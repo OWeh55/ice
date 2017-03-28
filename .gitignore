@@ -1,0 +1,14 @@
+*
+#!*.*
+!*/
+#*.o
+#/doxy/html
+#/doc/*eps
+#/doc/*converted-to.pdf
+#/lib/
+#/src/x86_64-suse-linux
+#*~
+!*.cpp
+!*.inc
+!Makefile
+!modules.mk
