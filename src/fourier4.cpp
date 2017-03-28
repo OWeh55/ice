@@ -1,0 +1,138 @@
+/*
+ * ICE - C++ - Library for image processing
+ *
+ * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
+ * Contact: ice@pandora.inf.uni-jena.de
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+/*
+ * Operations on Fourier and Hartley spectra (twodimensional)
+ * Wolfgang Ortmann, 97, 98
+ */
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "defs.h"
+#include "message.h"
+#include "macro.h"
+
+#include "darith.h"
+
+#include "fourier.h"
+
+//-----------------------------------------------------------------------
+// Whitening of spectra
+//-----------------------------------------------------------------------
+namespace ice
+{
+#define FNAME "WhiteningFImgD"
+  int WhiteningFImgD(ImageD re, ImageD im, ImageD dre, ImageD dim, double beta)
+  {
+    int xs, ys;
+    PixelFloatType di, dr, did, drd, denom;
+    double beta2 = beta * beta;
+
+    if (beta < 0)
+      {
+        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        return WRONG_PARAM;
+      }
+
+    ReturnErrorIfFailed(MatchImgD(re, im, dre, xs, ys));
+    ReturnErrorIfFailed(MatchImgD(dre, dim, xs, ys));
+
+    for (int y = 0; y < re.ysize; ++y)
+      for (int x = 0; x < re.xsize; ++x)
+        {
+          dr = GetValD(re, x, y);
+          di = GetValD(im, x, y);
+          denom = sqrt(dr * dr + di * di) + beta2;
+
+          if (denom == 0)
+            {
+              drd = 0;
+              did = 0;
+            }
+          else
+            {
+              drd = dr / denom;
+              did = di / denom;
+            }
+
+          PutValD(dre, x, y, drd);
+          PutValD(dim, x, y, did);
+        }
+    return OK;
+  }
+#undef FNAME
+//-----------------------------------------
+#define FNAME "WhiteningHImgD"
+  int WhiteningHImgD(ImageD im, ImageD nrm, double beta)
+  {
+    int x, y;
+    int xs, ys, xn, yn;
+
+    ImageD h;
+    PixelFloatType r, i, p;
+
+    double beta2 = beta * beta;
+
+    if (beta < 0)
+      {
+        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        return WRONG_PARAM;
+      }
+
+    ReturnErrorIfFailed(MatchImgD(im, nrm, xs, ys));
+
+    h = NewImgD(xs, ys);
+
+    for (y = 0; y < ys; y++)
+      {
+        yn = negf(y, ys);
+
+        for (x = 0; x < xs; x++)
+          {
+            xn = negf(x, xs);
+            r = GetValD(im, x, y);
+            i = GetValD(im, xn, yn);
+            p = sqrt((r * r + i * i) / 2) + beta2;
+
+            if (p != 0) p = r / p;
+
+            PutValD(h, x, y, p);
+          }
+      }
+
+    for (int y = 0; y < h.ysize; ++y)
+      for (int x = 0; x < h.xsize; ++x)
+        PutValD(nrm, x, y, GetValD(h, x, y));
+    FreeImgD(h);
+    return OK;
+  }
+#undef FNAME
+//
+#define FNAME "WhiteningImgD"
+  int WhiteningImgD(ImageD im1, ImageD im2, double beta)
+  {
+    RETURN_ERROR_IF_FAILED(HartleyImgD(im1, im2));
+    RETURN_ERROR_IF_FAILED(WhiteningHImgD(im2, im2, beta));
+    return HartleyImgD(im2, im2);
+  }
+#undef FNAME
+}

@@ -1,0 +1,162 @@
+/*
+ * ICE - C++ - Library for image processing
+ *
+ * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
+ * Contact: ice@pandora.inf.uni-jena.de
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+/************************************************/
+/*            Filter                            */
+/************************************************/
+#ifndef _FILTER_H
+#define _FILTER_H
+
+#include "base.h"
+
+#include "Matrix.h"
+#include "based.h"
+#include "arith.h"
+#include "ColorImage.h"
+
+namespace ice
+{
+  // filter1.cpp
+  int GradXImg(const Image& imgs, int norm, const Image& imgd);
+  int GradYImg(const Image& imgs, int norm, const Image& imgd);
+  int GradXImg(const Image& imgs, const Image& imgd, int norm = 1);
+  int GradYImg(const Image& imgs, const Image& imgd, int norm = 1);
+
+  int GradImg(const Image& imgs, int norm, const Image& imgd);
+
+  int CalcDirectionStructImg(const Image& pic, // zu untersuchendes Bild
+                             const Image& dest, // "Winkel"-Bild
+                             int detectionsize, // Umgebung
+                             ImageD lambda1 = ImageD(), ImageD lambda2 = ImageD());
+
+  int CalcDirectionImg(const Image& pic, // zu untersuchendes Bild
+                       const Image& dest, // "Winkel"-Bild
+                       int detectionsize = 11, // Umgebung
+                       ImageD eval = ImageD()
+                      );
+
+  int GradDirImg(const Image& imgs, const Image& imgd);
+
+  // filter2.cpp
+  int LaplaceXImg(const Image& imgs, int norm, const Image& imgd);
+  int LaplaceYImg(const Image& imgs, int norm, const Image& imgd);
+  int LaplaceImg(const Image& imgs, int norm, const Image& imgd);
+
+  int LaplaceXImg(const Image& imgs, const Image& imgd, int norm = 1);
+  int LaplaceYImg(const Image& imgs, const Image& imgd, int norm = 1);
+  int LaplaceImg(const Image& imgs, const Image& imgd, int norm = 1);
+
+  // filter3.cpp
+  int SmearImg(const Image& imgs, const Image& imgd, int sx, int sy);
+  int SmearImg(const Image& imgs, const Image& imgd, int sx = 3);
+  int SmearImg(const Image& imgs, int sx = 3);
+
+  int BoxImg(const Image& imgs, const Image& imgd, int sx, int sy);
+  int BoxImg(const Image& imgs, const Image& imgd, int sx = 3);
+  int BoxImg(const Image& imgs, int sx = 3);
+
+  int DoBImg(const Image& imgs, const Image& imgd, int n1, int n2, int mode = SMD_SHIFT);
+  int DoBImg(const Image& img, int n1, int n2, int mode = SMD_SHIFT);
+
+  int DoBMultiImg(const Image& imgs, const Image& imgd,
+                  const IMatrix& filtersizes,
+                  int boundary_x, int boundary_y, int scalef = 10,
+                  bool use_gauss_filter = false);
+
+  int MeanImg(const Image& imgs, const Image& imgd);
+
+  int GaussImg(const Image& imgs, const Image& imgd, int neighb, double sigma);
+  int GaussImg(const ImageD& imgs, const ImageD& imgd, int neighb, double sigma);
+
+  int MexicanHatImg(const Image& imgs, const Image& imgd, double sigma, int size = 0);
+  int MexicanHatImg(const Image& imgs, ImageD imgd, double sigma, int size = 0);
+  int MexicanHatImg(ImageD imgs, ImageD imgd, double sigma, int size = 0);
+
+  // filter4.cpp
+#define DirectedSmearImg OrientedSmearImg
+#define DirectedDoBImg OrientedDoBImg
+#define DirectedEdgeImg OrientedEdgeImg
+
+  int OrientedSmearImg(const Image& pic,
+                       const Image& dir,
+                       const Image& dest,
+                       int filter_size = 11, int filter_length = 10, int filter_width = 1);
+
+  int OrientedDoBImg(const Image& pic,
+                     const Image& dir,
+                     const Image& dest,
+                     int filter_size = 11, int filter_length = 10, int filter_width = 1);
+
+  int OrientedEdgeImg(const Image& pic,
+                      const Image& dir,
+                      const Image& dest,
+                      int filter_size = 11, int filter_rad = 10);
+
+  int OrientedSmearImg(const ColorImage& pic,
+                       const Image& dir,
+                       const ColorImage& dest,
+                       int filter_size = 11, int filter_length = 10, int filter_width = 1);
+
+  int OrientedDoBImg(const ColorImage& pic,
+                     const Image& dir,
+                     const ColorImage& dest,
+                     int filter_size = 11, int filter_length = 10, int filter_width = 1);
+
+  int OrientedEdgeImg(const ColorImage& pic,
+                      const Image& dir,
+                      const ColorImage& dest,
+                      int filter_size = 11, int filter_rad = 10);
+
+  // Erode/Dilate - morph.cpp
+  //   in Rechteckumgebung
+  int ErodeImg(const Image& img1, int nx, int ny, const Image& img2);
+  int DilateImg(const Image& img1, int nx, int ny, const Image& img2);
+
+  int ErodeImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+  int DilateImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+
+  int OpeningImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+  int ClosingImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+
+
+  //   in Umgebung durch Maske festgelegt
+  int DilateImg(const Image& img1, int neighb, int* mask, const Image& img2);
+  int ErodeImg(const Image& img1, int neighb, int* mask, const Image& img2);
+  int DilateImg(const Image& img1, int nx, int ny, int* mask,
+                const Image& img2);
+  int ErodeImg(const Image& img1, int nx, int ny, int* mask,
+               const Image& img2);
+
+  int DilateImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
+  int ErodeImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
+  int DilateImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
+  int ErodeImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
+
+  int OpeningImg(const Image& img1, const Image& img2, const IMatrix& msk);
+  int ClosingImg(const Image& img1, const Image& img2, const IMatrix& msk);
+
+  // Skelettierung - skelett.cpp
+  int skeletonImg(const Image& img1, const Image& img2, int lvl = 1);
+
+  // gemeinsame Bestimmung Max und Min
+  int MinMaxImg(const Image& img1, int nx, int ny,
+                const Image& imin, const Image& imax);
+}
+#endif
