@@ -1,0 +1,253 @@
+#include <image.h>
+
+#include <fstream>
+
+#include <getopt.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+  prog: Test- und Beispielprogramm für Delaunay
+  %% Beschreibung Optionen
+  %% short-opt, long-opt, Type, variable, helpstring, default
+  opt: g, generationmode, int, generationMode, Auswahl der Art der Punktmengen-generierung, 1
+  opt2:   mode = 1 - zufällige Punkte im Kreis
+  opt2:   mode = 2 - zufällige Punkte in gewählter Kontur
+  opt2:   mode = 3 - interaktiv eingegebene Punkte
+  opt2:   mode = 4 - Punktliste 1
+  opt2:   mode = 5 - Punktliste 2
+  opt2:   mode = 6 - Punkte aus Datei 'delaunay_points.txt' einlesen
+  opt: n, pointnumber, int, nPoints, Zahl der Punkte (bei Zufallsauswahl), 10000
+  opt: d, display, int, display, Darzustellende Ergebnisse - additiv, 15
+  opt2:   1 - Delaunay-Triangulation - Dreieck-Flächen
+  opt2:   2 - Delaunay-Triangulation - Kanten
+  opt2:   4 - Beschränkte Delaunay-Triangulation - Dreieck-Flächen
+  opt2:   8 - Beschränkte Delaunay-Triangulation - Kanten
+  opt2:  16 - Sequenz mit wachsendem Limit
+  opt: b, benchmark, void, benchmark, Keinerlei Warten um Zeitmessung zu ermöglichen, false
+  opt: l, limit, double, edgeLimit, Längenbegrenzung für Kanten, 100
+  opt: L, loop, int, loops, Anzahl der Durchläufe, 1
+  opt: W, writepoints, void, writePoints, Punkte in Datei 'delaunay_points.txt' ausschreiben, false
+  opt: T, trianglewritepoints, void, twritePoints, Punkte im Format von 'triangle' in die Datei points.node schreiben, false
+  opt: w, wait, void, wait, Warten auf Tastendruck , false
+  opt: h, help, usage, help, Hilfe,
+  AppGen*/
+
+void readPoints(const string& fn, vector<Point>& pl)
+{
+  ifstream is(fn.c_str());
+  if (is.good())
+    {
+      Point p;
+      char c1, c2, c3;
+      while (is >> c1 >> p.x >> c2 >> p.y >> c3)
+        {
+          //    cout << c1 << " " << c2 << " " << c3 << " "  << endl;
+          pl.push_back(p);
+        }
+    }
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+
+  Image marker;
+  marker.create(1000, 1000, 255);
+  Show(OVERLAY, marker);
+
+  for (int lauf = 0; lauf < loops; lauf++)
+    {
+      ClearImg(marker);
+
+      vector<Point> pl;
+
+      switch (generationMode)
+        {
+        case 1:
+        {
+          int i = 0;
+          while (i < nPoints)
+            {
+#if 0
+              int x = rand() % 900 + 50;
+              int y = rand() % 900 + 50;
+              int dx = x - 500;
+              int dy = y - 500;
+              if (dx * dx + dy * dy < 450 * 450)
+                {
+                  pl.push_back(Point(x, y));
+                  i++;
+                }
+#else
+              double x = RandomD() * 900 + 50;
+              double y = RandomD() * 900 + 50;
+              double dx = x - 500;
+              double dy = y - 500;
+              if (dx * dx + dy * dy < 450 * 450)
+                {
+                  pl.push_back(Point(x, y));
+                  i++;
+                }
+
+#endif
+            }
+        }
+        break;
+
+        case 2:
+        {
+          Contur c1 = SelContur(marker, true);
+          FillRegion(c1, 2, marker);
+          int i = 0;
+          while (i < nPoints)
+            {
+              int x = rand() % marker.xsize;
+              int y = rand() % marker.ysize;
+              if (marker.getPixel(x, y) > 0)
+                {
+                  pl.push_back(Point(x, y));
+                  i++;
+                }
+            }
+          ClearImg(marker);
+        }
+        break;
+
+        case 3:
+        {
+          int rc;
+          Point p = SelPoint(marker, rc);
+          while (rc >= 0)
+            {
+              pl.push_back(p);
+              Marker(1, p, 1, 7, marker);
+              p = SelPoint(marker, rc);
+            }
+        }
+        break;
+
+        case 4:
+          pl.push_back(Point(5, 200));
+          pl.push_back(Point(500, 500));
+          pl.push_back(Point(10, 10));
+          if (nPoints > (int)pl.size())
+            pl.push_back(Point(100, 100));
+          if (nPoints > (int)pl.size())
+            pl.push_back(Point(50, 50));
+          if (nPoints > (int)pl.size())
+            pl.push_back(Point(70, 70));
+          if (nPoints > (int)pl.size())
+            pl.push_back(Point(170, 170));
+          if (nPoints > (int)pl.size())
+            pl.push_back(Point(499, 200));
+          break;
+
+        case 5:
+          pl.push_back(Point(500, 0));
+          pl.push_back(Point(400, 300));
+          if (nPoints > (int)pl.size())
+            pl.push_back(Point(300, 400));
+          if (nPoints > (int)pl.size())
+            pl.push_back(Point(0, 500));
+          break;
+
+        case 6:
+          pl.clear();
+          readPoints("delaunay_points.txt", pl);
+          break;
+        }
+
+      for (int i = 0; i < (int)pl.size(); i++)
+        Marker(1, pl[i], 4, 5, marker);
+
+      cout << pl.size() << " Punkte" << endl;
+
+      if (writePoints)
+        {
+          ofstream os("delaunay_points.txt");
+          for (int i = 0; i < (int)pl.size(); ++i)
+            os << pl[i] << endl;
+        }
+      if (twritePoints)
+        {
+          ofstream os("points.node");
+          os << pl.size() << " 2 0 0" << endl;
+          for (int i = 0; i < (int)pl.size(); ++i)
+            os << i << " " << pl[i].x << " " << pl[i].y << endl;
+        }
+
+      Delaunay dela(pl);
+
+      if ((display & 3) > 0)
+        {
+          int fco, eco;
+          if ((display & 1) > 0) fco = 2;
+          else fco = -1;
+          if ((display & 2) > 0) eco = 1;
+          else eco = -1;
+          dela.draw(marker, eco, fco);
+
+          if (wait)
+            GetChar();
+        }
+
+      if ((display & 16) > 0)
+        {
+          //      Forest f;
+          ClearImg(marker);
+          for (int dist = 4; dist < edgeLimit; dist = dist + dist / 2)
+            {
+              Printf("Maximale Länge %d\n", dist);
+              dela.draw(marker, 1, 4, dist);
+
+              //    MinTree(pl, f, dist);
+              //    Draw(f, pl, marker, 3);
+
+              usleep(100000);
+              //    GetChar();
+            }
+
+          if (wait)
+            GetChar();
+        }
+
+      if ((display & 12) > 0)
+        {
+          vector<LineSeg> edges;
+          vector<Triangle> triangles;
+          dela.getEdges(edges, edgeLimit);
+          dela.getTriangles(triangles, edgeLimit);
+
+          int fco, eco;
+          if ((display & 4) > 0) fco = 2;
+          else fco = -1;
+          if ((display & 8) > 0) eco = 3;
+          else eco = -1;
+          dela.draw(marker, eco, fco);
+
+          if ((display & 4) > 0)
+            {
+              for (int i = 0; i < (int)triangles.size(); i++)
+                draw(triangles[i], marker, -1, 4);
+            }
+          if ((display & 8) > 0)
+            {
+              for (int i = 0; i < (int)edges.size(); i++)
+                {
+                  draw(edges[i], marker, 1);
+                }
+            }
+          if (wait)
+            GetChar();
+        }
+    }
+  if (display)
+    Print("Ende\n");
+
+  if (!benchmark)
+    GetChar();
+
+  return 0;
+}

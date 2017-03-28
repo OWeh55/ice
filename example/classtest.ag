@@ -1,0 +1,547 @@
+// test zu den Klassifikatoren
+
+#include <getopt.h>
+
+/*AppGen:Global*/
+
+#include <image.h>
+
+void makeColorImage(const Image& ptr, ColorImage& co)
+{
+  co.create(ptr->xsize, ptr->ysize, 255);
+
+  for (int y = 0; y < ptr.ysize; y++)
+    for (int x = 0; x < ptr.xsize; x++)
+      {
+        int gw = GetVal(ptr, x, y);
+        unsigned char r, g, b;
+        GetGreyColor(ptr, gw, r, g, b);
+        co.setPixel(x, y, ColorValue(r, g, b));
+      }
+}
+
+int bitInvers7(int i)
+{
+  int res = 0;
+  for (int k = 0; k < 7; k++)
+    {
+      res = res << 1;
+      res |= (i & 1);
+      i = i >> 1;
+    }
+  return res;
+}
+
+void setColorTable(const Image& mark)
+{
+  int r[256], g[256], b[256];
+
+  for (int i = 0; i < 42; i++)
+    {
+      int i1 = i;
+      int i2 = 41 - i1;
+      int ii = bitInvers7(i);
+      r[ii] = i2 * 6;
+      g[ii] = i1 * 6;
+      b[ii] = 0;
+    }
+
+  for (int i = 42; i < 84; i++)
+    {
+      int i1 = i - 42;
+      int i2 = 41 - i1;
+      int ii = bitInvers7(i);
+      b[ii] = i1 * 6;
+      g[ii] = i2 * 6;
+      r[ii] = 0;
+    }
+
+  for (int i = 84; i < 128; i++)
+    {
+      int i1 = i - 84;
+      if (i1 > 41) i1 = 41;
+      int i2 = 41 - i1;
+      int ii = bitInvers7(i);
+      r[ii] = i1 * 6;
+      b[ii] = i2 * 6;
+      g[ii] = 0;
+    }
+
+  for (int i = 1; i < 128; i++)
+    {
+      int rn = r[i];
+      int gn = g[i];
+      int bn = b[i];
+      SetOverlayColor(mark, i, rn, gn, bn);
+      rn = (rn + 254) / 2;
+      gn = (gn + 254) / 2;
+      bn = (bn + 254) / 2;
+      SetOverlayColor(mark, i + 128, rn, gn, bn);
+    }
+
+  SetOverlayColor(mark, 254, 255, 255, 255);
+  SetOverlayColor(mark, 255, 0, 0, 0);
+}
+
+vector<IPoint> selectPoints(const Image& marker, int nClasses, int nSamples)
+{
+  vector<IPoint> pointList;
+
+  Print("Select points\n");
+
+  for (int c = 0; c < nClasses; c++)
+    {
+      Printf("%d. von %d Klassen\n", c + 1, nClasses);
+      for (int i = 0; i < nSamples; i++)
+        {
+          Printf("   %d. von %d Punkten.\n", i + 1, nSamples);
+          IPoint point = SelPoint(DEFAULT, marker);
+          Marker(1, point, c + 1, 5, marker);
+//          marker.setPixel(point, c + 1);
+          pointList.push_back(point);
+        }
+      Print("==========================================\n");
+    }
+  return pointList;
+}
+
+vector<IPoint> selectRandomPoints(const Image& marker,
+                                  int nRandomPoints, int nClasses)
+{
+  int nPointsTotal = 0;
+  for (int y = 0; y < marker.ysize; y++)
+    for (int x = 0; x < marker.xsize; x++)
+      {
+        nPointsTotal++;
+        int m = marker.getPixel(x, y);
+        if (m > 0 && m <= nClasses)
+          nPointsTotal++;
+      }
+  if (nRandomPoints > nPointsTotal)
+    throw "not enough teached points";
+
+  vector<IPoint> pl;
+  while ((int)pl.size() < nRandomPoints)
+    {
+      int x = Random(marker.xsize - 1);
+      int y = Random(marker.ysize - 1);
+      int m = marker.getPixel(x, y);
+      if (m > 0 && m <= nClasses)
+        {
+          pl.push_back(IPoint(x, y));
+          //    marker.setPixel(x,y,0);
+        }
+    }
+  return pl;
+}
+
+vector<IPoint> selectRegularPoints(const Image& marker, int stepWidth, int nClasses)
+{
+  vector<IPoint> pl;
+  for (int y = 0; y < marker.ysize; y += stepWidth)
+    for (int x = 0; x < marker.xsize; x += stepWidth)
+      {
+        int m = marker.getPixel(x, y);
+        if (m > 0 && m <= nClasses)
+          pl.push_back(IPoint(x, y));
+      }
+  return pl;
+}
+
+int countClasses(const Image& marker)
+{
+  int maxmarker = 0;
+  for (int y = 0; y < marker.ysize; y++)
+    for (int x = 0; x < marker.xsize; x++)
+      {
+        int m = marker.getPixel(x, y);
+        if (m > maxmarker)
+          maxmarker = m;
+      }
+  return maxmarker;
+}
+
+void getFeatures(Point p, int mode, vector<double>& v)
+{
+  switch (mode)
+    {
+    case 3:
+      v[5] = p.x * p.x * p.x;
+      v[6] = p.x * p.x * p.y;
+      v[7] = p.x * p.y * p.y;
+      v[8] = p.y * p.y * p.y;
+    case 2:
+      v[2] = p.x * p.x;
+      v[3] = p.x * p.y;
+      v[4] = p.y * p.y;
+    case 1:
+      v[0] = p.x;
+      v[1] = p.y;
+      break;
+    }
+}
+
+void classifyImage(const Image& marker, const Classifier& cl,
+                   int featureMode, int nFeatures)
+{
+  vector<double> feature(nFeatures);
+  for (int y = 0; y < marker.ysize; y++)
+    for (int x = 0; x < marker.xsize; x++)
+      {
+        if (marker.getPixel(x, y) == 0)
+          {
+            getFeatures(IPoint(x, y), featureMode, feature);
+            int classnr = cl.Classify(feature);
+            if (classnr >= 0)
+              marker.setPixel(x, y, classnr + 1);
+            else
+              marker.setPixel(x, y, marker.maxval + 1 + classnr);
+          }
+      }
+}
+
+void showMarker(const Image& mark, const Image& cresult,
+                const vector<IPoint>& pl, const vector<int>& clnr)
+{
+  for (int y = 0; y < mark.ysize; y++)
+    for (int x = 0; x < mark.xsize; x++)
+      {
+        int m = cresult.getPixel(x, y);
+        if (m < 128)
+          m += 128;
+        mark.setPixel(x, y, m);
+      }
+
+  for (int i = 0; i < (int)pl.size(); i++)
+    {
+      Marker(3, pl[i], clnr[i] + 1, 7, mark);
+    }
+}
+
+/*AppGen
+ prog: Testprogramm für Klassifikatoren
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ % para: nothing, optional, string, nothing, Nur zum Test, 12345
+ opt: s, sample, string, sampleFilename, Stichprobe als Marker-Image, ""
+ opt: r, randomsample, int, nRandomPoints, Zufallsauswahl in Stichprobe, 0
+ opt: R, regularsample, int, stepWidth, Regelmaesige Auswahl mit Schrittweite, 0
+ opt: c, classifier, int, classifierNr, Verwendeter Klassifikator, 1
+ opt2: classifier == 1 Parallelepiped
+ opt2: classifier == 2 nearest neighbor
+ opt2: classifier == 3 nearest neighbor with VectorDistance
+ opt2: classifier == 4 k nearest neighbor
+ opt2: classifier == 5 k nearest neighbor with VectorDistance
+ opt2: classifier == 6 minimum distance
+ opt2: classifier == 7 Bayes
+ opt2: classifier == 8 Bayes mit Rückweisung
+ opt2: classifier == 9 Bayes (2 classes)
+ opt: f, features, int, featureMode,Art der Merkmale, 1
+ opt2:  1 = x, y
+ opt2:  2 = x, y, x*x, x*y, y*y
+ opt2:  3 = x, y, x*x, x*y, y*y, x*x*x, x*x*y, x*y*y, y*y*y
+ opt: C, classnumber, int, nClasses, Zahl der Klassen, 0
+ opt: t, testpattern, int, patternNr, Vordefinierte Testmuster, 0
+ opt: o, output, string, output, Ausgabedateiname (grey marker), ""
+ opt: O, outputrgb, string, outputrgb, Ausgabedateiname (color), ""
+ opt: i, interactive, int, interactive, Interaktives Anlernen mit n Werten, 0
+ opt: x, xsize, int, xsize, Bildgroesse (im interaktiven Modes), 1000
+ opt: y, ysize, int, ysize, Bildgroesse (im interaktiven Modes), 750
+ opt: g, global, void, global, 'Globales Anlernen' mit Liste, false
+ opt: b, benchmark, void, bench, Zeitmessung, false
+ opt: w, wait, void, wait, Warten auf Tastendruck , false
+ opt: h, help, usage, help, Hilfe,
+ AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+
+  try
+    {
+
+      if (sampleFilename.empty() && interactive == 0 && patternNr == 0)
+        interactive = 5;
+
+      if (classifierNr < 1 || classifierNr > 9)
+        throw "Classifier number out of range 1..9";
+
+      if (classifierNr == 9 && nClasses != 2) // bayes2
+        throw "Classifier Bayes2 requires 2 classes";
+
+      int nFeatures;
+      switch (featureMode)
+        {
+        case 1:
+          nFeatures = 2;
+          break;
+        case 2:
+          nFeatures = 5;
+          break;
+        case 3:
+          nFeatures = 8;
+          break;
+        default:
+          throw "Wrong feature mode";
+        }
+
+      Image marker;
+
+      Alpha(ON);
+      ClearAlpha();
+
+      vector<IPoint> pointList;
+
+      if (interactive > 0)
+        {
+          marker = Image::createImage(xsize, ysize, 255);
+          ClearImg(marker);
+          Show(OVERLAY, marker);
+          setColorTable(marker);
+          if (nClasses == 0)
+            nClasses = 3;
+          pointList = selectPoints(marker, nClasses, interactive);
+        }
+      else
+        {
+          if (patternNr > 0)
+            {
+              if (nClasses == 0)
+                nClasses = 3;
+              marker = Image::createImage(xsize, ysize, 255);
+              ClearImg(marker);
+              switch (patternNr)
+                {
+                case 1:
+                {
+                  for (int i = 0; i < nClasses; i++)
+                    {
+                      double fi = M_PI * 2 / nClasses * i;
+                      double r = xsize < ysize ? xsize : ysize;
+                      r *= 0.3;
+                      double r2 = r * 2 * M_PI / nClasses * 0.4;
+                      double xz = xsize / 2 + r * cos(fi);
+                      double yz = ysize / 2 + r * sin(fi);
+                      // cout << "circle " << xz << " " << yz << " " << r << endl;
+                      Circle c(xz, yz, r2);
+                      draw(c, marker, i + 1, i + 1);
+                    }
+                }
+                break;
+
+                case 2:
+                {
+                  double x0 = xsize / 2;
+                  double y0 = ysize / 2;
+                  double dphi = M_PI * 2 / nClasses;
+                  for (int y = 0; y < ysize; y++)
+                    for (int x = 0; x < xsize; x++)
+                      {
+                        double phi = atan2(y - y0, x - x0) + M_PI;
+                        int cl = (int)(phi / dphi) % nClasses;
+                        // cout << phi << "/" << dphi << " " << cl << endl;
+                        marker.setPixel(x, y, cl + 1);
+                      }
+                }
+                break;
+
+                case 3:
+                {
+                  double x0 = xsize / 2;
+                  double y0 = ysize / 2;
+                  double dphi = M_PI * 2 / nClasses;
+                  for (int y = 0; y < ysize; y++)
+                    for (int x = 0; x < xsize; x++)
+                      {
+                        double phi = atan2(y - y0, x - x0) + M_PI;
+                        double r = sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0));
+                        phi += (r / xsize) * M_PI * 2;
+                        int cl = (int)(phi / dphi) % nClasses;
+                        // cout << phi << "/" << dphi << " " << cl << endl;
+                        marker.setPixel(x, y, cl + 1);
+                      }
+                }
+                break;
+
+                case 4:
+                {
+                  double x0 = xsize / 2;
+                  double y0 = ysize / 2;
+                  double r = xsize / 20;
+                  vector<Point> classCenter(nClasses);
+                  for (int i = 0; i < nClasses; i++)
+                    {
+                      classCenter[i].x = x0 + RandomD() - 0.5;
+                      classCenter[i].y = y0 + RandomD() - 0.5;
+                    }
+                  for (int ct = 0; ct < 20000; ct++)
+                    {
+                      for (int i = 0; i < nClasses; i++)
+                        for (int k = i + 1; k < nClasses; k++)
+                          {
+                            Point dp = classCenter[i] - classCenter[k];
+                            double dist = dp.r();
+//      cout << dist << " " << (3*r) << endl;
+                            dist = 0.2 / (dist + 0.1);
+//      dist *=0.01;
+                            double phi = dp.phi();
+                            classCenter[i] += Point(cos(phi) * dist, sin(phi) * dist);
+                            classCenter[k] -= Point(cos(phi) * dist, sin(phi) * dist);
+                          }
+                      for (int i = 0; i < nClasses; i++)
+                        {
+                          Point& p = classCenter[i];
+                          //  Marker(1,p,i+1,5,marker);
+//    cout << p.x << "," << p.y << endl;
+                          if (p.x < r) p.x = r;
+                          if (p.y < r) p.y = r;
+                          if (p.x > xsize - 1 - r) p.x = xsize - 1 - r;
+                          if (p.y > ysize - 1 - r) p.y = ysize - 1 - r;
+                        }
+                    }
+                  for (int i = 0; i < nClasses; i++)
+                    {
+                      Circle c(classCenter[i], r);
+                      draw(c, marker, i + 1, i + 1);
+                    }
+                }
+                break;
+                default:
+                  throw "Wrong pattern type (-t)";
+                }
+            }
+          else
+            marker = ReadImg(sampleFilename);
+
+          Show(OVERLAY, marker);
+          setColorTable(marker);
+
+          if (nClasses == 0)
+            nClasses = countClasses(marker);
+          if (nRandomPoints > 0)
+            pointList = selectRandomPoints(marker, nRandomPoints, nClasses);
+          else
+            {
+              if (stepWidth == 0)
+                stepWidth = 1;
+              pointList = selectRegularPoints(marker, stepWidth, nClasses);
+            }
+        }
+
+      if (wait)
+        GetChar();
+
+      vector<int> classNr(pointList.size());
+      vector<vector<double> > features(pointList.size(), vector<double>(nFeatures));
+
+      for (int i = 0; i < (int)pointList.size(); i++)
+        {
+          IPoint& p = pointList[i];
+          classNr[i] = marker.getPixel(p) - 1;
+          getFeatures(p, featureMode, features[i]);
+        }
+
+      //ClassifierPE clpe(nClasses, nFeatures); // 1
+      ClassifierNearestNeighbor clnn(nClasses, nFeatures); // 2
+      //ClassifierNNCustomDistance<EuclideanVectorDistance> clnncd(nClasses, nFeatures); // 3
+      ClassifierKNN clknn(nClasses, nFeatures, 3); // 4
+      //    ClassifierKNNCustomDistance<EuclideanVectorDistance> clknnf(nClasses, nFeatures, 3); // 5
+      ClassifierMinimumDistance clmd(nClasses, nFeatures); // 6
+      ClassifierBayes clba(nClasses, nFeatures); // 7
+      ClassifierBayes clbarw(nClasses, nFeatures, true); // 8
+      ClassifierBayes2 clb2(2, nFeatures, 0.5, 0.5, 1, 1); // 9
+
+      Classifier& classifier =
+        //      classifierNr == 1 ? static_cast<Classifier&>(clpe) :
+        classifierNr == 2 ? static_cast<Classifier&>(clnn) :
+        //      classifierNr == 3 ? static_cast<Classifier&>(clnncd) :
+        classifierNr == 4 ? static_cast<Classifier&>(clknn) :
+        // classifierNr == 5 ? static_cast<Classifier&>(clknnf) :
+        classifierNr == 6 ? static_cast<Classifier&>(clmd) :
+        classifierNr == 7 ? static_cast<Classifier&>(clba) :
+        classifierNr == 8 ? static_cast<Classifier&>(clbarw) :
+        static_cast<Classifier&>(clb2);
+
+      vector<string> classifierName(10);
+      classifierName[1] = "parallelepiped";
+      classifierName[2] = "nearest neighbor";
+      classifierName[3] = "nearest neighbor with EuclideanVectorDistance";
+      classifierName[4] = "k-nearest neighbor";
+      classifierName[5] = "k-nearest neighbor with EuclideanVectorDistance";
+      classifierName[6] = "minimum distance";
+      classifierName[7] = "bayes";
+      classifierName[8] = "bayes with rejection";
+      classifierName[9] = "bayes 2 classes";
+
+      cout << "classifier: " << classifierName[classifierNr] << endl;
+
+      double teachTime = -TimeD();
+      if (global)
+        {
+          Matrix featureMatrix(pointList.size(), features[0].size());
+          IVector classnr(pointList.size());
+          for (int i = 0; i < (int)pointList.size(); i++)
+            {
+              classnr[i] = classNr[i];
+              for (int k = 0; k < nFeatures; k++)
+                featureMatrix[i][k] = features[i][k];
+            }
+          classifier.Train(featureMatrix, classnr);
+        }
+      else
+        {
+          for (int i = 0; i < (int)pointList.size(); i++)
+            {
+              classifier.Train(classNr[i], features[i]);
+            }
+        }
+      teachTime += TimeD();
+      if (bench)
+        cout << "Teaching: " << teachTime << endl;
+
+      double finishTime = -TimeD();
+      classifier.Finish();
+      finishTime += TimeD();
+      if (bench)
+        cout << "Finishing: " << finishTime << endl;
+
+
+      ClearImg(marker);
+      double classifyTime = -TimeD();
+      classifyImage(marker, classifier, featureMode, nFeatures);
+      classifyTime += TimeD();
+      if (bench)
+        cout << "Classifying: " << classifyTime << endl;
+
+      Image show = Image::createImage(xsize, ysize, 255);
+      ClearImg(show);
+
+      Show(OVERLAY, show, classifierName[classifierNr]);
+      setColorTable(show);
+
+      showMarker(show, marker, pointList, classNr);
+
+      if (!output.empty())
+        {
+          // Ausgabe des Klassifizierungsergebnisses
+          marker.write(output);
+        }
+
+      if (!outputrgb.empty())
+        {
+          // Ausgabe als Farbbild
+          ColorImage rgb;
+          makeColorImage(marker, rgb);
+          rgb.write(outputrgb);
+        }
+
+      GetChar();
+    }
+  catch (const char* msg)
+    {
+      cerr << "exception: " << msg << endl;
+    }
+  return 0;
+}
+
