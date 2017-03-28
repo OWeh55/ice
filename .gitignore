@@ -1,14 +1,26 @@
+# ignore all 
 *
-#!*.*
+# .. but file with "extensions"
+!*.*
+# .. and directories
 !*/
-#*.o
-#/doxy/html
-#/doc/*eps
-#/doc/*converted-to.pdf
-#/lib/
-#/src/x86_64-suse-linux
-#*~
-!*.cpp
-!*.inc
-!Makefile
-!modules.mk
+# ignore generated files
+*.o
+/doxy/html
+/doc/*eps
+/doc/*converted-to.pdf
+/lib/
+/src/x86_64-suse-linux
+# ignore backups and temporary files
+*~
+
+# possibly incomplete positive pattern
+#!*.cpp
+#!*.inc
+#!Makefile
+#!modules.mk
+#!*.tex
+#!*.fig
+#!mk
+#!*.ag
+#!Doxyfile
