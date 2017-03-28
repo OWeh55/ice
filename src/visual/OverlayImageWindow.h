@@ -1,0 +1,91 @@
+/*
+ * ICE - C++ - Library for image processing
+ *
+ * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
+ * Contact: ice@pandora.inf.uni-jena.de
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+#ifndef __ICEOVERLAYIMGWIN_H
+#define __ICEOVERLAYIMGWIN_H
+
+#include "visual/ImageWindow.h"
+#include "ColorTable.h"
+
+namespace ice
+{
+  class OverlayImageWindow : public ImageWindow
+  {
+  protected:
+    ~OverlayImageWindow() {};
+  public:
+    OverlayImageWindow(ice::ImageBase* BaseImage,
+                       ice::ImageBase* OverlayImage,
+                       const std::string& windowname = "ICE Image");
+    virtual bool Destroy();
+
+    int GetGreyColor(unsigned int Entry,
+                     unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal);
+    int SetGreyColor(unsigned int Entry,
+                     unsigned char RedVal, unsigned char GreenVal, unsigned char BlueVal);
+
+    int SetGreyLUT(unsigned int First, unsigned int Last);
+
+    int GetOverlayColor(unsigned int Entry,
+                        unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal);
+    int SetOverlayColor(unsigned int Entry,
+                        unsigned char RedVal, unsigned char GreenVal, unsigned char BlueVal);
+
+    //    bool ShowsImage(ImageBase *img) const;
+
+    virtual char ShowType() const
+    {
+      return 2;
+    }
+
+  protected:
+    // pure virtual implementations
+    virtual void PutPixel();
+    // The color tables for this window
+    ColorTable BaseColorTable, OverlayColorTable;
+
+    // The images that should be displayed in this window. BaseImage will be displayed
+    // just like in a grey value window as long as it isn't overlayed by OverlayImage.
+    ice::ImageBase* BaseImage;
+    ice::ImageBase* OverlayImage;
+
+    DECLARE_EVENT_TABLE()
+  };
+
+
+////////////////////////////////////////////////////////////////////////7
+//
+//             inline implementations
+//
+
+  inline int OverlayImageWindow::GetGreyColor
+  (unsigned int Entry, unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal)
+  {
+    return BaseColorTable.getColor(Entry, RedVal, GreenVal, BlueVal);
+  }
+
+  inline int OverlayImageWindow::GetOverlayColor
+  (unsigned int Entry, unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal)
+  {
+    return OverlayColorTable.getColor(Entry, RedVal, GreenVal, BlueVal);
+  }
+}
+#endif // #ifndef __ICEOVERLAYIMGWIN_H
