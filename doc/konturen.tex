@@ -1,0 +1,878 @@
+\nsection{Konturen, Kanten und Regionen}{conturs}
+
+\subsection{Konturfolge}
+\label{Konturen}
+
+\subsubsection{Objekte}
+Die Konturfolge dient in der Bildverarbeitung dazu, Objekte zu finden. Das
+Innere der gefundene Kontur repräsentiert im Bild das Objekt. Ausgangspunkt
+ist die Möglichkeit, für jedes einzelne Pixel im Bild die Entscheidung fällen
+zu können, ob es sich um einen Untergrund- oder einen Objektpunkt handelt. Im
+einfachsten Falle geschieht dies durch die Festlegung eines Grauwert-Pegels:
+Alle Punkte mit Werten größer gleich diesem Schwellwert sind Objektpunkte,
+die anderen Untergrundpunkte.
+
+\begin{figure}[h]
+  \epsfig{figure=contur1.eps,width=8cm}
+  \label{object}
+  \caption{Ein Objekt und seine Kontur}
+\end{figure}
+
+Im Bild sind Objektpunkte blau markiert. Randpunkte eine Objekts
+sind Objektpunkte, in deren 4-Nachbarschaft Untergrundpunkte
+liegen. Randpunkte und benachbarte Untergrundpunkte bilden
+Objekt-/Untergrund-Punktpaare. Umläuft man das Objekt, so entsteht eine Folge
+von Objekt-/Untergrundpaaren, die die Kontur bilden. In ICE wird als Contur
+die Folge der Randpunkte des Objekts abgelegt, die zugehörigen Untergrundpunkte
+lassen sich eindeutig rekonstruieren.
+
+Grundidee der Konturfolge ({\see{CalcContur}}) ist, daß man zunächst 
+zeilenweise oder spaltenweise das Bild durchmustert und einen Startpunkt 
+sucht. Ein geeigneter Startpunkt ist der erste Objektpunkt nach einem
+Untergrund-/Objekt-Übergang. Ausgehend von diesem bekannten
+Objekt-/Untergrund-Punktpaar wird dann in der Nachbarschaft nach weiteren
+Paaren gesucht und so die Kontur verfolgt (gestrichelte Linie). Nach dem
+Umlauf um das Objekt kehrt der Algorithmus immer zum Startpunkt zurück. Die
+Konturen sind deshalb immer geschlossene Konturen, der Start- und der Endpunkt
+sind dieselben. Geschlossene Konturen umschließen eine Fläche und besitzen
+deshalb zusätzliche Merkmale, z.B. die Fläche und den Formfaktor.
+
+\subsubsection{Löcher}
+\begin{figure}[h]
+  \epsfig{figure=contur2.eps,width=8cm}
+  \label{fig:hole}
+  \caption{Das Loch im Objekt und seine Kontur}
+\end{figure}
+
+In analoger Weise werden Konturen von Löchern gefunden. Trifft der Algorithmus
+auf ein Loch, so findet in genau gleicher Weise eine Konturfolge statt. Im
+Bild sind die Objekt-/Untergrund-Punktpaare und der Weg der
+Konturfolge für das Loch in dem Objekt dargestellt. Der Pfeil an der
+gestrichelten Konturlinie verdeutlicht, daß der Umlaufsinn einer Lochkontur
+entgegengesetzt zur Kontur eines Objekts ist. Auch Lochkonturen sind immer
+geschlossen. Wegen des negativen Umlaufsinns ist der Flächeninhalt einer
+Lochkontur negativ.
+
+\subsubsection{Undefinierte Punkte}
+\label{UndefiniertePunkte}
+
+\begin{figure}[h]
+  \epsfig{figure=contur3.eps,width=8cm}
+  \label{fig:hole}
+  \caption{Konturfolge und undefinierte Punkte}
+\end{figure}
+
+Oft entsteht die Situation, daß die Entscheidung Objekt oder Untergrund nicht
+für jedes Pixel eindeutig zu treffen ist. Dies gilt zum Beispiel auch für
+Punkte außerhalb des Bildes. Oft werden diese der Einfachheit halber als
+Untergrund-Punkte behandelt, genaugenommen ist eine solche Aussage nicht
+möglich. Eine ähnliche Situation kann für Punkte im Bild entstehen. Diese
+Punkte wollen wir im folgenden als ''undefiniert'' betrachten. Das Bild 
+verdeutlicht diese Situation. Undefinierte Punkte sind rot markiert.
+
+Die Kontur läßt sich jetzt immer noch genauso als Folge von
+Objekt-/Untergrund-Punktpaaren definieren. Der Übergang von einer dualen 
+Entscheidung zur ternären Entscheidung mit Objekt-Punkten, Untergrund-Punkten
+und undefinierten Punkten hat zur Folge, daß die gefundenen Konturen nicht 
+geschlossen sein müssen.
+
+\subsection{Die Klasse Contur}
+\hypertarget{Contur}{}
+
+Für die Speicherung und Bearbeitung von Konturen wird die Klasse \class{Contur}
+verwendet. Konturen entstehen als Ergebnis der Objektsuche im Bild 
+mittels Konturfolge. Aber auch beliebige ebene geometrische 
+Figuren als \class{Contur} beschrieben werden. 
+
+Die Datenstruktur \class{Contur} repräsentiert eine Folge von Punkten, wobei 
+in der Folge benachbarte Punkte auch im Bild benachbart sind. Sind Anfangs-
+und Endpunkt der Punktfolge identisch, so ist die Kontur
+geschlossen. Geschlossene Konturen umschließen eine Fläche und besitzen
+deshalb zusätzliche Merkmale, z.B. die Fläche und den Formfaktor. Je nach
+Umlaufsinn um die Fläche ist der Flächeninhalt positiv (positiver Umlaufsinn,
+Objekt-Kontur) oder negativ (negativer Umlaufsinn, Loch-Kontur).
+
+\subsubsection{Konstruktoren und Destruktoren}
+
+\proch{}{Contur::Contur}{}{contur.h}
+\descr{
+Legt eine (noch ungültige) Kontur an. Für derartige, nicht initialisierte
+Konturen hat $valid$ den Wert $false$. \\
+\seealso{Contur::isValid}\\
+Fehlgeschlagene Funktionen, die Konturen zurückliefern, geben ebenfalls
+eine derartige Kontur zurück.
+}
+\proc{}{Contur::Contur}{const Contur \&c}
+\descr{
+Legt eine Kopie der Kontur $c$ an.
+}
+
+\procf{}{Contur::Contur}{IPoint p}
+\proc{}{Contur::Contur}{int x,int y}
+\descr{
+Legt eine Kontur mit dem Startpunkt $p$ bzw. ($x,y$) an. Die Kontur hat die
+Länge Null. 
+}
+
+\subsubsection{Erstellung und Bearbeitung einer Kontur}
+Konturen werden nach der Definition eines Startpunktes (kann auch
+beim Konstruktor schon geschehen) durch Anhängen weiterer Teile
+aufgebaut. Angehängt werden Richtungscodes, Verbindungslinien zu 
+weiteren Punkten oder ganze Konturen.
+
+\proc{int}{Contur::Reset}{}
+\descr{Die Kontur wird zurückgesetzt und ist danach wieder undefiniert 
+(isValid()==false).\\
+\seealso{Contur::isValid}
+}
+
+\proc{int}{Contur::Reset}{IPoint p}
+\procf{int}{Contur::Reset}{int x,int y}
+\descr{Die Kontur wird zurückgesetzt und mit dem Startpunkt $p$ bzw. $(x,y)$
+neu initialisiert.
+}
+
+\proc{int}{Contur::SetStart}{IPoint p}
+\procf{int}{Contur::SetStart}{int x,int y}
+\descr{Der Startpunkt der Kontur wird auf ($x,y$) bzw. $p$ gesetzt. 
+Dabei wird eine bis dahin ungültige Kontur gültig und hat die Länge 0. 
+Bei einer bereits vorhandenen Kontur wird der Startpunkt versetzt, was 
+einer Verschiebung der ganzen Kontur entspricht.}
+
+\proc{int}{Contur::Add}{Freeman dir}
+\descr{Hängt an eine gültige Kontur den Richtungskode $dir$
+(Freeman-Richtung) an.\\
+\seealso{Freeman}
+}
+
+\proc{int}{Contur::Add}{IPoint p}
+\procf{int}{Contur::Add}{int x,int y}
+\descr{Hängt an eine gültige Kontur die geradlinige Verbindung 
+zu einem Punkt an.}
+
+\proc{int}{Contur::Add}{const Contur \&c}
+\descr{Hängt an eine gültige Kontur die Kontur $c$ an. 
+Dazu wird zunächst die geradlinige Verbindung zwischen bisherigen 
+Endpunkt der Kontur und dem Startpunkt der Kontur $c$ hergestellt
+und dann die weiteren Punkte der Kontur $c$ angehängt.}
+
+\proc{Contur}{operator+}{const Contur \&c1,const Contur \&c2}
+\descr{ Die Verkettung der Konturen c1 und c2 wird zurückgegeben. 
+Die Verkettung erfolgt genauso wie beim Anhängen einer Kontur 
+an eine Kontur.}
+
+\proc{void}{Contur::Close}{}
+\descr{Schließt die Kontur, indem der Startpunkt angehängt wird.}
+
+\proc{int}{Contur::InvDir}{}
+\descr{Kehrt die Richtung der Kontur um. Die entstehende Kontur
+besteht aus den gleichen Punkten, wird aber im entgegengesetzten
+Umlaufsinn durchlaufen. \\
+Achtung: Dadurch wird zwar eine Objekt-Kontur in eine Loch-Kontur
+umgewandelt, es handelt sich aber nicht um das zum Objekt
+komplementäre (flächengleiche) Loch.
+}
+
+\proc{Contur \&}{Contur::operator =}{const Trafo \&}
+\descr{Zuweisungs-Operator}
+
+\subsubsection{Abfrage elementarer Eigenschaften}
+
+\proc{int}{Contur::isValid}{}   
+\descr{Liefert den Wert {\bf true} genau dann, wenn es sich um eine gültige
+(initialisierte) Kontur handelt.}
+\proc{int}{Contur::Number}{}
+\descr{Liefert die Anzahl der Richtungscodes innerhalb der Kontur.}
+\proc{double}{Contur::Length}{}
+\descr{Liefert die geometrische Länge der Kontur.}
+\proc{int}{Contur::isClosed}{}
+\descr{Liefert {\bf true}, falls es sich bei der Kontur um eine gültige
+geschlossene Kontur handelt.}
+\proc{IPoint}{Contur::Start}{}
+\descr{Liefert den Startpunkt der Kontur.}
+\proc{IPoint}{Contur::End}{}
+\descr{Liefert den Endpunkt der Kontur.}
+\proc{int}{Contur::StartX}{}
+\procf{int}{Contur::StartY}{}
+\descr{Liefert die Koordinaten des Startpunktes der Kontur.}
+\proc{int}{Contur::EndX}{}
+\procf{int}{Contur::EndY}{}
+\descr{Liefert die Koordinaten des Endpunktes der Kontur.}
+\proc{int}{Contur::isHole}{}
+\descr{Liefert {\bf true }, falls es sich bei der Kontur um eine 
+geschlossene, gültige Kontur handelt, die ein Loch beschreibt.}
+\proc{int}{Contur::getRect}{int \&xi,int \&yi,int \&xa,int \&ya}
+\descr{Schreibt die Koordinaten des umschreibenden
+Rechtecks der Kontur auf die Variablen $xi$, $yi$, $xa$ und $ya$.}
+\seealso{FeatureContur}
+
+\subsubsection{Zugriff auf Kontur-Daten}
+\proc{Freeman}{Contur::getDirection}{int i}
+\descr{Liefert den Freemancode an der Stelle $i$ in der Kontur. Gültige Werte 
+von i liegen im Interval 0...Anzahl der Richtungscodes-1.\\
+\seealso{Freeman}
+\seealsonext{Contur::Number}
+}
+
+\proc{const std::vector\textless{}Freeman\textgreater{}\&}{Contur::getDirections}{}
+\descr{Liefert eine Referenz auf einen vector aller Freemancodes der Kontur.\\
+\seealso{Freeman}
+\seealsonext{Contur::Number}
+}
+
+\proc{int}{Contur::getDirections}{std::vector\textless{}Freeman\textgreater{}\& fc}
+\descr{Belegt Vector $fc$ mit den Freemancodes der Kontur.
+\\
+\seealso{Freeman}
+\seealsonext{Contur::Number}
+}
+\proc{int}{Contur::getPairs}{std::vector\textless{}IPoint\textgreater{} \&opl,std::vector\textless{}IPoint\textgreater{} \&upl}
+\procf{int}{Contur::getPairs}{std::vector\textless{}IPoint\textgreater{} \&pl,std::vector\textless{}Freeman\textgreater{} \&fc}
+\descr{Ermittelt zu einer Kontur die Objekt/Untergrund-Pixelpaare. Das Ergebnis 
+wird bereitgestellt als 
+Liste von Objektpunkten $opl$ und Liste von Untergrundpunkten $upl$ oder als
+Liste von Objektpunkten $pl$ und Liste von Richtungen $fc$, die vom Objektpunkt 
+auf den Untergrundpunkt verweisen.}
+
+\proc{int}{Contur::DirCode}{int i}
+\descr{Liefert den Richtungscode an der Stelle $i$ in der Kontur.
+Gültige Werte von i liegen im Interval 0...Anzahl der Richtungscodes-1.\\
+\seealso{Freeman}
+\seealsonext{Contur::Number}
+}
+
+\proc{IPoint}{Contur::getPoint}{int nr}
+\procf{int}{Contur::getPoint}{int nr,int \&x,int \&y}
+\descr{Berechnet den Punkt an der Stelle $nr$ der Kontur. Gültige
+Werte von $nr$ liegen im Interval 0...Anzahl der Richtungscodes 
+(\see{Contur::Number}). Der spezielle Wert $nr=0$ liefert den 
+Startpunkt der Kontur, $nr=Contur::Number()$ liefert den 
+Endpunkt der Kontur.\\
+\seealso{Contur::Start}
+\seealsonext{Contur::End}
+}
+
+\proc{void}{Contur::getPoints}{vector<IPoint> \&pl,bool close=false}
+\descr{
+Erzeugt eine Liste von Punkten der Kontur. Da bei geschlossenen Konturen der
+Endpunkt gleich dem Anfangspunkt ist, kann für diese mit dem Parameter $close$ 
+entschieden werden, ob der Endpunkt in die Liste aufgenommen ($close = true$)
+oder weggelassen werden soll ($close = false$).
+}
+
+\proc{\bsee{IMatrix}}{ConturPointlist}{const Contur \&c,int diff=1,bool close=true}
+\descr{Erzeugt aus einer Contur eine Liste von Punkten als \see{IMatrix}.
+  Durch Angabe von $diff$ kann festgelegt werden, dass nur jeder diff. Punkt in 
+  die Liste eingetragen wird. Bei offenen Konturen werden Anfangs- und Endpunkt immer in 
+  die Liste eingetragen. Bei geschlossenen Konturen entscheidet der Parameter $close$,
+  ob der Endpunkt, der ja gleich dem Anfangspunkt ist, an die Liste angehängt wird.
+  Punktlisten werden beispielsweise beim adaptiven Fitting
+  benötigt (\see{Adaptives Fitting}). }
+
+\subsubsection{Kontur-Merkmale}
+\proc{int}{FeatureContur}{Contur c,double \&length,double \&area,double
+\&form,double \&conv}
+\descr{
+Für eine geschlossene Kontur $c$ werden die Merkmale Konturlänge $length$,
+Anzahl der zu dem von der Kontur berandeten Objekt gehörenden Bildpunkte
+$area$, Formfaktor $form$ und Konvexitätsmaß $conv$ berechnet. 
+\begin{itemize}
+\item Die Konturlänge
+ergibt sich als Summe der Freemancodes, wobei gerade Richtungen mit 1 und
+ungerade Richtungen mit $\sqrt 2$ gewichtet werden. 
+\item Der Formfaktor wird nach
+der Formel $form={length^2 \over 4\pi\cdot area}$ berechnet, so daß sich für
+einen idealen Kreis der Wert 1 ergeben würde. Für reale Objekte ist der 
+Formfaktor immer größer als 1. 
+\item Die Konvexität wird nach der Formel $conv={3 \cdot l_0 +
+l_1 \over 2 \cdot (x_a-x_i+y_a-y_i+p_a-p_i+ma-mi)}$ berechnet, wobei $l_0$ die
+Anzahl der Richtungscodes, $l_1$ die Anzahl der ungeraden Richtungscodes,
+$x_i=min(x)$, $x_a=max(x)$, $y_i=min(y)$, $y_a=max(y)$, $p_i=min(x+y)$,
+$p_a=max(x+y)$, $m_i=min(x-y)$und $m_a=max(x-y)$ ist.
+\end{itemize}
+}
+
+\proc{double}{RoughnessContur}{Contur c, int diff}
+\descr{
+Es wird ein Maß für die ``Rauhigkeit'' der Kontur $c$ als Verhältnis der
+Konturlänge zur Länge eines Polygonzuges bestimmt, der sich ergibt, wenn man
+Konturpunkte mit dem Abstand $diff$ in der Richtungscodeliste durch
+Geradensegmente verbindet.
+}
+
+Als weitere Konturmerkmale lassen sich die Momente (\see{Moments}) und
+invariante Momente ({\see{Invariante Momente}) berechnen.
+
+\subsection{Kontursuche}
+
+Die Konturfolge beruht auf einer Klassifikation der
+Bildpunkte in ``Objektpunkte'' und ``Untergrundpunkte''. 
+Konturpunkte, die mittels der Konturfolge (\see{CalcContur}) gefunden 
+werden, sind stets Randpunkte des Objektes, also Objektpunkte, in 
+deren (Vierer-)Nachbarschaft sich
+Untergrundpunkte befinden. Die Konturfolge umrundet ein Objekt, indem
+jeweils Objekt-/Untergrund-Punktpaare gefunden werden. Der Kontur 
+werden die Objektpunkte hinzugefügt. Möglich ist auch eine Beschreibung der
+Kontur durch Richtungskodes, die die Bewegung von Konturpunkt zu Konturpunkt
+beschreiben.
+
+Bei der binären Klassifikation ``Objekt'' / ``Untergrund''
+ist gesichert, daß immer geschlossene Konturen gefunden werden.
+Bei der dreiwertigen Unterscheidung der Pixel nach Objekt/Untergrund/Undefiniert
+können auch offene Konturen gefunden werden (\see{UndefiniertePunkte}). 
+
+Neben dem reinen Grauwertbild wird bei der Konturfolge auch ein
+``Markierungsbild'' betrachtet. Markierte Punkte, also Punkte für die
+der Wert im Markierungsbild ungleich Null ist, und Punkte außerhalb 
+des Bildes werden standardmäßig als Untergrund betrachtet. Damit
+können bestimmte (markierte) Bildbereiche bei der Konturfolge 
+ausgeschlossen werden. Dies wird normalerweise auch dazu benutzt, 
+um bereits gefundene Objekte von der weiteren Suche auszuschließen.
+
+Es besteht auch die Möglichkeit, markierte Punkte und Punkte außerhalb 
+des Bildes als ``Objekt'' bzw. ``Undefiniert'' zu erklären.
+``Undefinierte'' Punkte sind weder Objektpunkte noch Untergrundpunkte. Dies
+kann für Punkte verwendet werden, an denen keine Entscheidung für Objekt oder
+Untergrund möglich ist. Die Konturfolge bricht ab, wenn es kein 
+Objekt-/Untergrund-Punktpaar zur Fortsetzung gibt. Das kann der Fall 
+sein, wenn undefinierten Punkte erreicht werden. Es entstehen so
+offenen Konturen.
+
+Standardmäßig wird eine Schwellwert-Entscheidung bezüglich des Grauwertes
+verwendet, um über Objekt und Untergrund zu entscheiden.
+
+Um die Konturfolge möglichst flexibel zu gestalten, kann aber auch eine 
+eigene Funktion zur Bildpunktklassifikation definiert werden, die
+durch einen Funktionspointer übergeben wird. Die Funktion muß dem 
+folgenden Prototyp genügen\\
+\\
+object\_rc {\bf cls}(const Image \&iv,int x,int y,int thr)\\
+\\
+wobei $x$ und $y$ die Koordinaten des zu klassifizierenden Bildpunktes sind
+und $thr$ ein Parameter für die Klassifikation, der von den Funktionen zur
+Startpunkt- und Kontursuche durchgereicht wird. Als Funktionswert muß der 
+Wert $isobject$ für Objektpunkte und $isunderground$  für 
+Untergrundpunkte zurückgegeben werden. Undefinierte Punkte 
+geben $isunknown$ zurück.
+
+Wenn für die Klassifikationsfunktion der Null-Pointer übergeben wird, 
+wird die Funktion {\em ObjectThr} verwendet, die die übliche pegelbasierte
+Konturfolge verwirklicht. Bildpunkte, deren Grauwerte größer oder gleich 
+$thr$ sind, werden als Objektpunkte klassifiziert, sofern sie nicht 
+markiert sind. Der Einsatz von {\em ObjectThrInv}
+invertiert dieses Verhalten: Objekte sind Punkte mit niedrigem Grauwert, also
+einem Grauwert kleiner als $trsh$.
+
+Die Klassifikationsfunktion {\em LocalSegObj} kann zusammen mit den lokalen
+Segmentierung mittels \see{LocalSeg} verwendet werden oder wenn andersweitig
+bereits ein Bild vorliegt, dessen Pixelwerte zwischen Objekt (=1), Untergrund
+(=0) und undefiniert (=2) unterscheiden. Der Parameter $thr$ hat hier keine
+Bedeutung. 
+
+\proch{double}{CalcThreshold}{const Hist \&h}{threshold.h}
+\procf{double}{CalcThreshold}{const Hist \&h,double \&discmax}
+\procf{int}{CalcThreshold}{const Histogram \&h}
+\procf{int}{CalcThreshold}{const Histogram \&h,double \&discmax}
+\descr{
+Aus dem Histogramm $h$ wird nach der Methode von Otsu eine 
+Schwelle zur Binarisierung und Konturdetektion bestimmt. Die Variable
+$discmax$ wird mit dem maximierten Wert der Diskriminanzfunktion belegt.
+}
+
+\proc{int}{CalcThreshold}{Image img}
+\procf{int}{CalcThreshold}{Image img,double \&discmax,int diff=1}
+\descr{
+Aus dem Bild $img$ wird mit Hilfe des Histogramms nach der Methode von Otsu
+eine Schwelle zur Konturdetektion bestimmt. Die Variable
+$discmax$ wird mit dem maximierten Wert der Diskriminanzfunktion belegt.
+Für die Berechnung des Histogramms bei einem gegebenen Bild kann 
+mit dem Parameter $diff$ festgelegt werden, dass nur jeder $diff$. Punkt 
+verwendet wird.
+}
+
+\proch{int}{SearchStart}{Image iv,Image io,object\_rc (*cls)(),int thr,int
+diff,int ps[2],int mode=HORZ}{contur.h}
+\procf{int}{SearchStart}{Image iv,Image io,int (*cls)(),int thr,int
+diff,IPoint \&ps,int mode=HORZ}
+\descr{
+Das Bild $iv$ wird auf Suchzeilen ($mode$=HORZ, Standard) bzw. 
+Suchspalten ($mode$=VERT) im Abstand $diff$ nach einem Startpunkt für 
+die Konturfolge durchsucht. Die Suche wird bei dem durch $ps$ gegebenen 
+Punkt begonnen. Ein Startpunkt im Sinne dieser Funktion ist ein 
+Objektpunkt, unter dessen 4-Nachbarn mindestens ein Untergrundpunkt ist. 
+Der gefundene Startpunkt wird auf 
+$ps$ zurückgegeben und dient als Ausgangspunkt für die Konturfolge 
+mit CalcContur(). Wenn ein Startpunkt gefunden wurde, ist der 
+Funktionswert OK, sonst NOT\_FOUND. Für die Startpunktsuche sind 
+markierte Punkte und Punkte außerhalb des Bildes immer ``Undefiniert'' 
+(=$isunknown$).
+}
+
+\proc{Contur}{CalcContur}{Image iv,Image io,object\_rc (*cls)(),int thr,int
+ps[2],int lng=0,object\_rc marked=isunderground,object\_rc outside=isunderground}
+\procf{Contur}{CalcContur}{Image iv,Image io,object\_rc (*cls)(),int thr,const IPoint \&ps,int lng=0,object\_rc marked=isunderground,object\_rc outside=isunderground}
+\descr{
+Ausgehend vom Startpunkt $ps$ wird die Kontur eines über die 4-Nachbarschaft
+zusammenhängenden Objektes bestimmt. Für die Bildpunktklassifikation wird
+normalerweise die gleiche Funktion und die gleiche Schwelle verwendet,
+wie bei der Startpunktsuche (\see{SearchStart}). $lng$ gibt die maximal 
+zulässige Konturlänge an, bei $lng=0$ (Standard) wird eine beliebig lange 
+Kontur zugelassen.
+Die wahlfreien Parameter $marked$ und $outside$ bestimmen, wie markierte
+Punkte bzw. Punkte außerhalb des Bildes behandelt werden. 
+Es gibt die Möglichkeiten:
+\begin{itemize}
+\item $isunderground$ - der Punkt wird als Untergrundpunkt betrachtet
+\item $isobject$ - der Punkt wird als Objekt betrachtet
+\item $isunknown$ - der Punkt wird als Undefiniert betrachtet
+\end{itemize}
+}
+
+Am folgenden Beispiel soll die Verwendung der Funktionen demonstriert werden.
+
+\begprogr\begin{verbatim}
+/* Konturfolge */
+#include <stdio.h>
+#include <image.h>
+#define PGL     10
+#define IMG     "cont_t.tif"
+void main(int argc,char *argv[])
+{
+  Image imgv = ReadImg(IMG);                     // Bild einlesen
+  Image imgo = NewImg(imgv->xsize,imgv->ysize,3); // Markierungsbild anlegen
+  ClearImg(imgo);                          // und löschen
+
+  Show(OVERLAY,imgv,imgo);                 // Bilddarstellung
+
+  IPoint start(0,0);                       // Startpunktsuche beginnt bei 0,0
+  Contur c;
+
+  while (SearchStart(imgv,imgo,NULL,PGL,1,start)==OK)
+  {                                // solange weiterer Startpunkt gefunden
+    c=CalcContur(imgv,imgo,NULL,PGL,start);   // Kontur verfolgen
+    if (c.valid)
+    {
+      MarkContur(c,1,imgo);                // markieren 
+    }
+    else PutVal(imgo,start.x,start.y,1);   // als bearbeitet markieren
+  }
+  GetChar();
+}
+\end{verbatim}
+\endprogr
+
+\proc{Contur}{GetContur}{int ps[2],int (*cls)(int,int,void*),void *par,int lng}
+\descr{
+Ausgehend von dem Startpunkt $ps$ wird die Kontur der Funktion $cls()$
+verfolgt. Für Objektpunkte muß der Funktionswert von $cls()$ Null sein
+und für Punkte außerhalb des Objektes kleiner Null. 
+Der Funktionswert -4 bewirkt einen Abbruch der Konturfolge, so daß 
+eine offene Kontur erzeugt wird. Der Pointer $par$ dient zur 
+Parameterübergabe an die Funktion $cls()$ und wird an diese durchgereicht.
+}
+
+\proch{int}{LocalSeg}{Image source,Image oimg,int neighb,int level}{lseg.h}
+\descr{Die Funktion erzeugt aus dem Bild $source$ ein Bild $oimg$, in dem
+  jedes Pixel einen Wert hat, der entscheidet ob das Pixel im
+  Originalbild $source$ ein Objekt- (=LSobject) oder Untergrundp>ixel (=LSunderground) ist, 
+  oder ob dies undefiniert (=LSunknown) ist. Die Entscheidung erfolgt, indem
+  in der Umgebung $neighb$ das Maximum und das Minimum der Grauwerte gesucht
+  werden. Überschreitet die Differenz vom Maximum und Minimum die Schwelle
+  $level$, so wird anhand des Schwellwertes $(Maximum+Minimum)/2$ über Objekt
+  und Untergrund entschieden. Sonst ist der Punkt undefiniert. Unter
+  Verwendung der Funktion \see{LocalSegObj} kann das so erzeugte Bild für die
+  Konturfolge verwendet werden.}
+
+\proch{int}{LocalSeg}{Image source,Image oimg,int neighb,int level1,int level2}{lseg.h}
+\descr{Analog zur Funktion LocalSeg mit einem Parameter $level$ erzeugt die
+  Funktion aus dem Bild $source$ ein Bild $oimg$, in dem
+  jedes Pixel eine einen Wert hat, der entscheidet ob das Pixel im
+  Originalbild $source$ ein Objekt- (=LSobject) oder Untergrundpixel
+  (=LSunderground) ist, oder ob dies undefiniert (=LSunknown) ist. Zusätzlich
+  gibt es die Entscheidungsmöglichkeit schwaches Objekt (=LSweakobject) und
+  schwacher Untergrund (=LSweakunderground).
+  Die Entscheidung erfolgt, indem in der Umgebung $neighb$ das Maximum 
+  und das Minimum der Grauwerte gesucht werden. 
+  Überschreitet die Differenz vom Maximum und Minimum die Schwelle
+  $level1$, so wird anhand des Schwellwertes $(Maximum+Minimum)/2$ über Objekt
+  und Untergrund entschieden.
+  Wird die nur (geringere) Schwelle $level2$ überschritten, so werden die
+  Pixel als schwaches Objekt oder schwacher Untergrund klassifiziert.
+  Sonst ist der Punkt undefiniert. 
+  Unter Verwendung der Funktion \see{LocalSegObj} bzw. \see{LocalSegObjHigh} 
+  können im so erzeugten Bild mittels Konturfolge schwache oder starke Objekte 
+  gefunden werden.}
+
+
+\subsection{Kantendetektion}
+
+\proc{int}{GradThreshold}{Image img}
+\descr{Aus dem Bild $img$ wird ein geeigneter Schwellwert für die
+  Kantenverfolgung bestimmt. Für die Startpunktsuche kann dieser Wert direkt
+verwendet werden, für die Kantenverfolgung kann er auf ca. ein Drittel
+reduziert werden.
+}
+\proc{int}{SearchGradStart}{Image iv,Image io,int thr,int diff,int
+ps[2],int mode}
+\descr{
+Das Bild $iv$ wird auf Suchzeilen ($mode$=HORZ) bzw. Suchspalten ($mode$=VERT)
+im Abstand $diff$ nach einem lokalen Maximum des Gradientenbetrages
+gesucht. Die Suche wird bei dem durch $ps$ gegebenen Punkt begonnen. Wenn
+der Gradientenbetrag in einem lokalen Maximum den Wert $thr$ übersteigt, wird
+der Punkt als Startpunkt für die Kantenverfolgung auf $ps$
+zurückgegeben. Wenn ein Startpunkt gefunden wurde, ist der Funktionswert OK,
+sonst NOT\_FOUND.
+}
+\proc{int}{SearchCircStart}{Image iv,Image io,int c[2],int r,int pgl,int
+ps[2]}
+\descr{
+Auf einem Kreis um den Punkt $c$ mit dem Radius $r$ wird nach einem lokalen
+Maximum des Gradientenbetrages gesucht. Wenn der Gradientenbetrag in einem
+lokalen Maximum den Wert $thr$ übersteigt, wird der Punkt als Startpunkt für
+die Kantenverfolgung auf $ps$ zurückgegeben. Wenn ein Startpunkt gefunden
+wurde, ist der Funktionswert OK, sonst NOT\_FOUND.
+}
+\proc{int}{SearchCStart}{Image iv,Image io,Contur c,int *ptr,int pgl,int ps[2]}
+\descr{
+Auf der durch $c$ gegebenen Kurve wird nach einem lokalen Maximum des
+Gradientenbetrages gesucht. Die Suche wird bei dem $*ptr$-ten Punkt
+begonnen. Wenn der Gradientenbetrag in einem lokalen Maximum den Wert $thr$
+übersteigt, wird der Punkt als Startpunkt für die Kantenverfolgung auf $ps$
+zurückgegeben und die aktuelle Position wird für eine spätere Weitersuche auf
+$*ptr$ bereitgestellt. Wenn ein Startpunkt gefunden wurde, ist der Funktionswert OK,
+sonst NOT\_FOUND.
+}
+\proc{Contur}{CalcGradContur}{Image iv,Image io,int thr,int maxg,int ps[2],int lng}
+\descr{
+Ausgehend vom Startpunkt $ps$ wird eine Kante (Kurve mit maximalem
+Gradientenbetrag) verfolgt (in beiden Richtungen), solange der
+Gradientenbetrag größer als $thr$ ist. Die Bildpunkte mit dem größeren
+Grauwert liegen jeweils rechts der Kante. Kleinere Lücken der 
+Länge $maxg$ werden übersprungen, wenn noch ein lokales Maximum 
+des Gradientenbetrages vorhanden
+ist. Der Wert $thr$ kann kleiner sein, als bei der Startpunktsuche
+(ca. 1/3). $lng$ gibt die maximal zulässige Konturlänge an, bei $lng=0$ wird
+eine beliebig lange Kontur zugelassen.
+}
+
+\begprogr\begin{verbatim}
+/* Kantendetektion */
+#include <stdio.h>
+#include <image.h>
+#define PGL     10
+#define IMG     "cont_t.tif"
+void main(int argc,char *argv[])
+{
+  Image imgv,imgo;
+  Contur c;
+  int ps[2]={0,0};
+  imgv=ReadImg(IMG,NULL);                    /* Bild einlesen */
+  imgo=NewImg(imgv->xsize,imgv->ysize,63);   /* Overlaybild anlegen */
+  ClearImg(imgo);
+  Show(OVERLAY,imgv,imgo);                   /* Bilddarstellung */
+  Display(ON);
+  while(SearchGradStart(imgv,imgo,PGL,5,ps,HORZ)==OK)
+  {                                          /* Bild nach Startpunkt durchsuchen */
+    c=CalcGradContur(imgv,imgo,PGL,0,ps,0);  /* Kontur verfolgen */
+    if (c.valid)
+    {
+      MarkContur(c,1,imgo);                  /* Kontur markieren */
+    }
+    ps[0]++;
+  }
+  getchar();
+  Display(OFF);
+}
+\end{verbatim}\endprogr
+
+\subsection{Liniendetektion}
+
+\proc{int}{RidgeThreshold}{Image img}
+\descr{Aus dem Bild $img$ wird ein geeigneter Schwellwert für die Linienverfolgung
+bestimmt. Für die Startpunktsuche kann dieser Wert direkt verwendet werden,
+für die Linienverfolgung kann er auf ca. ein Drittel reduziert werden.
+}
+\proc{int}{SearchRidgeStart}{Image imgv,Image imgo,int thr,int diff,int ps[2],int
+mode}
+\descr{Das Bild wird zeilenweise ($mode$=HORZ) bzw. spaltenweise ($mode$=VERT), beginnend
+bei $ps$ nach einem Startpunkt für die Linienverfolgung durchsucht. Die
+Suchzeilen bzw. -Suchspalten haben den Abstand $diff$. Die Startpunktsuche stopt
+an Punkten, deren Laplacewert in x- bzw y-Richtung größer als $thr$ ist und in
+deren direkter Nachbarschaft kein Punkt markiert ist. Der Schwellwert $thr$
+sollte mit Hilfe der Funktion RidgeThreshold bestimmt werden. Wenn ein Startpunkt
+gefunden wurde, ist der Funktionswert OK, sonst NOT\_FOUND.
+}
+\proc{Contur}{CalcRidgeContur}{Image imgv,Image imgo,int thr,int ps[2],int lng}
+\descr{Ausgehend vom Startpunkt $ps$ wird (in beiden Richtungen) eine Linie
+(``Kammlinie im Grauwertgebirge'') verfolgt. Die Linienverfolgung wird
+abgebrochen, wenn sich eine Fortsetzung nicht mindestens um den Wert $thr$ vom
+Untergrund abheben würde oder wenn ein markierter Punkt erreicht wird. Der
+Schwellwert $thr$ sollte mit Hilfe der Funktion RidgeThreshold() bestimmt
+werden.
+}
+
+\subsection{Konturlisten}
+\hypertarget{ConturList}{}
+
+Für die Analyse komplexerer Szenen wird die Verwaltung von 
+Konturen in Listen unterstützt. Die Klasse \class{ConturList} liefert
+die Methoden zur Verwaltung von Konturen in Listen.
+
+\proc{}{ConturList::ConturList}{}
+\descr{Anlegen einer leeren Konturliste.}
+\proc{}{ConturList::ConturList}{const ConturList\& cl}
+\descr{Anlegen einer neuen Konturliste als Kopie der 
+übergebenen Konturliste $cl$.}
+
+\proc{ConturList \&}{ConturList::operator=}{const ConturList\& cl}
+\descr{Kopieren der Konturliste $cl$ in die Konturliste.}
+
+\proc{int}{ConturList::Add}{const Contur \&c}
+\descr{Die Kontur $c$ wird an die Liste angehängt. In der
+Liste wird eine Kopie von $c$ angelegt, so daß $c$ freigegeben oder
+andersweitig weiter verwendet werden kann.}
+\proc{int}{ConturList::Del}{int i}
+\descr{Die Kontur mit Index $i$ wird aus der Konturliste entfernt.}
+
+\proc{Contur *}{ConturList::GetContur}{int i}
+\descr{Es wird ein Zeiger auf die Kontur Nummer $i$ zurückgegeben.}
+
+Die Anzahl der Konturen kann über die konstante Referenz 
+ConturList::number abgefragt werden.
+
+Das folgende Beispiel zeigt die Verwendung einer Konturliste:
+
+\begprogr
+\begin{verbatim}
+/* Arbeit mit Konturlisten */
+#include <stdio.h>
+#include <image.h>
+
+#define PGL     10
+#define IMG     "cont_t.tif"
+
+void main(int argc,char *argv[])
+{
+  Image imgv,imgo;
+  Contur c;
+  ConturList cl;
+  int ps[2]={0,0};
+  imgv=ReadImg(IMG,NULL);                  // Bild einlesen
+  imgo=NewImg(imgv->xsize,imgv->ysize,63); // Overlaybild anlegen
+  ClearImg(imgo);                          // und löschen
+
+  while(SearchStart(imgv,imgo,NULL,PGL,5,ps,HORZ)==OK)
+  {                                        // Bild nach Startpunkt durchsuchen
+    c=CalcContur(imgv,imgo,NULL,PGL,ps,0); // Kontur verfolgen 
+    if (c.valid)                           // Konturfolge erfolgreich ?
+    {
+        cl.Add(c);                         // Kontur in liste eintragen
+        MarkContur(c,1,imgo);              // markieren 
+    }
+    else PutVal(imgo,x,y,1);               // Punkt als bearbeitet markieren
+  }
+                                           // nun alle Konturen füllen
+  for (i=0;i<cl.number;i++)                // Schleife über alle Konturen
+  {
+    FillRegion(*(cl.GetContur(i)),2,imgo);
+  }
+
+// jetzt Konturliste mit einer leeren Konturliste überschreiben
+// alle gespeicherten Konturen gehen verloren und der Speicher
+// wird freigegeben
+
+  cl=ConturList();
+}
+\end{verbatim}
+\endprogr
+
+\subsection{Hilfsfunktionen zur Arbeit mit Konturen}
+\proc{bool}{pointInside}{double x,double y,const Contur \&c}
+\procf{bool}{pointInside}{const Point \&p,const Contur \&c}
+\proc{bool}{pointInside}{double x,double y,const Matrix \&pl}
+\procf{bool}{pointInside}{const Point \&p,const Matrix \&pl}
+\descr{
+ Für einen gegebenen Punkt wird entschieden, ob dieser innerhalb einer 
+gegebenen Kontur bzw. innerhalb eines gegebenen Polygons liegt. Das Gebiet 
+innerhalb der Kontur/des Polygons ist durch die stetige Verbindungslinie 
+benachbarter Punkte definiert (einschließlich dieser Linie).}
+
+\proc{}{conturFromPolygon}{const Matrix \&pl,Contur \&c}
+\descr{
+Aus dem in der Punktliste $pl$ gegebenen Polygon wird eine Kontur
+erstellt. Die Konturpunkte sind dabei die äußersten Pixel, deren Mittelpunkte
+noch innerhalb des Polygons liegen (einschließlich Rand).}
+
+\subsection{Arbeiten mit Richtungen}
+\hypertarget{Freeman}{}
+
+Diskrete Richtungen werden oft mit dem Freeman-Code angegeben. 
+
+\begin{figure}
+  \epsfig{figure=freeman.eps,width=5cm}
+  \label{fig:freeman}
+  \caption{Die Freeman-Richtungskodes}
+\end{figure}
+
+Die Klasse \class{Freeman} enthält einen entsprechenden Richtungswert und erlaubt Operationen auf diesem,
+wobei der zyklische Character der Richtungscodes berücksichtigt wird. Richtungen vom Typ Freeman 
+lassen sich durch einen Typwandlungskonstruktor aus int-Werten erzeugen und mittels der Methode 
+Int() wieder in int-Werte umwandeln.
+
+Die Operationen zur Verschiebung eines Punktes beziehungsweise zur Berechnung des Nachbarn in
+einer Richtung verwenden die folgenden Offsets.
+
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|} \hline
+$dir$     & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+$\Delta x$ & 1 & 1 & 0 & -1 & -1 & -1 & 0 & 1 \\ \hline
+$\Delta y$ & 0 & 1 & 1 & 1 & 0 & -1 & -1 & -1 \\ \hline
+\end{tabular}
+
+\subsubsection{Konstruktoren und Typwandlung}
+
+\proch{}{Freeman::Freeman}{}{freeman.h}
+\descr{Standard-Konstruktor. Erzeugt eine Richtung mit dem Freemancode 0.}
+
+\proch{}{Freeman::Freeman}{int dir}{freeman.h}
+\descr{Typwandlungs-Konstruktor. Erzeugt eine Richtung mit dem Freemancode $dir$. Werte außerhalb
+des Intervalls 0..7 werden Modulo 8 behandelt.}
+
+\proch{}{Freeman::Freeman}{const Freeman \&sec}{freeman.h}
+\descr{Kopierkonstruktor}
+
+\proc{int}{Freeman::Int}{} 
+\descr{Liefert den Richtungscode als int-Wert im Intervall 0..7 .}
+
+\subsubsection{Anwendung auf Punkte}
+
+\proch{void}{Freeman::move}{int x,int y,int \&xn,int \&yn}{freeman.h}
+\descr{Berechnet das Ergebnis der Verschiebung des Punktes $(x,y)$ um 
+einen Schritt und gibt das Ergebnis auf $xn$ und $yn$ zurück.}
+
+\proch{void}{Freeman::move}{int \&x,int \&y}{freeman.h}
+\descr{Verschiebt den Punkt (x,y) um einen Schritt.}
+
+\proch{void}{Freeman::move}{IPoint p1,IPoint \&p2}{freeman.h}
+\descr{Berechnet das Ergebnis der Verschiebung des Punktes $p1$ um 
+einen Schritt und gibt das Ergebnis auf $p2$ zurück.}
+
+\proch{void}{Freeman::move}{IPoint \&p}{freeman.h}
+\descr{Verschiebt den Punkt $p$ um einen Schritt.}
+
+\proch{IPoint}{Freeman::step}{IPoint \&p}{freeman.h}
+\descr{Berechnet das Ziel eines Schrittes vom Punkt $p$.}
+
+\subsubsection{Operatoren}
+Die Operatoren rechnen analog zum Typ int mit den Richtungskodes, berücksichtigen 
+aber, dass Richtungskodes zyklisch sind ($7+1 \rightarrow 1$).
+
+\begin{tabular}{ll}
+Operator      & Bedeutung \\
+\verb#a + b#  & Summe \\
+\verb#a += b# & \verb#a = a + b# \\
+\verb#a - b#  & Differenz \\
+\verb#a -= b# & \verb#a = a - b# \\
+\verb#a++#    & \verb#a += 1# \\
+\verb#++a#    & \\
+\verb#a--#    & \verb#a -= 1# \\
+\verb#--a#    & \\
+\verb#a==b#   & Test auf Gleichheit \\
+\end{tabular}
+
+\proch{Freeman}{Inverse}{}{freeman.h}
+\descr{Berechnet die entgegengesetzte Richtung.}
+
+
+\subsection{Regionen}
+\hypertarget{Region}{}
+
+Regionen sind Mengen von Bildpunkten. Regionen beschreiben Gebiete in Bildern,
+die nicht notwendigerweise zusammenhängen müssen. Genauso ist es möglich, dass
+Regionen Löcher aufweisen. Mittels der Klasse \class{Region} können solche Gebiete
+erfaßt, dargestellt und bearbeitet werden. Ausgangspunkt für die Berechnung von
+Gebieten können \class{Konturen} sein. Es ist auch möglich, Regionen aufzubauen,
+indem zu anfänglich leeren Regionen Punkte(Pixel), Fenster (\class{Window}) 
+und andere Regionen hinzugefügt werden.\\
+Zur Anwendung von Regionen siehe auch \see{RegionGrow}.
+
+\subsubsection{Konstruktoren und Konvertierungen}
+
+\ctor{Region}{}{region.h}
+\descr{Legt eine leere Region an.}
+
+\ctor{Region}{const Region \&r}{region.h}
+\descr{Legt eine Kopie der Region $r$ an.}
+
+\ctor{Region}{const Contur \&c}{region.h}
+\descr{Legt eine Region an, die die inneren und Randpunkte der Kontur $c$ umfasst.}
+
+\subsubsection{Regionen-Arithmetik}
+Unter Regionen-Arithmetik werde die Konstruktion von Regionen durch Hinzufügen
+und Entfernen von Punkten(Pixel), Fenstern (achsparallele Rechtecke) und
+Regionen verstanden. 
+Bei Verwendung der Ausdruck-Schreibweise (Operatoren +, - und \&) ist zu 
+beachten, dass die dabei notwendige Erzeugung temporärer Objekte
+Zeit- und Speicherplatz-aufwendig ist.
+
+\method{void}{add}{int x,int y}
+\methodf{void}{add}{const IPoint \&p}
+\methodf{void}{add}{const Point \&p}
+\descr{Fügt den durch die Koordinaten $x$ und $y$ bzw. durch Point $p$
+  gegebenen Punkt der Region hinzu.}
+
+\method{void}{add}{int x1,int y1,int x2,int y2}
+\methodf{void}{add}{const Window \&w}
+\descr{Fügt das durch die Eckpunkte $x1,y1$,$x2,y2$ gegebene achsparallele
+  Rechteck bzw. das \class{Window} w der Region hinzu.}
+
+\method{void}{add}{const Region \&r}
+\descr{Fügt die Region $r$ der Region hinzu.}
+
+\method{const Region \&}{operator +=}{const Region \&r2}
+\descr{Vereinigung mit der Region r2.}
+
+\method{Region}{operator +}{const Region \&r1,const Region \&r2}
+\descr{Vereinigt die beiden Regionen und gibt die vereinigte Region als
+  Funktionswert zurück.}
+
+\method{void}{del}{int x,int y}
+\methodf{void}{del}{const Point \&p}
+\methodf{void}{del}{const IPoint \&p}
+\descr{Entfernt den durch die Koordinaten $x$ und $y$ bzw. durch Point p
+  gegebenen Punkt aus der Region.}
+
+\method{void}{del}{int x1,int y1,int x2,int y2}
+\descr{Entfernt das durch die Eckpunkte $x1,y1$,$x2,y2$ gegebene 
+achsparallele Rechteck aus der Region.}
+
+\method{void}{del}{const Region \&r}
+\descr{Entfernt die Region $r$ aus der Region.}
+
+\method{Region}{operator -}{const Region \&r1,const Region \&r2}
+\descr{Bildet eine neue Region aus Punkten, die in $r1$ enthalten und in $r2$
+  nicht enthalten sind und gibt diese Region als Funktionswert zurück.}
+
+%\method{Region}{operator \&}{const Region \&r1,const Region \&r2}
+%\descr{Führt die Und-Verknüpfung der Regionen $r1$ und $r2$ aus.}
+
+\subsubsection{Abfrage von Eigenschaften}
+
+\method{bool}{inside}{int x,int y}
+\descr{Gibt zurück, ob der Punkt $x,y$ in der Region enthalten ist}
+
+\method{bool}{isEmpty}{void}
+\descr{Gibt zurück, ob die Region leer ist, also keine Punkte enthält}
+
+\method{int}{getArea}{}
+\descr{Gibt die Fläche der Region (=Zahl der Pixel) zurück.}
+
+\method{int}{CalcMoments}{Moments \&m}
+\descr{Berechnet die Momente der Region und legt das Ergebnis in der
+  Datenstruktur m von Typ \class{Moments} ab.}
+
+\method{void}{getPoints}{\vector{IPoint} \&points}
+\descr{Gibt eine Punktliste aller Punkte der Region zurück.}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

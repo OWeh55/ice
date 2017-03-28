@@ -1,0 +1,318 @@
+\nsection{Numerik}{numeric}
+\subsection{Allgemeine numerische Hilfsmittel}
+
+\proch{int}{limited}{int val,int min,int max}{util.h}
+\descr{Gibt $val$ zurück, wenn $val$ im Interval $min..max$ liegt. Gibt $min$
+zurück, wenn $val<min$ und gibt $max$ zurück, wenn $val>max$.}
+
+\proch{int}{limited}{int val,Image img}{util.h}
+\descr{Beschränkt einen Wert auf den Wertebereich des Bildes $img$.
+Gibt $val$ zurück, wenn $val$ im Interval $0..img->maxval$ liegt. Gibt $0$
+zurück, wenn $val<0$ und gibt $img->maxval$ zurück, wenn $val>img->maxval$.}
+
+\proc{double}{Sqr}{double val}
+\descr{Quadratberechnung}
+\proc{double}{Cub}{double val}
+\descr{Dritte Potenz}
+\proc{double}{CubRoot}{double val}
+\descr{Dritte Wurzel}
+
+\proc{double}{Arcus}{double degree}
+\descr{Umrechnung Gradmaß  Bogenmaß}
+\proc{double}{Degree}{double arc}
+\descr{Umrechnung Bogenmaß  Gradmaß}
+
+\proc{int}{Sign}{int val}
+\descr{Vorzeichen von Integer-Zahlen}
+\proc{double}{SignD}{double val}
+\descr{Vorzeichen von Double-Zahlen}
+
+\proc{int}{Max}{int val1,int val2}
+\descr{Maximum zweier Integer-Zahlen}
+\proc{int}{Min}{int val1,int val2}
+\descr{Minimum zweier Integer-Zahlen}
+\proc{double}{MaxD}{double val1,double val2}
+\descr{Maximum zweier Double-Zahlen}
+\proc{double}{MinD}{double val1,double val2}
+\descr{Minimum zweier Double-Zahlen}
+
+\proc{int}{MulDiv}{int val1,int val2,int val3}
+\descr{Berechnung von $val1\cdot val2 \over val3$, wobei durch die
+Multiplikation der Wertebereich von int überschritten werden darf. Diese Funktion
+wird auf Systemen, wo dies möglich ist, optimiert implementiert und ist einer
+Konvertierung zu Typen mit größerem Zahlenbereich stets vorzuziehen.}
+
+\proc{int}{Mod}{int val,int mod}
+\descr{Berechnet den Modulo-Wert von $val$ bezüglich $mod$. 
+Im Unterschied zum C-Operator \% ist das Ergebnis
+stets positiv im Intervall $ 0 \le result < abs(mod) $.}
+
+\proc{double}{FMod}{double val,double mod}
+\descr{Berechnet den Modulo-Wert von $val$ bezüglich des absoluten 
+Betrags von $mod$. Im Unterschied zu der C-Funktion $fmod$ ist das Ergebnis
+stets positiv ($ 0 \le result < fabs(mod) $).}
+
+\proc{double}{Round}{double val}
+\descr{Berechnet die nächste (gerundete) ganze Zahl (vom Typ double)}
+
+Die folgenden Funktionen dienen der Konvertierung von double-Werten in int mit
+Rundung. Diese Funktionen werden auf die jeweiligen Systeme optimiert und sind
+Lösungen mit floor usw. vorzuziehen, solange die Sprachstandards dies nicht
+besser definieren.
+
+\proc{int}{RoundInt}{double val}
+\descr{Berechnet die nächste (gerundete) ganze Zahl (vom Typ int)}
+\proc{void}{RoundInt}{double val,int \&i}
+\descr{Speichert in $i$ die nächste (gerundete) ganze Zahl zu $val$}
+
+\proch{double}{GammaFunction}{double x}{numbase.h}
+\descr{Die Gamma-Funktion}
+
+\subsection{Analytische Geometrie}
+\subsubsection{Analytische Geometrie der Ebene}
+
+\proch{double}{Distance}{double x1,double y1,double x2,double y2}{analygeo.h}
+\descr{Ermittelt den Euklidischen Abstand der Punkte $(x1,y1)$ und $(x2,y2)$.}
+
+\proc{double}{Distance}{\bsee{IPoint} p1,IPoint p2}
+\descr{Ermittelt den Euklidischen Abstand der Punkte $p1$ und $p2$.}
+
+\proc{double}{Distance}{\bsee{Point} p1,Point p2}
+\descr{Ermittelt den Euklidischen Abstand der Punkte $p1$ und $p2$.}
+
+\proch{void}{ConvCartesPolar}{double x,double y,double \&rad,double \&arc}{analygeo.h}
+\procf{void}{ConvCartesPolar}{double p[2],double *rad,double *arc}
+\descr{
+  Konvertierung von kartesischen in Polarkoordinaten
+}
+
+\proc{void}{ConvPolarCartes}{double rad,double arc,double \&x,double \&y}
+\procf{void}{ConvPolarCartes}{double rad,double arc,double p[2]}
+\descr{
+  Konvertierung von Polarkoordinaten in kartesische Koordinaten
+}
+
+\proc{int}{ConvPointHesse}{double p1[2],double p2[2],double *p,double *phi}
+\procf{\bsee{Vector}}{ConvPointHesse}{const \bsee{Vector} \&p1,const \bsee{Vector} \&p2}
+\descr{
+  Es werden die Parameter der Hesseschen Normalform 
+$x \cdot cos(\varphi)+y \cdot sin(\varphi)=p$
+der Geraden durch die Punkte $p1$ und $p2$ berechnet.
+In der zweiten Form werden die Punkt-Koordinaten als Vektor (\see{Vector})
+  angegeben und die Parameter der Hesseschen Normalform werden als
+  Rückgabewert vom Typ \bsee{Vector} bereitgestellt.
+}
+
+\proc{void}{RotTransPoint}{double p1[2],double centre[2],double arc,double p2[2]}
+\descr{
+  Der Punkt $p2$ ergibt sich aus der Rotation des Punktes $p1$ mit dem
+  Winkel $arc$ um das Rotationszentrum $centre$.
+}
+
+\proc{double}{DistPointLine}{double r[2],double p,double phi}
+\descr{
+  Es wird der Abstand des Punktes $r$ von der Geraden mit den Parametern
+  $p$ und $phi$ berechnet.
+}
+
+\proc{double}{ClosestPointLineSeg}{double p[2],double ls0[2],double
+  ls1[2],double pf[2]}
+\descr{
+  Es wird der Punkt der Strecke $(ls0,ls1)$ mit dem geringsten Abstand zum
+  Punkt $p$ berechnet und auf $pf$ zurückgegeben. Rückgabewert der Funktion
+  ist der Abstand von $p$ und $pf$.
+}
+
+\proc{double}{DistPointCircle}{double p[2],double par[3]}
+\descr{
+ Es wird der Abstand des Punkte $p$ zu einem Kreis mit dem Mittelpunkt
+ $(par[0],par[1])$ und dem Radius $par[2]$ berechnet.
+}
+
+\proc{double}{DistPointEllipse}{double p[2],double par[5],double koord[2]}
+\descr{Abstand des Punktes $p$ von einer Ellipse mit dem Mittelpunkt 
+$(par[0],par[1])$, den Halbachsen $par[2]$ und $par[3]$ und 
+der Drehung $par[4]$. Auf $koord$ stehen die Koordinaten des Punktes auf der
+Ellipse, der zum gegebenen Punkt p minimalen Abstand hat. Der Parameter
+koord  kann wahlweise geschrieben werden.}
+
+\proc{int}{IntersecLine}{double p1,double phi1,double p2,double phi2,double p[2]}
+\descr{Der Schnittpunkt zweier Geraden mit den Parametern $p1$ und $phi1$
+bzw. $p2$ und $phi2$ wird berechnet.}
+
+\proc{int}{TangentCircle}{double p[2],double par[3],double p1[2],double p2[2]}
+\descr{Die Berührungspunkte der Tangenten von dem Punkt $p$ an einen Kreis mit dem Mittelpunkt
+$(par[0],par[1])$ und dem Radius $par[2]$ werden berechnet.}
+
+\proc{double}{AreaPolygon}{PointList pl}
+\procf{double}{AreaPolygon}{const \bsee{Matrix} \&pl}
+\descr{
+Die Fläche eines Polynoms, dessen Eckpunkte in der Punktliste $pl$ bzw. 
+\bsee{Matrix} $pl$ stehen, wird berechnet.
+}
+
+\proc{int}{FeatureQuadrFunc}{double koeff[6],double par[5],int *type}
+\descr{
+  Es werden geometrische Parameter der quadratischen Form $koeff[0] \cdot x^2
+  + koeff[1] \cdot y^2 + koeff[2] \cdot x + koeff[3] \cdot y + koeff[4] \cdot
+  xy +koeff[5] = 0$ berechnet und auf $par$ bereitgestellt. Der Typ der
+  quadratischen Form wird auf $type$ bereitgestellt. Dafür sind die Konstanten
+  ELLIPSE, HYPERBEL, PARABEL und DEGENERATE (Entartung zu Geraden) definiert.
+  Die Parameter $par$ haben die folgende Reihenfolge: Mittelpunktkoordinaten,
+  Achsenparameter (Ellipse: große Halbachse, kleine Halbachse; Hyperbel:
+  reelle halbachse, imaginäre Halbachse; Parabel: Halbparameter = Abstand des
+  Brennpunktes zur Leitlinie), Drehwinkel bezüglich der Normallage.
+}
+
+\proc{int}{ParamQuadrFunc}{double par[5],int type,double koeff[6]}
+\descr{
+  Aus den geometrischen Parametern $par$ eines Kegelschnittes werden die
+  Koeffizienten der zugehörigen quadratischen Form berechnet. Der Typ des
+  Kegelschnittes wird durch $type$=(ELLIPSE, HYPERBEL, PARABEL) festgelegt.
+  Die geometrischen Parameter haben die folgende Reihenfolge:
+  Mittelpunktkoordinaten, Achsenparameter (Ellipse: große Halbachse, kleine
+  Halbachse; Hyperbel: reelle halbachse, imaginäre Halbachse; Parabel:
+  Halbparameter = Abstand des Brennpunktes zur Leitlinie), Drehwinkel
+  bezüglich der Normallage.
+}
+
+\proc{int}{InvarFivePoint2d}{double p[5][2],double *i1,double *i2}
+\descr{
+Für die fünf 2D-Punkte des Feldes $p$ werden die zwei projektiven Invarianten
+$i1$ und $i2$ berechnet, indem Doppelverhältnisse der Flächen von Dreiecken
+berechnet werden, die von jeweils drei der fünf Punkte gebildet werden.
+}
+
+\subsubsection{Analytische Geometrie des Raumes}
+
+\proch{double}{Distance}{const \bsee{Point3d} \&p1,const \bsee{Point3d} \&p2}{analygeo3d.h}
+\descr{Berechnet den Abstand zweier Raumpunkte}
+
+\proch{double}{Distance}{const \bsee{Point3d} \&p,const \bsee{Line3d} \&l}{analygeo3d.h}
+\procf{double}{Distance}{const \bsee{Line3d} \&l,const \bsee{Point3d} \&p}
+\descr{Berechnet den Abstand eines Raumpunktes von einer Raumgeraden.}
+
+\proch{double}{Distance}{const \bsee{Line3d} \&l1,const \bsee{Line3d} \&l2}{analygeo3d.h}
+\descr{Berechnet den Abstand zweier Geraden im Raum.}
+
+\proch{int}{Intersection}{const \bsee{Line3d} \&l1,const \bsee{Line3d} \&l2,\bsee{Point3d}
+\&p,double \&dist,\bsee{Vector} \&res}{analygeo3d.h}
+\procf{int}{Intersection}{const \bsee{Line3d} \&l1,const \bsee{Line3d} \&l2,\bsee{Point3d}
+\&p,double \&dist}
+\procf{int}{Intersection}{const \bsee{Line3d} \&l1,const \bsee{Line3d} \&l2,\bsee{Point3d} \&p}
+\descr{Berechnet den Schnittpunkt $p$ der Geraden $l1$ und $l2$. Falls der
+Schnittpunkt nicht existiert, wird der beiden Geraden am nächsten liegende
+Punkt zurückgegeben. Die Variable $dist$ ist der Abstand des Punktes zu beiden
+Geraden. Dieser Wert ist 0, falls der Schnittpunkt existiert. Der Vektor $res$
+enthält die Parameter der Lage der dem Punkt $p$ am nächsten gelegenen 
+Punkte auf den Geraden in Parameterdarstellung \see{Line3d}.}
+
+\proch{int}{Intersection}{const \bsee{Line3d} \&l,const \bsee{Sphere} \&s,\bsee{Point3d}
+\&p1,\bsee{Point3d} \&p2}{analygeo3d.h}
+\descr{Berechnet die Schnittpunkte $p1$ und $p2$ der Geraden $l$ und der Kugel
+$s$. Existiert kein Schnittpunkt wird $NO\_INTERSECTION$ zurückgegeben,
+existiert nur ein Schnittpunkt $TANGENT$, sonst (bei Erfolg) $OK$.}
+
+\proc{int}{InvarFivePoint3d}{double p[5][3],double *i1,double *i2}
+\descr{
+Für die fünf 3D-Punkte des Feldes $p$ werden die zwei projektiven Invarianten
+$i1$ und $i2$ berechnet, indem Doppelverhältnisse der Flächen von Dreiecken
+berechnet werden, die von jeweils drei der fünf Punkte gebildet werden. Es
+wird vorausgesetzt, daß die fünf Punkte koplanar sind.
+}
+
+\proc{int}{ConvR3PointHesse}{double p1[3],double p2[3],double p3[3],double *p,double n[3]}
+\descr{
+Für eine Raumebene durch die drei Punkte $p1,p2,p3$ wird der Abstand
+$p$ zum Ursprung und der Normalenvektor $n$ bestimmt.
+}
+\proc{double}{DistR3PointLine}{double p[3],double p0[3],double dir[3]}
+\descr{
+Es wird der Abstand des Punktes $p$ zu der in Parameterform
+$g=p0+\lambda dir$ gegebenen Geraden bestimmt.
+}
+\proc{double}{DistR3PointPlane}{double p[3],double r,double n[3]}
+\descr{
+Es wird der Abstand des Punktes $p$ zu der durch den Abstand $r$ vom Ursprung
+und den Normalenvektor $n$ gegebenen Ebene bestimmt.
+}
+
+%% \subsection{Komplexe Zahlen}
+
+%% \proc{int}{PrintCom}{charv *str, Complex c}
+%% \descr{Ausgabe einer komplexen Zahl auf dem Standard-Ausgabegerät}
+%% \proc{Complex*}{SetCom}{double re,double im,Complex *c}
+%% \descr{Definiertes Setzen}
+%% \proc{Complex*}{MoveCom}{Complex *c1,Complex *c2}
+%% \descr{Transport}
+%% \proc{double}{DistCom}{Complex *c1,Complex *c2}
+%% \descr{Euklidischer Abstand zweier komplexer Zahlen}
+%% \proc{Complex*}{AddCom}{Complex *c1,Complex *c2,Complex *c3}
+%% \descr{Addition komplexer Zahlen}
+%% \proc{Complex*}{SubCom}{Complex *c1,Complex *c2,Complex *c3}
+%% \descr{Subtraktion komplexer Zahlen}
+%% \proc{Complex*}{MulCom}{Complex *c1,Complex *c2,Complex *c3}
+%% \descr{Multiplikation komplexer Zahlen}
+%% \proc{Complex*}{DivCom}{Complex *c1,Complex *c2,Complex *c3}
+%% \descr{Division komplexer Zahlen}
+%% \proc{Complex*}{ScaleCom}{Complex *c1,double fac,Complex *c2}
+%% \descr{Skalieren einer komplexen Zahl}
+%% \proc{Complex*}{InvertCom}{Complex *c1,Complex *c2}
+%% \descr{Invertieren einer komplexen Zahl}
+%% \proc{void}{KonjCom}{Complex *c1,Complex *c2}
+%% \descr{Konjugiert komplexe Zahl}
+%% \proc{void}{ConvPolarCom}{double rad,double arc,Complex *c}
+%% \descr{Konvertieren Polarkoordinaten  komplexe Zahl}
+%% \proc{void}{ConvComPolar}{Complex *c,double rad,double arc}
+%% \descr{Konvertieren komplexe Zahl  Polarkoordinaten}
+
+\subsection{Nullstellen von Polynomen}
+
+\proc{int}{Root2}{double p1,p0,Complex *cptr1,*cptr2}
+\descr{
+Die Nullstellen des Polynoms $x^2+p1 x + p0=0$ werden berechnet und auf
+den komplexen Variable $cptr1$ und $cptr2$ bereitgestellt.
+}
+\proc{int}{Root3}{double p2,p1,p0,Complex c[3]}
+\descr{
+Die Nullstellen des Polynoms $x^3+p2 x^2+p1 x + p0=0$ werden analytisch
+berechnet.
+}
+\proc{int}{Root4}{double p3,p2,p1,p0,Complex c[4]}
+\descr{
+Die Nullstellen des Polynoms $x^4+p3 x^3+p2 x^2+p1 x + p0=0$ werden analytisch
+berechnet.
+}
+
+\proch{int}{Bairstow}{const \bsee{Vector} \&para,\bsee{Matrix}\& result,int inumber = 1000}{bairstow.h}
+\descr{Berechnet die Nullstellen eines Polynomes beliebigen Grades. Die
+Koeffizienten $a_0,a_1..$ des Polynoms werden als Vektor $para$ übergeben. 
+Die komplexen Nullstellen werden zeilenweise in der \bsee{Matrix} $result$ abgelegt (Real-,Imaginärteil).}
+
+\subsection{Ableitungen und bestimmte Integrale}
+
+\proc{int}{DeriveFunc}{FuncD func,int dim,int i,double *x,double h,int mode,double *val}
+\descr{
+Die partielle Ableitung $val$ der mehrdimensionalen Funktion $func$
+nach der $i$-ten Unbekannten $(i=0,\dots,dim-1)$ wird an der Stelle $x$ numerisch
+berechnet. $h$ gibt den Abstand der Stützstellen vor, durch $mode$ kann die
+Auswahl der Stützstellen beeinflußt werden:\\
+$mode=0:\qquad  (x_i-2h,x_i-h,x_i,x_i+h,x_i+2h)$\\
+$mode=1:\qquad  (x_i-h,x_i,x_i+h,x_i+2h,x_i+2h)$\\
+$mode=2:\qquad  (x_i-h,x_i,x_i+h)$\\
+$mode=3:\qquad  (x_i,x_i+h,x_i+2h,x_i+3h)$\\
+$mode=4:\qquad  (x_i,x_i+h,x_i+2h)$\\
+$mode=5:\qquad  (x_i,x_i+h)$
+}
+\proc{int}{Derive2Func}{FuncD func, int dim,int i,double *x,double h,int mode,double *val}
+\descr{
+Die zweite partielle Ableitung $val$ der mehrdimensionalen Funktion $func$
+nach der $i$-ten Unbekannten $(i=0,\dots,dim-1)$ wird an der Stelle $x$ numerisch
+berechnet. Es werden die Stützstellen $(x_i-2h,x_i-h,x_i,x_i+h,x_i+2h)$ verwendet.
+}
+\proc{int}{IntegrateFunc}{FuncD func,double s1,double s2,double *prec,double *val}
+\descr{
+Die Funktion $func$ wird im Intervall $[s1,s2]$ mit der Genauigkeit $prec$
+numerisch integriert (Romberg-Integration).
+}
+

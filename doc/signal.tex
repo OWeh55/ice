@@ -1,0 +1,375 @@
+\nsection{Signal-Transformationen}{signalTrafo}
+
+\subsection{Fourier- und Hartleytransformation - Operationen im Frequenzbereich}
+
+Hauptanwendungen der Fourier- und der Hartleytransformation sind 
+Operationen im Zusammenhang mit Faltung und Korrelation. Diese 
+Operationen sind im Frequenzbereich einfacher auszuführen. Während
+die Fouriertransformation die Arbeit mit komplexen Zahlen und Bildern
+erfordert, ist die Hartleytransformation eine Transformation aus dem
+reellen Zahlenbereich in den reellen Zahlenbereich. Zu den im 
+Frequenzbereich möglichen Operationen auf Fourierspektren gibt es 
+äquivalente Operationen für die Hartleytransformierte.
+
+\vspace{1em}
+\noindent Allgemeine Hinweise:
+\begin{itemize}
+\item Alle Funktionen dieser Gruppe arbeiten mit Gleitkommazahlen bzw.
+Bildern mit Gleitkommawerten.
+\item Die schnellen Algorithmen für die Fourier- und Hartleytransformation
+erfordern Werte-Anzahlen, die Potenzen von 2 darstellen (2,4,8,16..).
+Wenn diese Bedingung erfüllt ist, arbeiten die Funktionen wesentlich 
+schneller.
+\item Aus Geschwindigkeits- und Speichergründen ist die Hartley-Transformation
+vorzuziehen, wenn das Problem damit lösbar ist.
+\end{itemize}
+
+
+\subsubsection{Fourier- und Hartleytransformation}
+
+\proc{int}{Fourier}{const Vector \&re1,const Vector \&im1,int mode,
+Vector \&re2,Vector \&im2}
+\procf{int}{Fourier}{Vector \&re,Vector \&im,int mode=NORMAL}
+\descr{
+Die durch die Vektoren $re1$ und $im1$ gegebene Folge von komplexen 
+Zahlen wird transformiert ($mode$=NORMAL: Hintransformation, $mode$=INVERS:
+Rücktransformation). Das Ergebnis der Transformation wird auf den Vektoren
+$re2$ und $im2$ bzw. den Ausgangvektoren bereitgestellt. Der Wert bei 
+$re2[0]$ und $im2[0]$ ist der Gleichanteil.
+}
+
+\proc{int}{Fourier}{const Matrix \&src,int mode,Matrix \&dst}
+\procf{int}{Fourier}{Matrix \&m,int mode=NORMAL}
+\descr{
+Die durch die Matrix gegebene Folge von komplexen Zahlen wird 
+transformiert ($mode$=NORMAL: Hintransformation, $mode$=INVERS:
+Rücktransformation). Das Ergebnis der Transformation wird auf der Matrix
+$dst$ bzw. der Ausgangsmatrix bereitgestellt. Die Matrix muß 2 Zeilen
+oder 2 Spalten aufweisen. Die erste Zeile (Spalte) enthält die Real-Teile,
+die zweite Zeile (Spalte) die Imaginär-Teile. Der Gleichanteil liegt 
+beim Index 0.
+}
+
+%\proc{int}{FourierD}{double *re1,double *im1,int nbr,int mode,double
+%*re2,double *im2}
+%\descr{
+%Die durch die Felder $re1$ und $im1$ gegebene Folge von komplexen Zahlen wird
+%transformiert ($mode$=NORMAL: Hintransformation, $mode$=INVERS:
+%Rücktransformation). Das Ergebnis der Transformation wird auf den Feldern
+%$re2$ und $im2$ bereitgestellt. Der Wert bei $re2[0]$ und $im2[0]$ ist der
+%Gleichanteil.
+%}
+
+\proc{int}{Hartley}{const Vector \&src,const Vector \&dst}
+\procf{int}{Hartley}{Vector \&src}
+\descr{
+Die durch den Vektor $src$ gegebene Folge von reellen Zahlen wird
+transformiert. Das Ergebnis der Transformation wird auf dem Vektor
+$dst$ bzw. dem Ausgangsvektor bereitgestellt. Der Wert bei $dst[0]$ 
+ist der Gleichanteil.
+}
+
+%\proc{int}{HartleyD}{double *src,int nbr,double *dst}
+%\descr{
+%Die durch das Feld $src$ gegebene Folge von reellen Zahlen wird
+%transformiert. Das Ergebnis der Transformation wird auf dem Feld
+%$dst$ bereitgestellt. Der Wert bei $dst[0]$ ist der Gleichanteil.
+%}
+
+\proc{void}{FourierImgD}{ImageD re1,ImageD im1,int mode,ImageD re2,ImageD
+  im2,int dir=XY}
+\descr{
+  Das durch Realteil $re1$ und Imaginärteil $im1$ gegebene komplexe Bild wird
+  transformiert ($mode$=NORMAL: Hintransformation, $mode$=INVERS: Rücktransformation)
+  und in den Bildern $re2$ und $im2$ bereitgestellt. Die Koordinaten werden
+  hier auf den Wertebereich $[-\frac{n}{2},\frac{n}{2}-1]$ abgebildet, so 
+  daß die Frequenz 0 in der Mitte des Bildes liegt.
+  \noindent Folgende Werte für $dir$ sind möglich:
+  \begin{itemize}
+  \item XY - Die komplette 2D-Transformation (in X- und Y-Richtung) wird
+    durchgeführt
+  \item X\_ONLY - Es wird nur die Transformation in X-Richtung durchgeführt.
+  \item Y\_ONLY - Es wird nur die Transformation in Y-Richtung durchgeführt.
+  \end{itemize}
+}
+
+\proc{int}{HartleyImgD}{ImageD src,ImageD dest,int dir=XY}
+\descr{
+  Das durch $src$ gegebene Bild wird transformiert und im Bild $dest$ 
+  bereitgestellt. Die Koordinaten werden hier auf den Wertebereich 
+  $[-\frac{n}{2},\frac{n}{2}-1]$ abgebildet, so daß die Frequenz 0 
+  in der Mitte des Bildes liegt.
+  \noindent Folgende Werte für $dir$ sind möglich:
+  \begin{itemize}
+  \item XY - Die komplette 2D-Transformation (in X- und Y-Richtung) wird
+    durchgeführt
+  \item X\_ONLY - Es wird nur die Transformation in X-Richtung durchgeführt.
+  \item Y\_ONLY - Es wird nur die Transformation in Y-Richtung durchgeführt.
+  \end{itemize}
+}
+
+\subsubsection{Abgeleitete Spektren und Darstellungen}
+
+\proc{int}{PowerSpectrumFImgD}{ImageD re,ImageD im,ImageD imgd,int mode=MD\_POWER}
+\descr{
+  Es wird das Leistungsspektrum eines Bildes aus dessen fouriertransformierten 
+  Bild berechnet. 
+  Dazu wird punktweise das Betragsquadrat der komplexen Bildpunkte berechnet.
+  Es sind folgende Modi möglich:
+  \begin{itemize}
+  \item MD\_POWER Leistungsspektrum
+  \item MD\_MAGNITUDE Amplitudenspektrum (Quadratwurzel des Leistungsspektrums)
+  \item MD\_LOG logarithmiertes Leistungspektrum
+  \end{itemize}
+}
+
+\proc{int}{PowerSpectrumHImgD}{ImageD src,ImageD imgd,int mode=MD\_POWER}
+\descr{
+  Es wird das Leistungsspektrum eines Bildes aus dessen Hartleytransformierten 
+  Bild berechnet.
+  Es sind folgende Modi möglich:
+  \begin{itemize}
+  \item MD\_POWER Leistungsspektrum
+  \item MD\_MAGNITUDE Amplitudenspektrum (Quadratwurzel des Leistungsspektrums)
+  \item MD\_LOG logarithmiertes Leistungspektrum
+  \end{itemize}
+}
+
+\proc{int}{PowerSpectrumImgD}{ImageD imgs,ImageD imgd,int mode=MD\_POWER}
+\descr{
+  Es wird das Leistungsspektrum des Bildes $imgs$ berechnet.
+}
+
+\proc{int}{MPSpectrumFImgD}{ImageD re,ImageD im,ImageD mag,ImageD phase}
+\descr{
+  Aus dem komplexen Fourierspektrum in den Bildern $re$ und $im$ wird 
+  die Betrags-/Phasen-Darstellung berechnet und in den Bildern $mag$ (Betrag)
+  und $phase$ (Phase) gepeichert.
+}
+
+\proc{int}{MPSpectrumHImgD}{ImageD sp,ImageD mag,ImageD phase}
+\descr{
+  Aus der Hartleytransformierten $sp$ wird die Betrags-/Phasen-Darstellung 
+  berechnet und in den Bildern $mag$ (Betrag) und $phase$ (Phase) gepeichert.
+}
+
+\proc{int}{MPSpectrumImgD}{ImageD im,ImageD mag,ImageD phase}
+\descr{
+  Aus dem Bild $im$ wird die Betrags-/Phasen-Darstellung der 
+  Fouriertransformierten berechnet und in den Bildern $mag$ (Betrag) 
+  und $phase$ (Phase) gepeichert.
+}
+
+\proc{int}{FourierMPImgD}{ImageD mag,ImageD phase,ImageD re,ImageD im}
+\descr{
+  Die Betrags-/Phasen-Darstellung der Fouriertransformierten in den 
+  Bildern $mag$ und $phase$ wird in die komplexe Darstellung in den Bildern 
+  $re$ (Realteil) und $im$ (Imaginärteil) umgerechnet.
+}
+
+\proc{int}{HartleyMPImgD}{ImageD mag,ImageD phase,ImageD dst}
+\descr{
+  Aus der Betrags-/Phasen-Darstellung der Fouriertransformierten in den 
+  Bildern $mag$ und $phase$ wird die reellwertige Hartleytransformierte
+  im Bild $dst$ umgerechnet. Dabei wird vorausgesetzt, daß das 
+  das Ausgangsbild das Spektrum eines reellen Bildes ist. Die andernfalls
+  entstehenden imaginären Anteile werden ignoriert.
+}
+
+\proc{int}{CepstrumImgD}{ImageD imgs,ImageD imgd}
+\descr{
+  Es wird das Cepstrum des Bildes $imgd$ berechnet. 
+  Das Cepstrum ist das Leistungsspektrum des logarithmierten
+  Leistungsspektrums).
+}
+
+\subsubsection{Faltung und Kreuzkorrelation}
+
+Es stehen jeweils Varianten der Faltung, inversen Faltung und 
+Kreuzkorrelation zur Verfügung, die die entspechende Operation
+im Ortsbereich(Grauwertbild mit Gleitkommawerten), im Frequenzraum 
+der Fouriertransformation und im Frequenzraum der Hartleytransformation
+ausführen. Bei den Operationen im Ortsbereich erfolgt intern eine
+Transformation in den Frequenzraum. Die bei der Fouriertransformation
+gemachten Aussagen bezüglich der Wahl der Bildgrößen für eine optimale
+Abarbeitungsgeschwindigkeit gelten deshalb auch hier.
+
+\proc{int}{Convolution}{const Vector \&src1,const Vector \&src2,Vector \&dst}
+\descr{
+  Die Funktion im Vektor $src1$ wird mit dem Vektor $src2$ gefaltet und 
+  das Ergebnis im Vektor $dst$ gespeichert.
+}
+
+\proc{int}{ConvolutionImgD}{ImageD im1,ImageD im2,ImageD dst,int mode=MD\_USE\_BIAS}
+\descr{
+  Das Bild $im1$ wird mit dem Bild $im2$ gefaltet und das Ergebnis in Bild
+  $dst$ gespeichert.
+}
+
+\proc{int}{ConvolutionFImgD}{ImageD re1,ImageD im1,
+  ImageD re2,ImageD im2,ImageD re3,ImageD im3}
+\descr{
+  Die der Faltung entsprechende Operation wird auf den komplexen
+  Fouriertransformierten ($re1$,$im1$) und ($re2$,$im2$) ausgeführt und
+  das Ergebnis (Fouriertransformierte des gefalteten Bildes) in den Bildern
+  $re3$,$im3$ gespeichert.
+}
+\proc{int}{ConvolutionHImgD}{ImageD im1,ImageD im2,ImageD im3}
+\descr{
+  Die der Faltung entsprechende Operation wird auf den  
+  Hartleytransformierten $im1$ und $im2$ ausgeführt und
+  das Ergebnis (Hartleytransformierte des gefalteten Bildes) im Bild
+  $im3$ gespeichert.
+}
+
+\proc{int}{ConvolutionImg}{const Image \&im1,const Image \&im2,
+  Image \&dst,double factor=0.0,int mode=MD\_USE\_BIAS}
+\descr{
+  Das Bild $im1$ wird mit dem Bild $im2$ gefaltet und das Ergebnis in Bild
+  $dst$ gespeichert. Um eine optimale Umwandlung in Integer-Werte zu
+  ermöglichen, kann der Faktor $factor$ angegeben werden, mit dem alle Werte
+  vor der Konvertierung multipliziert werden. Ist $factor=0.0$, so wird eine
+  automatische Grauwert-Skalierung so vorgenommen, daß der Wert mit dem
+  maximalen Betrag den Werte-Bereich genau ausschöpft.
+}
+
+\proc{int}{ConvolutionImg}{const Image \&im1,const Image \&im2,
+ImageD dst, int mode=MD\_USE\_BIAS}
+\descr{
+  Das Bild $im1$ wird mit dem Bild $im2$ gefaltet und das Ergebnis im 
+Gleitkomma-Bild $dst$ gespeichert. 
+}
+
+\proc{int}{InvConvolution}{const Vector \&src1,const Vector \&src2,double beta,Vector \&dst}
+\descr{
+  Es wird der Vektor $dst$ berechnet, der gefaltet mit Vektor $src1$ den 
+  Vektor $src2$ ergibt (pseudo-inverse Faltung). Der vorzugebende 
+  Parameter $beta$ beschreibt den Rauschanteil in den Ausgangsfunktionen. 
+}
+
+\proc{int}{InvConvolutionImgD}{ImageD im1,ImageD im2,ImageD dst,double beta=0.000001,int mode=MD\_USE\_BIAS}
+\descr{
+  Es wird das Bild $dst$ berechnet, das gefaltet mit Bild $im1$ das Bild $im2$
+  ergibt (pseudo-inverse Faltung). Der vorzugebende Parameter $beta$ 
+  beschreibt den Rauschanteil in den Bildern. 
+}
+
+\proc{int}{InvConvolutionFImgD}{ImageD re1,ImageD im1,
+        ImageD re2,ImageD im2,ImageD re3,ImageD im3,double beta}
+\descr{
+Die der (pseudo-)inversen Faltung entsprechende Operation wird auf 
+den komplexen Fouriertransformierten ($re1$,$im1$) und ($re2$,$im2$) 
+ausgeführt und das Ergebnis (Fouriertransformierte des rekonstruierten Bildes) 
+in den Bildern $re3$,$im3$ gespeichert.
+}
+
+\proc{int}{InvConvolutionHImgD}{ImageD im1,ImageD im2,ImageD im3}
+\descr{
+  Die der (pseudo-)inversen Faltung entsprechende Operation wird auf den  
+  Hartleytransformierten $im1$ und $im2$ ausgeführt und
+  das Ergebnis (Hartleytransformierte des rekonstruierten Bildes) im Bild
+  $im3$ gespeichert.
+}
+
+\proc{int}{InvConvolutionImg}{const Image \&im1,const Image \&im2,
+  Image \&dst,
+  double factor=0.0,double beta=0.000001,int mode=MD\_USE\_BIAS}
+\descr{
+  Es wird das Bild $dst$ berechnet, das gefaltet mit Bild $im1$ das Bild $im2$
+  ergibt (pseudo-inverse Faltung). Der vorzugebende Parameter $beta$
+  beschreibt den Rauschanteil in den Bildern. Um eine optimale Umwandlung in
+  Integer-Werte zu ermöglichen, kann der Faktor $factor$ angegeben werden,
+  mit dem alle Werte vor der Konvertierung multipliziert werden. Ist
+  $factor=0.0$, so wird eine automatische Grauwert-Skalierung so vorgenommen,
+  daß der Wert mit dem maximalen Betrag den Werte-Bereich genau ausschöpft.
+}
+
+\proc{int}{InvConvolutionImg}{const Image \&im1,const Image \&im2,
+  ImageD dst,
+  double beta=0.000001,int mode=MD\_USE\_BIAS}
+\descr{
+  Es wird das Gleitkomma-Bild $dst$ berechnet, das gefaltet mit Bild 
+  $im1$ das Bild $im2$ ergibt (pseudo-inverse Faltung). Der 
+  vorzugebende Parameter $beta$ beschreibt den Rauschanteil in den 
+  Bildern. 
+}
+
+\proc{int}{CrossCorrelationImgD}{ImageD im1,ImageD im2,ImageD dst}
+\descr{
+  Die Kreuzkorrelation der Bilder $im1$ und $im2$ wird berechnet und 
+  das Ergebnis in Bild $dst$ gespeichert.
+}
+
+\proc{int}{CrossCorrelationFImgD}{ImageD re1,ImageD im1,
+  ImageD re2,ImageD im2,ImageD re3,ImageD im3}
+\descr{
+  Die der Kreuzkorrelation entsprechende Operation wird auf den komplexen
+  Fouriertransformierten ($re1$,$im1$) und ($re2$,$im2$) ausgeführt und
+  das Ergebnis (Kreuzkorrelation des gefalteten Bildes) in den Bildern
+  $re3$,$im3$ gespeichert.
+}
+
+\proc{int}{CrossCorrelationHImgD}{ImageD im1,ImageD im2,ImageD im3}
+\descr{
+  Die der Kreuzkorrelation entsprechende Operation wird auf den  
+  Hartleytransformierten $im1$ und $im2$ ausgeführt und
+  das Ergebnis (Hartleytransformierte des gefalteten Bildes) im Bild
+  $im3$ gespeichert.
+}
+
+\subsubsection{Manipulation im Frequenzbereich}
+
+\proch{int}{WhiteningImgD}{ImageD img1,ImageD img2,double beta=0}{fourier.h}
+\descr{Das Bild $img1$ wird ''weiß gemacht'' (whitening), das heißt dass die
+  Amplituden der Fourierkoeffizienten zu 1.0 normiert werden. Diese Funktion
+  beinhaltet die implizite Transformation in den Frequenzbereich und zurück. 
+  Die Normierung der Fourierkoeffizienten erfolgt nach:
+  \[
+  F_{i,j} = \frac{F_{i,j}}{| F_{i,j} |+\beta^2}
+  \]
+}
+
+\proch{int}{WhiteningFImgD}{ImageD re1,ImageD im1,ImageD re2,ImageD im2,double
+  beta=0}{fourier.h}
+\descr{Auf der komplexen Fouriertransformierten wird die Operation des
+  ''Whitening'' (\see{WhiteningImgD}) ausgeführt. Die Transformation in den
+    Frequenzraum und zurück muss hier explizit vorher bzw. hinterher
+    vorgenommen werden. 
+}
+
+\proch{int}{WhiteningHImgD}{ImageD imgs,ImageD imgd,double beta=0}{fourier.h}
+\descr{Auf der Hartleytransformierten wird die Operation des ''Whitening'' 
+(\see{WhiteningImgD}) ausgeführt. Die Hartley-Transformation muss hier explizit 
+vorher und hinterher vorgenommen werden. 
+}
+
+\subsection{Haartransformation}
+
+\proc{int}{HaarImg}{Image imgs,int depth,int mode,Image imgs}
+\descr{
+  Haartransformation des Bildes $imgs$ in das Bild $imgd$ mit der
+  Auflösungsstufe $depth$ ($mode$=NORMAL: Hintransformation, $mode$=INVERS:
+  Rücktransformation).
+}
+
+\subsection{Momenttransformation}
+
+\proc{ImageD}{MomentImg}{Image imgs,int p,int q,int n,ImageD imgd}
+\descr{Es wird punktweise aus einer $n \cdot n$-Umgebung das Moment
+  $m_{pq}$ über dem Bild $imgs$ berechnet und im Bild $imgd$ abgelegt.
+}
+
+\subsection{Radon-Transformation}
+
+\proch{int}{RadonImg}{const Image \&src,Image \&radon}{radon.h}
+\descr{Berechnet die Radontransformierte des Bildes $src$ und legt das Ergebnis in
+$radon$ ab.}
+
+\proc{int}{InvRadonImg}{const Image \&radon,Image \&res,int fmax=-1}
+\descr{Berechnet aus einem radontransformierten Bild $radon$ das Originalbild $res$. Ist $fmax$ größer
+als Null, so werden Frequenzen größer $fmax$ bei der Rücktransformation nicht berücksichtigt.}
+
+% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

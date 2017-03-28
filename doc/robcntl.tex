@@ -1,0 +1,136 @@
+\section{Steuerung für Roboter RX90L}
+\label{Roboter}
+
+Diese Funktionen dienen zur Kommunikation mit dem Controller des Stäubli
+RX90. Auf dem Kontroller muß vorher ein Interpreter gestartet werden, der die
+Kommandos, die durch die folgenden Funktionen gesendet werden, ausführt
+(inter.v2, Programm ``interpreter''). Der Start des Interpreteres erfolgt
+im Normalfall automatisch beim Start des Roboters.
+
+{\em Es kann nicht vollständig überprüft werden, ob die angegebenen Positionen
+kollisionsfrei erreicht werden können!!! Die Bewegungsbefehle sind deshalb mit
+entsprechender Vorsicht zu verwenden. Ein Not-Aus-Schalter (Teach-Panel oder
+Taster-Box) muß immer unmittelbar erreichbar sein.}
+
+Bewegungen werden nur ausgeführt, wenn die ``Tote Mann''-Taste gedrückt
+wird (Taste 1 am Teach-Panel bzw. grüne Taste an der Taster-Box). Ist 
+die Bewegung des Roboters durch die ``Tote Mann''-Taste angehalten, kann 
+sie durch das Drücken der Taste STOP am Teach-Panel abgebrochen werden. 
+Ist dies nicht erfolgreich, sollte die Notaus-Taste verwendet werden. Dann
+ist aber ein Neustart des Interpreters erforderlich.
+
+\proc{int}{OpenSerial}{char *device}
+\descr{
+Die serielle Schnittstelle $device$ wird zum Lesen und Schreiben geöffnet. In
+``robcntl.h'' ist die Konstante ROB\_DEVICE für die aktuelle
+Roboterschnittstelle definiert. Die
+Schnittstelle muß vom System initialisiert sein, z.B. mit ``stty 9600 raw
+-echo < /dev/ttyS1''. Rückgabewert ist ein Handle für die geöffnete
+Schnittstelle bzw. im Fehlerfall 0.
+}
+\proc{void}{CloseSerial}{int fd}
+\descr{
+  Die serielle Schnittstelle mit dem Handle $fd$ wird geschlossen.
+}
+\proc{int}{RobInit}{int fd}
+\descr{
+Es wird eine Initialisierung der Controller-Schnittstelle durchgeführt und eine
+definierte Konfiguration des Roboters eingestellt (lefty, above, noflip).
+}
+\proc{int}{RobReset}{int fd}
+\descr{
+Es wird eine Initialisierung der Controller-Schnittstelle durchgeführt und eine
+definierte Konfiguration des Roboters eingestellt (lefty, above, noflip). Der
+Roboter bewegt sich zu einer Startposition.
+}
+\proc{int}{RobSetSpeed}{int fd,int speed}
+\descr{
+Die Geschwindigkeit der Roboterbewegungen wird festgelegt. Der Wert $speed$
+muß im Intervall $[0,100]$ liegen und gibt einen Prozentwert der 
+einstellbaren Maximalgeschwindigkeit an.
+}
+\proc{int}{RobGripper}{int fd,int stat}
+\descr{
+Mit $stat=0$ wird der Greifer geöffnet, mit $stat=1$ kann der Greifer
+geschlossen werden.
+}
+\proc{int}{RobTeach}{int fd,char *prompt}
+\descr{
+Es wird ein Umschalten in den Teach-Modus ermöglicht. Die Zeichenkette
+$prompt$ wird auf dem Teach-Pendant ausgegeben. Es kann mit der ``MAN''-Taste
+das Teach-Pendant aktiviert und der Roboter bewegt werden. Durch Drücken der
+``COMP''-Taste wird die Steuerung an die Schnittstelle zurückgegeben.
+}
+\proc{int}{RobMove}{int fd,double par[6],int mode}
+\descr{
+  Ein Movebefehl wird an den Roboter gesendet. Mit $mode=0$ wird die Bewegung
+  im Achsinterpolationsmodus ausgeführt, mit $mode!=0$ im Linearmodus
+  (Bewegung auf einer Strecke). $par$ enthält die drei
+  Koordinaten X, Y, Z und die drei Winkel yaw, pitch und roll in dieser
+  Reihenfolge. 
+  Bei fehlerfreier Ausführung des
+ MOVE-Befehls ist der Rückgabewert 0, negative Werte signalisieren fatale
+ Fehler, positive Werte ein Überschreiten des Arbeitsbereiches, wobei die
+ Ursache binär kodiert ist. Die Bits 1 bis 6 stehen für eine
+ Bereichsüberschreitung der Achsen 1 bis 6, Bit 14 für eine Position zu nahe an
+ der Roboterbasis und Bit 15 für eine Position zu weit außerhalb.
+}
+\proc{int}{RobMoveFrame}{int fd,Frame *f,int mode}
+\descr{ Ein Movebefehl wird an den Roboter gesendet. $f$ ist eine homogene
+  Transformationsmatrix, die die gewünschte Lage und Orientierung des
+  Werkzeugkoordinatensystems im Basiskoordinatensystem beschreibt. Mit
+  $mode=0$ wird die Bewegung im Achsinterpolationsmodus ausgeführt, mit
+  $mode!=0$ im Linearmodus (Bewegung auf einer Strecke). {\em Achtung: Es wird
+  nicht getestet, ob die Bewegung kollisionsfrei ausgeführt werden kann. Ein
+  Not-Aus-Schalter (Teach-Panel) muß immer unmittelbar erreichbar
+sein!!!}. Bei fehlerfreier Ausführung des MOVE-Befehls ist der Rückgabewert 0,
+negative Werte signalisieren fatale Fehler, positive Werte ein Überschreiten
+des Arbeitsbereiches, wobei die Ursache binär kodiert ist. Die Bits 1 bis 6
+stehen für eine Bereichsüberschreitung der Achsen 1 bis 6, Bit 14 für eine
+Position zu nahe an der Roboterbasis und Bit 15 für eine Position zu weit
+außerhalb. 
+}
+\proc{int}{RobCP}{int fd,int on}
+\descr{
+  Die Funktion schaltet das Verschleifen der Bahn (Continous Path) ein
+  ($on=TRUE$) oder aus ($on=FALSE$). Grundzustand nach RobInit ist
+  CP=on. Im Fehlerfall ist der Funktionswert ERROR, sonst OK.
+}
+\proc{int}{RobWaitStop}{int fd,int total}
+\proc{int}{RobWaitStop}{int fd}
+\descr{
+  Die Funktion wartet, bis die laufende Bewegung des Roboters beendet ist.
+  Ist $total=TRUE$ oder erfolgt der Aufruf ohne diesen Parameter, so wird der
+  vollständige Stillstand abgewartet. Ist $total=FALSE$, so wird abgebrochen,
+  wenn die Abweichung vom Sollwert klein genug ist, um sicher greifen 
+  zu können, ohne daß der Roboter vollständig zum Stillstand gekommen sein 
+  muß.  
+  Im Fehlerfall ist der Funktionswert ERROR, sonst OK. 
+}
+\proc{int}{RobGetPos}{int fd,double par[6]}
+\descr{
+  Die aktuelle Position des Roboters wird abgefragt. $par$ wird mit den drei
+  Koordinaten X, Y, Z und den drei Winkeln yaw, pitch und roll in dieser
+  Reihenfolge belegt. Im Fehlerfall ist der Funktionswert ERROR, sonst OK. 
+}
+\proc{int}{RobGetFrame}{int fd,Frame *f}
+\descr{
+  Die aktuelle Position des Roboters wird abgefragt. $f$ wird mit einer
+  homogenen Transformationsmatrix belegt, die die Lage und Orientierung des
+  Werkzeugkoordinatensystems im Basiskoordinatensystem beschreibt. Im
+  Fehlerfall ist der Funktionswert ERROR, sonst OK. 
+}
+\proc{int}{RobSetTool}{int fd,Frame *f}
+\descr{
+  Das Werkzeugkoordinatensystem wird entsprechend der homogenen
+  Transformationsmatrix $f$ festgelegt, die die Lage und Orientierung
+  bezüglich des Werkzeugflansches des Roboters angibt. Im Fehlerfall ist der
+  Funktionswert ERROR, sonst OK. 
+}
+
+
+
+
+
+
+

@@ -1,0 +1,514 @@
+\nsection{Veraltete Datenstrukturen und Funktionen}{obsolet}
+Die in dieser Sektion gesammelten Datenstrukturen und Funktionen sind
+veraltet. Ihre Dokumentation ist nur informativ, die Funktionen und Strukturen
+sollten nicht mehr genutzt werden. 
+
+\subsection{Vektoren als C-Array}
+Die Klassen \class{Vector} bzw. \class{Vector3d} und ihre Methoden 
+ersetzen die Funktionen dieses Abschnitts. 
+Ein Einsatz sollte nicht mehr erfolgen.
+
+\subsubsection{Dreidimensionale Vektoren}
+\proc{double*}{MoveVec}{double v1[3],double v2[3]}
+\descr{
+Der Vektor $v1$ wird auf den Vektor $v2$ kopiert.
+}
+\proc{double}{LengthVec}{double v[3]}
+\descr{
+  Die Euklidische Länge des Vektors $v$ wird berechnet.
+}
+\proc{double*}{AddVec}{double v1[3],double v2[3],double v3[3]}
+\descr{
+Die Vektoren $v1$ und $v2$ werden addiert. Das Ergebnis wird auf $v3$
+bereitgestellt.
+}
+\proc{double*}{SubVec}{double v1[3],double v2[3],double v3[3]}
+\descr{
+Die Vektoren $v1$ und $v2$ werden subtrahiert. Das Ergebnis wird auf $v3$
+bereitgestellt.
+}
+\proc{double*}{NormVec}{double v1[3],double v2[3]}
+\descr{
+Der Vektor $v1$ wird auf die Länge 1 normiert. Das Ergebnis wird auf
+$v2$ bereitgestellt.
+}
+\proc{double*}{ScaleVec}{double v1[3],double fac,double v2[3]}
+\descr{
+Die Komponenten des Vektors $v1$ werden mit $fac$ multipliziert. Das Ergebnis wird auf
+$v2$ bereitgestellt.
+}
+\proc{double}{ScalProdVec}{double v1[3],double v2[3]}
+\descr{
+Rückgabewert ist das Skalarprodukt der Vektoren $v1$ und $v2$.
+}
+\proc{double*}{CrossProdVec}{double v1[3],double v2[3],double v3[3]}
+\descr{
+Auf $v3$ wird das Kreuzprodukt der Vektoren $v1$ und $v2$ bereitgestellt.
+}
+\proc{double}{SpatProdVec}{double v1[3],double v2[3],double v3[3]}
+\descr{
+Rückgabewert ist das Spatprodukt der Vektoren $v1$, $v2$ und $v3$.
+}
+\proc{double}{AngleVec}{double v1[3],double v2[3]}
+\descr{
+Rückgabewert ist der Winkel zwischen Vektoren $v1$ und $v2$.
+}
+
+\subsubsection{N-dimensionale Vektoren}
+
+Der Parameter $dim$ in den folgenden Funktionen gibt jeweils die Dimension der
+Vektoren an.
+
+\proc{double*}{MoveVecRn}{double *v1,int dim,double *v2}
+\descr{
+Der Vektor $v1$ wird auf den Vektor $v2$ kopiert.
+}
+\proc{double}{LengthVecRn}{double *v,int dim}
+\descr{
+Die Euklidische Länge des Vektors $v$ wird berechnet
+}
+\proc{double*}{AddVecRn}{double *v1,double *v2,int dim,double *v3}
+\descr{
+Die Vektoren $v1$ und $v2$ werden addiert. Das Ergebnis wird auf $v3$
+bereitgestellt.
+}
+\proc{double*}{SubVecRn}{double *v1,double *v2,int dim,double *v3}
+\descr{
+Die Vektoren $v1$ und $v2$ werden subtrahiert. Das Ergebnis wird auf $v3$
+bereitgestellt.
+}
+\proc{double*}{NormVecRn}{double *v1,int dim,double *v2}
+\descr{
+Der Vektor $v1$ wird auf die Länge 1 normiert. Das Ergebnis wird auf
+$v2$ bereitgestellt.
+}
+\proc{double*}{ScaleVecRn}{double *v1,int dim,double fac,double *v2}
+\descr{
+Die Komponenten des Vektors $v1$ werden mit $fac$ multipliziert. Das Ergebnis wird auf
+$v2$ bereitgestellt.
+}
+\proc{double}{ScalProdVecRn}{double *v1,double *v2,int dim}
+\descr{
+Rückgabewert ist das Skalarprodukt der Vektoren $v1$ und $v2$.
+}
+\proc{double}{AngleVecRn}{double *v1,double *v2,int dim}
+\descr{
+Rückgabewert ist der Winkel zwischen Vektoren $v1$ und $v2$.
+}
+\proc{void}{PrintVecRn}{char *str,double *v,int dim}
+\descr{Ausgabe von Vektoren auf Standardausgabegerät}
+
+\subsection{Matrizen alten Typs}
+\label{MatrixStruct}
+Die Klasse \see{Matrix} und ihre Methoden ersetzen die Definitionen und
+Funktionen dieses Abschnitts. 
+Der Typ $MatrixStruct$ sollte nicht mehr eingesetzt werden.
+
+Die Handhabung von Matrizen ist mit Hilfe von Pointern des Typs $MatrixStruct$
+möglich. In der Datenstruktur ist die Größe der Matrix mit abgelegt. Die
+Koeffizienten können vom Typ $double$, $int$ oder $char$ sein.
+
+\begprogr\begin{verbatim}
+typedef struct MatrixStruct_
+{
+  int type;
+  int rsize,csize;
+  double **data;
+  int **datai;
+  unsigned char **datac;
+}  *MatrixStruct;
+\end{verbatim}\endprogr
+
+\proc{MatrixStruct}{NewMatrix}{int typ,int rows,int columns}
+\descr{
+  Es wird eine Matrix mit $rows$ Zeilen, $columns$ Spalten angelegt. Der Typ der
+  Koeffizienten ist $double$ für $typ$=MAT\_DOUBLE, $int$ für $typ$=MAT\_INT und
+  $char$ für $typ$=MAT\_CHAR.
+  Für den Zugriff auf die Koeffizienten einer Matrix ist in Abhängigkeit vom
+  vereinbarten Typ der Pointer data (MAT\_DOUBLE), datai (MAT\_INT) oder datac
+  (MAT\_CHAR) zu verwenden.
+}
+\proc{int}{FreeMatrix}{MatrixStruct mat}
+\descr{
+Die Matrix $mat$ wird freigegeben.
+}
+\proc{int}{IsMatrix}{MatrixStruct mat}
+\descr{
+Es wird getestet, ob die Matrix $mat$ eine gültige Matrix ist, d.h ob sie in
+der internen Verwaltung geführt ist. Wenn das der Fall ist, wird TRUE
+zurückgegeben, sonst FALSE.
+}
+\proc{MatrixStruct}{MoveMat}{MatrixStruct m1,MatrixStruct m2}
+\descr{
+Die Matrix $m1$ wird auf die Matrix $m2$ kopiert. Wenn für $m2$ der
+NULL-Pointer übergeben wird, wird die Zielmatrix intern angelegt. Rückgabewert
+ist bei fehlerfreier Ausführung die Zielmatrix, sonst der NULL-Pointer.
+}
+\proc{MatrixStruct}{TranspMat}{MatrixStruct m1,MatrixStruct m2}
+\descr{
+Die Matrix $m1$ wird transponiert und auf die Matrix $m2$ kopiert. Wenn für
+$m2$ der NULL-Pointer übergeben wird, wird die Zielmatrix intern
+angelegt. Rückgabewert ist bei fehlerfreier Ausführung die Zielmatrix, sonst
+der NULL-Pointer. $m1$ bleibt unverändert.
+}
+\proc{MatrixStruct}{MulMat}{MatrixStruct m1,MatrixStruct m2,MatrixStruct m3}
+\descr{
+Es wird das Matrizenprodukt $m3=m1*m2$ berechnet. Die Spaltenzahl von $m1$ muß
+mit der Zeilenzahl von $m2$ übereinstimmen. Wenn für $m3$ der NULL-Pointer
+übergeben wird, wird die Ergebnismatrix intern angelegt. Rückgabewert ist die
+Ergebnismatrix bzw. im Fehlerfall der Nullpointer.
+}
+\proc{int}{MulMatVec}{MatrixStruct A,double *b,double *x}
+\descr{
+Es wird das Produkt der Matrix $A$ mit dem Vektor $b$ berechnet und auf $x$
+bereitgestellt. Die Dimension der Vektoren $b$ bzw. $x$ muß mindestens so groß
+wie die Spalten- bzw. Zeilenzahl der Matrix $A$ sein.
+}
+\proc{MatrixStruct}{InvertMat}{MatrixStruct A,MatrixStruct B}
+\descr{
+Es wird die Matrix $B$ als Inverse der quadratischen Matrix $A$
+berechnet. Wenn für $B$ der NULL-Pointer übergeben wird, wird die Zielmatrix
+intern angelegt. Rückgabewert ist bei fehlerfreier Ausführung die Zielmatrix,
+sonst der NULL-Pointer. Die Matrix $A$ bleibt unverändert. 
+}
+\proc{MatrixStruct}{SortMatrix}{MatrixStruct A,int col,int mode}
+\descr{
+Es wird eine Matrix erzeugt und zurückgegeben, die die Zeilen der Matrix $A$
+sortiert enthält. Durch $col$ wird die Spalte angegeben, nach deren Elementen
+die Matrix sortiert wird. Mit $mode>=0$ wird in aufsteigender Reihenfolge und
+mit $mode<0$ in absteigender Reihenfolge sortiert. Im Fehlerfall wird der
+NULL-Pointer zurückgegeben.
+}
+
+Die Anwendung von Matrizen soll im folgenden Beispiel verdeutlicht werden:
+\begprogr\begin{verbatim}
+/*Anwendung von Matrizen*/
+#include <stdio.h>
+#include <image.h>
+void main(void)
+{
+  MatrixStruct A,B,I;
+  int i,j;
+  double b[3],x[3];
+  A=NewMatrix(MAT_DOUBLE,3,3);           /* Koeffizientenmatrix */
+  A->data[0][0]= 3;  A->data[0][1]= 5;  A->data[0][2]=-1;
+  A->data[1][0]= 7;  A->data[1][1]=-2;  A->data[1][2]= 3;
+  A->data[2][0]=-2;  A->data[2][1]= 1;  A->data[2][2]= 8;
+  b[0]=10;  b[1]=12;  b[2]=24;           /* Inhomogenitätsvektor */
+  EquationSys(A,b,x);                    /* Gleichungssystem lösen */
+  printf("%f  %f  %f\n",x[0],x[1],x[2]);
+  NormalEquationSys(A,b,x);              /* Diese Lösung ist äquivalent */
+  printf("%f  %f  %f\n",x[0],x[1],x[2]);
+  B=InvertMat(A,NULL);                   /* Koeffizientenmatrix invertieren */
+  MulMatVec(B,b,x);                      /* Multiplikation mit Inhomogenität */
+  printf("%f  %f  %f\n",x[0],x[1],x[2]); /* wieder die gleiche Lösung */
+  I=MulMat(A,B,NULL);                    /* Das Produkt ist die Einheitsmatrix */
+  for(i=0;i<3;i++)
+  { 
+    for(j=0;j<3;j++) printf("%f  ",I->data[i][j]);
+    printf("\n");
+  }
+  FreeMatrix(A);                         /* Matrizen freigeben */
+  FreeMatrix(B);
+  FreeMatrix(I);
+} 
+\end{verbatim}\endprogr
+
+\subsection{Geometrische Transformationen als double[3][3]}
+Projektive und affine 2D-2D-Transformationen können als 3x3-Matrix
+(\verb+double m[3][3]+) beschrieben werden.
+ 
+Für neue Anwendungen ist die Klasse \class{Trafo} vorzuziehen.
+
+Es gibt Funktionen, die das Zusammensetzen einer Transformation
+aus speziellen affinen Transformationen erlauben. Dabei wird die zu der
+hinzuzufügenden Transformation gehörende Matrix jeweils von links mit der
+bereits vorhandenen Transformation multipliziert.
+\proc{int}{InitTrans}{double tr[3][3]}
+\descr{Initialisieren einer Transformationsmatrix (Einheitsmatrix)}
+\proc{int}{ShiftTrans}{double x0, double y0, double tr[3][3]}
+\descr{Hinzufügen einer Translation mit $(x0,y0)$}
+\proc{int}{RotTrans}{double x0, double y0, double phi, double tr[3][3]}
+\descr{Hinzufügen einer Rotation mit dem Winkel $phi$ (Bogenmaß) um den 
+Punkt $(x0,y0)$} 
+\proc{int}{ScaleTrans}{double x0, double y0, double a, double b, double
+tr[3][3]}
+\descr{Hinzufügen einer anisotropen Skalierung mit dem Faktor $a$ in
+x-Richtung und dem Faktor $b$ in y-Richtung}
+\proc{int}{InvertTrans}{double tr[3][3]}
+\descr{Die Transformation $tr$ wird invertiert.}
+\proc{int}{FitAffineTrans}{PointList pl1,PointList pl2,double tr[3][3]}
+\descr{Es wird mittels Ausgleichsrechnung eine affine Transformation
+bestimmt, die die Punkte der Liste $pl1$ auf die Punkte der Liste $pl2$
+transformiert. Punkte mit gleichem Index werden jeweils als Korrespondenzpaar
+interpretiert. Die Punktepaare werden mit dem Gewicht aus der Liste $pl2$
+gewichtet.
+}
+\seealso{MatchPointlists}
+\seealsonext{AffinFitMoments}
+\proc{int}{FitProjectiveTrans}{PointList pl1,PointList pl2,double tr[3][3]}
+\descr{Es wird mittels Ausgleichsrechnung eine projektive Transformation
+bestimmt, die die Punkte der Liste $pl1$ auf die Punkte der Liste $pl2$
+transformiert. Punkte mit gleichem Index werden jeweils als Korrespondenzpaar
+interpretiert. Die Punktepaare werden mit dem Gewicht aus der Liste $pl2$
+gewichtet. 
+}
+\proc{double*}{TransPoint}{double p1[2],double tr[3][3],double p2[2]}
+\descr{Der Punkt $p1$ wird mit der Transformation $tr$ in den Punkt $p2$
+transformiert.
+}
+\proc{int}{TransImg}{Image imgs,double tr[3][3],int mode,Image imgd}
+\descr{Das Bild $imgs$ wird mit der Transformation $tr$ in das Bild $imgd$
+transformiert. Da man bei der Transformation der Bildpunkte im allgemeinen
+keine ganzzahligen Koordinaten erhält, werden die Grauwerte für
+$mode$=INTERPOL bilinear interpoliert, bei $mode$=DEFAULT werden die
+Koordinaten gerundet.
+}
+\seealso{Transform}
+\proc{Contur}{TransContur}{Contur c,double tr[3][3]}
+\descr{
+Es wird eine Kontur angelegt, die sich aus der Transformation der Kontur $c$
+mit $tr$ ergibt.
+}
+
+\subsection{Statistische Maßzahlen mehrdimensionaler Zufallsvariablen}
+
+Im Normalfall sollten die neuen Statistikfunktionen zur Klasse
+\class{Statistics} verwendet werden.
+
+Diese Funktionen zur Berechnung von statistischen Maßzahlen mehrdimensionaler
+Zufallsvariablen (Mittelwertvektor, Kovarianz- und Korrelationsmatrix)
+arbeiten mit einer Datenstruktur, auf die über einen Pointer vom Typ
+$Statistic$ zugegriffen wird.
+
+\proc{Statistic}{InitStatistic}{int dim}
+\descr{Initialisierung eines Statistikbereiches für Zufallsvektoren der
+Dimension $dim$
+}
+\proc{int}{PutStatistic}{Statistic st,double v[dim],double weight}
+\descr{Gewichteter Eintrag eines Zufallsvektors in den Statistikbereich. Die
+Dimension muß mit der bei der Initialisierung angegebenen Dimension
+Übereinstimmen.
+}
+\proc{int}{GetStatisticDim}{Statistic st,int *dim}
+\descr{Dimension $dim$ des Statistikbereiches abfragen.}
+\proc{int}{GetStatisticWeight}{Statistic st,double *sweight}
+\descr{Es wird die Summe der Gewichte bestimmt.}
+\proc{int}{GetStatisticMean}{Statistic st,double *mean}
+\descr{Es wird der Mittelwertvektor bestimmt.}
+\proc{MatrixStruct}{GetStatisticCov}{Statistic st,MatrixStruct cov}
+\descr{
+Für die in $st$ akkumulierten Realisierungen wird die Kovarianzmatrix
+$cov$ bestimmt. $cov$ muß eine Gleitkomma-Matrix sein, ihre Dimension muß mit
+derjenigen der Zufallsvektoren übereinstimmen. Wenn für $cov$ der NULL-Pointer
+übergeben wird, wird die Kovarianzmatrix intern angelegt. Rückgabewert ist die
+Kovarianzmatrix oder bei Fehlern der NULL-Pointer
+}
+\proc{MatrixStruct}{GetStatisticCor}{Statistic st,MatrixStruct cor}
+\descr{
+Für die in $st$ akkumulierten Realisierungen wird die Korrelationsmatrix
+$cor$ bestimmt. $cor$ muß eine Gleitkomma-Matrix sein, ihre Dimension muß mit
+derjenigen der Zufallsvektoren übereinstimmen. Wenn für $cov$ der NULL-Pointer
+übergeben wird, wird die Korrelationsmatrix intern angelegt. Rückgabewert ist die
+Korrelationsmatrix oder bei Fehlern der NULL-Pointer
+}
+\proc{int}{WriteStatistic}{Statistic st,char *file}
+\descr{Die Daten des Statistikbereiches werden für eine spätere
+Weiterbearbeitung in ein Textfile $file$ geschrieben.}
+\proc{Statistic}{ReadStatistic}{char *file}
+\descr{Ein mit WriteStatistic() geschriebener Statistikbereich wird vom File
+$file$ eingelesen.}
+
+\subsection{Momente als Feld vom Typ double}
+
+Einige veraltete Funktionen verwenden Felder vom Typ $double$ um Momente
+abzulegen. Diese sollten nicht mehr verwendet werden. Ersatz dafür ist 
+die Klasse \class{Moments}.
+
+Momente werden in Feldern vom Typ $double$ in der Reihenfolge $m_{00}$,
+$m_{10}$, $m_{01}$, $m_{20}$, $m_{11}$, $m_{02}$, $m_{30}$, $m_{21}$,
+$m_{12}$, $m_{03}$, $m_{40}$, $m_{31}$, $m_{22}$, $m_{13}$, $m_{04}$
+abgelegt. Bei der Berechnung der Momente erfolgt keine Normierung auf den
+Schwerpunkt.
+
+\proc{int}{MomentPolygon}{PointList p,double m[15],double s[2]}
+\procf{int}{MomentPolygon}{const Matrix \&p,double m[15],double s[2]}
+\descr{Es werden die Flächenmomente des durch die Punktliste $pl$
+beschriebenen Polygons berechnet. Auf $s$ wird der Flächenschwerpunkt
+bereitgestellt. Die Vorzeichen der Momente sind von der Orientierung
+(Umlaufsinn) des Polygons abhängig.}
+\proc{int}{PointListMoment}{PointList pl,int a1,int a2,double m[15],double s[2]}
+\descr{Es werden die Flächenmomente eines Teilpolygons berechnet, dessen
+Eckpunkte in der Punktliste $pl$ von Adresse $a1$ bis Adresse $a2$ stehen. Auf
+$s$ wird der Flächenschwerpunkt bereitgestellt.}
+\proc{int}{MomentRegion}{Contur c, double m[15], double s[2]}
+\descr{Es werden die Flächenmomente der durch die Kontur $c$ umschlossenen
+Fläche berechnet. Auf $s$ wird der Flächenschwerpunkt bereitgestellt.
+Das Moment $m_{00}$ ist hier immer nichtnegativ.}
+
+\subsubsection{Transformation von Momenten}
+
+\proc{int}{TranslateMoments}{const double m1[15],double x,double y,double m2[15]}
+\descr{
+Transformation der Momente $m1$ entsprechend einer Translation mit $(x,y)$.}
+\proc{int}{AffinTransMoments}{const double m1[15],double tr[3][3],double m2[15]}
+\descr{Affine Transformation der Momente $m1$ entsprechend der
+Transformationsmatrix $tr$.}
+\proc{int}{XShearMoments}{const double m[15],double a,double ms[15]}
+\descr{Transformation der Momente durch X-Scherung.}
+\proc{int}{YShearMoments}{const double m1[15],double b,double m2[15]}
+\descr{Transformation der Momente durch Y-Scherung.}
+\proc{int}{ScaleMoments}{const double m1[15],double a,double b, double m2[15]}
+\descr{Transformation der Momente durch anisotrope Skalierung.}
+\proc{int}{RotateMoments}{const double m1[15],double c,double s, double m2[15]}
+\descr{Transformation der Momente durch Rotation. $c$ und $s$ geben den
+Cosinus bzw. den Sinus des Rotationswinkels an.}
+
+\proc{int}{CalcCentralMoments}{const double m[15],double mc[15]}
+\descr{Berechnet aus den Momenten in $m$ die zentralen Momente $mc$.}
+
+\proc{int}{NormalizeMoments}{const double m1[15],double m2[15]}
+\descr{Normierung der Momente $m1$ auf vergleichbare Größen, 
+indem die n-ten Momente
+durch $m_{00}^{(1+{n \over 2})}$ dividiert werden. Die normierten Momente
+werden auf $m2$ bereitgestellt.}
+
+\subsubsection{Algebraische Momentinvarianten}
+
+\proc{int}{AffinAlgebraicInvar}{double m[15],double flu[4]} 
+\descr{Aus den Momenten $m$ werden algebraische Invarianten nach Flusser
+  berechnet und auf $flu$ bereitgestellt.}  
+\proc{int}{AffinHuInvar}{double m[15],double hu[7]}
+\descr{Nach einer Scherungsnormierung werden aus den Momenten $m$ 7
+  Invarianten nach Hu berechnet und auf $hu$ bereitgestellt, die affin
+  invariant sind.}
+
+\subsubsection{Affine Standardlagen}
+
+Durch die Normierung bestimmter Momente können affine Transformationen
+bestimmt werden, die das zugehörige Objekt in eine Standardlage überführen.
+\proc{int}{AffinNormMoments}{double m[21],double maf[21],double atr[3][3]}
+\descr{ Berechnung einer Standardlage durch Normierung von Momenten
+  auf $(m_{20}=1; m_{11}=0; m_{02}=1; m_{30}+m_{12}=0)$. Die Momente in der
+  Standardlage werden auf $maf$ bereitgestellt, die affine Transformation zur
+  Überführung in die Standardlage auf $atr$.}
+\proc{int}{PolyNormMoments}{double m[21],double maf[21],double atr[3][3]}
+\descr{ Berechnung einer Standardlage mit der Polynommethode durch Normierung
+  der Momente auf $(m_{30}=0; m_{11}=0; m_{20}=1; m_{02}=1)$. Die Momente in
+  der Standardlage werden auf $maf$ bereitgestellt, die affine Transformation
+  zur Überführung in die Standardlage auf $atr$.}
+\proc{int}{AffinIterateMoments}{double m[21],double maf[21],double atr[3][3]}
+\descr{Berechnung einer Standardlage mit der Iterationsmethode durch
+  Normierung der Momente auf $(m_{31}=0; m_{13}=0; m_{20}=1; m_{02}=1)$. Die
+  Momente in der Standardlage werden auf $maf$ bereitgestellt, die affine
+  Transformation zur Überführung in die Standardlage auf $atr$.  }
+
+\subsubsection{Fitting mit Momenten}
+
+\proc{double}{AffinFitMoments}{double m1[15],double m2[15],double tr[3][3]}
+\descr{ Es wird eine affine Transformation bestimmt, die approximativ das
+  Objekt mit den Momenten $m1$ in das Objekt mit den Momenten $m2$ überführt.
+  Rückgabewert ist ein Fehlermaß, das die Abweichung der mit $tr$
+  transformierten Momente $m1$ von $m2$ beschreibt. Der Algorithmus ist sehr
+  schnell, versagt aber bei Objekten, die ausgezeichnete Symmetrien aufweisen,
+  z.B. ähnlich einem Dreieck, einem Rechteck oder Quadrat. Bei Objekten, bei
+  denen man a priori solche Symmetrien ausschliessen kann, arbeitet der
+  Algorithmus sicher und ist sehr robust.}
+\seealso{MatchObject}
+\proc{double}{AffinFitPolygons}{PointList pl1,PointList pl2,double tr[3][3]}
+\descr{ Es wird eine affine Transformation bestimmt, die approximativ das
+  Objekt (Polygon) $pl1$ in das Objekt $pl22$ überführt. Rückgabewert ist ein
+  Fehlermaß, das die Abweichung der mit $tr$ transformierten Punktliste $pl1$
+  von $pl2$ beschreibt. Der Algorithmus ist sehr
+  schnell, versagt aber bei Objekten, die ausgezeichnete Symmetrien aufweisen,
+  z.B. ähnlich einem Dreieck, einem Rechteck oder Quadrat. Bei Objekten, bei
+  denen man a priori solche Symmetrien ausschliessen kann, arbeitet der
+  Algorithmus sicher und ist sehr robust.}
+\proc{int}{FitTriangleMoments}{double moment[15],double corner[3][2]}
+\descr{
+Es werden die drei Eckpunkte $corner$ eines Dreiecks bestimmt, das mit der 
+Polynommethode an das Objekt mit den Flächenmomenten $moment$ angepaßt ist.
+}
+\proc{int}{FitRectangleMoments}{double moment[15],double corner[4][2]}
+\descr{
+Es werden die vier Eckpunkte $corner$ eines Rechteckes bestimmt, das mit einer 
+Momenten-Normierungsmethode an das Objekt mit den Flächenmomenten $moment$ angepaßt ist.
+}
+\proc{int}{FitParallelogramMoments}{double moment[15],double corner[4][2]}
+\descr{
+Es werden die vier Eckpunkte $corner$ eines Parallelogrammes bestimmt, das mit einer 
+Momenten-Normierungsmethode an das Objekt mit den Flächenmomenten $moment$ angepaßt ist.
+}
+\proc{int}{FitParallelogramMoments}{double moment[15],double corner[4][2], double \& guetemass}
+\descr{
+Es werden die vier Eckpunkte $corner$ eines Parallelogrammes bestimmt, das mit einer 
+Momenten-Normierungsmethode an das Objekt mit den Flächenmomenten $moment$ angepaßt ist.
+Die Variable $guetemass$ erhält den quadratischen Abstand zwischen den Referenzmomenten
+und den normierten Momenten des Objektes.
+}
+
+\proc{int}{FitQuadrangleMoments}{double moment[15],double corner[4][2]}
+\descr{
+Es werden die vier Eckpunkte $corner$ eines beliebigen Vierecks bestimmt, das mit einer 
+Momenten-Normierungsmethode an das Objekt mit den Flächenmomenten $moment$ angepaßt ist.
+}
+
+\proc{int}{FitCircleMoments}{double moment[15],double \&x0,double \&y0,double \&radius}
+\descr{
+Es werden der Mittelpunkt $x0,y0$ und der Radius $radius$ eines Kreises bestimmt, der mit einer 
+Momenten-Normierungsmethode an das Objekt mit den Flächenmomenten $moment$ angepaßt ist.
+}
+\proc{int}{FitCircularSegmentMoments}{double moment[15],double
+circle\_par[3],double line\_start[2],double line\_end[2]}
+\descr{
+Eingabe sind die 15 Flächenmomente $moment$ des Objektes. Es wird
+an das Objekt ein Kreissegment angepaßt. Dies ist kein Bogensegment eines
+Kreises, sondern das gesamte Flächen-Objekt wird aufgefaßt als ein Kreis, von
+dem ein Stück abgeschnitten wurde. Das Keissegment wird daher beschrieben
+durch die eigentlichen Kreisparameter $circle\_par[3]$ in der Reihenfolge
+Mittelpunkt und Radius (\see{DrawCircle}) und durch eine Strecke, die den Kreis
+beschneidet. Dabei beschreibt $line\_start[2]$ den Anfangspunkt der Strecke und
+$line\_end[2]$ den Endpunkt der Strecke. Als Algorithmus wird eine
+Momenten-Normierungs-Methode verwendet.
+}
+\proc{int}{FitEllipseMoments}{double moment[15],double ell\_par[5]}
+\descr{
+Eingabe sind die 15 Flächenmomente $moment$ des Objektes. Es wird
+an das Objekt eine Ellipse angepaßt. Diese Ellipse ist die bekannte
+Trägheitsellipse eines Objektes, wobei die Größe der Trägkeitsellipse noch auf
+die Größe des Objektes normiert wurde. Die 5 Ergebnisparameter in $ell\_par[5]$
+der Ellipse sind genauso aufgebaut wie in allen anderen Funktionen, siehe (\see{DrawEllipse}).
+}
+
+\proc{int}{FitEllipticalSegmentMoments}{double moment[15],double
+ell\_par[5],double line\_start[2],double line\_end[2]}
+\descr{
+Eingabe sind die 15 Flächenmomente $moment$ des Objektes. Es wird
+an das Objekt ein Ellipsensegment angepaßt. Dies ist kein Bogensegment einer
+Ellipse, sondern das gesamte Flächen-Objekt wird aufgefaßt als eine Ellipse, von
+der ein Stück abgeschnitten wurde. Das Ellipsensegment wird daher beschrieben
+durch die eigentlichen 5 Ellipsenparameter $ell\_par[5]$
+(\see{DrawEllipse})  und durch eine Strecke, die die Ellipse
+beschneidet. Dabei beschreibt $line\_start[2]$ den Anfangspunkt der Strecke und
+$line\_end[2]$ den Endpunkt der Strecke. Als Algorithmus wird eine
+Momenten-Normierungs-Methode verwendet.
+}
+\proc{int}{FitSuperEllipseMoments}{double moment[15],double
+\&c1,double \&f1,double tr1[3][3],double \&c2,double \&f2,double tr2[3][3]}
+\descr{
+Eingabe sind die 15 Flächenmomente $moment$ des Objektes. Es wird
+an das Objekt eine Super-Ellipse angepaßt. Da für bestimmte Situationen zwei
+gute Lösungen existieren, werden diese alle beide berechnet. Der
+Approximationswert ist $f1$ bzw. $f2$, es sollte die Lösung genommen werden,
+für die dieser Wert kleiner ist. Die eigentlichen Super-Ellipse Parameter sind
+dann der Exponent $c1$ bzw. $c2$ und eine affine Transformation $tr1[3][3]$
+bzw. $tr2[3][3]$. Zur grafischen Darstellung der gefitteten Super-Ellipse kann
+die Funktion DrawSuperEllipse (\see{DrawSuperEllipse}) benutzt werden. Als 
+Algorithmus wird eine Momenten-Normierungs-Methode verwendet.
+}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: icedoc_base.tex
+%%% TeX-master: "icedoc_base"
+%%% End: 

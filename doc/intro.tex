@@ -1,0 +1,46 @@
+\section{Einführung}
+
+In dieser Dokumentation werden Werkzeuge zur 3D-Szenenanalyse und Robot Vision
+beschrieben, die auf der ICE-Bibliothek aufbauen. Die Schwerpunkte liegen auf
+der Kamerakalibrierung, der monokularen Lage- und Orientierungsschätzung, der
+Beschreibung von Polyederszenen und Polyedermodellen mit orientierten
+Nachbarschaftsstrukturen.
+
+Die Funktionsprototypen und Datenstrukturen sind in dem Headerfile
+``robvis.h'' zusammengafaßt, die Funktionen in der Bibliothek ``robvis.a''.
+
+Zur Beschreibung von Kameras werden hauptsächlich die projektiven Parameter
+$a_{ij}$ verwendet, so daß für die Abbildung eines Raumpunktes $pw=(x,y,z)^T$
+in einen Bildpunkt $pc=(\xi,\eta)^T$ die Abbildungsgleichungen
+\begin{eqnarray}
+\xi ={a_{00}x+a_{01}y+a{02}z+a{03} \over
+a_{20}x+a_{21}y+a{22}z+a{23}}\nonumber\cr \cr
+\eta={a_{10}x+a_{11}y+a{12}z+a{13} \over a_{20}x+a_{21}y+a{22}z+a{23}}\nonumber
+\end{eqnarray}
+gelten. Zusätzlich können noch radialsymmetrische Verzeichnungen
+berücksichtigt werden, die durch $\tilde r = r(1+k_1 r^2+k_2 r^4)$ modelliert
+werden. $\tilde r$ ist der Abstand des verzeichneten Punktes vom Hauptpunkt und
+$r$ der Abstand des unverzeichneten Punktes. Eine Trennung der inneren und
+äußeren Kameraparameter und die Umrechnung zwischen physikalischen und
+projektiven Kameraparametern ist möglich.
+
+Für die Bestimmung der Lage und Orientierung von Objekten aus ihren
+projektiven Abbildungen stehen hauptsächlich Funktionen zur monokularen
+Rekonstruktion zur Verfügung, die die Lage und Orientierung eines körperfesten
+Koordinatensystems aus gegebenen Korrespondenzen von Modell- und Bildpunkten
+berechnen. Eine Ausnahme bilden die Funktionen zur Rekonstruktion anhand
+geometrischer Momente, die keine expliziten Punktkorrespondenzen benötigen,
+sondern die Flächenmomente korrespondierender planarer Objekte.
+
+Zur Beschreibung von Bildern mit polyedrischen Objekten werden Datenstrukturen
+verwendet, die aus mehrfach untereinander verketteten Listen für Eckpunkte,
+Kanten und Flächen bestehen und den Bildinhalt als orientierte
+Nachbarschaftsstruktur beschreiben. Die Beschreibung der dreidimensionalen
+Polyedermodelle ist analog aufgebaut. Mit Hilfe solcher Beschreibungen ist das
+Matching von Modell und Bildbeschreibung und die Lagerekonstruktion möglich.
+
+Die Modellbeschreibung erlaubt durch ein den einzelnen Modellen zugeordnetes
+Lageframe den Aufbau von Szenenbeschreibungen. Solche Szenenbeschreibungen
+können wiederum für eine gegebene Kamera rechnerisch in eine
+2D-Bildbeschreibung überführt werden, die nur die für die Kamera tatsächlich
+sichtbaren Objektbestandteile enthält.

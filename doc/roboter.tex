@@ -1,0 +1,129 @@
+\section{Steuerung für Roboter RX90L}
+\label{RoboterSteuerung}
+
+Diese Funktionen dienen zur Kommunikation mit dem Controller des Stäubli
+RX90. Auf dem Kontroller muß vorher ein Interpreter gestartet werden, der die
+Kommandos, die durch die folgenden Funktionen gesendet werden, ausführt
+(inter.v2, Programm ``interpreter''). Der Start des Interpreters erfolgt
+im Normalfall automatisch beim Start des Roboters.
+
+{\em Es kann nicht überprüft werden, ob die angegebenen Positionen
+kollisionsfrei erreicht werden können!!! Die Bewegungsbefehle sind deshalb mit
+entsprechender Vorsicht zu verwenden. Ein Not-Aus-Schalter (Teach-Panel oder
+Taster-Box) muß immer unmittelbar erreichbar sein.}
+
+Bewegungen werden nur ausgeführt, wenn die ``Tote Mann''-Taste gedrückt
+wird (Taste 1 am Teach-Panel bzw. grüne Taste an der Taster-Box). Ist 
+die Bewegung des Roboters durch die ``Tote Mann''-Taste angehalten, kann 
+diese Bewegung durch das Drücken der Taste STOP am Teach-Panel abgebrochen 
+werden. Ist dies nicht erfolgreich, sollte die Notaus-Taste verwendet 
+werden. Dann ist aber ein Neustart des Interpreters erforderlich.
+
+\proch{int}{RobOpen}{void}{robcntl.h}
+\descr{
+Die serielle Schnittstelle zum Roboter wird zum Lesen und Schreiben 
+geöffnet.
+}
+\proc{void}{RobClose}{void}
+\descr{
+  Die serielle Verbindung zum Roboter wird geschlossen.
+}
+\proc{int}{RobInit}{}
+\descr{
+Es wird eine Initialisierung der Controller-Schnittstelle durchgeführt und eine
+definierte Konfiguration des Roboters eingestellt (lefty, above, noflip).
+}
+\proc{int}{RobReset}{}
+\descr{
+Es wird eine Initialisierung der Controller-Schnittstelle durchgeführt und eine
+definierte Konfiguration des Roboters eingestellt (lefty, above, noflip). Der
+Roboter bewegt sich zu einer Startposition.
+}
+\proc{int}{RobSetSpeed}{int speed}
+\descr{
+Die Geschwindigkeit der Roboterbewegungen wird festgelegt. Der Wert $speed$
+muß im Intervall $[0,100]$ liegen und gibt einen Prozentwert der 
+einstellbaren Maximalgeschwindigkeit an.
+}
+\proc{int}{RobGripper}{int stat}
+\descr{
+Mit $stat=0$ wird der Greifer geöffnet, mit $stat=1$ kann der Greifer
+geschlossen werden.Mit $stat=-1$ greift der Greifer ``nach aussen''.
+}
+\proc{int}{RobTeach}{const string \&prompt}
+\descr{
+Es wird ein Umschalten in den Teach-Modus ermöglicht. Die Zeichenkette
+$prompt$ wird auf dem Teach-Pendant ausgegeben. Es kann mit der ``MAN''-Taste
+das Teach-Pendant aktiviert und der Roboter manuell bewegt werden. 
+Durch Drücken der ``COMP''-Taste wird die Steuerung an das Programm 
+zurückgegeben.
+}
+\proc{int}{RobMove}{double par[6],int mode}
+\procf{int}{RobMove}{const Vector \&v,int mode}
+\descr{
+  Ein Movebefehl wird an den Roboter gesendet.
+  $par$ bzw. $v$ enthält die drei Koordinaten X, Y, Z und 
+  die drei Winkel yaw, pitch und roll in dieser
+  Reihenfolge. Mit $mode==0$ wird die Bewegung im Achsinterpolationsmodus 
+  ausgeführt, mit $mode!=0$ im Linearmodus (Bewegung auf einer Strecke).
+  Bei fehlerfreier Ausführung des  MOVE-Befehls ist der Rückgabewert 0, 
+  negative Werte signalisieren fatale Fehler, positive Werte ein 
+  Überschreiten des Arbeitsbereiches, wobei die
+  Ursache binär kodiert ist. Die Bits 1 bis 6 stehen für eine
+  Bereichsüberschreitung der Achsen 1 bis 6, Bit 14 für eine Position 
+  zu nahe an der Roboterbasis und Bit 15 für eine Position zu weit außerhalb.
+}
+\proc{int}{RobMoveFrame}{Frame *f,int mode}
+\descr{Ein Movebefehl wird an den Roboter gesendet. $f$ ist eine homogene
+  Transformationsmatrix, die die gewünschte Lage und Orientierung des
+  Werkzeugkoordinatensystems im Basiskoordinatensystem beschreibt. Mit
+  $mode==0$ wird die Bewegung im Achsinterpolationsmodus ausgeführt, mit
+  $mode!=0$ im Linearmodus (Bewegung auf einer Strecke).
+ Bei fehlerfreier Ausführung des MOVE-Befehls ist der Rückgabewert 0,
+negative Werte signalisieren fatale Fehler, positive Werte ein Überschreiten
+des Arbeitsbereiches, wobei die Ursache binär kodiert ist. Die Bits 1 bis 6
+stehen für eine Bereichsüberschreitung der Achsen 1 bis 6, Bit 14 für eine
+Position zu nahe an der Roboterbasis und Bit 15 für eine Position zu weit
+außerhalb. 
+}
+\proc{int}{RobCP}{int on}
+\descr{
+  Die Funktion schaltet das Verschleifen der Bahn (Continous Path) ein
+  ($on=1$) oder aus ($on=0$). Grundzustand nach RobInit ist
+  CP=on. Im Fehlerfall ist der Funktionswert ERROR, sonst OK.
+}
+
+\proc{int}{RobWaitStop}{int total}
+\proc{int}{RobWaitStop}{}
+\descr{
+  Die Funktion wartet, bis die laufende Bewegung des Roboters beendet ist.
+  Ist $total==1$ oder erfolgt der Aufruf ohne diesen Parameter, so wird der
+  vollständige Stillstand nach Erreichen der Position abgewartet. 
+  Ist $total==0$, so wird abgebrochen, wenn die Abweichung von der 
+  Sollposition klein genug ist, um sicher greifen 
+  zu können, ohne daß der Roboter vollständig zum Stillstand gekommen sein 
+  muß. 
+  Im Fehlerfall ist der Funktionswert ERROR, sonst OK. 
+}
+
+\proc{int}{RobGetPos}{double par[6]}
+\procf{int}{RobGetPos}{Vector \&v}
+\descr{
+  Die aktuelle Position des Roboters wird abgefragt. $par$ wird mit den drei
+  Koordinaten X, Y, Z und den drei Winkeln yaw, pitch und roll in dieser
+  Reihenfolge belegt. Im Fehlerfall ist der Funktionswert ERROR, sonst OK. 
+}
+\proc{int}{RobGetFrame}{Frame *f}
+\descr{
+  Die aktuelle Position des Roboters wird abgefragt. $f$ wird mit einer
+  homogenen Transformationsmatrix belegt, die die Lage und Orientierung des
+  Werkzeugkoordinatensystems im Basiskoordinatensystem beschreibt. Im
+  Fehlerfall ist der Funktionswert ERROR, sonst OK. 
+}
+\proc{int}{RobSetTool}{Frame *f}
+\descr{
+  Das Werkzeugkoordinatensystem wird entsprechend der homogenen
+  Transformationsmatrix $f$ festgelegt, die die Lage und Orientierung
+  bezüglich des Werkzeugflansches des Roboters angibt. Im Fehlerfall ist der
+  Funktionswert ERROR, sonst OK. 
+}

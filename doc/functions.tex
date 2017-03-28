@@ -1,0 +1,508 @@
+\nsection{Funktionen}{functions}
+\hypertarget{Funktionen}{}
+
+\class{Function} und \class{Function2d} sind Klassen, die mittels 
+des \verb+operator()+ skalare Funktionen von einem oder zwei Argumenten 
+berechnen (''Funktoren''). Die in der Klassen-Hierarchie definierten 
+Funktionen umfassen Polynome, geometrische Transformationen (analog 
+\class{Trafo}), Verzeichnungen (analog \class{Distortion}) und erlauben 
+die Verwendung von Bildern (\class{Image}, \class{ImageD}) als
+zweidimensionale Funktionen.
+
+Funktionshierarchie:
+\begin{itemize}
+\item \class{Function}
+\begin{itemize}
+\item \class{FunctionWithFitting}
+\begin{itemize}
+\item \class{Constant}
+\item \class{Polynom1o}
+\item \class{Polynom2o}
+\item \class{Polynom}
+\end{itemize}
+\end{itemize}
+\item \class{Function2d}
+\begin{itemize}
+\item \class{Function2dWithFitting}
+\begin{itemize}
+\item \class{Constant2d}
+\item \class{Polynom2d1o}
+\item \class{Polynom2d2o}
+\item \class{Polynom2d}
+\end{itemize}
+\item \class{Function2dModifier}
+\begin{itemize}
+\item \class{Function2dParameterShift}
+\item \class{Function2dValueTransform}
+\item \class{Function2dParameterTransform}
+\item \class{Function2dDistortion}
+\end{itemize}
+\item \class{ImageFunction}
+\item \class{ImageDFunction}
+\end{itemize}
+\end{itemize}
+
+\subsection{Fitting mit Funktionen}
+\hypertarget{FittingWithFunctions}{}
+
+Die von den Klassenhierarchien
+\class{FunctionWithFitting} und \class{Function2dWithFitting} abgeleiteten 
+Klassen erlauben die Bestimmung der Parameter dieser Funktionen mittels Fitting.
+
+Fitting kann grundsätzlich über die Vorgabe einzelner Werte-Tupel erfolgen
+oder durch Vorgabe einer Liste.
+\begin{itemize}
+\item Im Falle einzelner Werte-Tupel ist zunächst
+das Fitting zu initialisieren \see{FunctionWithFitting::FitInit}, 
+dann sind die Werte-Tupel mit \see{FunctionWithFitting::FitVal} einzutragen. 
+Nach dem Abschluss mit \see{FunctionWithFitting::FitFinish} stehen die
+gefitteten Parameter zur Verfügung.
+\item Im Falle einer Liste erfolgt das komplette Fitting durch Aufruf der
+ Methode \see{FunctionWithFitting::Fit}. Neben einer Wertetupel-Liste 
+in Form einer \see{Matrix} können bei zweidimensionalen Funktionen auch 
+Bilder zum Fitten übergeben werden.
+\end{itemize}
+
+\seealso{GaussFit}
+
+\subsection{Eindimensionale Funktionen}
+\label{Function}
+\hypertarget{Function}{}
+Die abstrakte Basisklasse \class{Function} beschreibt skalare 
+Funktionen mit einem Parameter. Wesentliche Eigenschaft dieser
+Klasse ist der \verb+operator()+, der mit einem Parameter vom Typ
+\verb+double+ aufgerufen werden kann. 
+
+\proch{double}{Function::operator()}{double x}{function.h}
+\descr{Berechnet den Funktionswert der Funktion an der Stelle {\bf x}.}
+
+\proch{void}{Function::getCoefficient}{\vector{double} \&c}{function.h}
+\descr{Ermittelt die Parameter (Coefficienten) der Funktion. Diese werden
+an den \vector{double} {\bf c} angehängt. Dies erlaubt das Aufsammeln 
+der Parameter mehrerer Funktionen in einem \vector{double}.}
+
+\proch{int}{Function::setCoefficient}{const \vector{double} \&para,int idx=0}{function.h}
+\descr{Setzt die Parameter (Coefficienten) der Funktion. Diese werden
+dem \vector{double} ab dem Index {\bf idx} entnommen. Die Funktion
+gibt den Index nach dem letzten gelesenen Element zurück.
+Dies erlaubt die Initialisierung mehrerer Funktionen aus einem 
+\vector{double}.}
+
+\subsection{Eindimensionale Funktionen mit Fitting}
+\label{FunctionWithFitting}
+\hypertarget{FunctionWithFitting}{}
+
+Die von der Klasse \class{Function} abgeleitete abstrakte Klasse 
+\class{FuntionWithFitting} beschreibt 
+eindimensionale Funktionen, deren Parameter durch Fitting ermittelt werden
+können. 
+
+\proch{void}{FunctionWithFitting::FitInit}{void}{fitfn.h}
+\descr{Die abstrakte Methode initialisiert das Fitten von Wertpaaren.}
+
+\proch{void}{FunctionWithFitting::FitValue}{double x, double g, double w=1.0}{fitfn.h}
+\descr{Die (abstrakte) Methode übergibt ein Wertepaar für das Fitting. Die
+optionale Angabe des Gewichts $w$ erlaubt die Wichtung des Wertepaars,
+negative Gewichte tragen quasi das Wertepaar wieder aus.}
+\proch{int}{FunctionWithFitting::FitFinish}{}{fitfn.h}
+\descr{Schließt den Prozess des Fitting ab. Danach sind die gefitteten 
+Parameter der Funktion gültig.}
+
+\proch{int}{FunctionWithFitting::Fit}{const Matrix \&m}{fitfn.h}
+\descr{Die Funktion wird an die Wertepaare in der Matrix $m$ gefittet.
+Dabei stellt jede Zeile der Matrix ein Wertepaar bereit: Die Matrix muss
+ mindestens zwei Spalten haben. Diese Funktion umfasst alle Schritte von 
+der Initialisierung (\see{FunctionWithFitting::FitInit}) über das 
+Eintragen der Werte (\see{FunctionWithFitting::FitValue}) bis zum 
+Abschluss des Fittens (\see{FunctionWithFitting::FitFinish}).
+Vorher mit \bsee{FunctionWithFitting::FitValue} eingetragene Werte
+gehen verloren.}
+
+\proch{double}{FunctionWithFitting::operator()}{double x}{fitfn.h}
+\descr{Gibt den Funktionswert der Funktion an der Stelle $x$ zurück}
+
+\seebaseclass{Function}
+
+\subsubsection{Konstante eindimensionale Funktionen}
+\label{Constant}
+\hypertarget{Constant}{}
+Die Klasse Constant beschreibt konstante eindimensionale Funktionen der Form
+$f(x) = a$ . Sie ist von der Klasse \class{FunctionWithFitting} abgeleitet. 
+
+\proch{}{Constant::Constant}{void}{fitfn.h}
+\descr{Standard-Konstruktor. Der Parameter $a$ wird mit $0$ initialisiert.}
+\proch{}{Constant::Constant}{double a}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten mit den übergebenen Werten initialisiert.}
+\proch{}{Constant::Constant}{const \vector{double} \&v}{fitfn.h}
+\descr{Konstruktor, der den Parameter a mit mit dem Wert $v[0]$ des Vektors $v$ initialisiert.}
+
+\proch{}{Constant::Constant}{const Constant \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\proch{int}{Constant::setCoefficient}{double pa}{fitfn.h}
+\descr{Setzt den Wert des Parameters a auf $pa$.}
+
+\proch{int}{Constant::getCoefficient}{double \&pa}{fitfn.h}
+\descr{Schreibt den Wert des Parameters auf $pa$.}
+
+\seebaseclass{FunctionWithFitting}
+
+\subsubsection{Lineare eindimensionale Funktionen}
+\label{Polynom1o}
+\hypertarget{Polynom1o}{}
+Die Klasse Polynom1o beschreibt lineare eindimensionale Funktionen der Form
+$ f(x) = a_1 \cdot x + a_0$ . Sie ist von der Basisklasse 
+\class{FunctionWithFitting} abgeleitet.
+
+\proch{}{Polynom1o::Polynom1o}{void}{fitfn.h}
+\descr{Standard-Konstruktor. Die Koeffizienten werden mit $a_0=0$ und $a_1=0$ 
+initialisiert.}
+\proch{}{Polynom1o::Polynom1o}{double a0, double a1}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten mit den übergebenen Werten initialisiert.}
+\proch{}{Polynom1o::Polynom1o}{const \vector{double} \&v}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten werden mit den Werten des 
+\vector{double} $v[0]$ und $v[1]$ initialisiert.}
+\proch{}{Polynom1o::Polynom1o}{const Polynom1o \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\proch{int}{Polynom1o::setCoefficient}{double a0, double a1}{fitfn.h}
+\descr{Setzt die Werte der Parameter $a_0$ und $a_1$.}
+
+\proch{int}{Polynom1o::getCoefficient}{double \&a0, double \&a1}{fitfn.h}
+\descr{Schreibt die Koeffizienten-Werte auf $a0$ und $a1$.}
+
+\seebaseclass{FunctionWithFitting}
+
+\subsubsection{Quadratische eindimensionale Funktionen}
+\label{Polynom2o}
+\hypertarget{Polynom2o}{}
+
+Die Klasse Polynom2o beschreibt quadratische eindimensionale Funktionen der 
+Form $ f(x) = a_2 \cdot x^2 + a_1 \cdot x + a_0$ . Sie ist von der Basisklasse 
+\class{FunctionWithFitting} abgeleitet.
+
+\proch{}{Polynom2o::Polynom2o}{void}{fitfn.h}
+\descr{Standard-Konstruktor. Die Koeffizienten werden mit $a_0=0$, $a_1=0$ und $a_2=0$ 
+initialisiert.}
+\proch{}{Polynom2o::Polynom2o}{double a0, double a1, double a2}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten mit den übergebenen Werten initialisiert.}
+\proch{}{Polynom2o::Polynom2o}{const Vector \&v}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten werden mit den Werten des Vektors
+$v[0]$, $v[1]$ und $v[2]$ initialisiert.}
+\proch{}{Polynom2o::Polynom2o}{const Polynom2o \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\proch{int}{Polynom2o::setCoefficient}{double a0, double a1, double a2}{fitfn.h}
+\descr{Setzt die Werte der Parameter $a_0$, $a_1$ und $a_2$.}
+
+\proch{int}{Polynom2o::getCoefficient}{double \&a0, double \&a1, double \&a2}{fitfn.h}
+\descr{Schreibt die Koeffizienten-Werte auf $a0$, $a1$ und $a2$.}
+
+\seebaseclass{FunctionWithFitting}
+
+\subsubsection{Allgemeine polynomiale Funktionen}
+\label{Polynom}
+\hypertarget{Polynom}{}
+
+Die Klasse Polynom beschreibt allgemeine polynomiale Funktionen der Form
+$ f(x) = \sum_{i=0}^n a_i \cdot x^i$ . Sie ist von der Basisklasse 
+\class{FunctionWithFitting} abgeleitet.
+
+\proch{}{Polynom::Polynom}{void}{fitfn.h}
+\descr{Standard-Konstruktor. Polynomiale Funktion der Ordnung 0 - Konstante.}
+\proch{}{Polynom::Polynom}{int ord}{fitfn.h}
+\descr{Erzeugt eine Polynomiale Funktion der Ordnung $ord$. Die
+Koeffizienten werden mit 0 initialisiert. }
+\proch{}{Polynom::Polynom}{const \vector{double} \&v}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten werden mit den Werten des Vektors
+$v[i]$ initialisiert.}
+\proch{}{Polynom::Polynom}{const Polynom \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\seebaseclass{FunctionWithFitting}
+
+\subsection{Zweidimensionale Funktionen}
+\label{Function2d}
+\hypertarget{Function2d}{}
+
+Die abstrakte Basisklasse \class{Function2d} beschreibt skalare 
+Funktionen mit zwei Parametern. Wesentliche Eigenschaft dieser
+Klasse ist der \verb+operator()+, der mit zwei Parameter vom Typ
+\verb+double+ aufgerufen werden kann oder mit einem Parameter 
+vom Typ \class{Point}.
+
+\proch{double}{Function2d::operator()}{double x,doubel y}{function.h}
+\procf{double}{Function2d::operator()}{Point p}
+\descr{Berechnet den Funktionswert der Funktion an der Stelle {\bf x, y}
+oder an der Stelle des Punkte {\bf p}.}
+
+\proch{void}{Function2d::getCoefficient}{\vector{double} \&c}{function.h}
+\descr{Ermittelt die Parameter (Koeffizienten) der Funktion. Diese werden
+an den \vector{double} angehängt. 
+Dies erlaubt das Aufsammeln der Parameter mehrerer Funktionen in 
+einem \vector{double}.}
+
+\proch{int}{Function2d::setCoefficient}{const \vector{double} \&para,int idx=0}{function.h}
+\descr{Setzt die Parameter (Koeffizienten) der Funktion. Diese werden
+dem \vector{double} ab dem Index {\bf idx} entnommen. 
+Die Funktion gibt die Position nach dem letzten gelesenen Wert zurück.
+Dies erlaubt die Initialisierung mehrerer Funktionen mit 
+einem \vector{double}.}
+
+\subsection{Zweidimensionale Funktionen mit Fitting}
+\label{Function2dWithFitting}
+\hypertarget{Function2dWithFitting}{}
+
+Die abstrakte Klasse \class{Function2dWithFitting} ist von der Klasse
+\class{Function2d} abgeleitet und beschreibt zweidimensionale Funktionen, 
+deren Parameter durch Fitting ermittelt werden können.
+
+\proch{int}{Function2dWithFitting::FitInit}{}{fitfn.h}
+\descr{Die abstrakte Methode initialisiert das Fitten von Werttupeln.}
+\proch{int}{Function2dWithFitting::FitVal}{double x, double y, double g, double w=1.0}{fitfn.h}
+\descr{Die abstrakte Methode übergibt ein Wertetupel für das Fitten. Optional
+ist es möglich, ein Gewicht $w$ des Typels anzugeben.}
+\proch{int}{Function2dWithFitting::FitVal}{const Point \&p, double g, double w=1.0}{fitfn.h}
+\descr{Die abstrakte Methode übergibt ein Wertetupel für das Fitten, wobei die
+Koordinaten x und y von \see{Point} $p$ als Argument verwendet werden. Optional
+ist es möglich, ein Gewicht $w$ des Typels anzugeben.}
+\proch{int}{Function2dWithFitting::FitFinish}{}{fitfn.h}
+\descr{Schließt den Prozess des Fitting ab. Danach sind die gefitteten 
+Parameter der Funktion gültig.}
+
+\proch{int}{Function2dWithFitting::Fit}{const Matrix \&m}{fitfn.h}
+\descr{Die Funktion wird an die Wertetupel in der Matrix $m$ gefittet.
+Dabei stellt jede Zeile der Matrix ein Wertetupel bereit. Die Matrix muß also
+  mindestens drei Spalten haben.
+Diese Funktion umfasst alle Schritte von 
+der Initialisierung (\see{Function2dWithFitting::FitInit}) über das 
+Eintragen der Werte (\see{Function2dWithFitting::FitValue}) bis zum 
+Abschluss des Fittens (\see{Function2dWithFitting::FitFinish}).
+Vorher mit \bsee{Function2dWithFitting::FitValue} eingetragene Werte
+gehen verloren.}
+
+\proch{int}{Function2dWithFitting::Fit}{Image img}{fitfn.h}
+\proch{int}{Function2dWithFitting::Fit}{ImageD img}{fitfn.h}
+\descr{Die Funktion wird an die Grauwerte des Bildes $img$ gefittet.}
+
+\proch{double}{Func2d::operator()}{double x, double y}{fitfn.h}
+\procf{double}{Func2d::operator()}{Point p}
+\descr{Gibt den Funktionswert der Funktion an der Stelle $x,y$ zurück.}
+
+\seebaseclass{Function2d}
+
+\subsubsection{Konstante zweidimensionale Funktionen}
+\label{Constant2d}
+\hypertarget{Constant2d}{}
+
+Die Klasse \class{Constant2d} beschreibt konstante 
+zweidimensionale Funktionen der Form $ f(x,y) = a$ . 
+Sie ist von der Basisklasse 
+\class{Function2dWithFitting} abgeleitet.
+
+\proch{}{Constant2d::Constant2d}{void}{fitfn.h}
+\descr{Standard-Konstruktor. Der Parameter $a$ wird mit $0$ initialisiert.}
+\proch{}{Constant2d::Constant2d}{double a}{fitfn.h}
+\descr{Konstruktor, der den Parameter $a$ mit dem übergebenem Wert initialisiert.}
+\proch{}{Constant2d::Constant2d}{const \vector{double} \&v}{fitfn.h}
+\descr{Konstruktor, der Parameter $a$ wird mit dem Wert $v[0]$ des Vektors $v$
+initialisiert.}
+\proch{}{Constant2d::Constant2d}{const Constant2d \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\proch{void}{Constant2d::setCoefficient}{double a}{fitfn.h}
+\descr{Setzt den Wert des Parameters $a$.}
+
+\proch{void}{Constant2d::getCoefficient}{double \&a}{fitfn.h}
+\descr{Schreibt den Wert des Parameters $a$ auf die übergebene 
+Variable $a$.}
+
+\seebaseclass{Function2dWithFitting}
+
+\subsubsection{Lineare zweidimensionale Funktionen}
+\label{Polynom2d1o}
+\hypertarget{Polynom2d1o}{}
+
+Die Klasse \class{Polynom2d1o} beschreibt lineare zweidimensionale 
+Funktionen der Form
+$ f(x,y) = a_{10} \cdot x + a_{01} \cdot y + a_{00}$ . Sie ist von der Basisklasse 
+\class{Function2dWithFitting} abgeleitet.
+
+\proch{}{Polynom2d1o::Polynom2d1o}{void}{fitfn.h}
+\descr{Standard-Konstruktor. Die Koeffizienten werden mit $a_{00}=0$,
+$a_{10}=0$ und $a_{01}=0$ initialisiert.}
+\proch{}{Polynom2d1o::Polynom2d1o}{double a00, double a10, double a01}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten mit den übergebenen Werten initialisiert.}
+\proch{}{Polynom2d1o::Polynom2d1o}{const \vector{double} \&v}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten werden mit den Werten des Vektors
+$v[0]$,$v[1]$ und $v[2]$ initialisiert.}
+\proch{}{Polynom2d1o::Polynom2d1o}{const Polynom2d1o \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\proch{void}{Polynom2d1o::setCoefficient}{double a00, double a10, double a01}{fitfn.h}
+\descr{Setzt den Wert der Parameter $a_{00}, a_{10}$ und $a_{01} $.}
+
+\proch{void}{Polynom2d1o::getCoefficient}{double \&a00, double \&a10, double \&a01}{fitfn.h}
+\descr{Schreibt den Wert der Parameter auf die übergebene Variablen.}
+
+\seebaseclass{Function2dWithFitting}
+
+\subsubsection{Zweidimensionale Funktionen zweiter Ordnung}
+\label{Polynom2d2o}
+\hypertarget{Polynom2d2o}{}
+
+Die Klasse \class{Polynom2d2o} beschreibt zweidimensionale 
+Polynome zweiter Ordnung der Form 
+$ f(x,y) = a_{20} \cdot x^2 + a_{11} \cdot x \cdot y + a_{02} \cdot y^2 + a_{10}
+\cdot x + a_{01} \cdot y + a_{00}$ . 
+Sie ist von der Basisklasse \class{Function2dWithFitting} abgeleitet.
+
+\proch{}{Polynom2d2o::Polynom2d2o}{void}{fitfn.h}
+\descr{Standard-Konstruktor. Alle Koeffizienten werden 0 initialisiert.}
+\proch{}{Polynom2d2o::Polynom2d2o}{double a00, double a10, double a01, double a20, double
+a11, double a02}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten mit den übergebenen Werten initialisiert.}
+\proch{}{Polynom2d2o::Polynom2d2o}{const \vector{double} \&v}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten mit den Werten $v[0]$ bis $v[5]$ 
+initialisiert.}
+\proch{}{Polynom2d2o::Polynom2d2o}{const Polynom2d2o \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\proch{void}{Polynom2d2o::setCoefficient}{double a00, double a10, double a01, double a20, double a11, double a02}{fitfn.h}
+\descr{Setzt den Wert der Parameter 
+$a_{00}, a_{10}, a_{01}, a_{20}, a_{11}$ und $a_{20} $.}
+
+\proch{void}{Polynom2d2o::getCoefficient}{double \&a00, double \&a10, double \&a01, double \&a20, double \&a11, double \&a02}{fitfn.h}
+\descr{Schreibt den Wert der Parameter auf die übergebene Variablen.}
+
+\seebaseclass{Function2dWithFitting}
+
+\subsubsection{Allgemeine zweidimensionale polynomiale Funktionen}
+\label{Polynom2d}
+\hypertarget{Polynom2d}{}
+
+Die Klasse \class{Polynom2d} beschreibt allgemeine polynomiale 
+Funktionen der Form
+$ f(x,y) = \sum_{i,j} a_{i,j} \cdot x^i y^j$ . 
+Sie ist von der Basisklasse \see{Function2dWithFitting} abgeleitet. 
+Die Ordnung $ord$ des Polynoms begrenzt die Potenzen auf
+$i+j \le ord$.
+
+\proch{}{Polynom2d::Polynom2d}{void}{fitfn.h}
+\descr{Standard-Konstruktor, erzeugt eine konstante Funktion (Ordnung=0).}
+\proch{}{Polynom2d::Polynom2d}{int ord}{fitfn.h}
+\descr{Erzeugt eine Polynomiale Funktion der Ordnung $ord$. Die
+Koeffizienten werden mit 0 initialisiert. }
+\proch{}{Polynom2d::Polynom2d}{const \vector{double} \&v}{fitfn.h}
+\descr{Konstruktor, der die Koeffizienten werden mit den Werten des Vektors
+$v[i]$ initialisiert.}
+\proch{}{Polynom2d::Polynom2d}{const Polynom2d \&f}{fitfn.h}
+\descr{Kopier-Konstruktor}
+
+\seebaseclass{Function2dWithFitting}
+
+\subsection{Funktions-Modifizierer}
+\label{Function2dModifier}
+\hypertarget{Function2dModifier}{}
+
+Die (abstrakte) Klasse \class{Function2dModifier} ist von der Basisklasse
+\class{Function2d} abgeleitet und beschreibt Funktionen, die andere 
+Funktionen modifizieren. Die Klassen \class{Function2dParameterShift},
+\class{Function2dParameterTransform} und \class{Function2dDistortion}
+transformieren die Parameter einer Funktion vor dem Aufruf.
+Die Klasse \class{Function2dValueTransform} wendet auf den von einer
+Funktion zurückgelieferten Wert eine lineare Funktion an.
+
+\proch{}{Function2dModifier::Function2dModifier}{Function2d \&funcp}{trfunc.h}
+\descr{Konstruktor, der als Parameter die zu modifizierende
+Funktion erhält.}
+
+\seebaseclass{Function2d}
+
+\subsubsection{Verschiebung einer Funktion}
+\label{Function2dParameterShift}
+\hypertarget{Function2dParameterShift}{}
+Die von der Klasse \class{Function2dModifier} abgeleitete 
+Klasse \class{Function2dParameterShift} modifiziert eine
+Funktion dadurch, dass auf von den Aufrufparametern x und y konstante
+Werte dx und dy subtrahiert werden: $ g(x,y) = f ( x - dx, y - dy ) $.
+Dies entspricht einer Verschiebung der Funktion um (dx,dy).
+
+\proch{}{Function2dParameterShift::Function2dParameterShift}{Function2d \&funcp, double sx, double sy}{trfunc.h}
+\descr{Konstruktor, der die zugrundeliegende Funktion und die Offset-Werte
+für die Parameter übernimmt.}
+
+\seebaseclass{Function2dModifier}
+
+\subsubsection{Geometrische Transformation einer Funktion}
+\label{Function2dParameterTransform}
+\hypertarget{Function2dParameterTransform}{}
+Die von der Klasse \class{Function2dModifier} abgeleitete 
+Klasse \class{Function2dParameterTransform} unterwirft eine Funktion
+einer Transformation $T$ der Klasse \class{Trafo}. Dazu werden die
+Parameter x und y der entsprechenden inversen Transformation
+unterworfen: $ g(x,y)=f(T^{-1}(x,y))$ .
+
+\proch{}{Function2dParameterTransform::Function2dParameterTransform}{Function2d \&funcp, const Trafo \&tr}{trfunc.h}
+\descr{Konstruktor, der die zugrundeliegende Funktion und die anzuwendende
+Transformation übernimmt.}
+
+\proch{Trafo \&}{Function2dParameterTransform::Tr}{}{trfunc.h}
+\procf{const Trafo \&}{Function2dParameterTransform::Tr}{}
+\descr{Zugriff auf die anzuwendende Transformation.}
+
+\seebaseclass{Function2dModifier}
+
+\subsubsection{Verzeichnung einer Funktion}
+\label{Function2dDistortion}
+\hypertarget{Function2dDistortion}{}
+Die von der Klasse \class{Function2dModifier} abgeleitete 
+Klasse \class{Function2dDistortion} unterwirft eine Funktion
+einer Verzeichnung $D$ der Klasse \class{Distortion}. Dazu werden die
+Parameter x und y der entsprechenden inversen Transformation
+unterworfen: $ g(x,y)=f(D^{-1}(x,y))$ .
+
+\proch{}{Function2dDistortion::Function2dDistortion}{Function2d \&funcp, Distortion \&tr}{trfunc.h}
+\descr{Konstruktor, der die zugrundeliegende Funktion und die anzuwendende
+Verzeichnung übernimmt. Die Verzeichnung wird als Referenz gespeichert. 
+Die übergebene Instanz der Klasse \class{Distortion} muss deshalb
+solange gültig bleiben, wie die Funktion genutzt wird. 
+}
+
+\seebaseclass{Function2dModifier}
+
+\subsubsection{Transformation des Funktionswertes}
+\label{Function2dValueTransform}
+\hypertarget{Function2dValueTransform}{}
+Die von der Klasse \class{Function2dModifier} abgeleitete 
+Klasse \class{Function2dValueTransform} wendet auf den Funktionswert 
+einer Funktion eine lineare Funktion an: $ g(x,y) = a_1 \cdot f(x,y) + a_0 $ .
+
+\proch{}{Function2dValueTransform::Function2dValueTransform}{Function2d \&funcp, double a1, double a0}{trfunc.h}
+\descr{Konstruktor, der die zugrundeliegende Funktion und die Parameter
+der linearen Funktion übernimmt.}
+
+\seebaseclass{Function2dModifier}
+
+\subsection{Bilder als Funktionen}
+\label{ImageFunction}
+\label{ImageDFunction}
+\hypertarget{ImageFunction}{}
+\hypertarget{ImageDFunction}{}
+
+Die von der Basisklasse \class{Function2d} abgeleiteten Klassen
+\class{ImageFunction} und \class{ImageDFunction} stellen Bilder
+der Klassen \class{Image} und \class{ImageD} als Funktion zur 
+Verfügung. Dabei kann der Typ der Interpolation mittels
+Parameter {\bf mode} gewählt werden:
+
+\begin{tabular}{ll}
+mode & Interpolation \\
+DEFAULT & Nearest Neighbor \\
+INTERPOL & Bilineare Interpolation \\
+\end{tabular}
+
+\proch{}{ImageFunction::ImageFunction}{const Image \&imgp, int mode = INTERPOL}{function.h}
+\procf{}{ImageDFunction::ImageDFunction}{const ImageD \&imgp, int mode = INTERPOL}
+\descr{Konstruktor für Bildfunktionen mit Übergabe des Bildes und Auswahl des
+Interpolationstypes.}

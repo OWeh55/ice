@@ -1,0 +1,443 @@
+\nsection{Statistik}{statistics}
+\subsection{Erzeugung von Zufallszahlen}
+
+\proc{void}{Randomize}{}
+\descr{Initialisierung des Zufallszahlengenerators}
+\proc{int}{Random}{int val}
+\descr{Es wird eine Realisierung einer im Intervall [0,$val$] gleichverteilten
+Zufallsvariablen erzeugt.}
+\proc{double}{RandomD}{}
+\descr{Es wird eine Realisierung einer im Intervall [0,1] gleichverteilten
+Zufallsvariablen erzeugt.}
+\proc{double}{GaussRandom}{double sigma}
+\descr{Es wird eine Realisierung einer normalverteilten Zufallsvariablen 
+mit dem Erwartungswert Null und der Standardabweichung $sigma$ erzeugt}
+
+\subsection{Multivariate Statistik}
+\label{Statistics}
+\hypertarget{Statistics}{}
+
+Zur Ermittlung statistischer Maßzahlen dient die Klasse $Statistics$,
+die einen Datenbereich und Methoden zur Erfassung statistischer 
+Eigenschaften bereitstellt.
+
+\proc{}{Statistics::Statistics}{}
+\descr{
+Standard-Konstruktor. Bevor ein derart angelegter Statistikbereich
+genutzt werden kann, muß dieser mit Init() initialisiert werden. 
+}
+\proc{}{Statistics::Statistics}{int dim}
+\descr{
+Ein Statistikbereich für $dim$ Zufallsvariablen wird angelegt 
+und initialisiert.
+}
+\proc{int}{Statistics::Init}{}
+\descr{
+Reinitialisieren eines Statistikbereiches. Alle akkumulierten
+Werte werden zurückgesetzt.
+}
+\proc{int}{Statistics::Init}{int dim}
+\descr{
+Der Statistikbereich wird für $dim$ Zufallsvariablen eingerichtet
+und initialisiert.
+}
+
+\proc{int}{Put}{Statistics \&st,const Vector \&val,double weight=1.0}
+\descr{
+Der Zufallsvariablenvektor $val$ wird in den Statistikbereich $st$
+mit einem Gewicht von $weight$ aufgenommen
+}
+
+\proc{Vector}{Mean}{const Statistics \&st}
+\descr{
+Liefert den Mittelwert-Vektor des Statistikbereiches $st$.
+}
+
+\proc{double}{Weight}{const Statistics \&st}
+\descr{
+Liefert das Gesamtgewicht aller eingtragenen Werte des 
+Statistikbereiches $st$.
+}
+
+\proc{Matrix}{Covariance}{const Statistics \&st}
+\descr{
+Liefert die Covarianz-Matrix des Statistikbereiches $st$.
+}
+
+\proc{Matrix}{Correlation}{const Statistics \&st}
+\descr{
+Liefert die Korrellations-Matrix des Statistikbereiches $st$.
+}
+
+\proc{int}{Write}{const Statistics \&st,const string \&fn}
+\descr{
+Schreibt den Statistikbereich $st$ in die Datei $fn$.
+}
+
+\proc{int}{Read}{Statistics \&st,const string \&fn}
+\descr{
+Lädt den Statistikbereich $st$ aus der Datei $fn$.
+}
+
+\proc{ostream \&}{operator <<}{ostream \&s,const Statistics \&t}
+\descr{
+Schreibt den Statistikbereich $st$ in den Stream $s$.
+}
+
+\proc{istream \&}{operator >>}{istream \&s,Statistics \&st}
+\descr{
+Liest den Statistikbereich $st$ aus dem Stream $s$.
+}
+
+Das folgende Beispiel bestimmt die Statistik der Farbwerte in einem
+Farbbild:
+
+\begprogr\begin{verbatim}
+void Stat(Image ri,Image gi,Image bi)
+{
+ int x,y, r,g,b, cl;
+ Statistics st(3); // Statistikbereich mit 3 Zufalls-Größen
+ wloop(mi,x,y)
+  {
+    r=GetVal(ri,x,y); // Größen abfragen
+    g=GetVal(gi,x,y);
+    b=Getval(bi,x,y);
+    Put(st,Vector(r,g,b)); // Eintragen (mit Gewicht 1)
+  }
+ // Ergebnisse ausgeben
+ cout << "Mittelwerte" << endl << Mean(st) << endl;
+ cout << "Kovarianz" << endl << Covariance(st) << endl;
+ cout << "Korrelation" << endl << Correlation(st) << endl;
+ return clf;
+}
+\end{verbatim}\endprogr
+
+\subsection{Karhunen-Loewe-Transformation}
+
+Die Karhunen-Loewe-Transformation kann aus einer bereits ermittelten
+Statistik berechnet werden oder auch anhand einer Liste von
+Merkmalsvektoren.
+
+\proc{Matrix}{KLT}{const Matrix \&m}
+\procf{Matrix}{KLT}{const Matrix \&m,Vector \&r}
+\descr{Für die Stichprobe von Merkmalsvektoren (Zeilenvektoren der 
+Matrix $m$) wird die Karhunen-Loewe-Transformation berechnet. Wird
+der Vektor $r$ als Parameter angegeben, so wird auf dem Vektor $r$
+für jedes transformierte Merkmal ein Relevanzmaß zurückgegeben.
+}
+
+\proc{Matrix}{KLT}{const Statistics \&st}
+\procf{Matrix}{KLT}{const Statistics \&st,Vector \&r}
+\descr{Aus der Information im Statistikbereich $st$ wird die 
+Karhunen-Loewe-Transformation berechnet. Wird
+der Vektor $r$ als Parameter angegeben, so wird auf dem Vektor $r$
+für jedes transformierte Merkmal ein Relevanzmaß zurückgegeben.
+}
+
+\subsection{Histogramme}
+Die Klassen \class{Histogram} und \class{Hist} dienen der 
+Berechnung von Histogrammen für eindimensionale Zufallsgrößen.
+Während die Klasse \class{Histogram} eine direkt Zuordnung der Werte
+im Interval 0 .. nClasses-1 zu den Klassen-Nummern verwendet, erlaubt 
+die Klasse \class{Hist} die Aufteilung eines Intervalls in jeweils
+gleichgroße Klassen.
+
+\subsubsection{Die Klasse {\bf Histogram}}
+\label{Histogram}
+\hypertarget{Histogram}{}
+Die Klasse \class{Histogram} stellt eine einfach und schnelle 
+Histogramm-Klasse zur Verfügung. In die knumber Klassen des Histogrammes 
+werden ganzzahlige Werte von 0 .. {\bf knumber-1} eingeordnet, wobei 
+jedem Zahlenwert eine Klasse entspricht. Typische Anwendungen sind 
+Histogramme von Grauwerten und Markierungen. Eine variablere 
+Zuordnung von Werten zu Klassen ermöglicht die Klasse \class{Hist}.
+
+\subtitle{Konstruktoren}
+
+\ctor{Histogram}{}{histogram.h}
+\descr{Legt ein Histogramm an. Dieses ist noch ungültig, da keine
+Klassenanzahl bekannt ist (\see{Histogram::isValid}).}
+
+\ctor{Histogram}{int knumber}{histogram.h}
+\descr{Legt ein Histogramm mit $knumber$ Klassen an, wobei den Klassen
+die ganzzahligen Werte 0..knumber zugeordnet sind.}
+
+\ctor{Histogram}{const Image \&img,int diff=1}{histogram.h}
+\descr{Erzeugt ein Histogramm des Bildes $img$. Zur Beschleunigung ermöglicht
+  es der Parameter $diff$, in x- und y-Richtung nur jeden diff-ten Wert zu 
+berücksichtigen.}
+
+\subtitle{Elementare Methoden}
+\method{int}{reset}{}
+\descr{Setzt das Histogram zurück, es ist danach wieder ungültig
+(\see{Histogram::isValid}).}
+
+\method{int}{reset}{int knumber}
+\descr{Setzt das Histogram zurück und legt $knumber$ Klassen neu an.}
+
+\method{int}{isValid}{}
+\descr{Gibt wahr zurück, wenn das Histogramm gültig ist. Ein Histogramm ist
+  ungültig, wenn es mit dem Standard-Konstruktor angelegt wurde oder mittels
+  parameterlosem \see{reset} zurückgesetzt wurde.}
+
+\method{int}{nClasses}{}
+\descr{Gibt die Zahl der Klassen im Histogramm zurück.
+  Der Wert ist undefiniert für ungültige Histogramme (\see{Histogram::isValid}).}
+
+\method{int}{addValue}{int val,int count = 1}
+\descr{Trägt den Wert $val$ in das Histogramm ein. Der optionale 
+  Parameter $count$ erlaubt das mehrfache Eintragen eines Wertes. 
+  Durch negative Werte von $count$ können Werte wieder ausgetragen werden.
+Werte außerhalb des Intervalles $[0,nClasses-1]$ werden ignoriert.
+}
+
+\method{int}{getCount}{int nr}
+\methodf{int}{operator []}{int nr}
+\descr{Gibt der Zahl der in die Klasse $nr$ eingetragenen Werte zurück.}
+
+\method{\vector{int}}{getCount}{}
+\methodf{void}{getCount}{\vector{int} \&v}
+\descr{Gibt die gezählten Werte pro Klasse in einem int-Vektor zurück.} 
+
+\method{double}{getRelative}{int nr}
+\descr{Gibt den Anteil der in die Klasse $nr$ eingetragenen Werte zurück.}
+
+\method{\vector{double}}{getRelative}{}
+\methodf{void}{getRelative}{\vector{double} \&v}
+\descr{Gibt den Anteil der in die Klassen eingetragenen Werte als 
+double-Vektor zurück.}
+
+\subtitle{Komplexe Abfragen}
+
+\method{int}{getLimits}{int \&min, int \&max}
+\descr{Ermittelt den kleinsten und den größten Wert, für den Eintrage
+  im Histogramms existieren.}
+
+\method{int}{getLimits}{int \&min, int \&max, double quantil}
+\descr{Ermittelt den kleinsten und den größten Wert, für den Eintrage
+  im Histogramms existieren. Dabei bleiben die jeweils 
+  $quantil \cdot sum$ größten und kleinsten Werte unberücksichtigt (Ausreißer).
+}
+
+\method{int}{Statistic}{int \&sum}
+\methodf{int}{Statistic}{int \&sum,double \&xm,double \&xs}
+\methodf{int}{Statistic}{int \&sum,double \&xm,double \&xs,double \&skew}
+\descr{Ermittelt eine Schätzung der statistischem Maßzahlen für die in das
+Histogramm eingetragenen Werte.
+\begin{itemize}
+\item sum - Anzahl der eingetragenen Werte
+\item xm - Mittelwert
+\item xs - Standardabweichung
+\item skew - Schiefe
+\end{itemize}
+}
+
+\proch{double}{Distance}{const Histogram \&h1,const Histogram \&h2}{histogram.h}
+\descr{Berechnet die ''Earth Mover's Distance'' zwischen den beiden gegebenen
+  Histogrammen. Die Implementierung ist beschränkt auf Histogramme mit gleicher
+  Klassen-Anzahl.}
+
+\subtitle{Ausgabe}
+
+\method{int}{Vis}{int val,const Image \&img}
+\descr{Stellt das Histogram im Bild $img$ mit dem Wert $val$ grafisch dar.}
+
+\proch{int}{PrintHistogram}{const Histogram \& h}{histogram\_vis.h}
+\descr{Gibt das Histogramm $h$ auf dem alphanumerischen Bildschirm aus.}
+
+\subsubsection{Die Klasse {\bf Hist}}
+\label{Hist}
+\hypertarget{Hist}{}
+
+Im Unterschied zu \class{Histogram} verwendet die Klasse \class{Hist}
+Gleitkommawerte für die in die Klassen einzutragenden Werte. Dies ermöglicht
+eine variablere Zuordnung. Wo dies nicht nötig ist, sollte aus
+Effizienzgründen die Klasse \class{Histogram} verwendet werden.
+
+\proch{}{Hist::Hist}{}{hist.h}
+\descr{
+  Es wird ein Histogramm angelegt. Dieses ist wegen fehlender
+  Initialisierung noch ungültig ($valid=false$).
+}
+
+\proc{}{Hist::Hist}{const Hist \&h}
+\descr{
+  Es wird ein Histogramm als Kopie des Histogramms $h$ angelegt. 
+}
+
+\proc{}{Hist::Hist}{int knumber,double diff=1.0,double lower=-0.5}
+\descr{
+  Es wird ein Histogramm mit $knumber$ Klassen, der Klassenbreite $diff$ und der
+  unteren Schranke $lower$ der untersten Histogrammklasse angelegt und
+  initialisiert.
+}
+
+\proc{int}{Hist::Reset}{}
+\descr{
+  Das Histogramm wird zurückgesetzt und Speicher wird freigegeben. Es 
+  ist damit (wieder) ungültig ($valid=false$).
+}
+
+\proc{int}{Hist::Reset}{int knumber,double diff=1.0,double lower=-0.5}
+\descr{
+  Das Histogramm wird zurückgesetzt und neu mit $knumber$ Klassen, der 
+  Klassenbreite $diff$ und der unteren Schranke $lower$ der untersten 
+Histogrammklasse angelegt und initialisiert.
+}
+
+\proc{int}{Hist::Add}{double val}
+\descr{
+Der Wert $val$ wird in das Histogramm eingetragen.
+}
+
+\proc{int}{Hist::Count}{int index}
+\descr{
+Die Zahl der in die Klasse $index$ einsortierten Werte
+wird zurückgegeben.
+}
+
+\proc{double}{Hist::Rel}{int index}
+\descr{
+Die relative Zahl der in die Klasse $index$ einsortierten Werte
+wird zurückgegeben.
+}
+
+\proc{int}{Hist::Limits}{double \&min,double \&max}
+\descr{Der kleinste und der größte in das Histogramm eingetragene
+Wert werden auf $min$ bzw. $max$ zurückgegeben.
+}
+
+\proc{int}{Hist::Limits}{double \&min,double \&max,double quant}
+\descr{
+Es wird ein Intervall von Klassen ermittelt, so daß der Anteil
+der unterhalb bzw. oberhalb liegenden Werte im Histogram einen 
+Anteil unter quant an der Gesamtzahl der Werte hat. Der mittlere
+Wert der minimalen bzw. maximalen Klasse wird auf $min$ bzw. $max$
+zurückgegeben.
+}
+
+\proc{Hist}{HistImg}{Image img,int diff=1,int clw=1}
+\descr{
+Es wird ein Grauwerthistogramm für das Bild $img$ angelegt, wobei für jeden
+möglichen Grauwert eine Klasse vorgesehen wird. Für das Histogramm werden
+Bildpunkte aus einem Raster mit dem Abstand $diff$ ausgewertet. Jede Klasse
+des Histogramms hat die Breite $clw$.
+}
+
+\proc{int}{Hist::Statistic}{int \&nbr,double \&mean,double \&dispers}
+\descr{
+Für das Histogramm wird die Anzahl der eingetragenen Werte $nbr$, 
+der Mittelwert $mean$ und die empirische Standardabweichung $dispers$
+bestimmt.
+}
+
+\proch{int}{PrintHist}{const Hist \& h}{hist\_vis.h}
+\descr{Das Histogramm $h$ wird auf dem Text-Bildschirm ausgegeben.}
+
+\proc{int}{Hist::Vis}{int val,Image img}
+\descr{
+In das Bild $img$ wird das Histogramm $h$ eingezeichnet.
+}
+
+Die folgenden Werte können zur Abfrage der Histogramm-Eigenschaften
+verwendet werden:
+
+\begin{tabular}{ll}
+int valid & Boolscher Wert Gültigkeit des Histogramms\\
+int number & Zahl der Klassen des Histogramms \\
+double minval & Untere Schranke der ersten Klasse \\
+double diff & Klassenbreite \\
+\end{tabular}
+
+\subsection{Akkumulation}
+Unter Akkumulation werde hier verstanden, dass eine große Zahl von Werten erfasst und
+am Ende der häufigste Wert ermittelt werde. Dies ähnelt der Eintragung von Werten 
+in ein Histogramm und nachfolgender Maximumsuche. Die Akkumulatorklassen enthalten 
+eine effizientere Implementierung für die spezielle Aufgabe und reduzieren die 
+Quantisierungseffekte: Dazu werden Einträge neben der eigentlichen Klasse mit 
+geringerem Gewicht in die Nachbarklassen eingetragen.
+
+Die Klasse {\bf accu1} realisiert eine eindimensionale Akkumulation über einen skalaren Wert. 
+{\bf accu2} akkumuliert über 2-dimensionale Werte.
+
+\subtitle{Konstruktoren und Initialisierung}
+\label{accumulation}
+\hypertarget{accumulation}{}
+
+\proch{}{accu1::accu1}{}{accu.h}
+\procf{}{accu2::accu2}{}
+\descr{Der Standardkonstruktor legt einen noch ungültigen Akkumulator an. 
+Vor einer weiteren Nutzung müssen die Parameter mittels \bsee{accu1::setDim} 
+festgelegt werden.}
+
+\proch{}{accu1::accu1}{int n,double min=0.0,double max=1.0,bool mod=false}{accu.h}
+\procf{}{accu2::accu2}{int n1,double min1,double max1,bool mod1,
+int n1,double min2, double max2,bool mod2,int smear=1}
+\descr{Diese Konstruktoren legen ein Akkumulatorobjekt an und initialisieren es.
+Die Parameter beschreiben die Zahl der Klassen ($n$ bzw. $n1$ und $n2$), den Wertebereich 
+der zu berücksichtigenden Werte ($min$ ... $max$) und legen fest, ob die Eingangsgröße
+zyklisch behandelt werden soll, wie zum Beispiel Winkelgrößen.
+Der Parameter smear legt fest, dass ein Wert neben der eigenen Klasse 
+auch in die Nachbarklassen in einer smear*smear-Umgebung einzutragen ist. Das Gewicht 
+fällt dabei proportional zum Abstand ab.
+}
+
+\proch{void}{accu1::setDim}{int n,double min=0.0,double max=1.0,bool mod=false}{accu.h}
+\descr{Diese Methode legt die Parameter für die Eingangsgröße fest.
+Die Parameter beschreiben die Zahl der Klassen ($n$), den Wertebereich 
+der zu berücksichtigenden Werte ($min$ ... $max$) und legen fest, ob die Eingangsgröße
+zyklisch behandelt werden soll, wie zum Beispiel Winkelgrößen.
+}
+
+\proch{void}{accu2::setDim}{int dim,int n,double min=0.0,double max=1.0,bool mod=false}{accu.h}
+\descr{Diese Methode legt die Parameter für eine Dimension der Eingangsgröße fest.
+Für dim sind die Werte 0 und 1 möglich.
+Die Parameter beschreiben die Zahl der Klassen ($n$), den Wertebereich 
+der zu berücksichtigenden Werte ($min$ ... $max$) und legen fest, ob die Eingangsgröße
+zyklisch behandelt werden soll, wie zum Beispiel Winkelgrößen.
+}
+
+\subtitle{Eintrag von Werten}
+
+\proch{void}{accu1::Add}{double val}{accu.h}
+\descr{Trägt den Wert $val$ in das Akkumulatorobjekt ein.}
+
+\proch{void}{accu2::Add}{double val1,double val2}{accu.h}
+\procf{void}{accu2::Add}{const Vector \&v}
+\procf{void}{accu2::Add}{Point v}
+\descr{Trägt das Wertpaar $val1$/$val2$ in das Akkumulatorobjekt ein. Alternativ können die Werte 
+als \bsee{Vector} oder als \bsee{Point} angegeben werden.}
+
+\subtitle{Abfrage}
+
+\proch{void}{accu1::getMax}{double \&val}{accu.h}
+\procf{void}{accu1::getMax}{double \&val,double \&ct}
+\descr{Ermittelt den am häufigsten aufgetretenen Wert und gibt ihn auf $val$ zurück. $ct$ wird
+auf den akkumulierten Wert, ein Maß für die Häufigkeit, gesetzt.}
+
+\proch{void}{accu2::getMax}{double \&val1,double \&val2}{accu.h}
+\procf{void}{accu2::getMax}{double \&val1,double \&val2,double \&ct}
+\procf{Point}{accu2::getMax}{}
+\procf{Point}{accu2::getMax}{double \&ct}
+\descr{Ermittelt den am häufigsten aufgetretenen Wert und gibt ihn auf $val1$/$val2$ zurück. $ct$ wird
+auf den akkumulierten Wert, ein Maß für die Häufigkeit, gesetzt. Alternativ kann der Wert (das Wertepaar) 
+als \bsee{Point} zurückgegeben werden.}
+
+\subsection{Geradendetection durch Akkumulation}
+Bei der Geradendetektion durch \hyperlink{accumulation}{Akkumulation} wird eine Liste von Punkten ausgewertet, die Kandidaten für 
+Geradenpunkte darstellen. Für alle bzw. eine gegebene Anzahl von Paaren von diesen Punkten werden die 
+Parameter der Gerade berechnet, die durch diese Punkte geht. Mittels \hyperlink{accumulation}{Akkumulation} wird 
+die Gerade ermittelt, die am häufigsten aufgetreten ist und die damit durch die meisten Punkte geht.
+
+\proch{LineSeg}{DetectLine}{const vector<Point> \&pointlist}{accu.h}
+\procf{LineSeg}{DetectLine}{const vector<Point> \&pointlist,int pairs}
+\procf{LineSeg}{DetectLine}{const Matrix \&pointlist}
+\procf{LineSeg}{DetectLine}{const Matrix \&pointlist,int pairs}
+\descr{Ermittelt durch Akkumulation eine Gerade, die durch möglichst viele Punkte der übergebenen 
+Punktliste $pointlist$ geht. Im ersten Fall werden alle möglichen Punktpaare verwendet, im zweiten Fall wird die
+Auswertung auf $pairs$ zufällig gewählte Punktpaare beschränkt.}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

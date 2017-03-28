@@ -1,0 +1,523 @@
+\nsection{Klassifikation}{classification}
+
+Alle Klassifikatoren bauen auf der abstrakten Basisklasse 
+\class{Classifier} auf. Diese bestimmt das normale Interface
+für die Verwendung von Klassifikatoren. 
+
+Die Klassifikatoren ordnen den Klassen die Zahlen von 0 ... n-1 zu,
+wenn der Klassifikator n Klassen klassifiziert. Negative Klassennummern
+als Klassifikationsergebnis kennzeichnen Sonderfälle:
+\begin{itemize}
+\item[-1] Rückweisung, Objekt gehört zu keiner Klasse
+\item[-2] Ergebnis ist nicht eindeutig (Rückweisung 2. Art)
+\end{itemize}
+
+Der typische Lebenszyklus eines Klassifikators besteht aus:
+\begin{itemize}
+\item Initalisierung und Konfiguration\\
+Die Parameter eines Konstruktors werden im Konstruktor
+oder in der Methode {\bf Init} festgelegt. Die 
+Methode {\bf Init} erlaubt eine spätere Festlegung der 
+Parameter, wenn zum Anlegen der Standard-Konstruktor 
+verwendet werden soll.
+\item Anlernen\\
+Die Methoden {\bf Train} erlauben das Anlernen des Klassifikators
+durch Vorgaben einzelner Stichproben oder einer Liste.
+\item Abschluss des Lernvorganges\\
+Methode {\bf Finish} verarbeitet die angelernten Stichproben. Bei 
+den meisten Klassifikatoren erfolgt hier der Anlern-Vorgang, der 
+die angelernten Stichproben verarbeitet.
+\item Klassifizieren\\
+Die Methoden {\bf Classify} können nach dem Abschluss des Lernvorganges
+genutzt werden, um anhand eines Merkmalsvektors zu klassifizieren. 
+\end{itemize}
+
+\subsection{Klasse ClassSample}
+Die Klasse \class{ClassSample} enthält die Merkmale einer Probe als 
+\verb+vector<double>+ und die Klassen-Nummer. Die Klasse enthält die 
+öffentlichen (public) Instanz-Variablen \verb+int classnr+ und 
+\verb+vector<double> features+.
+
+\ctor{ClassSample}{}{ClassSample.h}
+\descr{Standard-Konstruktor.}
+
+\ctor{ClassSample}{int c, \cvector{double} f}{classc.h}
+\descr{Legt eine Instanz von \class{ClassSample} mit den gegebenen
+Werten an.}
+
+\method{double \&}{operator[]}{int i}
+\descr{Gibt das Merkmal $i$ zurück.}
+
+\method{int}{size}{}
+\descr{Gibt die Zahl der Merkmale zurück.}
+
+\subsection{Abstrakte Klasse Classifier}
+\hypertarget{Classifier}{}
+Die abstrakte Klasse \class{Classifier} ist die Oberklasse zu allen 
+Klassifikator-Klassen.
+
+\ctor{Classifier}{}{Classifier.h}
+\descr{
+Standard-Konstruktor. Wird ein Klassifikator hiermit angelegt,
+so muss die Methode Init verwendet werden, um die grundlegenden
+Parameter vorzugeben.
+}
+\ctor{Classifier}{int classes,int dimension}{Classifier.h}
+\descr{
+Konstruktor, der den Klassifikator mit den notwendigen
+Parametern initialisiert. Bei einzelnen Klassifikatoren sind 
+mehr Parameter als die Zahl der Klassen $classes$ und die
+Zahl der Merkmale $dimension$ möglich oder erforderlich.
+}
+\ctor{Classifier}{const Classifier \&c}{Classifier.h}
+\descr{
+Kopier-Konstruktor. Erzeugt ein Duplikat des übergebenen 
+Klassifikators $c$. Das Kopieren sollte nur bei Notwendigkeit 
+erfolgen, da dies bei einzelnen Klassifikatoren die Kopie großer
+Datenmengen erfordert.
+}
+
+\method{int}{Init}{}
+\descr{Rücksetzen des Klasifikators. 
+Verwirft alle angelernten Werte und erlaubt das neue Anlernen 
+mit den gleichen Parametern.}
+
+\method{int}{Init}{int classes,int dimension}
+\descr{
+Initialisieren des Klassifikators mit den gegebenen Parametern.
+Bei einzelnen Klassifikatoren sind mehr Parameter als die Zahl 
+der Klassen $classes$ und die Zahl der Merkmale $dimension$ 
+erforderlich.
+}
+
+\method{int}{Train}{const ClassSample \&sample}
+\methodf{int}{Train}{int cl,const \vector{double} \&feat}
+\methodf{int}{Train}{int cl,const Vector \&feat}
+\descr{
+Belehrt den Klassifikator mit einer Probe $sample$ oder einem einzelnen 
+Merkmalsvektor $feat$, der der Klasse $cl$ zu zuordnen ist
+}
+
+\method{int}{Train}{const \vector{ClassSamples} \&samples}
+\descr{
+Belehrt den Klassifikator mit einer Liste von Stichproben $samples$.}
+
+\method{int}{Train}{const Matrix \&m}
+\descr{
+Belehrt den Klassifikator mit einer klassifizierten Stichprobe.
+Die Matrix $m$ ist eine (zeilenweise) Liste von Vektoren, die
+die Merkmale und in der letzten Spalte die Klassennummer 
+enthalten}
+
+\method{int}{Train}{const Matrix \&features,const IVector \&classnr}
+\descr{
+Belehrt den Klassifikator mit einer Liste von Stichproben.
+Die Matrix $features$ ist eine Liste von (zeilenweisen) Merkmalsvektoren,
+der Integer-Vektor $classnr$ enthält die jeweilige Klassennummer.}
+
+\method{int}{Finish}{}
+\descr{Das Anlernen des Klassifikators wird beendet. Hier finden
+Klassifikator-spezifische Berechnungen statt. 
+Finish {\bf muss} vor der Verwendung des Klassifikators aufgerufen werden.}
+
+\method{double}{Test}{const \vector{ClassSample} \&samples}
+\method{double}{Test}{const Matrix \&m}
+\method{double}{Test}{const Matrix \&features,const IVector \&classnr}
+\descr{
+Verifiziert den Klassifikator anhand der Stichprobe.
+Der Rückgabe-Wert enthält den relativen Anteil korrekt
+klassifizierter Proben.
+}
+
+\method{double}{Test}{const Matrix \&m,Matrix \&f}
+\descr{
+Verifiziert den Klassifikator anhand der klassifizierten 
+Stichprobe in der Matrix $m$. Der Rückgabe-Wert enthält den
+relativen Anteil richtig klassifizierter Proben. In der 
+zurückgegebenen Matrix f werden für jede Objektklasse
+(Zeilen) angegeben, welcher Anteil von Objekten dieser
+Klasse in die jeweiligen Klassen (Spalten) klassifiziert 
+wurden.
+}
+
+\method{int}{Classify}{const \vector{double} \&features}
+\methodf{int}{Classify}{const Vector \&features}
+\descr{
+Klassifiziert den Merkmalsvektor $feat$ und liefert die Klassennummer 
+zurück. Rückweisungen erster Art (das Muster gehört zu keiner Klasse) 
+werden durch den Wert Classifier::rejected == -1 gekennzeichnet. 
+Bei Rückweisungen zweiter Art (das Muster gehört zu mehreren Klassen) 
+ist der Rückgabewert Classifier::ambiguous == -2.
+}
+
+\method{int}{Classify}{const \vector{double} \&features, 
+                             \vector{double} \&probabilities}
+\descr{
+Klassifiziert den Merkmalsvektor $features$ und liefert die Klassennummer 
+zurück. Auf dem Vektor $probabilities$ werden für alle Klassen 
+Wahrscheinlichkeiten bereitgestellt. Für Klassifikatoren, bei denen
+keine differenzierte Angabe der Wahrscheinlichkeiten erfolgen kann, ist 
+die Wahrscheinlichkeit der erkannten Klasse auf 1.0, die der anderen 
+Klassen auf 0.0 gesetzt.
+}
+
+\proc{int}{Classifier::Classify}{Matrix \&m}
+\descr{
+Klassifiziert die Liste von Merkmalsvektoren (Zeilen) in der
+Matrix $m$. Das Ergebnis wird als zusätzliche Spalte an die
+Matrix angehängt.
+}
+
+\proc{int}{Classifier::Classify}{const Matrix \&m,IVector \&cl}
+\descr{
+Klassifiziert die Liste von Merkmalsvektoren (Zeilen) in der
+Matrix $m$. Das Ergebnis wird in Integer-Vektor $cl$ 
+eingetragen.
+}
+
+\proc{int}{Classifier::Write}{const string \&fn}
+\descr{
+Speichert den Klassifikator in der Datei $fn$. Der Klassifikator muss
+angelernt und mit \bsee{Classifier::Finish} verarbeitet worden sein.
+}
+
+\proc{int}{Classifier::Read}{const string \&fn}
+\descr{
+Liest den Klassifikator aus der Datei $fn$ ein.
+}
+
+\subsection{Abstrakte Klasse ClassifierNormal}
+Die abstrakte Klasse \class{ClassifierNormal} dient der Implementierung
+von Klassifikatoren, die
+\begin{itemize}
+\item alle Stichproben während des Anlernen aufsammeln und
+innerhalb von {\bf Finish} verarbeiten,
+\item (optional) eine Normalisierung der Merkmalswerte vornehmen wollen.
+\end{itemize}
+
+\ctor{ClassifierNormal}{}{ClassifierNormal.h}
+\descr{
+Standard-Konstruktor. Wird ein Klassifikator hiermit angelegt,
+so muss die Methode Init verwendet werden, um die grundlegenden
+Parameter vorzugeben.
+}
+
+\ctor{ClassifierNormal}{int classes,int dimension}{ClassifierNormal.h}
+\descr{
+Konstruktor, der den Klassifikator mit $classes$ Klassen und
+jeweils $dimension$ Merkmalen initialisiert.
+}
+
+\method{void}{doNormalization}{int mode = normalizeCenter $|$ normalizeScaling $|$ normalizeIsotropic}
+\descr{Die Methode wird von abgeleiteten Klassen in {\bf Finish} 
+aufgerufen, um eine Normalisierung zu ermitteln und die Stichprobe 
+zu normalisieren. Der Parameter $mode$ steuert die vorzunehmenden
+Normalisierung:}
+\begin{tabular}{|l|l|} \hline
+Konstante: & Normalisiert ... \\ \hline
+ClassifierNormal::normalizeCenter & ... die Mittelwerte auf 0.0 \\ \hline
+ClassifierNormal::normalizeScaling & ... die Standardabweichung der
+einzelnen Merkmale auf 1.0 \\ \hline
+ClassifierNormal::normalizeIsotropic & ... die Standardabweichung 
+aller Merkmale auf 1.0 \\ \hline
+\end{tabular}
+
+\method{void}{normalize}{\vector{double} \&feat}
+\descr{Die Methode wird in der Klassifiaktion in abgeleiteten Klassen
+aufgerufen, um den Merkmalsvektor mit der ermitteleten Klassifikation 
+zu normalisieren.}
+
+\subsection{Minimum-Distanz-Klassifikator}
+\hypertarget{ClassifierMD}{}
+Der Minimum-Distanz-Klassifikator ermittelt für jede Klasse einen
+Repräsentanten, der dem Mittelwert der angelernten Stichprobe 
+entspricht. Zur Klassifikation einer Probe wird die Klasse ermittelt, 
+deren Repräsentant den geringsten Abstand zur Probe hat.
+
+\ctor{ClassifierMD}{}{ClassifierMinimumDistance.h}
+\descr{
+Standard-Konstruktor. Wird ein Klassifikator hiermit angelegt,
+so muss die Methode Init verwendet werden, um die grundlegenden
+Parameter vorzugeben.
+}
+
+\ctor{ClassifierMD}{int classes,int dimension}{ClassifierMinimumDistance.h}
+\descr{
+Konstruktor, der den Klassifikator bereits mit den notwendigen
+Parametern initialisiert. Parameter sind die Zahl der 
+Klassen $classes$ und die Zahl der Merkmale $dimension$.
+}
+\ctor{ClassifierMD}{const ClassifierMD \&c}{ClassifierMinimumDistance.h}
+\descr{
+Kopier-Konstruktor. Erzeugt ein Duplikat des übergebenen 
+Klassifikators $c$.
+}
+
+Alle Methoden dieser Klasse entsprechen in Ihrem Verhalten dem
+im Abschnitt für die Klasse $Classifier$ beschriebenen.
+
+\subsection{Nearest-Neighbour-Klassifikator}
+\hypertarget{ClassifierNearestNeighbor}{}
+
+Der Nearest-Neighbour-Klassifikator klassifiziert anhand aller 
+beim Anlernen gesehenen Proben. Dabei wird die Probe gesucht, die
+vom aktuellen Merkmalsvektor den geringsten Abstand hat, Resultat 
+ist dann dessen Klassenzugehörigkeit. Durch Festlegen einer Zahl 
+von Nachbarn wird der Klassifikator zum K-Nearest-Neighbor-Klassifikator,
+der unter den $k$ nächsten Nachbarn die Klasse durch Abstimmung 
+ermittelt.
+
+\ctor{ClassifierNearestNeighbor}{}{ClassifierNearestNeighbor.h}
+\descr{
+Standard-Konstruktor. Wird ein Klassifikator hiermit angelegt,
+so muss die Methode Init verwendet werden, um die grundlegenden
+Parameter vorzugeben.
+}
+
+\ctor{ClassifierNearestNeighbor}{int classes,int dimension,int nNeighbors = 1,bool norm = false}ClassifierNearestNeighbor.h}
+\descr{
+Konstruktor, der einen Klassifikator mit $classes$ Klassen und
+$dimension$ Merkmalen initialisiert. Durch Angabe ein Zahl von Nachbarn 
+größer 1 wird der Klassifikator zum K-Nearest-Neighbor-Klassifikator.
+Ist $norm$ gleich $true$ werden die Merkmale bezüglich anisotroper 
+Skalierung normalisiert.
+}
+
+\ctor{ClassifierNearestNeighbor}{const ClassifierNearestNeighbor \&c}{ClassifierNearestNeighbor.h}
+\descr{
+Kopier-Konstruktor. Erzeugt ein Duplikat des übergebenen 
+Klassifikators $c$.
+}
+
+\method{void}{Init}{int classes,int dimension,int neighbors = 1, bool norm = false}
+\descr{[Re-]Initialisiert den Klassifikator mit den gegebenen Werten
+für die Zahl der Klassen $classes$ und die Zahl der Merkmale $dimension$.
+Durch Angabe ein Zahl von Nachbarn größer 1 wird der Klassifikator zum
+K-Nearest-Neighbor-Klassifikator.
+Ist $norm$ gleich $true$ wird eine Normalisierung bezüglich anisotroper 
+Skalierung aktviert.}
+
+\method{void}{setNNeighbors}{int k}
+\methodf{int}{getNNeighbors}{}
+\descr{Setzt die Zahl der zu suchenden nächsten Nachbarn fest. Der 
+Klassifikator wird zum k-Nearest-Neighbor-Klassifikator. Dies kann 
+auch noch nach dem Aufruf von {\bf Finish()} erfolgen.}
+
+\method{void}{setConsiderDistances}{bool considerDistances}
+\methodf{bool}{getConsiderDistances}{}
+\descr{Setzt beziehungsweise liest ein Flag, welches die Berücksichtigung
+der Distanzen bei der Entscheidung des K-Nearest-Neighbor-Klassifikators
+ermöglicht.}
+
+\method{void}{setRejectionThreshold}{double theshold}
+\methodf{double}{getRejectionThreshold}{}
+\descr{Diese Schwelle gibt an, welcher Teil der k nächsten Nachbarn zu
+einer Klasse gehören muss. Überschreitet die häufigtse Klasse diese
+Schwelle nicht, erfolgt eine Zuordnung zur Rückweisungsklasse (-1).
+}
+
+Alle weiteren Methoden dieser Klasse entsprechen in Ihrem Verhalten dem
+im Abschnitt für die Klasse $Classifier$ beschriebenen.
+
+\subsection{Bayes-Klassifikator für zwei Klassen}
+\hypertarget{ClassifierBayes2}{}
+Der Bayes-Klassifikator für 2 Klassen ohne Rückweisung verlangt die Angabe der
+Verwechslungskosten c01 von Klasse 0 mit Klasse 1 und c10 von Klasse 1 mit
+Klasse 0. Weiterhin müssen die A priori-Klassenwahrscheinlichkeiten p0 für
+Klasse 0 und p1 für Klasse 1 angegeben werden. Dieser Bayes-Klassifikator setzt
+Normalverteilung voraus und arbeitet mit den Mittelwertvektoren und
+den Kovarianzmatrizen aller Merkmale für jede Klasse. 
+Die Trennfunktion für die beiden Klassen stellt eine Hyper-Fläche 2. Ordnung dar.
+
+\ctor{ClassifierBayes2}{}{ClassifierBayes2.h}
+\descr{
+Standard-Konstruktor. Wird ein Klassifikator hiermit angelegt,
+so muss die Methode Init verwendet werden, um die grundlegenden
+Parameter vorzugeben.
+}
+\ctor{ClassifierBayes2}{int classes,int dimension,
+double p0,double p1,double c01,double c10}{ClassifierBayes2.h}
+\descr{
+Konstruktor, der den Klassifikator bereits mit den notwendigen
+Parametern initialisiert. Parameter sind die Zahl der 
+Klassen $classes$ und die Zahl der Merkmale $dimension$,
+die a priori-Wahrscheinlichkeiten $p0$,$p1$ für die Klassen 
+0 und 1, sowie die Kosten für eine Fehlklassifikation eines
+Objekts der Klasse 0 in die Klasse1 bzw. der Klasse 1 in die
+Klasse 0.
+}
+\ctor{ClassifierBayes2}{const ClassifierBayes2 \&c}{ClassifierBayes2.h}
+\descr{
+Kopier-Konstruktor. Erzeugt ein Duplikat des übergebenen 
+Klassifikators $c$.
+}
+
+\proc{int}{ClassifierBayes2::Init}{int classes,int dimension,double p0,double p0,double c01, double c10}
+\descr{
+Initialisieren des Klassifikators mit den gegebenen Parametern.
+Parameter sind die Zahl der Klassen $classes$ und die 
+Zahl der Merkmale $dimension$,
+die a priori-Wahrscheinlichkeiten $p0$,$p1$ für die Klassen 
+0 und 1, sowie die Kosten für eine Fehlklassifikation eines
+Objekts der Klasse 0 in die Klasse1 bzw. der Klasse 1 in die
+Klasse 0.
+}
+
+Alle weiteren Methoden dieser Klasse entsprechen in Ihrem 
+Verhalten dem im Abschnitt für die Klasse $Classifier$ beschriebenen.
+
+\subsection{Bayes-Klassifikator}
+\hypertarget{ClassifierBayes}{}
+Der Bayes-Klassifikator setzt Normalverteilung voraus und arbeitet 
+mit den Mittelwertvektoren und den Kovarianzmatrizen aller Merkmale 
+für jede Klasse. Der Klassifikator ist oft auch bei Abweichung von der
+Normalverteilung noch einsetzbar. Die Wahrscheinlichkeiten der Zugehörigkeit 
+zu der jeweiligen Klasse, die von Classify bereitgestellt werden,
+sind dann jedoch nicht zutreffend.
+
+\ctor{ClassifierBayes}{}{ClassifierBayes.h}
+\descr{
+Standard-Konstruktor. Wird ein Klassifikator hiermit angelegt,
+so muss die Methode Init verwendet werden, um die grundlegenden
+Parameter vorzugeben.
+}
+
+\ctor{ClassifierBayes}{int classes,int dimension,
+bool rejection=false, int apm=APM\_EQUAL}{ClassifierBayes.h}
+\descr{
+Konstruktor, der den Klassifikator bereits mit den notwendigen
+Parametern initialisiert. Parameter sind die Zahl der 
+Klassen $classes$ und die Zahl der Merkmale $dimension$,
+ein boolscher Wert $rejection$ für die anzulegende Rückweisungsklasse und ein
+Modus $apm$ für die Behandlung der a priori-Wahrscheinlichkeiten.
+Der Modus APM\_EQUAL setzt gleiche a priori-Wahrscheinlichkeiten für alle
+Klassen an. APM\_CONSTRUCTOR erlaubt die explicite Festlegung der a
+priori-Wahrscheinlichkeiten durch Benutzung eines speziellen
+Konstruktors. Bei Angabe von APM\_TEACH wird die Statistik der Lernstichprobe
+verwendet.
+}
+
+\ctor{ClassifierBayes}{int classes, \cvector{double} app, 
+                       bool rejection}{ClassifierBayes.h}
+\descr{
+Konstruktor, der den Klassifikator bereits mit den notwendigen
+Parametern initialisiert. Parameter sind die Zahl der 
+Klassen $classes$, ein Vektor mit den a priori-Wahrscheinlichkeiten
+und ein boolscher Wert $rejection$ für die anzulegende Rückweisungsklasse.
+}
+
+\ctor{ClassifierBayes}{const ClassifierBayes \&c}{ClassifierBayes.h}
+\descr{
+Kopier-Konstruktor. Erzeugt ein Duplikat des übergebenen 
+Klassifikators $c$.
+}
+
+\method{int}{Init}{int classes,int dimension}
+\descr{
+Initialisieren des Klassifikators mit den gegebenen Parametern.
+Parameter sind die Zahl der Klassen $classes$ und die 
+Zahl der Merkmale $dimension$.
+}
+
+Alle weiteren Methoden dieser Klasse entsprechen in Ihrem 
+Verhalten dem im Abschnitt für die Klasse $Classifier$ beschriebenen.
+
+\subsection{Baum-Klassifikator}
+\subsection{Random Forest-Klassifikator}
+
+\subsection{Ein Anwendungs-Beispiel}
+Gegeben sei ein Farbbild $rgb$, als Merkmal der Pixel werden die 
+drei Farbwerte rot, grün und blau verwendet.
+Im Bild \verb+label+ sei mit den Werten 1 und 2 eine Klassifizierung 
+in zwei Klassen vorgenommen worden. Es ist ein Farb-Klassifikator 
+anzulernen, der diese Klassen trennt.
+
+\begprogr\begin{verbatim}
+void train(Classifier &clf, const ColorImage &rgb, const Image &label)
+{
+ clf.Init(2, 3); // Klassifikator mit 2 Klassen und 3 Merkmalen
+ vector<double> features(3); // Merkmals-Vektor
+ for (int y = 0; y < rgb.ysize; y++)
+   for (int x = 0; x < rgb.xsize; x++)
+     {
+       int classNr = label.getPixel(x, y);
+       if (classNr != 0) // wenn Punkt klassifiziert ist, ...
+       {
+         classNr--;    // Klassennummern im Bereich 0..1
+         ColorValue cv = rgb.getPixel(x,y);
+         features[0] = cv.red;
+         features[1] = cv.green;
+         features[2] = cv.blue;
+         clf.Train(classNr, features);  // Anlernen des Klassifikators
+    }
+  }
+ clf.Finish(); // Lernvorgang beenden
+}
+\end{verbatim}\endprogr
+
+Der Klassifikator soll nun angewendet werden:
+\begprogr\begin{verbatim}
+void classify(const Classifier &clf, const ColorImage &rgb, const Image &classimg)
+{
+  vector<double> features(3); // Merkmals-Vektor
+  for (int y = 0; y < rgb.ysize; y++)
+    for (int x = 0; x < rgb.xsize; x++)
+     {
+       ColorValue cv = rgb.getPixel(x, y);
+       features[0] = cv.red;
+       features[1] = cv.green;
+       features[2] = cv.blue;
+       int classNr = clf.Classify(features); // Klassifizieren
+       classimg.setPixel(x, y, classNr+1);
+     }
+}
+\end{verbatim}\endprogr
+
+\subsection{Implementierungshinweise für weitere Klassifikator-Klassen}
+
+Alle Klassifikatorklassen werden von der Klasse \class{Classifier} 
+beziehungweise
+\class{ClassifierNormal} abgeleitet.
+Diese gemeinsame Basisklasse \class{Classifier} erlaubt einen alternativen 
+Einsatz verschiedenster Klassifikatoren (Polymorphismus) und stellt 
+außerdem verschiedene Grundfunktionen allgemein zur Verfügung.
+
+\begin{itemize}
+\item Die Konstruktoren der abgeleiteten Klasse sollten die passenden Konstruktoren der
+Basisklasse aufrufen. Diese organisieren die Speicherung der Zahl der Klassen (Attribut \verb+nClasses+)
+und der Zahl der Merkmale (Attribut \verb+nFeatures+).
+\item Die Klasse kann im allgemeinen die Methode \verb+Init()+ der Basisklasse verwenden, die ihrerseits
+die bekannten Parameter einsetzt und \verb+Init(int nClasses,int nFeatures)+ aufruft.
+\item Wenn in der Initialisierung weitere Variablen gesetzt werden müssen, muss die Methode 
+\verb+Init(int nClasses,int nFeatures)+ überschrieben werden. Dabei sollte das entsprechende \verb+Init+ der 
+Basisklassse aufgerufen werden (chaining). Um das parameterlose \verb+Init()+ der Basisklasse weiter 
+nutzen zu können, ist die Angabe von \verb+using Classifier::Init;+ notwendig.
+\item Die abgeleitete Klasse sollte nicht die Methoden \verb+Train+ überschreiben, sondern die 
+\verb+protected+-Methode \verb+_train(int classNr,const std::vector<double> &features)+. Wenn die Methode 
+\verb+Train+ der Basisklasse aufgerufen wird, testet sie zunächst die Parameter \verb+classNr+ und die Größe des 
+\verb+vector<double>+ und zählt die Lernvorgänge pro Klasse (Attribut \verb+vector<int> classTrained+). 
+Dann wird die \verb+_train+ aufgerufen.
+\item Die abgeleitete Klasse sollte nicht die Methode \verb+Finish+ überschreiben, sondern die 
+\verb+protected+-Methode \verb+_finish()+. Wenn die Methode \verb+Finish+ der Basisklasse aufgerufen wird, 
+prüft sie zunächst, ob alle Klassen angelernt wurden und leitet dann den Aufruf an \verb+_finish+ weiter.
+\item Die abgeleitete Klasse sollte nicht die Methoden \verb+Classify+ überschreiben, sondern die 
+\verb+protected+-Methode \verb+int _classify(const vector<double> &features,vector<double> &probabilities)+. 
+Wenn eine Methode \verb+Classify+ der Basisklasse aufgerufen wird, prüft diese ob das Anlernen korrekt
+beendet wurde und ob die Zahl der Merkmale stimmt und reicht dann den Aufruf weiter an  
+\verb+int _classify(const vector<double> &features,vector<double> &probabilities)+. Diese Methode
+bestimmt vor allem die zu $features$ passende Klasse und gibt diese als Rückgabewert zurück. Zusätzlich
+kann ein Klassifikator über den Vektor $probabilities$ Wahrscheinlichkeiten für alle Klassen zurückgeben, 
+die Wahrscheinlichkeit der Klasse $n$ steht in \verb+probabilities[n]+. Es gelten folgende Regeln:
+\begin{itemize}
+\item Klassifikatoren, die keine Wahrscheinlichkeiten berechnen können, lassen den Vektor
+\verb+probabilities+ unangetastet. Eine triviale Angabe der Wahrscheinlichkeiten 0.0/1.0 wird
+dann in \verb+Classifier+ bereitgestellt.
+\item Hat der übergebene Vektor \verb+probabilities+ die Länge Null, ist keine Berechnung 
+der Wahrscheinlichkeiten erforderlich. Klassifikatoren, die die Wahrscheinlichkeiten in jedem Fall 
+berechnen, können dies tun, die Werte in \verb+probabilities+ werden aber ignoriert.
+\item Sonst berechnet der Klassifikator die Wahrscheinlichkeiten für alle Klassen. Der Vektor hat 
+beim Aufruf bereits die richtige Länge \verb+nClasses+, die Werte sind als undefiniert zu betrachten.
+Besitzt der Klassifikator keine Rückweisung, muss die Summe der Wahrscheinlichkeiten 1.0 ergeben, 
+andernfalls beschreibt die Differenz zu 1.0 die Wahrscheinlichkeit der Rückweisung.
+\end{itemize}
+\end{itemize}

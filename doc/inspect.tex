@@ -1,0 +1,57 @@
+\lsection{Inspektion von Szenenbestandteilen}
+
+Für eine visuell unterstützte Greifplanung ist eine Untersuchung der
+Zugänglichkeit von einzelnen Modellbestandteilen, insbesondere Flächen, für
+den Greifer erforderlich. Dazu wird die Kamera so positioniert, daß das zu
+untersuchende Modellbestandteil im Bild sichtbar sein müßte. Durch
+Kantendetektion und Segmentierung wird eine Bildbeschreibung erzeugt. Ebenso
+kann durch Abbildung der zu untersuchenden Objekte in die Bildebene unter
+berücksichtigung verdeckter Kanten eine weitere Bildbeschreibung erzeugt
+werden. Zu dieser ``Soll''-Bildbeschreibung werden aus der
+``Ist''-Beschreibung alle die Kanten herausgesucht, die einen vorzugebenden
+Maximalabstand zu der jeweiligen ``Soll''-Kante nicht überschreiten. Eine
+Bildbeschreibung mit diesen Kanten wird als Ergebnis der Inspektion
+zurückgegeben.
+
+Vor der Inspektion von Szenenbestandteilen muß einmal bzw. erneut nach jeder
+Positionsänderung der Kamera die Funktion ChangeView() aufgerufen werden, um
+blickrichtungsabhängige Merkmale in der Szenenbeschreibung neu zu berechnen.
+
+\proc{double}{DistanceLineseg}{double l0[2],double l1[2],double ls0[2],double
+ls1[2]}
+\descr{
+Es wird ein Abstandsmaß zwischen den Geradensegmenten $l0,l1$ und $ls0,ls1$
+bestimmt und zurückgegeben.
+}
+\proc{Edge}{SearchMatchingEdge}{Edge edgm, Description D, double *dmin}
+\descr{
+Aus der Bildbeschreibung $D$ wird die Kante mit dem geringsten Abstand zur
+Kante $edgm$ gesucht und zurückgegeben. Wenn keine Kante gefunden wird, deren
+Abstand kleiner als $dmin$ ist, wird der Nullpointer zurückgegeben. Der
+Abstand einer gefundenen Kante wird auf $dmin$ bereitgestellt.
+}
+\proc{int}{MapPointToMesh}{double p[2],camera cam,Mesh msh,double pw[3]}
+\descr{
+Der Bildpunkt $p$ wird auf die Ebene projiziert, die durch die Masche $msh$
+gegeben ist. Die Position von $msh$ wird durch das aktuelle Lageframe des
+zugehörigen Modells bestimmt. Der projizierte Raumpunkt wird auf $pw$
+zurückgegeben. 
+}
+\proc{Description}{InspectModel}{Model mod,camera cam,ModelList S,Description D}
+\descr{
+Aus der Bildbeschreibung $D$ werden alle Kanten herausgesucht, die sich bei der
+durch die Kamera $cam$ gegebenen Blickrichtung und der aktuellen
+Modellposition einer Modellkante des Modells $mod$ zuordnen lassen. 
+}
+\proc{Description}{InspectMesh}{Mesh msh,camera cam,ModelList S,Description D}
+\descr{
+Aus der Bildbeschreibung $D$ werden alle Kanten herausgesucht, die sich bei der
+durch die Kamera $cam$ gegebenen Blickrichtung und der aktuellen
+Modellposition einer Modellkante der Masche $msh$ zuordnen lassen. 
+}
+\proc{Description}{InspectEdge}{Edge medg,camera cam,ModelList S,Description D}
+\descr{
+Aus der Bildbeschreibung $D$ werden alle Kanten herausgesucht, die sich bei der
+durch die Kamera $cam$ gegebenen Blickrichtung und der aktuellen
+Modellposition der Modellkante $medg$ zuordnen lassen. 
+}

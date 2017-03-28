@@ -1,0 +1,889 @@
+\nsection{Klassen-Hierarchie Geometrisches Objekt}{geoObject}
+
+Alle Klassen, die der Beschreibung von geometrischen Objekten der Ebene 
+dienen, leiten sich von der abstrakten Basis-Klasse \class{GeoObject} ab.
+In dieser Klasse wird das grundsätzliche Verhalten der Methoden 
+beschrieben, die in den abgeleiteten Klassen reimplementiert werden. 
+
+\vspace{1cm}
+\noindent
+Klassen-Hierarchie:
+
+\begin{description}
+\item[\see{GeoObject}] Abstrakte Basisklasse
+\begin{description}
+\item[\see{Circle}] Kreis
+\begin{description}
+\item[\see{CircleSeg}] Kreissegment
+\item[\see{Ellipse}] Ellipse
+\begin{description}
+\item[\see{EllipseSeg}] Ellipsensegment
+\end{description}
+\end{description}
+\item[\see{LineSeg}] Strecke, Strahl oder Gerade
+\item[\see{Triangle}] Dreieck
+\item[\see{PolygonalCurve}] PolygonalCurve
+\begin{description}
+\item[\see{Polygon}] Polygon
+\end{description}
+\end{description}
+\end{description}
+
+\subsection{GeoObject}
+\hypertarget{GeoObject}{}
+\label{GeoObject}
+
+GeoObject ist eine abstrakte Basisklasse für 
+\hyperlink{geometricObject}{geometrische Objekte} der Ebene.
+
+\proc{}{GeoObject::GeoObject}{}
+\descr{Legt ein Objekt der Klasse GeoObject an.}
+\proc{}{GeoObject::GeoObject}{const GeoObject \&c}
+\descr{Legt ein Objekt der Klasse GeoObject an und initialisiert 
+die Parameter mit den Werten des übergebenen Objektes (Kopierkonstruktor).}
+\proc{}{GeoObject::GeoObject}{double xm,double ym}
+\procf{explicit}{GeoObject::GeoObject}{Point m}
+\procf{explicit}{GeoObject::GeoObject}{IPoint m}
+\procf{explicit}{GeoObject::GeoObject}{const Vector \&v}
+\descr{Legt ein Objekt GeoObject an und initialisiert die Koordinaten mit den
+übergebenen Werten.}
+
+\proch{Point}{GeoObject::getPos}{}{geo\_ob.h}
+\descr{Liefert die Koordinaten (des Referenzpunktes) als \bsee{Point}.}
+
+\proch{void}{GeoObject::setPos}{Point x}{geo\_ob.h}
+\descr{Setzt die Koordinaten (des Referenzpunktes) des geometrischen Objekts. 
+Dies stellt eine Verschiebung des ganzen Objektes dar.}
+
+\proch{void}{GeoObject::Shift}{double dx,double dy}{geo\_ob.h}
+\procf{void}{GeoObject::Shift}{Point p}
+\descr{Verschieben des geometrischen Objekts um $dx$ in X-Richtung und 
+$dy$ in Y-Richtung.}
+
+\proch{double}{GeoObject::Distance}{double x,double y}{geo\_ob.h}
+\procf{double}{GeoObject::Distance}{\bsee{IPoint} p}
+\procf{double}{GeoObject::Distance}{\bsee{Point} p}
+\descr{Ermittelt den Abstand zwischen dem gegebenen Punkt $p$ 
+und der Randlinie des Objektes.
+}
+\proch{double}{GeoObject::Distance}{const GeoObject \&obj}{geo\_ob.h}
+\descr{Ermittelt den Abstand des Referenzpunktes des
+geometrischen Objektes $obj$ von der Randlinie des Objektes.}
+
+\proch{bool}{GeoObject::Inside}{double xp,double yp}{geo\_ob.h}
+\procf{bool}{GeoObject::Inside}{IPoint p}
+\procf{bool}{GeoObject::Inside}{Point p}
+\descr{Ermittelt, ob der Punkt (x,y) bzw. $p$ innerhalb des Objektes liegt. 
+Die Methode der (abstrakten) Basisklasse $GeoObject$ liefert hier immer 
+false zurück. Dies gilt auch für geometrische Objekte ohne Fläche wie 
+z.B. \bsee{LineSeg}.
+}
+
+\subsection{Circle}
+\label{Circle}
+\hypertarget{Circle}{}
+
+\begin{figure}[h]
+  \epsfig{figure=circle.eps,width=5cm}
+  \label{fig:circle}
+\end{figure}
+
+Die Klasse Circle ist direkt von der Basis-Klasse \class{GeoObject} abgeleitet
+und repräsentiert Kreise in der Ebene.
+
+\noindent
+Konstruktoren:
+
+\proc{}{Circle::Circle}{}
+\descr{Legt ein Objekt Circle an.}
+\proc{}{Circle::Circle}{const Circle \&c}
+\descr{Legt ein Objekt Circle an und initialisiert die Parameter mit den
+Werten des übergebenen Kreises (Kopierkonstruktor).}
+\proc{}{Circle::Circle}{double xm,double ym,double r}
+\procf{}{Circle::Circle}{Point m,double r}
+\descr{Legt ein Objekt Circle an und initialisiert die Parameter mit den
+übergebenen Werten für Mittelpunkt und Radius.}
+
+\proc{explicit}{Circle::Circle}{const Vector \&c}
+\descr{Legt ein Objekt Circle an und initialisiert die Parameter
+des Mittelpunktes (xm,ym) und den Radius mit Werten aus dem 
+übergebenen \see{Vector}.}
+
+\proc{explicit}{Circle::Circle}{const double d[]}
+\descr{Legt ein Objekt Circle an und initialisiert die Parameter 
+des Mittelpunktes (xm,ym) und den Radius mit Werten aus dem 
+übergebenen Feld d.}
+
+\noindent
+Methoden:
+\proc{double}{Circle::getR}{}
+\descr{Zugriff auf den Radius des Kreises.}
+\proc{void}{Circle::setR}{double val}
+\descr{Setzt den Wert des Radius auf den übergebenen Wert.}
+
+Zu den wesentlichen ererbten und überschriebenen Methoden siehe:
+\begin{itemize}
+\item \see{GeoObject::setPos}, ..
+\item \see{GeoObject::getPos}, ..
+\item \see{GeoObject::Shift}
+\end{itemize}
+
+\subsection{CircleSeg}
+\label{CircleSeg}
+\hypertarget{CircleSeg}{}
+
+\begin{figure}[h]
+  \epsfig{figure=circleseg.eps,width=5cm}
+  \label{fig:circle}
+\end{figure}
+
+Die Klasse \class{CircleSeg} ist über die Klasse \class{Circle} von der 
+Basis-Klasse \class{GeoObject} abgeleitet und repräsentiert 
+Kreis-Segmente (Kreisausschnitte) in der Ebene. 
+
+\noindent
+Konstruktoren:
+
+\proc{}{CircleSeg::CircleSeg}{}
+\descr{Legt ein Objekt CircleSeg an.}
+\proc{}{CircleSeg::CircleSeg}{const CircleSeg \&c}
+\descr{Legt ein Objekt CircleSeg an und initialisiert die Parameter mit den
+Werten des übergebenen Kreis-Segments (Kopierkonstruktor).}
+\proc{}{CircleSeg::CircleSeg}{double xm,double ym,double r,
+  double phi1,double phi2}
+\proc{}{CircleSeg::CircleSeg}{Point p,double r,double phi1,double phi2}
+\descr{Legt ein Objekt CircleSeg an und initialisiert die Parameter mit den
+übergebenen Werten für Mittelpunkt und Radius. 
+$phi1$ und $phi2$ sind Anfangs- und Endwinkel des Segments bezogen auf die X-Achse.}
+
+\proc{explicit}{CircleSeg::CircleSeg}{const Vector \&c}
+\descr{Legt ein Objekt CircleSeg an und initialisiert die Koordinaten
+des Mittelpunktes (xm,ym), den Radius und die Segmentwinkel mit Werten 
+aus dem übergebenen \see{Vector}.}
+
+\proc{explicit}{CircleSeg::CircleSeg}{const double d[]}
+\descr{Legt ein Objekt CircleSeg an und initialisiert die Koordinaten
+des Mittelpunktes (xm,ym), den Radius und die Segmentwinkel mit Werten 
+aus dem übergebenen Feld d.}
+
+\noindent
+Methoden:
+\proc{double }{CircleSeg::getPhi1}{}
+\descr{Zugriff auf den Wert des Anfangswinkels.}
+\proc{void}{CircleSeg::setPhi1}{double val}
+\descr{Setzt den Wert des Anfangswinkels auf den übergebenen Wert.}
+\proc{double}{CircleSeg::getPhi2}{}
+\descr{Zugriff auf den Wert des Endwinkels.}
+\proc{void}{CircleSeg::setPhi2}{double val}
+\descr{Setzt den Wert des Endwinkels auf den übergebenen Wert.}
+
+Zu den wesentlichen ererbten und überschriebenen Methoden siehe:
+\begin{itemize}
+\item \see{GeoObject::setPos}, ..
+\item \see{GeoObject::getPos}, ..
+\item \see{GeoObject::Shift}
+\end{itemize}
+
+\subsection{Ellipse}
+\label{Ellipse}
+\hypertarget{Ellipse}{}
+
+\begin{figure}[h]
+  \epsfig{figure=ellipse.eps,width=5cm}
+  \label{fig:ellipse}
+\end{figure}
+
+Die Klasse Ellipse ist über die Klasse \class{Circle} von der 
+Basis-Klasse \class{GeoObject} abgeleitet und repräsentiert Ellipsen
+in der Ebene.
+
+\noindent
+Konstruktoren:
+
+\proc{}{Ellipse::Ellipse}{}
+\descr{Legt ein Objekt Ellipse an.}
+\proc{}{Ellipse::Ellipse}{const Ellipse \&c}
+\descr{Legt ein Objekt Ellipse an und initialisiert die Parameter mit den
+Werten der übergebenen Ellipse (Kopierkonstruktor).}
+\proc{}{Ellipse::Ellipse}{double xm,double ym,double r1,double r2,double phi}
+\descr{Legt ein Objekt Ellipse an und initialisiert die Parameter mit den
+übergebenen Werten für Mittelpunkt, große und kleine Halbachse und 
+den Winkel $\varphi$.}
+
+\proc{explicit}{Ellipse::Ellipse}{const Vector \&c}
+\descr{Legt ein Objekt Ellipse an und initialisiert die Koordinaten
+des Mittelpunktes (xm,ym), die Halbachsen und den Winkel $\varphi$ mit 
+Werten aus dem übergebenen \see{Vector}.}
+
+\proc{explicit}{Ellipse::Ellipse}{const double d[]}
+\descr{Legt ein Objekt Ellipse an und initialisiert die Koordinaten
+des Mittelpunktes (xm,ym), die Halbachsen und den Winkel $\varphi$ mit 
+Werten aus dem übergebenen Feld $d$.}
+
+\noindent
+Methoden:
+\proc{double}{Ellipse::getR1}{}
+\descr{Liefert den aktuellen Wert der großen Halbachse zurück.}
+\proc{void}{Ellipse::setR1}{double val}
+\descr{Setzt den Wert der großen Halbachse auf den übergebenen Wert.}
+\proc{double}{Ellipse::getR2}{}
+\descr{Liefert den aktuellen Wert der kleinen Halbachse zurück.}
+\proc{void}{Ellipse::setR2}{double val}
+\descr{Setzt den Wert der kleinen Halbachse auf den übergebenen Wert.}
+\begin{itemize}
+\item Statt getR1() und setR1() können genauso die Methode getR() und setR() 
+verwendet werden, die von \see{Circle} ererbt wurden. 
+\item Wird durch Setzen mit diesen Methoden der Wert der kleinen Halbachse 
+größer als der Wert der großen Halbachse werden in einer (internen)
+Normalisierung die Werte vertauscht und der Winkel $\varphi$ angepaßt.
+\end{itemize}
+
+\noindent
+Weiterhin sind die ererbten und überschriebenen Methoden von \class{Circle} und
+\class{GeoObject} nutzbar.
+
+\seealso{Circle::setR}
+\seealsonext{Circle::getR} \\
+\seealso{GeoObject::setPos}
+\seealsonext{GeoObject::getPos}\\
+\seealso{Draw}
+
+\subsection{EllipseSeg}
+\label{EllipseSeg}
+\hypertarget{EllipseSeg}{}
+
+\begin{figure}[h]
+  \epsfig{figure=ellipseseg.eps,width=7cm}
+  \label{fig:circle}
+\end{figure}
+
+Die Klasse \class{EllipseSeg} ist über die Klassen \class{Ellipse} 
+und \class{Circle} von der Basis-Klasse \class{GeoObject} abgeleitet 
+und repräsentiert Ellipsen-Segmente in der Ebene. 
+
+\noindent
+Konstruktoren:
+
+\proc{}{EllipseSeg::EllipseSeg}{void}
+\descr{Legt ein Objekt EllipseSeg an.}
+\proc{}{EllipseSeg::EllipseSeg}{const EllipseSeg \&c}
+\descr{Legt ein Objekt EllipseSeg an und initialisiert die Parameter mit den
+Werten des übergebenen Ellipsen-Segments (Kopierkonstruktor).}
+\proc{}{EllipseSeg::EllipseSeg}{double xm,double ym,double r1,double r2,double phi,double phi1,double phi2}
+\descr{Legt ein Objekt EllipseSeg an und initialisiert die Parameter mit den
+übergebenen Werten für Mittelpunkt, große und kleine Halbachse und 
+Neigungswinkel $\varphi$ der Ellipse. $phi1 und $phi2 sind Anfangs-
+und Endwinkel des Segments bezogen auf die große Achse der Ellipse.}
+
+\proc{explicit}{EllipseSeg::EllipseSeg}{const Vector \&c}
+\descr{Legt ein Objekt EllipseSeg an und initialisiert die Koordinaten
+des Mittelpunktes (xm,ym), die Halbachsen, den Neigungswinkel und die 
+Segmentwinkel mit Werten aus dem übergebenen \see{Vector}.}
+
+\proc{explicit}{EllipseSeg::EllipseSeg}{const double d[]}
+\descr{Legt ein Objekt EllipseSeg an und initialisiert die Koordinaten
+des Mittelpunktes (xm,ym), die Halbachsen, den Neigungswinkel und die 
+Segmentwinkel mit Werten aus dem übergebenen Feld $d$.}
+
+\noindent
+Methoden:
+\proc{double}{EllipseSeg::Phi1}{void}
+\descr{Liefert den aktuellen Wert des Anfangswinkels zurück.}
+\proc{void}{EllipseSeg::setPhi1}{double val}
+\descr{Setzt den Wert des Anfangswinkels auf den übergebenen Wert.}
+\proc{double}{EllipseSeg::Phi2}{void}
+\descr{Liefert den aktuellen Wert des Endwinkels zurück.}
+\proc{void}{EllipseSeg::setPhi2}{double val}
+\descr{Setzt den Wert des Endwinkels auf den übergebenen Wert.}
+\seealso{Ellipse:setR1}
+\seealsonext{Ellipse:getR1}
+\seealsonext{Ellipse:setR2}
+\seealsonext{Ellipse:getR2}\\
+\seealso{GeoObject::setPos}
+\seealsonext{GeoObject::getPos}
+
+\noindent
+Weiterhin sind die ererbten und überschriebenen Methoden von 
+\class{Ellipse}, \class{Circle} und \class{GeoObject} nutzbar.
+
+\noindent
+\seealso{GeoObject::Draw}
+\seealsonext{GeoObject::Shift}
+\pagebreak
+\subsection{LineSeg}
+\label{LineSeg}
+\hypertarget{LineSeg}{}
+
+\begin{figure}[h]
+  \epsfig{figure=lineseg.eps,width=12cm}
+  \label{fig:circle}
+\end{figure}
+
+Die Klasse LineSeg ist direkt abgeleitet von der Basisklasse \class{GeoObject} 
+und beschreibt Strecken, Strahlen und Geraden in der Ebene. Die Varianten
+werden über ein Attribut $type$ unterschieden:
+\begin{tabular}{|l|l|} \hline
+  Typ & Wert \\ \hline
+  Gerade & LineSeg::line \\ \hline
+  Strahl & LineSeg::ray \\ \hline
+  Strahl (in Gegenrichtung)& LineSeg::inv\_ray \\ \hline
+  Strecke & LineSeg::segment \\ \hline
+\end{tabular}
+
+Die Strecken, Strahlen und Geraden der Klasse LineSeg sind gerichtet vom 
+Startpunkt P1 zum Endpunkt P2. Diese Orientierung spielt in einigen Methoden 
+eine Rolle (\bsee{LineSeg::RightOf},\bsee{LineSeg::OrientationAngle},
+\bsee{LineSeg::Angle}).
+
+\noindent
+
+\subtitle{Konstruktoren}
+
+\proc{}{LineSeg::LineSeg}{}
+\descr{Legt ein Objekt LineSeg an.}
+\proc{}{LineSeg::LineSeg}{Point p1,Point p2,int type=LineSeg::segment}
+\descr{Legt ein Objekt LineSeg an und initialisiert mit den übergebenen Werten
+von Startpunkt \see{Point} p1 und Endpunkt \see{Point} p2 der Strecke.}
+\proc{}{LineSeg::LineSeg}{IPoint p1,IPoint p2,int type=LineSeg::segment}
+\descr{Legt ein Objekt LineSeg an und initialisiert mit den übergebenen Werten
+von Startpunkt \see{IPoint} p1 und Endpunkt \see{IPoint} p2 der Strecke.}
+\proc{}{LineSeg::LineSeg}{const LineSeg \&p}
+\descr{Legt ein Objekt LineSeg an und initialisiert mit den Werten des
+übergebenen Objekts $p$ (Kopierkonstruktor).}
+\proc{}{LineSeg::LineSeg}{double x1,double y1,double x2,double y2,int type=LineSeg::segment}
+\descr{Legt ein Objekt LineSeg an und initialisiert mit den übergebenen Werten
+von Startpunkt (x1,y1) und Endpunkt (x2,y2) der Strecke.}
+\proc{}{LineSeg::LineSeg}{double p,double phi}
+\descr{Legt ein Objekt LineSeg an und initialisiert mit den übergebenen Werten
+der Hesseschen Geradenparameter. Der Typ ist $LineSeg::line$}
+\proc{explicit}{LineSeg::LineSeg}{const Vector \&v,int type=LineSeg::segment}
+\descr{Legt ein Objekt LineSeg an und initialisiert mit Werten für die
+Start- und Endpunktkoordinaten aus dem übergebenen \see{Vector} v.}
+\proc{explicit}{LineSeg::LineSeg}{double d[],int type=LineSeg::segment}
+\descr{Legt ein Objekt LineSeg an und initialisiert mit Werten für die
+Start- und Endpunktkoordinaten aus dem übergebenen Feld d.}
+\noindent
+
+\subtitle{Zugriffs-Methoden}
+
+\proc{Point}{LineSeg::getP1}{}
+\descr{Liefert die Koordinaten des Startpunktes als \bsee{Point}.}
+
+\proc{Point}{LineSeg::getP2}{}
+\descr{Liefert die Koordinaten des Endpunktes als \bsee{Point}.}
+
+Die folgenden set-Methoden setzen nur den jeweiligen Endpunkt, im Gegensatz 
+zu \bsee{GeoObject::setPos}.
+
+\proc{void}{LineSeg::setP1}{Point p}
+\descr{Setzt den Startpunkt auf $p$.}
+
+\proc{void}{LineSeg::setP2}{Point p}
+\descr{Setzt den Endpunkt auf $p$.}
+
+\proc{int}{LineSeg::Type}{}
+\descr{Gibt den Typ von LineSeg zurück.}
+\proc{void}{LineSeg::setType}{int type}
+\descr{Setzt den Typ des LineSeg auf $type$}
+
+\subtitle{Parameterdarstellung}
+
+Betrachten wir die Gerade gegeben durch die zwei Punkte $p_1$ und $p_2$, 
+so wird ein Punkt der Geraden durch die Parameterdarstellung 
+$p = p_1 + \mu \cdot (p_2 - p_1)$
+beschrieben.
+
+\proc{Point}{LineSeg::RelPoint}{double my}
+\descr{Liefert den Punkt der Geraden, der in der Parameterdarstellung 
+dem Parameter $my$ zugeordnet ist.}
+
+\proc{double}{LineSeg::LimitedMy}{double my}
+\descr{
+Liefert zu einem gegebenen $my$ einen auf den jeweiligen Wertebereich 
+beschränkten Wert zurück. Der Bereich ergibt sich aus dem Typ:\\
+\begin{tabular}{|l|l|} \hline
+  Typ & Wertebereich $\mu$ \\ \hline
+  Gerade & $-\infty < \mu < \infty$ \\ \hline
+  Strahl & $ 0 \le \mu < \infty$ \\ \hline
+  Strahl (in Gegenrichtung)& $ -\infty < \mu \le 1$ \\ \hline
+  Strecke & $ 0 \le \mu \le 1$ \\ \hline
+\end{tabular}
+}
+
+\subtitle{Hessesche Normalform}
+
+\proc{void}{LineSeg::CalcHesse}{double \&p,double \&phi}
+\descr{
+  Berechnet die Parameter $p$ und $phi$ der Darstellung der Geraden in 
+  Hessescher Normalform $x \cdot cos(\varphi)+y \cdot sin(\varphi)=p$ .
+  In der hier gewählten Normalisierung gilt $p \ge 0$ und $0 \le \varphi < 2 \cdot \pi$.
+}
+\proc{double}{LineSeg::P}{}
+\descr{Liefert den Parameter $p$ der hessischen Normalform 
+$x \cdot cos(\varphi)+y \cdot sin(\varphi)=p$ der Geraden}
+\proc{double}{LineSeg::Phi}{}
+\descr{Liefert den Parameter $\varphi$ der hessischen Normalform 
+$x \cdot cos(\varphi)+y \cdot sin(\varphi)=p$ der Geraden}
+
+\subtitle{Analytische Geometrie}
+
+\proc{double}{LineSeg::OrientationAngle}{}
+\descr{Liefert den Winkel des Vektors von p1 nach p2 bezüglich der X-Achse.}
+
+\proc{double}{LineSeg::Angle}{const LineSeg \&sec}
+\descr{Liefert den Winkel zwischen dem $LineSeg$ (*this) und $sec$. Dabei sind 
+die beiden Geraden gerichtet und der Winkel wird zwischen $*this$ und $sec$ 
+berechnet. Der Winkel ist immer nichtnegativ im Intervall $0 \le \varphi < \pi$.}
+
+\proc{bool}{LineSeg::RightOf}{Point p}
+\descr{Die Methode RightOf ermittelt, ob der gegebene Punkt $p$ rechts der 
+{\bf Geraden} liegt. Dabei wird die Gerade als von Punkt p1 nach p2 
+orientiert betrachtet bzw. in positiver Richtung der 
+Parameterdarstellung $my$.
+}
+
+\proc{bool}{LineSeg::LeftOf}{Point p}
+\descr{Die Methode LeftOf ermittelt, ob der gegebene Punkt $p$ links der 
+{\bf Geraden} liegt. Dabei wird die Gerade als von Punkt p1 nach p2 
+orientiert betrachtet bzw. in positiver Richtung der 
+Parameterdarstellung $my$.
+}
+
+\proc{Point}{LineSeg::ClosestPoint}{Point p}
+\procf{Point}{LineSeg::ClosestPoint}{Point p,double \&my}
+\descr{Berechnet den zum Punkt $p$ nächstgelegenen Punkt auf der Geraden, auf
+  dem Strahl oder auf der Geraden. Die zweite Aufrufform liefert zusätzlich 
+den Parameter des Punktes in der Parameterdarstellung der Geraden}
+
+\proc{double}{LineSeg::Distance}{Point p}
+\descr{Liefert die Distanz des Punktes $p$ zum Geradensegment. Dies ist 
+identisch zum Abstand des nächsten Punktes (\bsee{LineSeg::ClosestPoint})
+der Geraden zu $p$.}
+
+\proch{bool}{LineSeg::Intersection}{const LineSeg \&second}{lineseg.h}
+\procf{bool}{LineSeg::Intersection}{const LineSeg \&second,Point \&ip}
+\procf{bool}{LineSeg::Intersection}{const LineSeg \&second,Point \&ip,double \&my1,double \&my2}
+\descr{Ermittelt, ob sich die Strecke, Strahl oder Gerade mit der als 
+Parameter gegebenen zweiten Strecke, Strahl oder Gerade schneiden. Wenn 
+als Parameter vorhanden, wird der Schnittpunkt als $ip$ zurückgegeben. Die 
+Parameter $my1$ und $my2$ liefern die Parameterdarstellung des Schnittpunktes
+bezüglich sich selbst (*this) bzw. $second$ zurück.
+}
+
+\proc{Point}{LineSeg::Normal}{}
+\descr{Liefert die Normale auf der Geraden als \bsee{Point}.}
+
+Zu den wesentlichen ererbten Methode siehe:
+\begin{itemize}
+  \item \bsee{GeoObject::setPos}
+  \item \bsee{GeoObject::Shift}
+\end{itemize}
+
+\seealso{Draw}
+
+\subsection{Triangle}
+\label{Triangle}
+\hypertarget{Triangle}{}
+Dreiecke werden durch ihre drei Eckpunkte definiert.
+
+\subtitle{Konstruktoren}
+
+\proch{}{Triangle::Triangle}{}{triangle.h}
+\descr{Standard-Konstruktor. Erzeugt ein Dreieck mit den 
+Eckpunkten (-1,0), (0,1), (1,0).}
+
+\proch{}{Triangle::Triangle}{Point p1, Point p2, Point p3}{triangle.h}
+\descr{Erzeugt ein Dreieck mit den gegebenen Eckpunkten.}
+
+\subtitle{Zugriffs-Methoden}
+
+\proch{bool}{Triangle::isValid}{}{triangle.h}
+\descr{Ein Dreieck ist gültig, wenn die Eckpunkte nicht auf 
+einer geraden liegen. Im Falle einer solchen Entartung sind die
+Parameter des Umkreises ungültig.}
+
+\proc{Point}{Triangle::getCorner}{int i}
+\procf{const Point \&}{Triangle::P1}{}
+\procf{const Point \&}{Triangle::P2}{}
+\procf{const Point \&}{Triangle::P3}{}
+\descr{Abfrage der Eckpunkte. Die Eckpunkte werden intern umgeordnet. Ihre
+Zuordung entspricht nicht der im Konstruktor angegeben Reihenfolge.}
+
+\proc{Point}{Triangle::getCCCenter}{}
+\proc{double}{Triangle::getCCRadius}{}
+\descr{Ermittelt den Mittelpunkt und den Radius des Umkreises (circumcircle).
+Diese Werte sind nur gültig, wenn das Dreieck nicht entartet ist 
+(\bsee{Triangle::isValid}). }
+
+\proc{bool}{Triangle::isInsideCC}{Point point}
+\descr{Ermittelt, ob der Punkt point innerhalb des Umkreise liegt.}
+
+\proc{void}{Triangle2Region}{const Triangle \&t, Region \&r}
+\descr{Die Funktion erzeugt zu dem Dreieck t eine \class{Region}, die 
+die Fläche des Dreiecks beschreibt.}
+
+\seebaseclass{GeoObject}
+
+\subsection{PolygonalCurve}
+\label{PolygonalCurve}
+\hypertarget{PolygonalCurve}{}
+
+Polygonale Kurven werden durch eine Reihe Punkte definiert, die durch 
+geradlinige Kanten verbunden sind. Polygonale Kurven können geschlossen sein, 
+das heißt, der Anfangspunkt stellt auch den Endpunkt dar. Polygonale 
+Kurven sind geschlossen, wenn dies bei der Konstruktion der Instanz so
+festgelegt wurde, die Lage der Punkte spielt keine Rolle. Eine spätere Änderung 
+dieser Eigenschaft ist nicht möglich.
+ 
+Der erste Eckpunkt ist mittels des Konstruktors bzw. der Methode 
+\bsee{PolygonalCurve::Reset} festzulegen. Erfolgt dies nicht, wird dieser 
+Punkt auf $(0,0)$ gesetzt. Die weiteren Eckpunkte 
+werden mit der Methode \bsee{PolygonalCurve::Add} angehängt. Alternativ 
+kann die ganze Kurve durch Angabe einer Liste von Punkten bzw. einer Kontur 
+konstruiert werden.
+
+\subtitle{Konstruktoren}
+\proch{}{PolygonalCurve::PolygonalCurve}{bool closed=false}{polygonalcurve.h}
+\descr{Legt eine polygonale Kurve mit einem Eckpunkt an, der Eckpunkt 
+liegt im Ursprung. Im allgemeinen wird danach die eigentliche Konstruktion 
+der polygonalen Kurve mit \bsee{PolygonalCurve::Reset} und 
+\bsee{PolygonalCurve::Add} erfolgen.}
+
+\proch{}{PolygonalCurve::PolygonalCurve}{const PolygonalCurve \&p}{polygonalcurve.h}
+\descr{Kopierkonstruktor.}
+
+\proch{}{PolygonalCurve::PolygonalCurve}{\bsee{Point} p,bool closed=false}{polygonalcurve.h}
+\descr{Legt eine polygonale Kurve mit einer Ecke an, der Eckpunkt ist $p$. 
+Im allgemeinen wird die weitere Konstruktion der polygonalen Kurve mit 
+\bsee{PolygonalCurve::Add} erfolgen.}
+
+\proch{explicit}{PolygonalCurve::PolygonalCurve}{const \bsee{Matrix} \&m,
+                 bool closed=false}{polygonalcurve.h}
+\procf{}{PolygonalCurve::PolygonalCurve}{const vector<Point> \&pl,bool closed=false}
+\descr{Konstruiert eine polygonale Kurve aus einer Liste von Punkten.}
+
+\proch{explicit}{PolygonalCurve::PolygonalCurve}{const \bsee{Contur} \&c,
+                 bool closed=false}{polygonalcurve.h}
+\descr{Konstruiert eine polygonale Kurve aus einer Kontur.
+Als Eckpunkte der Kurve werden 
+die Punkte der Kontur ( = Randpunkte des Objektes) verwendet. Die polygonale Kurve verläuft 
+damit in dem Objekt, ist also nicht die Randlinie.
+}
+
+\subtitle{Zugriffs-Methoden}
+
+\proch{int}{PolygonalCurve::size}{}{polygonalcurve.h}
+\descr{Gibt die Zahl der Ecken der polygonalen Kurve zurück.}
+
+\proch{bool}{PolygonalCurve::isClosed()}{}{polygonalcurve.h}
+\descr{Gibt zurück, ob die polygonale Kurve gschlossen ist.}
+
+\proch{const Point \&}{PolygonalCurve::operator[]}{int i}{polygonalcurve.h}
+\descr{Gibt die $i$. Ecke der polygonalen Kurve zurück.}
+
+\proch{\bsee{LineSeg}}{PolygonalCurve::edge}{int i}{polygonalcurve.h}
+\procf{void}{edge}{int i,LineSeg \&l}
+\descr{Gibt die $i$. Kante der polygonalen Kurve als \bsee{LineSeg} zurück.}
+
+\proch{void}{PolygonalCurve::Reset}{}{polygonalcurve.h}
+\procf{void}{PolygonalCurve::Reset}{Point p}
+\descr{Setzt die polygonale Kurve zurück. Die polygonale Kurve besteht danach 
+aus nur einem Eckpunkt. Dieser wird auf $(0,0)$ bzw. den übergebenen Punkt 
+$p$ gesetzt.
+}
+
+\proch{Contur}{MakeContur}{}{polygonalcurve.h}
+\descr{Erzeugt eine Contur, die die Kurve beschreibt. Aufgrund der 
+Ganzzahligkeit der Konturpunktkoordinaten ist dies eine Näherung.
+}
+
+\proch{int}{getClosestCorner}{Point p}{polygonalcurve.h}
+\descr{Bestimmt den zum gegebenen Punkt p am nächsten liegenden Eckpunkt 
+der Kurve.}
+
+\proch{int}{getClosestEdge}{Point p}{polygonalcurve.h}
+\descr{Bestimmt die zum gegebenen Eckpunkt p am nächsten liegende Kante 
+der Kurve.}
+
+\proch{PolygonalCurve}{Reduced}{int nr, int mode=1}{polygonalcurve.h}
+\procf{void}{Reduced}{int nr, PolygonalCurve \&p, int mode=1}
+\descr{Erzeugt eine Kurve mit geringerer Eckenzahl $nr$, die die gegebene
+Kurve approximiert.\\
+\begin{tabular}{cl}
+mode == 1 & merge \\
+mode == 2 & split \\
+\end{tabular}
+}
+
+\proch{PolygonalCurve}{PolygonalCurve::ReducedToPrecision}{double prec,int mode=1}
+{polygonalcurve.h}
+\procf{void}{PolygonalCurve::ReducedToPrecision}{double prec,PolygonalCurve \&res,int mode=1}
+\descr{Erzeugt eine Kurve mit geringerer Eckenzahl, die die gegebene
+Kurve so gut approximiert, dass kein Punkt weiter als $prec$ von der 
+Approximation entfernt ist.\\
+\begin{tabular}{cl}
+mode == 1 & merge \\
+mode == 2 & split \\
+\end{tabular}
+}
+
+\seealso{Draw}
+
+\subsection{Polygon}
+\label{Polygon}
+\hypertarget{Polygon}{}
+
+Polygone werden durch ihre Eckpunkte definiert. Der erste Eckpunkt ist mittels 
+des Konstruktors bzw. der Methode \bsee{Polygon::Reset} festzulegen. Erfolgt 
+dies nicht, wird dieser Punkt auf $(0,0)$ gesetzt. Die weiteren Eckpunkte 
+werden mit der Methode \bsee{Polygon::Add} angehängt. Alternativ kann das 
+ganze Polygon durch Angabe einer Liste von Punkten bzw. einer Kontur 
+konstruiert werden. Neben der Klasse Polygon werden in einigen Funktionen 
+auch Punktlisten/Matrizen als Polygon interpretiert.
+
+\subtitle{Konstruktoren}
+\proch{}{Polygon::Polygon}{}{polygon.h}
+\descr{Legt ein Polygon mit einem Eckpunkt an, der Eckpunkt liegt im Ursprung. 
+Im allgemeinen wird danach die eigentliche Konstruktion des Polygon mit 
+\bsee{Polygon::Reset} und \bsee{Polygon::Add} erfolgen.}
+
+\proch{}{Polygon::Polygon}{const Polygon \&p}{polygon.h}
+\descr{Kopierkonstruktor.}
+
+\proch{}{Polygon::Polygon}{\bsee{Point} p}{polygon.h}
+\descr{Legt ein Polygon mit einer Ecke an, der Eckpunkt ist $p$. 
+Im allgemeinen wird die weitere Konstruktion des Polygon mit 
+\bsee{Polygon::Add} erfolgen.}
+
+\proch{explicit}{Polygon::Polygon}{const \bsee{Matrix} \&m}{polygon.h}
+\procf{}{Polygon::Polygon}{const vector<Point> \&pl}
+\descr{Konstruiert das Polygon aus einer Liste von Punkten.}
+
+\proch{explicit}{Polygon::Polygon}{const \bsee{Contur} \&c}{polygon.h}
+\descr{Konstruiert ein Polygon aus einer Kontur.
+Als Eckpunkte des Polygons werden die Punkte der Kontur ( = Randpunkte des Objektes) verwendet. 
+Das Polygon liegt damit in dem Objekt, ist also nicht die Randlinie.
+}
+
+\subtitle{Zugriffs-Methoden}
+
+\proch{int}{Polygon::size}{}{polygon.h}
+\descr{Gibt die Zahl der Ecken des Polygon zurück.}
+
+\proch{const Point \&}{Polygon::operator[]}{int i}{polygon.h}
+\descr{Gibt die $i$. Ecke der Polygons zurück.}
+
+\proch{\bsee{LineSeg}}{Polygon::edge}{int i}{polygon.h}
+\procf{void}{edge}{int i,LineSeg \&l}
+\descr{Gibt die $i$. Kante des Polygons als \bsee{LineSeg} zurück.}
+
+\proch{void}{Polygon::Reset}{}{polygon.h}
+\procf{void}{Polygon::Reset}{Point p}
+\descr{Setzt das Polygon zurück. Das Polygon besteht danach aus nur 
+einem Eckpunkt. Dieser wird auf $(0,0)$ bzw. den übergebenen Punkt $p$ gesetzt.
+}
+
+\seealso{Draw}
+
+\subsection{Zeichenfunktionen}
+\proch{int}{Draw}{const \bsee{Circle} \&c,Image \&img,int val,int fval=-1}{draw.h}
+\procf{int}{Draw}{const \bsee{CircleSeg} \&c,Image \&img,int val,int fval=-1}
+\procf{int}{Draw}{const \bsee{Ellipse} \&c,Image \&img,int val,int fval=-1}
+\procf{int}{Draw}{const \bsee{EllipseSeg} \&c,Image \&img,int val,int fval=-1}
+\procf{int}{Draw}{const \bsee{LineSeg} \&c,Image \&img,int val}
+\procf{int}{Draw}{const \bsee{Polygon} \&c,Image \&img,int val,int fval=-1}
+\descr{Stellt das jeweilige geometrische Objekt im Bild $img$ dar. 
+Dabei wird die Objektbegrenzung mit dem Wert $val$, das Objektinnere 
+mit dem Wert $fval$ eingetragen. Wird $fval$ mit dem speziellen Wert -1 
+vorgegeben, so wird das Objekt nicht gefüllt. }
+
+\subsection{Implementierungshinweise für geometrische Objekte}
+Klassen für weitere \hyperlink{SECTION:geoObject}{geometrische Objekte} können 
+durch Ableitung von einer geeigneten Klasse der Klassenhierarchie 
+\class{GeoObject} erfolgen. Es ist darauf zu achten, dass
+alle abstrakten Methoden der Basisklasse implementiert werden. 
+Insbesondere ist folgendes zu beachten:
+\begin{itemize}
+\item Die Methoden Distance(..) und Inside(..) mit unterschiedlicher Form 
+der Parameterangaben werden intern in einen Aufruf von 
+{\bf \verb+double distance(Point p) const;+} bzw.
+{\bf \verb+bool inside(Point p) const;+} umgewandelt. Abgeleitete 
+Klassen müssen diese (kleingeschriebenen) Methoden (re-)implementieren.
+\item {\bf distance} bezieht sich immer auf den Abstand zur Begrenzungslinie 
+des Objektes, nicht die Fläche.
+\item {\bf inside} bezieht sich immer auf die Objekte-Fläche. Punkte der 
+Begrenzungslinie sind nicht innerhalb. Geometrische Objekte ohne Fläche 
+geben immer {\bf false} zurück, was bereits in der Basisklasse 
+\class{GeoObject} so implementiert ist und somit nicht neu implementiert 
+werden muss.
+\end{itemize}
+
+%===============================================================================
+\nsection{Klassen-Hierarchie Geometrisches 3D-Objekt}{geoObject3d}
+\label{Geometrisches3DObjekt}
+\hypertarget{geometric3dObject}{}
+
+Alle Klassen, die der Beschreibung von geometrischen Objekten des Raumes 
+dienen, leiten sich von der abstrakten Basis-Klasse \class{GeoObject3d} ab.
+\vspace{1cm}
+\noindent
+Klassen-Hierarchie:
+
+\begin{description}
+\item[\class{GeoObject3d}] Abstrakte Basisklasse
+\begin{description}
+\item[\class{Line3d}] Gerade, Strecke, Strahl
+\item[\class{Sphere}] Kugel
+\end{description}
+\end{description}
+
+\subsection{GeoObject3d}
+\label{GeoObject3d}
+\hypertarget{GeoObject3d}{}
+
+\class{GeoObject3d} ist eine abstrakte Basisklasse für 
+\hyperlink{geometric3dObject}{geometrische Objekte} des Raumes.
+In dieser Klasse definierte Methoden sind in allen abgeleiteten Klassen
+ebenfalls vorhanden.
+
+Konstruktoren:
+
+\proch{}{GeoObject3d::GeoObject3d}{void}{geo3d.h}
+\descr{Legt ein 3D-Objekt im Ursprung an.}
+
+\proc{}{GeoObject3d::GeoObject3d}{const GeoObject3d \&p}
+\procf{}{GeoObject3d::GeoObject3d}{const Vector3d \&p}
+\procf{}{GeoObject3d::GeoObject3d}{double xp,double yp,double zp}
+\descr{Legt ein 3D-Objekt im angegebenen Punkt an.}
+
+\proc{explicit}{GeoObject3d::GeoObject3d}{const Vector \&v}
+\proc{explicit}{GeoObject3d::GeoObject3d}{double p[]}
+\descr{Legt ein 3D-Objekt im angegebenen Punkt an.
+ Zur Vermeidung ungewollter  Konvertierungen muß der Aufruf explizit erfolgen.}
+
+\proc{double}{GeoObject3d::X}{void}
+\procf{double}{GeoObject3d::Y}{void}
+\procf{double}{GeoObject3d::Z}{void}
+\descr{Lesender Zugriff auf die Koordinaten des 3D-Objekts}
+
+\proc{void}{GeoObject3d::setX}{double x}
+\procf{void}{GeoObject3d::setY}{double y}
+\procf{void}{GeoObject3d::setZ}{double z}
+\procf{void}{GeoObject3d::set}{const Vector \&v}
+\descr{Setzen der Koordinatenwerte der Objektposition.}
+
+\proc{Vector3d \&}{GeoObject3d::Pos}{}
+\descr{Zugriff auf die Position des 3D-Objektes.}
+
+\proc{void}{GeoObject3d::Shift}{double dx,double dy,double dz}
+\proc{void}{GeoObject3d::Shift}{const Vector3d \&v}
+\descr{Verschiebung des 3D-Objektes um die gegebene Verschiebung.}
+
+\proc{double}{GeoObject3d::Distance}{double dx,double dy,double dz}
+\procf{double}{GeoObject3d::Distance}{const Vector3d \&ob}
+\descr{Euklidischer Abstand des gegebenen Raumpunktes vom 3D-Objekt}
+
+\proc{double}{GeoObject3d::Volume}{}
+\descr{Gibt das Volumen des 3D-Objektes zurück. Diese Methode ist in der
+  Basis-Klasse abstrakt.}
+
+\subsection{Sphere}
+\label{Sphere}
+\hypertarget{Sphere}{}
+
+\class{Sphere} ist eine von \class{GeoObject3d} abgeleitetet Klasse 
+zur Repräsentation von Kugeln.
+
+Konstruktoren:
+\proch{}{Sphere::Sphere}{}{sphere.h}
+\descr{Legt eine Einheits-Kugel im Ursprung an.}
+
+\proc{}{Sphere::Sphere}{double xp,double yp,double zp,double rp}
+\procf{}{Sphere::Sphere}{const Vector3d \&p,double rp}
+\procf{}{Sphere::Sphere}{const Point3d \&p,double rp}
+\descr{Legt eine Kugel mit den gegebenen Parametern für Mittelpunkt und Radius
+  an.}
+
+\proc{}{Sphere::Sphere}{const Sphere \&p}
+\descr{Legt eine Kopie der Kugel $p$ an (Kopierkonstruktor).}
+
+\proc{explicit}{Sphere::Sphere}{const Vector \&v}
+\procf{explicit}{Sphere::Sphere}{double d[]}
+\descr{Legt eine Kugel mit den gegebenen Parametern für Mittelpunkt und Radius
+  an. Der Aufruf muß explizit erfolgen.}
+
+Methoden:
+
+\proc{double}{Sphere::R}{}
+\descr{Gibt den Radius der Kugel zurück.}
+
+\proc{void}{Sphere::setR}{double vr}
+\descr{Setzt den Radius der Kugel auf $vr$.}
+
+\proc{double}{Sphere::Volume}{}
+\descr{Berechnet das Volumen der Kugel.}
+
+Siehe auch weitere Methoden der Basis-Klasse \see{GeoObject3d}.
+\newcommand{\pfeil}[1]{\stackrel{\rightarrow}{{#1}}}
+
+\subsection{Line3d}
+\label{Line3d}
+\hypertarget{Line3d}{}
+
+\class{Line3d} ist eine von \class{GeoObject3d} abgeleitetet Klasse 
+zur Repräsentation von Geraden, Strahlen und Strecken des Raumes. 
+Die Gerade wird dabei in ihrer
+Parameter-Form $\pfeil{x}=\pfeil{x_1}+p \cdot (\pfeil{x_2}-\pfeil{x_1})=\pfeil{x_1}+p \cdot \pfeil{dx}$ dargestellt. Der Parameter
+$p$ ist bei Geraden unbeschränkt, ist bei Strahlen größer als Null und liegt
+bei Strecken im Intervall $[0..1]$.
+
+Konstruktoren:
+
+\proch{}{Line3d::Line3d}{}{line3d.h}
+\descr{Legt eine undefiniert Strecke an. Vor der Verwendung müssen die
+  Endpunkte sinnvoll gesetzt werden.}
+
+\proc{}{Line3d::Line3d}{double xp,double yp,double zp,double x2p,double y2p,double z2p}
+\procf{}{Line3d::Line3d}{const Point3d \&p1,const Point3d \&p2}
+\descr{Legt eine Strecke mit den gegebenen Endpunkten an.}
+
+\proc{}{Line3d::Line3d}{const Line3d \&p}
+\descr{Legt eine Kopie der gegebenen Gerade an (Kopierkonstruktor).}
+
+\proc{explicit}{Line3d::Line3d}{const Vector \&v}
+\procf{explicit}{Line3d::Line3d}{double d[]}
+\descr{Legt eine Strecke mit den in Parametern angegebenen Endpunkten an. Der
+  Aufruf muß explizit erfolgen.}
+
+Elementzugriff:
+
+\proc{double}{Line3d::X1}{}
+\proc{double}{Line3d::Y1}{}
+\proc{double}{Line3d::Z1}{}
+\proc{Vector3d \&}{Line3d::P1}{}
+\descr{Zugriff auf die Koordinatenwerte des Startpunktes. Diese Methoden sind
+  identisch zu den gleichfalls nutzbaren Methoden X(),Y() und Z() der
+  Basisklasse $GeoObject3d$.}
+
+\proc{double}{Line3d::X2}{}
+\proc{double}{Line3d::Y2}{}
+\proc{double}{Line3d::Z2}{}
+\proc{Vector3d}{Line3d::P2}{}
+\descr{Zugriff auf die Koordinatenwerte des Endpunktes. Diese Werte
+  werden berechnet, da intern nur ein Richtungsvektor gespeichert wird.}
+
+\proc{double}{Line3d::DX}{}
+\proc{double}{Line3d::DY}{}
+\proc{double}{Line3d::DZ}{}
+\proc{Vector3d \&}{Line3d::DP}{}
+\descr{Zugriff auf die Werte des Richtungsvektors vom Start- zum Endpunkt.}
+
+Methoden:
+
+\proc{Vector3d}{Line3d::operator()}{double p}
+\descr{Liefert die Koordinaten des Punktes $x$ der Geraden mit
+  $\pfeil{x}=\pfeil{x_1}+p \cdot (\pfeil{x_2}-\pfeil{x_1})=\pfeil{x_1}+p \cdot
+  \pfeil{dx}$}
+
+\proc{double}{Line3d::Volume}{}
+\descr{Gibt 0 zurück.}

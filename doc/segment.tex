@@ -1,0 +1,214 @@
+\nsection{Segmentierung}{segmentation}
+\subsection{Wasserscheidentransformation (WST)}
+
+Die Idee der Wasserscheidentransformation ist recht einfach: Ein Grauwertbild
+wird als topographisches Relief interpretiert und jeder Punkt dieses
+digitalen Bildes einem regionalen Minimum zugewiesen.
+Dazu wird ein Flutungsprozess simuliert, bei dem Wasser aus den
+regionalen Minima str\"omt und damit die Becken (Minima) füllt.
+Punkte werden einem Minimum zugeordnet, indem sie mit der entsprechenden 
+Staubeckennummer markiert werden.
+
+Es werden durch den steigenden Wasserstand Einflusszonen der Minima
+berechnet. Treffen zwei Becken aufeinander, werden die Punkte an den 
+Ber\"uhrungsstellen speziell als D\"amme markiert. Diese D\"amme sind 
+die Wasserscheidenlinien, die m\"ogliche Objektgrenzen darstellen.
+
+Um in konstanter Zeit auf die Pixel einer H\"ohenstufe zugreifen zu 
+k\"onnen, werden die Bildpixel ihrem Grauwert entsprechend in ein Array 
+von FIFO-Schlangen einsortiert. Die Gr\"o\ss e des Array ist durch die 
+Anzahl der unterschiedlichen Grauwerte im Bild bestimmt.
+
+Die Anwendung der Wasserscheidentransformation resultiert oft in starker
+\"Ubersegmentierung. Diese kann durch Vorverarbeitungsmaßnahmen gemindert 
+werden. Um die \"Ubersegmentierung nachtr\"aglich zu reduzieren, k\"onnen 
+die Regionen nach bestimmten Kriterien verschmolzen werden.
+
+Wenn Objekte mit homogenen Grauwerten segmentiert werden sollen, wird die
+Wasserscheidentransformation auf das Gradientenbild angewendet. F\"ur die
+Segmentierung von texturierten Objekten eignet sich dieses Vorgehen nicht.
+
+\subsection{WST-Algorithmen und Hilfsfunktionen}
+
+\proch{int}{WST}{Image in, Image WSImg, int mode=1}{WaterShed.h}
+\descr{Anwendung der Wasserscheidentransformation auf Bild $in$. Im Bild
+$WSImg$ werden die Minima und ihre Einzugsgebiete numeriert.
+$mode = 1$ : Flutungsansatz, neue Minima in h\"oheren Grauwertleveln zulassen}
+%$mode = 2$ : Markeransatz, nur von den Initial-Markern fluten
+
+5 Schritte bei $mode=1$:
+\begin{quote}
+\begin{tabular}{ll}
+1.&     Sortieren der Grauwertpixel nach H\"ohenstufen.\\
+2.&     Punkte, die sich an Regionengrenzen befinden, in FIFO-Schlange aufnehmen.\\
+3.&     Diese Punkte als Wasserscheide markieren oder einem Becken zuordnen.\\
+4.&     Isoliert liegende Punkte als neue Regionen markieren.\\
+5.&     N\"achstes Grauwertlevel verarbeiten und Schritt 2 ausf\"uhren, bis Grauwert-Maximum erreicht ist.\\
+\end{tabular}
+\end{quote}
+
+%5 Schritte bei $mode=1$:
+%\begin{quote}
+%\begin{tabular}{ll}
+%1.&     Sortieren der Grauwertpixel nach H\"ohenstufen.\\
+%2.&     Markerregionen mit Nummern etikettieren.\\
+%3.&     Punkte, die sich an Regionengrenzen befinden, in FIFO-Schlange aufnehmen.\\
+%4.&     Diese Punkte als Wasserscheide markieren oder einem Becken zuordnen.\\
+%5.&     N\"achstes Grauwertlevel verarbeiten und wieder Schritt 3 bis Maximum erreicht.\\
+%\end{tabular}
+%\end{quote}
+
+%\proch{void}{prune}{Image in, Image out, int tresh}{WaterShed.h}
+%\descr{Grauwerte im Bild $in$, die kleiner als der Schwellwert $tresh$ sind,
+%in Bild $out$ auf 0 setzen.}
+
+%\proch{void}{imposeMinima}{Image in, Image out}{WaterShed.h}
+%\descr{Minima aus Bild $in$ in Bild $out$ auferlegen. Ein Minimum ist ein Punkt
+%mit Grauwert 0.}
+
+\proch{void}{GraphIter}{Image Original, Image WSImg, Image \&GrwImg, int Threshold}{WaterShed.h}
+\descr{Originalbild $Original$, Ergebnisbild der Wasserscheidentransformation $WSImg$ und das R\"uckgabebild
+$GrwImg$ \"ubergeben. Der Parameter $Threshold$ steuert die Verschmelzung der Regionen. Es werden
+nur Regionen vereinigt, bei denen die Differenz der durchschnittlichen Grauwerte gr\"o\ss er als $Threshold$ ist.}
+
+Eine vollst\"andige Grapheniteration durchf\"uhren:
+\begin{quote}
+\begin{tabular}{ll}
+1.&     Regionengraph berechnen.\\
+2.&     In Kantengraph transformieren.\\
+3.&     WST auf Kantengraph ausf\"uhren.\\
+4.&     Kantengraph in Regionenbild \"uberf\"uhren.\\
+\end{tabular}
+\end{quote}
+
+%% \proch{void}{DGrwImage}{Image Original, Image WSImg, Image \&GrwImg}{WaterShed.h}
+%% \descr{Durchschnittlichen Grauwert der Regionen des Bildes $WSImg$ unter
+%% Zuhilfenahme der Originalgrauwerte aus Bild $Original$ berechnen und in
+%% Bild $GrwImg$ einzeichnen.}
+
+%% \proch{void}{delWSHDPixels}{Image GrwImg, Image \&WSHEDDeleted}{WaterShed.h}
+%% \descr{Wasserscheidenlinien l\"oschen und durch gemittelten Grauwert der
+%% angrenzenden Regionen ersetzen. Als Eingabebild dient ein Regionenbild
+%% mit eingezeichneten Wasserscheidenlinien und durchschnittlichen Grauwert
+%% f\"ur die Punkte einer Region in $GrwImg$.}
+
+%\proch{void}{LowerCompleteImg}{Image in, Image \&lcImg}{WaterShed.h}
+%\descr{Bild $in$ wird in ein nach unten vollst\"andiges Bild transformiert.
+%Zu nicht minimalen Plateaus wird ein behelfsm\"a\ss iges Relief hinzuaddiert.}
+
+%% \proch{void}{deleteSmallMarkers}{Image i1, int threshold}{WaterShed.h}
+%% \descr{Zusammenh\"angende Punktmengen, die als Marker fungieren und weniger
+%% als $threshold$ Pixel besitzen, werden gel\"oscht.}
+
+%% \subsection{Regiongraph und Kantengraph}
+
+%% Methoden zum Aufbau von Regionengraph und Kantengraph, 
+%% WST-Algorithmus zur Ausf\"uhrung auf dem Kantengraph
+
+%% \proch{}{RegionGraph::RegionGraph}{Image source, Image labImg, Image \&retImg}{RegionGraph.h}
+%% \descr{Regionengraph mit dem Originalbild $source$ und dem Wasserscheidenbild $labImg$ initialisieren.}
+
+%% \proch{void}{RegionNode::DrawRegion}{Image working, int color}{RegionGraph.h}
+%% \descr{Die Regionenpixel der Region mit der Farbe $color$ in das Bild $working$ einzeichnen.}
+
+%% \proch{void}{RegionNode::DrawWSHDPixel}{Image working, int color}{RegionGraph.h}
+%% \descr{Die Wasserscheidenpixel der Region mit der Farbe $color$ in das Bild $working$ einzeichnen.}
+
+%% \proch{EdgeGraph*}{RegionGraph::ComputeEdgeGraph}{void}{RegionGraph.h}
+%% \descr{Den Kantengraph aus dem Regionengraph erstellen.}
+
+%% \proch{void}{EdgeGraph::ComputeWatershedTrans}{void}{RegionGraph.h}
+%% \descr{Die Wasserscheidentransformation auf dem Kantengraph ausf\"uhren.}
+
+%% \proch{void}{EdgeGraph::drawAllWSHEDs}{Image i, Image wsheds, int tresh}{RegionGraph.h}
+%% \descr{Wasserscheidenkanten in Bild $wsheds$ einzeichnen, die nach der
+%% Wasserscheidentransformation auf dem Kantengraphen als Wasserscheidenknoten
+%% markiert wurden. Zus\"atzlich werden nur die Kanten eingezeichnet, bei denen
+%% die Grauwertdifferenz der angrenzenden Regionen gr\"o\ss er als $tresh$ ist.}
+%% \subsection{Beispielcode}
+
+%% Algorithmus Teil 1: Vorverarbeitung
+%% \begin{quote}
+%% \begin{tabular}{ll}
+%%  1.&       (wenn n\"otig) Shading entfernen (Zeile 4)\\
+%%  2.&       Rangfilter oder Gaussfilter zur Rauschminderung anwenden (Zeile 5)\\
+%%  3.&       Gradientenbild des gefilterten Bildes berechnen (Zeile 6)\\
+%%  4.&       (nur f\"ur WST2:) Marker mittels prune-Funktion vergr\"o\ss ern (Zeile 7)\\
+%%  5.&       (nur f\"ur WST2:) Marker auf WST-Eingangsbild auferlegen (Zeile 8)\\
+%% \end{tabular}
+%% \end{quote}
+
+
+%% Algorithmus Teil 2: WST ausf\"uhren und Nachverarbeitung durch Grapheniteration
+%% \begin{quote}
+%% \begin{tabular}{ll}
+%%  6.&       Initialwasserscheiden berechnen (Zeile 9)\\
+%%  7.&       Regionengraph berechnen (Aufruf von GraphIter Zeile 10)\\
+%%  8.&       Transformation zu Kantengraph\\
+%%  9.&       Wasserscheidentransformation auf Kantengraph anwenden\\
+%% 10.&       Regionengraph des Ergebnis der Transformation berechnen\\
+%% 11.&       noch zweimal wie 7. bis 10. (Zeile 11 und 12)\\
+%% 12.&       Wasserscheidenlinien l\"oschen (Zeile 13)\\
+%% 13.&       als G\"utevergleich Differenzbild von 12 mit Originalbild berechnen (Zeile 14)\\
+%% \end{tabular}
+%% \end{quote}
+
+%% \begprogr
+%% \begin{verbatim}
+%% /* Test der Funktion WST
+%%    Vorverarbeitung: Shadingkorrektur, Gaussfilterung, Gradientenbild */
+%% #include "WaterShed.h"
+%% #include "RegionGraph.h"
+
+%% 1.      void testWST2(Image Original) {
+%% 2.              Image Gauss, Grad, GradPruned, GradMin;
+%% 3.              Image WS, BlurPic, Grw1, Grw2, Grw3;
+
+%% 4.              Shading(Original,Original);
+%% 5.              GaussImg(Original,13,2,Gauss);
+
+%% 6.              GradImg(Gauss,1,Grad);
+%% 7.              prune(Grad,GradPruned,3);
+%% 8.              imposeMinima(GradPruned,GradMin);
+
+%% 9.              WST(GradMin,WS);
+
+%% 10.             GraphIter(Original,WS,GrwBild1,10);
+%% 11.             GraphIter(Original,GrwBild1,GrwBild2,10);
+%% 12.             GraphIter(Original,GrwBild2,GrwBild3,10);
+
+%% 13.             delWSHDPixels(GrwBild3,BlurPic);
+%% 14.             Image subPic=NewImg(MaxImg);
+%% 15.             SubImg(BlurPic,Original,subPic);
+%% 16.     }
+%% \end{verbatim}
+%% \endprogr
+
+\subsection{Regionenwachstum}
+
+\proch{Region}{RegionGrow}{int x,int y,const Image \&orig,int maxsize=INT\_MAX,int refvalue=-1}{segment1.h}
+\procf{int}{RegionGrow}{int x,int y,const Image \&orig,Image \&mark,int val=1,int maxsize=INT\_MAX,int refvalue=-1}
+\descr{Ermittelt durch Regionenwachstum auf dem Bild $orig$ eine Region mit 
+  maximal $maxSize$ Pixeln um den Punkt (x,y). Das Regionenwachstum erfolgt 
+durch Hinzufügen des ``ähnlichsten'' Punktes. Der ``ähnlichste'' Punkt ist 
+der Punkt, der die geringste Wert-Abweichung vom Startpunkt zeigt, 
+beziehungsweise die geringste Abweichung vom übergebenen Referenzwert 
+$refvalue$, wenn dieser nicht negativ ist. Durch Angabe von 0 oder 
+orig.maxval kann RegionGrow zur Ermittlung von Minima- oder 
+Maxima-Regionen genutzt werden. Abbruchbedingung ist das
+  Maximum der Differenz des mittleren Grauwertes der Region zu den 
+  benachbarten Punkten. Die zweite Aufruf-Form zeichnet die Region mit dem
+  Wert $val$ in das Bild $mark$ ein.}
+
+\proch{Region}{RegionGrowGrw}{int x,int y,const Image \&orig,double stdmax=3.0,int maxSize=INT\_MAX}{segment1.h}
+\procf{int}{RegionGrowGrw}{int x,int y,const Image \&orig,Image \&mark,int
+  val=1,double stdmax=3.0,int maxSize=INT\_MAX}
+\descr{Ermittelt durch Regionenwachstum eine Region mit maximal $maxSize$
+  Pixeln um den Punkt (x,y). Das Wachstum wird abgebrochen, wenn die
+  Standardabweichung der Grauwerte der Region den Wert $stdmax$ übersteigt.
+  Die zweite Aufruf-Form zeichnet die Region mit dem Wert $val$ in das Bild $mark$ ein.}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

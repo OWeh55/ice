@@ -1,0 +1,618 @@
+\nsection{Datenstrukturen für Bilder}{Images}
+
+Bilder werden mit Hilfe von Instanzen der Bild-Klassen \class{Image}, 
+\class{ColorImage} und \class{Image3d} verwaltet. Sie speichern 
+die Bildinformation
+in Form von Grauwerten: Der Wert 0 entspricht hier ``weiß'' 
+beziehungsweise hoher Intensität und der Maximalwert 
+entspricht ``schwarz''.
+
+Bilder können visualisiert werden. Dabei werden die Bilder einmal zur 
+Visualisierung angemeldet (\see{Show}) und werden ab diesem Zeitpunkt 
+auf dem Bildschirm dargestellt. Alle Änderungen im Bild sind sofort
+sichtbar.
+
+Die Bildklassen selbst stellen eine {\bf Referenz} auf die eigentlichen 
+Bilddaten dar. Sie haben Eigenschaften ähnlich einem Zeiger (''Smart Pointer''). 
+In den meisten Fällen kann man diese Referenz aber als ''das Bild'' ansehen, 
+mit dem man am Ende arbeitet. Es gibt jedoch einige Besonderheiten zu beachten:
+\begin{itemize}
+\item Alle Konstruktoren erzeugen kein neues Bild, sondern zunächst nur eine 
+Referenz. 
+\item Der Standard-Konstruktor erzeugt zunächst ein ''ungültiges''
+Bild (\see{Image::isValid}). Vor der Verwendung muss noch das 
+eigentliche Bild initialisiert werden (\see{NewImg}, \see{Image::create} ).
+\item Der Kopierkonstruktor und damit auch Parameterübergaben über den Wert 
+erzeugen {\bf kein} neues Bild, sondern nur eine neue Referenz auf das 
+Ursprungsbild. Es handelt sich also um das gleiche Bild. Das gilt auch für den 
+Zuweisungsoperator.
+\item Bilder, genauer gesagt die Referenzen,  werden als konstant 
+betrachtet, solange sich nicht die Bildgröße oder der Grauwertumfang 
+ändert. Bilder werden deshalb an Funktionen meist als konstante Referenz 
+übergeben (\verb+const Image &image+), auch wenn sich der Inhalt des Bildes
+ändert.
+\item Zum Anlegen von Bildern gibt es Methoden (\see{Image::create}) 
+und Funktionen (\see{NewImg}), ebenso zum Kopieren bestehender Bilder 
+(\see{CopyImg}, \see{Image::copy}).
+\item Es ist möglich, Bilder explizit freizugeben (mittels \see{FreeImg}), 
+im Normalfall erfolgt eine Freigabe implizit mit dem Ungültigwerden 
+der Variable. 
+\end{itemize}
+
+Die Klasse \class{Image} dient zur Behandlung von Grauwertbildern. Der 
+Wert eines Pixels wird hier durch einen ganzzahligen Wert repräsentiert. 
+
+Zur Behandlung von Farbbildern ist die Klasse \class{ColorImage}
+zu verwenden, die in 3 Bildern der Klasse \class{Image} die Farbauszüge 
+Rot, Grün und Blau verwaltet.
+
+3D-Bilder können mit der Template-Klasse class{Image3d} angelegt werden.
+Es handelt sich um eine Sequenz von Bildern.
+
+\subsection{Die Klasse Image}
+\label{Image}
+\hypertarget{Image}{}
+
+Die Klasse \class{Image} stellt ein zweidimensionales Grauwert-Bild dar. 
+Sie speichert die Bildinformation in Form von Grauwerten: Der 
+Wert 0 entspricht hier ''weiß'' und der Maximalwert 
+entspricht ''schwarz''.
+
+Die Grauwerte neu angelegter Bilder werden standardmäßig 
+nicht initialisiert, so dass ihr Wert unbestimmt ist (\see{ClearImg}, \see{Image::set}).
+
+\subsection{Die Klasse ColorImage}
+\label{ColorImage}
+\hypertarget{ColorImage}{}
+
+Die Klasse \class{ColorImage} stellt ein zweidimensinales Farbbild dar. Die Farben
+werden in den drei ''Kanälen'' rot, grün und blau gespeichert. Die ''Kanäle'' selbst 
+sind Bilder der Klasse \class{Image}, auf die auch einzeln zugegriffen werden kann.
+Der Zugriff auf Farbbildpunkte arbeitet mit Werten vom Typ \class{ColorValue}, dessen
+Komponenten die {\bf Intensitäten} in der Kanälen rot, grün und blau darstellen.
+
+\subsection{Organisation und Verwaltung}
+\subsubsection{Image}
+\proch{}{Image::Image}{}{ImageC.h}
+\descr{Standard-Konstruktor. Das so erzeugte Bild ist zunächst ungültig
+  \see{Image::isValid}.}
+
+\proch{}{Image::Image}{const Image \&img}{ImageC.h}
+\descr{Kopier-Konstruktor. Erzeugt eine weitere {\bf Referenz} auf das
+  übergebene Bild.}
+
+\proch{void}{Image::create}{int xsize,int ysize,int maxval,const string \&title=''''}{ImageC.h}
+\procf{void}{Image::create}{const Image \&img,const string \&title=''''}
+\descr{Falls das Bild bereits initialisiert ist, wird zunächst das bestehende 
+Bild freigegeben.
+Es wird dann ein neues Bild der Größe $xsize$ * $ysize$ angelegt. 
+Der Maximalwert der zu speichernden Grauwerte beträgt $maxval$.
+Das Bild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+In der zweiten Form werden die Daten des Bildes $img$ als 
+Vorlage verwendet. Der Bildinhalt wird nicht kopiert.}
+
+\proch{void}{Image::copy}{const Image \&src}{ImageC.h}
+\descr{Falls das Bild bereits initialisiert ist, wird zunächst das bestehende 
+Bild freigegeben. Ein neues Bild wird dann als Kopie des übergebenen Bildes erzeugt.}
+
+\proch{static Image}{Image::createImage}{int sizeX, int sizeY, int maxValue, const std::string \&title = ''''}{ImageC.h}
+\descr{Legt ein neues Bild der Größe $sizeX$ * $sizeY$ mit dem
+maximalen Grauwert $maxValue$ an und gibt ein {\bf Image} zurück.
+Das Bild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+}
+Dies ist eine statische Methode und kann in der Form \verb+Image image=Image::createImage(1280,720,255);+
+verwendet werden. (''named constructor'')
+
+\proch{static Image}{createImage}{const Image \&src, bool copy, const std::string \&title = ''''}{ImageC.h}
+\descr{Legt ein neues Bild der Größe mit den Parametern von $src$ an und gibt ein {\bf Image} zurück.
+Das Bild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+}
+Dies ist eine statische Methode und kann in der Form verb+Image image2=Image::createImage(image);
+verwendet werden. (''named constructor'')
+
+\proch{Image}{NewImg}{int xsize,int ysize,int maxval,const string \&title=''''}{ImageC.h}
+\procf{Image}{NewImg}{const Image \&img,int copy=false,const string \&title=''''}
+\descr{
+Es wird ein neues Bild angelegt und als Funktionswert zurückgegeben.
+Die Größe wird durch $xsize$ und $ysize$ bestimmt, der maximale Grauwert 
+ist $maxval$. Das Bild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+Bei Aufruf mit einem vorhandenen Bild $img$ wird dessen Größe
+als Vorlage gewählt. Ist $copy=true$, so wird auch der Bildinhalt ins neue
+Bild kopiert.
+}
+
+\proch{int}{FreeImg}{Image \&img}{ImageC.h}
+\descr{
+Das Bild $img$ wird gelöscht und der dynamische Speicher freigegeben. Das Bild wird damit
+ungültig (\see{Image::isValid}):
+}
+
+\proch{bool}{Image::isValid}{}{ImageC.h}
+\descr{
+Gibt $true$ zurück, wenn Image ein gültiges Bild ist.
+}
+
+\proc{bool}{IsImg}{const Image \&img}
+\descr{
+Die Funktion gibt $true$ zurück, wenn $img$ ein gültiges Bild ist (\see{Image::isValid}).
+}
+\subsubsection{ColorImage}
+\proch{}{ColorImage::ColorImage}{}{ColorImage.h}
+\descr{Standard-Konstruktor. Das so erzeugte Farbbild ist zunächst ungültig
+  \see{ColorImage::isValid}.}
+
+\proch{}{ColorImage::ColorImage}{const ColorImage \&img}{ColorImage.h}
+\descr{Kopier-Konstruktor. Erzeugt eine weitere {\bf Referenz} auf das
+  übergebene Farbbild.}
+
+\proch{void}{ColorImage::create}{int xsize,int ysize,int maxval,const string \&title=''''}{ColorImage.h}
+\procf{void}{ColorImage::create}{const ColorImage \&img,const string \&title=''''}
+\descr{Falls das Farbbild bereits initialisiert ist, wird zunächst das bestehende 
+Farbbild freigegeben.
+Es wird dann ein neues Farbbild der Größe $xsize$ * $ysize$ angelegt. 
+Der Maximalwert der zu speichernden Werte pro Farbkanal beträgt $maxval$.
+Das Farbbild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+In der zweiten Form werden die Daten des Farbbildes $img$ als 
+Vorlage verwendet. Der Bildinhalt wird nicht kopiert.}
+
+\proch{void}{ColorImage::copy}{const ColorImage \&src}{ColorImage.h}
+\descr{Falls das Farbbild bereits initialisiert ist, wird zunächst das bestehende 
+Farbbild freigegeben. Ein neues Farbbild wird dann als Kopie des übergebenen Farbbildes erzeugt.}
+
+\proch{static ColorImage}{ColorImage::createColorImage}{int sizeX, int sizeY, int maxValue, const std::string \&title = ''''}{ColorImage.h}
+\descr{Legt ein neues Farbbild der Größe $sizeX$ * $sizeY$ mit einem maximalen Wert $maxValue$ 
+in den Farbkanälen an und gibt ein {\bf ColorImage} zurück.
+Das Farbbild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+}
+Dies ist eine statische Methode und kann in der Form \verb+ColorImage image=ColorImage::createColorImage(1280,720,255);+
+verwendet werden. (''named constructor'')
+
+\proch{static ColorImage}{ColorImage::createColorImage}{const ColorImage \&src, bool copy, const std::string \&title = ''''}{ColorImage.h}
+\descr{Legt ein neues Farbbild der Größe mit den Parametern von $src$ an und gibt ein {\bf ColorImage} zurück.
+Das Farbbild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+}
+Dies ist eine statische Methode und kann in der Form verb+ColorImage image2=ColorImage::createColorImage(image);
+verwendet werden. (''named constructor'')
+
+\proch{ColorImage}{NewImg}{int xsize,int ysize,int maxval,const string \&title=''''}{ColorImage.h}
+\procf{ColorImage}{NewImg}{const ColorImage \&img,int copy=false,const string \&title=''''}
+\descr{
+Es wird ein neues Farbbild angelegt und als Funktionswert zurückgegeben.
+Die Größe wird durch $xsize$ und $ysize$ bestimmt, der maximale Wert in den Farbkanälen
+ist $maxval$. Das Farbbild erhält den durch $title$ gegebenen Namen, der zum Beispiel bei der Darstellung
+verwendet wird.
+Bei Aufruf mit einem vorhandenen Farbbild $img$ wird dessen Größe
+als Vorlage gewählt. Ist $copy=true$, so wird auch der Bildinhalt ins neue
+Farbbild kopiert.
+}
+
+\proch{int}{FreeImg}{ColorImage \&img}{ColorImage.h}
+\descr{
+Das Farbbild $img$ wird gelöscht und der dynamische Speicher freigegeben. Das Farbbild wird damit
+ungültig (\see{ColorImage::isValid}):
+}
+
+\proch{bool}{ColorImage::isValid}{}{ColorImage.h}
+\descr{
+Gibt $true$ zurück, wenn ColorImage ein gültiges Farbbild ist.
+}
+
+\proc{bool}{IsImg}{const ColorImage \&img}
+\descr{
+Die Funktion gibt $true$ zurück, wenn $img$ ein gültiges Farbbild ist (\see{ColorImage::isValid}).
+}
+
+\proch{Image}{ColorImage::redImage}{void}{ColorImage.h}
+\procf{Image}{ColorImage::greenImage}{void}
+\procf{Image}{ColorImage::blueImage}{void}
+\descr{
+Liefert die Teilbilder vom Typ \see{Image} (Farbauszüge) zurück. 
+Damit können die Funktionen für Bilder vom Typ \see{Image} auf die einzelnen 
+Farbauszüge angewendet werden.
+Bei der Bearbeitung der Teilbilder muß garantiert werden, dass diese 
+immer die gleiche Größe behalten, sonst wird das Farbbild ungültig.
+}
+
+\subsection{Teilbilder - SubImages}
+\hypertarget{SubImages}{}
+
+In ICE wird die Idee einer ''Region of interest'' durch Teilbilder (SubImages)
+realisiert. Durch den \hyperlink{SubImageConstructor}{SubImage-Konstruktor} wird
+eine Referenz vom Typ $Image$ erzeugt, die auf ein rechteckiges Teilbild des
+gegebenen Bildes weist. Teilbilder verhalten sich in fast jeder Hinsicht wie
+andere Bilder, insbesondere kann auch von Teilbildern wieder ein Teilbild
+angelegt werden. Werden jetzt irgendwelche Operationen auf dieses
+(Teil-)Bild angewendet, so wirken sie sich auf diesen rechteckigen Teilbereich
+des Ausgangsbildes aus. 
+
+\hypertarget{SubImageConstructor}{}
+\proch{}{Image::Image}{const Image \&img,const Window \&w,const string \&title=''''}{ImageC.h}
+\descr{Legt eine neue Referenz auf die Bilddaten des Bildes $img$ an, welches
+  dem durch $w$ gegebenem {\bf Teilbild} entspricht. Das Bild erhält den durch
+  $title$ gegebenen Namen. Ein solches Teilbild verhält sich in (fast) 
+  allen Belangen wie ein normales Bild, es wird jedoch immer ein Teilbild 
+  des Bildes $img$ verarbeitet.}
+
+\proch{Image}{Image::operator()}{const Window \&w}{ImageC.h}
+\descr{Erzeugt ein Teilbild von Image}
+
+\proch{}{ColorImage::ColorImage}{const ColorImage \&img,const Window \&w,const string \&title=''''}{ColorImage.h}
+\descr{Legt eine neue Referenz auf die Bilddaten des Farbbildes $img$ an, welches
+  dem durch $w$ gegebenem {\bf Teilbild} entspricht. Das Bild erhält den durch
+  $title$ gegebenen Namen. Ein solches Teilbild verhält sich in (fast) 
+  allen Belangen wie ein normales Bild, es wird jedoch immer ein Teilbild 
+  des Bildes $img$ verarbeitet.}
+
+\proch{ColorImage}{ColorImage::operator()}{const Window \&w}{ImageC.h}
+\descr{Erzeugt ein Teilbild von Image}
+
+Dadurch können beliebige mit Bildern arbeitende Funktionen auch auf Teilbilder 
+angewendet werden:
+\begin{verbatim} 
+ Image img = ReadImg("test.jpg");
+ Image subimg(img, Window(10,10,200,150));        // SubImage anlegen
+ ClearImg(subimg);                                // Funktion auf Teilbereich anwenden
+ SetImg(img(Window(200,100,300,200)),img.maxval); // SubImage mit operator() erzeugt
+\end{verbatim}
+
+\subsection{Bildpunktzugriff}
+
+Der Zugriff auf einzelne Pixel von Bildern erfolgt mit Hilfe der Methoden
+\see{Image::setPixel} und \see{Image::getPixel} oder mittels der
+Funktionen \see{PutVal} und \see{GetVal}. \\
+Die Unchecked-Varianten der Methoden erlauben einen 
+beschleunigten Zugriff ohne Testung der übergebenen Parameter.
+Diese sollten nur in gut getesteten Programmen zur Anwendung kommen.
+Bei hohen Anforderungen an die Laufzeit des Programmes kann der 
+\hyperref{direct_pixel_access}{}{}{low level-Bildpunktzugriff} verwendet werden.
+
+\subsubsection{Methoden}
+
+\proch{int}{Image::getPixel}{int x,int y}{ImageC.h}
+\procf{int}{Image::getPixel}{IPoint p}
+\descr{Abfrage des Grauwertes an der Stelle (x,y) oder p des Bildes. }
+
+\proch{ColorValue}{ColorImage::getPixel}{int x,int y}{ColorImage.h}
+\procf{ColorValue}{ColorImage::getPixel}{IPoint p}
+\descr{Abfrage des Farbwertes an der Stelle (x,y) oder p des Bildes. }
+
+\proch{int}{Image::getPixelUnchecked}{int x,int y}{ImageC.h}
+\procf{int}{Image::getPixelUnchecked}{IPoint p}
+\descr{Abfrage des Grauwertes an der Stelle (x,y) oder p des Bildes. 
+Es erfolgt keine Testung, ob die übergebenen Koordinaten innerhalb des Bildes liegen.
+}
+
+\proch{ColorValue}{ColorImage::getPixelUnchecked}{int x,int y}{ColorImage.h}
+\procf{ColorValue}{ColorImage::getPixelUnchecked}{IPoint p}
+\descr{Abfrage des Farbwertes an der Stelle (x,y) oder p des Bildes.
+Es erfolgt keine Testung, ob die übergebenen Koordinaten innerhalb des Bildes liegen.
+}
+
+\proch{int}{Image::getIntensity}{int x,int y}{ImageC.h}
+\procf{int}{Image::getIntensity}{IPoint p}
+\descr{Abfrage der Intensität an der Stelle (x,y) oder p des Bildes.}
+
+\proch{int}{Image::getIntensityUnchecked}{int x,int y}{ImageC.h}
+\procf{int}{Image::getIntensityUnchecked}{IPoint p}
+\descr{Abfrage der Intensität an der Stelle (x,y) oder p des Bildes.
+Es erfolgt keine Testung, ob die übergebenen Koordinaten innerhalb des Bildes liegen.
+}
+
+Das Ergebnis der Abfrage der Intensität ist äquivalent zu \verb+img.maxval - img.getPixel(x,y)+.
+
+\proch{void}{Image::setPixel}{int x,int y,int value}{ImageC.h}
+\procf{void}{Image::setPixel}{IPoint p,int value}
+\descr{Setzt den Grauwert an der Stelle (x,y) oder p des Bildes auf den Wert $value$. }
+
+\proch{void}{ColorImage::setPixel}{int x,int y,ColorValue cv}{ColorImage.h}
+\procf{void}{ColorImage::setPixel}{IPoint p,ColorValue cv}
+\descr{Setzt den Farbwert an der Stelle (x,y) oder p des Farbbildes auf den Wert $cv$. }
+
+\proch{void}{Image::setPixelUnchecked}{int x,int y,int value}{ImageC.h}
+\procf{void}{Image::setPixelUnchecked}{IPoint p,int value}
+\descr{Setzt den Grauwert an der Stelle (x,y) oder p des Bildes auf den Wert $value$.
+Es erfolgt keine Testung der übergebenen Koordinaten und des Wertes.
+}
+
+\proch{void}{ColorImage::setPixelUnchecked}{int x,int y,ColorValue cv}{ColorImage.h}
+\procf{void}{ColorImage::setPixelUnchecked}{IPoint p,ColorValue cv}
+\descr{Setzt den Farbwert an der Stelle (x,y) oder p des Farbbildes auf den Wert $cv$. 
+Es erfolgt keine Testung der übergebenen Koordinaten und des Wertes.
+}
+
+\proch{int}{Image::setIntensity}{int x,int y,int value}{ImageC.h}
+\procf{int}{Image::setIntensity}{IPoint p,int value}
+\descr{Setzt die Intensität an der Stelle (x,y) oder p des Bildes auf 
+den Wert $value$.}
+
+\proch{int}{Image::setIntensityUnchecked}{int x,int y,int value}{ImageC.h}
+\procf{int}{Image::setIntensityUnchecked}{IPoint p,int value}
+\descr{Setzt die Intensität an der Stelle (x,y) oder p des Bildes auf den Wert
+$value$. Es erfolgt keine Testung, ob die übergebenen Koordinaten und der 
+Intensitäts-Wert zulässig sind.
+}
+
+Das Setzen der Intensität eines Pixels ist äquivalent zu zum Setzen des 
+Grauwertes auf \verb+img.maxval - value+.
+
+Die Methoden {\bf inside} sind nützlich, um festzustellen, ob die Kordinaten eines 
+Punktes oder Fensters im Inneren eines Bildes liegen.
+
+\proc{bool}{Image::inside}{const IPoint p}
+\procf{bool}{Image::inside}{int x,int y}
+\procf{bool}{Image::inside}{const Window \&w}
+\procf{bool}{ColorImage::inside}{const IPoint p}
+\procf{bool}{ColorImage::inside}{int x,int y}
+\procf{bool}{ColorImage::inside}{const Window \&w}
+\descr{Die Methoden testen ob ein gegebener Punkt beziehungsweise das gegebene
+  Fenster (\class{Window}) im Bereich der Bildkoordinaten des Bildes liegt.
+}
+
+\subsubsection{Funktionen}
+
+\proch{void}{PutVal}{\bsee{Image} \&img,int x,int y,int val}{base.h}
+\descr{
+Der Bildpunkt (x,y) im Bild $img$ wird mit dem Wert $val$ beschrieben. Es
+muß $0\le val\le img \to maxval$ gelten.
+}
+
+\proc{int}{GetVal}{const \bsee{Image} \&img,int x,int y}
+\descr{Der Wert des Bildpunktes $(x,y)$ des Bildes $img$ wird als Funktionswert
+bereitgestellt.
+}
+
+\proc{int}{GetVal}{const \bsee{Image} \&img,double x,double y,mode=DEFAULT}
+\descr{Es wird ein Wert der Grauwertfunktion des Bildes $img$ für den 
+Punkt (x,y) bereitgestellt. Der Wert berechnet sich in Abhängigkeit von
+$mode$:
+\begin{itemize}
+\item $mode=DEFAULT$: Der Wert des nächsten Pixels wird genutzt, 
+\item $mode=INTERPOL$: Der Wert wird durch bilineare Interpolation aus den 4
+  benachbarten Pixeln berechnet.
+\end{itemize}
+}
+
+\proch{void}{PutVal}{\bsee{Image} \& img,const \bsee{IPoint} \&p,int val}{base.h}
+\descr{Setzt das Pixel im Punkt $p$ auf den Wert $val$.}
+
+\proch{int}{GetVal}{const \bsee{Image} img,const \bsee{IPoint} \&p}{base.h}
+\descr{Liest den Wert des Pixels im Punkt $p$.}
+
+\proch{double}{GetInterpolVal}{Image img,double x,double y}{base.h}
+\procf{bool}{GetInterpolVal}{Image img,double x,double y,double \&val}
+\descr{Für die Gleitkomma-Koordinaten $(x,y)$ wird durch bilineare Interpolation 
+der Grauwerte der vier nächstliegenden Bildpunkte aus dem Bild $img$ ein
+Grauwert berechnet.\\
+In der zweiten Aufrufform gibt die Funktion zurück, ob die Koordinaten 
+innerhalb des Bildes lagen. Der interpolierte Grauwert wird
+hier auf $val$ zurückgegeben.}
+
+\subsection{Schleifen in Bildern}
+
+Sollen Operationen in einem Bild über alle Pixel erfolgen, so müssen 
+in einer Schleife alle Koordinatenwerte durchlaufen werden. 
+Wenn irgend möglich sollte dafür ein zeilenweises Durchlaufen gewählt 
+werden, da dann die Caches des Computers effizienter arbeiten können 
+und die Abarbeitung deutlich schneller erfolgt. 
+
+Dies wird oft in der Form zweier Schleifen erfolgen:
+
+\begprogr
+\begin{verbatim}
+Image img;
+... 
+for (int y=0; y < img.ysize; ++y) // äußere Schleife y
+  for (int x=0; x < img.xsize; ++x) // innere Schleife x
+    {
+      PutVal(img,x,y,(x+y) % img->maxval);
+    }
+\end{verbatim}
+\endprogr
+
+Eine iterator-ähnliche Methode zum Durchlaufen aller Bildpunkte
+verwendet die Klasse \class{Walker}.
+
+\subsection{Bildpunktzugriff auf low level-Ebene}
+\hypertarget{direct_pixel_access}{}
+Um einen schnelleren Zugriff auf die Bilddaten in zeitkritischen Anwendungen
+zu ermöglichen, kann ein Zeiger auf die internen Datenstrukturen abgefragt
+und direkt auf die Daten im Speicher zugegriffen werden. Dabei gibt es
+folgende Einschränkungen:
+\begin{itemize}
+\item Der Zugriff ist abhängig vom konkreten Typ des Bildes. Dieser Typ kann
+  mit der Methode \verb+Image->ImageType()+ abgefragt werden. Als Typ-Wert wird 
+  einer der Werte von 1 bis 3 zurückgegeben, woraus sich der zu verwendende
+  Pixel-Datentyp ergibt.\\
+\begin{tabular}{|l|l|l|} \hline
+Bildtyp&Pixeltyp&C++-Datentyp\\
+\verb+Image->ImageType()+ & & \\ \hline
+1&PixelType1&unsigned char\\
+2&PixelType2&unsigned short int\\
+3&PixelType3&int\\ \hline
+\end{tabular}\\
+Die Angabe des zugrundeliegenden C++-Datentyps dient nur der Information 
+und kann sich jederzeit ändern.
+\item Es erfolgt keinerlei Testung der Parameter des Zugriffs.
+\item Die Visualisierung der geänderten Daten muss durch
+  Image-$>$needRefresh() explizit veranlasst werden.
+\end{itemize}
+
+\proch{int}{Image-$>$ImageType}{}{ImageC.h}
+\descr{Gibt den Type des Bildes zurück.}
+
+\proch{void*}{Image-$>$getDataPointer}{}{ImageC.h}
+\descr{Gibt einen Zeiger T** auf die Bilddaten zurück. Dabei ist T der
+  Pixeltyp, der in Abhängigkeit vom Bildtyp explizit zu casten ist.
+  Der Zeiger zeigt auf ein Feld von Zeigern auf die Bildzeile. Die Bildzeile selbst
+  ist ein C-array vom Pixel-Typ $T$.}
+
+Ein Beispiel-Programmfragment:
+\begprogr
+\begin{verbatim}
+Image img;
+... 
+if (img->ImageType()==1) // Spezialbehandlung für diesen Typ
+{
+  PixelType1** imgdata = (PixelType1**)img->getDataPtr();
+  for (int y=0; y < img.ysize; ++y) // äußere Schleife y
+    for (int x=0; x < img.xsize; ++x) // innere Schleife x
+    {
+      imgdata[y][x] = 1;
+    }
+  img->needRefresh();
+}
+else // alle anderen Bildtypen
+{
+  for (int y=0; y < img.ysize; ++y) // äußere Schleife y
+    for (int x=0; x < img.xsize; ++x) // innere Schleife x
+    {
+      PutVal(img,x,y,1);
+    }
+}
+\end{verbatim}
+\endprogr
+
+\subsection{Bildbearbeitung}
+Operatoren über Bilder vom Typ \class{Image} verknüpfen ein oder zwei Bilder und
+legen das Ergebnis im Zielbild ab. Alle Bilder, insbesondere auch das Zielbild
+müssen gültige (mit \see{NewImg} angelegte) Bilder sein.
+Die Bildgrößen aller Bilder müssen entsprechend übereinstimmen.
+
+Die Beschreibung der Operatoren findet sich für alle Bildrepräsentationen im
+Abschnitt \see{Bildbearbeitung}.
+
+\subsection{3D-Bilder - die Klasse Image3D}
+\hypertarget{Image3d}{}
+
+Die Klasse \class{Image3d} repräsentiert 3D-Bildern. Das sind dreidimensionale 
+Voxel-Bilder, wie sie beispielsweise bei der Computer-Tomografie oder 
+Magnet-Resonanz-Tomografie entstehen.
+{\bf Image3d}-Objekte stellen eine Sequenz von 2D-Bildern \class{Image} dar, 
+die Scheiben des 3D-Bildes in XY-Richtung darstellen. Bei 3D-Bildern der Klasse
+{\bf Image3d} kann die Auflösung in alle 3 Richtungen getrennt festgelegt 
+werden, was beim Zugriff mittels {\bf GetValueD} berücksichtigt wird.
+\subsubsection{Konstruktoren}
+\proch{}{Image3d}{int xs, int ys, int zs, int maxval = 255,
+  double xscale = 1.0, double yscale = 1.0, double zscale = 1.0}{image3d.h}
+\descr{Erzeugt ein 3D-Bild der Klasse {\bf Image3d}. Die Ausdehnungen in 
+X-, Y- und Z-Richtung in Voxeln wird durch $xs$, $ys$ und $zs$ festgelegt.
+$maxval$ gibt den maximalen Grauwert an, der in Voxeln gespeichert werden kann.
+$xscale$, $yscale$ und $zscale$ beschreiben die physische Größe des Voxels.}
+
+\proch{}{Image3d}{const std::string \&filemask,
+  double xscale = 1.0, double yscale = 1.0, double zscale = 1.0}{image3d.h}
+\descr{Erzeugt ein 3D-Bild aus Bilddateien. Aus den Bilddateien wird die Größe ermittelt,
+das 3D-Bild angelegt und die Bilder werden eingelesen. Die Datei-Maske muss die zu ladenden Bilder 
+beschreiben. Die Reihenfolge der Bilder ist alphabetisch.
+$xscale$, $yscale$ und $zscale$ beschreiben die physische Größe des Voxels.}
+
+\proch{}{Image3d}{const Image3d \&src, bool copydata = true}{image3d.h}
+\descr{Kopierkonstruktor. Bei Angabe von $copydate$ als $false$ wird nur das 3D-Bild
+gleicher Größe angelegt, aber der Bildinhalt nicht kopiert.}
+
+\proch{}{Image3d}{const Image3d \&src, Window3d w}{image3d.h}
+\descr{Konstruktor eines 3D-Teilbildes, welches die Daten des Originalbildes $src$
+referenziert. Änderungen des Teilbildes ändern den entsprechend Bildauschnitt des 
+Origionalbildes $src$.}
+ 
+\subsection{Bilder mit Gleitkommawerten}
+\label{ImageD}
+\hypertarget{Image3d}{}
+Für einige Aufgaben, z.B. im Zusammenhang mit Fouriertransformationen, reicht
+der Grauwertumfang der Integer-Bilder \class{Image} nicht aus. Analog zur 
+Datenstruktur Image gibt es eine Datenstruktur \class{ImageD} mit Grauwerten 
+vom Typ {\em double} eingeführt. Diese Bilder können nicht direkt visualisiert
+werden, es stehen jedoch Funktionen zur Konvertierung in Integer-Bilder und
+umgekehrt zur Verfügung (\see{ConvImgDImg}). Zusätzlich zum maximalen 
+Wert $maxval$ wird in Gleitkomma-Bildern der minimale Wert $minval$ 
+gespeichert. Abweichend von den Integer-Bildtypen haben diese Werte 
+jedoch nur einen informativen Character. Sie stellen keine Begerenzung 
+des Wertebereiches dar und es erfolgt bei Zuweisungen keine Testung auf eine 
+Einhaltung des gegebenen Bereichs.
+
+\proch{ImageD}{NewImgD}{int xsize,int ysize,double minval=0.0,double maxval=0.0}{based.h}
+\procf{ImageD}{NewImgD}{ImageD img,bool copy=false}
+\procf{ImageD}{NewImgD}{const Image \&img,bool copy=false}
+\descr{
+Es wird ein neues Gleitkommabild angelegt und als Funktionswert zurückgegeben.
+Neben der Möglichkeit der expliziten Angabe der Größe kann auch ein anderes 
+Bild (\class{Image}) oder Gleitkommabild als Muster vorgegeben werden. Wenn der 
+zusätzliche Parameter $copy$ = true ist, wird der Inhalt der Vorlage ins neue 
+Bild kopiert. Im Fehlerfall wird der NULL-Pointer zurückgegeben.
+}
+
+\proch{void}{PutValD}{ImageD img,int x,int y,double val}{macro.h}
+\descr{
+Der Bildpunkt $(x,y)$ im Bild $img$ wird mit dem Wert $val$ beschrieben. 
+Es wird keine Kontrolle des Wertebereiches vorgenommen. 
+}
+
+\proc{double}{GetValD}{ImageD img,int x,int y}
+\descr{
+Es wird der Datenwert des Bildpunktes $(x,y)$ des Bildes $img$ als
+Funktionswert bereitgestellt.
+}
+
+\proch{void}{PutValue}{ImageD img,IPoint p,double val}{based.h}
+\descr{
+Der Bildpunkt $p$ im Bild $img$ wird mit dem Wert $val$ beschrieben. 
+Es wird keine Kontrolle des Wertebereiches vorgenommen. 
+}
+
+\proc{double}{GetValue}{ImageD img,IPoint p}
+\descr{
+  Es wird der Datenwert des Bildpunktes $p$ des Bildes $img$ als
+Funktionswert bereitgestellt.
+}
+
+\proch{int}{UpdateLimitImgD}{ImageD img}{based.h}
+\descr{
+In dem Gleitkommabild $img$ werden die Werte für den minimalen und maximalen Grauwert
+anhand der vorhandenen Werte des Bildes aktualisiert.
+}
+
+\proc{int}{ConvImgDImg}{ImageD imgs,Image imgd,int modus=ADAPTIVE,int sign=UNSIGNED}
+\descr{
+Das Gleitkommabild $imgs$ wird in ein Integer-Bild $imgd$ konvertiert. 
+Die Parameter $modus$ und $sign$ steuern, welcher Zahlenbereich des 
+Gleitkomma-Bildes dem Grauwert-Umfang des Integer-Bildes entspricht:
+\begin{tabular}{|l||c|c|} \hline
+$modus$ & $UNSIGNED$ & $SIGNED$ \\ \hline \hline
+RAW & $[0,imgd->maxval]$ & $[-\frac{imgd->maxval}{2},\frac{imgd->maxval}{2}]$ \\ \hline
+ADAPTIVE & \multicolumn{2}{c}{$[imgs->minval,imgs->maxval]$} \\ \hline
+NORMALIZED & $[0,4]$ & $[-2,2]$ \\ \hline
+\end{tabular}\\
+Werte außerhalb des jeweiligen Wertebereichs werden auf den Maximal- bzw.
+Minimal-Wert begrenzt. Ist $modus=ADAPTIVE$ wird der Wertebereich des
+Gleitkommabildes neu ermittelt, der Parameter $sign$ wird hier ignoriert.
+}
+
+\proc{int}{ConvImgImgD}{const Image \&imgs,ImageD imgd,int modus=RAW,int sign=UNSIGNED}
+\descr{
+Das Integer-Bild $imgs$ wird in ein Gleitkommabild $imgd$ konvertiert.
+Der Grauwert-Bereich des Quellbildes $[0,imgs->maxval]$ wird in Abhängigkeit
+von $modus$ und $sign$ in die folgenden Gleitkomma-Zahlenbereiche 
+transformiert:
+\begin{tabular}{|l||c|c|} \hline
+$modus$ & $UNSIGNED$ & $SIGNED$ \\ \hline \hline
+RAW & $[0,imgs->maxval]$ & $[-\frac{imgs->maxval}{2},\frac{imgs->maxval}{2}-1]$ \\ \hline
+NORMALIZED & $[0,4]$ & $[-2,2]$ \\ \hline
+\end{tabular}
+}
+
+\proc{int}{FreeImgD}{ImageD img}
+\descr{
+Das Gleitkommabild $img$ wird gelöscht und der dynamische Speicher freigegeben.
+}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

@@ -1,0 +1,76 @@
+\lsection{Monokulare Rekonstruktion}
+\subsection{Planare Objekte}
+
+\proc{int}{RecTriangle}{camera cam,PointCorr *pcorr,int n,Frame frame[2]}
+\descr{
+Aus der Punktkorrespondenzliste $pcorr$ wird eine Dreieck mit möglichst großer
+Fläche ausgewählt und die Lage Rekonstruiert. Die beiden Lösungen werden auf
+$frame$ zurückgegeben.
+}
+\proc{int}{RecPlanar}{camera cam,PointCorr *pcorr,int nbr,Frame *f}
+\descr{
+Die Lage der planaren Punktkonfiguration $pcorr$ mit mindestens vier Punkten
+wird rekonstruiert und auf $f$ zurückgegeben.
+}
+\proc{int}{RecGeneralPlanar}{PointList plb,PointList plm,camera cam, Frame f[2]}
+\descr{ 
+  Mit Hilfe der Flächenmomente und Standardlagen des Modellobjektes
+  $plm$ und des zugehörigen Bildobjektes $plb$ wird die Lage des
+  Modellobjektes rekonstruiert. Die beiden Lösungen werden auf $f$
+  zurückgegeben.  
+}
+\proc{int}{RecPlanarIterate}{PointList plb,PointList plm,int nbr,camera cam,Frame *f}
+\descr{
+  Ausgehend von der auf $f$ übergebenen Startlösung wird die Lage eines
+  planaren Objektes iterativ bestimmt. Dazu werden iterativ an $nbr$
+  äquidistanten Stützstellen aus $plm$ korrespondierende Punkte in $plb$
+  gesucht und mit den gefundenen Paaren die Lage neu bestimmt.
+}
+\proc{int}{RecMoments}{double mm[15],double mb[15],camera cam, Frame f[2]}
+\descr{
+Aus den Flächenmomenten eines planaren Modellobjektes $mm$ und des zugehörigen
+Bildobjektes $mb$ wird die Lage des Modellobjektes rekonstruiert. Die beiden
+Lösungen werden auf $f$ zurückgegeben.
+}
+\proc{int}{RecSquare}{camera cam,PointCorr *pc,Frame *f}
+\descr{
+Es wird die Lage eins planaren Vierecks rekonstruiert, indem der Diagonalenschnittpunkt
+als Linearkombination von jeweils zwei Seiten ausgedrückt wird. Aus dem daraus
+folgenden Gleichungssystem können die Abstände der einzelnen Punkte zum
+Projektionszentrum berechnet werden.
+}
+
+
+\subsection{Räumliche Objekte}
+
+\proc{int}{LinRecNPoint}{camera cam,PointCorr *pcorr,int nbr,Frame *f,double *mse}
+\descr{
+Durch lineare Ausgleichsrechnung wird die Lage der räumlichen Punktekonfiguration
+$pcorr$ rekonstruiert. $nbr$ gibt die Anzahl der Punktkorrespondenzen an. Das
+Rekonstruktinsergebnis wird auf $f$ zurückgegeben, $mse$ gibt den Restfehler
+der Ausgleichung an.
+}
+\proc{int}{NonLinRecNPoint}{camera cam,PointCorr *pcorr,int nbr,Frame *f}
+\descr{
+Durch nichtlineare Ausgleichsrechnung (Newton-Raphson) wird die Lage der
+räumlichen Punktekonfiguration $pcorr$ rekonstruiert. $nbr$ gibt die Anzahl
+der Punktkorrespondenzen an. $f$ muß eine geeignete Startlösung enthalten und
+wird durch die Funktion verändert.
+}
+\proc{int}{IterateRec}{camera cam,PointCorr *pcorr,int nbr,Frame *f}
+\descr{
+Es wird ein Iterationsschritt zur Lagerekonstruktion der Punktekonfiguration
+$pcorr$ ausgeführt (Newton-Raphson).
+}
+\proc{int}{NonLinRecNLine}{camera cam,LineCorr *lcorr,int nbr,Frame *f}
+\descr{
+Es wird die Lage der Geradenkonfiguration $lcorr$ durch nichtlineare
+Ausgleichsrechnung (Newton-Raphson) rekonstruiert. $nbr$ gibt die Anzahl
+der Linienkorrespondenzen an. $f$ muß eine geeignete Startlösung enthalten und
+wird durch die Funktion verändert.
+}
+\proc{double}{RecError}{camera cam,PointCorr *pcorr,int nbr,Frame *f}
+\descr{
+Zurückgegeben wird der mittlere Abstand der Bildpunkte von den mit $f$ und
+$cam$ in die Bildebene projizierten Raumpunkten.
+}

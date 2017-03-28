@@ -1,0 +1,212 @@
+\nsection{Kameramodelle}{cameraModel}
+\subsection{Datenstruktur Camera}
+\label{Camera}
+\hypertarget{Camera}{}
+Die Datenstruktur \class{Camera} beschreibt die Eigenschaften einer Kamera. Dies
+umfaßt die inneren und äußeren Parameter der Kamera bezüglich der projektiven
+Abbildung sowie die Parameter der Verzeichnung (\see{Distortion}).
+
+Die äußeren Kameraparameter beschreiben eine Transformation der
+Weltkoordinaten eines Punktes in die Kamerakoordinaten durch eine Bewegung. 
+Der Ursprung des Kamerakoordinatensystems sitzt im Projektionszentrum der 
+projektiven Abbildung der Kamera, die Z-Achse liegt auf der optischen Achse
+der Kamera von der Kamera weg, die X-Achse ist parallel zu horizontalen 
+Achse der Bildebene, die Y-Achse ist parallel zur vertikalen Bildachse, aber
+umgekehrt orientiert. Dies trägt der Tatsache Rechnung, daß in der
+Bildverarbeitung üblicherweise die vertikale Achse nach unten gerichtet ist,
+also entgegengesetzt zur üblichen Orientierung im Raum.
+Die Bewegung (Transformation Weltkoordinaten in Kamerakoordinaten) wird
+beschrieben durch die Eulerschen Winkel einer Drehung um die Z-Achse des
+Weltkoordinatensystems ($\gamma$), Drehung um die Y-Achse des
+Weltkoordinatensystems ($\beta$) und einer Drehung um die X-Achse des
+Weltkoordinatensystems ($\alpha$), ausgeführt in dieser Reihenfolge und eine
+Verschiebung. 
+
+Die projektive 3D-2D-Transformation von Kamerakoordinaten in Bildkoordinaten
+$(u,v)$ wird durch die inneren Kameraparameter charakterisiert. 
+Dies sind die Kammerkonstante $f$, die Anisotropie $a$, die die abweichende
+Skalierung bezüglich der Bildachsen beschreibt, die Scherung $s$ in u-Richtung
+sowie der Hauptpunkt $(u_0,v_0)$. Die resultierende Transformationsmatrix ist
+\centerline{
+$\left( 
+\begin{array}{cccc}
+f & s \cdot f & u_0 & 0\\
+0 & -a \cdot f & v_0 & 0\\
+0 & 0 & 1 & 0
+\end{array} 
+ \right)$}
+
+Für die Verzeichnung können alle vorhandenen Verzeichnungsmodelle
+(\see{Distortion}) genutzt werden.
+
+\subsubsection{Konstruktoren, Zuweisung, Destruktor}
+
+\proch{}{Camera::Camera}{int dtyp=1}{camera.h}
+\descr{Legt eine Kamera mit dem gegebenen Verzeichnungstyp $dtyp$ an (\see{Distortion}). }
+
+\proch{}{Camera::Camera}{const Vector \&v,int dtyp=1}{camera.h}
+\descr{Legt eine Kamera mit dem gegebenen Verzeichnungstyp $dtyp$ an
+  (\see{Distortion}) und initialisiert diese mit den im Vektor $v$ gegebenen
+  Parametern 
+(\see{Camera::Set},\see{Camera::MakeVector})}
+
+\proch{}{Camera::Camera}{const Camera \&c}{camera.h}
+\descr{Kopierkonstruktor.}
+
+\proch{Camera \&}{operator=}{const Camera \&c}{camera.h}
+\descr{Zuweisungsoperator: Setzen einer Kamera (linke Seite)
+auf die Werte der Kamera der rechten Seite.}
+
+\subsubsection{Zugriff auf Komponenten und Parameter}
+
+\proc{void}{Camera::Set}{double fp,double ap,double sp,
+                   double u0p,double v0p,const Distortion \&d}
+\procf{void}{Camera::Set}{double fp,double ap,double sp,double u0p,double v0p}
+\descr{Setzt die internen Parameter einer Kamera entsprechend der gegebenen
+Werte, mit bzw. ohne die Verzeichnungsparameter.}
+\proc{void}{Camera::SetExt}{double dxp,double dyp,double dzp,double ap,double
+bp,double cp}
+\descr{Setzt die äußeren Kamera-Parameter.}
+
+\proc{void}{Camera::Get}{double \&fp,double \&ap,double \&sp,double \&u0p,double \&v0p}
+\descr{Ermittelt die internen Parameter der Kamera.}
+\proc{void}{Camera::GetExt}{double \&dxp,double \&dyp,double \&dzp,
+double \&ap,double \&bp,double \&cp}
+\descr{Gibt die äußeren Kamera-Parameter zurück.}
+
+\proc{const Distortion}{Camera::Dist}{}
+\descr{Gibt eine konstante Referenz der Verzeichnung der Kamera zurück.}
+\proc{int}{Camera::DistType}{}
+\descr{Gibt den Type der Verzeichnung als Integer-Wert zurück.}
+
+\proc{void}{Camera::SetDist}{const Distortion \&d}
+\descr{Setzt die Verzeichnungsparameter der Kamera.}
+
+Die speziellen Zugriffsmethoden, die die Parameter der Kamera in einem
+\bsee{Vector} ablegen bzw. aus einem \bsee{Vector} laden dienen der
+Nutzung mit Funktionen, die Vektoren als Parameter benötigen, wie zum Beispiel
+die Funktion \bsee{LMDif}.
+
+\proch{Vector}{Camera::MakeVector}{int what=Camera::all}{camera.h}
+\descr{Erzeugt einen Vektor, in dem die Parameter der Kamera gespeichert
+sind. Mittels Parameter $what$ kann festgelegt werden, welche Parameter im
+Vektor abgelegt werden:
+\begin{itemize}
+\item[Camera::all] Es werden alle Parameter abgelegt.
+\item[Camera::internal] Es werden die internen Parameter abgelegt
+(einschließlich Verzeichnung). 
+\item[Camera::external] Es werden die äußeren Parameter abgelegt.
+\end{itemize}
+}
+
+\proch{void}{Camera::Set}{const Vector \&v,int what=Camera::all}{camera.h}
+\descr{Setzt die Parameter etsprechend der Daten im Vektor $v$. Zur Bedeutung
+des Parameters $what$ siehe \see{Camera::MakeVector}.}
+
+\subsubsection{Transformationen}
+
+\proch{Vector}{Camera::Transform}{const Vector \&v}{camera.h}
+\descr{Abbildung eines als Vektor gegebenenen Raumpunktes in die
+Bildebene und Rückgabe als Vektor.}
+
+\proch{Point}{Camera::Transform}{const Vector3d \&v}{camera.h}
+\descr{Abbildung eines als Vektor3d gegebenenen Raumpunktes in die
+Bildebene und Rückgabe als Point.}
+
+\proch{Point}{Camera::Transform}{const Point3d \&v}{camera.h}
+\descr{Abbildung eines als Point3d gegebenenen Raumpunktes in die
+Bildebene und Rückgabe als Point.}
+
+\proc{void}{Camera::Transform}{double x,double y,double z,double \&u,double \&v}
+\descr{Abbildung eines durch die Koordinaten x, y und z gegebenenen
+Raumpunktes in die Bildebene. Die Rückgabe der Koordinaten erfolgt über die
+Parameter u und v.}
+
+\proc{Line3d}{Ray}{const Point \&bp}
+\procf{Line3d}{Ray}{double u,double v}
+\procf{Line3d}{Ray}{const Vector \&bp}
+\descr{Berechnet zu einem gegebenen Bildpunkt den Sehstrahl.}
+
+\subsubsection{Ein- und Ausgabe}
+
+\proch{string}{Camera::toString}{const string \&del}{camera.h}
+\descr{Erzeugt einen beschreibenden String. $del$ wird als Trennzeichen
+zwischen den Parametern verwendet. Typisch ist die Verwendung des
+Zeilenvorschubs für eine zeilenweise Ausgabe der Parameter (default) oder 
+Leerzeichen, Komma oder ähnliches für die Ausgabe auf einer Zeile.}
+
+\subsection{Planare Selbstkalibrierung mit einem Muster nach Zhang}
+
+Mit der Funktion \see{DrawPattern} erstellt man das zu verwendende planare
+Kalibriermuster, welches man dann auf z.B. ein weißes A4 Blatt druckt oder
+gleich auf dem planaren Monitor darstellt. Wird das Muster auf Papier
+gedruckt, muss man darauf achten, dass das Papier planar aufliegt, es darf sich
+z.B. nicht wellen usw. Von diesem Muster macht man mit einer Kamera
+mindestens drei Aufnahmen aus verschiedenen Blickrichtungen ohne die internen
+Kameraparameter dabei zu verändern.\\
+Wichtig:\\
+-die internen Parameter dürfen sich nicht ändern, z.B. nicht zoomen von
+einer Aufnahme zur anderen!\\
+-mindestens 3 Aufnahmen aus 3 verschiedenen Blickrichtungen. Dabei müssen
+die Blickrichtungen verschieden bez. 2 Rotationsachsen sein. Liegt z.B. das
+Muster auf einem Tisch, so reicht es nicht nur Aufnahmen zu machen, indem man
+um den Tisch geht und aus gleicher Höhe das Muster aufnimmt, sondern man muss
+auch die Höhe der Kamera noch variieren, sonst entstehen numerische Instabilitäten.\\
+ Weiterhin ist bei den Aufnahmen zu beachten, dass das Muster einen großen
+Teil des Bildes einnimmt. Mit der Funktion \see{Calibrate} kann man dann
+einfach die inneren und äußeren Kameraparameter bestimmen. Falls es
+dabei oder bei den anderen Funktionen zu Fehlermeldungen kommt, kann man den
+Prekompilerbefehle \#define selfcalib\_debug in der selfcalib.h setzten und
+erhält somit eine genauere Textausgabe in der Konsole sowie eine
+Visualisierung der kritischen Zwischenschritte mittels zweier Images, die als
+Defaulteinstellung als ungültig gesetzt sind. Nach jedem relevanten
+Zwischenschritt bestätigt man mit $<$Enter$>$. Dabei kann man vor dem
+Aufruf der folgenden Funktionen ein Textfenster mit der Funktion
+\see{OpenAlpha} und ein Visualisierungsfenster mit der Funktion \see{Display}
+bereitstellen und die beiden Bilder $debug\_image$ und $debug\_mark$ mit den
+gleichen Dimensionen wie die Aufnahmen initialisieren. Mittels dem Aufruf
+Show(OVERLAY,debug\_image,debug\_mark) bekommt man die Bilder überlagert
+angezeigt. Für Verzeichnungen gibt es verschiedene Modelle, es wird immer
+das Modell verwendet, das im Camera object festgelegt wurde, entweder
+explizit, oder der Standardkonstruktur setzt einen DEFAULT-Typ.
+\\
+Im Verzeichnis applications findet man ein Rahmenprogramm
+calib\_zhang.cpp
+\\
+
+\proch{int}{Calibrate}{vector$<$Image$>$ \&images, Camera \&c, bool dist=true, Image debug\_image = Image(), Image debug\_mark = Image()}{selfcalib.h}
+\descr{Kalibrierung aus mindestens 3 gleichgroßen Aufnahmen des Testmusters. Mit $images$ werden diese Bilder als ein Vektor übergeben. $c$ ist vom Typ Camera und es werden die inneren Kameraparameter zurückgegeben. Wenn $dist=true$ ist, dann werden die Verzeichnungen berücksichtigt und mit zurückgegeben.}
+
+\proch{int}{Calibrate}{vector$<$Image$>$ \&images, vector$<$Camera$>$ \&cv, bool dist=true, Image debug\_image = Image(), Image debug\_mark = Image()}{selfcalib.h}
+\descr{Kalibrierung aus mindestens 3 gleichgroßen Aufnahmen des Testmusters. Mit $images$ werden diese Bilder als ein Vektor übergeben. $cv$ ist ein Vektor aus Kameras und es werden innere und aüßere Kameraparameter zurückgegeben, wobei die Dimensionen der beiden Vektoren gleich sein muss. Wenn $dist=true$ ist, dann werden die Verzeichnungen berücksichtigt und mit zurückgegeben.}
+
+\proch{int}{AssignCalibPattern}{Image \&image, Matrix \&imagepoints, Matrix \&worldpoints, Image debug\_image = Image(), Image debug\_mark = Image()}{selfcalib.h}
+\descr{Bestimmung der Koordinaten des Musters in der Aufnahme und Rückgabe der theoretischen Koordinaten des Musters in Bezug auf die Bilddimensionen ohne Berücksichtigung einer Verzeichnung. Mit $image$ wird eine Aufnahme des Testmussters übergeben. Mit $imagepoints$ wird eine Matrix(50,2) der ermittelten Bildkoordinaten und mit $worldpoints$ wird eine Matrix(50,3) der Weltkoordinaten des Testmusters zurückgegeben.}
+
+\proch{int}{AssignCalibPattern}{Image \&image, Matrix \&imagepoints, Matrix \&worldpoints, Camera \&c, Image debug\_image = Image(), Image debug\_mark = Image()}{selfcalib.h}
+\descr{Bestimmung der Koordinaten des Musters in der Aufnahme und Rückgabe der theoretischen Koordinaten des Musters in Bezug auf die Bilddimensionen mit Berücksichtigung einer Verzeichnung gegeben durch $c$. Mit $image$ wird eine Aufnahme des Testmussters übergeben. Mit $imagepoints$ wird eine Matrix(50,2) der ermittelten Bildkoordinaten und mit $worldpoints$ wird eine Matrix(50,3) der Weltkoordinaten des Testmusters zurückgegeben.}
+
+\proch{int}{ComputeHomography}{Matrix \&imagepoints, Matrix \&worldpoints, Trafo \&H}{selfcalib.h}
+\descr{Bestimmung der Homographie aus den Koordinaten des Musters im Bild und der theoretischen Koordinaten des Musters. Mit $imagepoints$ wird eine Matrix(50,2) der ermittelten Bildkoordinaten und mit $worldpoints$ wird eine Matrix(50,3) der Weltkoordinaten des Testmusters übergeben. Mit $H$ bekommt man die Homographie zurück.}
+
+\proch{int}{CalibrateWithPattern}{vector$<$Matrix$>$ \&imagepoints, vector$<$Matrix$>$ \&worldpoints, Camera \&c}{selfcalib.h}
+\descr{Kalibrierung aus Koordinatenpaaren gegeben als jeweils zwei Felder von mindestens 3 Aufnahmen des Testmusters. Mit einem Vektor aus $imagepoints$ der Matrizen(50,2) werden die ermittelten Bildkoordinaten aus verschiedenen Bildern des Testmusters und mit einem Vektor aus $worldpoints$ der Matrizen(50,3) werden die Weltkoordinaten des Testmusters übergeben. $c$ ist vom Typ Camera und es werden die inneren Kameraparameter zurückgegeben.}
+
+\proch{int}{CalibrateWithPattern}{vector$<$Matrix$>$ \&imagepoints, vector$<$Matrix$>$ \&worldpoints, vector$<$Camera$>$ \&cv}{selfcalib.h}
+\descr{Kalibrierung aus Koordinatenpaaren gegeben als jeweils zwei Felder von mindestens 3 Aufnahmen des Testmusters. Mit einem Vektor aus $imagepoints$ der Matrizen(50,2) werden die ermittelten Bildkoordinaten aus verschiedenen Bildern des Testmusters und mit einem Vektor aus $worldpoints$ der Matrizen(50,3) werden die Weltkoordinaten des Testmusters übergeben. $cv$ ist ein Vektor aus Kameras, wobei die Dimensionen aller Vektoren gleich sein muss, und es werden innere und aüßere Kameraparameter zurückgegeben.}
+
+\proch{int}{CalibrateWithHomographies}{vector$<$Trafo$>$ \&H, Camera \&c}{selfcalib.h}
+\descr{Kalibrierung aus mindestens 3 Homographien die als Vektor $H$ übergeben werden. $c$ ist vom Typ Camera und es werden die inneren Kameraparameter zurückgegeben.}
+
+\proch{int}{CalibrateWithHomographies}{vector$<$Trafo$>$ \&H, vector$<$Camera$>$ \&cv}{selfcalib.h}
+\descr{Kalibrierung aus mindestens 3 Homographien die als Vektor $H$ übergeben werden. $cv$ ist ein Vektor aus Kameras, wobei die Dimensionen der beiden Vektoren gleich sein muss, und es werden innere und aüßere Kameraparameter zurückgegeben.}
+
+\proch{Image}{DrawPattern}{int dimx, int dimy}{selfcalib.h}
+\descr{Es wird ein Bild der Größe $dimx$ mal $dimy$ zurückgegeben, welches 
+das Testmuster für die Kalibrierfunktionen enthält. Das Bild kann 
+dann z.B. ausgedruckt werden. Eine geeignete Größe ist z.B. 1200x800.}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

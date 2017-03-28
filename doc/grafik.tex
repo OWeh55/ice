@@ -1,0 +1,188 @@
+\nsection{Grafik}{graphics}
+
+\subsection{Zeichnen}
+\subsubsection{Grafische Primitiva}
+
+\proc{int}{Marker}{int mode, int x,int y,int val,int size,Image img}
+\procf{int}{Marker}{int mode, const IVector \&p,int val,int size,Image img}
+\procf{int}{Marker}{int mode, const Point \&p,int val,int size,Image img}
+\descr{
+In das Bild $img$ wird an der Stelle $(x,y)$ ein Markierungspunkt mit dem Wert
+$val$ und der Größe $size$ eingetragen. Die Form der Markierung wird durch
+$mode$ festgelegt.}
+\begin{quote}
+\begin{tabular}{ll}
+DEFAULT&senkrechtes Kreuz\\
+1&      schräges Kreuz\\
+2&      leerer Kreis\\
+3&      voller Kreis\\
+4&      leeres achsparalleles Quadrat\\
+5&      volles achsparalleles Quadrat\\
+6&      leeres schräges Quadrat\\
+7&      volles schräges Quadrat\\
+\end{tabular}
+\end{quote}
+
+\proc{int}{Text}{const string \&s,IPoint p,int val,int exp,Image \& img}
+\proc{int}{Text}{const string \&s,int x,int y,int val,int exp,Image \& img}
+\proc{int}{Text}{const char *s,int x,int y,int val,int exp,Image \& img}
+\descr{
+In das Bild $img$ wird der Text $s$ mit dem Wert $val$ eingetragen.
+Die linke obere Ecke des Textes liegt auf dem gegebenen Punkt.
+Der Parameter $exp$ ($0 \le exp \le 4$) bewirkt eine Vergrößerung des
+Textes um $2^{exp}$.
+}
+
+\subsubsection{Zeichnen geometrischer Figuren}
+
+\proc{int}{Line}{int x1,int y1,int x2,int y2,int val,int mode,Image img}
+\procf{int}{Line}{int x1,int y1,int x2,int y2,int val,Image img}
+\procf{int}{Line}{const IVector \&p1,const IVector \&p2,int val,int mode,Image
+img}
+\procf{int}{Line}{const IVector \&p1,const IVector \&p2,int val,Image img}
+\procf{int}{Line}{const Point \&p1,const Point \&p2,int val,int mode,Image img}
+\procf{int}{Line}{const Point \&p1,const Point \&p2,int val,Image img}
+\descr{
+In das Bild $img$ wird mit dem Wert $val$ ein Geradensegment von $(x1,y1)$ 
+bis $(x2,y2)$ ($mode$=DEFAULT) bzw. eine Gerade durch die beiden Punkte 
+($mode$=1) gezeichnet. Alternativ können die Punkte als \see{Point} oder
+als Integer-Vektoren vom Typ \see{IVector} angegeben werden.}
+\proc{int}{HesseLine}{double p,double phi,int val,Image img}
+\procf{int}{HesseLine}{const Vector \&p,int val,Image img}
+\descr{
+In das Bild $img$ wird mit dem Wert $val$ eine Gerade gezeichnet, deren
+Hessesche Normalform die Parameter $p$ und $phi$ hat. Alternativ können die
+Parameter p und phi als 2-elementiger Vektor vom Typ \see{Vector} angegeben 
+werden.}
+\proc{int}{DrawCircle}{double par[3],int val1,int val2,int mode,Image img}
+\descr{
+In das Bild $img$ wird der Kreis mit dem Mittelpunkt $(par[0],par[1])$ und dem Radius
+$par[2]$ mit $val1$ gezeichnet. Für $mode$=DEFAULT wird die Kreisfläche mit dem
+Wert $val2$ gefüllt. Bei $mode$=NOFILL wird nur der Kreis gezeichnet und der
+Parameter $val2$ ist redundant.}
+\proc{int}{DrawEllipse}{double par[5],int val1,int val2,int mode,Image img}
+\descr{ 
+In das Bild $img$ wird mit dem Wert $val1$ eine Ellipse gezeichnet mit dem
+Mittelpunkt $(par[0],par[1])$, den Halbachsen $par[2]$ bzw. $par[3]$ und einer Drehung um den
+Winkel $par[4]$. Für $par[4]=0$ ist die Halbachse $par[2]$ parallel zur x-Achse. Wenn
+$mode$=DEFAULT ist, wird die Ellipse mit dem Wert $val2$ gefüllt. Bei
+$mode$=NOFILL wird nur die Ellipse gezeichnet und der Parameter $val2$ ist
+redundant.}
+\proc{void}{DrawSuperEllipse}{double c, double tr[3][3], int val,Image img}
+\descr{ 
+In das Bild $img$ wird mit dem Wert $val$ eine SuperEllipse gezeichnet. Der
+Wert $c$ ist der Exponent in Zentrallage und $tr[3][3]$ ist eine affine
+Transformation zur Abbildung der Zentrallage.}
+
+\proc{int}{DrawCircleSegment}{double par[5],int val1,int val2,int mode,Image img}
+\descr{Wie \bsee{DrawCircle}, es wird aber nur das Segment vom Winkel 
+$par[3]$ bis zum Winkel $par[4]$ gezeichnet.}
+\proc{int}{DrawEllipseSegment}{double *par[7],int val1,int val2,int mode,Image img}
+\descr{Wie \bsee{DrawEllipse}, es wird aber nur das Segment vom Winkel 
+$par[5]$ bis zum Winkel $par[6]$ gezeichnet.}
+\proc{void}{DrawPolygon}{PointList pl,int val,Image img}
+\descr{
+Die Punktliste $pl$ wird als Folge von Eckpunkten eines Polygons interpretiert
+und mit dem Wert $val$ in das Bild $img$ eingezeichnet.
+}
+
+\subsubsection{Geometrische Figuren als Konturen}
+
+\proc{Contur}{LineContur}{Contur c,int p1[2][,int p2[2]]}
+\descr{
+Ablegen eines Geradensegmentes als Kontur. Es ist ein zwei- und ein
+dreiparametriger Aufruf vorgesehen. Wird für $c$ der NULL-Pointer verwendet,
+so wird intern eine neue Kontur angelegt. Die Funktion gibt den Pointer auf
+diese neue Kontur zurück. In ihr wird eine Kontur von $p1$ nach $p2$ abgelegt
+(dreiparametriger Aufruf). Existiert die Kontur $c$ bereits ($c$!=NULL) so sind
+für diesen Funktionsaufruf nur zwei Parameter relevant ($p2$ redundant).
+An die Kontur $c$ wird eine Linienkontur vom Endpunkt der alten Kontur nach
+$p1$ angefügt. Der Pointer auf die neue Kontur wird als Funktionswert zurückgegeben. 
+}
+\proc{Contur}{CircleContur}{double par[3]}
+\descr{
+Es wird eine geschlossene Kontur angelegt, die einen Kreis mit dem Radius $par[2]$
+um den Punkt $(par[0],par[1])$ beschreibt. Die Parameter sind so zu
+wählen, daß alle Konturpunkte positive Koordinaten haben. Bei erfolgreicher
+Ausführung wird der Pointer auf die Kreiskontur zurückgegeben, im Fehlerfall
+der NULL-Pointer.
+}
+\proc{Contur}{EllipseContur}{double par[5]}
+\descr{
+Es wird eine geschlossene Kontur angelegt, die eine Ellipse mit dem
+Mittelpunkt $(par[0],par[1])$, den Halbachsen $par[2]$ bzw. $par[3]$ und einer Drehung um den
+Winkel $par[4]$ beschreibt. Für $par[4]=0$ ist die Halbachse $par[2]$ parallel zur x-Achse.
+}
+\proc{Contur}{CircleSegmentContur}{double par[5]}
+\descr{
+Es wird eine Kontur angelegt, die ein Segment eines Kreises mit dem Radius $par[2]$
+um den Punkt $(par[0],par[1])$ beschreibt. Das Segment beginnt bei dem Winkel $par[3]$,
+endet bei dem Winkel $par[4]$ und verläuft im positiven Drehsinn. Der Betrag der
+Differenz zwischen den beiden Winkeln $par[3]$ und $par[4]$ darf nicht größer
+als $2\pi$ sein.
+}
+\proc{Contur}{EllipseSegmentContur}{double par[7]}
+\descr{
+Es wird eine Kontur angelegt, die ein Segment einer Ellipse mit dem
+Mittelpunkt $(par[0],par[1])$, den Halbachsen $par[2]$ bzw. $par[3]$ und einer Drehung um den
+Winkel $par[4]$ beschreibt. Für $par[4]=0$ ist die Halbachse $par[2]$ parallel zur
+x-Achse. Das Segment beginnt bei dem Winkel $par[5]$, endet bei dem Winkel
+$par[6]$ und verläuft im positiven Drehsinn. Der Betrag der Differenz zwischen
+den beiden Winkeln $par[5]$ und $par[6]$ darf nicht größer als $2\pi$ sein.
+}
+
+\subsubsection{Zeichnen von Kurven und Flächen}
+
+\proc{int}{MarkContur}{Contur c,int val,Image img}
+\descr{
+Die Kontur $c$ wird mit dem Wert $val$ in das Bild $img$ eingezeichnet.
+}
+\proc{int}{FillRegion}{Contur c,int val,Image img}
+\descr{
+Die durch die {\em geschlossene} Kontur $c$ eingeschlossene Fläche wird mit
+dem Wert $val$ im Bild $img$ gefüllt.
+}
+
+\subsection{Interaktive Zeichenfunktionen}
+
+Zur Benutzung der interaktiven Zeichenfunktionen muß das zughörige Bild
+visualisiert werden.
+
+\proch{\bsee{LineSeg}}{SelLine}{Image img}{polygon\_vis.h}
+\procf{int}{SelLine}{Image img,\bsee{IPoint} \&p1,IPoint p2}
+\procf{int}{SelLine}{Image img,int p0[2],int p[2]}
+\descr{
+Interaktive Selektion einer Linie durch Auswahl der Endpunkte mit der Maus.
+Abbruch durch Drücken einer Maustaste. Der Rückgabewert hängt von der zum 
+Abbruch gedrücken Maustaste ab:
+Links 1, Mitte 0, Rechts -1. Übrige Funktionalität wie bei \see{SelPoint}.
+}
+
+%\proch{PointList}{SelPolygon}{Image img}{polygon\_vis.h}
+%\descr{
+%Interaktive Selektion eines Polygons im Bild $img$. Auswahl der 
+%Eckpunkte mit der linken
+%Maustaste, Beenden mit der rechten Maustaste.
+%}
+
+\proch{Contur}{SelContur}{Image img,int force\_close=FALSE}{contool\_vis.h}
+\descr{
+Interaktives Zeichnen einer Kurve mit der Maus. Bei erstmaliger 
+Betätigung der linken Maustaste wird der Startpunkt der Kontur 
+festgelegt. Bei gedrückter linker Maustaste kann ``gezeichnet''
+werden. Wenn die Maus bewegt wird, ohne daß eine Taste gedrückt
+ist, wird ausgehend vom aktuellen Endpunkt der Kontur ein 
+Liniensegment ``aufgezogen'', das durch Drücken der linken 
+Maustaste bestätigt wird. Es besteht die Möglichkeit, das 
+Selektieren der Kontur ohne Schließen (Betätigen der rechten
+Maustaste) bzw. mit Schließen der Kontur (Betätigen der linken 
+und rechten Maustaste) zu beenden. Ist der Parameter $force\_close$
+auf TRUE gesetzt, so wird die Kontur immer geschlossen, indem
+an die selektierte Kontur eine geradlinige Verbindung mit dem 
+Startpunkt angehängt wird.
+}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

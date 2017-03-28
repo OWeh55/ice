@@ -1,0 +1,395 @@
+\lsection{Bewegungsdetektion}
+
+\subsection{Der Optische Fluss}
+\label{optflow}
+
+Der Optische Fluss ist eine Vektorfunktion, die \textit{jedem} Bildpunkt einen Vektor zuordnet, der beschreibt, wo sein Grauwert herkommt. Er beschreibt damit die Bewegung zwischen mehreren Bildern einer Bildsequenz.
+
+\proch{int}{horn}{Image img1,Image img2,ImageD xDelta,ImageD yDelta,double lambda=1,int iterationNumber=100}{VelocimetryUtil.h}
+\descr{Berechnet den Optischen Fluss vom Bild img1 zu Bild img2 durch den Horn-Schunck-Algorithmus (siehe R.Klette, A.Koschan und K.Schlüns. \textit{Computer Vision}, Vieweg Verlag, Braunschweig/Wiesbaden,1. Auflage,1996)\\
+Das resultierende Vektorfeld wird in den Gleitkommabildern xDelta und yDelta abgelegt. Ein hoher lambda-Wert ($0<lambda\le2$) bewirkt ein glätteres Vektorfeld. iterationNumber gibt die Anzahl der Iterationen des Algorithmus an.  Zu kleine Werte können ungenaue Ergebnisse verursachen.
+}
+
+\proch{int}{showOpticalFlow}{Image img,ImageD xdelta,ImageD ydelta,int subSampleSize=4,double vectorScale=1,int color=1}{VelocimetryUtil.h}
+
+\descr{
+Zeichnet den durch xDelta und yDelta gegebenen Optischen Fluss in das Bild img mit der Farbe color ein. Dabei wird für ein Quadrat der Größe subSampleSize der durchschnittliche Vektor berechnet und durch einen Pfeil dargestellt. vectorScale ermöglicht eine Skalierung der Pfeildarstellung.
+}
+
+
+\subsection{Die Klasse Velocimetry}
+\label{Velocimetry}
+Die Klasse $Velocimetry$ dient der Berechnung des Bewegungsvektordfeldes, welches
+die Bewegung des Bildinhalts zwischen 2 Bildern einer Bildsequenz beschreibt und eignet sich besonders für Particle-Imaging-Velocimetry-Analysen (PIV).
+Das Bild wird dabei in rechteckige Analysefenster in einem regelmäßigen Gitter eingeteilt, für deren Bildinhalt eine reine Translation als einzig mögliche Bewegung angenommen wird und für die ein Verschiebungsvektor berechnet wird.  Die Analysefenster können sich überlappen, d.h. größer oder auch kleiner sein als die Zeilen/Spaltenabstände des Gitters.
+Die Klasse $Velocimetry$ beinhaltet das berechnetet Vektorfeld sowie die zugrundeliegenden Parameter und 
+erlaubt verschiedene Operationen darauf (z.B. Fehlerkorrektur, Glättung). 
+Umfangreiche Beschreibungen der verwendeten Algorithmen finden sich in\\
+
+{
+\noindent
+Marco Stahl, Entwicklung von bildanalytischen Verfahren zur Ermittlung von Str"omungsfeldern in bewegten Objekten, Diplomarbeit, Fakultät für Mathematik und Informatik, FSU-Jena, 2004\\
+}
+
+
+\subsubsection{Konstruktoren, Initialisierung und Destruktoren}
+
+\proch{}{Velocimetry::Velocimetry}{void}{Velocimetry.h}
+\descr{Initialisieren der Klasse $Velocimetry$}
+
+%\proch{}{Velocimetry:: {\textasciitilde}  Velocimetry}{void}{Velocimetry.h}
+%\descr{Destruktor der Klasse $Velocimetry$}
+
+\proch{}{Velocimetry::clearResults}{void}{Velocimetry.h}
+\descr{Löscht das berechnete Bewegungsvektorfeld}
+
+\subsubsection{Setzen der Parameter}
+
+
+\proch{int}{Velocimetry::setGridSize}{int gridSizeX,int gridSizeY}{Velocimetry.h}
+\descr{Setzt die Größe des zu berechnenden Vektorfeldes, wobei gridSizeX die Anzahl der Spalten angibt und gridSizeY die Zahl der Zeilen.}
+
+\proch{int}{Velocimetry::setAlgo}{int algo}{Velocimetry.h}
+\descr{Wählt den Algorithmus zur Verschiebungsbestimmung in einem Analyseblock aus. Möglich sind: 
+\begin{description}
+\item [Velocimetry::SDR] Verschiebungsbestimmung durch Restoration (\see{InvConvolution})
+\item [Velocimetry::LS] Blockmatching mit Least Squares
+\item [Velocimetry::DCC] Blockmatching mit Direkter Normierter Korrelation
+\item [Velocimetry::FFTCC] Kreuzkorrelation im Frequenzraum über FFT
+\item [Velocimetry::PHASE] Phasenkorrelation
+\item [Velocimetry::DCC\_CORRECTED\_SDR] Durch SDR ermittelte Peaks werden mit DCC neu bewertet und geordnet.
+\item [Velocimetry::SDR\_GUIDED\_DCC] Durch SDR ermittelte Peaks werden als Startpunkte für eine lokale DCC-Maximum-Suche verwendet.
+\end{description}
+}
+
+\proch{int}{Velocimetry::setBeta}{double beta}{Velocimetry.h}
+\descr{Der Parameter beta ($beta \ge 0$) muss bei den Verfahren SDR, DCC\_CORRECTED\_SDR und SDR\_GUIDED\_DCC in Abhängikeit von den zu erwartenden Bildstörungen und Verschiebungstärke gewählt werden (\see{InvConvolution}). Kleine beta-Werte verstärken den Einfluß hochfrequenter Bildstrukturen auf die Bewegungsdetektion.}
+
+\proch{int}{Velocimetry::setMaxPeakNumber}{int maxPeakNumber=10 }{Velocimetry.h}
+\descr{Gibt die maximale Anzahl der zu bestimmenden Peaks an ($maxPeakNumber \ge 2$ (Hauptpeak und 1 Nebenpeak)).}
+
+\proch{int}{Velocimetry::setMinPeakHeight}{double minPeakHeight=0.0 }{Velocimetry.h}
+\descr{Gibt an, wie groß ein Nebenpeak im Verhältnis zum Hauptpeak mindestens sein muss ($Height(Nebenpeak) \ge minPeakHeight * Height(Hauptpeak)$). Dies wirkt sich auf die Peakbewertung, Fehlererkennung und Fehlerkorrektur aus.}
+
+
+\proch{int}{Velocimetry::setValuationMethod}{int method}{Velocimetry.h}
+\descr{Wählt den verwendeten Algorithmus zur Bewertung  der Sicherheit der Verschiebungsbestimmung innerhalb eines Analyseblocks aus (Peakbewertung). Möglich sind:
+\begin{description}
+\item [Velocimetry::ICE] StandardICE-Verfahren wie bei (\see{PeakValuation})
+\item [Velocimetry::GPIV] 1 - Höhe(1. NebenPeak)/Höhe(Hauptpeak)
+\item [Velocimetry::MEAN\_OTHERPEAKS] 1 - durchschnittliche\_Höhe(NebenPeaks)/Höhe(Hauptpeak)
+\item [Velocimetry::OTHERPEAKS\_NUMBER] 1/(Anzahl der Nebenpeaks)
+\end{description}
+}
+
+\proch{int}{Velocimetry::setInterpolation}{int interpolation}{Velocimetry.h}
+\descr{Wählt den Algorithmus zur Subpixelinterpolation der Verschiebungsbestimmung. Möglich sind: Velocimetry::NO\_INTERPOLATION,Velocimetry::GAUSSIAN\_INTERPOLATION, Velocimetry::PARABOLIC\_INTERPOLATION und Velocimetry::CENTROID\_INTERPOLATION.
+}
+
+\proch{int}{Velocimetry::setGridStart}{int x,int y}{Velocimetry.h}
+\descr{Legt die linke obere Ecke des zu berechnenden Vektorfeldes in Pixel fest.
+}
+
+\proch{int}{Velocimetry::setWindowSize}{int x,int y}{Velocimetry.h}
+\descr{Legt Größe eines Analyseblockes in Pixeln fest. Werte die 2erPotenzen entsprechen, erhöhen die Geschwindigkeit für die frequenzraumbasierten Verfahren.
+}
+
+\proch{int}{Velocimetry::setGridSpacing}{int x,int y}{Velocimetry.h}
+\descr{Legt den Spalten- und Zeilenabtand des Vektorfeldes in Pixeln fest.
+}
+
+\proch{int}{Velocimetry::setGridOffset}{int x,int y}{Velocimetry.h}
+\descr{Bestimmt die Vorverschiebung im zweiten Bild. Untersucht man z.B. PIV-Aufnahmen eines horizontalen Strömungskanales mit einer durchschittlichen Verschiebung von 32 Pixeln nach rechts, kann dieses Wissen durch setGridOffset(32,0) vorgegeben werden.
+}
+
+\proch{int}{Velocimetry::maximizeGrid}{Image img1,Image img2}{Velocimetry.h}
+\descr{
+Wenn das Bewegungsfeld für das gesamte Bild berechnet werden soll, setzt diese Funktion GridStart und GridSize automatisch, aufgrund der Einstellungen für GriddOffset,WindowSize,GridSpacing und der Größe der Bilder img1 und img2.
+}
+
+\proch{int}{Velocimetry::setDisplacement}{}{Velocimetry.h}
+\proch{int}{Velocimetry::setMinDisplacement}{int x,int y}{Velocimetry.h}
+\proch{int}{Velocimetry::setMaxDisplacement}{int x,int y}{Velocimetry.h}
+\descr{
+Bei den Verfahren SDR,FFTCC,PHASE, DCC\_CORRECTED\_SDR und SDR\_GUIDED\_DCC beträgt die maximal detektierbare Bewegung ohne Verwendung des Offsets ($-\lfloor windowSizeX/2 \rfloor \le \delta_x \le \lfloor windowSizeX/2-1 \rfloor$,$-\lfloor windowSizeY/2 \rfloor \le \delta_y \le \lfloor windowSizeY/2-1 \rfloor$). Dieser Bereich wird mit setDisplacement eingestellt. Er kann mit setMinDisplacement/setMaxDisplacement verkleinert werden. Für DCC und LS läßt sich zusätzlich ein größerer Bereich einstellen.
+}
+
+\proch{int}{Velocimetry::setCorrelationCorrection}{int method}{Velocimetry.h}
+\descr{
+Auswahl eines Verfahrens zur Korrektur/Filterung der Korrelationsmatrizen. Zur Zeit wird außer Velocimetry::NO\_CORRELATION\_CORRECTION nur Velocimetry::MULTIPLICATION unterstützt. Hierbei wird die Korrelationsmatrix für jedem Block mit der Korrelationsmatrix eines  WindoSizeX/2 weiter rechts liegenden Analyseblocks multipliziert. Dadurch  veringert sich die Höhe der Peaks, die durch zufällige Bildstörungen enstehen, und der ''wirkliche'' Peak wird verstärkt.
+}
+
+\proch{int}{Velocimetry::setGlobalValuationMethod}{int method}{Velocimetry.h}
+\proch{int}{Velocimetry::setGlobalValuationParameter}{double parameter1,double parameter2}{Velocimetry.h}
+\descr{Wählt ein Verfahren zur Fehlererkennung. Mögliche Verfahren sind:
+\begin{description}
+\item [Velocimetry::NO\_GLOBAL\_VALUATION] Keine Fehlererkennung
+\item [Velocimetry::LOCAL] Ein Block gilt als fehlerhaft, wenn die Peakbewertung kleiner als parameter1 ist.
+\item [Velocimetry::MEAN] Ein Block gilt als fehlerhaft, wenn der Vektorabstand zum Durchschnittsvektor der 3*3erUmgebung größer als parameter1+parameter2*(Varianz in der 3*3Umgebung) ist.
+\item [Velocimetry::MEDIAN] Ein Block gilt als fehlerhaft, wenn der Vektorabstand zum VektorMedian der 3*3erUmgebung größer als parameter1 ist.
+\end{description}
+}
+
+\proch{int}{Velocimetry::checkParas}{Image img1,Image img2}{Velocimetry.h}
+\descr{Überprüft ob die gesetzen Parameter für die Bilder img1 und img2 gültig sind. Falls ja wird OK, andernsfalls wird ein Fehlercode zurückgegeben.
+Mögliche Felher sind: Velocimetry::GRIDSIZE\_X\_TO\_BIG, Velocimetry::GRIDSIZE\_Y\_TO\_BIG, Velocimetry::GRIDSTART\_X\_TO\_SMALL, Velocimetry::GRIDSTART\_Y\_TO\_SMALL, Velocimetry::MINDISPLACEMENT\_X\_TO\_BIG, Velocimetry::MINDISPLACEMENT\_Y\_TO\_BIG, Velocimetry::MAXDISPLACEMENT\_X\_TO\_SMALL und Velocimetry::MAXDISPLACEMENT\_Y\_TO\_SMALL.
+}
+
+
+\proch{char  *}{Velocimetry::getErrorMessage}{int errorCode}{Velocimetry.h}
+\descr{Gibt  zu dem angegebenen Fehlercode die entsprechende Fehlernachricht zurück.}
+
+
+\subsubsection{Abfrage der Parameter}
+
+\proch{double}{Velocimetry::getBeta}{}{Velocimetry.h}
+\proch{double}{Velocimetry::getMinPeakHeight}{}{Velocimetry.h}
+\proch{double}{Velocimetry::getGlobalValuationParameter1}{}{Velocimetry.h}
+\proch{double}{Velocimetry::getGlobalValuationParameter2}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getMaxPeakNumber}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getAlgo}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGlobalValuationMethod}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getCorrelationCorrection}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getValuationMethod}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getInterpolation}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridSizeY}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridSpacingY}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridStartY}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getWindowSizeY}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getMaxDisplacementY}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getMinDisplacementY}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridOffsetY}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridSizeX}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridSpacingX}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridStartX}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getWindowSizeX}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getMaxDisplacementX}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getMinDisplacementX}{}{Velocimetry.h}
+\proch{int}{Velocimetry::getGridOffsetX}{}{Velocimetry.h}
+\descr{Die getXXX()-Funktionen dienen der Abfrage aktuell gesetzten Parameter.}
+
+
+\subsubsection{Laden und Speichern der Parameter}
+
+\proch{int}{Velocimetry::loadPara}{const char *filename}{Velocimetry.h} 
+\descr{
+Lädt die Parameter aus der Datei filename.
+}
+
+\proch{int}{Velocimetry::savePara}{const char *filename}{Velocimetry.h}
+\proch{int}{Velocimetry::savePara}{ostream \&os}{Velocimetry.h}
+\proch{int}{Velocimetry::savePara}{string \&string}{Velocimetry.h}
+\descr{
+Speichert die Parameter in die Datei $filename$, den Stream $os$ bzw. den String $string$.
+}
+
+\subsubsection{Berechnung des Bewegungsvektorfeldes}
+
+\proch{int}{Velocimetry::calc}{Image img1,Image img2}{Velocimetry.h}
+\descr{Berechnet das Vektorfeld, welches die Bildveränderung von Bild img1 zu img2 beschreibt. Im Fehlerfall wird ein ErrorCode zurückgegeben, dessen Fehlernachricht sich mit getErrorMessage(errorcode) abfragen lässt.}
+
+\proch{int}{Velocimetry::getCorrelationImage}{Image img1,Image img2,Image correlationImage,int xPos,int yPos,int algo=-1,double beta=-1,int correlationCorrection=-1}{Velocimetry.h}
+\descr{Berechnet das Korrelationsbild correlationImage für eine Blockanalyse an der Position (xPos,yPos) mit den vorher gesetzen Parametern. Die Parameter algo,beta und correlationCorrection lassen sich überschreiben, was sich jedoch nicht auf auf die gesetzten Parameter der Klasse $Velocimetry$ auswirkt.
+}
+
+\subsubsection{Fehlererkennung und Fehlerkorrektur}
+
+\proch{double}{Velocimetry::valuateGlobal}{}{Velocimetry.h}
+\descr{Führt die Fehlererkennung mit den durch setGlobalValuationMethod() und setGlobalValuationParameter() gesetzten Parametern durch.}
+
+\proch{int}{Velocimetry::correct}{int method}{Velocimetry.h}
+\descr{ Versucht die als fehlerhaft detektierten Vektoren zu korrigieren. Mögliche Verfahren:
+\begin{description}
+\item [Velocimetry::SECOND\_PEAK\_CORRECTION] Ersetzt den Vektor durch den zum ersten Nebenpeak gehörenden Vektor.
+\item [Velocimetry::NEXT\_PEAK\_TO\_MEAN\_CORRECTION] Ersetzt den Vektor durch den zu einem Nebenpeak gehörenden Vektor, dessen Abstand zum Durchschittsvektor der 3*3Umgebung minimal ist.
+\item [Velocimetry::NEXT\_PEAK\_TO\_MEDIAN\_CORRECTION] 
+Ersetzt den Vektor durch den zu einem Nebenpeak gehörenden Vektor, dessen Abstand zum Vektormedian der 3*3Umgebung minimal ist.
+\item [Velocimetry::MEAN\_CORRECTION] Ersetzt den Vektor durch den Durchschnittsvektor der 3*3Umgebung
+\item [Velocimetry::MEDIAN\_CORRECTION]  Ersetzt den Vektor durch den Vektormedian der 3*3Umgebung
+\end{description}
+}
+
+\proch{int}{Velocimetry::vectorMedian3}{}{Velocimetry.h}
+\descr{Ersetzt jeden Vektor durch den Vektormedian seiner 3*3 Umgebung.}
+
+\proch{int}{Velocimetry::vectorMedian}{int size}{Velocimetry.h}
+\descr{Ersetzt jeden Vektor durch den Vektormedian seiner size*size Umgebung.}
+
+\proch{int}{Velocimetry::peakMedian}{int size,int maxIteration=1,double beta=0}{Velocimetry.h}
+\descr{Ersetzt jeden Vektor durch den Peakmedian seiner size*size Umgebung. Eine Beschreibung des Peakmedians findet sich in der oben angegebenen Diplomarbeit.}
+
+
+\subsubsection{Abfrage der Berechnungsergebnisse}
+
+\proch{vArray *}{Velocimetry::getVelArray}{}{Velocimetry.h}
+\descr{ Es wird ein Zeiger auf eine Instanz der Klasse vArray zurückgegeben, welche das berechnete Vektorfeld enthällt.
+Die Klasse vArray ist ein geschachtelter Vektor des Typs vData.}
+
+\begprogr\begin{verbatim}
+struct vData \{
+  double dx;    // horizontale Verschiebung 
+  double dy;    // vertikale Verschiebung 
+  double x;     // Mittelpunkt des Blocks 
+  double y;     
+  double val;   // Peakbewertung 
+  double gval;  // globale Evaluierung (Fehlerererkennung), 0 -> Fehler
+\}
+
+class vArray : public std::vector< std::vector<vData> > \{
+  ...
+  int getSizeX();
+  int getSizeY();
+\}
+\end{verbatim}\endprogr
+
+Folgendes Beispiel demonstriert den Zugriff auf die Vektordaten:
+
+\begprogr\begin{verbatim}
+  vArray *velArray=velocimetry->getVelArray();
+        
+  int gx,gy;
+  for (gx=0;gx<velArray->getSizeX();gx++) {
+    for (gy=0;gy<velArray->getSizeY();gy++) {           
+      Printf("%0.2f,%0.2f ",(*velArray)[gx][gy].dx,(*velArray)[gx][gy].dy);
+    }
+    Printf("\n");
+  }
+\end{verbatim}\endprogr
+
+\proch{double}{Velocimetry::getValuation}{}{Velocimetry.h}
+\descr{Gibt die durchschnittliche Peakbewertung des Vektorfeldes zurück.}
+
+\proch{int}{Velocimetry::ready}{}{Velocimetry.h}
+\descr{Gibt OK zurück, wenn ein berechnetes Vektorfeld vorliegt.}
+
+
+\subsubsection{Ausgabe und Visualisierung des Bewegungsvektorfeldes}
+
+\proch{int}{Velocimetry::show}{Image img,double size=1,bool showValuation=false}{Velocimetry.h}
+\descr{Visualisiert das Vektorfeld durch Pfeile im (Overlay)Bild img. Der Parameter size erlaubt eine Skalierung der Pfeile und showValuation ein Einblenden der Peakbewertung. Als Fehlerhaft markierte Vektoren werden mit der Farbe 1 (rot) gezeichnet, andere mit Farbe 2 (grün).}
+
+\proch{int}{Velocimetry::print}{}{Velocimetry.h}
+\proch{int}{Velocimetry::save}{ostream \& os,double z=DBL\_MAX}{Velocimetry.h}
+\proch{int}{Velocimetry::save}{const char *filename,double z=DBL\_MAX}{Velocimetry.h}
+\descr{Gibt das Vektorfeld auf die Standardausgabe, den angegbenen Stream os oder in die Datei filename aus.
+Folgendes Beispiel demonstriert den prinzipiellen Aufgabe der Ausgabe:
+}
+\begprogr\begin{verbatim}
+<PARA>
+gridSpacingX=32
+gridSpacingY=32
+gridOffsetX=0
+gridOffsetY=0
+gridStartX=0
+gridStartY=0
+...
+</PARA>
+
+<LOG>
+valuateGlobal
+globalValuationMethod=2
+globalValuationParameter1=3
+globalValuationParameter2=0
+correct
+method=4
+vectorMedian
+size=3
+...
+</LOG>
+
+<DATA>
+16      16      0 -3.24334      1.06019 0.737255        1
+16      48      0 -6.87094      0.524972        0.419608        1
+...
+</DATA>
+\end{verbatim}\endprogr
+\descr{Zwischen {\textless}PARA{\textgreater} und {\textless}/PARA{\textgreater} stehen die Parameter mit denen das Vektorfeld berechnet wurde. Zwischen {\textless}LOG{\textgreater} und {\textless}/LOG{\textgreater} sind die Veränderungen des Vektorfeldes protokolliert. Seine eigentlichen Daten zwischen {\textless}DATA{\textgreater} und {\textless}/DATA{\textgreater} entsprechen der Ausgabe der Funktion saveVelocimetryArray.
+}
+
+\proch{int}{Velocimetry::saveVelocimetryArray}{const char *filename,double z=DBL\_MAX}{Velocimetry.h}
+\proch{int}{Velocimetry::saveVelocimetryArray}{ostream \& os,double z=DBL\_MAX}{Velocimetry.h}
+\descr{Gibt das Vektorfeld als Text aus. In jeder Zeile stehen die Daten zu einem Vektor durch einen Tabulator getrennt in der Reihenfolge (PositionX,PositionY,DeltaX,DeltaY,Peakbewertung,Fehlerhaft?(0=fehlerhaft)). Falls z ungleich DBL\_MAX ist,  wird zusätzich die Z-Koordinate z für  jeden Vektor ausgeben: (PositionX,PositionY,z,DeltaX,DeltaY,Peakbewertung,Fehlerhaft?) }
+
+\subsection{Hilfsfunktionen zur Bewegungsdetektion}
+
+\proch{double}{directSquaredDifference}{Image img1,Image img2,int x1,int y1,int w,int h,int xd,int yd}{VelocimetryUtil.h}
+\descr{
+Berechnet die Summe der quadratischen Fehler (SSD) zwischem einem Bildblock der Größe (w,h) an der Position (x1,y1) in Bild img1 und einem gleichgroßen Block in Bild img2 an der Stelle (x1+xd,y1+yd) und gibt diese zurück: \\
+$d=\sum_{y=0}^{h}\sum_{x=0}^{w}
+     \left(I_1(x1+x,y1+y)-I_2(x1+xd+x,y1+yd+y)\right)^2$
+}
+
+
+\proch{double}{directSquaredDifferenceNorm}{Image img1,Image img2,int x1,int y1,int w,int h,int xd,int yd}{VelocimetryUtil.h}
+\descr{
+Berechnet analog zu directSquaredDifference() die normierte Summe der quadratischen Fehler: \\
+$d=\frac{\sum_{y=0}^{h}\sum_{x=0}^{w}
+               \left(I_1(x1+x,y1+y)-I_2(x1+xd+x,y1+yd+y)\right)^2}
+        {\sqrt{\sum_{y=0}^{h}\sum_{x=0}^{w}I_1(x1+x,y1+y)^2*
+               \sum_{y=0}^{h}\sum_{x=0}^{w}I_2(x1+xd+x,y1+yd+y)^2}}$
+}
+
+\proch{double}{directCrossCorrelation}{Image img1,Image img2,int x1,int y1,int w,int h,int xd,int yd}{VelocimetryUtil.h}
+\descr{
+Berechnet analog zu directSquaredDifference() die Kreuzkorrelation: \\
+$d=\sum_{y=0}^{h}\sum_{x=0}^{w}
+     \left(I_1(x1+x,y1+y)I_2(x1+xd+x,y1+yd+y)\right)^2$
+}
+
+\proch{double}{directCrossCorrelationNorm}{Image img1,Image img2,int x1,int y1,int w,int h,int xd,int yd}{VelocimetryUtil.h}
+\descr{
+Berechnet analog zu directSquaredDifference() die normierte Kreuzkorrelation: \\
+$d=\frac{\sum_{y=0}^{h}\sum_{x=0}^{w}
+            \left(I_1(x1+x,y1+y)*I_2(x1+xd+x,y1+yd+y)\right)^2}
+        {\sqrt{\sum_{y=0}^{h}\sum_{x=0}^{w}I_1(x1+x,y1+y)^2*
+               \sum_{y=0}^{h}\sum_{x=0}^{w}I_2(x1+xd+x,y1+yd+y)^2}}$
+}
+
+\proch{double}{directCorrCoefficient}{Image img1,Image img2,int x1,int y1,int w,int h,int xd,int yd}{VelocimetryUtil.h}
+\descr{
+Berechnet analog zu directSquaredDifference() den Korrelationskoeffizienten: \\
+$d=\sum_{y=0}^{h}\sum_{x=0}^{w}
+     \left(I_1(x1+x,y1+y)*I_2(x1+xd+x,y1+yd+y)-\bar{I_1}*\bar{I_2}\right)^2$
+}
+
+\proch{double}{directCorrCoefficientNorm}{Image img1,Image img2,int x1,int y1,int w,int h,int xd,int yd}{VelocimetryUtil.h}
+\descr{
+Berechnet analog zu directSquaredDifference() den normierten Korrelationskoeffizienten: \\
+$d=\frac{\sum_{y=0}^{h}\sum_{x=0}^{w}
+           \left(I_1(x1+x,y1+y)*I_2(x1+xd+x,y1+yd+y)-\bar{I_1}*\bar{I_2}\right)^2}
+        {\sqrt{\sum_{y=0}^{h}\sum_{x=0}^{w}\left(I_1(x1+x,y1+y)^2-\bar{I_1}\right)*
+               \sum_{y=0}^{h}\sum_{x=0}^{w}\left(I_2(x1+xd+x,y1+yd+y)^2-\bar{I_s}\right)}}$
+}
+
+\proch{int}{directSquaredDifference}{ImageD img1,ImageD img2,ImageD img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCorrCoefficientNorm}{ImageD img1,ImageD img2,ImageD img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directSquaredDifference}{Image img1,Image img2,Image img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directSquaredDifferenceNorm}{Image img1,Image img2,Image img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCrossCorrelation}{Image img1,Image img2,Image img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCrossCorrelationNorm}{Image img1,Image img2,Image img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCorrCoefficient}{Image img1,Image img2,Image img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCorrCoefficientNorm}{Image img1,Image img2,Image img3,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\descr{Berechnet die Verschiebungs-Korrelationsmatrix zwischen den, mittels gleichgroßen Fenstern markierten, Blöcken in img1 und img2 durch Blockmatching mit den gleichnamigen Funktionen oben. Durch minDisplacementX,minDisplacementY,maxDisplacementX und  maxDisplacementY läßt sich der minimale/maximale Verschiebungsbereich einstellen. Die berechnete Korrelationsmatrix wird in das Bild img3 geschrieben, welches mindestens ($maxDisplacementX-minDisplacementX+1$,$maxDisplacementY-minDisplacementY+1$) groß sein muss.}
+
+\proch{int}{directSquaredDifference}{ImageD img1,ImageD img2,ImageD img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCorrCoefficientNorm}{ImageD img1,ImageD img2,ImageD img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directSquaredDifference}{Image img1,Image img2,Image img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directSquaredDifferenceNorm}{Image img1,Image img2,Image img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCrossCorrelation}{Image img1,Image img2,Image img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCrossCorrelationNorm}{Image img1,Image img2,Image img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCorrCoefficient}{Image img1,Image img2,Image img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\proch{int}{directCorrCoefficientNorm}{Image img1,Image img2,Image img3,int x1,int y1,int w,int h,int offsetX,int offsetY,int minDisplacementX,int minDisplacementY,int maxDisplacementX,int maxDisplacementY}{VelocimetryUtil.h}
+\descr{Berechnet die Korrelationsmatrix zwischen dem Block der Größe (w,h) an der Stelle (x1,y1) in Bild img1 mit gleichgroßen Ausschnitten aus img2. Der Mittelpunkt des Suchbereiches ist um (offsetX, offsetY) verschoben, die minimale und maximale Verschiebung durch (minDisplacementX, minDisplacementY) und (maxDisplacementX, maxDisplacementY) eingeschränkt. Die Blockvergleiche wird jeweils mit den gleichnamigen Funktionen von oben durchgeführt. Die berechnete Korrelationsmatrix wird in das Bild img3 geschrieben, welches mindestens ($maxDisplacementX-minDisplacementX+1$,$maxDisplacementY-minDisplacementY+1$) groß sein muss.}
+
+\proch{Image}{phaseCorrelation}{Image img1,Image img2,Image img3}{VelocimetryUtil.h}
+\descr{Berechnet die Phasenkorrelations-Matrix zwischen den durch 
+gleichgroße Fenster markierten Bildblöcken in den Bildern img1 und img2 und 
+schreibt das Ergebnis in das Bild img3.}
+\proch{Image}{phaseCorrelationD}{ImageD is1,ImageD is2,ImageD id}{VelocimetryUtil.h}
+\descr{Entspricht der Funktion phaseCorrelation, arbeitet aber auf 
+Gleitkommabildern.}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

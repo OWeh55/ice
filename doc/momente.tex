@@ -1,0 +1,265 @@
+\nsection{Momente und Standardlagen}{moments}
+
+\subsection{Momente}
+\label{Moments}
+\hypertarget{Moments}{}
+
+Die Klasse \class{Moments} dient in ICE der Behandlung der Momente bis zur
+4. Ordnung. Die Klasse ersetzt die veraltete Speicherung der Momente in
+Feldern vom Typ $double$. 
+
+Normalerweise werden Momente durch Aufruf eines Konstruktors angelegt und die
+Werte der Momente eines übergebenen Objektes berechnet.
+
+\subsubsection{Konstruktoren}
+
+Konstruktoren legen eine Instanz der Klasse \class{Moments} an und 
+berechnen in der Regel Momente eines übergebenen Objektes.
+
+\proch{}{Moments::Moments}{}{momente.h}
+\descr{Legt eine Datenstruktur an und belegt alle Momente mit 0.0.}
+      
+\proch{}{Moments::Moments}{double m[15]}{momente.h}
+\descr{Legt eine Datenstruktur an und belegt alle Momente mit den Werten aus
+dem Feld $m$ von $double$-Werten. Die Momente müssen in $m$ 
+in der Reihenfolge $m_{00}$ ,$m_{10}$, $m_{01}$, $m_{20}$, $m_{11}$, $m_{02}$,
+$m_{30}$, $m_{21}$, $m_{12}$, $m_{03}$, $m_{40}$, $m_{31}$, $m_{22}$,
+$m_{13}$, $m_{04}$ abgelegt sein.}
+
+\proch{}{Moments::Moments}{const Region \&r}{momente.h}
+\procf{}{Moments::Moments}{const Contur \&c}
+\descr{Die Momente des übergebenen Objektes werden berechnet. 
+Diese Konstruktoren müssen explizit aufgerufen werden.}
+
+\proch{}{Moments::Moments}{const Matrix \&p}{momente.h}
+\descr{Die als Matrix angelegte Punktliste (mit einem Punkt pro Zeile) 
+wird als Polygon getrachtet und die Flächen-Momente berechnet. Dieser Konstruktor
+muß explizit aufgerufen werden.}
+
+\proch{}{Moments::Moments}{PointList p}{momente.h}
+\procf{}{Moments::Moments}{PointList p,int a1,int a2}
+\descr{Es werden die Flächen-Momente eines in der Punktliste abgelegten Polygons
+berechnet. In der zweiten Version des Aufrufes werden nur die Punkte mit den
+Indizes von $a_1$..$a_2$ betrachtet. {\bf Achtung: Die Datenstruktur 
+$PointList$ ist veraltet.}}
+
+\subsubsection{Elementzugriff und einfache Werte}
+Auf die Elemente der Datenstruktur $Moments$ kann über Methoden zugegriffen
+werden.
+
+\proch{double *}{Moments::Mom}{}{moments.h}
+\descr{Liefert einen Zeiger auf ein Feld von $double$-Werten, das die Momente
+in der Reihenfolge $m_{00}$,
+$m_{10}$, $m_{01}$, $m_{20}$, $m_{11}$, $m_{02}$, $m_{30}$, $m_{21}$,
+$m_{12}$, $m_{03}$, $m_{40}$, $m_{31}$, $m_{22}$, $m_{13}$, $m_{04}$
+enthält.}
+
+\proch{double \&}{operator ()}{int xi,int yi}{moments.h}
+\descr{Liefert eine Referenz auf das Moment mit den entsprechenden 
+Indizes/Potenzen. Dadurch können einzelne Momente gelesen oder 
+geschrieben werden.}
+
+Schwerpunkt
+
+\proch{void}{Moments::getCentroid}{double \&xc,double \&yc}{moments.h}
+\descr{
+Berechnet den Schwerpunkt aus den Momenten und gibt ihn auf $xc,yc$ zurück.
+}
+
+\subsubsection{Transformationen}
+
+Die Anwendung von geometrischen Transformationen auf Momente bedeutet, dass die
+Momente bestimmt werden, wie sie das entsprechende transformierte Objekt
+aufweisen würde. Die neuberechneten Momente werden zurückgegeben.
+
+\proc{Moments}{Moments::CentralMoments}{}
+\descr{Berechnet die zentrale Momente (auf den Schwerpunkt normiert).}
+
+\proc{Moments}{Moments::Translate}{double dx,double dy}
+\descr{Translation in der Richtung (dx,dy)}
+
+\proc{Moments}{Moments::Rotate}{double phi}
+\descr{Anwendung einer Rotation um den Winkel $phi$ um den Ursprung.}
+
+\proc{Moments}{Moments::XShear}{double s}
+\procf{Moments}{Moments::YShear}{double s}
+\descr{Anwendung einer Scherung in X- bzw. Y-Richtung mit dem Parameter $s$.}
+
+\proc{Moments}{Moments::Scale}{double a}
+\procf{Moments}{Moments::Scale}{double a,double b}
+\descr{Anwendung einer Skalierung um den Ursprung. Im ersten Fall ist die
+Skalierung isotrop, im zweiten Fall bestimmen die zwei Parameter $a$ und $b$
+die Skalierungen in X- bzw. Y-Richtung.}
+
+\proc{Moments}{Moments::AffineTransform}{const Trafo \&tr}
+\descr{Wendet eine {\bf affine} Transformation $tr$ an.}
+
+\subsubsection{Invarianten}
+
+\proc{Vector}{Moments::AffineAlgebraicInvariants}{} 
+\descr{Aus den Momenten werden algebraische Invarianten nach Flusser
+  berechnet und als Vector mit 4 Elementen zurückgegeben.}  
+\proc{Vector}{Moments::HuInvariants}{}
+\descr{Es werden aus den Momenten 7 Invarianten nach Hu berechnet
+und als Vector mit 7 Elementen zurückgegeben.}
+\proc{Vector}{Moments::AffineHuInvariants}{}
+\descr{Es werden aus den Momenten 7 affine Invarianten nach Hu berechnet
+und als Vector mit 7 Elementen zurückgegeben.
+Dazu erfolgt eine Normalisierung von Translation, Scherung und Skalierung,
+wonach die Invarianten nach Hu berechnet werden.}
+Zu invarianten Momenten, die durch Normalisierung gewonnen werden, siehe auch
+\bsee{Invariante Momente}.
+
+\subsubsection{Affine Standardlagen und invariante Momente}
+\label{Invariante Momente}
+
+Normalisierung bestimmt eine Transformation, die ein Objekt in
+eine Standardlage überführt. Die Standardlage wird durch festgelegte Werte
+bestimmter Momente definiert. Das transformierte Objekt in Standardlage 
+ist dann ein ausgezeichneter Repräsentant für die Objekte der Klasse 
+(bezüglich affiner Transformationen). 
+Ergebnisse dieser Methoden sind die Transformation (\see{Trafo}) und 
+die Momente des Objekts in Standardlage. Diese Informationen können zum
+Beispiel genutzt werden, um Objekte zu vergleichen. Die Momente des Objektes
+in Standardlage stellen affininvariante Merkmale des Objektes dar 
+(Invariante Momente).
+
+\proch{Moments}{Moments::NormalizeSign}{}{moments.h}
+\descr{
+Alle Momente werden negiert, wenn das Moment $m_{0,0}$ negativ ist.
+}
+
+\proch{Moments}{Moments::NormalizeTranslation}{}{moments.h}
+\procf{Moments}{Moments::NormalizeTranslation}{double \&x,double \&y}
+\descr{
+Normalisiert die Momente bezüglich der Translation. Die normalisierten 
+Momente (zentrale Momente) werden zurückgegeben. Die Parameter der 
+Translation werden den optionalen Parametern zugewiesen.
+}
+
+\proch{Moments}{Moments::NormalizeXShearing}{}{moments.h}
+\procf{Moments}{Moments::NormalizeXShearing}{double \&beta}
+\descr{Normalisiert die Momente bezüglich der X-Scherung 
+$x' = x + \beta \cdot y$. Die normalisierten 
+Momente werden zurückgegeben. Der Parameter der Scherung
+ wird dem optionalen Parameter zugewiesen.
+}
+
+\proch{Moments}{Moments::NormalizeYShearing}{}{moments.h}
+\procf{Moments}{Moments::NormalizeYShearing}{double \&beta}
+\descr{
+Normalisiert die Momente bezüglich der Y-Scherung 
+$y' = y + \beta \cdot x$. Die normalisierten 
+Momente werden zurückgegeben. Der Parameter der Scherung
+ wird dem optionalen Parameter zugewiesen.
+}
+
+%    enum scalemode { isotropic, anisotropic };
+\proch{Moments}{Moments::NormalizeScaling}{scalemode mode=anisotropic}{moments.h}
+\procf{Moments}{Moments::NormalizeScaling}{double \&alpha}
+\procf{Moments}{Moments::NormalizeScaling}{double \&alpha,double \&beta}
+\descr{
+Normalisiert die Momente bezüglich der Skalierung. Die normalisierten 
+Momente werden zurückgegeben. Der Parameter $mode$ kann die Werte  
+$isotropic$ oder $anisotropic$ annehmen und entscheidet über die Verwendung 
+einer isotropen oder anisotropen Skalierung. Alternativ wird einem Parameter 
+$alpha$ der Skalierungsfaktor zugewiesen (isotrope Skalierung) bzw. den 
+Parametern $alpha$ und $beta$ die Skalierungsfaktoren in X- und Y-Richtung 
+(anisotrope Skalierung).
+}
+
+\proch{Moments}{Moments::NormalizeRotation}{}{moments.h}
+\procf{Moments}{Moments::NormalizeRotation}{double \&phi}
+\procf{Moments}{Moments::NormalizeRotation}{double \&c,double \&s}
+\descr{
+Normalisiert die Momente bezüglich der Rotation. Die normalisierten 
+Momente werden zurückgegeben. Bei Verwendung des Parameters $phi$ wird 
+darauf der Winkel der Rotation zurückgegeben. Die Parameter $c$ und $s$ 
+stehen für den Cosinus beziehungsweise den Sinus des Rotationswinkels.
+}
+
+\proch{Moments}{Moments::Normalize}{Trafo \&tr,nmode mode=Moments::standard}{moments.h}
+\procf{Moments}{Moments::Normalize}{nmode mode=Moments::standard}
+\descr{Führt eine Normalisierung bezüglich affiner Transformationen aus. 
+Je nach dem Parameter $mode$ wird 
+eine Normalisierung nach Standard-Methode (mode=Moments::standard),  
+eine Normalisierung nach der Polynommethode (mode=Moments::polynom) oder
+eine Normalisierung nach der Iterationsmethode (mode=Moments::iteration)
+durchgeführt. Die Momente nach der Normalisierung werden als Rückgabewert
+zurückgegeben, die Transformation wird im Parameter $tr$ abgelegt.}
+
+\subsubsection{Fitting mit Momenten}
+Fitting mit Momenten beruht darauf, die Momente des zu fittenden Objektes 
+und des Referenzobjektes durch Normalisierung in eine Standardlage zu 
+überführen. Die ermittelten Transformationen erlauben eine Transformation 
+des Referenzobjektes in die Lage des gegebenen Objektes und liefern somit 
+ein angepasstes Objekt der gewählten Klasse. Viele dieser Funktionen liefern
+optional als Ergebnis ein Gütemass, welches die Abweichung von der idealen Form 
+beschreibt. Der Wert von 0 stellt also eine ideale Anpassung dar.
+
+\proc{Trafo}{AffineFit}{const Moments \&m1,const Moments \&m2}
+\descr{Bestimmt eine affine Transformation (\see{Trafo}), die die Momente 
+in die übergebenen Momente $m2$ überführt.}
+
+\proc{Matrix}{FitTriangle}{const Moments \&m}
+\descr{Passt ein Dreieck an, so dass dessen Momente den gegegebenen Momenten
+entsprechen. Die Rückgabe der Eckpunktkoordinaten erfolgt als Zeilen einer
+Matrix (``Punktliste'').} 
+
+\proc{Matrix}{FitEquilateralTriangle}{const Moments \&m}
+\procf{Matrix}{FitEquilateralTriangle}{const Moments \&m,double \&guetemass}
+\descr{Passt ein gleichseitiges Dreieck an, so dass dessen Momente den 
+gegegebenen Momenten entsprechen. Die Rückgabe der Eckpunktkoordinaten 
+erfolgt als Zeilen einer Matrix (``Punktliste'').} 
+
+\proc{Matrix}{FitIsoscelesTriangle}{const Moments \&m}
+\procf{Matrix}{FitIsoscelesTriangle}{const Moments \&m,double \&guetemass}
+\descr{Passt ein gleichschenkliges Dreieck an, so dass dessen Momente den 
+gegegebenen Momenten entsprechen. Die Rückgabe der Eckpunktkoordinaten 
+erfolgt als Zeilen einer Matrix (``Punktliste'').} 
+
+\proc{Matrix}{FitSquare}{const Moments \&m}
+\procf{Matrix}{FitSquare}{const Moments \&m,double \& guetemass}
+\descr{Passt ein Quadrat an, so dass dessen Momente den gegegebenen 
+Momenten entsprechen. Die Rückgabe der Eckpunktkoordinaten erfolgt als 
+Zeilen einer Matrix (``Punktliste'').} 
+
+\proc{Matrix}{FitRectangle}{const Moments \&m}
+\procf{Matrix}{FitRectangle}{const Moments \&m,double \&guetemass}
+\descr{Passt ein Rechteck an, so dass dessen Momente den gegegebenen 
+Momenten entsprechen. Die Rückgabe der Eckpunktkoordinaten 
+erfolgt als Zeilen einer Matrix (``Punktliste'').}
+
+\proc{Matrix}{FitParallelogram}{const Moments \&m}
+\procf{Matrix}{FitParallelogram}{const Moments \&m,double \& guetemass}
+\descr{Passt ein Parallelogramm an, so dass dessen Momente den gegegebenen 
+Momenten entsprechen. Die Rückgabe der Eckpunktkoordinaten erfolgt als 
+Zeilen einer Matrix (``Punktliste'').} 
+
+\proc{Matrix}{FitQuadrangle}{const Moments \&m}
+\descr{Passt ein allgemeines Viereck an, so dass dessen Momente den 
+gegegebenen Momenten entsprechen. Die Rückgabe der Eckpunktkoordinaten 
+erfolgt als Zeilen einer Matrix (``Punktliste'').} 
+
+\proc{Matrix}{FitPolygon}{const Moments \&m,const Matrix \&pl}
+\procf{Matrix}{FitPolygon}{const Moments \&m,const Matrix \&pl,double \&guetemass}
+\descr{Passt ein Polygon an, so dass dessen Momente den gegebenen Momenten 
+entsprechen. Als Startlösung ist das Polygon $pl$ zu übergeben, welches dadurch 
+auch die Anzahl der Ecken festlegt.}
+
+\proc{int}{FitCircle}{const Moments \&m,double \&x0,double \&y0,double \&radius}
+\proc{Circle}{FitCircle}{const Moments \&m}
+\descr{Passt einen Kreis an, so dass dessen Momente den gegegebenen 
+Momenten entsprechen. Die Rückgabe der Parameter des Kreises erfolgt über 
+die Variablen-Parameter $x0$, $y0$, $radius$. Alternativ wird eine
+Datenstruktur \see{Circle} zurückgegeben.}
+
+\proc{Ellipse}{FitEllipse}{const Moments \&m}
+\descr{Passt eine Ellipse an, so dass deren Momente den gegegebenen 
+Momenten entsprechen. Es wird wird eine Datenstruktur \see{Ellipse} 
+zurückgegeben.}
+
+\proc{double}{Orientation}{const Moments \&m}
+\descr{Liefert einen Winkel (im Bogenmaß), der die Orientierung
+des Objekts beschreibt. Dieser Winkel kann zur Beschreibung der 
+Orientierung im Vergleich mit gleichartigen Objekten dienen.}

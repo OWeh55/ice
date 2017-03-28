@@ -1,0 +1,241 @@
+\lsection{Beschreibung von Modellen und Szenen}
+\subsection{Datenstrukturen}
+
+Ähnlich wie bei der Bildbeschreibung werden auch für die Beschreibung von
+3D-Modellen und Szenen komplexe Datenstrukturen benötigt, die aus
+untereinander verketteten Listen von Eckpunkten, Kanten und Oberflächen
+bestehen. Übergeordnete Datenstruktur ist der Typ $ModelList$, der lediglich
+Verweise auf das erste und letzte Element einer doppelt verketteten Liste von
+Modellbeschreibungen vom Typ $Model$ enthält.
+\begprogr\begin{verbatim}
+typedef struct ModelList_
+{
+  struct Model_       *FirstModel;
+  struct Model_       *LastModel;
+}*ModelList;
+\end{verbatim}\endprogr
+
+Diese Liste kann sowohl als vogegebene Liste von CAD-Modellen als auch im
+Zusammenhang mit der in den Modellbeschreibungen enthalten Lage und
+Orientierung als Szenenbeschreibung genutzt werden. Durch die
+Modellbeschreibung können Polyedrische Modelle beschrieben werden. Die
+Modellbeschreibung enthält Felder mit Pointern auf die zum Modell gehörenden
+Eckpunkte, Kanten und Oberflächen, ein Frame zur Beschreibung der Lage und
+Felder für die Identifizierung des Objektes.
+\begprogr\begin{verbatim}
+typedef struct Model_
+{
+  struct Model_       *prev,*next;
+  int                 index;                    /*Modellindex*/
+  char                modelfile[80];            /*Modellfilename*/
+  int                 vertices;                 /*Anzahl der Eckpunkte*/
+  PointCorr           *pcorr;                   /*Punktkorrespondenzen*/
+  struct Vertex3D_    **vx;                     /*Knoten (Eckpunkte)*/
+  int                 edges;                    /*Anz. d. Kanten*/
+  struct Edge3D_      **edg;                    /*Kantenliste*/
+  int                 meshes;                   /*Anz. d. Oberflächen*/
+  struct Mesh3D_      **msh;                    /*Liste der Oberflächen*/
+  Frame               frm;                      /*Lageframe*/
+  double              err;                      /*Rekonstruktionsfehler*/
+  int                 matchedvx;                /*Anz. d. gematchten Knoten*/
+}*Model;
+\end{verbatim}\endprogr
+
+Die Oberflächen polyedrischer Körper werden durch 3D-Maschen beschrieben, die
+wiederum aus Kanten aufgebaut sind. Sie werden durch ihren Normalenvektor und
+verschiedene Merkmale für das Matching mit Bildbeschreibungen
+charakterisiert. Sie können außerdem ein Feld mit Verweisen auf Lochmaschen,
+die sich in der Masche befinden, enthalten.
+\begprogr\begin{verbatim}
+typedef struct Mesh3D_
+{
+  int                 index;                   /*Index in Modellwelt*/
+  double              n[3];                    /*Normalenvektor*/
+  char                visible;                 /*Sichtbarkeitsflag*/
+  struct Model_       *mod;                    /*Verweis auf zug. Modell*/
+  int                 IsHole;                  /*Kennung Lochfl. (TRUE/FALSE)*/
+  int                 edges;                   /*Anz. d. Außenkanten*/
+  struct Edge3D_      **edg;                   /*Liste d. Außenkanten*/
+  int                 *vxi;                    /*Knotenindizes*/
+  int                 holes;                   /*Anz. d. Löcher*/
+  struct Mesh3D_      **hol;                   /*Liste d. Lochflächen*/
+  double              *inv1;                   /*InvariantenListen*/
+  double              *inv2;
+  int                 class;                   /*affine Klasse*/
+  void                *Corr2D;                 /*korrespondierende Bildmasche*/
+  void                *poly;                   /*z.B. für 2D-Punktliste*/
+}*Mesh3D;
+\end{verbatim}\endprogr
+
+Die 3D-Kanten enthalten Verweise auf die Endknoten und die benachbarten Maschen.
+\begprogr\begin{verbatim}
+typedef struct Edge3D_
+{
+  int                 index;                   /*Index in Modellwelt*/
+  struct Vertex3D_    *vx[2];                  /*inzidierende Knoten*/
+  int                 vxi[2];                  /*Knotenindizes*/
+  struct Mesh3D_      *msh[2];                 /*inzidierende Maschen*/
+  void                *Corr2D;                 /*korrespondierende 2D-Kante*/
+}*Edge3D;
+\end{verbatim}\endprogr
+
+Die 3D-Knoten enthalten die Koordinaten des zugehörigen Punktes und Verweise
+auf die Kanten, mit denen der Knoten verbunden ist.
+\begprogr\begin{verbatim}
+typedef struct Vertex3D_
+{
+  int             index;
+  double          p[3];                        /*Punktkoordinaten*/
+  int             edges;                       /*Anzahl der Kanten*/
+  struct Edge3D_  **edg;                       /*Kantenliste*/
+  void            *Corr2D;                     /*korrespondierender Bildknoten*/
+}*Vertex3D;
+\end{verbatim}\endprogr
+
+
+\subsection{Verwaltung der Modell- und Szenenbeschreibungen}
+
+\proc{Model}{NewModel}{ModelList M,int index,int nvx,int nedg,int nmsh}
+\descr{
+Es wird ein Modell mit dem Index $index$ angelegt, das $nvx$ Knoten, $nedg$
+Kanten und $nmsh$ Maschen aufnehmen kann.
+}
+\proc{void}{DeleteModel}{Model mod,ModelList M}
+\descr{
+Das Modell $mod$ wird aus der Modelliste $m$ entfernt und gelöscht.
+}
+\proc{Mesh3D}{NewMesh3D}{int nedg,int nhol,int index}
+\descr{
+Es wird eine Masche mit dem Index $index$ angelegt. Die Anzahl der Kanten
+beträgt $nedg$ und die Anzahl der Lochmaschen $nhol$.
+}
+\proc{void}{DeleteMesh3D}{Mesh3D msh}
+\descr{
+Die Masche $msh$ wird gelöscht.
+}
+\proc{Edge3D}{NewEdge3D}{Model mod,int v1,int v2,int index}
+\descr{
+Es wird eine Kante zwischen den Knoten mit den Indizes $v1$ und $v2$ in der
+Knotenliste des Modells angelegt. Der Kante wird der Index $indx$ zugeordnet.
+}
+\proc{int}{AddEdge3D}{Edge3D edg,Vertex3D vx}
+\descr{
+Die Kante $edg$ wird mit dem Knoten $vx$ verbunden.
+}
+\proc{Vertex3D}{NewVertex3D}{double p[3],int index}
+\descr{
+Es wird ein Knoten mit den Koordinaten des Punktes $p$ angelegt.
+}
+\proc{int}{DeleteModelList}{ModelList M}
+\descr{
+Die Modelliste $M$ wird gelöscht.
+}
+
+
+\subsection{Zugriff aud die Modellbeschreibungen}
+
+\proc{int}{MeshOfEdge3D}{Mesh3D msh,Edge3D edg}
+\descr{
+Es wird der Index der Masche $msh$ in der Maschenliste der Kante $edg$ bestimmt.
+}
+\proc{Vertex3D}{NextVertex3D}{Vertex3D vx,int enr,int *dir}
+\descr{
+Zum Knoten $vx$ wird der über die Kante mit dem Index $enr$ benachbarte Knoten bestimmt.
+}
+\proc{Vertex3D}{StartVertex3D}{Mesh3D msh,Edge3D edg}
+\descr{
+Es wird der Anfangsknoten der Kante $edg$ beim Umlauf um die Masche $msh$ bestimmt.
+}
+\proc{Mesh3D}{NeighborMesh3D}{Edge3D edg,Mesh3D msh}
+\descr{
+Es wird die Masche bestimmt, die zur Masche $msh$ über die Kante $edg$
+benachbart ist.
+}
+\proc{int}{EdgeOfMesh3D}{Edge3D edg,Mesh3D msh}
+\descr{
+Es wird der Index der Kante $edg$ in der Kantemöiste der Masche $msh$ bestimmt.
+}
+\proc{int}{VertexOfEdge3D}{Vertex3D vx,Edge3D edg}
+\descr{
+Es wird der Knotenindex des Knotens $vx$ in der Knotenliste der Kante $edg$ bestimmt.
+}
+\proc{int}{EdgeOfVertex3D}{Edge3D edg,Vertex3D vx}
+\descr{
+Es wird der Index der Kante $edg$ in der Kantenliste des Knotens $vx$ bestimmt.
+}
+
+
+\subsection{Erzeugung und Bearbeitung von Modellbeschreibungen}
+
+\proc{Model}{ReadEPLYModel}{ModelList M,char *file,int index}
+\descr{
+Es wird ein Modell angelegt und die Daten aus der EPLY-Modellbeschreibung
+$file$ eingelesen. Das Modell wird in die Modelliste $M$ eingefügt und erhält
+den Index $index$.
+}
+Model ReadEPLYModel(ModelList M,char *file,int code);
+\proc{ModelList}{CreateModelList}{char *file}
+\descr{
+In $file$ wird eine Liste von EPLY-Files erwartet, aus denen die
+Modellbeschreibungen gelesen werden.
+}
+\proc{Model}{CopyModel}{Model mods,ModelList M}
+\descr{
+Es wird ein Modell angelegt und die Daten aus $mods$ kopiert.
+}
+\proc{Mesh3D}{CopyMesh3D}{Mesh3D mshs,Model mod}
+\descr{
+Es wird eine Masche mit den Daten der Masche $mshs$ angelegt und in das Modell
+$mod$ eingeordnet.
+}
+\proc{int}{CalcSurfaceNormal}{Mesh3D msh}
+\descr{
+Für die Masche $msh$ wird die Oberflächennormale berechnet.
+}
+\proc{int}{CalcInvar}{Mesh3D msh}
+\descr{
+Für die Masche $msh$ werden die Fünf-Punkte-Invarianten berechnet.
+}
+\proc{void}{Delete2DCorrespondences}{ModelList M}
+\descr{
+Die den Modellbestandteilen zugeordneten 2D-Korrespondenzen werden zurückgesetzt.
+}
+
+
+\subsection{Zeichnen von Modellbeschreibungen}
+
+\proc{int}{DrawVertex3D}{Vertex3D vx,camera cam,Frame *frm,int val,Image img}
+\descr{
+Der 3D-Knoten $vx$ wird mit $frm$ positioniert, mit $cam$ abgebildet und mit dem
+Wert $val$ im Bild $img$ eingezeichnet.
+}
+\proc{int}{DrawEdge3D}{Edge3D edg,camera cam,Frame *frm,int val,Image img}
+\descr{
+Die 3D-Kante $edg$ wird mit $frm$ positioniert, mit $cam$ abgebildet und mit dem
+Wert $val$ im Bild $img$ eingezeichnet.
+}
+\proc{int}{DrawSurface}{Mesh3D msh,camera cam,Frame *frm,int val,Image img}
+\descr{
+Die 3D-Oberfläche $msh$ wird mit $frm$ positioniert, mit $cam$ abgebildet und mit dem
+Wert $val$ im Bild $img$ eingezeichnet.
+}
+\proc{int}{DrawModel}{Model mod,camera cam,Frame *frm,int val,Image img}
+\descr{
+Das 3D-Modell $mod$ wird mit $frm$ positioniert, mit $cam$ abgebildet und mit dem
+Wert $val$ im Bild $img$ eingezeichnet.
+}
+\proc{void}{DrawSzene}{ModelList S,camera cam,Image img}
+\descr{
+Die Modelle der Szenenbeschreibung $S$ werden mit dem den jeweiligen Modellen
+zugeordneten Lageframes positioniert, mit der Kamera $cam$ abgebildet und in
+das Bild $img$ eingezeichnet.
+}
+\proc{int}{DrawFrame}{Frame *frm,camera cam, int val,int axelng,Image img}
+\descr{
+Es wird ein Dreibein mit mit der Achsenlänge $axelng$ mit $frm$ positioniert,
+mit $cam$ abgebildet und mit dem Wert $val$ im Bild $img$ eingezeichnet. Die
+Endpunkte der Achsen werden mit dem Wert 1, 2 bzw 3 für die x-, y-
+bzw. z-Achse markiert.
+}
+
+

@@ -1,0 +1,789 @@
+\nsection{Quaternionen}{quaternions}
+\hypertarget{Trafo}{}
+
+\subsection{Elementare Quaternionen}
+\hypertarget{Quaternion}{}
+
+\subsubsection{Konstruktoren und Destruktoren}
+\proch{}{Quaternion::Quaternion}{void}{quaternion.h}
+\descr
+    {
+      Es wird eine mit 0 initialisierte Quaternion angelegt.
+    }
+    \proc{}{Quaternion::Quaternion}{double real, double i, double j, double k}
+    \descr
+	{
+	  Es wird eine Quaternion mit Realteil $real$ und den
+	  Imaginäranteilen $i$, $j$ und $k$ angelegt.
+	}
+	\proc{}{Quaternion::Quaternion}{double real, Vector3d\& imaginary}
+	\descr
+	    {
+	      Es wird eine Quaternion mit Realteil $real$ und
+	      Imaginäranteilen aus dem Vektor $imaginary$ (i,j,k) angelegt.
+	    }
+	    \proc{}{Quaternion::Quaternion}{const Quaternion\& b}
+	         {
+	           Es wird eine Kopie der Quaternion $b$ erzeugt. (Kopier-Konstruktor)	
+	         }
+	         \subsubsection{Operatoren}
+	         \begin{tabular}{|c|c|}
+		   \hline
+		   Operator & Funktion\\ 
+		   \hline
+		   Quaternion = Quaternion & Zuweisungsoperator\\
+		   \hline
+		   Quaternion + Quaternion & Quaternionenaddition\\
+		   \hline
+		   Quaternion - Quaternion & Quaternionensubtraktion\\
+		   \hline
+			-Quaternion & Negation der Quaternion\\
+			\hline
+			Quaternion * double & Multiplikation mit Skalar\\
+			\hline
+			double * Quaternion & Multiplikation mit Skalar\\
+			\hline
+			Quaternion * Quaternion & Quaternionenmultiplikation\\
+			\hline
+		 \end{tabular}
+		 
+	         \subsubsection{Elementfunktionen}
+		 \proc{double}{Quaternion::getReal}{void}
+		 \descr
+		     {
+			Liefert den Realteil der Quaternion.
+		}
+		\proc{double}{Quaternion::getI}{void}
+		\descr
+		{
+			Liefert den i-Imaginärteil der Quaternion.
+		}
+		
+		\proc{double}{Quaternion::getJ}{void}
+		\descr
+		{
+			Liefert den j-Imaginärteil der Quaternion.
+		}
+		
+		\proc{double}{Quaternion::getK}{void}
+		\descr
+		{
+			Liefert den k-Imaginärteil der Quaternion.
+		}
+		
+    \proc{vector3d}{Quaternion::getImaginary}{void}
+    \descr
+    {
+    	Liefert die Imaginärteile der Quaternion als Vektor (i,j,k)
+    }
+ 
+ 		\proc{void}{Quaternion::setReal}{double real}
+ 		\descr
+ 		{
+ 			Setzt den Realteil der Quaternion auf $real$.
+ 		}
+ 		
+ 		\proc{void}{Quaternion::setI}{double i}
+ 		\descr
+ 		{
+ 			Setzt den i-Imaginärteil der Quaternion auf $i$.
+ 		}
+ 		
+ 		\proc{void}{Quaternion::setJ}{double j}
+ 		\descr
+ 		{
+ 			Setzt den j-Imaginärteil der Quaternion auf $j$.
+ 		}
+ 		
+ 		\proc{void}{Quaternion::setK}{double k}
+ 		\descr
+ 		{
+ 			Setzt den k-Imaginärteil der Quaternion auf $k$.
+ 		}
+ 		
+ 		\proc{void}{Quaternion::setImaginary}{vector3d\& imaginary}
+ 		\descr
+ 		{
+ 			Setzt die Imaginärwerte der Quaternion auf die Werte des Vektors $imaginary$ 			(i,j,k).
+ 		}
+ 		
+ 		\proc{Quaternion}{Quaternion::getNegate}{void}
+ 		\descr
+ 		{
+ 			 Gibt die negierte Quaternion zurück.
+ 		}
+ 		
+ 		\proc{Quaternion}{Quaternion::getConjugate}{void}
+ 		\descr
+ 		{
+ 			 Gibt die conjugierte Quaternion zurück.
+ 		}
+ 		
+ 		\proc{Quaternion}{Quaternion::getInverse}{void}
+ 		\descr
+ 		{
+ 			 Gibt die inverse Quaternion zurück, falls diese Vorhanden ist, sonst Fehlermeldung.
+ 		}
+ 		
+ 		\proc{Quaternion}{Quaternion::getNormalize}{void}
+ 		\descr
+ 		{
+ 			 Gibt die normalisierte Quaternion zurück, falls diese Vorhanden ist, sonst Fehlermeldung.
+ 		}
+ 		
+ 		\proc{Quaternion}{Quaternion::getSquare}{void}
+ 		\descr
+ 		{
+ 			 Gibt das Quadrat der Quaternion zurück.
+ 		}
+ 		
+ 		\proc{double}{Quaternion::getNorm}{void}
+ 		\descr
+ 		{
+ 			 Gibt die Norm der Quaternion zurück.
+ 		}
+ 		
+ 		\proc{double}{Quaternion::getSquareNorm}{void}
+ 		\descr
+ 		{
+ 			 Gibt das Quadrat der Norm der Quaternion zurück.
+ 		}
+ 		
+ 		\proc{double}{Quaternion::getEigenwinkel}{void}
+ 		\descr
+ 		{
+ 			 Gibt den Eigenwinkel der Quaternion zurück, falls dieser Vorhanden, sonst Fehlermeldung.
+ 		}
+ 		
+ 		\proc{Quaternion}{Quaternion::getEigenachse}{void}
+ 		\descr
+ 		{
+ 			 Gibt die Eigenachse der Quaternion zurück, falls diese vorhanden, sonst Fehlermeldung.
+ 		}
+ 		
+ 		\proc{vector3d}{Quaternion::getPhases}{void}
+ 		\descr
+ 		{
+ 			 Gibt die Phasen der Quaternion als Vektor $(\alpha,\beta,\delta) $ zurück,falls
+ 			 vorhanden, sonst Fehlermeldung.
+ 		}
+ 		
+ 		\proc{bool}{Quaternion::isUnitQuaternion}{void}
+ 		\descr
+ 		{
+ 			 Liefert TRUE, falls die Quaternion eine Einheitsquaternion ist.
+ 		}
+ 		
+	\subsubsection{Funktionen mit Quaternionen}
+ 		\proc{Quaternion}{qexp}{Quaternion\& x}
+ 		\descr
+ 		{
+ 			 Gibt $e^x$ zurück.
+ 		}
+\subsection{RotQuaternionen}
+\hypertarget{RotQuaternion}{}
+	\subsubsection{Konstruktoren und Destruktoren}
+		\proch{}{RotQuaternion::RotQuaternion}{void}{rotquaternion.h}
+		\descr
+		{
+			Es wird eine mit 1 initialisierte Rotationsquaternion angelegt.
+		}
+	
+		\proc{}{RotQuaternion::RotQuaternion}{double angle, double x, double y, double z}
+		\descr
+		{
+			Es wird eine Rotationsquaternion mit Rotationswinkel $angle$ im Bogenmaß und
+			Rotationsachse ($x$,$y$,$z$)	angelegt.
+		}
+	
+		\procf{}{RotQuaternion::RotQuaternion}{double angle, vector3d\& axis}
+		\descr
+		{
+			Es wird eine Rotationsquaternion mit Rotationswinkel $angle$ im Bogenmaß und
+			Rotationsachse $axis$ angelegt.
+		}
+	
+		\procf{}{RotQuaternion::RotQuaternion}{const RotQuaternion\& b)
+		{
+			Es wird eine Kopie der Rotationsquaternion b erzeugt. (Kopier-Konstruktor}
+		}
+
+	\subsubsection{Operatoren}
+		\begin{tabular}{|c|c|}
+			\hline
+			Operator & Funktion\\ 
+			\hline
+			RotQuaternion = RotQuaternion & Zuweisungsoperator\\
+			\hline
+			-RotQuaternion & Negation der Rotationsquaternion\\
+			\hline
+			RotQuaternion * RotQuaternion & Quaternionenmultiplikation\\
+			\hline
+	\end{tabular}
+	
+	Operatoren, die den Bereich der Rotationsquaternionen verlassen und eine Quaternion als
+	Rückgabewert liefern.
+	
+	\begin{tabular}{|c|c|}
+			\hline
+			Operator & Funktion\\ 
+			\hline
+			RotQuaternion + Rotquaternion & Quaternionenaddition\\
+			\hline
+			RotQuaternion - RotQuaternion & Quaternionensubtraktion\\
+			\hline
+			double * RotQuaternion & Multiplikation einer Quaternion mit einem Skalar\\
+			\hline
+			RotQuaternion * double & Multiplikation einer Quaternion mit einem Skalar\\
+			\hline
+			RotQuaternion*Quaternion & Quaternionenmultiplikation\\
+			\hline
+			Quaternion*RotQuaternion & Quaternionenmultiplikation\\
+			\hline
+			(Quaternion)* & Castingoperator
+	\end{tabular}
+	
+	\subsubsection{Elementfunktionen}
+		\proc{double}{RotQuaternion::getReal}{void}
+		\descr
+		{
+			Liefert den Realteil der Rotationsquaternion.
+		}
+		
+		\proc{double}{RotQuaternion::getI}{void}
+		\descr
+		{
+			Liefert den i-Imaginärteil der Rotationsquaternion.
+		}
+		
+		\proc{double}{RotQuaternion::getJ}{void}
+		\descr
+		{
+			Liefert den j-Imaginärteil der Rotationsquaternion.
+		}
+		
+		\proc{double}{RotQuaternion::getK}{void}
+		\descr
+		{
+			Liefert den k-Imaginärteil der Rotationsquaternion.
+		}
+		
+    \proc{vector3d}{RotQuaternion::getImaginary}{void}
+    \descr
+    {
+    	Liefert die Imaginärteile der Rotationsquaternion als Vektor (i,j,k).
+    }
+    
+    \proc{double}{RotQuaternion::getRotationAngle}{void}
+    \descr
+    {
+    	Liefert den Rotationswinkel der Rotationsquaternion im Bogenmaß.
+    }
+    
+    \proc{vector3d}{RotQuaternion::getRotationAxis}{void}
+    \descr
+    {
+    	Liefert die Rotationsachse der Rotationsquaternion als Vektor (i,j,k).
+    }
+    
+    \proc{void}{RotQuaternion::setRotationAngle}{double angle}
+    \descr
+    {
+    	Setzt Rotationswinkel der Rotationsquaternion auf angle im Bogenmaß.
+    }
+    
+    \proc{void}{RotQuaternion::setRotationAxis}{vector3d\& axis}
+    \descr
+    {
+    	Setzt die Rotationsachse der Rotationsquaternion.
+    }
+ 
+ 		\proc{RotQuaternion}{RotQuaternion::getNegate}{void}
+ 		\descr
+ 		{
+ 			 Gibt die negierte Rotationsquaternion zurück.
+ 		}
+ 		
+ 		\proc{RotQuaternion}{RotQuaternion::getConjugate}{void}
+ 		\descr
+ 		{
+ 			 Gibt die conjugierte Rotationsquaternion zurück.
+ 		}
+ 		
+ 		\proc{RotQuaternion}{RotQuaternion::getInverse}{void}
+ 		\descr
+ 		{
+ 			 Gibt die inverse Rotationsquaternion zurück.
+ 		}
+ 			
+ 		\proc{RotQuaternion}{RotQuaternion::getSquare}{void}
+ 		\descr
+ 		{
+ 			 Gibt das Quadrat der Quaternion zurück.
+ 		}
+ 		
+ 		\proc{double}{RotQuaternion::getNorm}{void}
+ 		\descr
+ 		{
+ 			 Gibt die Norm (1.0) der Rotationsquaternion zurück.
+ 		}
+ 		
+ 		\proc{double}{RotQuaternion::getSquareNorm}{void}
+ 		\descr
+ 		{
+ 			 Gibt das Quadrat (1.0) der Norm der Rotationsqquaternion zurück.
+ 		}
+ 		
+ 		\proc{double}{RotQuaternion::getEigenwinkel}{void}
+ 		\descr
+ 		{
+ 			 Gibt den Eigenwinkel der Rotationsquaternion zurück, falls dieser Vorhanden, sonst
+ 			 Fehlermeldung.
+ 		}
+ 		
+ 		\proc{RotQuaternion}{RotQuaternion::getEigenachse}{void}
+ 		\descr
+ 		{
+ 			 Gibt die Eigenachse der Rotationsquaternion zurück, falls diese vorhanden, sonst
+ 			 Fehlermeldung.
+ 		}
+ 		
+ 		\proc{vector3d}{RotQuaternion::getPhases}{void}
+ 		\descr
+ 		{
+ 			 Gibt die Phasen der Rotationsquaternion als Vektor $(\alpha,\beta,\delta)$ zurück,
+ 			 falls vorhanden, sonst Fehlermeldung.
+ 		}
+ 		
+ 		\proc{Matrix}{RotQuaternion::getRotationMatrix}{void}
+ 		\descr
+ 		{
+ 			 Konvertiert die Quaternion in eine $3\times 3$ Rotationsmatrix.
+ 		}
+ 		
+ 		
+ 	\subsubsection{Funktionen mit Rotationsquaternionen}
+ 		\proc{Quaternion}{qexp}{RotQuaternion\& x}
+ 		\descr
+ 		{
+ 			 Gibt $e^x$ zurück.
+ 		}
+ 		
+ 		\proc{RotQuaternion}{convertToRotQuaternion}{Quaternion\& in}
+ 		\descr
+ 		{
+ 			Konvertiert die Quaternion $in$ in eine Rotationsquaternion, falls dies
+ 			möglich, sonst Fehlermeldung.
+ 		}
+ 		
+ 		\proc{RotQuaternion}{convertToRotQuaternion}{Matrix\& in}
+ 		\descr
+ 		{
+ 			Konvertiert die $3\times 3$ Rotationsmatrix $in$ in eine Rotationsquaternion,
+ 			falls dies möglich, sonst Fehlermeldung.
+ 		}
+\subsection{QuatMatrix - Quaternionenwertige Matrizen}
+\hypertarget{QuatMatrix}{}
+\subsubsection{Konstruktoren und Destruktoren}
+ 	\proch{}{QuatMatrix::QuatMatrix}{void}{quatmatrix.h}
+		\descr
+	{
+		Es wird eine quaternionenwertige Matrix unbestimmter Größe angelegt.
+	}
+	
+	\procf{}{QuatMatrix::QuatMatrix}{unsigned int rows, unsigned int columns}
+	\descr
+	{
+		Es wird eine quaternionenwertige Matrix mit $rows$ Zeilen und $columns$
+		Zeilen angelegt.
+	}
+	
+	\procf{}{QuatMatrix::QuatMatrix}{const QuatMatrix\& qm}
+	\descr
+	{
+		Es wird eine Kopie der quaternionenwertigen Matrix $qm$ erzeugt.
+		(Kopier-Konstruktor)
+	}
+	
+	\subsubsection{Operatoren}
+		\begin{tabular}{|c|c|}
+			\hline
+			Operator & Funktion\\ 
+			\hline
+			QuatMatrix = QuatMatrix & Zuweisungsoperator\\
+			\hline
+			QuatMatrix + QuatMatrix & Matrixaddition\\
+			\hline
+			QuatMatrix - QuatMatrix & Matrixsubtraktion\\
+			\hline
+			QuatMatrix * double & Multiplikation mit Skalar\\
+			\hline
+			double * QuatMatrix & Multiplikation mit Skalar\\
+			\hline
+			QuatMatrix * Quaternion & Multiplikation mit Quaternion\\
+			\hline
+			Quaternion * QuatMatrix & Multiplikation mit Quaternion\\
+			\hline
+			Quaternion [int] & Zugriff auf eine Zeile der quaternionenwertigen Matrix\\
+			\hline
+			Quaternion [int i][int j] & Zugriff auf Element der Matrix
+		\end{tabular}
+		
+	\subsubsection{Elementfunktionen}
+		\proc{unsigned int}{QuatMatrix::getRows}{void}
+		\descr
+		{
+			Liefert die Anzahl der Zeilen der quaternionenwertigen Matrix.
+		}
+		
+		\proc{unsigned int}{QuatMatrix::getColumns}{void}
+		\descr
+		{
+			Liefert die Anzahl der Spalten der quaternionenwertigen Matrix.
+		}
+\subsection{Quaternionenwertige Vektoren}
+ \subsubsection{Konstruktoren und Destruktoren}
+ 		\proch{}{QuatVector::QuatVector}{void}{quatvektor.h}
+		\descr
+		{
+			Es wird ein quaternionenwertiger Vektor unbestimmter Größe angelegt.
+		}
+	
+		\procf{}{QuatVector::QuatVector}{unsigned int dimension}
+		\descr
+		{
+			Es wird ein quaternionenwertiger Vektor der Größe $dimension$ angelegt.
+		}
+	
+		\procf{}{QuatVector::QuatVector}{const QuatVector\& qv}
+		\descr
+		{
+			Es wird eine Kopie des quaternionenwertigen Vektors $qv$ erzeugt.
+			(Kopier-Konstruktor)
+		}
+	
+	\subsubsection{Operatoren}
+		\begin{tabular}{|c|c|}
+			\hline
+			Operator & Funktion\\ 
+			\hline
+			QuatVector = QuatVector & Zuweisungsoperator\\
+			\hline
+			QuatVector + QuatVector & Vektorenaddition\\
+			\hline
+			QuatVector - QuatVector & Vektorensubtraktion\\
+			\hline
+			QuatVector * double & Multiplikation mit Skalar\\
+			\hline
+			double * QuatVector & Multiplikation mit Skalar\\
+			\hline
+			QuatVector * Quaternion & Multiplikation mit Quaternion\\
+			\hline
+			Quaternion * QuatVector & Multiplikation mit Quaternion\\
+			\hline
+			Quaternion [int] & Elementzugriff
+		\end{tabular}
+		
+	\subsubsection{Elementfunktionen}
+		\proc{unsigned int}{QuatVector::getDimension}{void}
+		\descr
+		{
+			Liefert die Dimension des quaternionenwertigen Vektors.
+		}
+\subsection{Duale Quaternionen}
+\subsubsection{Konstruktoren und Destruktoren}
+	\proch{}{DualQuaternion::DualQuaternion}{void}{dualquaternion.h}
+	\descr
+	{
+		Es wird eine mit $\hat{q}=(0,\vec{0})+(0,\vec{0}\varepsilon)$ initialisierte duale
+		Quaternion angelegt.
+	}
+	\proc{}{DualQuaternion::DualQuaternion}{Quaternion\& real, Quaternion\& dual}
+	\descr
+	{
+		Es wird eine duale Quaternion mit Realteil $real$ und denm dualen Anteil	
+		$dual$ angelegt.
+	}
+	\proc{}{DualQuaternion::DualQuaternion}{const DualQuaternion\& b}
+	\descr
+	{
+		Es wird eine Kopie der dualen Quaternion $b$ erzeugt. (Kopier-Konstruktor)
+	}
+	\subsubsection{Operatoren}
+	\begin{tabular}{|c|c|}
+			\hline
+			Operator & Funktion\\ 
+			\hline
+			DualQuaternion = DualQuaternion & Zuweisungsoperator\\
+			\hline
+			DualQuaternion + DualQuaternion & Addition dualer Quaternionen\\
+			\hline
+			DualQuaternion - DualQuaternion & Subtraktion dualer Quaternionen\\
+			\hline
+			-DualQuaternion & Negation der dualen Quaternion\\
+			\hline
+			DualQuaternion * double & Multiplikation mit Skalar\\
+			\hline
+			double * DualQuaternion & Multiplikation mit Skalar\\
+			\hline
+			DualQuaternion * DualQuaternion & Multiplikation der dualen Quaternionen\\
+			\hline
+		\end{tabular}
+		
+		\subsubsection{Elementfunktionen}
+		\proc{Quaternion}{DualQuaternion::getReal}{void}
+		\descr
+		{
+			Liefert den Realteil der dualen Quaternion.
+		}
+		
+		\proc{Quaternion}{DualQuaternion::getDual}{void}
+		\descr
+		{
+			Liefert den Dualteil der dualen Quaternion.
+		}
+		
+		\proc{void}{DualQuaternion::setReal}{Quaternion\& real}
+		\descr
+		{
+			Setzt den Realteil der dualen Quaternion auf $real$.
+		}
+		
+		\proc{void}{DualQuaternion::setDual}{Quaternion\& dual}
+		\descr
+		{
+			Setzt den Dualteil der dualen Quaternion auf $dual$.
+		}
+		
+		\proc{DualQuaternion}{DualQuaternion::getNegate}{void}
+		\descr
+		{
+			Gibt die negierte duale Quaternion zurück.
+		}
+		
+		\proc{DualQuaternion}{DualQuaternion::getConjugate}{void}
+		\descr
+		{
+			Gibt die konjugierte duale Quaternion zurück.
+		}
+		
+		\proc{DualQuaternion}{DualQuaternion::getTilde}{void}
+		\descr
+		{
+			Gibt das Ergebnis der Anwendung des Tildeoperators zurück.
+		}
+		
+		\proc{DualQuaternion}{DualQuaternion::getInverse}{void}
+		\descr
+		{
+			Gibt die inverse duale Quaternion zurück, falls vorhanden, sonst Fehlermeldung.
+		}
+		
+		\proc{DualQuaternion}{DualQuaternion::getQuasiNorm}{void}
+		\descr
+		{
+			Gibt die Quasi-Norm der dualen Quaternion zurück.
+		}
+		
+		\proc{bool}{DualQuaternion::isUnitDualQuaternion}{void}
+		\descr
+		{
+			Liefert true, falls die duale Einheitsquaternion.
+		}
+\subsection{Duale Transformationsquaternionen}
+\subsubsection{Konstruktoren und Destruktoren}
+	\proch{}{TrafoDualQuaternion::TrafoDualQuaternion}{void}{trafodualquaternion.h}
+	\descr
+	{
+		Es wird eine mit $\hat{q}=(1,\vec{0})+(0,\vec{0}\varepsilon)$ initialisierte duale
+		Transformationsquaternion angelegt.
+	}
+	\proc{}{TrafoDualQuaternion::TrafoDualQuaternion}{RotQuaternion\& rot, vector3d\& trans}
+	\descr
+	{
+		Es wird eine duale Transformationsquaternion aus dem Rotationsanteil $rot$ und dem
+		Translatiosvektor \textit{trans} angelegt.
+	}
+	\proc{}{TrafoDualQuaternion::TrafoDualQuaternion}{const TrafoDualQuaternion\& b}
+	\descr
+	{
+		Es wird eine Kopie der dualen Transformationsquaternion $b$ erzeugt.
+		(Kopier-Konstruktor)
+	}
+	
+	\subsubsection{Operatoren}
+	\begin{tabular}{|c|c|}
+			\hline
+			Operator & Funktion\\ 
+			\hline
+			TrafoDualQuaternion = TrafoDualQuaternion & Zuweisungsoperator\\
+			-TrafoDualQuaternion & Negation einer dualen
+			Transformationsquaternion\\
+			\hline
+			TrafoDualQuaternion * TrafoDualQuaternion & Multiplikation dualer
+			Transformationsquaternionen\\
+			\hline
+	\end{tabular}
+		
+	Operatoren, die den Bereich der dualen Transformationsquaternionen verlassen und eine
+	duale Quaternion als Rückgabewert liefern.
+	
+	\subsubsection{Operatoren}
+	\begin{tabular}{|c|c|}
+			\hline
+			Operator & Funktion\\ 
+			\hline
+			TrafoDualQuaternion + TrafoDualQuaternion & Addition zweier dualer
+			Transformationsquaternioen\\
+			\hline
+			TrafoDualQuaternion + DualQuaternion & Addition duale Quaternion und duale
+			Transformationsquaternion\\
+			\hline
+			DualQuaternion + TrafoDualQuaternion & Addition duale Quaternion und duale
+			Transformationsquaternion\\
+			\hline
+			TrafoDualQuaternion - TrafoDualQuaternion & Subtraktion zweier dualer
+			Transformationsquaternioen\\
+			\hline
+			TrafoDualQuaternion - DualQuaternion & Subtraktion duale Transformationsquaternion und
+			duale	duale Quaternion\\
+			\hline
+			DualQuaternion - TrafoDualQuaternion & Subtraktion duale Quaternion und duale
+			Transformationsquaternion\\
+			\hline
+			double * TrafoDualQuaternion & Multiplikation mit Skalar\\
+			\hline
+			TrafoDualQuaternion * double & Multiplikation mit Skalar\\
+			\hline
+			DualQuaternion * TrafoDualQuaternion & Multiplikation mit dualer Quaternion\\
+			\hline
+			TrafoDualQuaternion * DualQuaternion & Multiplikation mit dualer Quaternion\\
+			\hline
+			(TrafoDualQuaternion)* & Castingoperator\\
+			\hline
+	\end{tabular}
+		
+	\subsubsection{Elementfunktionen}
+		\proc{Quaternion}{TrafoDualQuaternion::getReal}{void}
+		\descr
+		{
+			Liefert den Realteil der dualen Quaternion.
+		}
+		
+		\proc{Quaternion}{TrafoDualQuaternion::getDual}{void}
+		\descr
+		{
+			Liefert den Dualteil der dualen Quaternion.
+		}
+		
+		\proc{void}{TrafoDualQuaternion::setRotation}{RotQuaternion\& rot}
+		\descr
+		{
+			Setzt den Rotationsanteil der dualen Transformationsquaternion auf $rot$.
+		}
+		
+		\proc{void}{TrafoDualQuaternion::setDual}{vector3d\& trans}
+		\descr
+		{
+			Setzt die Translation der der dualen Transformationsquaternion.
+		}
+		
+		\proc{TrafoDualQuaternion}{TrafoDualQuaternion::getNegate}{void}
+		\descr
+		{
+			Gibt die negierte duale Transformationsquaternion zurück.
+		}
+		
+		\proc{TrafoDualQuaternion}{TrafoDualQuaternion::getConjugate}{void}
+		\descr
+		{
+			Gibt die konjugierte duale Transformationsquaternion zurück.
+		}
+		
+		\proc{TrafoDualQuaternion}{TrafoDualQuaternion::getTilde}{void}
+		\descr
+		{
+			Gibt das Ergebnis der Anwendung des Tildeoperators zurück.
+		}
+		
+		\proc{TrafoDualQuaternion}{TrafoDualQuaternion::getInverse}{void}
+		\descr
+		{
+			Gibt die inverse duale Quaternion zurück.
+		}
+		\proc{Matrix}{TrafoDualQuaternion::getTransformationMatrix}{void}
+		\descr
+		{
+			Gibt die zur dualen Transformationsquaternion äquivalente homogene Transformation zurück.
+		}
+		\subsubsection{Funktionen mit dualen Transformatiosquaternionen}
+ 		\proc{TrafoDualQuaternion}{convertToTrafoDualQuaternion}{const	Matrix\& in}
+ 		\descr
+ 		{
+ 			Konvertiert die homogene Transformationsmatrix $in$ 
+			in eine duale Transformationsquaternion.
+ 		}
+ 		
+ 		\proch{TrafoDualQuaternion}{estimateTransformation}{const
+ 		Matrix\& orig,const Matrix\& trans}{quatmatch.h}
+ 		\descr
+ 		{
+ 			Berechnet die Transformation (Rotation und Translation), durch die die in $orig$ gegebenen 
+ 			dreidimensionalen Originalpunkte in die in $trans$ gegeben dreidimensionalen Punkte
+ 			transformiert wurden.
+ 		} 		
+\subsection{Quaternionen-Fourier-Transformation}
+\proch{int}{QFourier}{QuatMatrix\& input, QuatMatrix\& output,int option=NORMAL}{qft.h}
+\descr
+{
+Quaternionenwertige Fourier-Transformation der quaternionenwertigen Matrix \textit{input} 
+($mode$=NORMAL Hintransformation, $mode$=INVERS Tücktransformation). Das
+Ergebnis der Transformation wird in $output$ abgelegt.
+}
+\subsubsection{Abgeleitete Spektren}
+Für die unten aufgeführten abgeleiteten Spektren gilt:
+\begin{itemize}
+\item mode = CENTER: zentriertes Spektrum
+\item mode = NOCENTER: unzentriertes Spektrum
+\end{itemize}
+ 
+\proch{int}{PowerSpektrumQFT}{QuatMatrix\& input, Image\& output,int type=POWER, int
+mode=CENTER}{qft.h}
+\descr
+{
+Berechnet das Leistungsspektrum der quaternionenwertigen Matrix \textit{input} und
+legt dieses als Bild $output$ ab. Die Matrix $input$ sollte dabei ein
+fouriertransformiertes Signal enthalten.\\
+Dabei gilt:
+\begin{itemize}
+\item type=POWER: Spektrum der Quadratnorm
+\item type=NORM: Spektrum der Norm
+\item type=LOG: Spektrum in logarithmischer Skalierung
+\end{itemize}
+}
+	
+\proch{int}{EigenwinkelSpektrumQFT}{QuatMatrix\& input, Image\& r, Image\& g,
+	Image\& b, int mode=CENTER}{qft.h}
+\descr{			
+Berechnet das Eigenwinkelspektrum der quaternionenwertigen Matrix $input$ und
+legt dieses in den Graustufenbilder $r$, $g$ und $b$ ab.
+Diese als RGB-Bild dargestellt, ergibt das Eigenwinkelspektrum. Die Funktion 
+kann auch zur Visualisierung von quaternionenwertigen Korrelationen verwendet 
+werden.	}
+	
+\proch{int}{EigenachsenSpektrumQFT}{QuatMatrix\& input, Image\& r, Image\& g,
+	Image\& b, int mode=CENTER}{qft.h}
+\descr
+{Berechnet das Eigenachsenspektrum er quaternionenwertigen Matrix $input$ und
+legt dieses in den Graustufenbilder $r$, $g$ und $b$ ab.
+Diese als RGB-Bild dargestellt, ergibt das Eigenachsenspektrum. Die Funktion 
+kann auch zur Visualisierung von quaternionenwertigen Korrelationen verwendet werden.}
+		
+		\proch{int}{PhasenSpektrumQFT}{QuatMatrix\& input, Image\& alpha, Image\& beta,
+		Image\& delta, int mode=CENTER}{qft.h}
+		\descr
+		{			
+			Berechnet das Phasenspektren der Winkel für die $\alpha,\beta,\delta)$ Exponentialform
+			einer Quaternion und legt diese als Graustufenbil $alpha$, $beta$ und
+			$delta$ ab.
+		}

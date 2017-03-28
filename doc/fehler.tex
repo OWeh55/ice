@@ -1,0 +1,186 @@
+\nsection{Fehlerbehandlung}{errorHandling}
+
+\subsection{Grundsätzliches}
+\label{Fehlerbehandlung}
+Bei fehlerhafter Abarbeitung (z.B. durch falsche Parameter) geben Funktionen
+normalerweise eine Fehlermeldung aus. Die Abarbeitung des Programms kann dann
+interaktiv abgebrochen oder fortgesetzt werden. Um eine Fehlerbehandlung durch
+das Anwenderprogramm zu ermöglichen, kann diese Form der Fehlermeldung durch
+spezielle Funktionen ein- und ausgeschaltet werden. Eine Fehlerdiagnose ist
+mit Hilfe der Funktion GetError() möglich, mit der der Fehlercode abgefragt 
+werden kann.
+
+\noindent Bezüglich der Rückgabewerte bei Fehlern existieren in ICE drei 
+verschiedene Funktionstypen:
+\begin{itemize}
+\item Funktionen, die keinen funktionsspezifischen Rückgabewert liefern: Der
+Rückgabewert ist hier vom Typ $int$ und enthält den Fehlercode. Der Wert
+$OK$ steht hier für ``kein Fehler''.
+\item Funktionen, die Zeiger zurückliefern: Bei Fehler liefern diese
+Funktionen den Nullpointer als Rückgabewert. Die genaue Fehlerbeschreibung 
+(der Fehlercode) ist mit der Funktion GetError() abzufragen.
+\item Funktionen mit einem funktionsspezifischen Rückgabewert: Der
+Rückgabewert liefert hier keine Information über aufgetretene Fehler. 
+Hier besteht nur die Möglichkeit, mit \bsee{GetError} abzufragen, ob und 
+welcher Fehler aufgetreten ist.
+\end{itemize}
+\subsection{Fehlerbehandlungsfunktionen}
+\proc{void}{Message}{char *name, char *msg, int code}
+\descr{Ausgabe einer Fehlermeldung. $name$ ist der Funktionsname, {\em
+msg} ist der Text der Fehlernachricht und $code$ ist ein Fehlercode, der
+intern gesetzt wird und mit GetError() abgefragt werden kann. 
+Vordefinierte Fehlermeldungen und Rückkehrcodes befinden sich im defs.h.
+Eine besondere Bedeutung besitzt die Meldung (der Zeiger) $M\_0$. Er bewirkt, 
+dass die von einer untergeordneten, gerufenen Funktion erzeugte Fehlermeldung
+ausgegeben wird. }
+\proc{void}{OffMessage}{void}
+\descr{Ausschalten der Fehlermeldungen. Treten bei einem Funktionsaufruf
+Fehler auf, so werden diese nicht angezeigt und können von der rufenden
+Funktion selber ausgewertet werden. Um die Funktion des gesamten Systems 
+zu gewährleisten, ist sicherzustellen, daß die Fehlermeldungen vor dem 
+Verlassen der Funktion wieder eingeschaltet werden. Dies muß vor 
+der Ausgabe eigener Fehlermeldungen geschehen, damit diese angezeigt werden. }
+\proc{void}{OnMessage}{void}
+\descr{Einschalten der Fehlermeldungen.}
+\proc{void}{SetOk}{void}
+\descr{Der interne Fehlercode wird zurückgesetzt. Damit kann die
+Programmabarbeitung fortgesetzt werden.}
+\proc{int}{GetError}{void}
+\descr{Als Funktionswert wird der interne Fehlercode zurückgegeben.}
+\subsection{Beispiele für Standardfehlerbehandlung in ICE-Funktionen}
+\begin{itemize}
+\item Funktion in der ein Fehler auftreten kann.\\
+In diesem Beispiel kann ein Fehler durch falsche Parameterangabe bzw. 
+bei Speicheranforderungen auftreten.
+\begprogr
+\begin{verbatim}
+//  Anlegen eines neuen Bildes 
+// Beispiel veraltet !!!
+#define FNAME "NewImg"
+
+Image NewImg(int xsize, int ysize, int maxval)
+{
+ Image img;
+ if ((xsize<=0)||(ysize<=0)||(maxval<=0)); // Parametertestung
+    {
+        Message(FNAME,M_WRONG_PARAM,WRONG_PARAM); // Fehlermeldung
+        return NULL; // Rückgabewert NULL als Zeichen für Fehler
+    }
+ img=(Image )malloc(sizeof(struct Image_)); // Speicheranforderung
+ if (img==NULL)
+    {
+        Message(FNAME,M_NO_MEM,NO_MEM); // Nicht genug Speicher melden
+        return NULL; // Rückgabewert NULL als Zeichen für Fehler
+    }
+// Etliche weitere Schritte zur Verwaltung der Bildspeicher 
+// durch ICE folgen
+...
+//
+ return img; // Bei Erfolg Bildzeiger zurückgeben
+}
+#undef FNAME
+\end{verbatim}
+\endprogr
+\item Funktion, die eine andere ICE-Funktion aufruft.\\
+Das Durchreichen der Fehlermeldungen bis zur obersten Ebene hat den 
+Vorteil, daß der Anwender aus der Fehlermeldung leichter die Fehlerursache 
+erkennt, da er ja die intern indirekt aufgerufenen Funktionen nicht kennt.
+\begprogr
+\begin{verbatim}
+// Anlegen eines neuen Bildes mit einem (einfachen) Testmuster
+#define FNAME "GenImg"
+Image GenImg(int xsize,int ysize,int maxval)
+{
+  Image img;
+  // Die Parametertestung wird durch NewImg vorgenommen
+  OffMessage(); // Fehlermeldungen deaktivieren
+  img = NewImg(xsize,ysize,maxval); // Bild neu anlegen
+  OnMessage();  // Fehlermeldungen wieder einschalten !
+  if (!img.isValid()) // Ist ein Fehler aufgetreten ?
+    {
+      int errorcode=GetError();
+      Message(FNAME,M_0,errorcode); // Fehler von NewImg weiterreichen (M_0)
+                                    // ErrorCode ebenfalls wie gemeldet 
+      return img; // Rückkehr mit ungültigem (invalid) Bild
+    }
+  for (int y=0; y < ysize; y++)
+    for (int x=0;x < xsize; x++)
+      PutVal(img, x, y, (x + y) % (maxval + 1)); // Bild beschreiben
+
+  return img; // Zeiger auf neues Bild zurückgeben
+}
+#undef FNAME
+\end{verbatim}\endprogr
+\end{itemize}
+\subsection{Makros für Standardfälle der Fehlerbehandlung}
+Zur Erleichterung der Behandlung von Fehlern sind Makros definiert, die
+einige Standardfälle abdecken. Diese setzen die Definition des Makros FNAME 
+voraus, welches den Namen der Funktion als Zeichenkette enthält.
+\proc{}{ReturnNullIfFailed}{function}
+\descr{
+Bricht bei Fehler bei der Abarbeitung von function ab und kehrt mit
+dem Nullpointer zur aufrufenden Funktion zurück. Dieses Makro ist geeignet
+für Funktionen, die normalerweise einen Zeiger zurückgeben.
+}
+Unter Verwendung von ReturnNullIfFailed vereinfacht sich das obige Beispiel 
+stark:
+\begprogr\begin{verbatim}
+// Anlegen eines neuen Bildes mit einem (einfachen) Testmuster
+#define FNAME "GenImg"
+Image GenImg(int xsize,int ysize,int maxval)
+{
+Image img;
+// Aufruf NewImg und Fehlerbehandlung
+ReturnNullIfFailed(img=NewImg(xsize,ysize,maxval)); 
+
+for (int y=0;y<ysize;y++)
+ for (int x=0;x<xsize;x++)
+   PutVal(img,x,y,(x+y)%(maxval+1)); // Bild beschreiben
+
+return img; // Zeiger auf neues Bild zurückgeben
+}
+#undef FNAME
+\end{verbatim}\endprogr
+
+\proc{}{ReturnErrorIfFailed}{function}
+\descr{
+Bricht bei Fehler bei der Abarbeitung von $function$ ab und kehrt mit
+dem Wert des Fehlers zur aufrufenden Funktion zurück. Dieses Makro ist 
+geeignet für Funktionen vom typ $int$, die keinen funktionsspezifischen
+Wert zurückgeben, sondern einen Fehlerkode.
+}
+\proc{}{IfFailed}{function}
+\descr{
+Aufruf der Funktion $function$ und Fehlerauswertung.
+Dieses Makro stellt eine if-Anweisung dar. Die Bedingung ist erfüllt,
+wenn ein Fehler aufgetreten ist. Im Körper der if-Anweisung ist 
+entsprechend auf den Fehler zu reagieren. 
+}
+
+\noindent Das Makro IfFailed ist in folgender Form anwendbar:
+\begin{verbatim}
+IfFailed(img=NewImg(x,y,v))
+    \{
+        // Reaktion auf Fehler, z.B. files schließen ..
+        ...
+        Message(FNAME,M_0,ERROR);
+        return NULL;
+    \}
+
+\end{verbatim}
+Dieses Makro ist geeignet, wenn bei Fehlern individuell reagiert werden muß. 
+Gründe dafür können sein:
+\begin{itemize}
+\item Ein spezieller Rückgabewert
+\item Freigabe von Resourcen vor Fehlermeldung und Rückkehr
+\item Tolerierung von Fehlern, wenn die Funktion trotzdem erfolgreich
+beendet werden kann. Im Block nach IfFailed ist die spezielle Behandlung 
+bei Fehler zu realisieren und der Fehlerzustand mit SetOK() zurückzusetzen,
+damit die Abarbeitung ohne weitere Fehlermeldungen forgesetzt werden kann.
+\end{itemize}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% TeX-master: "icedoc_base"
+%%% End: 

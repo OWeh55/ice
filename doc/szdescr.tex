@@ -1,0 +1,473 @@
+\lsection{Bildbeschreibung mit Nachbarschaftsstrukturen}
+\subsection{Datenstrukturen}
+
+Zur Bildbeschreibung und das spätere Matching mit Modelldaten sind relativ
+komlexe Datenstrukturen erforderlich, die aus doppelt verketteten Listen 
+für Knoten, Kanten und Maschen bestehen, die zusätzlich untereinander durch 
+Zeiger
+verknüpft sind. Die übergeordnete Datenstruktur ist $Description$, die jeweils
+das erste und letzte Element der Knoten-, Kanten- und Maschenlisten enthält
+sowie für das Matching mit den Modelldaten einen Verweis auf einen
+Klassifikator.
+
+Jedes Element der Bildbeschreibung ist in den Listen genau einmal enthalten.
+\begprogr\begin{verbatim}
+typedef struct Description_
+{
+  struct Mesh_          *FirstMesh;     /*Flaechenliste*/
+  struct Mesh_          *LastMesh;
+  struct Edge_          *FirstEdge;     /*Kantenliste*/
+  struct Edge_          *LastEdge;
+  struct Vertex_        *FirstVertex;   /*Knotenliste*/
+  struct Vertex_        *LastVertex;
+  void                  *C;             /*Klassifikator*/
+} *Description;
+\end{verbatim}\endprogr
+Knoten enthalten neben den Bildebenenkoordinaten ein Feld von Pointern auf die
+von dem Knoten ausgehenden Kanten und den Winkel dieser Kanten bezüglich einer
+Referenzrichtung. Außerdem kann ein Verweis auf ein zugehöriges 3D-Element
+eingetragen werden.
+\begprogr\begin{verbatim}
+typedef struct Vertex_
+  {
+    struct Vertex_ *prev,*next;         /*Listenverkettung*/
+    int           state;                /*Status 0 - gelöscht*/
+    int           edges;                /*Anzahl der ausgehenden Kanten*/
+    double        p[2];                 /*Punktkoordinaten*/
+    struct Edge_  **edg;                /*Kantenliste*/
+    double        *angle;               /*Winkel d. Kante im Knoten*/
+    struct Description_ *D;             /*zugeh. Beschr.-strukt.*/
+    void             *Corr3d;           /*korrespondierendes 3D-Element*/
+  } *Vertex;
+\end{verbatim}\endprogr
+
+Kanten enthalten Verweise auf die Anfangs- und Endknoten und auf die beiden
+Maschen, die durch die Kante begrenzt werden. Zusätzlich sind Felder für die
+nähere Charakterisierung der Kante (Hessesche Parameter, Länge, Kantenstärke)
+vorgesehen.
+\begprogr\begin{verbatim}
+typedef struct Edge_
+{ 
+  struct Edge_   *prev,*next;    /*Listenverkettung*/
+  double         par[5];         /*Geraden: Hessesche Parameter p und phi*/
+                                 /*Ellipsen: xm,ym,a,b,phi*/
+  struct Vertex_ *vx[2];         /*Knoten am Linienanfang u. -ende*/
+  struct Mesh_   *msh[2];        /*Zeiger auf angr. Flaechen*/
+  double        lng;             /*Segmentlaenge*/
+  double          w;             /*Kantenstaerke*/
+  int           type;            /*Kurventyp: 1 - Liniensegment*/
+                                 /*           2 - Ellipsenbogensegment*/
+  int           state;           /*Bearbeitungsstatus*/
+                                 /*Bit 1: nicht geloescht*/
+                                 /*Bit 2: Bildkante*/
+                                 /*Bit 3: "künstliche" Kante*/
+  struct Description_ *D;        /*zugeh. Beschr.-strukt.*/
+  void       *Corr3d;            /*korrespondierendes 3D-Element*/
+} *Edge;
+\end{verbatim}\endprogr
+
+Maschen enthalten jeweils ein Feld von Pointern auf die sie begrenzenden Kanten
+und auf deren Anfangsknoten. Weiterhin sind Verweise auf Lochmaschen, die
+vollständig in der Masche liegen, und Merkmale zur Klassifikation der Masche
+vorgesehen. Weitere Felder werden für das Matching mit Modelldaten benötigt.
+\begprogr\begin{verbatim}
+typedef struct Mesh_
+{
+  struct Mesh_    *prev,*next;   /*Listenverkettung*/
+  struct Edge_    **edg;         /*begrenzende Kanten*/
+  struct Vertex_  **vx;          /*Anfangsknoten der Kanten*/
+  int             edges;         /*Anzahl der Flaechen*/
+  int             border;        /*Flag f. Randmasche*/
+  int             ishole;        /*Lochmasche? (TRUE/FALSE)*/
+  int             holes;         /*Anz. der umschlossenen Maschen*/
+  struct Mesh_    **hol;         /*Liste der Lochmaschen*/
+  int             matched;       /*Flag f. erfolgte Zuordnung*/
+  int             matches;       /*Anz. d. zugeordn. Modellmaschen*/
+  int             *matchmod;     /*Modellindizes*/
+  int             *matchmsh;     /*Modellmaschenindizes*/
+  Model           *models;       /*Verweis auf zugeordn. Modelle*/
+  double          area;          /*Flaeche (vorzeichenbehaftet)*/
+  double          length;        /*Umfang*/
+  int             ellipse;       /*Masche ellipsenähnlich (TRUE/FALSE)*/
+  int             class;         /*Klassifikationsergebnis*/
+  double          *iv1;          /*Fuenf-Punkte-Invarianten*/
+  double          *iv2;
+  struct Description_ *D;        /*zugeh. Beschr.-strukt.*/
+  void      *Corr3d;             /*korrespondierendes 3D-Element*/
+} *Mesh;
+\end{verbatim}\endprogr
+
+\subsection{Verwaltung der Datenstrukturen}
+
+\subsubsection{Knoten}
+
+\proc{Vertex}{NewVertex}{Description D,double p[2]}
+\descr{
+neuen Knoten bereitstellen
+}
+\proc{int}{DeleteVertex}{Vertex vx}
+\descr{
+Knoten aus Liste entfernen
+}
+\proc{int}{ActualizeVertex}{Vertex vx}
+\descr{
+Knotendaten aktualisieren
+}
+\proc{double}{AngleEdge}{Vertex vx,Vertex vx1}
+\descr{
+Winkel einer Kante im Knoten
+}
+\proc{int}{InsertEdge}{Edge edg,Vertex vx}
+\descr{
+Kante mit Knoten verbinden
+}
+\proc{int}{ReleaseEdge}{Edge edg,Vertex vx}
+\descr{
+Kante aus Knoten entfernen
+}
+
+\subsubsection{Kanten}
+
+\proc{Edge}{NewEdge}{Description D,Vertex vx1,Vertex vx2,int state}
+\descr{
+neue Kante bereitstellen
+}
+\proc{int}{DeleteEdge}{Edge edg}
+\descr{
+Kante aus Liste entfernen
+}
+\proc{Edge}{CopyEdge}{Edge edg,Description D}
+\descr{
+Die Kante $edg$ wird kopiert und die kopierte Kante in die Bildbeschreibung
+$D$ aufgenommen. Die beiden Endknoten werden neu angelegt und ebenfalls in $D$
+aufgenommen. Verweise auf Maschen und korrespondierende Kanten werden nicht
+übernommen. 
+}
+
+\subsubsection{Maschen}
+
+\proc{Mesh}{NewMesh}{Description D}
+\descr{
+Masche anfordern
+}
+\proc{int}{DeleteMesh}{Mesh msh}
+\descr{
+Masche löschen.
+}
+
+
+\subsubsection{Bildbeschreibung}
+
+\proc{Description}{NewDescription}{void}
+\descr{
+Beschreibung anlegen
+}
+Description NewDescription(void);      /*Beschreibung anlegen*/
+\proc{void}{DeleteDescription}{Description D}
+\descr{
+Beschreibung löschen und Speicher freigeben
+}
+
+
+\subsubsection{Konsistenzprüfung}
+
+\proc{int}{IsVertex}{Description D,Vertex vx}
+\descr{
+ist der Knoten in der Beschreibung
+}
+\proc{int}{IsEdge}{Description D,Edge edg}
+\descr{
+ist die Kante in der Beschreibung?
+}
+\proc{int}{IsMesh}{Description D,Mesh msh}
+\descr{
+ist Masche in Liste?
+}
+\proc{int}{IsConsistent}{Description D}
+\descr{
+Konsistenz der Beschreibung pruefen
+}
+
+
+\subsection{Zugriff auf Bildbeschreibungen}
+
+\proc{int}{EdgeOfVertex}{Edge edg,Vertex vx}
+\descr{
+Nummer Kante in Knoten
+}
+\proc{Vertex}{NeighborVertex}{Vertex vx,int enr}
+\descr{
+Über Kante benachbarter Knoten
+}
+\proc{int}{HasCommonEdge}{Vertex vx1,Vertex vx2}
+\descr{
+Liefert TRUE, wenn die Knoten $vx1$ und $vx2$ über eine Kante miteinander
+verbunden sind.
+}
+\proc{int}{VertexOfEdge}{Vertex vx,Edge edg}
+\descr{
+Nummer Knoten in Kante
+}
+\proc{int}{MeshOfEdge}{Mesh msh,Edge edg}
+\descr{
+Nummer Masche in Kante
+}
+\proc{int}{EdgeOfMesh}{Edge edg,Mesh msh}
+\descr{
+Nummer Kante in Masche
+}
+\proc{Mesh}{NeighborMesh}{Edge edg,Mesh msh}
+\descr{
+Nachbarmasche bestimmen
+}
+\proc{Vertex}{MeshVertex}{Mesh msh,int i}
+\descr{
+Anf.-ktn. i-te Kante einer Masche
+}
+
+\proc{Vertex}{CommonVertex}{Edge edg1, Edge edg2}
+\descr{
+Knoten bestimmen, der beiden Kanten gemeinsam ist.
+}
+\proc{Edge}{ConnectingEdge}{Vertex vx1,Vertex vx2}
+\descr{
+Es wird die Kante zurückgegeben, die die beiden Knoten $vx1$ und $vx2$
+miteinander verbindet.
+}
+
+\subsection{Zeichnen von Beschreibungen}
+
+\proc{void}{DrawVertex}{Vertex vx,Image img,int val}
+\descr{
+Knoten zeichnen
+}
+\proc{void}{DrawEdge}{Edge edg,Image img, int val}
+\descr{
+Kante zeichnen
+}
+\proc{void}{DrawMesh}{Mesh msh,Image img, int val}
+\descr{
+Masche zeichnen
+}
+\proc{void}{DrawDescription}{Description D,int val,Image img}
+\descr{
+Beschreibung zeichnen
+}
+
+\subsection{Bearbeitung von Beschreibungen}
+
+\proc{int}{MergeVertices}{Vertex vx1,Vertex vx2}
+\descr{
+Die Knoten $vx1$ und $vx2$ werden zu einem Knoten zusammengefaßt. Es wird der
+durch Ausgleichsrechnung bestimmte ``Schnittpunkt'' aller Kanten zugeordnet.
+}
+\proc{int}{MergeVertexList}{Description D,double maxdist}
+\descr{
+Die Knotenliste wird nach Paaren von Knoten durchsucht, deren Abstand kleiner
+als $maxdist$ ist. Solche Knotenpaare werden zu einem Knoten zusammengefaßt.
+}
+\proc{Vertex}{SplitEdge}{Edge edg,double p[2]}
+\descr{
+Die Kante $edg$ wird im Punkt $p$ geteilt und ein neuer Knoten eingefügt.
+}
+\proc{int}{CloseGaps}{Description D,double maxdist}
+\descr{
+Alle Knoten, deren Abstand nicht größer als $maxdist$ ist, werden durch eine
+Kante verbunden.
+}
+\proc{int}{RemoveShortEdges}{Description D,double minlng}
+\descr{
+Alle Kanten, die kürzer als $minlng$ sind, werden entfernt und ihre Endknoten
+zu einem Knoten zusammengefaßt.
+}
+\proc{double}{DistVertexEdge}{Vertex vx,Edge edg,double p[2],int *mode}
+\descr{
+Der Abstand des Knotens $vx$ zur Kante $edg$ wird zurückgegeben. Der dem
+Knoten am nächsten liegende Punkt der Kante wird auf $p$ bereitgestellt und
+$mode$ wird auf 0 gesetzt, wenn $p$ der Anfangspunkt der Kante ist, auf 1,
+wenn $p$ der Endpunkt der Kante ist und auf 2, wenn $p$ zwischen Anfangs- und
+Endpunkt liegt.
+}
+\proc{double}{MeshAngle}{Mesh msh,Vertex vx}
+\descr{
+Der Winkel zwischen den beiden zur Masche $msh$ gehörenden Kanten im Knoten
+$vx$ wird berechnet.
+}
+\proc{int}{HasCrossPoint}{double p11[2],double p12[2],double p21[2],double p22[2]}
+\descr{
+Liefert TRUE, wenn sich die Geradensegmente $p11,p21$ und $p21,p22$ kreuzen.
+}
+\proc{int}{InvarMeshList}{Description D}
+\descr{
+Für alle Maschen mit mehr als vier Punkten werden die Fünf-Punkte-Invarianten
+berechnet.
+}
+\proc{int}{PointInMesh}{double p[2],Mesh msh}
+\descr{
+Es wird TRUE zurückgegeben, wenn der Punkt $p$ innerhalb der Masche $msh$ liegt.
+}
+
+
+
+
+
+\proc{int}{VertexMergeList}{Description D,double rad,double maxd}
+\descr{
+Zusammenfassen von Knoten
+}
+\proc{int}{MergeEdges}{Vertex vx,double maxdist}
+\descr{
+Knoten evtl. entfernen
+}
+\proc{int}{MergeEdgeList}{Description D,double maxdist}
+\descr{
+Kanten vereinigen
+}
+\proc{int}{RemoveDoubleEdges}{Description D}
+\descr{
+Entfernen von doppelten Kanten
+}
+\proc{Mesh}{CreateMesh}{Edge edg,int side}
+\descr{
+Masche zu Kante erzeugen
+}
+\proc{int}{ListMeshes}{Description D}
+\descr{
+Maschenliste erzeugen
+}
+\proc{Mesh}{DeleteVertexMeshes}{Vertex vx,Mesh msh}
+\descr{
+alle Maschen, die den Knoten $vx$ berühren, werden gelöscht.
+}
+\proc{int}{CreateVertexMeshes}{Vertex vx}
+\descr{
+Es werden alle Maschen erzeugt, die den Knoten beinhalten.
+}
+\proc{int}{ClassifyMesh}{Mesh msh}
+\descr{
+Die Masche $msh$ wird klassifiziert.
+}
+\proc{int}{ClassifyMeshList}{Description D}
+\descr{
+Alle Maschen der Liste werden klassifiziert.
+}
+\proc{int}{IsConcaveVertex}{Mesh msh,int j}
+\descr{
+Liefert TRUE, wenn die Masche im $j$-ten Knoten konkav ist.
+}
+\proc{int}{OppositeVertex}{Mesh msh,int i,double dmin}
+\descr{
+Es wird ein ``gegenüberliegender'' Knoten gesucht.
+}
+\proc{int}{IsInMesh}{Mesh msh,int i,int j}
+\descr{
+Es wird getestet, ob die Strecke vom $i$-ten zum $j$-ten Knoten der Masche
+$msh$ vollständig innerhalb der Masche verläuft.
+}
+\proc{int}{SplitMesh}{Mesh msh,int i,int j,MomentClassifyer *mc}
+\descr{
+Die Masche $msh$ wird geteilt, indem eine Kante vom $i$-ten zum $j$-ten Knoten
+eingefügt wird. Die entstehenden Teilmaschen werden klassifiziert.
+}
+\proc{int}{ClassifySubMesh}{Mesh msh,int i,int j,MomentClassifyer *mc,double *d}
+\descr{
+Die durch Trennung der Masche $msh$ zwischen dem $i$-ten zum $j$-ten Knoten
+entstehende Masche wird klassifiziert.
+}
+\proc{int}{CutMesh}{Mesh msh,MomentClassifyer *mc}
+\descr{
+Es wird versucht, durch einfügen von Kanten die Masche $msh$ so zu
+unterteilen, daß die entstehenden Maschen einer Klasse zugeordnet werden können.
+}
+\proc{int}{SearchSubMesh}{Mesh msh,MomentClassifyer *mc}
+\descr{
+Es wird versucht, durch einfügen einer Kante von der Masche $msh$ eine Masche
+abzutrennen, die einer Klasse zugeordnet werden kann.
+}
+\proc{int}{CutMeshList}{Description D}
+\descr{
+Die Maschenliste wird nach unklassifizierten Maschen durchsucht, aus denen
+durch Unterteilung klassifizierbare Maschen erzeugt werden können.
+}
+\proc{int}{ClearInnerEdges}{Mesh msh}
+\descr{
+In die Masche $msh$ hineinragende, doppelt durchlaufene Kanten werden entfernt.
+}
+\proc{int}{ClearInnerEdgeList}{Description D}
+\descr{
+In allen Maschen der Maschenliste werden in die Masche hineinragende, doppelt
+durchlaufene Kanten entfernt.
+}
+\proc{Mesh}{RemoveTVertex}{Mesh msh,double dist}
+\descr{
+In der unklassifizierten Masche $msh$ werden T-Knoten aufgelöst.
+}
+\proc{int}{RemoveTVertexList}{Description D}
+\descr{
+In allen unklassifizierten Maschen der Maschenliste werden T-Knoten aufgelöst.
+}
+\proc{int}{SearchHoles}{Description D}
+\descr{
+Lochmaschen bestimmen und markieren
+}
+\proc{char}{IsHole}{Mesh msh}
+\descr{
+Liefert TRUE, wenn die Masche eine Lochmasche ist.
+}
+\proc{int}{CutBorderMeshList}{Description D}
+\descr{
+Es wird versucht, aus den Randmaschen durch Hinzufügen oder Löschen von Kanten
+sinnvolle Maschen abzuspalten.
+}
+\proc{int}{CutBorderMesh}{Mesh msh}
+\descr{
+Es wird versucht, aus der Randmasche $msh$ durch Hinzufügen oder Löschen von Kanten
+sinnvolle Maschen abzuspalten.
+}
+\proc{char}{SegmentInMesh}{double p1[2],double p2[2],Mesh msh}
+\descr{
+Liefert TRUE, wenn die Strecke $p1,p2$ vollständig innerhalb der Masche $msh$ verläuft.
+}
+\proc{char}{CrossMesh}{double p1[2],double p2[2],Mesh msh}
+\descr{
+Liefert TRUE, wenn die Strecke $p1,p2$ eine Kante der Masche $msh$ schneidet.
+}
+\proc{int}{SearchConcavity}{Mesh msh,int i}
+\descr{
+Beginnend beim $i$-ten Knoten der Masche $msh$ wird nach einer Konkavität
+gesucht.
+}
+
+\proc{int}{AddPolygon}{Contur c, int lmin, double dmax, Description D}
+\descr{
+Die Kontur $c$ wird mit der minimalen Segmentlänge $lmin$ und dem maximalen
+Abstand $dmax$ in Geradensegmente segmentiert und als zusammenhängender
+Polygonzug in die Beschreibung $D$ aufgenommen.
+}
+\proc{int}{SearchVertexEdge}{Image imgv,Image imgo,Vertex vx}
+\descr{
+Es wird nach Kanten gesucht, die vom Knoten $vx$ ausgehen,
+}
+\proc{int}{SearchMeshEdge}{Image imgv,Image imgo,Mesh msh,int n}
+\descr{
+Es wird innerhalb der Masche $msh$ nach Kanten gesucht, die von dem $n$-ten Knoten
+ausgehen.  
+}
+\proc{int}{MeshEdges}{Description D,Image imgv,Image imgo}
+\descr{
+Es werden innerhab der in der Beschreibung $D$ enthaltenen Maschen Kanten gesucht.
+}
+\proc{int}{SearchLowEdges}{Image imgv,Image imgo,Description D}
+\descr{
+Es werden Kanten gesucht, die von Knoten der Beschreibung $D$ ausgehen.
+}
+\proc{int}{SearchStrongEdges}{Image imgv,Image imgo,int maxgrd,Description D}
+\descr{
+Im Bild $imgv$ werden mit der Schwelle $maxgrd$ für die Startpunktsuche
+gradientenorientiert Kanten gesucht.
+}
+\proc{Description}{CreateEdgeList}{Image imgv,Image imgo}
+\descr{
+Im Bild $imgv$ werden gradientenorientiert Kanten gesucht und in eine neu
+angelegte Beschreibung eingetragen.
+}

@@ -1,0 +1,309 @@
+\nsection{Graphen}{graph}
+\subsection{Bäume}
+\subsubsection{KDTree}
+\hypertarget{KDTree}
+Ein KDTree ist ein Binärbaum, dessen Knoten k-dimensionale Werte (Vektoren) 
+enthalten. In jeder Verzweigung wird eines der k Merkmale ausgewählt und die Vektoren 
+werden anhand dieses Merkmales auf den linken oder rechten Teilbaum verteilt. 
+Links wird gewählt, wenn das gewählte Merkmal kleiner als das Merkmal in 
+diesem Blatt ist, sonst rechts.
+
+Die Template-Klasse {\bf KDTree} realisiert einen KDTree. Der Template-Typ {\bf T}
+der zu speichernden Elemente muss die Eigenschaften von {\bf vector} besitzen, das 
+heißt die Operatoren \verb+operator[](int)+ und die Methode \verb+size()+ besitzen.
+Für die Verwendung im Kontext von Klassifizierungsaufgaben ist als Typ die Klasse
+{\bf ClassSample} geeignet.
+
+\ctor{KDTree}{}{KDTree.h}
+\descr{Legt einen noch leeren KDTree an.}
+
+\method{void}{create}{\cvector{T} s}
+\descr{Baut den Baum mit den Elementen des Vektors auf.}
+
+\method{T*}{findNearest}{\cvector{double} v}
+\methodf{T*}{findNearest}{const T \&s}
+\descr{Findet im Baum den Knoten mit geringstem Abstand zum gegebenen Vektor.}
+
+\method{void}{findKNearest}{\cvector{double} v, int k,\vector{const T*} \&neighbors, \vector{double} \&distances}
+\methodf{void}{findKNearest}{const T \&v,int k,\vector{const T*} \&neighbors,\vector{double} \& distances}
+\descr{Findet die k nächsten Nachbarn zum Vektor $v$ und gibt diese und die Distanzen auf $neighbors$ 
+und $distances$ zurück. 
+}
+
+\method{void}{write}{ostream \&os}
+\descr{Schreibt den Baum in den übergebenen Stream.}
+\method{void}{read}{istream \&is}
+\descr{liest den Baum aus dem übergebenen Stream.}
+
+Das Format ist von {\bf read} und {\bf write} ist nicht für die Darstellung für den Menschen geeignet. Es dient
+dazu, einen Baum in einer Datei zu speichern und wieder zu lesen. Es ist nicht garantiert, dass die mit 
+dieser Version erzeugten Dateien auch in späteren Versionen wieder lesbar sind, da sich das Format ändern kann.
+
+\subsubsection{ObliqueTree}
+\subsection{Forest}
+\hypertarget{Forest}{}
+Die Klasse {\bf Forest} ist eine Repräsentation von Bäumen.
+Jedes der {\bf n} Elemente einer zugrunde liegenden Menge sind in je genau 
+einem Baum enthalten. Der Wald kann somit aus bis zu {\bf n} Bäumen 
+bestehen, die dann jeder aus genau einen Knoten (Wurzel) bestehen. 
+Das andere Extrem ist {\bf ein} Baum, der alle Knoten enthält. Die 
+Elemente der zugrunde liegenden Menge werden über ihren Index 
+(ganze Zahl von {\bf 0} bis {\bf n-1}) verwaltet. Jeder Knoten 
+ausser der Wurzel hat einen Verweis auf den Vater.
+
+\subsubsection{Konstruktoren}
+\proch{}{Forest::Forest}{int n=0}{forest.h}
+\descr{Legt einen Wald aus einer Menge mit $n$ Elementen an. Jedes Element 
+ist Wurzel seines eigenen Baumes.}
+
+\proch{int}{Forest::Reset}{int n}{forest.h}
+\descr{Setzt einen Wald in den Ursprungszustand zurück wie im Konstruktor 
+beschrieben.}
+
+\subsubsection{Methoden}
+\proch{int}{Forest::Size}{}{forest.h}
+\descr{
+Gibt die Anzahl der Elemente der zugrundeliegenden Menge des Waldes zurück.
+}
+
+\proch{int}{Forest::nTree}{bool ignoreZeroLengthTrees=false}{forest.h}
+\descr{Gibt die Anzahl der Bäume des Waldes zurück. Ist $ignoreZeroLengthTrees$ wahr,
+so werden Bäume ignoriert, die nur aus der Wurzel bestehen.
+}
+
+\proch{int}{Forest::getRefCount}{int x}{forest.h}
+\descr{Zählt die zum Knoten $x$ gehörigen Kinder. Ist für Blätter von 
+Bäumen gleich Null.}
+
+\proch{int}{Forest::getNeighborCount}{int x}{forest.h}
+\descr{Zählt die Zahl der Nachbarn des Knotens $x$.}
+
+\proch{void}{Forest::setFather}{int x,int f=Forest::rootval}{forest.h}
+\descr{
+Setzt den Knoten $f$ als Vater des Knotens $x$ ein. Damit wird $x$ dem 
+entsprechenden Baum zugeordnet. Der Defaultwert $Forest::rootval$ bewirkt, 
+dass der Knoten keinen Vater besitzt und selbst zur Wurzel wird.
+}
+
+\proch{bool}{Forest::isRoot}{int x}{forest.h}
+\descr{Gibt zurück, ob der Knoten $x$ Wurzel eines Baumes ist.}
+
+\proch{bool}{Forest::isLeaf}{int x}{forest.h}
+\descr{Gibt zurück, ob der Knoten $x$ ein Blatt ist. Eine Wurzel ist 
+kein Blatt, auch wenn sie allein steht und somit keine Kinder hat.}
+
+\proch{void}{Forest::makeRoot}{int x}{forest.h}
+\descr{
+Organisiert den zu $x$ gehörenden Baum derart um, dass $x$ die Wurzel wird.
+}
+
+\proch{int}{Forest::Father}{int x}{forest.h}
+\descr{
+Gibt den Index des Vaters des Knotens $x$ zurück. Wenn $x$ die Wurzel 
+des Baumes ist, wird der Wert Forest::rootval zurückgegeben.
+}
+
+\proch{int}{Forest::Root}{int x}{forest.h}
+\descr{
+Ermittelt die Wurzel des Baumes, zu dem der Knoten $x$ gehört.
+}
+
+\proch{int}{Forest::Depth}{int x}{forest.h}
+\descr{Ermittelt die Tiefe des Knotens $x$, das heisst die Zahl der Schritte
+bis zur Wurzel.}
+
+\subsection{Minimal aufspannender Baum}
+\hyperref{MinTree}{}
+Der minimal aufspannende Baum zu einer Punktmenge ist ein Baum, der alle Punkte 
+als Knoten enthält und für den die Summe der Kantenlängen minimal ist. Um 
+einen minimal aufspannenden Baum zu erzeugen, wird zunächst eine Instanz der
+Klasse \class{MinTree} angelegt. Der Konstruktor erzeugt eine interne
+Repräsentation des minimal auspannenden Baumes. Mit den Methoden 
+von \class{MinTree} kann der Baum als \class{Forest} abgefragt werden.
+
+\ctor{MinTree}{const \vector{Point} \&pointlist}{mintree.h}
+\descr{Erzeugt einen minimal aufspannenden Baum zu den Punkten der 
+Punktliste pointlist anhand der euklidischen Distanzen.}
+
+\ctor{MinTree}{const \vector{\vector{double} } \&nodelist,
+const VectorDistance \&vd = EuclideanVectorDistance()}{mintree.h}
+\descr{Erzeugt einen minimal aufspannenden Baum zu den Knoten von
+nodelist. Jeder Knoten ist durch einen Vektor von Merkmalen 
+charakterisiert. Durch Vorgabe einer \class{VectorDistance} kann
+eine beliebige Metrik verwendet werden.}
+ 
+\ctor{MinTree}{const Matrix \&distances}{mintree.h}
+\descr{Erzeugt einen minimal aufspannenden Baum zu Knoten, deren
+Abstände in der Matrix distances vorgegeben sind (\see{DistanceMatrix}).}
+ 
+\method{double}{getTree}{Forest \&f}
+\descr{Speichert den ermittelten minimal aufspannenden Baum 
+im \class{Forest} f.}
+
+\method{double}{getForest}{Forest \&f, double maxlen}
+\descr{Erzeugt aus dem minimal aufspannenden Baum einen Graphen,
+der um alle Kanten länger als maxlen reduziert ist. Das Ergebnis wird 
+in \class{Forest} f gespeichert. Dieser Graph besteht aus mehreren Bäumen.}
+
+\method{double}{getCluster}{Forest \&f, int nCluster}
+\descr{Erzeugt aus dem minimal aufspannenden Baum einen Graphen,
+der durch Entfernen der längsten Kanten in nCluster Teilbäume
+zerlegt ist. Das Ergebnis wird in \class{Forest} f gespeichert. 
+Sind mehrere Kanten gleich lang, so können auch mehr als nCluster
+Teilbäume entstehen, da bei Kanten gleicher Länge immer alle diese 
+Kanten entfernt werden.}
+
+\proch{double}{computeMinTree}{const vector$<$Point$>$ \&pointlist,Forest \&
+tree,double maxlen=0.0}{mintree.h}
+\procf{double}{computeMinTree}{const Matrix \&pointlist,Forest \& tree,double maxlen=0.0}
+\descr{Für die Punkte der übergebene Liste $pointlist$ wird der minimal 
+aufspannende Baum berechnet und auf $tree$ zurückgegeben. 
+Mit dem Parameter $maxlen$ kann eine Grenze für die Länge der
+Kanten angegeben werden. Das Ergebnis ist dann ein Wald, also mehrere Bäume. 
+Ist $maxlen$ gleich 0 wird keine Schranke angenommen. 
+Rückgabewert ist die Summe der Kantenlängen im Baum bzw. in den Bäumen.}
+
+\proch{vector$<$vector$<$int$>$ $>$}{SplitToBranches}{Forest f}{mintree.h}
+\descr{Zerlegt einen Baum in Äste. Äste sind Pfade zwischen 
+Verzweigungspunkten. Ein Ast wird durch 
+die Indizes der Knoten als vector$<$int$>$ beschrieben. Alle Äste werden 
+dementsprechend als vector$<$vector$<$int$>$ $>$ zurückgegeben. Bäume in $f$, 
+die nur aus einer Wurzel bestehen, werden ignoriert.}
+
+\proch{int}{cutShortBranches}{Forest \&f,const vector$<$Point$>$ \&pointlist,double minlen}{mintree.h}
+\procf{int}{cutShortBranches}{Forest \&f,const Matrix \&pointlist,double minlen}
+\descr{
+Beschneidet Zweige eines Baumes, die eine Länge unter $minlen$ aufweisen. Die 
+abgeschnittenen Knoten werden in $f$ als Bäume ``der Länge Null'' geführt: 
+Sie sind Wurzel eines Baumes ohne weiteren Punkt. 
+}
+
+\begprogr
+\begin{verbatim}
+// Erzeugung und Darstellung eines minimal aufspannenden Baumes 
+
+   vector<Point> points; // Punktliste anlegen
+
+   for (int i=0;i<n;i++)
+       points.push_back(Point(x,y)); // Punkte an Punktliste anhängen
+
+   Forest mintree;  
+   MinTree(points,mintree); // minimal aufspannenden Baum ermitteln
+   
+   for (int i=0;i<mintree.Size();i++)
+    {
+      int father = mintree.Father(i); // Vater des aktuellen Knotens
+      if (father != Forest::rootval) // Knoten ist nicht die Wurzel
+      {
+        Line(points[i],points[father],2,pic); // Verbindung einzeichnen
+      }
+    }
+// Analyse der Äste des Baues
+   vector<vector<int> > branches=SplitToBranches(mintree);
+
+   for (int i=0;i<branches.size();i++)  // für alle Äste
+     {
+       for (int j=1;j<branches[i].size();j++) // alle Kanten des Astes        
+         {
+            Line(points[branches[i][j-1]],points[branches[i][j]],i,pic);
+         }
+     }
+
+\end{verbatim}
+\endprogr
+
+\subsection{Dijkstra}
+Der Algorithmus von Dijkstra sucht einen Pfad mit minimalen Kosten in 
+einem Graphen. In bezug auf Bilder wird der Nachbarschaftsgraph für die
+8er-Nachbarschaft verwendet und die Kosten entsprechen der Grauwertsumme 
+auf dem Pfad.
+
+\proch{\bsee{Contur}}{Dijkstra}{const Image \&img,\bsee{IPoint} s,IPoint e}{dijkstra.h}
+\descr{
+Bestimmt einen Pfad mit minimalen Kosten im Bild $img$ zwischen Startpunkt s 
+und Zielpunkt $e$ und gibt diesen als \bsee{Contur} zurück.
+}
+
+\proch{Contur}{Dijkstra}{const Image \&img,IPoint s,Image \&e}{dijkstra.h}
+\descr{
+Bestimmt einen Pfad mit minimalen Kosten im Bild $img$ zwischen Startpunkt s 
+und einem in $e$ markierten Punkt und gibt diesen als \bsee{Contur} zurück. Das 
+Bild $e$ muss die gleiche Größe wie $img$ haben und die möglichen Endpunkte müssen 
+einen Wert ungleich Null besitzen. Nach Ablauf von Dijkstra stehen in dem Bild $e$ 
+die Richtungskodes der untersuchten Pfade.
+}
+
+\begprogr
+\begin{verbatim}
+// Ermittlung und Darstellung eines optimalen Pfades mit Dijkstra
+
+   Image img;
+   Image mrk;
+   ...
+   Contur res=Dijkstra(img,IPoint(5,5),IPoint(225,225));
+   MarkContur(c,1,mrk);
+   ...
+   ClearImg(mrk);
+   Line(555,4,666,500,1,mrk); // "ausgedehntes" Ziel
+   res=Dijkstra(img,IPoint(5,5),mrk);
+   ClearImg(mrk);
+   MarkContur(c,1,mrk);
+
+\end{verbatim}
+\endprogr
+
+\subsection{Delaunay-Triangulation}
+Die Delaunay-Triangulation einer Punkt-Menge erfolgt mittels der Klasse
+\class{Delaunay}. Die Konstruktion der Klasse mittels einer Punktmenge als 
+\verb+vector<Point>+ führt die Triangulation aus. Danach kann mittels der 
+weiteren Methoden das Ergebnis in verschiedenen Formen abgefragt werden 
+und mittels Delaunay::draw gezeichnet werden.
+
+\subsubsection{Konstruktoren}
+\proch{}{Delaunay::Delaunay}{\vector{Point} \&nodesp}{delaunay.h}
+\descr{Konstruiert einen Delaunay-Graphen mit den übergebenen Punkten 
+als Ecken.}
+
+\proch{}{Delaunay::Delaunay}{const PolygonalCurve \&curv}{delaunay.h}
+\descr{Konstruiert einen Delaunay-Graphen aus den Eckpunkten einer
+geschlossenen polygonalen Kurve (\class{PolygonalCurve}) oder einem 
+Polygon (\class{Polygon}).
+}
+
+\subsubsection{Ergebnis-Abfrage}
+Die Ergebnisse werden als Liste von Kanten beziehungsweise Dreiecken 
+bereitgestellt. Dabei gibt es jeweils Varianten, die dies als 
+geometrisches Objekt oder über die Indizes der Knoten in der 
+originalen Punktliste bereitstellen. Optional kann die Ausgabe dabei
+auf Kanten und Dreiecke beschränkt werden, deren Kantenlänge ein übergebenes
+Limit nicht übersteigt. Wird das Limit nicht angegeben oder ist dessen
+Wert kleiner gleich Null, so erfolgt keine Bschränkung.
+
+\proch{void}{Delaunay::getTriangles}{\vector{Triangle} \&output, double limit = -1}{delaunay.h}
+\descr{Die Dreiecke werden als Vektor von \class{Triangle} zurückgegeben.}
+
+\proc{void}{Delaunay::getTrianglesI}{\vector{\vector{int}} \&output, double limit = -1}
+\descr{Die Indizes der Eckpunkte jedes Dreiecks in der Originalpunktliste
+werden als \vector{int} mit 3 Elementen zurückgegeben, alle Dreiecke bilden 
+demnach einen \vector{\vector{int}}.
+}
+
+\proch{void}{Delaunay::getEdges}{\vector{LineSeg} \&output, double limit = -1}{delaunay.h}
+\descr{Die Kanten werden als Vektor von \class{LineSeg} zurückgegeben.}
+
+\proch{void}{Delaunay::getEdgesI}{\vector{\vector{int}} \&output, double limit = -1}{delaunay.h}
+\descr{Die Kanten werden durch die Indizes ihrer Endpunkte in der 
+Originalpunktliste in einem \vector{int} der Länge 2 beschrieben. Alle Kanten
+bilden demnach einen \vector{\vector{int}}.}
+
+\proch{void}{Delaunay::getRegion}{Region \&region, double limit = -1}{delaunay.h}
+\descr{Die Fläche der Triangulation = die Fläche aller Dreiecke wird
+als Region bereitgestellt. Ohne Beschränkung durch limit ist dies
+die konvexe Hülle.}
+
+\proch{void}{Delaunay::draw}{const Image \&img, int edgeValue = 1, int fillValue = -1, double limit = -1}{delaunay.h}
+\descr{Stellt die Triangulation im Bild img dar. Die Kanten werden mit dem Wert
+edgeValue, die Fläche der Dreiecke mit fillValue gezeichnet. Werden diese
+Werte mit negativen Werten angegeben, erfolgt keine Darstellung.}
+
+ 

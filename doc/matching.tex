@@ -1,0 +1,89 @@
+\lsection{Matching von Bild- und Modellbeschreibungen}
+
+\proc{double}{RecErrPCorr}{PointCorr *pc,int n,int start,camera cam,Frame *f}
+\descr{
+Aus dem Feld von $n$ Punktkorrespondenzen wird der mittlere Bildpunktfehler
+berechnet. dazu wird, beginnend bei $pc[start]$ der Raumpunkt mit $f$ und
+$cam$ in die Bildebene abgebildet und der Abstand zu dem zugehörigen Bildpunkt
+berechnet. 
+}
+\proc{double}{MeshRecError}{Mesh msh,Mesh3D sf,int disp,camera cam,Frame *f}
+\descr{
+Es wird der Rekonstruktionsfehler berechnet, wenn die Maschen $msh$ und $sf$
+mit einer Startpunktverschiebung $disp$ einander zugeordnet werden.
+}
+\proc{int}{TestMesh}{Mesh msh, Mesh3D sf,int disp,camera cam,Frame *f,double
+maxerr}
+\descr{
+Es wird untersucht, wie viele der mit mit den Maschen $msh$ bzw $sf$
+zusammenhängende Maschen sich mit dem maximalen Bildpunktfehler $maxerr$
+zuordnen lassen.
+}
+\proc{int}{ReconTestMatch}{Mesh msh,Mesh3D sf,camera cam,Frame *fm,int *count}
+\descr{
+Es wird durch Versuchsweise Rekonstruktion untersucht, ob sich die beiden
+Maschen $msh$ und $sf$ zuordnen lassen (unter Berücksichtigung zyklischer
+Vertauschungen). Der Startpunktversatz, die Anzahl der zuordenbaren
+Nachbarmaschen und ggf. das Lageframe werden zurückgegeben. 
+}
+\proc{int}{InvarTestMatch}{Mesh msh,Mesh3D sf,camera cam,Frame *fm,int *count}
+\descr{
+Es wird durch Vergleich der Fünf-Punkte-Invarianten untersucht,
+ob sich die beiden Maschen $msh$ und $sf$ zuordnen lassen (unter Berücksichtigung
+zyklischer Vertauschungen). Der Startpunktversatz, die Anzahl der zuordenbaren
+Nachbarmaschen und ggf. das Lageframe werden zurückgegeben.
+}
+\proc{Mesh}{GetCandidateMesh}{Description D}
+\descr{
+Es wird aus der Bildbeschreibung $D$ die klassifizierte, noch nicht einer
+Modellmasche zugeordnete Masche mit der größten Kantenzahlherausgesucht. 
+}
+\proc{Mesh}{GetMatchedMesh}{Mesh3D sf, Description D}
+\descr{
+Es wird die Masche der Bildbeschreibung bestimmt, die der Modellmasche $sf$
+zugeordnet ist. Voraussetzung ist, daß für alle Knoten der Modellmasche ein
+korrespondierender Knoten in der Bildbeschreibung gefunden wurde.
+}
+\proc{int}{MarkMatchedMesh}{Mesh3D sf}
+\descr{
+In der zu $sf$ korrespondierenden Bildmasche wird der Verweis auf $sf$ eingetragen.
+}
+\proc{int}{DeleteMatch}{Mesh msh,Model mod}
+\descr{
+In der Masche $msh$ wird der Verweis auf das Modell $mod$ gelöscht.
+}
+\proc{int}{IsMatched}{Mesh msh,Mesh3D sf}
+\descr{
+Es wird getestet, ob in der Masche $msh$ ein Verweis auf die Masche $sf$
+eingetragen ist.
+}
+\proc{int}{ReconModel}{Model mod,Description D,camera cam}
+\descr{
+Das (bereits erkannte) Modell $mod$ wird in mit dem in $mod$ enthaltenen
+Lageframe und der Kamera $cam$ abgebildet und jedem projizierten
+Modellknoten wird der nächstgelegene Knoten der Bildbeschreibung zugeordnet,
+sofern der Abstand nicht größer als vier Bildpunkte ist.
+}
+\proc{ModelList}{CreateSzeneRepresentation}{Description D, ModelList M,camera
+cam}
+\descr{
+Es wird eine Modelliste als Szenenbeschreibung angelegt, indem für die Maschen
+der Bildbeschreibung korrespondierende Modellmaschen gesucht werden.
+}
+\proc{ModelList}{UpdateSzeneRepresentation}{Description D, ModelList M,camera
+cam,ModelList S}
+\descr{
+Die Szenenbeschreibung $S$ wird um die Modelle aus der Modelliste $M$
+erweitert, die sich als Korrespondenzen der Bildbeschreibung $D$ zuordnen lassen.
+}
+\proc{void}{DeleteWrongModels}{ModelList S}
+\descr{
+Wenn einzelnen Maschen der Bildbeschreibung mehrere Modelle zugeornet wurden,
+werden die Modelle mit der geringeren Zahl von korrespondierenden Knoten und
+dem größeren Bildpunktfehler aus der Szenenbeschreibung gelöscht.
+}
+\proc{void}{WriteSzeneRepresentation}{ModelList S,char *file}
+\descr{
+Die Szenenbeschreibung $S$ wird als Textfile mit dem Namen $file$ ausgegeben.
+}
+

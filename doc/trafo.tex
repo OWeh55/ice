@@ -1,0 +1,332 @@
+\nsection{Geometrische Transformationen}{geoTrafo}
+
+\subsection{Die Klasse Trafo}
+\label{Trafo}
+\hypertarget{Trafo}{}
+
+Projektive und affine Transformationen werden durch Objekte der
+Klasse $Trafo$ beschrieben. Dabei wird intern mit homogenen
+Koordinaten gerechnet und die Transformation durch die 
+entsprechende Transformations-Matrix beschrieben.
+Es existieren Methoden, die das Zusammensetzen einer Transformation 
+aus speziellen affinen Transformationen erlauben. Dabei wird die 
+hinzuzufügende Transformations-Matrix jeweils von links mit der
+bereits vorhandenen Transformation multipliziert, was der nachfolgenden 
+Ausführung der hinzuzufügenden Transformation entspricht.
+\subsubsection{Konstruktoren und Destruktoren}
+\proch{}{Trafo::Trafo}{void}{geo.h}
+\descr{Initialisieren einer 2D-2D-Transformation mit der identischen
+Transformation (Einheitsmatrix).}
+\proch{}{Trafo::Trafo}{const Trafo \&}{geo.h}
+\descr{Initialisieren einer Transformation mit einer gegebenen
+Transformation (Copy-Konstruktor).}
+\proch{}{Trafo::Trafo}{const Matrix \&}{geo.h}
+\descr{Initialisieren einer Transformation anhand einer gegebenen
+Transformations-Matrix (Klasse \see{Matrix}).}
+\proch{}{Trafo::Trafo}{int dims,int dimd}{geo.h}
+\descr{Initialisieren einer Transformation aus dem Raum der Dimension
+$dims$ in den Raum der Dimension $dimd$.}
+\subsubsection{Operatoren und elementare Funktionen}
+\proch{Trafo \&}{Trafo::operator =}{const Trafo \&}{geo.h}
+\descr{Zuweisungs-Operator}
+\proch{Trafo \&}{Trafo::operator =}{const Matrix \&}{geo.h}
+\descr{Umwandlung einer (Transformations-)Matrix in eine 
+Transformation und Zuweisung an eine bestehende Transformation.}
+
+\proch{double \&}{Trafo::operator ()}{int x,int y}{geo.h}
+\descr{Zugriff auf das Element [i,j] der Transformationsmatrix
+\see{Trafo::Tmatrix}.
+}
+
+\proch{Trafo}{operator *}{const Trafo \&,const Trafo \&}{geo.h}
+\descr{Multiplikation zweier Transformationen = Hintereinander-Ausführung.
+Das Ergebnis ist wieder eine Transformation (Klasse Trafo) }
+\proch{Vector}{operator *}{const Trafo \&,const Vector \&}{geo.h}
+\descr{Multiplikation einer Transformation mit einem $Vector$ = 
+Anwendung der Transformation auf den Vektor. Das Ergebnis ist der
+transformierte Vektor}
+\proch{int}{Trafo::DimS}{void}{geo.h}
+\descr{Liefert die Dimension des Ausgangs-Raumes der Transformation.}
+\proch{int}{Trafo::DimD}{void}{geo.h}
+\descr{Liefert die Dimension des Ziel-Raumes der Transformation.}
+\proch{Matrix}{Trafo::Tmatrix}{void}{geo.h}
+\descr{Liefert die Transformations-Matrix als Objekt der Klasse
+\see{Matrix}.}
+\proch{Matrix}{Trafo::Init}{void}{geo.h}
+\descr{Setzt die Transformation zurück in den Zustand wie nach dem Anlegen
+durch den Konstruktor.}
+\proch{int}{Trafo::Invert}{}{geo.h}
+\descr{Invertiert die Transformation.}
+\proch{Trafo}{Trafo::Inverse}{}{geo.h}
+\descr{Gibt die invertierte Transformation zurück.}
+\subsubsection{Konstruktion allgemeiner Transformationen aus
+elementaren Transformationen}
+Die folgendenden Methoden fügen einer bestehenden Transformation eine weitere
+Transformation hinzu (im Sinne der Hintereinanderausführung). Um eine bereits verwendete Transformation neu zu belegen, muß diese mit \see{Trafo::Init} zuückgesetzt werden.
+\proch{int}{Trafo::Shift}{double x0,double y0}{geo.h}
+\descr{Hinzufügen einer Translation um $(x0,y0)$
+an eine xD-2D-Transformation.}
+\proch{int}{Trafo::Shift}{double x0,double y0,double y0}{geo.h}
+\descr{Hinzufügen einer Translation um $(x0,y0,y0)$
+an eine xD-3D-Transformation.}
+\proch{int}{Trafo::Shift}{vector3d v}{geo.h}
+\descr{Hinzufügen einer Translation um $v$
+an eine xD-3D-Transformation.}
+\proch{int}{Trafo::Shift}{Vector v}{geo.h}
+\descr{Hinzufügen einer Translation um $v$
+an eine Transformation. Die Dimension des Ziel-Raumes der Transformation
+muß gleich der Dimension des Verschiebungsvektors sein.}
+
+\proch{int}{Trafo::Rotate}{double x0,double y0,double phi}{geo.h}
+\descr{Hinzufügen einer Rotation um den Punkt $(x0,y0)$ um
+den Winkel $phi$ (Bogenmaß) an eine xD-2D-Transformation.}
+\proch{int}{Trafo::Rotate}{vector3d point,vector3d dir,double phi}{geo.h}
+\descr{Hinzufügen einer Rotation um den Strahl vom Punkt $point$ 
+mit der Richtung $dir$ um den Winkel $phi$ (Bogenmaß)an eine 
+xD-3D-Transformation.}
+
+\proch{int}{Trafo::RotateX}{double phi}{geo.h}
+\proch{int}{Trafo::RotateY}{double phi}{geo.h}
+\proch{int}{Trafo::RotateZ}{double phi}{geo.h}
+\descr{Hinzufügen einer Rotation um die jeweilige Achse des
+Koordinatensystems um den Winkel $phi$ (Bogenmaß)an eine 
+xD-3D-Transformation.}
+
+\proch{int}{Trafo::Flip}{int axis}{geo.h}
+\descr{Hinzufügen einer Spiegelung, die die angebene Achse invertiert.}
+
+\proch{int}{Trafo::ShearX}{double dxy}{geo.h}
+\descr{Hinzufügen einer Scherung in Richtung der X-Achse an eine 
+xD-2D-Transformation. Der Parameter ist der Quotient aus der Verschiebung
+in X-Richtung und dem Y-Koordinatenwert.}
+\proch{int}{Trafo::ShearY}{double dyx}{geo.h}
+\descr{Hinzufügen einer Scherung in Richtung der Y-Achse an eine 
+xD-2D-Transformation. Der Parameter ist der Quotient aus der Verschiebung
+in Y-Richtung und dem X-Koordinatenwert.}
+\proch{int}{Trafo::Scale}{double x0, double y0, double f}{geo.h}
+\descr{Hinzufügen einer isotropen Skalierung um den 
+Punkt $(x0,y0)$ um den Faktor $f$ an eine xD-2D-Transformation.}
+\proch{int}{Trafo::Scale}{double x0, double y0, double fx,double fy}{geo.h}
+\descr{Hinzufügen einer anisotropen Skalierung um den 
+Punkt $(x0,y0)$ um die Faktor $fx$ bzw. $fy$ in X- bzw. Y-Richtung
+an eine xD-2D-Transformation.}
+\proch{int}{Trafo::Scale}{vector3d v, double f}{geo.h}
+\descr{Hinzufügen einer isotropen Skalierung um den 
+Punkt $v$ um den Faktor $f$ an eine xD-3D-Transformation.}
+\proch{int}{Trafo::Scale}{vector3d v, double fx,double fy,double fz}{geo.h}
+\descr{Hinzufügen einer anisotropen Skalierung um den 
+Punkt $v$ um die Faktor $fx$, $fy$ bzw. $fz$ in X-, Y- bzw. Z-Richtung
+an eine xD-3D-Transformation.}
+\proch{int}{Trafo::Scale}{Vector v, double f}{geo.h}
+\descr{Hinzufügen einer isotropen Skalierung um den 
+Punkt $v$ um den Faktor $f$ an eine Transformation.}
+\proch{int}{Trafo::Scale}{Vector v, Vector f}{geo.h}
+\descr{Hinzufügen einer anisotropen Skalierung um den
+Punkt $v$ an eine Transformation, wobei die Faktoren für die
+verschiedenen Koordinatenrichtungen im Vektor $f$ abgelegt sind.}
+
+\proch{int}{Trafo::Projective}{void}{geo.h}
+\descr{Hinzufügen einer projektiven Abbildung, die die Dimension 
+des Raumes um 1 vermindert. Die Abbildung erfolgt durch eine 
+projektive Abbildung mit dem Ursprung als Zentrum in den Unter-Raum, bei 
+dem die letzte Koordinate den Wert 1 hat.}
+
+\subsubsection{Anwendung von Transformationen}
+
+\proc{int}{Transform}{const Trafo \&,double \&x,double \&y}
+\descr{Wendet die 2D-2D-Transformation auf $(x,y)$ an und
+ändert die Variablen-Werte entsprechend.}
+
+\proc{int}{Transform}{const Trafo \&,Point \&p}
+\descr{Wendet die 2D-2D-Transformation auf $p$ an.}
+
+\proc{int}{Transform}{const Trafo \&,double x,double y,double \&xt,double
+\&yt}
+\descr{Wendet die 2D-2D-Transformation auf $(x,y)$ an und
+gibt das Ergebnis auf den Variablen $xt$ und $yt$ zurück.}
+
+\proc{int}{Transform}{const Trafo \&,Point p1,Point \&p2}
+\descr{Wendet die 2D-2D-Transformation auf $p$ an und gibt das Ergebnis auf $p2$ zurück.}
+
+\proc{int}{TransformAndRound}{const Trafo \&,int \&x,int \&y}
+\descr{Wendet die 2D-2D-Transformation auf $(x,y)$ an und
+ändert die Variablen-Werte entsprechend. Die ganzzahligen Werte sind 
+gegenüber den exakten Werten gerundet.}
+
+\proc{int}{TransformAndRound}{const Trafo \&,int x,int y,int \&xt,int \&yt}
+\descr{Wendet die 2D-2D-Transformation auf $(x,y)$ an und
+gibt das Ergebnis auf den Variablen $xt$ und $yt$ zurück. Die ganzzahligen Werte sind 
+gegenüber den exakten Werten gerundet.}
+
+\proc{int}{Transform}{const Trafo \&,double \&x,double \&y,double \&z)}
+\descr{Wendet die 3D-3D-Transformation auf $(x,y,z)$ an und
+ändert die Variablen-Werte entsprechend.}
+
+\proc{int}{Transform}{const Trafo \&,double x,double y,double z,double
+\&xt,double \&yt,double \&zt}
+\descr{Wendet die 3D-3D-Transformation auf $(x,y,z)$ an und
+gibt das Ergebnis auf den Variablen $xt$, $yt$ und $zt$ zurück.}
+\proc{int}{Transform}{const Trafo \&,double x,double y,double z,double
+\&xt,double \&yt}
+
+\descr{Wendet die 3D-2D-Transformation auf $(x,y,z)$ an und
+gibt das Ergebnis auf den Variablen $xt$ und $yt$ zurück.}
+
+\proc{int}{TransformList}{const Trafo \&tr,Matrix \&m}
+\procf{int}{TransformList}{const Trafo \&tr,const Matrix \&m,Matrix \&m2}
+\descr{Interpretiert die Matrix $m$ als Punktliste (jede Zeile
+enthält die Koordinaten eines Punktes) und transformiert diese
+mittels der Trafo $tr$. Das Ergebnis ist die transformierte Matrix $m$
+beziehungsweise die Matrix $m2$.}
+
+\proc{Contur}{Transform}{const Trafo \& tr,const Contur \& c}
+\descr{Wendet die 2D-2D-Transformation auf die Kontur $c$ an 
+und gibt die transformierte Kontur zurück}
+
+\proc{int}{Transform}{const Trafo \&,const Image \&simg,Image \&dimg,int mode=DEFAULT}
+\proc{int}{Transform}{const Trafo \&,const Image \&simg,Image \&dimg,int mode,
+Image \&mark,int val=1}
+\descr{Wendet die 2D-2D-Transformation auf das Bild $simg$ an 
+und schreibt das Ergebnis in das Bild $dimg$. Da man bei der 
+Transformation der Bildpunkte im allgemeinen keine ganzzahligen 
+Koordinaten erhält, werden die Grauwerte für $mode$=INTERPOL 
+bilinear interpoliert. Bei $mode$=DEFAULT werden die Koordinaten 
+gerundet. Wenn der Originalpunkt zu einem Pixel des Zielbildes ausserhalb des
+Quellbildes liegt, kann kein Grauwert berechnet werden und es wird der Wert
+Null eingetragen. Wird als Parameter $mark$ ein Bild angegeben, so werden
+diese Pixel in diesem Bild mit dem Wert $val$ belegt.
+}
+\seealso{TransImg} 
+
+\subsection{Verzeichnungen}
+\label{Distortion}
+\hypertarget{Distortion}{}
+
+Verzeichnungen von Kameras werden üblicherweise als radialsymmetrisch 
+angenommen. Die Enstehung eines verzeichneten Bildes aus einem 
+unverzerrten Bild wird als Änderung des Abstandes $r$ vom 
+Symmetriezentrum (x0,y0) beschrieben. 
+
+In ICE stehen die Klassen {\bf Distortion0}, {\bf Distortion1}, {\bf Distortion2} und 
+{\bf Distortion3} zur Verfügung, die von der abstrakten Basisklasse  {\bf
+Distortion} abgeleitet sind.
+
+Diese Klassen realisieren die folgenden Verzeichnungs-Modelle:
+\begin{itemize}
+\item[Distortion0:] $r'=r \cdot (1 + d_2 \cdot r^2)$
+\item[Distortion1:] $r'=r \cdot (1 + d_2 \cdot r^2 + d_4 \cdot r^4)$
+\item[Distortion2:] $r'=r \cdot (1 + d_2 \cdot r^2 + d_3 \cdot r^3 + d_4 \cdot r^4)$
+\item[Distortion3:] $r'=r \cdot (1 + d_2 \cdot r^2 + d_4 \cdot r^4 + d_6 \cdot r^6)$
+\end{itemize}
+
+\subsubsection{Konstruktoren}
+Verzeichnungen können durch direkte Angabe von Verzeichnungsparametern oder
+durch die Ermittlung aus Punktkorrespondenzen angelegt werden. 
+
+\proch{}{Distortion0::Distortion0}{void}{distort.h}
+\procf{}{Distortion1::Distortion1}{void}
+\procf{}{Distortion2::Distortion2}{void}
+\procf{}{Distortion3::Distortion3}{void}
+\procf{}{Distortion0::Distortion0}{double x0,double y0,double d2=0.0}
+\procf{}{Distortion1::Distortion1}{double x0,double y0,double d2=0.0,
+double d4=0.0}
+\procf{}{Distortion2::Distortion2}{double x0,double y0,double d2=0.0,
+double d3=0.0,double d4=0.0}
+\procf{}{Distortion3::Distortion3}{double x0,double y0,double d2=0.0,
+double d4=0.0,double d6=0.0}
+\descr{
+Ein Verzeichnungs-Objekt wird angelegt und mit den gegebenen Werten
+initialisiert.}
+
+\proch{}{Distortion0::Distortion0}{const Matrix \&mark,const Matrix \&orig,Trafo \&tr,const Vector \&ImageCenter}{distort.h}
+\procf{}{Distortion0::Distortion0}{const Matrix \&mark,const Matrix \&orig,const Vector \&ImageCenter}
+\procf{}{Distortion0::Distortion0}{const Matrix \&mark,const Matrix \&orig}
+\procf{}{Distortion1::Distortion1}{const Matrix \&mark,const Matrix \&orig,Trafo \&tr,const Vector \&ImageCenter}
+\procf{}{Distortion1::Distortion1}{const Matrix \&mark,const Matrix \&orig,const Vector \&ImageCenter}
+\procf{}{Distortion1::Distortion1}{const Matrix \&mark,const Matrix \&orig}
+\procf{}{Distortion2::Distortion2}{const Matrix \&mark,const Matrix \&orig,Trafo \&tr,const Vector \&ImageCenter}
+\procf{}{Distortion2::Distortion2}{const Matrix \&mark,const Matrix \&orig,const Vector \&ImageCenter}
+\procf{}{Distortion2::Distortion2}{const Matrix \&mark,const Matrix \&orig}
+\procf{}{Distortion3::Distortion3}{const Matrix \&mark,const Matrix \&orig,Trafo \&tr,const Vector \&ImageCenter}
+\procf{}{Distortion3::Distortion3}{const Matrix \&mark,const Matrix \&orig,const Vector \&ImageCenter}
+\procf{}{Distortion3::Distortion3}{const Matrix \&mark,const Matrix \&orig}
+\descr{
+$mark$ stellt eine Liste von im Bild vermessenen Markern bereit, $orig$
+enthält eine 2D-Liste der originalen Position der Marker. Es wird die
+Verzeichnung konstruiert. Das zugrunde liegende Modell ist eine projektive
+2D-2D-Transformation gefolgt von der Verzeichnung. Dies entspricht der
+Aufnahme einer ebenen Vorlage mit Markierungen mit einer Kamera. Wenn bereits
+bekannt, kann für eine projektive 2D-2D-Transformation als Startwert $tr$
+übergeben werden. Nach der Rückkehr ist diese Transformation auf die
+ermittelte (optimierte) projektive Transformation gesetzt. $ImageCenter$
+übergibt einen Startwert für die Lage des Symmetriezentrums.
+}
+
+\subsubsection{Zugriff auf die Daten der Verzeichnung}
+\proch{double}{Distortion::X0}{void}{distort.h}
+\descr{Es wird die X-Koordinate des Symmetriezentrums der Verzeichnung
+zurückgegeben.}
+\proch{double}{Distortion::Y0}{void}{distort.h}
+\descr{Es wird die Y-Koordinate des Symmetriezentrums der Verzeichnung
+zurückgegeben.}
+
+\proch{double}{Distortion0::D2}{void}{distort.h}
+\descr{Es wird der Wert von d2 zurückgegeben.}
+
+\proch{double}{Distortion1::D2}{void}{distort.h}
+\descr{Es wird der Wert von d2 zurückgegeben.}
+\proch{double}{Distortion1::D4}{void}{distort.h}
+\descr{Es wird der Wert von d4 zurückgegeben.}
+
+\proch{double}{Distortion2::D2}{void}{distort.h}
+\descr{Es wird der Wert von d2 zurückgegeben.}
+\proch{double}{Distortion2::D3}{void}{distort.h}
+\descr{Es wird der Wert von d3 zurückgegeben.}
+\proch{double}{Distortion2::D4}{void}{distort.h}
+\descr{Es wird der Wert von d4 zurückgegeben.}
+
+\proch{double}{Distortion2::D2}{void}{distort.h}
+\descr{Es wird der Wert von d2 zurückgegeben.}
+\proch{double}{Distortion2::D4}{void}{distort.h}
+\descr{Es wird der Wert von d4 zurückgegeben.}
+\proch{double}{Distortion2::D6}{void}{distort.h}
+\descr{Es wird der Wert von d6 zurückgegeben.}
+
+\subsubsection{Anwendung und Invertierung von Verzeichnungen}
+
+\proch{int}{Distortion::Distort}{double \&x,double \&y}{distort.h}
+\procf{int}{Distortion::Distort}{double x,double y,double \&xd,double \&yd}
+\procf{Vector}{Distortion::Distort}{const Vector \&p}
+\procf{Point}{Distortion::Distort}{const Point \&p}
+\descr{Anwendung der Verzeichnung auf einen Punkt. Der Punkt kann mit seinen
+Koordinaten $x$ und $y$, als Punkt vom Typ \see{Point} oder als Vektor 
+vom Typ \see{Vector} gegeben sein.
+Die verzeichneten Kordinaten überschreiben $x$ und $y$ oder werden als 
+$xd$ und $yd$, als Punkt oder als Vektor zurückgegeben.}
+
+\proch{int}{Distortion::Rect}{double \&x,double \&y}{distort.h}
+\procf{int}{Distortion::Rect}{double x,double y,double \&xr,double \&yr}
+\procf{Vector}{Distortion::Rect}{const Vector \&p}
+\procf{Point}{Distortion::Rect}{const Point \&p}
+\descr{Invertierung der Verzeichnung eines Punktes. Der Punkt kann mit seinen
+Koordinaten $x$ und $y$, als Punkt vom Typ \see{Point} oder als Vektor vom 
+Typ \see{Vector} gegeben sein. Die unverzeichneten Kordinaten überschreiben 
+$x$ und $y$ oder werden als $xd$ und $yd$, als Punkt oder als Vektor 
+zurückgegeben.}
+
+\proch{Image}{Distortion::RectImg}{Image source,int mode=DEFAULT}{distort.h}
+\procf{Image}{Distortion::RectImg}{Image source,Image dest,int mode=DEFAULT}
+\descr{Entzerrt das verzeichnete Bild $source$ und überschreibt $source$
+beziehungsweise schreibt es als neues Bild $dest$. Punkte im Zielbild, zu
+denen kein Punkt im Quellbild existiert, werden mit Null belegt. Die
+Bestimmung der Grauwerte erfolgt je nach Modus:
+\begin{itemize}
+\item $mode=DEFAULT$ Es wird der Wert des nächstgelegenen Pixels verwendet.
+\item $mode=INTERPOL$ Es werden die Werte der Nachbarn bilinear interpoliert.
+\end{itemize}
+Rückgabewert ist das Zielbild.}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

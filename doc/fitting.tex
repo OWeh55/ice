@@ -1,0 +1,405 @@
+\nsection{Fitting}{fitting}
+
+Zusätzlich zu den hier vorgestellten Wegen kann das Fitting von Funktionen
+auch durch Verwendung der Klassen der Hierarchie ein- und zweidimensionaler
+Funktionen erfolgen (\see{Funktionen}).
+
+\subsection{Fitting mehrdimensionaler linearer Funktionen}
+\label{GaussFit}
+\hypertarget{GaussFit}{}
+
+Die Klasse $GaussFit$ stellt die Mittel zum Bestimmen der Koeffizienten $a_i$ 
+einer Funktion der Form $F(x_1,x_2,..x_i) = \sum_{i=0}^n a_i \cdot x_i$ 
+zur Verfügung.
+
+\seealso{Funktionen}
+
+Konstruktoren:
+\proch{}{GaussFit::GaussFit}{int n=0}{fitgauss.h}
+\descr{Legt einen Fit-Bereich mit der Dimension $n$ an.
+Wird die Dimension $n$ mit 0 angegeben, so muss diese 
+durch Aufruf von \see{GaussFit::Init} vor der Benutzung der
+Instanz noch festgelegt werden.}
+
+Methoden:
+
+\proch{void}{GaussFit::Init}{int n=0}{fitgauss.h}
+\descr{Initialisiert einen (neuen) Fit-Prozess. Ein Wert von $n$ ungleich
+Null legt eine (neue) Dimension der Funktion fest. Diese Funktion muss
+aufgerufen werden, wenn die Dimension im Konstruktor nicht festgelegt wurde
+oder wenn nach einer Verwendung ein neuer Fitprozess initialisiert werden 
+soll.}
+
+\proch{void}{GaussFit::Value}{const \bsee{Vector} \&x,double y,double w=1.0}{fitgauss.h}
+\procf{void}{GaussFit::Value}{\vector{double} \&x,double y,double w=1.0}
+\descr{Übergibt einen Wert für das Fitting. Der Vektor $x$ enthält die x-Werte
+  $x_i$, $y$ den zugehörigen Funktionswert. Mit $w$ kann ein Gewicht
+  festgelegt werden.}
+
+\proch{void}{Gaussfit::Finish}{}{fitgauss.h}
+\descr{Schließt das Fitting ab. Muss vor der Abfrage des Resultats
+aufgerufen werden. Nach dem Abschluss kann das Fitting durch Eingabe weiterer
+Werte fortgesetzt werden, dann muss auch noch einmal {\bf Finish} 
+aufgerufen werden.}
+
+\proch{void}{GaussFit::Fit}{const \bsee{Matrix} \&xn,const \bsee{Vector} \&yn}{fitgauss.h}
+\descr{Fitted eine Funktion an eine Liste von Werten.
+Die Matrix $xn$ enthält zeilenweise x-Vektoren, der Vektor $yn$ die 
+zugehörigen y-Werte. Dieser Aufruf erledigt den vollständigen Fitting-Prozess
+mit {\bf Init}, {\bf Value} und {\bf Finish}.}
+
+\proch{void}{GaussFit::getResult}{Vector \&v}{fitgauss.h}
+\procf{void}{GaussFit::getResult}{\vector{double} \&v}
+\descr{Schreibt die Koeffizienten $a_i$ des Ergebnisses auf v[i].}
+
+\proch{double}{GaussFit::Variance}{}{fitgauss.h}
+\descr{Gibt die Varianz der Funktionswerte zurück.}
+
+\subsection{Adaptives Fitting geometrischer Elemente}
+\label{Adaptives Fitting}
+
+Bei den hier betrachteten Fittung-Funktionen werden geometrische
+(Linien-)Objekte an eine gegebene Punktmenge angepasst. Die Punktmenge wird
+als \vector{Point} oder als \class{Matrix} übergeben.
+
+Wird die Punktmenge als \vector{Point} übergeben, so kann als zusätzlicher 
+Parameter ein \vector{double} übergeben werden, der für jeden Punkt 
+ein Gewicht festlegt. Fehlt dieser Parameter, werden alle Punkte gleich gewichtet.
+
+Wird die Punktmenge als \class{Matrix} übergeben, so müssen die ersten 
+beiden Spalten der Matrix die Koordinaten x und y der Punkte enthalten. 
+Ist eine dritte Spalte vorhanden, wird diese als Gewicht des jeweiligen 
+Punktes interpretiert, sonst werden 
+alle Punkte gleich gewichtet. Alle weiteren Spalten werden ignoriert.
+
+Die Struktur \class{PointList} ist veraltet und sollte nicht mehr 
+verwendet werden. 
+
+Soll die Anpassung an eine Kontur erfolgen, so kann diese einfach mittels 
+\bsee{ConturPointlist} gewandelt werden, zum Beispiel:
+\begin{verbatim}
+Contur c=...;
+Circle c=FitCircle(ConturPointlist(c));
+...
+\end{verbatim}
+
+\subsubsection{Gerade}
+An eine Punktmenge wird eine Gerade angepaßt. Die Punktmenge kann als
+\verb+vector<Point>+ oder als Matrix vorgegeben sein (\see{Adaptives Fitting}).
+
+Es ist möglich eine Anzahl $step$ adaptiver Iterationsschritte vorzugeben.
+Bei den weiteren Iterationsschritten werden die Punkte, die weiter von der im 
+vorhergehenden Schritt angepaßten Geraden entfernt liegen, mit einem 
+geringeren Gewicht versehen.
+
+\proch{LineSeg}{FitLine}{const \vector{Point} \&pl}{fit.h}
+\procf{LineSeg}{FitLine}{const \vector{Point} \&pl,int step}
+\procf{LineSeg}{FitLine}{const \vector{Point} \&pl,const \vector{double} \&weight}
+\procf{LineSeg}{FitLine}{const \vector{Point} \&pl,\vector{double} \&weight,int step}
+\procf{LineSeg}{FitLine}{const Matrix \&pl,int step=0}
+\descr{Die gefundene Gerade wird als Instanz der Klasse \class{LineSeg} 
+zurückgegeben.
+}
+
+\proc{int}{FitLine}{const Matrix \&pl,double \&r,double \&phi,int step=0}
+\descr{Die Parameter $r$ und $phi$ der Hesseschen Normalform der gefundenen 
+  Gerade werden zurückgegeben. 
+  $x \cdot \cos(\phi) + y \cdot sin(\phi) = r$
+}
+
+\proc{int}{FitLine}{const Matrix \&m,double par[2],int step=0}
+\descr{Die Parameter der Hesseschen Normalform der gefundenen Gerade werden im 
+  Array $par$ (2 Elemente) zurückgegeben.
+  $x \cdot \cos(par[1]) + y \cdot sin(par[1]) = par[0]$
+}
+
+\proch{int}{FitLine}{PointList pl,int a1,int a2,int step,double par[2],double *mdist,int *madr}{fit\_pointlist.h}
+\descr{
+An die in einer Punktliste $pl$ zwischen $a1$ und $a2$ angegebenen Punkte wird 
+adaptiv eine Gerade angepaßt. Die Anzahl der Adaptionsschritte ist mit $step$ 
+vorzugeben. In der Adaption werden Punkte, die weiter von der im vorhergenden 
+Schritt angepaßten Geraden entfernt liegen, mit einem geringeren Gewicht 
+versehen. Es werden die Parameter der Hesseschen Normalform 
+$x \cdot \cos(par[1]) + y \cdot sin(par[1]) = par[0]$, der Abstand $mdist$ 
+des am weitesten entfernt liegenden Punktes sowie dessen Adresse $madr$ in
+der Punktliste bereitgestellt. 
+}
+
+\proc{int}{FitLineLinOpt}{PointList pl,int a1,int a2,int step,double
+par[2],double limit=1000000} 
+\descr{
+An die in einer Punktliste $pl$ zwischen $a1$ und $a2$ mit der Schrittweite
+$step$  angegebenen Punkte wird
+mit den Gewichten der Punktliste eine
+Gerade angepaßt. Die gewichtete Ausgleichsrechnung wird mittels linearer
+Optimierung durchgeführt (Simplexmethode),d.h. es wird nicht die Summe der
+Quadrate der Defekte minimiert sondern die Summe der Beträge der Defekte. Der
+Parameter limit (Standard:1000000) wird in einer zusätzlichen
+Beschränkungsrelation zur linearer Optimierung benutzt. Es ist
+möglich, daß dieser Parameter gegebenenfalls vergrößert werden muß. Es werden die
+Parameter der Hesseschen Normalform $x \cdot \cos(par[1]) + y \cdot
+sin(par[1]) = par[0]$ der Geraden bereitgestellt. 
+}
+
+\subsubsection{Kreis}
+An eine Punktmenge wird ein Kreis angepaßt. Die Punktmenge kann als
+\verb+vector<Point>+ oder als Matrix vorgegeben sein (\see{Adaptives Fitting}).
+Es ist möglich eine Anzahl $step$ adaptiver Iterationsschritte vorzugeben. 
+Dabei werden Punkte, die weiter von dem im vorhergehenden Schritt angepassten 
+Kreis entfernt liegen, mit einem geringeren Gewicht versehen.
+
+\proch{Circle}{FitCircle}{const \vector{Point} \&pl}{fit.h}
+\procf{Circle}{FitCircle}{const \vector{Point} \&pl,const \vector{double} \&weight}
+\procf{Circle}{FitCircle}{const \vector{Point} \&pl,int step}
+\procf{Circle}{FitCircle}{const \vector{Point} \&pl,\vector{double} \&weight,int step}
+\proc{Circle}{FitCircle}{const Matrix \&pl,int step=0}
+\descr{Der gefundene Kreis wird als Datenstruktur \see{Circle} zurückgegeben. 
+}
+
+\proch{int}{FitCircle}{const Matrix \&pl,double \&xm,double \&ym,double \&rad,int step=0}{fit.h}
+\descr{Der Mittelpunkt $(xm,ym)$ und der Radius $rad$ des gefundenen Kreises werden 
+  zurückgegeben.}
+
+\proc{int}{FitCircle}{const Matrix \&pl,double par[3],int step=0}
+\descr{Der Mittelpunkt (xm,ym) und der Radius rad des gefundenen Kreises werden 
+  im Array $par$ zurückgegeben (3 Elemente). }
+
+\proc{int}{FitCircle}{PointList pl,int a1,int a2,int step,double par[3],double *mdist,int *madr} 
+\descr{
+An die in einer Punktliste $pl$ zwischen $a1$ und $a2$ angegebenen Punkte wird
+adaptiv ein Kreis angepaßt. In der Adaption werden Punkte, die weiter von dem
+im vorhergenden Schritt angepaßten Kreis entfernt liegen, mit einem geringeren
+Gewicht versehen. Es wird der Mittelpunkt $(par[0],par[1])$, der Radius des Kreises $par[2]$,
+der Abstand $mdist$ des am weitesten entfernt liegenden Punktes sowie dessen
+Adresse $madr$ in der Punktliste bereitgestellt.
+}
+
+\proc{int}{FitCircleLinOpt}{PointList pl,int a1,int a2,int step,double
+par[3],double limit=1000000} 
+\descr{
+An die in einer Punktliste $pl$ zwischen $a1$ und $a2$ mit der Schrittweite
+$step$ angegebenen Punkte wird mit den Gewichten der Punktliste
+ein Kreis angepaßt. Die gewichtete Ausgleichsrechnung wird mittels linearer
+Optimierung durchgeführt (Simplexmethode), d.h. es wird nicht die Summe der
+Quadrate der Defekte minimiert sondern die Summe der Beträge der Defekte.  Der
+Parameter limit (Standard:1000000) wird in einer
+zusätzlichen Beschränkungsrelation zur linearer Optimierung benutzt. Es ist
+möglich, daß dieser Parameter gegebenenfalls vergrößert werden muß. Es
+werden der Mittelpunkt $(par[0],par[1])$ und der Radius des Kreises $par[2]$
+bereitgestellt. Falls der Rückkehrkode nicht
+Null ist, konnte kein Kreis angepasst werden.
+}
+
+\subsubsection{Ellipse}
+An eine Punktmenge wird eine Ellipse angepaßt.  Die Punktmenge kann als
+\verb+vector<Point>+ oder als Matrix vorgegeben sein (\see{Adaptives Fitting}).
+
+Es werden die Quadrate der algebraischen Distanzen 
+$distance = a \cdot x^2 + b \cdot x^2 + c \cdot y^2+d \cdot x + e \cdot y + f$ 
+minimiert. 
+
+Bei der Default-Methode ($mode=1$) wird die Restriktion $ a^2+b^2+c^2+d^2+e^2+f^2=1$ 
+bei der Minimierung verwendet. 
+
+Alternativ ($mode=2$) wird als Restriktion $a + c = 1$ verwendet. In diesem 
+Falle ist das Fitting einer Ellipse kovariant bezüglich 
+Ähnlichkeitstransformationen, d.h. transformiert man die Punktmengen, 
+so sind die beiden gefitteten Ellipsen auch die Abbilder voneinander 
+bezüglich der verwendeten Ähnlichkeitstransformation.
+
+Es ist möglich eine Anzahl $step$ adaptiver Iterationsschritte vorzugeben. 
+Dabei werden Punkte, die weiter von der im vorhergenden Schritt angepaßten 
+Ellipse entfernt liegen, mit einem geringeren Gewicht versehen.
+
+\proch{Ellipse}{FitEllipse}{const Matrix \&pl,int step=0,int mode=1}{fit.h}
+\descr{Die gefundene Ellipse wird als Datenstruktur \see{Ellipse} zurückgegeben. }
+
+\proch{int}{FitEllipse}{const Matrix \&pl,double par[5],int step=0,int mode=1}{fit.h}
+\descr{Die Parameter Mittelpunkt $(par[0],par[1])$,
+  die Halbachsen $par[2]$und $par[3]$, der Drehwinkel $par[4]$ der 
+  gefundenen Ellipse werden im Array $par$ zurückgegeben. 
+}
+
+\proc{int}{FitEllipse}{PointList pl,int a1,int a2,int step,double
+par[5],double *mdist,int *madr,int mode=1}
+\descr{
+An die in einer Punktliste $pl$ zwischen $a1$ und $a2$ angegebenen Punkte wird
+adaptiv eine Ellipse angepaßt. In der Adaption werden Punkte, die weiter von 
+der im vorhergenden Schritt angepaßten Ellipse entfernt liegen, mit einem 
+geringeren Gewicht versehen. Es wird der Mittelpunkt $(par[0],par[1])$, 
+die Halbachsen $par[2]$und $par[3]$, der Drehwinkel $par[4]$, 
+der Abstand $mdist$ des am weitesten entfernt liegenden Punktes sowie 
+dessen Index $madr$ in der Punktliste bereitgestellt.}
+
+\proc{int}{FitEllipseLinOpt}{PointList pl,int a1,int a2,int step,double
+par[5],double limit}
+\descr{
+An die in einer Punktliste $pl$ zwischen $a1$ und $a2$ mit der Schrittweite
+$step$  angegebenen Punkte wird
+eine Ellipse angepaßt. Die gewichtete Ausgleichsrechnung wird mittels linearer
+Optimierung durchgeführt (Simplexmethode), d.h. es wird nicht die Summe der
+Quadrate der Defekte minimiert sondern die Summe der Beträge der Defekte.  Der
+Parameter limit (Standard:1000000) wird in einer
+zusätzlichen Beschränkungsrelation zur linearer Optimierung benutzt. Es ist
+möglich, daß dieser Parameter gegebenenfalls vergrößert werden muß. Es werden der Mittelpunkt $(par[0],par[1])$, die Halbachsen
+$par[2]$und $par[3]$ und der Drehwinkel $par[4]$ der Ellipse
+bereitgestellt. Falls der Rückkehrkode nicht 
+OK ist, konnte keine Ellipse angepasst werden. 
+}
+
+%\proc{int}{FitQuadrFunc}{PointList pl,int a1,int a2,int step,double *par,double *mdist,int *madr}
+%\descr{
+%An die in einer Punktliste $pl$ zwischen $a1$ und $a2$ angegebenen Punkte wird
+%adaptiv eine quadratische Funktion der Form $Ax^2+By^2+Cx+Dy+Exy+F=0$
+%angepaßt. In der Adaption werden Punkte, die weiter von der im vorhergenden
+%Schritt angepaßten Ellipse entfernt liegen, mit einem geringeren Gewicht
+%versehen. Auf $param$ werden die Parameter $A, B, C, D, E, F$ der
+%quadratischen Funktion bereitgestellt. Es werden der Abstand mdist des am
+%weitesten entfernt liegenden Punktes sowie dessen Adresse madr in der
+%Punktliste bereitgestellt. Der Parameter $mode$ spezifiziert das
+%Approximationsmodell:\\
+%$mode=0$  Lagrang'sche Ausgleichung\\
+%$mode=1$  Normierung A=1\\
+%$mode=2$  Normierung B=1\\
+%$mode=3$  Normierung C=1\\
+%$mode=4$  Normierung D=1\\
+%$mode=5$  Normierung E=1\\
+%$mode=6$  Normierung F=1
+%}
+
+\subsubsection{Segmente}
+
+Für die Beschreibung von Geraden-, Kreis- und Ellipsensegmenten wird die
+Datenstruktur $Segment$ verwendet, die den Aufbau von verketteten Listen
+erlaubt.
+\begprogr\begin{verbatim}
+typedef struct Segment_
+{
+  double          p0[2],p1[2];     /*Anfangs- und Endpunkt*/
+  int             typ;             /*Segmenttyp: 1 - Geradensegment*/
+                                   /*            2 - Kreissegment*/
+                                   /*            3 - Ellipsensegment*/
+  double          par[7];          /*Geradensegment: p,phi*/
+                                   /*Kreissegment:   xm,ym,r,psi1,psi2*/
+                                   /*Ellipsensegment:xm,ym,a,b,phi,psi1,psi2*/
+  struct Segment_ *prev,*next;     /*Listenverkettung*/
+}*Segment;
+\end{verbatim}\endprogr
+
+\proc{Segment}{FitLineSegment}{PointList pl,int a1,int a2,int step,double *mdist,int *madr}
+\descr{An die in der Punktliste $pl$ von Adresse $a1$ bis Adresse $a2$
+abgelegten Punkte wird ein Geradensegment angepaßt. Der Punkt mit dem größten
+Abstand $mdist$ zu dem Geradensegment hat die Adresse $madr$.}
+\proc{Segment}{FitCircleSegment}{PointList pl,int a1,int a2,int step,double *mdist,int *madr}
+\descr{An die in der Punktliste $pl$ von Adresse $a1$ bis Adresse $a2$
+abgelegten Punkte wird ein Kreissegment angepaßt. Der Punkt mit dem größten
+Abstand $mdist$ zu dem Kreissegment hat die Adresse $madr$.}
+\proc{Segment}{FitEllipseSegment}{PointList pl,int a1,int a2,int step,double *mdist,int *madr}
+\descr{An die in der Punktliste $pl$ von Adresse $a1$ bis Adresse $a2$
+abgelegten Punkte wird ein Ellipsensegment angepaßt. Der Punkt mit dem größten
+Abstand $mdist$ zu dem Ellipsensegment hat die Adresse $madr$.}
+
+
+\subsection{Kontursegmentierung}
+\proc{Segment}{LineSegContur}{Contur c,int mlng,double mdist}
+\descr{
+Die Kontur $c$ wird in Geradensegmente zerlegt. Die Mindestanzahl der zu einem
+Segment gehörenden Punkte wird durch $mlng$ festgelegt, $mdist$ gibt den
+maximal zulässigen Abstand eines Konturpunktes zu dem nächstliegenden
+Geradensegment an. Rückgabewert ist das erste Element einer Liste von
+Geradensegmenten, die einen Polygonzug bilden. Falls die Kontur geschlossen
+ist, wird durch die Geradensegmente ein geschlossener Polygonzug gebildet.
+}
+
+\proc{PointList}{FitPolygonContur}{Contur c,int mlng,double mdist}
+\descr{
+An die Kontur $c$ wird ein Polygonzug angepaßt. Die Mindestanzahl der zu einer
+Seite des Polygonzuges gehörenden Punkte wird durch $mlng$ festgelegt, $mdist$
+gibt den maximal zulässigen Abstand eines Konturpunktes zum Polygonzug
+an. Rückgabewert ist eine Punktliste mit den Eckpunkten des angepaßten
+Polygons. Falls die Kontur $c$ geschlossen ist, wird der Endpunkt der letzten
+Seite nicht in die Liste aufgenommen, da er mit dem Anfangspunkt der ersten
+Seite identisch ist.
+}
+
+\subsection{Segmentierung von Punktlisten}
+\proc{Segment}{SegmentPointList}{PointList pl, int mode}
+\descr{
+Die Punktliste $pl$ wird in Linien, Kreise und Ellipsen ($mode$=SPL\_ALL),
+in Linien und Kreise ($mode$=SPL\_LINECIRC) oder nur in Linien 
+($mode$=SPL\_LINE) segmentiert. Zurückgegeben wird eine
+Liste vom Typ Segment mit den Parametern der gefundenen Segment oder im
+Fehlerfall NULL. Es wird der Algorithmus aus ``P. L. Rosin: Nonparametric
+Segmentation of Curves into Various Representations. PAMI-17, 1995,
+pp. 1140-1153'' verwendet.\\
+}
+
+\proc{Segment}{SegmentPointList}{PointList pl, int mode, [double maxdev]}
+\descr{
+Die Punktliste $pl$ wird in Linien, Kreise und Ellipsen ($mode$=SPL\_ALL),
+ in Linien
+und Kreise ($mode$=SPL\_LINECIRC) oder nur in Linien ($mode$=SPL\_LINE) 
+segmentiert. Zurückgegeben
+wird eine Liste vom Typ Segment mit den Parametern der gefundenen Segment oder
+im Fehlerfall NULL. Wird der Parameter $mode$ zusätzlich mit SPL\_NOCLOSE
+ODER-verknüpft, so wird nicht versucht, das erste und letzte Segment zu
+verbinden. 
+}
+
+\proc{Segment}{DetermineSegment}{PointList pl, int pa, int pe, int type, Segment sl, int* ma, double* md}
+\descr{
+An den Ausschnitt [$pa$,$pe$] der Punktliste $pl$ wird genau ein 
+Segment angepaßt. Der Parameter type definiert die in Frage kommenden
+Segmenttypen (ODER-Verknüpfung):\\
+DS\_LINE - Liniensegment\\
+DS\_CIRCLE - Kreissegment\\
+DS\_ELLIPSE - Ellipsensegment\\
+Wird eine bereits vorhandene Segmentliste $sl$ übergeben, so wird das
+gefundene Segment angehängt (sonst $sl$=NULL). Der zurückgegebene
+Zeiger $ma$ zeigt auf den Punkt mit dem größten Abstand $md$ vom
+Segment. Rückgabewert ist ein Zeiger auf das gefundene Segment bzw. NULL
+bei Fehler.
+}
+
+\proc{Segment}{LineSegPointList}{PointList pl,int closed,int mlng,double mdist}
+\descr{
+Die geordnete Punktliste $pl$ wird in Geradensegmente zerlegt. Die
+Mindestanzahl der zu einem Segment gehörenden Punkte wird durch $mlng$
+festgelegt, $mdist$ gibt den maximal zulässigen Abstand eines Punktes der Punktliste zu
+dem nächstliegenden Geradensegment an. Rückgabewert ist das erste Element einer
+Liste von Geradensegmenten, die einen Polygonzug bilden. Falls $closed$=TRUE
+ist, wird durch die Geradensegmente ein geschlossener Polygonzug gebildet.
+}
+\proc{PointList}{FitPolygonPointList}{PointList pl,int closed,int mlng,double mdist}
+\descr{
+An die geordnete Punktliste $pl$ wird ein Polygonzug angepaßt. Die
+Mindestanzahl der zu einer Seite des Polygonzuges gehörenden Punkte wird durch $mlng$
+festgelegt, $mdist$ gibt den maximal zulässigen Abstand eines Punktes der
+Punktliste zum Polygonzug an. Rückgabewert ist eine Punktliste mit den
+Eckpunkten des angepaßten Polygons. Falls $closed$=TRUE ist, wird der Endpunkt
+der letzten Seite nicht in die Liste aufgenommen, da er mit dem Anfangspunkt
+identisch ist.
+}
+
+\subsection{Anpassung an Grauwertverläufe}
+
+\proc{double}{FitGrayLine}{Image img, double lp[2][2],int dist, double *p, double *phi}
+\descr{
+Über das Geradensegment mit den Endpunkten $lp[0]$ und $lp[1]$ wird ein
+Fenster der Breite $2 \cdot dist$ gelegt. An die Punkte aus diesem Fenster
+wird eine Gerade angepaßt, wobei die Punkte mit ihrem Grauwert gewichtet
+werden. Punkte, deren Grauwert unterhalb des Mittelwertes im Fenster liegt,
+erhalten das Gewicht Null.
+}
+\proc{double}{FitGradLine}{Image img, double lp[2][2],int dist, double *p, double *phi}
+\descr{
+Über das Geradensegment mit den Endpunkten $lp[0]$ und $lp[1]$ wird ein
+Fenster der Breite $2 \cdot dist$ gelegt. An die Punkte aus diesem Fenster
+wird eine Gerade angepaßt, wobei die Punkte mit ihrem Gradientenbetrag 
+gewichtet werden. Punkte, deren Gradientenbetrag unterhalb des Mittelwertes 
+im Fenster liegt, erhalten das Gewicht 0.0 .
+}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

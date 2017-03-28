@@ -1,0 +1,113 @@
+\lsection{Euklidische Transformationen}
+
+Euklidische Transformationen werden durch homogene Transformationsmatrizen der
+Größe 4x4 beschrieben, die häufig auch als ``Frame'' oder ``Lageframe''
+bezeichnet werden.  Zur Handhabung solcher Transformationsmatrizen dient
+die Datenstruktur $FRAME$, die zusätzlich das Abspeichern einer Fehlermaßzahl
+erlaubt.
+\begprogr\begin{verbatim}
+typedef struct
+  {
+    double frame[4][4];
+    double err;
+  }Frame;
+\end{verbatim}\endprogr
+
+\proc{double*}{FTransPoint}{double p1[3],Frame *f,double p2[3]}
+\descr{
+Der Punkt $p1$ wird mit $f$ transformiert und das Ergebnis auf $p2$ zurückgegeben.
+}
+\proc{double*}{FTransVec}{double v1[3],Frame *f,double v2[3]}
+\descr{
+Der Vektor $v1$ wird mit $f$ transformiert (ohne Translation) und das Ergebnis auf $v2$ zurückgegeben.
+}
+\proc{Frame*}{CatFrames}{Frame *f1,Frame *f2,Frame *f3}
+\descr{
+Die Transformationen $f1$ und $f2$ werden verkettet, so daß $f3$ einer
+Nacheinanderausführung von $f2$ und $f1$ entspricht: $f3=f1 \cdot f2$.
+}
+\proc{Frame*}{InvertFrame}{Frame *f1,Frame *f2}
+\descr{
+Die Transformation $f1$ wird invertiert. Als Ergebnis wird auf $f2$ die
+invertierte Matrix zurückgegeben.
+}
+\proc{int}{CopyFrame}{Frame *f1,Frame *f2}
+\descr{
+Der Inhalt von $f1$ wird nach $f2$ transportiert.
+}
+\proc{int}{CalcPlaneFrame}{double *p,int n,Frame *f}
+\descr{
+$p$ zeigt auf ein Feld von $n$ koplanaren 3D-Punkten. Es wird ein
+Koordinatensystem festgelegt, dessen Ursprung im ersten Punkt liegt, dessen
+x-y-Ebene mit der durch die Punkte bestimmten Ebene übereinstimmt, und dessen
+x-Achse die Richtung des Vektors vom ersten zum zweiten Punkt hat.
+}
+\proc{Frame*}{CameraFrame}{camera cam,Frame *frm}
+\descr{
+Es wird ein Koordinatensystem $frm$ bestimmt, dessen Ursprung im
+Projektionszentrum der Kamera $cam$ liegt, dessen z-Achse mit der optischen
+Achse übereinstimmt und dessen x-Achse mit der x-Achse des Bildes
+übereinstimmt.
+}
+\proc{int}{RecalibCamera}{camera c, Frame *frm}
+\descr{
+Die Parameter der Kamera $c$ werden entsprechend einer Bewegung mit $frm$ transformiert.
+}
+\proc{int}{ReadFrame}{char *file,Frame *f}
+\descr{
+Die Transformationsmatrix $f$ wird vom File $file$ eingelesen.
+}
+\proc{int}{WriteFrame}{Frame *f,char *file}
+\descr{
+Die Transformationsmatrix $f$ wird auf das File $file$ geschrieben.
+}
+\proc{Frame*}{MakeFrame}{int mode,double par[6],Frame *frm}
+\descr{
+Aus den Eulerschen Parametern $par$ wird eine Transformationsmatrix
+erzeugt. Die ersten drei Komponenten von $par$ werden als Eulersche Winkel
+$a$, $b$ und $c$ interpretiert, die letzten drei Komponenten als
+Translationsparameter. Aus den Eulerschen Winkeln $a$, $b$ und $c$ ergeben
+sich bei einer Drehung um die $x$-, $y$- bzw. $z$-Achse die Rotationsmatrizen
+$R_{ax}$, $R_{by}$ und $R_{cz}$. Die Gesamtrotation ergibt sich dann für
+$mode$=0 aus $R_{cz} \cdot R_{-by} \cdot R_{ax}$, für $mode$=1 aus $R_{ax}
+\cdot R_{-by} \cdot R_{cz}$, für $mode$=2 aus $R_{az} \cdot R_{by} \cdot
+R_{cx}$ und für $mode$=3 aus $R_{az} \cdot R_{by} \cdot R_{cz}$.
+}
+\proc{int}{MakeEuler}{int mode,Frame *f,double par1[6],double par2[6]}
+\descr{
+Aus der Euklidischen Transformation $f$ werden die beiden äquivalenten
+Eulerschen Repräsentationen $par1$ und $par2$ berechnet. Die ersten drei
+Komponenten von $par1$ bzw. $par2$ sind als Eulersche Winkel 
+$a$, $b$ und $c$ zu interpretieren, die letzten drei Komponenten als
+Translationsparameter. Aus den Eulerschen Winkeln $a$, $b$ und $c$ ergeben
+sich bei einer Drehung um die $x$-, $y$- bzw. $z$-Achse die Rotationsmatrizen
+$R_{ax}$, $R_{by}$ und $R_{cz}$. Die Gesamtrotation ergibt sich dann für
+$mode$=0 aus $R_{cz} \cdot R_{by} \cdot R_{ax}$, für $mode$=1 aus $R_{ax}
+\cdot R_{by} \cdot R_{cz}$, für $mode$=2 aus $R_{az} \cdot R_{by} \cdot
+R_{cx}$ und für $mode$=3 aus $R_{az} \cdot R_{by} \cdot R_{cz}$.
+}
+\proc{int}{MakeAxleFrame}{double axle[3], double phi, Frame *f}
+\descr{
+Es wird eine Rotation $f$ berechnet, die sich aus einer Drehung um den Winkel
+$phi$ um die Achse $axle$ im positiven Drehsinn ergibt.
+}
+\proc{Frame*}{OrthonormalizeFrame}{Frame *frm}
+\descr{
+Die Transformationsmatrix $frm$ wird mit dem Schmidt'schen Verfahren
+orthogonalisiert.
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

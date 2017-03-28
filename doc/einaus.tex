@@ -1,0 +1,468 @@
+\nsection{Ein- und Ausgabe von Bilddaten}{imageio}
+
+\subsection{Bild-Dateien}
+
+Bilder können von Bildfiles in verschiedenen Formaten eingelesen und 
+auch in diesen Formaten ausgegeben werden. Das Format
+des Bildfiles wird anhand des Dateinamen erkannt:
+\begin{itemize}
+\item Hat die Datei die Standard-Namens-Endung (extension) für dieses 
+Format, so wird dieser Typ angenommen.
+\item Wenn die Datei eine andere Namens-Endung besitzt, kann der Typ
+der Datei durch einen durch Doppelpunkt abgetrennten Vorsatz vor
+dem Dateinamen angegeben werden.\\
+\end{itemize}
+Beispiel: Bei Angabe von $TIFF:test.jpg$ behandelt ICE die Datei als
+Bild im TIF-Format, auch wenn die Erweiterung etwas anderes nahelegt.
+
+\begin{tabular}{|l|c|c|c|c|} \hline
+ Typ & Prefix & Extension & Grauwert & Farbe \\ \hline \hline
+TIFF & TIF: & .tif & Ja & Nein \\ 
+ & TIFF: & .tiff & & \\ \hline
+JPEG & JPG: & .jpg & Ja & Ja \\ 
+ & JPEG: & .jpeg & & \\ \hline
+PCX & PCX: & .pcx & Ja & Nein \\ \hline
+Targa & TGA: & .tga & Ja & Ja \\ \hline
+Windows-Bitmap & BMP: & .bmp & Ja & Ja \\ \hline
+Portable Bitmap & PBM: &  & Ja & Ja \\ \hline
+ & PPM: & .ppm & Ja & Ja \\ \hline
+ & PGM: & .pgm & Ja & Ja \\ \hline
+Photoshop & PSD: & .psd & Ja & Ja \\ \hline
+\end{tabular}
+
+Beim Lesen von Bildern im Portablen Bitmap-Format (PBM) kann als weitere
+Besonderheit direkt die Ausgabe eines Programmes eingelesen werden. Damit wird
+es möglich, Programme wie $convert$ (ImageMagick) oder $dcraw$ zum Einlesen von
+Fremdformaten zu verwenden:
+\begin{verbatim}
+ReadImg("PGM:|convert ente.ras PPM:-",img);
+\end{verbatim}
+Das pipe-Symbol '|' als erstes Zeichen des Dateinamen kennzeichnet den Aufruf
+eines Programmes, hier $convert$. Der Aufruf von {\bf convert} mit
+\verb+convert ente.ras PPM:-+ bewirkt die Konvertierung der Datei 
+{\bf ente.ras} in eine portable Bitmap und deren Ausgabe auf der 
+Standard-Ausgabe. ReadImg liest diese Ausgabe in das Bild img ein.
+Dies kann auch dazu verwendet werden, mittels $scanimage$ (sane) Bilder von
+Scannern einzulesen.
+Eine weitere spezielle Möglichkeit ist das Einlesen eines Bildes von der
+Standardeingabe. Dazu ist als Filename ''-'' einzugeben:
+\begin{verbatim}
+ReadImg("PGM:-",img);
+\end{verbatim}
+Ein Programm {\bf myprog}, welches auf diese Art ein Bild einliest, kann mit
+\verb+convert ente.ras PPM:- | myprog+ aufgerufen werden.
+
+\proch{Image}{ReadImg}{const string \&filename,Image \&img,int flag=IB\_SCALE}{picio.h}
+\descr{
+Von dem Bildfile $file$ wird ein Grauwert-Bild in $img$ eingelesen.
+Überschreitet die Bildgröße in der Datei die Größe des Bildes $img$, so
+wird je nach dem Wert von $flag$ das eingelesene Bild ganzzahlig skaliert
+($flag=IB\_SCALE$) oder auf die Größe von $img$ beschnitten ($flag=IB\_CROP$).
+Wenn die Grauwertbereiche nicht übereinstimmen, wird eine lineare 
+Skalierung vorgenommen. Wird als Parameter $img$ ein ungültiges Bild
+übergeben, so wird ein Bild in der passenden Größe angelegt.
+}
+
+\proc{int}{WriteImg}{const Image \&img,const string \&filename}
+\descr{
+Das Grauwertbild $img$ wird in die Datei $filename$ geschrieben.
+}
+
+\proc{int}{ReadImg}{const string \&file,Image \&imgr,Image \&imgg,Image \&imgb,
+int flag=IB\_SCALE}
+\descr{
+Von dem Bildfile $file$ wird ein Farbbild eingelesen und die
+Farbauszüge Rot, Grün und Blau werden in die Bilder $imgr$, $imgg$ und
+$imgb$ eingetragen. Die Bilder $imgr$, $imgg$ und $imgb$ müssen die
+gleiche Größe besitzen.  Überschreitet die Bildgröße in der Datei 
+die Größe der Bilder $imgr$, $imgg$ und $imgb$, so
+wird je nach dem Wert von $flag$ das eingelesene Bild ganzzahlig skaliert
+($flag=IB_SCALE$) oder auf die notwendige Größe beschnitten ($flag=IB_CROP$).
+Wenn die Grauwertbereiche nicht übereinstimmen, wird eine lineare 
+Skalierung vorgenommen. Wenn statt der Bilder $imgr$, $imgg$ und $imgb$ 
+der Null-Pointer übergeben wird, wird ein Bild in der passenden Größe 
+angelegt.
+}
+\proc{int}{WriteImg}{const Image \&ir,const Image \&ig,const Image \&ib,const string \&filename}
+\descr{
+Das durch die Farbauszüge in den Bildern $ir$, $ig$ und $ib$ übergebene
+Farbbild wird in die Datei $filename$ ausgeschrieben.
+}
+
+\proc{int}{InfImgFile}{const string \&filename, int \&xsize, int \&ysize, 
+  int \&maxval,int \&nr}
+\procf{int}{InfImgFile}{const string \&filename, int \&xsize, int \&ysize, 
+  int \&maxval}
+\descr{
+  Die Informationen zum Bildfile $filename$ werden ermittelt. Zurückgegeben
+  werden die Bildgröße ($xsize$,$ysize$), der Grauwertumfang ($maxval$) und 
+  die Zahl der Teilbilder bzw. Farbebenen ($nr$).
+}
+
+\subsection{Video-Dateien}
+\label{VideoFile}
+\hypertarget{VideoFile}
+Bildsequenzen können aus Video-Dateien gelesen und in Video-Dateien 
+geschrieben werden. Voraussetzung dafür ist die Installation der 
+Bibliothek \verb+libffmpeg+.
+
+Video-Dateien können nur streng sequentiell gelesen und geschrieben
+werden. Dazu muss ein \class{VideoFile} angelegt werden. Dabei kann 
+bereits beim Anlegen der Name angegeben werden und die Entscheidung 
+über Lesen oder Schreiben gefällt werden. Wenn dies nicht hier 
+erfolgt, muss die Datei später mit \bsee{VideoFile::open} geöffnet werden. 
+
+Danach kann fortlaufend aus der Datei gelesen werden
+(\bsee{VideoFile::Read}) oder in die Datei geschrieben werden 
+(\bsee{VideoFile::Write}). 
+Die Datei wird im Destruktor von \class{VideoFile} automatisch geschlossen.
+
+Das Setzen von Parametern mit \bsee{VideoFile::setPara}
+und \bsee{VideoFile::setCPara} ist nur vor dem ersten Schreiben möglich.
+
+\proch{}{VideoFile::VideoFile}{}{videoio.h}
+\descr{Standard-Konstruktor. Die Datei muss mit \bsee{VideoFile::open} 
+geöffnet werden.}
+
+\proc{}{VideoFile::VideoFile}{const string \&fn,ios\_base::openmode mode =
+  ios\_base::in}
+\descr{
+Konstruktor, der den Dateinamen und die Schreib-Lese-Richtung
+festlegt: Lesen - ios\_base::in, Schreiben - ios\_base::out. 
+}
+
+\proc{int}{VideoFile::open}{const string \&fn,ios\_base::openmode mode =
+  ios\_base::in}
+\descr{Legt den Dateinamen und die Schreib-Lese-Richtung fest: Lesen -
+  ios\_base::in, Schreiben - ios\_base::out. }
+
+\proc{void}{VideoFile::getPara}{int \&xs,int \&ys,int \&mv,int \&fps}
+\descr{Fragt die Parameter Bildgröße (x,y), maximaler Grauwert und
+  Bildfrequenz (fps) einer Video-Datei ab. Die Werte sind bei einer 
+  zu lesenden Datei nach dem Öffnen gültig.}
+
+\proc{void}{VideoFile::setPara}{int xs,int ys,int mv,int fps,int bitrate=0}
+\descr{Legt die Parameter einer zu schreibenden Video-Datei fest. Dies muss
+  vor dem ersten Schreibvorgang mit \bsee{VideoFile::Write} erfolgen. Die 
+Bildgröße $x*y$ muss exakt der Größe der zu schreibenden Bilder entsprechen.
+Als maximaler Grauwert ist z.Z. nur der Wert 255 möglich. Die Bitrate 
+$bitrate$ (Bit pro Sekunde) kann auch mit dem Wert 0 vorgegeben werden. Dann 
+wird ein geeigneter Wert aus Bildgröße und Framerate $fps$ ermittelt. }
+
+\proc{void}{VideoFile::setCPara}{const string \&p}
+\descr{Definiert optional für Ausgabe-Dateien einen Kompressionstyp.
+Die zu verwendenden Kürzel entsprechen der Codec-Kennung in der 
+libffmpeg oder dem MIME-Type der Dateien. Wird dies nicht gesetzt, wird 
+der Dateityp aus der Datei-Erweiterung ermittelt.}
+
+\proc{bool}{VideoFile::Read}{Image \&img,int ch=3}
+\procf{bool}{VideoFile::Read}{Image \&ir,Image \&ig,Image \&ib}
+\procf{bool}{VideoFile::Read}{ColorImage \&irgb}
+\descr{Liest ein Bild aus einer Video-Datei. Die Methode gibt bei Erfolg
+den Wert {\bf true} zurück.\\
+Beim Lesen eines Grauwertbildes kann mittels des Parameters $ch$ entschieden 
+werden, welcher Kanal in das Bild $img$ geschrieben wird.\\
+\begin{tabular}{ll}
+ch = 0 & Rot \\
+ch = 1 & Grün \\
+ch = 2 & Blau \\
+ch = 3 & Grauwert aus R, G und B\\
+\end{tabular}
+}
+
+\proc{bool}{VideoFile::Write}{const Image \&img}
+\procf{bool}{VideoFile::Write}{const Image \&ir,const Image \&ig,const Image \&ib}
+\procf{bool}{VideoFile::Write}{const ImageRGB \&irgb}
+\descr{Schreibt ein Bild in eine Video-Datei.}
+
+Im folgendem Beispiel wird eine Video-Datei ''kopiert'': Wegen der Dekodierung
+beim Lesen und neuen Kodierung beim Schreiben ist dies keine echte Kopie.
+\begprogr
+\begin{verbatim}
+void Copy(const string &infilename, const string &outfilename)
+{
+ VideoFile in(infilename,ios_base::in);
+ VideoFile out(outfilename,ios_base::out);
+
+ int xs, ys, mv, fps;
+ in.getPara(xs, ys, mv, fps); // Parameter der Quelldatei abfragen
+
+ out.setPara(xs, ys, mv, fps); // Parameter der Zieldatei setzen
+
+ ColorImage rgb;
+
+ while (in.Read(rgb))
+ {
+     out.Write(rgb);
+ }
+// Schließen der Dateien erfolgt im Destruktor 
+// von in und out
+}
+\end{verbatim}
+\endprogr
+
+\subsection{Datei-Eingabe-Puffer (Template)}
+
+Die Templates \verb+ReadImageCache+ und \verb+ReadColorImageCache+ 
+ermöglichen die Pufferung der Eingabe aus einer Quelle, die Bilder 
+sequentiell liest (typisch für \bsee{VideoFile}).
+Der Puffer ermöglicht in begrenztem Umfang, in der Eingabedatei 
+vorwärts und rückwärts zu gehen.
+
+Die Templates erfordern als Template-Parameter eine Klasse, die eine 
+Methode zum sequentiellen Lesen von Bildern besitzt.
+
+\begin{tabular}{ll}
+\verb+ReadImageCache<T>+&\verb+Read(const Image &img)+ \\
+\verb+ReadColorImageCache<T>+&\verb+Read(const Image &imgr,const Image &imgg,const Image &imgb)+ \\
+\end{tabular}
+
+\proch{}{ReadImageCache$<$T$>$::ReadImageCache}{T \&tr,int xsize,int ysize,int maxval,int csize}{readcache.h}
+\procf{}{ReadColorImageCache$<$T$>$::ReadColorImageCache}{T \&tr,int xsize,int ysize,int maxval,int csize}
+\descr{Legt einen ReadImageCache an. Es müssen die Quelle $tr$ für das Lesen, die Parameter der
+zu lesenden Bilder $xsize$, $ysize$, $maxval$ und die Cache-Größe $csize$ angegeben werden.
+Die Quelle muss für die Lebensdauer des Caches existieren.}
+
+\proc{bool}{ReadImageCache$<$T$>$::Read}{const Image \&img,int frame=ReadImagCache$<$T$>$::next}
+\procf{bool}{ReadColorImageCache$<$T$>$::Read}{const ColorImage \&img,int frame}
+\procf{bool}{ReadColorImageCache$<$T$>$::Read}{const Image \&imgr,const Image \&imgg,const Image \&imgb,int frame}
+\descr{Liest den Frame $frame$ ein. Der Rückgabewert signalisiert, ob das 
+Einlesen efolgreich war.
+Die Framenummer ist eine nichtnegative Zahl, die die Nummer des Frames 
+in der Quelle darstellt. Die speziellen Werte ReadImageCache$<$T$>$::next 
+und ReadImageCache$<$T$>$::prev spezifizieren den nächsten 
+beziehungsweise vorigen Frame (bezogen auf die vorherige Lese-Operation).}
+
+\proc{int}{ReadImageCache$<$T$>$::FrameNumber}{}
+\proc{int}{ReadColorImageCache$<$T$>$::FrameNumber}{}
+\descr{Liefert die Nummer des zuletzt erfolgreich gelesenen Frames.}
+
+\proc{int}{ReadImageCache$<$T$>$::getError}{}
+\proc{int}{ReadColorImageCache$<$T$>$::getError}{}
+\descr{Gibt das Ergebnis des letzten Lesevorganges an.}
+\begin{tabular}{ll}
+Fehlerwert&Bedeutung\\
+\verb+ReadImageCache<T>::no_error+&Kein Fehler \\
+\verb+ReadImageCache<T>::before+&Lesen vor Anfang des Puffers \\
+\verb+ReadImageCache<T>::past_eof+&Lesen nach Dateiende \\
+\end{tabular}
+
+\begprogr
+\begin{verbatim}
+...
+  VideoFile vi("test.mpg",ios::in);
+
+  int xs,ys,mv,fps;
+  vi.getPara(xs,ys,mv,fps);
+
+  ReadImageCache cvi(vi,xs,ys,mv,300);
+
+  Image img=NewImg(xs,ys,mv);
+  Show(ON,img);
+
+  cvi.Read(img); // ersten Frame lesen
+  int c;
+  while ((c=GetChar())!='x')
+    {
+      switch(c)
+        {
+        case 'n': vi.Read(img, cvi.next); break;
+        case 'p': vi.Read(img, cvi.prev); break;
+        }
+      Printf("Aktueller Frame: %d , Error: %d\n",cvi.FrameNumber(),cvi.getError());
+    }
+...
+\end{verbatim}
+\endprogr
+
+\subsection{Gepufferte Video-Dateien}
+\label{VideoFileCached}
+\hypertarget{VideoFileCached}{}
+Gepufferte Video-Dateien lockern die Beschränkung der Video-Dateien 
+({\see{VideoFile}) auf rein sequentiellen Zugriff. 
+Im Rahmen der Größe des Puffers ist es in einer gepufferten Video-Datei 
+auch möglich, rückwärts zu gehen. Gepufferte Video-Dateien können nur 
+gelesen werden.
+
+\proch{}{VideoFileCached::VideoFileCached}{const string \&fn,int buffersize}{videoio.h}
+\descr{Konstruktor, der den Dateinamen und die Puffergröße festlegt und die 
+Video-Datei öffnet. Die Puffergröße ist die Zahl der gespeicherten 
+Bilder/Frames. Diese bestimmt, wieweit in der Datei rückwärts gegangen werden kann.}
+
+\proc{void}{VideoFileCached::getPara}{int \&xs,int \&ys,int \&mv,int \&fps}
+\descr{Fragt die Parameter Bildgröße (x,y), maximaler Grauwert und
+  Bildfrequenz (fps) einer gepufferten Video-Datei ab.}
+
+\proc{bool}{VideoFileCached::Read}{Image \&ir,Image \&ig,Image \&ib,int frame=VideoFileCached::next}{videoio.h}
+\procf{bool}{VideoFileCached::Read}{ColorImage \&img,int frame=VideoFileCached::next}
+\procf{bool}{VideoFileCached::Read}{ImageRGB \&img,int frame=VideoFileCached::next}
+\descr{Liest ein Bild aus einer Video-Datei. Die Methode gibt bei Erfolg den Wert {\bf true} zurück.
+Die Framenummer ist eine nichtnegative Zahl, die die Nummer des Frames 
+in der Videodatei darstellt. Die speziellen Werte 
+VideoFileCached::next und VideoFileCached::prev spezifizieren den nächsten 
+beziehungsweise vorigen Frame (bezogen auf die vorherige Lese-Operation).}
+
+\proc{int}{VideoFileCached::FrameNumber}{}
+\descr{Liefert die Nummer des zuletzt erfolgreich gelesenen Frames.}
+
+\proc{int}{VideoFileCached::getError}{}
+\descr{Gibt das Ergebnis des letzten Lesevorganges an.}
+\begin{tabular}{ll}
+Fehlerwert&Bedeutung\\
+\verb+ReadImageCache<T>::no_error+&Kein Fehler \\
+\verb+ReadImageCache<T>::before+&Lesen vor Anfang des Puffers \\
+\verb+ReadImageCache<T>::past_eof+&Lesen nach Dateiende \\
+\end{tabular}
+
+Beispiel:
+\begprogr
+\begin{verbatim}
+...
+  VideoFileCached vi("test.mpg",100);
+  int xs,ys,mv,fps;
+  vi.getPara(xs,ys,mv,fps);
+  Image ri=NewImg(xs,ys,mv);
+  Image gi=NewImg(xs,ys,mv);
+  Image bi=NewImg(xs,ys,mv);
+  Show(_RGB,ri,gi,bi);
+  vi.Read(ri,gi,bi); // ersten Frame lesen
+  int c;
+  while ((c=GetChar())!='x')
+    {
+      switch(c)
+        {
+        case 'n': vi.Read(ri, gi, bi, vi.next); break;
+        case 'p': vi.Read(ri, gi, bi, vi.prev); break;
+        }
+      Printf("Aktueller Frame: %d , Error: %d\n",vi.FrameNumber(),vi.getError());
+    }
+...
+\end{verbatim}
+\endprogr
+
+\subsection{Bildaufnahme}
+
+Wenn entsprechende Hardware vorhanden ist, können Bilder digitalisiert
+(abgetastet) werden. Die auf dem jeweiligen Rechner vorhandenen
+Eingabemöglichkeit werden als Kanäle konfiguriert und beim Funktionsaufruf 
+durch eine Kanalnummer unterschieden.
+
+\proch{void}{ScanWindow}{int ch,int x1,int y1,int x2,int y2}{scan.h}
+\descr{
+Für den Kanal $ch$ wird ein Ausschnitt für die Bildabtastung festgelegt. 
+Die Koordinaten $(x1,y1)$ und $(x2,y2)$ geben die linke obere und die rechte 
+untere Ecke des festzulegenden Bildausschnitts an. Der Bildauschnitt bezieht 
+sich immer auf die Bildgröße des Eingabe-Gerätes.
+}
+
+\proc{int}{ScanImg}{int ch,Image \&pi,int interactive=TRUE}
+\descr{
+Es wird ein Bild vom Kanal $ch$ abgetastet. Bei $interactive$=TRUE wird vor 
+dem eigentlichen Abtasten auf eine Bestätigung durch Tastendruck gewartet, 
+so daß z.B. die Kameraeinstellung noch korrigiert werden kann. Bei 
+$mode$=FALSE wird sofort abgetastet.
+}
+
+\proc{int}{ScanImg}{int ch,Image \&pr,Image \&pg,Image \&pb,int interactive=TRUE}
+\descr{
+Es wird ein Farb-Bild vom Kanal $ch$ abgetastet und die Farbauszüge in den
+Bildern $pr$, $pg$ und $pb$ abgespeichert. Bei $interactive$=TRUE wird vor 
+dem eigentlichen Abtasten auf eine Bestätigung durch Tastendruck gewartet, 
+so daß z.B. die Kameraeinstellung noch korrigiert werden kann. 
+Bei $mode$=FALSE wird sofort abgetastet.
+}
+
+\proc{int}{ScanInfo}{int ch,int \&xm,int \&ym,int \&maxval,int \&channels,
+            int \&flags,string \&descr}
+\descr{
+Es werden grundlegende Informationen über den Kanal $ch$ bereitgestellt.
+\begin{itemize}
+\item xm,ym,maxval - Größe und maximaler Grauwert des abgetasteten Bildes
+\item channels - Zahl aller Kanäle (ist unabhängig vom angegebenen Kanal)
+\item flags - Eigenschaften des Kanals
+\item descr - textuelle Beschreibung des Kanals
+\end{itemize}
+Die Werte für Bildgröße und maximalen Grauwert können den Wert -1 zurückgeben,
+wenn der Treiber vor dem eigentlichen Scan-Vorgang keine Information darüber
+besitzt.\\
+Folgende Bit-Werte werden (wenn vorhanden) in der Variable $flag$ ODER-verknüpft:
+\begin{tabular}{|l|c|c|} \hline
+ SC\_SCAN & 1 & Es können Bilder aufgenommen werden \\  \hline
+ SC\_RGB & 2 & Es können Farb-Bilder aufgenommen werden \\ \hline
+ SC\_PREVIEW & 4 & Es gibt eine Vorschau-Funktion \\ \hline
+ SC\_DIALOG & 8 & Es gibt einen interaktiven Einstellungs-Dialog \\ \hline
+ SC\_EXTDATA & 16 & Es können Parameter eingestellt werden \\ \hline
+\end{tabular} \\
+{\it Es sollten nur die symbolischen Konstanten der ersten Spalte verwendet werden,
+die konkreten Werte in der zweiten Spalte dienen nur der Information und können sich ändern.}
+}
+
+\subsubsection{Konfiguration der Bildaufnahme unter Unix/Linux}
+Die Konfiguration der Bildaufnahme erfolgt durch Setzen von
+Environment-Variablen. Die Variablen ICESCANDEVICE0 .. ICSCANDEVICE9
+korrespondieren mit den 10 möglichen Kanälen 0..9. Die Einträge haben die
+folgende Form:
+\begin{verbatim}
+ICESCANDEVICE0=fw,0,MODE_640x480_YUV422,30
+\end{verbatim}
+Der erste Wert (hier: fw) spezifiziert die Art des Eingabe-Gerätes, den
+zuständigen Treiber, die darauffolgenden Parameter sind jeweils
+Geräte-spezifisch.
+
+\begin{itemize}
+\item {\bf fw} - IEEE1394-Kameras (IIDC-kompatibel)
+\begin{verbatim}
+ICESCANDEVICE0=fw,0,MODE_640x480_YUV422,30
+\end{verbatim}
+Die Parameter nach {\bf fw} haben die folgende Bedeutung:
+\begin{itemize}
+\item Nummer der Kamera\\
+Die vorhandenen Kameras werden von 0 an durchnummeriert.
+\item Modus\\
+Modus, in dem die Kamera betrieben werden soll.
+\item Bildwiederhol-Rate\\
+Die Bildwiederhol-Rate in fps (Frames per second).
+\end{itemize}
+%\item {\bf v4l} - Video for Linux
+%\begin{verbatim}
+%ICESCANDEVICE0=v4l,0,0,740,556
+%\end{verbatim}
+%Die Parameter nach {\bf v4l} haben die folgende Bedeutung:
+%\begin{itemize}
+%\item Schnittstelle\\
+%Die Zahl entspricht der Gerätedatei /dev/videoX: 0 = /dev/video0 ..
+%\item Kanalnummer\\
+%Kanalnummer in Video for Linux.
+%\item Bildgröße Breite, Höhe
+%\end{itemize}
+
+\item {\bf file} - Einlesen von einer Datei
+\begin{verbatim}
+ICESCANDEVICE0=file,/tmp/img.jpg,640,480,255
+\end{verbatim}
+Der erste Parameter nach der Kennung {\bf file } gibt den Namen der Datei an. 
+Die folgenden optionalen Parameter beschreiben die Bildgröße (x,y) und den 
+maximalen Grauwert. Werden diese nicht angegeben, so werden sie zur Laufzeit 
+aus der Bilddatei ermittelt, was allerdings zeitaufwendiger ist.
+
+\item {\bf program} - Ein Programm, welches eine Bilddatei bereitstellt
+\begin{verbatim}
+ICESCANDEVICE0=program,igen /tmp/x.jpg,/tmp/x.jpg,640,480,255
+\end{verbatim}
+Die Parameter nach {\bf program} haben die folgende Bedeutung:
+\begin{itemize}
+\item Programmaufruf\\
+Aufruf des Programmes mit Parametern.
+\item Bilddateiname\\
+Name der erstellten Bilddatei.
+\end{itemize}
+Die folgenden optionalen Parameter beschreiben die Bildgröße (x,y) und 
+den maximalen Grauwert. Werden diese nicht angegeben, so werden sie 
+vom System als ``unbekannt'' gemeldet. Es ist dann Sache des
+Anwendungsprogrammes, eine geeignete Bildgröße zu wählen.
+
+\end{itemize}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

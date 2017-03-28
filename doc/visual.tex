@@ -1,0 +1,295 @@
+\nsection{Visualisierung von Bildern und interaktive Auswahl}{Visualisierung}
+
+\subsection{Displaysteuerung}
+
+Die darzustellenden Bilder müssen mit der Funktion \see{Show} zur 
+Visualisierung angemeldet werden. Sie werden dann in einem Fenster 
+dargestellt. Bilder können als einfaches Grauwertbild, 
+als Grauwertbild mit Overlays und als Echtfarbbilder dargestellt
+werden. Veränderungen der Bilder werden im Normalfall simultan dargestellt.
+
+Die Bilddarstellung wird durch einen gesonderten Prozess realisiert. Die
+Aktualisierung erfolgt in kurzen Abständen, gesteuert durch einen Zeitgeber.
+Falls diese Abstände - z.B. für Interaktionen - zu groß sind, kann
+mit der Funktion \see{ForceUpdate} ein sofortiges Update erzwungen werden.
+
+\proch{int}{Show}{int mode,Image img,const string \& title=''''}{visual.h}
+\procf{int}{Show}{int mode,Image img1,Image img2,const string \& title=''''}
+\procf{int}{Show}{int mode,Image img1,Image img2,Image img3,const string \&title=''''}
+\descr{
+  Es werden Bilder vom Type \class{Image} für die Visualisierung angemeldet.
+  Die Zahl der Parameter ist abhängig vom gewünschten Darstellungs-Modus ab. 
+  Wenn mehrere Bilder übergeben werden, müssen diese jeweils die gleiche 
+  Größe haben. Der Parameter $title$ gibt den Titel des zugehörigen Fensters
+  an. Wird $title$ nicht angegeben, wird der Name des ersten Bildes verwendet.
+  Der Modus $mode$ kann eine der folgenden Konstanten sein:\\
+  \begin{tabular}{|c|l|} \hline
+    ON & 
+    \begin{minipage}{0.6\textwidth}
+      Das Bild $img1$ wird als einfaches Grauwertbild dargestellt.
+    \end{minipage} \\ \hline
+    \begin{minipage}{0.2\textwidth}
+      OVERLAY, OVERLAY1, OVERLAY2, OVERLAY3 
+    \end{minipage}
+    & 
+    \begin{minipage}{0.6\textwidth}
+      Das Bild $img1$ wird als Grauwertbild dargestellt, das Bild $img2$ als
+      Overlaybild, d.h, dort, wo im Bild $img2$ der Wert Null steht, ist der
+      Grauwert des Bildes $img1$ sichtbar, ansonsten die zum Wert aus $img2$
+      gehörende Farbe. In der Reihenfolge OVERLAY, OVERLAY1, OVERLAY2, OVERLAY3
+      steigt die Durchsichtigkeit des Overlays, so das das Grauwertbild unter
+      den Markierungen erkannt werden kann.
+    \end{minipage} \\ \hline
+    \_RGB & 
+    \begin{minipage}{0.6\textwidth}
+      Es wird ein Farbbild dargestellt, wobei die Bilder $img1$, $img2$ 
+      und $img3$ als Rot-, Grün- und Blauauszug interpretiert werden.
+    \end{minipage} \\ \hline
+    OFF &
+    \begin{minipage}{0.6\textwidth}
+      Das Bild $img1$ und die zugehörigen Overlaybilder bzw. Farbauszüge werden von
+      der Visualisierung abgemeldet. 
+    \end{minipage} \\ \hline
+  \end{tabular} 
+}
+
+\proch{int}{Show}{const ColorImage \& img, int mode=ON}{visual/ColorImage\_vis.h}
+\descr{
+Das Farbbild $img$ wird zur Visualisierung als Farbbild angemeldet ($mode=ON$) 
+oder abgemeldet ($mode=OFF$).
+}
+
+\proch{int}{Zoom}{Image img,int val,int x,int y}{visual/visual.h}
+\procf{int}{Zoom}{Image img}
+\descr{Die Göße der Darstellung des Bildes $img$ wird geändert.
+Wenn $val$ größer als Null ist, wird jeder Bildpunkt in $val$-facher 
+Größe dargestellt. Wenn $val$ kleiner als Null ist, wird nur jeder 
+$val$-te Bildpunkt dargestellt wird. 
+}
+
+\proch{int}{Cursor}{int mode,Image img,int x,int y}{visual/visual.h}
+\descr{
+Die Kursorkoordinaten für das Bild $img$ werden gesetzt und die Visualisierung
+des Kursors kann ein- und ausgeschaltet werden. Der Kursor wird generell nur
+dann sichtbar, wenn das Bild zur Darstellung angemeldet und die Darstellung
+eingeschaltet ist. Der Modus kann durch Konstanten mit der folgenden Bedeutung
+festgelegt werden.
+\begin{tabular}{|c|l|} \hline
+SET&
+\begin{minipage}[t]{0.6\textwidth}
+Der Kursor wird an der Stelle $(x,y)$ dargestellt. Ein evtl. vorher an anderer
+Stelle des Bildes gesetzter Kursor wird vorher gelöscht.
+\end{minipage}\\ \hline
+OFF&
+\begin{minipage}[t]{0.6\textwidth}
+Der Kursor wird gelöscht, wobei aber die Koordinaten intern erhalten bleiben,
+so daß der Kursor mit ON an gleicher Stelle wieder gesetzt werden kann.
+\end{minipage}\\ \hline
+ON&
+\begin{minipage}[t]{0.6\textwidth}
+Der Kursor wird dargestellt, wobei die intern verwalteten Koordinaten
+verwendet werden.
+\end{minipage}\\ \hline
+\end{tabular}
+}
+
+\subsection{Farbtabellen}
+
+Die Darstellung der Werte von Grauwert- und Overlaybildern kann durch
+Farbtabellen beeinflußt werden. Für die Darstellung von Grauwerten werden
+standardmäßig die verfügbaren Intensitätswerte den Werten von Null bis zum
+größten zulässigen Grauwert linear zugeordnet. Wenn gleichzeitig Bilder mit
+unterschiedlichem maximalem Grauwert dargestellt werden, kann das dazu führen,
+daß die Bilder mit dem kleineren Grauwertumfang flau dargestellt werden.
+
+Für die Overlaydarstellung sind den Werten 1\dots 8 die Farben rot, grün,
+blau, gelb, rosa, cyan, purpur und braun zugeordnet. Bei höheren Werten
+wiederholen sich diese Farben zyklisch. Die letzten drei Einträge der
+Overlay-Farbtabelle legen die Farben für die Umrandung der Bilder und 
+den Kursor fest.
+
+\proch{int}{SetGreyColor}{int val,int red,int green,int blue}{visual/visual.h}
+\descr{
+Dem Grauwert $val$ wird ein Farbwert mit den Intensitäten $red$, $green$ und
+$blue$ zugeordnet, die zwischen 0 und 255 liegen können.
+}
+\proch{int}{SetGreyLUT}{int val1,int val2}{visual/visual.h}
+\descr{
+Die verfügbaren Intensitäten werden linear den Grauwerten zwischen val1 und
+val2 zugeordnet. Die unterhalb bzw. oberhalb dieses Intervalls liegenden
+Grauwerte werden weiß bzw. schwarz dargestellt.
+}
+\proch{int}{SetOverlayColor}{int val,int red,int green,int blue}{visual/visual.h}
+\descr{
+Dem Overlay-Wert $val$ wird ein Farbwert mit den Intensitäten $red$, $green$ und
+$blue$ zugeordnet, die zwischen 0 und 255 liegen können.
+}
+
+\subsection{Informationsabfrage zur Visualisierung}
+
+Einige Eigenschaften der Bilddarstellung können in Abhängigkeit von der
+Hardware und vom Betriebssystem unterschiedlich realisiert sein. Zur
+Unterstützung einer portablen Programmierung werden durch die Funktion
+InfVis() einige Information zur Bilddarstellung bereitgestellt.
+
+\proch{int}{InfVis}{int code}{visual/visual.h}
+\descr{
+Es können Informationen zur Bilddarstellung abgefragt werden, die als
+Funktionswert zurückgegeben werden. Als $code$
+können die folgenden vordefinierten Konstanten verwendet werden:
+}
+\begin{quote}
+\begin{tabular}{ll}
+MAXX&
+\begin{minipage}[t]{9cm}
+x-Ausdehnung des Grafikbildschirms bzw. des Grafikfensters
+\end{minipage}\\
+MAXY&
+\begin{minipage}[t]{9cm}
+y-Ausdehnung des Grafikbildschirms bzw. des Grafikfensters
+\end{minipage}\\
+TABLE\_LEN&
+\begin{minipage}[t]{9cm}
+Anzahl der zur Verfügung stehenden Farbtabelleneinträge
+\end{minipage}\\
+REAL\_TIME\_COLOR&
+\begin{minipage}[t]{9cm}
+TRUE, wenn die Farbtabellen in Echzeit modifiziert werden können, sonst FALSE.
+\end{minipage}\\
+REAL\_TIME\_ZOOM&
+\begin{minipage}[t]{9cm}
+TRUE, wenn die Zoomfunktionen in Echzeit ausgeführt werden, sonst FALSE.
+\end{minipage}\\
+VIRTUAL\_X&
+\begin{minipage}[t]{9cm}
+Aktuelle x-Ausdehnung des virtuellen Bildspeichers.
+\end{minipage}\\
+VIRTUAL\_Y&
+\begin{minipage}[t]{9cm}
+Aktuelle y-Ausdehnung des virtuellen Bildspeichers.
+\end{minipage}\\
+IMAGES&
+\begin{minipage}[t]{9cm}
+Anzahl der zur Visualisierung angemeldeten Bilder. Bilder mit Overlay und
+Echtfarbbilder werden jeweils als ein Bild gezählt.
+\end{minipage}\\
+\end{tabular}
+\end{quote}
+
+\subsection{Interaktive Auswahlfunktionen}
+
+\proch{int}{Mouse}{Image img,int *x,int *y}{visual/mouse.h}
+\procf{int}{Mouse}{Image img,int \&x,int \&y}
+\descr{
+Auf $x$ und $y$ werden die entsprechend den Mausbewegungen veränderten
+Koordinaten eingetragen. Die Window-Systemen sind die Koordinaten an die
+Position des System-Mauszeigers gekoppelt. Der Rückgabewert ergibt sich aus
+einer ODER-Verknüpfung der Werte für die folgenden Mausereignisse:
+}
+\begin{quote}
+\begin{tabular}{ll}
+M\_LEFT\_DOWN&\begin{minipage}[t]{9cm}linke Maustaste ist gedrückt\end{minipage}\\
+M\_RIGHT\_DOWN&\begin{minipage}[t]{9cm}rechte Maustaste ist gedrückt\end{minipage}\\
+M\_MIDDLE\_DOWN&\begin{minipage}[t]{9cm}mittlere Maustaste ist gedrückt\end{minipage}\\
+M\_LEFT\_PRESSED&\begin{minipage}[t]{9cm}linke Maustaste wurde seit der letzten
+Abfrage gedrückt\end{minipage}\\
+M\_RIGHT\_PRESSED&\begin{minipage}[t]{9cm}rechte Maustaste wurde seit der letzten
+Abfrage gedrückt\end{minipage}\\
+M\_MIDDLE\_PRESSED&\begin{minipage}[t]{9cm}mittlere Maustaste wurde seit der
+letzten Abfrage gedrückt\end{minipage}\\
+M\_LEFT\_RELEASED&\begin{minipage}[t]{9cm}linke Maustaste wurde seit der letzten
+Abfrage losgelassen\end{minipage}\\
+M\_RIGHT\_RELEASED&\begin{minipage}[t]{9cm}rechte Maustaste wurde seit der letzten
+Abfrage losgelassen\end{minipage}\\
+M\_MIDDLE\_RELEASED&\begin{minipage}[t]{9cm}mittlere Maustaste wurde seit der
+letzten Abfrage losgelassen\end{minipage}\\
+M\_MOVED&\begin{minipage}[t]{9cm}Maus wurde seit der letzten Abfrage bewegt\end{minipage}\\
+\end{tabular}
+\end{quote}
+
+Die Funktionen zur interaktiven Auswahl eines Punktes werden wie folgt
+bedient:\\
+Im Bild $img$ wird bei eingeschalteter Visualisierung ein Kursor eingeblendet,
+der mit der Maus bewegt werden kann. Bei $mode=1$ werden in einer Textzeile 
+jeweils die aktuellen Koordinaten und der aktuelle Grauwert ausgegeben. 
+Für $mode$=DEFAULT erfolgt keine Einblendung der Koordinaten. 
+Durch Drücken der linken Maustaste oder \enter wird die Funktion beendet und 
+der aktuelle Punkt ausgewählt. Wenn die rechte Maustaste gedrückt wird oder 
+\esc, erfolgt ebenfalls ein Abbruch der Funktion.
+Durch Drücken der Leertaste wird der sichtbare Bereich so verschoben, dass 
+die aktuelle Kursorposition in der Mitte des Darstellungsfesters liegt. Durch
+Drücken der ``+''-Taste bzw. der ``-''-Taste kann zusätzlich die Vergrößerung
+eingestellt werden. Drücken von ``.'' stellt eine Vergrößerung ein, die das
+gesamte Bild sichtbar macht.
+
+\proch{int}{SelPoint}{int mode,const Image \&img,int p[2]}{visual/pointsel.h}
+\descr{
+Auswahl eines Punktes im Bild $img$ und Rückgabe der Koordinaten in $p$.
+Der Rückgabewert ist der selektierte Grauwert oder -1 bei Abbruch mit rechter
+Maustaste beziehungsweise \esc.
+}
+
+\proch{IPoint}{SelPoint}{int mode,const Image \&img}{visual/pointsel.h}
+\procf{IPoint}{SelPoint}{int mode,const Image \&img,int \&rc}
+\procf{Point}{SelPoint}{const Image \&img,int \&rc}
+\procf{Point}{SelPoint}{const Image \&img}
+\descr{
+Auswahl eines Punktes im Bild $img$ und Rückgabe als \see{Point}. 
+$rc$ enthält nach der Rückkehr den Grauwert an der ausgewählte Stelle oder -1
+bei Abbruch mit rechter Maustaste oder \esc.
+}
+
+\proch{IVector}{SelVector}{int mode,const Image \&img,int \&rc}{visual/pointsel.h}
+\procf{IVector}{SelVector}{int mode,const Image \&img}
+\procf{IVector}{SelVector}{const Image \&img,int \&rc}
+\procf{IVector}{SelVector}{const Image \&img}
+\descr{
+Auswahl eines Punktes im Bild $img$ und Rückgabe als \see{IVector}. 
+$rc$ enthält nach der Rückkehr den Grauwert an der ausgewählte Stelle oder -1
+bei Abbruch mit rechter Maustaste oder \esc.
+}
+
+\proch{int}{SelectWindow}{const Image \&img,int mode}{pointsel.h}
+\descr{
+In dem Bild $img$ wird bei eingeschalteter Visualisierung interaktiv mit der
+Maus oder den Kursortasten ein Fenster festgelegt. Bei $mode$=0 kann das
+vorher gesetzte Fenster lediglich verschoben werden, die Größe wird nicht
+verändert. Mit $mode$=1 wird zunächst die linke obere Ecke angeklickt und dann
+das Fenster ``aufgezogen''. Durch Drücken der rechten Maustaste oder \esc
+wird die Funktion abgebrochen und das vorherige Fenster wieder gesetzt. Der
+Rückgabewert ist in diesem Fall -1, sonst 0. Das folgende Programmbeispiel
+demonstriert die Verwendung der Funktion.
+}
+\begprogr\begin{verbatim}
+// Interaktive Fensterauswahl 
+#include <stdio.h>
+#include <image.h>
+void main(void)
+{
+  int x,y;
+  OpenAlpha("ICE Text Server");      // Textfenster
+  SetAttribute(0,7,0,0);             // Attribute setzen
+  ClearAlpha();                      // initialisieren 
+  Image img=NewImg(768,512,255);     // Bilder anfordern
+  Image imgo=NewImg(768,512,255);
+  ClearImg(imgo);
+  for (int y=0;y<img.ysize;y++)
+    for (int x=0;x<img.xsize;x++)
+      {
+        PutVal(img,x,y,x&255);
+        if (x & 8) PutVal(imgo,x,y,1);
+      }  
+  Show(OVERLAY, img, imgo);          // Bilddarstellung
+  Display(ON);
+  Printf("Linke obere Ecke anklicken und Fenster aufziehen\n");
+  SelectWindow(img,1);               // Fenster "aufziehen" 
+  Printf("Fenster verschieben                             \n");
+  SelectWindow(img,0);               // Fenster verschieben
+  Display(OFF);
+}
+\end{verbatim}\endprogr
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

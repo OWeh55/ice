@@ -1,0 +1,247 @@
+\nsection{Allgemeine Werkzeuge}{genericTools}
+
+\subsection{String-Funktionen}
+
+\proc{string}{NumberString}{int i,unsigned int width=0}
+\procf{string}{NumberString}{unsigned int i,unsigned int width=0}
+\procf{string}{NumberString}{long int i,unsigned int width=0}
+\procf{string}{NumberString}{long long int i,unsigned int width=0}
+\procf{string}{NumberString}{double f,unsigned int width=0,unsigned int
+  prec=0}
+\descr{Gibt einen String zurück, der den übergebenen Wert in Textform
+  darstellt. Sind die Werte von $width$ oder $prec$ ungleich Null, so wird die
+  Ausgabe entsprechend dieser Werte formatiert.}
+
+\proc{int}{Integer}{const string\& s}
+\descr{Wandelt den übergebenen String $s$ nach Integer (int).}
+
+\proc{double}{Double}{const string \&s}
+\descr{Wandelt den übergebenen String $s$ nach double.}
+
+\proc{string}{lowercase}{const string \&s}
+\proc{string}{uppercase}{const string \&s}
+\descr{Wandelt die Buchstaben des übergebenen Strings $s$ in Klein-
+  bzw. Großbuchstaben um.}
+
+\proch{string}{Split}{string \&text,const string \&del,int erase=true,
+int need\_del=false}{strtool.h}
+\descr{Die Funktion spaltet vom gegebenen String $text$ von vorne einen
+ Teilstring ab und gibt diesen zurück, der durch den Begrenzer $del$ 
+abgegrenzt wird. Ist $erase = true$ (Standard), so wird $text$ um den 
+abgespalteten Text und den Begrenzer gekürzt. Kommt der Begrenzer $del$ 
+im String $text$ nicht vor, so wird bei $need\_del=false$ (Standard) der 
+gesamte restliche String zurückgegeben, bei $need\_del=true$ wird in diesem
+Fall nichts abgespalten.}
+
+\proch{string}{SplitFilename}{const string \&fullname,string \&path,string \&basename,string \&ext}{strtool.h}
+\procf{string}{SplitFilename}{const string \&fullname,string \&path,string \&filename}
+\descr{Die Funktion spaltet den gegebenen Namen einer Datei in Pfad (Verzeichnis) 
+und Dateinamen auf. Wird der Parameter $ext$ angegeben wird der Dateinamen in
+den Basisnamen (ohne Erweiterung) und die Dateierweiterung aufgespalten. 
+Die Trennzeichen '/' am Ende des Pfades und '.' zwischen Dateinamen und Erweiterung
+gehören nicht zu den Ergebnis-Zeichenketten.}
+
+\subsection{Alphanumerische Bildschirmsteuerung}
+
+Für ICE-Implementierungen unter X11 und MS-Windows steht ein
+terminalähnliches Textfenster zur Verfügung, an das auch dann Eingaben
+weitergeleitet werden, wenn das ICE-Grafikdisplayfenster den Focus hat. Damit
+sind Anwendungsprogramme mit einem einfachen Nutzerinterface, das sich auf
+einem Textbildschirm realisieren läßt, zwischen den verschiedenen
+Implementierungen portabel.
+
+\proc{void}{OpenAlpha}{unsigned char *windowname}
+\descr{
+Es wird ein Textfenster mit dem Namen $windowname$ angelegt geöffnet.\\
+Auch ohne expliziten Aufruf dieser Funktion wird ein Textfenster
+geöffnet, wenn eine Funktion zur Ausgabe bzw. Eingabe aufgerufen wird.
+}
+\proc{void}{CloseAlpha}{void}
+\descr{
+Das Textfenster wird abgemeldet.
+}
+\proc{void}{Alpha}{int mode}
+\descr{
+Das Textfenster wird mit $mode$=OFF minimiert und mit $mode$=ON wieder eingeschaltet.
+}
+\proc{void}{PushAlpha}{void}
+\descr{
+Der aktuelle Zustand des Textfensters wird auf einem Stack gesichert.
+}
+\proc{void}{PopAlpha}{void}
+\descr{
+Das zuletzt auf dem Stack gesicherte Textfenster wird wiederhergestellt.
+}
+\proc{void}{ClearAlpha}{void}
+\descr{
+Der Inhalt des Textfensters wird gelöscht.
+}
+\proc{void}{SetAlphaCursor}{int x,int y}
+\descr{
+Ein Textkursor wird im Textfenster auf die Position $(x,y)$ gesetzt.
+}
+\proc{void}{GetAlphaCursor}{int *x,int *y}
+\descr{
+Die aktuelle Position des Textkursors wird auf den 
+Variablen $x$ und $y$ bereitgestellt.
+}
+\proc{void}{Bell}{void}
+\descr{
+Es wird ein Ton ausgegeben.
+}
+\proc{int}{AlphaSizeX}{void}
+\descr{
+Die Anzahl der Spalten des Textfensters wird zurückgegeben.
+}
+\proc{int}{AlphaSizeY}{void}
+\descr{
+Die Anzahl der Zeilen des Textfensters wird zurückgegeben.
+}
+\proc{void}{SetAttribute}{int fg,int bg,int inv,int high}
+\descr{
+Es werden Attribute für den Textbildschirm gesetzt. Die Vordergrundfarbe wird
+durch die niederwertigen drei Bits von $fg$, die Hintergrundfarbe duch die
+niederwertigen drei Bits von $bg$ bestimmt. Für $inv \ne 0$ wird der Text
+invertiert dargestellt und mit $high \ne 0$ hervorgehoben.\\
+Für die Farbangaben können die Konstanten C\_BLACK, C\_RED, C\_GREEN,
+C\_BLUE, C\_YELLOW, C\_CYAN, C\_MAGENTA und C\_WHITE verwendet werden.
+}
+
+
+\subsection{Ein- und Ausgabefunktionen}
+
+\proc {int}{PutChar}{int c}
+\descr{
+Es wird ein Zeichen $c$ an das Textfenster ausgegeben.
+}
+\proc {int}{GetChar}{void}
+\descr{
+Es wird die Eingabe eines Zeichens erwartet und der Zeichencode der
+gedrücketen Taste zurückgegeben.
+}
+\proc {int}{GetKey}{void}
+\descr{
+Es wird getestet, ob eine Taste gedrückt wurde. Ist das der Fall, wird der
+zugehörige Zeichencode zurückgegeben, wenn keine Taste gedrückt wurde, ist der
+Rückgabewert 0.
+}
+\proc{int}{Printf}{const char *format,...}
+\descr{
+Ausgabe in das Textfenster. Der Formatstring und die restlichen Parameter sind
+aufgebaut wie bei der Standardfunktion printf().
+}
+\proc{int}{Print}{const string \&s}
+\descr{
+Ausgabe des string s in das Textfenster.
+}
+\proc{int}{Input}{const char *prompt}
+\procf{int}{Input}{const char *prompt,int defvalue}
+\procf{int}{Input}{const string \&prompt}
+\procf{int}{Input}{const string \&prompt,int defvalue}
+\descr{
+Eingabe einer Integerzahl. Der String $prompt$ wird als Prompt ausgegeben. Bei
+fehlerhafter Eingabe wird die Anforderung wiederholt. Ist $defvalue$ gegeben, 
+so wird dieser Wert als Default-Wert angeboten.
+}
+
+\proc{double}{InputD}{const char *prompt}
+\procf{double}{InputD}{const char *prompt,double defvalue}
+\procf{double}{InputD}{const string \&prompt}
+\procf{double}{InputD}{const string \&prompt,double defvalue}
+\descr{
+Eingabe einer Gleitkommazahl. Der String $prompt$ wird als Prompt ausgegeben. 
+Bei fehlerhafter Eingabe wird die Anforderung wiederholt. 
+Ist $defvalue$ gegeben, so wird dieser Wert als Default-Wert angeboten.
+}
+\proc{void}{InputS}{const char *p,char *s}
+\procf{string}{InputS}{const string \&p}
+\descr{
+Eingabe einer Zeichenkette. Der String $p$ wird als Prompt ausgegeben.
+}
+\proc{int}{InputString}{char *Str,int Control,int *Ptr,int *scroll}
+\descr{
+Eingabe einer Zeichenkette. Falls $Control$ ungleich Null ist, wird die
+Eingabe auch durch Kursortasten abgebrochen und als Rückgabewert der
+entsprechende Tastendruck geliefert.
+}
+
+\subsection{Zeitmessung}
+
+\proc{double}{TimeD}{int mode=TM\_WORLD}
+\descr{
+Es wird die Zeit in Sekunden zurückgegeben. Abhängig von $mode$ können 
+verschiedene Zeiten abgefragt werden:
+\begin{itemize}
+\item TM\_WORLD Die Systemzeit. Widerspiegelt die real abgelaufene Zeit.
+\item TM\_PROCESS Die Prozesszeit. Widerspiegelt die vom Prozess genutzte
+  Rechenzeit inklusive Systemaufrufen.
+\item TM\_USER Die ``user time''. Widerspiegelt die vom Prozess genutzte
+  Rechenzeit ohne Systemaufrufe.
+\item TM\_CHILD Die Kindzeit. Widerspiegelt die von Kindern des aktuellen Prozesses genutzte
+  Rechenzeit inklusive Systemaufrufen.
+\item TM\_CHILDUSER Die ``user''-Kindzeit. Widerspiegelt die von Kindern des
+  aktuellen Prozesses genutzte Rechenzeit ohne Systemaufrufe.
+\end{itemize}
+}
+\proc{void}{Delay}{double time}
+\descr{
+Verzögerung von $time$ Sekunden.
+}
+
+\subsection{Menüs und Verzeichnisse}
+
+\proch{void}{Directory}{vector$<$string$>$ \&t,const string \&mask,int mode=DIR\_FILE $|$ DIR\_DIR}{dirfunc.h}
+\descr{Im vector$<$string$>$ $t$ werden die Namen der gefundenen Dateien abgelegt, 
+die der Auswahlmaske $mask$ entsprechen. Die Maske ist den Konventionen des jeweiligen 
+Betriebssystems entsprechend aufzubauen. Enthält die Maske keinen Pfad,
+wird das aktuelle Verzeichnis benutzt.
+Enthält die Liste bereits Einträge, so bleiben diese erhalten. Die neuen Einträge
+der Liste werden alphabetisch sortiert angehängt.\\
+\begin{tabular}{ll}
+Modus & Bedeutung\\
+DIR\_FILE & suche reguläre Dateien \\
+DIR\_DIR & suche Verzeichnisse \\
+DIR\_WITHPATH & Ergänze die Eintrage um den Pfad \\
+\end{tabular}
+}
+\seealso{SplitFilename}
+
+\proch{int}{Menu}{const vector$<$string$>$ \&t,int x1=-1,int y1=-1,int x2=-1,int y2=-1, bool restore=false,const string \&title=''''}{visual/menu.h}
+\procf{int}{Menu}{const vector$<$string$>$ \&t,const vector$<$int$>$ \&menuId, int x1=2,int y1=2,int x2=30,int y2=22, bool restore=false,const string \&title=''''}
+\descr{
+  Aus der Liste von Menüpunkten $t$ wird in dem durch die Koordinaten $x1,y1$ und $x2,y2$
+  festgelegten Ausschnitt des Textfensters ein Menü aufgebaut.
+  Die Auswahl erfolgt mit den Kursortasten. Ist im Menütext ein Buchstabe durch ein 
+  vorangestelltes '~' markiert, so kann dieser Menüpunkt durch die entsprechende 
+  Taste ausgewählt werden, sonst wird der Anfangsbuchstabe verwendet.
+  Rückgabewert der Funktion ist die Nummer $nr$ des ausgewählten Texteintrages, 
+  auf den dann mit $t[nr]$ zugegriffen werden kann. Wird der Parameter $menuId$
+  angegeben, so wird der entsprechende Wert aus $menuId$ zurückgegeben.
+  Bei Abbruch mit $<$ESC$>$ ist der Rückgabewert negativ (=ERROR).
+  Ist $restore=true$ wird nach der Menüauswahl der vorherige Bildschirminhalt 
+  wiederhergestellt.
+}
+
+\proch{bool}{SelFile}{const string \&mask,string \&filename,string \&dirname,int mode=DIR\_FILE,const string \&title='''', int x1=-1,int y1=-1,int x2=-1,int y2=-1}{visual/menu.h}
+\procf{bool}{SelFile}{const string \&mask, string \&filename}
+\descr{Eine einfache interaktive Dateiauswahl. Mittels \see{Directory} wird eine
+Dateiliste aufgebaut, aus der mittels \see{Menu} eine Datei ausgewählt werden
+kann. Je nach $mode$ kann eine Datei und/oder ein Verzeichnis gewählt werden. Ist bei
+$mode$ der Wert $DIR\_SELPATH$ angegeben, kann man damit eine Datei in einem beliebigen
+erreichbaren Verzeichnis ausgewählt werden. Die Funktion gibt nach erfolgreicher Auswahl 
+den Wert $true$ zurück. Die ausgewählte Datei steht in $filename$, das Verzeichnis in 
+$dirname$. Bei Aufruf in der zweiten Form wird ist $filename$ aus Verzeichnis und 
+Dateinamen zusammengesetzt. Der Verzeichnisname ist relativ oder absolut, je nachdem wie
+das Verzeichnis in $mask$ angegeben wurde.}
+
+%\proc{string}{FileSel}{const string \&mask,int x1=2,int y1=2,int x2=30,int y2=22,bool restore=true}
+%\descr{
+%Eine einfache interaktive Dateiauswahl. Mittels \see{Directory} wird eine
+%Dateiliste aufgebaut, aus der mittels \see{Menu} eine Datei ausgewählt werden
+%kann. Im Fehlerfalle (keine Datei vorhanden) oder bei Abbruch durch den Nutzer
+%wird der Leerstring zurückgegeben.}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

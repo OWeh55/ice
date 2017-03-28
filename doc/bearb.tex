@@ -1,0 +1,274 @@
+\nsection{Bildbearbeitung}{processing}
+\label{Bildbearbeitung}
+
+In diesem Abschnitt werden Operationen über Bilder beschrieben, deren Ergebnis
+in der Regel wieder Bilder sind. \bsee{Filter} werden in einem eigenen 
+Abschnitt beschrieben (\see{Filter}).
+Alle Typen von Bildrepräsentationen werden hier, soweit es geht, gemeinsam 
+abgehandelt (\class{Image}, \class{ImageD}, \class{ColorImage}). 
+Auf die Besonderheiten bei bestimmten Typen wird speziell hingewiesen. 
+
+\subsection{Grauwerttransformationen}
+
+\proch{int}{BinImg}{const Image \&src,Image \&dest,int thr=1,int val=-1}{arith.h}
+\procf{int}{BinImg}{Image \&src,int thr=1}
+\descr{
+Binarisierung des Bildes $src$. Im Zielbild $dest$ werden alle Bildpunkte, 
+deren Grauwerte im Bild $src$ größer oder gleich $thr$ sind, auf $val$ 
+gesetzt, alle anderen Bildpunkte auf Null. Wird $val$ auf -1 gesetzt (default),
+wird der maximale Grauwert des Zielbildes verwendet.
+Bei Aufruf ohne $dest$ wird das Ergebnis in $src$ geschrieben.
+Die Bestimmung der Schwelle $thr$ kann durch \see{CalcThreshold} erfolgen.
+}
+
+\proch{int}{FindMin}{const Image \&img, int \&x, int \&y}{arith.h}
+\procf{int}{FindMin}{const Image \&img, IPoint \&p}
+\procf{int}{FindMin}{const Image \&img}
+\procf{int}{FindMax}{const Image \&img, int \&x, int \&y}
+\procf{int}{FindMax}{const Image \&img, IPoint \&p}
+\procf{int}{FindMax}{const Image \&img}
+\descr{Die Funktionen finden den minimalen/maximalen Wert im Bild $img$ und geben diesen
+als Funktionwert zurück. Bei Angabe der Parameter $x$ und $y$ bzw. $p$ wird die Position,
+an der dieser Wert gefunden wurde, darauf zurückgegeben.
+\seealso{PeakValuation}
+}
+
+\proch{int}{GetGrayLimits}{const Image \&img,int \&min,int \&max, 
+int mode=GV\_QUANTILE, double quantile = 0.01}{lintrans.h}
+\procf{int}{GetGrayLimits}{const Hist \& h, int\& min, int\& max, 
+int mode=GV\_QUANTILE, double quantile = 0.01 }
+\descr{
+Es werden aus dem Bild $img$ bzw. Histogramm $h$ eine untere Grenze
+$min$ und eine obere Grenze $max$ bestimmt. Dieses Grauwertintervall kann zum
+Beispiel für die lineare Grauwert-Transformation \see{GrayTransformLimits}
+genutzt werden, um den vollen Grauwertbereich auszunutzen. Diese Grenzen sind
+nicht das exakte Minimum oder Maxmimum wie in \see{FindMin} und \see{FindMax},
+sondern ignorieren extreme Wert, die als Ausreißer betrachtet werden können.
+Für $mode$ kann GV\_QUANTILE (default) oder GV\_MEAN gewählt werden.
+Bei $mode$=GV\_QUANTILE werden die Quantile $minq$ und $maxq$
+für die Ermittlung der unteren und die oberen Grenze verwendet.
+}
+
+\proch{int}{GrayTransform}{const Image \&src, const Image \&dest, double a1, double a0}{lintrans.h}
+\procf{int}{GrayTransform}{const Image \&src, double a1, double a0}
+\descr{
+Die Grauwerte des Bildes $src$ werden nach der Formel 
+$g \prime  = a1 \cdot g + a0$
+transformiert. Das Ergebnis steht in Bild $dest$ oder wird in $src$ eingetragen.
+Bei Grauwert über- oder Unterlauf werden der maximale oder minimale Grauwert verwendet.
+}
+
+\proch{int}{GrayTransformLimits}{const Image \&src, const Image \& dest, int min, int max}{lintrans.h}
+\procf{int}{GrayTransformLimits}{const Image \&img, int min, int max}
+\descr{
+Die Grauwerte des Bildes $src$ werden linear transformiert, so dass $min$ im
+Zielbild den Wert 0 ergibt, $max$ den Wert $dst->maxval$. Das Ergebnis steht
+in Bild $dst$ oder wird in $img$ eingetragen.
+}
+
+\proch{int}{GrayNormalize}{const Image \&src,const Image \& dest, int mode=GV\_QUANTILE, double quantile = 0.01}{lintrans.h}
+\procf{int}{GrayNormalize}{const Image \&src, int mode=GV\_QUANTILE, double quantile = 0.01}
+\descr{Die Grauwerte des Bildes $src$ werden normalisiert, indem mittels
+\see{GetGrayLimits} der Grauwertbereich ermittelt und mittels
+\see{GrayTransformLimits} auf den Grauwertbereich 0..$dst->maxval$
+transformiert wird.}
+
+\proch{int}{HistogramEqualization}{const Image \&img1,const Image \&img2}{icefunc.h}
+\descr{
+Es wird im Bild {\bf img1} ein Histogrammausgleich durchgeführt und 
+das Ergebnis im Bild {\bf img2} abgespeichert.
+}
+
+\proch{int}{correctShading}{const Image \&img1,const Image \&img2, int ord=2}{shading.h}
+\descr{
+Es wird eine Shading-Korrektur des Bildes $img1$ durchgeführt und im Bild 
+$img2$ abgespeichert. Dazu wird an das Bild eine polynomiale Funktion
+angepasst. Die Ordnung des Polynoms wird durch den Parameter $ord$
+bestimmt.
+}
+
+\proch{int}{correctShading}{const Image \&img1,const Image \&img2, Function2dWithFitting \&fn}{shading.h}
+\descr{
+Es wird eine Shading-Korrektur des Bildes $img1$ durchgeführt und im Bild 
+$img2$ abgespeichert. Dazu wird die Funktion {\bf fn} an das Bild
+angepasst.
+}
+
+\subsection{Bildarithmetik}
+\subsubsection{Integer-Bilder}
+
+Die Funktionen zur Bildarithmetik benötigen im allgemeinen zwei Quellbilder
+und ein Zielbild. Bei fehlerfreier Abarbeitung wird der Wert $OK$
+zurückgegeben, sonst ein Fehlercode. Die beteiligten Bilder müssen
+die gleiche Größe haben.
+
+\label{range}
+\hypertarget{range}{}
+Überschreitet der Wertebereich des Ergebnisses den Umfang des Zielbildes,
+so sind mittels Parameter $mode$ folgende Strategien wählbar:
+
+\begin{itemize}
+\item MD\_NORMALIZE \\
+Grauwerte werden auf den Bereich des Zielbildes linear transformiert.
+\item MD\_LIMIT \\
+Grauwerte werden auf den Bereich des Zielbildes begrenzt.
+\item MD\_MODULO \\
+Grauwerte werden durch Verwendung des Modulo-Operators auf den Bereich 
+des Zielbildes begrenzt.
+\end{itemize}
+
+\proch{int}{ClearImg}{const Image \&img}{arith.h}
+\descr{Alle Bildpunkte werden auf Null gesetzt.
+}
+\proch{int}{setImg}{const Image \&img,int val}{base.h}
+\descr{Alle Bildpunkte werden auf den konstanten Wert $val$ gesetzt.
+}
+\proch{int}{setImg}{const Image \&img,const Function2d \& fn}{fitfn.h}
+\descr{Alle Bildpunkte (x,y) werden auf den Wert der Funktion $fn(x,y)$ 
+  gesetzt (\see{Func2D}). Überschreitet der Funktionswert den Bereich 
+  [0..img->maxval], so wird der Wert begrenzt.
+}
+\proc{int}{CopyImg}{const Image \&src,const Image \&dest}
+\descr{Das Bild $src$ wird nach $dest$ kopiert.}
+
+\proch{int}{AddImg}{const Image \&img1,const Image \&img2,
+  const Image \&dest,int mode=MD\_NORMALIZE}{arith.h}
+\descr{
+Punktweise Addition der Bilder $img1$ und $img2$:
+$$vd=v1+v2$$
+\hyperref{range}{}{}{{\bf mode}} steuert die Behandlung von 
+Wertebereichsüberschreitungen.
+}
+\proc{int}{SubImg}{const Image \&img1,const Image \&img2,int smode,const Image \&dest,int mode=MD\_NORMALIZE}
+\procf{int}{SubImg}{const Image \&img1,const Image \&img2,const Image \&dest,int smode=SMD\_ABSOLUTE,int mode=MD\_NORMALIZE}
+\descr{
+Punktweise Subtraktion der Bilder $img1$ und $img2$.
+
+\begin{tabular}{|c|c|} \hline
+smode & Wert \\ \hline
+SMD\_ABSOLUTE & $vd=\vert v1-v2 \vert$ \\
+SMD\_POSITIVE & $vd=max(v1-v2,0)$ \\
+SMD\_SHIFT & $vd=v1-v2+max/2$ \\ \hline
+\end{tabular}
+
+\hyperref{range}{}{}{{\bf mode}} steuert die Behandlung von 
+Wertebereichsüberschreitungen.
+}
+
+\proc{int}{MaxImg}{const Image \&img1,const Image \&img2,const Image \&dest,int mode=MD\_NORMALIZE}
+\descr{Es wird punktweise das Maximum der Bilder $img1$ und $img2$ gebildet:
+$$vd=max(v1,v2)$$
+\hyperref{range}{}{}{{\bf mode}} steuert die Behandlung von 
+Wertebereichsüberschreitungen.
+}
+\proc{int}{MinImg}{const Image \&img1,const Image \&img2,const Image \&dest,int mode=MD\_NORMALIZE}
+\descr{Es wird punktweise das Maximum der Bilder $img1$ und $img2$ gebildet
+$$vd=min(v1,v2)$$
+\hyperref{range}{}{}{{\bf mode}} steuert die Behandlung von 
+Wertebereichsüberschreitungen.
+}
+\proc{int}{InvertImg}{const Image \&img, const Image \&dest}
+\procf{int}{InvertImg}{const Image \&img}
+\descr{Bildinvertierung:
+$$vd=(max1-vs)\cdot{maxd \over max1}$$
+Bei Aufruf ohne $dest$ wird das Ergebnis in $img$ geschrieben.
+}
+\proch{int}{RenormImg}{const Image \&img,const Image \&dest}{arith.h}
+\descr{
+Das Bild $src$ wird auf die Größe und den Grauwertumfang von $dest$
+umgerechnet und in $dest$ abgelegt.
+}
+
+\subsubsection{Gleitkommabilder}
+
+\proch{int}{ClearImgD}{ImageD img}{darith.h}
+\descr{Die Werte des Gleitkommabildes $img$ werden auf 0.0 gesetzt.}
+\proc{int}{SetImgD}{ImageD img,double val}
+\descr{Alle Bildpunkte werden auf den konstanten Wert $val$ gesetzt.}
+\proc{int}{MoveImgD}{ImageD src,ImageD dest}
+\descr{Das Bild $src$ wird nach $dest$ transportiert.}
+\proc{int}{AddImgD}{ImageD img1,ImageD img2,ImageD dest}
+\descr{Punktweise Addition der Bilder $img1$ und $img2$}
+\proc{int}{MulImgD}{ImageD img1,ImageD img2,ImageD dest}
+\descr{Punktweise Multiplikation der Bilder $img1$ und $img2$}
+\proc{int}{LogImgD}{ImageD src,ImageD dest}
+\descr{Punktweise Logarithmierung des Bildes $src$}
+
+\subsection{Polar-Darstellung}
+
+\proc{int}{PolarImgD}{ImageD src,ImageD dest,double r1=1,double r2=0,int sym=2}
+\procf{int}{PolarImg}{const Image \&src,const Image \&dest,double r1=1,double r2=0,int sym=2}
+\descr{
+Transformiert das Bild $src$ in die Polar-Darstellung. Dazu werden die
+Koordinaten jedes Punktes des Bildes $src$ bezüglich des Mittelpunktes
+in die Betrag- und Phasenwinkel-Darstellung (r,phi) umgerechnet und der
+Grauwert des jeweiligen Bildpunktes unter den Koordinaten (x=r,y=phi) 
+im Bild $dest$ gespeichert.
+Die Parameter $r1$ und $r2$ bestimmen den minimalen und den maximalen zu
+verwendenden Radius. $r2==0$ veranlasst die Verwendung des maximal
+möglichen Radius. 
+Der Parameter $sym$ charakterisiert die $sym$-zählige Symmetrie des
+Originalbildes (Standard sym=2 z.B. bei Amplituden-Spektren). 
+Liegt mit sym>1 eine mehrzählige Rotations-Symmetrie vor, so wird 
+in X-Richtung nur ein Winkelbereich von 0..360/sym erfasst.
+}
+
+\proc{int}{PolarC}{ImageD src,ImageD dest,double x,double y,double \&r,double \&phi,double r1=1,double r2=0,int sm=2}
+\descr{
+Berechnet Winkel $phi$ und Radius $r$, der einem bestimmten Koordinatenpaar
+($x,y$) im Polarbild $dest$ entspricht. Alle anderen Parameter sind
+genauso anzugeben, wie sie zur Erzeugung des Polarbildes verwendet
+wurden. 
+\seealso{PolarImg}
+}
+ 
+\proc{int}{LogPolarImgD}{ImageD src,ImageD dest,double r1=1,double r2=0,int sym=2}
+\procf{int}{LogPolarImg}{const Image \&src,
+  const Image \&dest,double r1=1,double r2=0,int sym=2}
+\descr{
+Transformiert das Bild src in die Polar-Darstellung. Dazu werden die
+Koordinaten jedes Punktes des Bildes img1 bezüglich des Mittelpunktes
+in die Betrag- und Phasenwinkel-Darstellung (r,phi) umgerechnet und der
+Grauwert des jeweiligen Bildpunktes unter den Koordinaten (x=r,y=phi) 
+im Bild img2 gespeichert.
+Die Parameter r1 und r2 bestimmen den minimalen und den maximalen zu
+verwendenden Radius. $r2==0$ veranlasst die Verwendung des maximal
+möglichen Radius. 
+Der Parameter sym charakterisiert die sym-zählige Symmetrie des
+Originalbildes (Standard sym=2 z.B. bei Amplituden-Spektren). 
+Liegt mit sym>1 eine mehrzählige Rotations-Symmetrie vor, so wird 
+in X-Richtung nur ein Winkelbereich von 0..360/sym erfasst.
+}
+
+\proc{int}{LogPolarC}{ImageD src,ImageD dest,double x,double y,double \&r,double \&phi,double r1=1,double r2=0,int sym=2}
+\descr{
+Berechnet Winkel $phi$ und Radius $r$, der einem bestimmten Koordinatenpaar
+($x,y$) im Log-Polarbild $dest$ entspricht. Alle anderen Parameter sind
+genauso anzugeben, wie sie zur Erzeugung des Log-Polarbildes verwendet
+wurden. 
+\seealso{LogPolarImg}
+}
+
+\subsection{Farbraum-Transformationen}
+Bilder der Klasse \class{ColorImage} speichern Farbwerte im RGB-Format.
+Neben Funktionen zur Farbraum-Transformation einzelner 
+Farbwerte (\see{RgbToHsi}) gibt es Funktionen zur Transformation von 
+Bildern. Im Farbraum RGB werden Bilder der Klasse \class{ColorImage} 
+verwendet, in anderen Farbräumen werden die einzelnen Komponenten in 
+jeweils eigenen Bildern der Klasse \class{Image} abgelegt. Der 
+Wertebereich der jeweiligen Farbkomponente wird dabei auf den 
+Wertebereich des Bildes gestreckt.
+
+\proch{int}{ColorImageToHsi}{const ColorImage \&src, const Image \&hue, const Image \&saturation, const Image \&intensity}{ColorSpace.h}
+\procf{int}{HsiToColorImage}{const Image \&hue, const Image \&saturation, const Image \&intensity, const ColorImage \&dst}
+\procf{int}{ColorImageToLab}{const ColorImage \&src,
+  const Image \&lImg, const Image \&aImg, const Image \&bImg}
+\procf{int}{LabToColorImage}{const Image \&lImg, const Image \&aImg, const Image \&bImg, const ColorImage \&src}
+\procf{int}{ColorImageToYuv}{const ColorImage \&src, const Image \&y, const Image \&u, const Image \&v}
+\procf{int}{YuvToColorImage}{const Image \&y, const Image \&u, const Image \&v, const ColorImage \&dst}
+\descr{Farbraum-Transformation von RGB als \class{ColorImage} in die Farbräume YUV, HSI und Lab und zurück.}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

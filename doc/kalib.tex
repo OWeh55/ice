@@ -1,0 +1,169 @@
+\lsection{Projektive Abbildungen und Kalibrierung}
+
+\subsection{Punktkorrespondenzen}
+
+Für die Kamerakalibrierung müssen Korrespondenzpaare von Raum- und Bildpunkten
+vorgegeben werden. Zur Handhabung solcher Punktkorrespondenzen dient die
+Datenstruktur $PointCorr$:
+\begprogr\begin{verbatim}
+typedef struct
+{
+double pw[3];   /* Raumpunktkoordinaten */
+double pc[2];   /* Bildebenenkoordinaten */
+double w;       /* Gewichtskoeffizient */
+int status;     /* Status der Bildebenenkoordinaten
+                   OK      - gültiger Abbildungspunkt
+                   INVALID - ungültigen Abbildungspunkt */
+} PointCorr;
+\end{verbatim}\endprogr
+
+\proc{int}{WritePointCorr}{PointCorr *pcr,int n,char *file}
+\descr{
+Die ersten $n$ Einträge der Punktkorrespondenzliste $pcorr$ werden auf das
+File $file$ ausgegeben.
+}
+\proc{PointCorr*}{ReadPointCorr}{char *pcfile,int *n}
+\descr{
+Vom File $pcfile$ wird eine Liste von Punktkorrespondenzen eingelesen. Die
+Anzahl der gelesenen Einträge wird auf $n$ zurückgegeben.
+}
+\proc{int}{CopyPointCorr}{PointCorr *pcs,PointCorr *pcd}
+\descr{
+Die Punktkorrespondenzliste $pcs$ wird nach $pcd$ kopiert.
+}
+\proc{int}{GetTriangle}{PointCorr *pcorr,int n,PointCorr pc[3]}
+\descr{
+Aus der Punktkorrespondenzliste $pcorr$ mit $n$ Elementen wird ein Dreieck mit
+möglichst großer Fläche ausgewählt. Die Korrespondenzen für dessen Eckpunkte
+werden auf $pc$ zurückgegeben.
+}
+
+
+\subsection{Kamerakalibrierung}
+
+Kameras werden durch ihre projektiven Parameter beschrieben. Auf diese intern
+verwalteten Parameter kann über einen Pointer vom Typ $camera$ zugegriffen
+werden.
+\begprogr\begin{verbatim}
+typedef struct Camera_
+{
+  double a[3][4];             /* projektive Kameraparameter */
+  double ac[3][3];            /* inverse Projektionsmatrix */
+  double c[3];                /* Zentrum der Projektion */
+  double pp[2];               /* Hauptpunkt */
+  int has_distortion;         /* Flag Verzeichnungparameter */
+  double k2,k4;               /* Verzeichnungsparameter */
+} *camera;
+\end{verbatim}\endprogr
+
+\proc{camera}{CalibCamera}{camera cam,PointCorr *pc,int nbr,int flag,double
+*mse}
+\descr{
+Aus den Punktkorrespondenzen $pc$ werden die Kameraparameter berechnet und in
+die Struktur $cam$ eingetragen. Wenn für $cam$ der NULL-Pointer übergeben
+wird, wird die Kamerastruktur implizit angelegt und als Rückgabewert
+übergeben. $nbr$ gibt die Anzahl der Punktkorrespondenzen an, die mindestens 6
+betragen muß. Durch $flag$=TRUE kann die Berechnung von
+Verzeichnungsparametern erzwungen werden.
+}
+\proc{camera}{CopyCamera}{camera cam}
+\descr{
+Es wird eine Kamerastruktur angelegt, die mit den Daten von $cam$ gefüllt
+wird.
+}
+\proc{int}{WriteCamera}{camera cam, char name[]}
+\descr{
+Die Parameter der Kamera $cam$ werden in ein Textfile $name$ geschrieben.
+}
+\proc{camera}{ReadCamera}{char name[]}
+\descr{
+Es wird eine Kamerastruktur angelegt, deren Parameter aus dem File $name$
+gelesen werden.
+}
+\proc{int}{DistortPoint}{camera cam,double p[2]}
+\descr{
+Zu dem Bildpunkt $p$ wird mit den Verzeichnungsparametern aus $cam$ der
+zugehörige verzeichnete Punkt berechnet.
+}
+\proc{int}{RectifyPoint}{camera cam,double p[2]}
+\descr{
+Zu dem Bildpunkt $p$ wird mit den Verzeichnungsparametern aus $cam$ der
+zugehörige unverzeichnete (rektifizierte) Punkt berechnet.
+}
+\proc{int}{CalcPhysicalParameters}{camera cam,double par[5]}
+\descr{
+Aus den projektiven Parametern der Kamera werden die inneren Kameraparameter
+berechnet. $par[0],par[1]$ sind die Hauptpunktkoordinaten, $par[2]$ und
+$par[3]$ sind die Produkte aus Brennweite und Skalierung in x- bzw. y-Richtung
+und $par[4]$ ist der Winkel zwischen der x- und y-Achse der Bildebene.
+}
+\proc{camera}{CalcProjectiveCamera}{double par[5]}
+\descr{
+Es wird eine Kamerastruktur angelegt, deren projektive Parameter aus den
+inneren Kameraparametern $par$ berechnet werden. Die erzeugte Kamera befindet
+in einer Normallage sich mit ihrem Projektionszentrum im Ursprung des
+Weltkoordinatensystems.
+} 
+\proc{double}{CalibHandCamera}{Frame *hb,int n,PointCorr **c,int m,double p[5],Frame *ch,Frame *bw}
+\descr{
+Mit Hilfe der Felder $hb[n]$ für die Hand-Basis-Transformationen und c[n][m] für
+die Punktkorrespondenzen aus $n$ verschiedenen Kamerapositionen werden durch
+Ausgleichsrechnung die inneren Kameraparameter $p$, die
+Kamera-Hand-Transformation $ch$ und die Basis-Welt-Transformation $bw$ berechnet.
+}
+Für die Kalibrierung mit dem vorhandenen Kalibrierkörper sind Funktionen
+vorbereitet, die an die spezielle Form und Lage der Paßpunktmarken
+(Doppelkreuze) angepaßt sind.
+\proc{camera}{InitManCamera}{Image imgv,Image imgo}
+\descr{
+Interaktive Initialisierung der Kamerakalibrierung. Das Bild $imgv$ muß eine
+Abbildung des Kalibrierkörpers enthalten. Zu den vorgegebenen Paßpunktmarken
+(Nummer) muß die zugehörige Abbildung ausgewählt werden (durch Klicken in das
+Innere des Doppelkreuzes). Wenn auf diese Weise sechs Punktkorrespondenzen
+gefunden sind, wird eine projektive Abbildung angepaßt und als Kamerastruktur
+zurückgegeben.
+}
+\proc{int}{Calibrate}{Image imgv,Image imgo,camera cam,int cnt,int distort}
+\descr{
+Mit Hilfe der initialen Kamera $cam$ werden im Bild $imgv$ alle Paßpunktmarken
+gesucht und zugeordnet. Es wird vorausgesetzt, daß $imgv$ eine Abbildung des
+Kalibrierkörpers enthält. Durch $cnt$ kann eine Anzahl von Aufnahmen angegeben
+werden, über die die Paßpunkte gemittelt werden sollen. Dazu werden intern vom
+aktuell ausgewählten Videokanal (s. SelChannel) Bilder eingelesen. Mit
+$distort=TRUE$ werden zusätzlich Parameter für radialsymmetrische
+Verzeichnungen bestimmt. Die aktualisierten Kameraparameter werden auf $cam$
+bereitgestellt.
+}
+\proc{int}{CalibrateImg}{Image imgv,Image imgo,camera cam,int distort}
+\descr{
+Mit Hilfe der initialen Kamera $cam$ werden im Bild $imgv$ alle Paßpunktmarken
+gesucht und zugeordnet. Es wird vorausgesetzt, daß $imgv$ eine Abbildung des
+Kalibrierkörpers enthält. Mit $distort=TRUE$ werden zusätzlich Parameter für
+radialsymmetrische Verzeichnungen bestimmt. Die aktualisierten Kameraparameter
+werden auf $cam$ bereitgestellt.
+}
+
+
+\subsection{Abbildung, Sehstrahlen, Raumpunkte}
+
+\proc{int}{MapPoint}{camera cam,double pw[3],double pc[2]}
+\descr{
+Der Raumpunkt $pw$ wird mit der Kamera $cam$ in den Bildpunkt $pc$ abgebildet.
+}
+\proc{int}{ViewRay}{camera cam, double p[2], double t[3]}
+\descr{
+Es wird ein Einheitsvektor $t$ berechnet, der die Richtung des Sehstrahls vom
+Bildpunkt $p$ durch das Projektionszentrum der Kamera $cam$ hat.
+}
+\proc{int}{ViewPlane}{camera cam,double p,double phi,double n[3]}
+\descr{
+Es wird der Normalenvektor $n$ der Raumebene berechnet, die durch das
+Projektionszentrum der Kamera $cam$ und die durch die Hesseschen Parameter $p$ und $phi$
+charakterisierte Bildgerade bestimmt ist.
+}
+\proc{int}{SpacePoint}{camera cam[],double pl[][2],int nbr,double pw[3],double *mse}
+\descr{
+Durch Ausgleichsrechnung wird der Schnittpunkt der Sehstrahlen berechnet, die
+jeweils vom Bildpunkt $p_i$ der Kamera $cam_i$ ausgehen.
+}
+

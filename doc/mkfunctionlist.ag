@@ -1,0 +1,468 @@
+/* icedoc - Glossar lesen und in Funktionslisten konvertieren */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string.h>
+#include <ctype.h>
+
+//#include <getopt.h>
+
+#include "mkfunctionlist.h"
+
+/*AppGen:Global*/
+
+using namespace std;
+
+// binary tree element for functions/methods
+class Function
+{
+public:
+  string typ;
+  string pname;
+  string param;
+  string label;
+  string page;
+  string section;
+  Function *left;
+  Function *right;
+  Function(const string &ret,const string &name,
+	   const string &para,const string &label,
+	   const string &page,
+	   const string &section):
+    typ(ret),pname(name),param(para),label(label),page(page),section(section),
+    left(NULL), right(NULL) {}
+};
+
+class Section
+{
+public:
+  string name;
+  string label;
+  string nlabel;
+  string page;
+  Section(const string &name,
+	  const string &label,
+	  const string &nlabel,
+	  const string &page):
+    name(name),label(label),nlabel(nlabel),page(page) {}
+};
+
+Function* gloss = NULL;
+
+vector<Section> sections;
+
+enum readResult {isOK=0,isIGNORE=1,isEOF=2,isERROR=3};
+
+readResult readGlo(ifstream &is,
+		   string &s1,string &s2,string &s3,string &s4,
+		   string &page)
+{
+  string line;
+  if (getline(is,line))
+    {
+      if (line.substr(0, 14) != "\\glossaryentry")      
+	return isIGNORE;
+      Split(line,"{");
+      string hline=SplitBracket(line);
+      Split(line,"{");
+      string page=SplitBracket(line);
+      // cout << hline << " ||| " << page << endl;
+      s1 = Split(hline,";");
+      s2 = Split(hline,";");
+      s3 = Split(hline,";");
+      s4 = Split(hline,";");
+      return isOK;
+    }
+  else
+    return isEOF;
+}
+
+void Add(Function* &g, Function* e)
+{
+  if (g == NULL)
+    {
+      g = e;
+    }
+  else
+    {
+      if (lowercase(g->pname) > lowercase(e->pname))
+        Add(g->left, e);
+      else
+        Add(g->right, e);
+    }
+}
+
+void ReadGlossary(const string &filename)
+{
+  ifstream is(filename.c_str());
+  if (! is.good())
+    {
+      throw "File " + filename + " not found";
+    }
+
+  string line;
+  string section = "";
+  string s1,s2,s3,s4;
+  string page;
+
+  while (readGlo(is,s1,s2,s3,s4,page)!=isEOF)
+    {
+      if (s1 != "SECTION")
+        {
+          Add(gloss, new Function(s1, s2, s3, s4, page, section));
+        }
+      else
+	{
+	  section=s2;
+	  sections.push_back(Section(s3,s2,s4,page));
+	}
+    }
+}
+
+void WriteEntryU(ofstream &os, Function* g)
+{
+  os << "\\functionlistentry{" << g->typ << "}{" << g->pname;
+  os << "}{" << g->param << "}{" << g-> label;
+  os << "}{" << g-> section << "}{" << g->page << "}" << endl;
+}
+
+void WriteSectionU(Function* g, const string &section, ofstream &os)
+{
+  if (g != NULL)
+    {
+      WriteSectionU(g->left, section, os);
+      if (g->section == section)
+        WriteEntryU(os, g);
+      WriteSectionU(g->right, section, os);
+    }
+}
+
+int countFunctions(Function *g, const string &section)
+{
+  if (g==NULL)
+    return 0;
+  int count = 0;
+  if (g->section == section)  count++;
+  count += countFunctions(g->left,section);
+  count += countFunctions(g->right,section);
+  return count;
+}
+
+void WriteListU(Function* g, ofstream &os)
+{
+  if (g != NULL)
+    {
+      for (int i=0;i<sections.size();i++)
+	{
+	  //	  cout << sections[i].label << endl;
+	  if (countFunctions(g,sections[i].label)>0)
+	    {
+	      os << "\\subtitle{\\hyperlink{SECTION:" << sections[i].label << "}{" << sections[i].name << "}}\\\\"<<endl;
+	      WriteSectionU(gloss, sections[i].label, os);
+	      os << endl;
+	    }
+        }
+    }
+}
+
+int writeListSection(const string &fn)
+{
+  ofstream os(fn.c_str());
+  if (! os.good())
+    throw "Cannot open file" + fn;
+
+  WriteListU(gloss, os);
+  return 0;
+}
+
+bool first_letter[256];
+bool second_letter[256];
+
+void navigation(ofstream &os,
+                char c1, char c2, bool first)
+{
+  char u1 = toupper(c1);
+  char l1 = tolower(c1);
+  char u2 = toupper(c2);
+  char l2 = tolower(c2);
+
+  if (second_level)
+    os << endl << "\\letterlabel{" << u1 << l2 << "}" << endl;
+  else
+    os << endl << "\\letterlabel{" << u1 << "}" << endl;
+
+  if (first) os << "\\letterlabel{" << u1 << "}" << endl;
+  //  if (second_level) os << "\\label{" << u1 << l2 << "}" << endl;
+
+  //  os << "\\hrule" << endl;
+
+  for (int i = 0; i < 256; i++)
+    {
+      if (first_letter[i])
+        {
+          char letter = toupper(i);
+          os << "\\letterref{" << letter << "}" << endl;
+        }
+    }
+
+  if (second_level)
+    {
+      os << endl;
+
+      for (int i = 0; i < 256; i++)
+        {
+          if (second_letter[i])
+            {
+              char letter = tolower(i);
+              os << "\\letterref{" << u1 << letter << "}" << endl;
+            }
+        }
+    }
+
+  // os << "\\hrule" << endl;
+
+  if (second_level)
+    os << "\\letterlabelend{" << u1 << l2 << "}" << endl;
+  else
+    os << "\\letterlabelend{" << u1 << "}" << endl;
+}
+
+void WriteEntryS(ofstream &os, Function* g)
+{
+  os << "\\functionlistentry{" << g->typ << "}{" << g->pname;
+  os << "}{" << g->param << "}{" << g-> label;
+  os << "}{" << g-> section << "}{" << g->page << "}" << endl;
+}
+
+void register_first_letter(Function* g)
+{
+  if (g != NULL)
+    {
+      register_first_letter(g->left);
+      first_letter[tolower(g->pname[0])] = true;
+      register_first_letter(g->right);
+    }
+}
+
+void RegisterFirstLetter(Function* g)
+{
+  for (int i = 0; i < 256; i++)
+    first_letter[i] = false;
+  register_first_letter(g);
+}
+
+void register_second_letter(Function* g, unsigned char c1)
+{
+  if (g != NULL)
+    {
+      register_second_letter(g->left, c1);
+      if (c1 == tolower(g->pname[0]))
+        {
+          second_letter[tolower(g->pname[1])] = true;
+        }
+      register_second_letter(g->right, c1);
+    }
+}
+
+void RegisterSecondLetter(Function* g, unsigned char c1)
+{
+  for (int i = 0; i < 256; i++)
+    second_letter[i] = false;
+  register_second_letter(g, c1);
+}
+
+void WriteListS(Function* all, Function* g, ofstream &os, char &c1, char &c2)
+{
+  if (g != NULL)
+    {
+      WriteListS(all, g->left, os, c1, c2);
+      if (g->typ != "SECTION")
+        {
+          if (c1 != tolower(g->pname[0]))
+            {
+              // new first letter
+              c1 = tolower(g->pname[0]);
+              if (second_level)
+                {
+                  // find all second letters
+                  RegisterSecondLetter(all, c1);
+                }
+              c2 = tolower(g->pname[1]);
+              navigation(os, c1, c2, true);
+            }
+          else
+            {
+              if (second_level)
+                if (c2 != tolower(g->pname[1]))
+                  {
+                    c2 = tolower(g->pname[1]);
+                    navigation(os, c1, c2, false);
+                  }
+            }
+          WriteEntryS(os, g);
+        }
+      WriteListS(all, g->right, os, c1, c2);
+    }
+}
+
+int writeListSorted(const string &f1)
+{
+  ofstream os(f1.c_str());
+  if (! os.good())
+    {
+      throw "Cannot open " + f1;
+    }
+
+  char a1 = ' ';
+  char a2 = ' ';
+
+  os << "\\label{FunktionsListe}" << endl;
+
+  RegisterFirstLetter(gloss);
+
+  WriteListS(gloss, gloss, os, a1, a2);
+
+  return 0;
+}
+
+bool isClass(const vector<string> &classes, const string &w)
+{
+  bool exists = false;
+  for (int i = 0; i < classes.size() && ! exists; i++)
+    {
+      if (w == classes[i])
+        exists = true;
+    }
+  return exists;
+}
+
+void getClasses(Function* tree, vector<string> &classes)
+{
+  if (tree != NULL)
+    {
+      getClasses(tree->left, classes);
+      getClasses(tree->right, classes);
+      string::size_type pos = tree->pname.find("::");
+      if (pos != string::npos)
+        {
+          string s1 = tree->pname.substr(0, pos);
+          string s2 = tree->pname.substr(pos + 2);
+          // cout << s1 << " ## " << s2 << endl;
+          if (s1 == s2)
+            {
+              // class found
+              // store to classes if not yet registered
+              if (! isClass(classes, s1))
+                classes.push_back(s1);
+            }
+        }
+    }
+}
+
+string getWord(string &src)
+{
+  string res;
+  int idx = 0;
+  if (idx >= src.length())
+    return res;
+  if (isalpha(src[idx]))
+    {
+      idx++;
+      while (idx < src.length() && isalnum(src[idx]))
+        idx++;
+    }
+  else
+    idx++;
+  res = src.substr(0, idx);
+  src.erase(0, idx);
+  return res;
+}
+
+string withLinks(string src, const vector<string> &classes)
+{
+  //  cout << "all: " << src << endl;
+  string result;
+  while (!src.empty())
+    {
+      string w = getWord(src);
+      if (isClass(classes, w))
+        result += "\\hyperlink{" + w + "}{" + w + "}";
+      else
+        result += w;
+    }
+  return result;
+}
+
+void setLinks(Function* node, const vector<string> &classes)
+{
+  if (node->typ != "SECTION")
+    {
+      // cout << "entry: "<< node->typ << " " << node->pname << " " << node->param << endl;
+      string w = node-> typ;
+      node->typ = withLinks(w, classes);
+      w = node-> param;
+      node->param = withLinks(w, classes);
+    }
+}
+
+void setAllLinks(Function* tree, const vector<string> &classes)
+{
+  if (tree != NULL)
+    {
+      setLinks(tree, classes);
+      setAllLinks(tree->left, classes);
+      setAllLinks(tree->right, classes);
+    }
+}
+/*AppGen
+  %%  Beschreibung des Programmes:
+  prog: Erzeugung der Funktionslisten für ICE-Doku
+
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  para: basename, optional, string, basename, Basisname der Quelle, icedoc
+  para: extension,  optional, string, ext, Erweiterung der Glossary-Datei, glo
+
+  %% Beschreibung der Optionen
+  % kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
+  opt: h, help,   usage,   ,    Hilfe
+  opt: 2, twocolumn,  Void, second_level, Buchstabeverweise zweistufig,  false
+  opt: l, linkclasses, void, linkclasses, Verlinke Klassen in Parameterangaben, false
+  AppGen*/
+
+/*AppGen:Main*/
+
+int main(int argc, char *argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      //      cout << "second_level:" << second_level << endl;
+      string fnglossary = basename + "." + ext;
+      string flistsectionname = basename + "_fl_section.tex";
+      string flistsortedname = basename + "_fl_sorted.tex";
+
+      ReadGlossary(fnglossary);
+
+      if (linkclasses)
+        {
+          vector<string> classlist;
+          getClasses(gloss, classlist);
+	  // for (int i=0;i<classlist.size();++i)
+	  //    cout << classlist[i] << endl;
+          setAllLinks(gloss, classlist);
+        }
+
+      writeListSection(flistsectionname);
+      writeListSorted(flistsortedname);
+    }
+  catch (const string &msg)
+    {
+      cerr << "error: " << msg << endl;
+      return 1; // abbruch mit fehler
+    }
+  return 0;
+}

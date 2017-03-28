@@ -1,0 +1,132 @@
+\newcommand\lt{\textless}
+\newcommand\gt{\textgreater}
+\newcommand\cb[1]{\textless{}#1\textgreater}
+
+% <ESC> und <ENTER>
+\def\esc{\cb{ESC}}
+\def\enter{\cb{ENTER}}
+
+\def\vector#1{vector\cb{#1}}
+\def\cvector#1{const vector\cb{#1} \&}
+
+\newcommand{\nextlabel}[3]{
+  \stepcounter{referencecounter}
+  \glossary{#1;#2;#3;\arabic{referencecounter}}
+  \hypertarget{reflabel\arabic{referencecounter}}{}
+}
+
+%******************************************************
+%Makro für Kapitelüberschrift
+%******************************************************
+\newcommand{\nsection}[2]{\section{#1}
+  \label{#2}
+  \hypertarget{SECTION:#2}{}
+  % includefile ungültig machen
+  \renewcommand{\includefile}{}
+  \nextlabel{SECTION}{#2}{#1}
+}
+
+\newcommand{\subtitle}[1]{{\noindent\bf#1}}
+%******************************************************
+%Makro für Prozedurkopf
+%******************************************************
+% erster Header
+\newcommand{\proc}[3]{
+  \vspace*{0.5cm}
+  \par\noindent#1 \hypertarget{#2}{{\bf #2}}{\small (#3)}\hspace{0.5cm} \includefile 
+  \nextlabel{#1}{#2}{#3} \\
+}
+
+% erster Header mit Include-Fileangabe
+\newcommand{\proch}[4]{
+  % includefilename für nachfolgende Funktionen merken
+%  \renewcommand{\includefile}{\hspace*{\fill} ({\it \#include \ls #4\gt})}
+  \renewcommand{\includefile}{\hspace*{\fill} ({\it \#include~\cb{#4}})}
+  \vspace*{0.5cm}
+  \par\noindent#1 \hypertarget{#2}{{\bf #2}}{\small (#3)} \includefile 
+  \nextlabel{#1}{#2}{#3} \\
+}
+
+% nachfolgende Header 
+\newcommand{\procf}[3]{
+  #1 \hypertarget{#2}{{\bf #2}}{\small (#3)}
+  \nextlabel{#1}{#2}{#3} \\
+}
+
+\newcommand{\ctor}[4][]{
+\renewcommand{\classname}{#2}
+\proch{#1}{#2::#2}{#3}{#4}
+}
+
+\newcommand{\ctorf}[2]{
+\renewcommand{\classname}{#1}
+\procf{}{#1::#1}{#2}
+}
+
+\newcommand{\method}[3]{
+\proc{#1}{\classname::#2}{#3}
+}
+
+\newcommand{\methodf}[3]{
+\procf{#1}{\classname::#2}{#3}
+}
+
+%******************************************************
+%Makro für Prozedurbeschreibung
+%******************************************************
+\newcommand{\descr}[1]{\nopagebreak
+  \vspace*{-0.6cm}
+  \begin{quote}
+    %  \par\noindent
+    #1
+  \end{quote}
+}
+
+%******************************************************
+% allgemeine Verweise
+%******************************************************
+\newcommand{\seealso}[1]{
+  \vspace{0.1cm}
+  Siehe auch: \hyperlink{#1}{#1}
+}
+
+\newcommand{\seealsonext}[1]{
+  \hyperlink{#1}{#1}
+}
+
+\def\see#1{$\to$ #1}
+\def\bsee#1{#1}
+
+%******************************************************
+% Verweis auf Klassendefinition
+%******************************************************
+
+\newcommand{\class}[1]{{\bf \bsee{#1}}}
+
+\newcommand{\seebaseclass}[1]{Siehe auch die geerbten Variablen 
+und Methoden der Basisklasse \class{#1}}
+
+%******************************************************
+%Definition für Prozedurliste
+%******************************************************
+
+\def\functionlistentry#1#2#3#4#5#6{\noindent #1 {\bf #2}(#3) \dotfill #6\\}
+
+\def\letterref#1{}
+\def\letterlabel#1{\vspace{0.5cm}\centerline{\Large #1}}
+\def\letterlabelend#1{}
+
+%******************************************************
+%Makro für Programmbeginn
+%******************************************************
+\def\begprogr{\par\noindent\begin{minipage}{\textwidth}\medskip\hrule\medskip}
+
+%******************************************************
+%Makro für Programmende
+%******************************************************
+\def\endprogr{\nopagebreak\hrule\end{minipage}\par\medskip\noindent}
+
+%******************************************************
+%Prozedurliste erzeugen
+%******************************************************
+\makeglossary

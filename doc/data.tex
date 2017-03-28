@@ -1,0 +1,851 @@
+\nsection{Grundlegende Datenstrukturen}{datastructures}
+\subsection{Punkte - Datenstrukturen Point und IPoint}
+\hypertarget{Point}{}
+\hypertarget{IPoint}{}
+Die Klassen \class{Point} und \class{IPoint} beschreiben Punkte der 
+Ebene durch ihre Koordinaten. \class{Point} speichert die Koordinaten 
+als {\bf double}-Werte, \class{IPoint} als {\bf int}-Werte. Oft werden 
+Punkte auch als 2D-Vektoren aufgefasst.
+
+Für einen sehr schnellen Zugriff sind die Instanz-Variablen $x$ und $y$ von 
+aussen zugreifbar. Da \class{Point} und \class{IPoint} als 
+Spezialisierungen einer Template-Klasse implementiert sind, gelten die 
+folgenden Methoden für beide Klassen, auch wenn hier jeweils nur 
+\class{Point} genannt ist.
+
+Konstruktoren
+
+\ctor{Point}{}{point.h}
+\descr{Standard-Konstruktor. Die Koordinaten werden mit 0 initialisiert.}
+
+\ctor{Point}{double x, double y}{point.h}
+\descr{Die Koordinaten werden mit $(x,y)$ initialisiert.}
+
+\ctor[explicit]{Point}{const Vector \&v}{point.h}
+\descr{Legt eine Datenstruktur Point an und initialisiert $x$ und $y$ mit den
+ersten beiden Werten des \see{Vector} v.}
+
+\ctor[explicit]{Point}{const IVector \&v}{point.h}
+\descr{Legt eine Datenstruktur Point an und initialisiert $x$ und $y$ mit den
+ersten beiden Werten des \see{IVector} v.}
+
+\ctor[explicit]{Point}{double d[]}{point.h}
+\descr{Legt eine Datenstruktur Point an und initialisiert $x$ und $y$ mit den
+ersten beiden Werten des Feldes d. }
+
+Zugriffsmethoden
+
+\method{double}{X}{}
+\methodf{double}{Y}{}
+\descr{Lesender Zugriff auf die Koordinatenwerte.}
+
+Operatoren
+
+\method{bool}{operator ==}{const Point \&p}
+\methodf{bool}{operator !=}{const Point \&p}
+\descr{Test zweier Punkte auf Gleichheit/Ungleichheit.}
+
+\method{Point}{operator +}{const Point \&p}
+\methodf{Point}{operator +=}{const Point \&p}
+\descr{Komponentenweise Summe zweier Punkte.}
+
+\method{Point}{operator -}{const Point \&p}
+\methodf{Point}{operator -=}{const Point \&p}
+\descr{Komponentenweise Differenz zweier Punkte.}
+
+\method{Point}{operator *}{double f}
+\methodf{Point}{operator *=}{double f}
+\descr{Produkt mit Zahl $f$.}
+
+\method{double}{operator *}{Point second}
+\descr{Skalarprodukt zweier Punkte}
+
+\method{Point}{operator /}{double d}
+\methodf{Point}{operator /=}{double d}
+\descr{Quotient mit Zahl $d$.}
+
+Methoden
+
+\method{int}{Shift}{double dx,double dy}
+\descr{Verschiebt den Punkt um $(dx,dy)$.}
+
+\method{double}{r}{}
+\methodf{double}{phi}{}
+\descr{Polarkoordinaten-Darstellung}
+
+\method{Point}{normalized}{}
+\descr{Liefert den normalisierten Vektor.}
+
+\subsection{Walker Klassenhierarchie}
+\hypertarget{Walker}{}
+
+Walker verwenden eine ähnliche Idee wie die Iteratoren in der STL. 
+Während Iteratoren das Fortschreiten über die Elemente eines 
+Containers mittels der Operatoren ++ und -- organisieren, 
+wird die Klasse \class{Walker} verwendet, um damit eine Sequenz 
+von Punktkoordinaten zu erzeugen und damit Pfade beziehungsweise 
+Flächen (im Bild) abzulaufen.
+
+Die Klasse \class{Walker} ist von \class{IPoint} abgeleitet. Eine 
+Instanz von \class{Walker} kann deshalb direkt anstelle 
+eines \class{IPoint} verwendet werden, um zum Beispiel Koordinaten 
+im Bild zu adressieren.
+
+Die Klasse Walker verfügt über Methoden, um das ``Wandern durchs Bild''
+zu organisieren. 
+\see{Walker::init()} setzt den \class{Walker} auf den Ausgangspunkt zurück, 
+\see{Walker::next()} setzt auf den nächsten Punkt.
+Mittels \see{Walker::ready()} kann abgefragt werden, ob das Ende des 
+Pfades erreicht ist.
+
+Durch Rücksetzen mit \see{Walker::init()} kann ein Walker mehrfach 
+verwendet werden. \see{Walker::moveTo()} verschiebt den 
+Walker auf eine neue Position. Bezug ist dabei der Referenz-Punkt, 
+dessen genaue Lage von der Art des Walkers abhängt. Zum Beispiel ist 
+bei Konturen der Referenzpunkt der Startpunkt, bei 
+Nachbarschafts-Walkern ist der zentrale Ausgangspunkt Referenzpunkt.
+
+Die Klasse \class{Walker} ist eine abstrakte Basisklasse, von der 
+sich eine Klassen-Hierarchie ableitet:
+
+\begin{itemize}
+\item \class{Walker} Abstrakte Basisklasse, abgeleitet von \class{IPoint}
+\begin{itemize}
+\item \class{WindowWalker} Walker über ein Fenster im Bild.
+\item \class{PointListWalker} Walker über eine Punktliste, typisch genutzt für Pfade
+\item \class{RegionWalker} Walker über eine Region, nutzbar für Flächen
+\end{itemize}
+\end{itemize}
+
+Eine typische Anwendung eines Walkers zeigt das Beispiel, das eine
+Region in ein Bild einzeichnet (analog \see{Region::draw()}):
+
+\begin{verbatim}
+Region region = ... ;
+RegionWalker rw(region);
+for (rw.init(); ! rw.ready(); rw.next())
+    img.setPixel(rw, img.maxval);
+\end{verbatim}
+
+\subsubsection{Walker}
+Die Klasse \class{Walker} ist eine abstrakte Basisklasse für alle in
+ICE implementierten Walker. Sie ist ihrerseits abgeleitet von 
+\class{IPoint}.
+
+\ctor{Walker}{}{Walker.h}
+\ctorf{Walker}{IPoint p}
+\ctorf{Walker}{int x, int y}
+\descr{Konstruiert einen Walker, dessen Referenzpunkt im Ursprung (0,0)
+beziehungsweise im gegebenen Punkt liegt.}
+
+\method{void}{moveTo}{IPoint p}
+\descr{Verschiebt den Walker. 
+Dabei wird der Referenzpunkt in den Punkt $p$ verschoben. 
+Schließt den Aufruf von \see{Walker::init()} ein.}
+
+\method{void}{init}{}
+\descr{Setzt Walker auf Anfangspunkt.}
+
+\method{void}{next}{}
+\descr{Setzt Walker auf nächsten Punkt. Wird beim Weitersetzen 
+das Ende des Pfades {\bf überschritten}, wird ready 
+auf true gesetzt und der aktuelle Punkt gehört nicht mehr zum Pfad.}
+
+\method{void}{next}{int steps}
+\descr{Setzt Walker um $steps$ Schritte weiter. 
+Wird beim Weitersetzen das Ende des Pfades {\bf überschritten}, 
+wird ready auf true gesetzt und der aktuelle Punkt 
+gehört nicht mehr zum Pfad.}
+
+\method{bool}{ready}{}
+\descr{Gibt zurück, ob der Pfad abgelaufen ist.}
+
+\subsubsection{WindowWalker}
+\hypertarget{WindowWalker}{}
+Die Klasse \class{WindowWalker} ist ein \class{Walker}, der alle
+Punkte eines Fensters (\see{Window}) durchläuft.
+
+\ctor{WindowWalker}{const Window \&w}{Walker.h}
+\descr{Legt einen Walker für das Fenster w an. Referenzpunkt des 
+Walkers ist die linke obere Ecke des Fensters.}
+
+\ctor{WindowWalker}{const Image \&img center}{Walker.h}
+\descr{Legt einen Walker für das Bild img an. Referenzpunkt des 
+Walkers ist der Punkt (0,0).}
+
+\ctor{WindowWalker}{IPoint center, int sizex, int sizey = -1}{Walker.h}
+\descr{Legt einen Walker für ein Fenster um den Punkt center an. Das Fenster
+hat die Breite sizex und die Höhe sizey. Wird sizey weggelassen oder 
+ist sizey gleich -1, ist das Fenster quadratisch mit der Größe sizex.
+Der Referenzpunkt des Walkers ist das Zentrum des Fensters.}
+
+\seebaseclass{Walker}
+
+\subsubsection{PointListWalker}
+\hypertarget{PointlistWalker}{}
+Die Klasse \class{WindowWalker} ist ein \class{Walker}, der alle in
+einer Punktliste enthaltenen Punkte durchläuft. 
+%
+%Die von dieser 
+%Klasse abgeleiteten ähnlichen Walker, die sich vor allem in der 
+%Initialisierung unterscheiden werden hier mitbehandelt.
+\ctor{PointListWalker}{}{PointListWalker.h}
+\descr{Standard-Konstruktor. Bevor dieser Walker nutzbar ist, muss er mit
+\see{PointListWalker::setPointList} initialisiert werden.}
+
+\ctor{PointListWalker}{IPoint p}{PointListWalker.h}
+\descr{Konstruktor, der nur den Referenzpunkt setzt. 
+Bevor dieser Walker nutzbar ist, muss er mit 
+\see{PointListWalker::setPointList} initialisiert werden.}
+
+\ctor{PointListWalker}{const \vector{IPoint} \&pl,int idx = 0}{PointListWalker.h}
+\descr{Der Walker wird mit der gegebenen Punktliste initialisiert. Mittels
+des Parameters idx kann ein Start-Index gewählt werden. Ist idx ungleich Null
+arbeitet der Walker zyklisch vom Index idx bis zum Index idx-1.
+Der Referenzpunkt des Walkers wird auf den Punkt pl[idx] gesetzt.}
+
+\ctor{PointListWalker}{const Contur \&c}{PointListWalker.h}
+\descr{Ein Walker wird mit den Konturpunkten der Contur c erzeugt.}
+
+\method{void}{setPointList}{const \vector{IPoint} \&v,int idx = 0}
+\descr{Der Walker wird mit der gegebenen Punktliste initialisiert. Mittels
+des Parameters idx kann ein Start-Index gewählt werden. Ist idx ungleich Null
+arbeitet der Walker zyklisch vom Index idx bis zum Index idx-1.
+Der Referenzpunkt des Walkers wird auf den Punkt pl[idx] gesetzt.
+Der Aufruf dieser Methode impliziert eine Neuinitialisierung.}
+
+\method{void}{setStartIndex}{int idx = 0}
+\descr{Setzt den als Start zu verwendenden Index. Ist idx ungleich Null
+arbeitet der Walker zyklisch vom Index idx bis zum Index idx-1.
+ Der Aufruf dieser Methode impliziert eine Neuinitialisierung.}
+
+\seebaseclass{Walker}
+
+\subsubsection{Nachbarschafts-Walker}
+\hypertarget{Neighbor8Walker}{}
+\hypertarget{Neighbor4Walker}{}
+
+Die Klassen \class{Neighbor4Walker} und \class{Neighbor8Walker} 
+erzeugen Walker, die die Vierer- bzw Achter-Nachbarschaft eines 
+gegebenen Punktes durchlaufen.
+
+\ctor{Neighbor4Walker}{IPoint p}{PointListWalker.h}
+\descr{Erzeugt einen Walker, der die Punkte in der Vierer-Nachbarschaft
+des Punktes p durchläuft. Referenzpunkt ist der Punkt p.}
+
+\ctor{Neighbor8Walker}{IPoint p}{PointListWalker.h}
+\descr{Erzeugt einen Walker, der die Punkte in der Achter-Nachbarschaft
+des Punktes p durchläuft. Referenzpunkt ist der Punkt p.}
+
+\seebaseclass{Walker}\\
+\seebaseclass{PointListWalker}
+
+\subsubsection{RegionWalker}
+\hypertarget{RegionWalker}{}
+
+Ein \class{RegionWalker} durchläuft eine Region, die zum Beispiel durch
+eine Instanz der Klasse \class{Region} oder eine Kontur (\class{Contur})
+bestimmt wird. 
+
+\ctor{RegionWalker}{const Region \&region}{RegionWalker.h}
+\descr{Legt einen RegionWalker für die Region region an. Dieser 
+RegionWalker durchläuft alle Punkte der Region.}
+
+\ctor{RegionWalker}{const Contur \&contur}{RegionWalker.h}
+\descr{Legt einen RegionWalker an, der das durch die Punkte des durch die
+\class{Contur} bestimmten Objektes durchläuft.}
+
+\seebaseclass{Walker}
+
+\subsection{Point3d, Vector3d, IPoint3d und IVector3d}
+\hypertarget{Point3d}{}
+\hypertarget{Vector3d}{}
+\hypertarget{IPoint3d}{}
+\hypertarget{IVector3d}{}
+Die Klassen \class{Point3d},\class{Vector3d}, \class{IPoint3d} 
+und \class{IVector3d} dienen der Repräsentation von Raumpunkten. 
+Die Begriffe {\bf Vector} und {\bf Point} sind hier gleichwertig 
+und können synonym verwendet werden, im folgenden verwenden wir nur 
+\class{Vector3d}. 
+\class{IPoint3d} und \class{IVector3d} repräsentieren Raumpunkte durch 
+ganzzahlige Koordinaten,  \class{Point3d} und \class{Vector3d} 
+dagegen Koordinaten vom Typ {\bf double}. Die folgende Beschreibung 
+verwendet \class{Vector3d} als Typangabe, \class{IVector3d} verhält 
+sich entsprechend.
+
+Für einen sehr schnellen Zugriff sind die Instanz-Variablen 
+$x$, $y$ und $z$ von außen zugreifbar. 
+
+Operatoren und Konstruktoren ermöglichen eine problemlose Umwandlung 
+von \class{Vector3d} in \class{Vector} und umgekehrt.
+
+Konstruktoren:
+
+\proch{}{Vector3d::Vector3d}{}{point3d.h}
+\descr{Legt einen Punkt im Ursprung an.}
+
+\proc{}{Vector3d::Vector3d}{const Vector3d \&p}
+\procf{}{Vector3d::Vector3d}{double xp,double yp,double zp}
+\descr{Legt einen Punkt mit der gegebenen Position an.}
+
+\proc{explicit}{Vector3d::Vector3d}{const Vector \&v}
+\procf{explicit}{Vector3d::Vector3d}{const IVector \&v}
+\procf{explicit}{Vector3d::Vector3d}{double p[]}
+\descr{Legt einen Punkt mit der gegebenen Position an. Zur Vermeidung 
+ungewollter Konvertierungen muss der Aufruf explizit erfolgen.}
+
+Operatoren:
+\begin{center}
+\begin{tabular}{ccc@{=}c}
+%%Operand & Operator &  Operand & Resultat \\
+Vector3d & + & Vector3d & Vector3d\\
+Vector3d & - & Vector3d & Vector3d\\
+ & - & Vector3d & Vector3d\\
+Vector3d & * & Vector3d & double \\
+double & * & Vector3d & Vector3d \\
+Vector3d & * & double & Vector3d \\
+\end{tabular}
+\end{center}
+
+Methoden:
+
+\proc{Vector}{Vector3d::operator Vector}{}
+\descr{Typwandlung in $Vector$.}
+
+\proc{Vector3d}{Vector3d::Normalized}{}
+\descr{Gibt einen normalisierten Vektor (der Länge 1) zurück.}
+
+\proc{void}{Vector3d::Normalize}{}
+\descr{Normalisiert den Vektor.}
+
+\subsection{Window}
+\hypertarget{Window}{}
+
+Die Klasse \class{Window} beschreibt ein rechteckiges achsparalleles 
+Fenster anhand der linken oberen und der rechten unteren Ecke bzw. 
+der minimalen und maximalen Koordinaten-Werte in X- und Y-Richtung.
+
+Konstruktoren
+
+\proch{}{Window::Window}{}{window.h}
+\descr{Standard-Konstruktor. Die Koordinaten werden mit 0 initialisiert.}
+
+\proch{}{Window::Window}{int x1,int y1,int x2,int y2}{window.h}
+\descr{Die linke obere Ecke wird mit $(x1,y1)$, die rechte untere Ecke mit
+  $(x2,y2)$ initialisiert.}
+
+Zugriffs-Methoden
+
+\proch{int}{Window::Width}{}{window.h}
+\procf{int}{Window::Height}{}
+\descr{Die Methoden geben die Breite bzw. die Höhe des Fensters zurück.}
+
+\proch{int}{Window::GetLeft}{}{window.h}
+\procf{int}{Window::XI}{}
+\procf{int}{Window::GetRight}{}
+\procf{int}{Window::XA}{}
+\procf{int}{Window::GetTop}{}
+\procf{int}{Window::Yi}{}
+\procf{int}{Window::GetBottom}{}
+\procf{int}{Window::YA}{}
+\descr{Zugriff auf die X-Koordinatenwerte des linken oder rechten Randes
+  bzw. auf die Y-Koordinatenwerte des oberen oder unteren Randes.}
+
+\proch{const IPoint \&}{Window::P1}{}{window.h}
+\procf{const IPoint \&}{Window::P2}{}
+\descr{Zugriff auf die linke obere Ecke bzw. die rechte untere Ecke als
+  \see{IPoint}.}
+
+\proch{IPoint}{Window::getSize}{}{window.h}
+\descr{Zugriff auf die Größe des Fensters als Datenstruktur \class{IPoint}.}
+
+Methoden
+
+\proch{bool}{Window::Inside}{const IPoint \&p}{window.h}
+\procf{bool}{Window::Inside}{int x,int y}
+\descr{Testet, ob der Punkt $p$ bzw. $(x,y)$ im Fenster liegt}
+
+\proch{bool}{Window::operator ==}{const Window \&w}{window.h}
+\procf{bool}{Window::operator !=}{const Window \&w}
+\descr{Vergleich zweier Fenster auf Gleichheit bzw. Ungleichheit.}
+
+\proch{int}{Window::Shift}{int dx,int dy}{window.h}
+\descr{Verschiebt das Fenster um $(dx,dy)$.}
+
+\subsection{Vektoren}
+\hypertarget{Vector}{}
+\hypertarget{IVector}{}
+
+Der Datentyp (class) \class{Vector} repräsentiert ein Feld 
+von $double$-Werten. 
+Die Dimension $n$ kann ein beliebiger Wert größer Null sein. Die Index-
+Numerierung der Elemente läuft von $0$ bis $n-1$. 
+Gegenüber der STL-Klasse \verb+vector<double>+ sind Vektoren der Klasse
+\class{Vector} um viele mathematische Operationen erweitert.
+
+Der Datentyp (class) \class{IVector} repräsentiert ein Feld von 
+\verb+int+-Werten.
+Die Beschreibung des \class{Vector} trifft sinngemäß weitgehend auch für die 
+Klasse \class{IVector} zu, wenn der Typ $double$ durch $int$ ersetzt wird.\\
+Die Klasse \class{IVector} kann auch als Wert überall dort eingesetzt werden, 
+wo auch ein \class{Vector} stehen könnte, da die Klasse \class{Vector} über 
+einen entsprechenden Tywandlungskonstruktor verfügt.
+\\
+Eine spezielle Implementierung dreidimensionaler Vektoren \class{Vector3d} 
+kann für eine effiziente Rechnung mit dreidimensionalen Vektoren verwendet 
+werden. Eine Konvertierung von und nach der Klasse \class{Vector} kann 
+erfolgen:
+\begin{itemize}
+\item Konstruktor der Klasse \class{Vector3d} mit Parameter vom 
+Typ \class{Vector}  (Typwandlungs-Konstruktor)
+\item $operator$ \class{Vector} der Klasse \class{Vector3d}
+\end{itemize}
+Diese ermöglichen eine Verwendung von \class{Vector3d} als 
+\class{Vector} ohne explizite Konvertierung.
+\\
+\subsubsection{Konstruktoren}
+\proc{}{Vector::Vector}{}
+\descr{Ein Vektor der Länge 0 wird angelegt.}
+
+\proc{}{Vector::Vector}{int n}
+\descr{Ein Vektor der Dimension $n$ wird angelegt.}
+
+\proc{}{Vector::Vector}{int n,double *data}
+\descr{Ein Vektor der Dimension $n$ wird angelegt und mit den Werten des
+  C-array $data$ belegt.}
+
+\proc{}{Vector::Vector}{const Vector \&v}
+\descr{Ein Vektor wird als Kopie des Vektor $v$ angelegt.}
+
+\proc{explicit}{Vector::Vector}{const vector<double> \&v}
+\descr{Der vector<double> $v$ wird in einen Vektor konvertiert.}
+
+\proc{}{Vector::Vector}{double d1,double d2}
+\proc{}{Vector::Vector}{double d1,double d2,double d3}
+\proc{}{Vector::Vector}{double d1,double d2,double d3,double d4}
+\proc{}{Vector::Vector}{double d1,double d2,double d3,double d4,double d5}
+\descr{
+Ein Vektor der entsprechenden Länge wird angelegt und die Elemente werden mit
+$d1$, $d2$ ... initialisiert.
+}
+
+\subsubsection{Operatoren}
+
+\begin{tabular}{|c|l|}
+\hline
+Operator & Funktion \\
+\hline
+Vector = Vector & Zuweisungs-Operator \\
+Vector + Vector & Vektor-Addition \\
+Vector - Vector & Vektor-Subtraktion \\
+- Vector        & Negation des Vektors \\
+Vector * Vector & Skalar-Produkt \\
+Vector * double & Multiplikation mit Skalar \\
+double * Vector & Multiplikation mit Skalar \\
+Vector [ int ]  & Zugriff auf ein beliebiges Element \\
+Vector (int,int)& Teil-Vektor (Vektor-Wert) \\
+\hline
+\end{tabular}
+
+\proch{double \&}{Vector::at}{int idx}{VectorO.h}
+\descr{Zugriff auf das Element mit dem Index $idx$ des Vektors analog zum 
+Operator[], aber ohne Bereichstestung.}
+
+\subsubsection{Element-Funktionen}
+
+\proch{int}{Vector::Size}{}{VectorO.h}
+\procf{unsigned int}{Vector::size}{}
+\descr{Gibt die Dimension des Vektors zurück.}
+
+\proch{bool}{Vector::empty}{}{VectorO.h}
+\descr{Gibt $true$ zurück, wenn der Vektor leer ist, also 0 Elemente hat.}
+
+\proch{void}{Clear}{}{VectorO.h}
+\descr{Löscht den Vektor. Der Vektor hat danach 0 Elemente. }
+
+\proch{void}{Resize}{int n}{VectorO.h}
+\descr{Reinitialisiert den Vektor und legt $n$ Elemente an. Der vorhandene
+  Inhalt wird zerstört!}
+
+\proch{void}{Vector::Set}{double val}{VectorO.h}
+\descr{Setzt alle Elemente auf den Wert $val$.}
+
+\proch{void}{Vector::SetV}{double d1}{VectorO.h}
+\procf{void}{Vector::SetV}{double d1,double d2}
+\procf{void}{Vector::SetV}{double d1,double d2,double d3}
+\procf{void}{Vector::SetV}{double d1,double d2,double d3,double d4}
+\procf{void}{Vector::SetV}{double d1,double d2,double d3,double d4,double d5}
+\descr{Setzt die ersten Elemente des Vektors auf die übergebenen Werte.}
+
+\proch{void}{Vector::Append}{double val}{VectorO.h}
+\proch{void}{Vector::Append}{const Vector \&v}{VectorO.h}
+\descr{Verlängert den Vektor indem der Wert $val$ beziehungsweise die Werte
+  des Vektors $v$ angehängt werden.}
+
+\proch{void}{Vector::Exchange}{int i1,int i2}{VectorO.h}
+\descr{Tauscht die Elemente mit dem Index $i1$ und $i2$ aus.}
+
+\proch{void}{Vector::Delete}{int i1,int i2}{VectorO.h}
+\procf{void}{Vector::Delete}{int i}
+\descr{Löscht die Elemente mit von Index $i1$ bis $i2$ oder das
+Element mit Index $i$.}
+
+\proch{double}{Vector::Length}{}{VectorO.h}
+\descr{Gibt die Länge (den Betrag) des Vektors zurück}
+
+\proch{void}{Vector::Normalize}{}{VectorO.h}
+\descr{Normiert den Vektor auf eine Länge (Betrag) von Eins.\\
+\seealso{Normalize}
+}
+
+\proc{void}{Vector::Sort}{int order=0}
+\descr{
+Sortiert die Elemente des Vektors in aufsteigender (order=0) oder absteigender
+(order=1) Ordnung.
+}
+
+\subsubsection{Funktionen mit Vektoren}
+\label{Vector-Funktionen}
+
+\proc{Vector}{Normalize}{const Vector \&v}
+\descr{
+Gibt den normalisierten Vector $v$ zurück.\\
+\seealso{Vector::Normalize}
+}
+
+\proc{Vector}{Cross}{const Vector \&v1,const Vector \&v2}
+\descr{
+Gibt das Kreuzprodukt der Vektoren $v1$ und $v2$ zurück.
+}
+
+\subsection{Matrizen}
+\hypertarget{Matrix}{}
+
+Der Datentyp \class{Matrix} repräsentiert ein zwei-dimensionales Feld von 
+{\bf double}-Werten bzw. ein Feld von \hyperlink{Vector}{Vektoren}.
+Die Dimensionen $m$ und $n$ können beliebige Werte größer gleich Null sein. 
+Die Index-Numerierung der Elemente läuft von $0$ bis $n-1$ bzw. von $0$ bis
+$m-1$.
+
+\hypertarget{IMatrix}{}
+Der Datentyp \class{IMatrix} verwendet statt des Datentypes $double$ für die
+Elemente den Typ Integer ($int$). Durch einen Typwandlungskonstruktor kann
+eine $Matrix$ aus einer $IMatrix$ erzeugt werden, was an vielen Stellen den
+Einsatz von $IMatrix$ äquivalent zu $Matrix$ erlaubt.
+
+Diese Klassendefinitionen ersetzen den alten Datentyp \see{MatrixStruct}.
+Zur {\bf Anwendung} von Matrizen siehe auch Abschnitt \bsee{Matrix-Algebra}.
+
+\subsubsection{Konstruktoren}
+\proc{}{Matrix::Matrix}{}
+\descr{Legt eine Matrix der Groesse (0,0) an. Diese Matrix kann so 
+nicht verwendet werden.}
+
+\proc{}{Matrix::Matrix}{const int rows,const int cols,int initmode=0}
+\descr{
+Legt eine Matrix mit $rows$ Zeilen und $cols$ Spalten an. Alle Werte sind mit
+Null belegt. Wird $initmode=1$ gesetzt, so wird die Matrix als Einheitmatrix
+initialisiert.
+}
+
+\proc{explicit}{Matrix::Matrix}{const int rows,const int cols,double *init}
+\descr{
+Legt eine Matrix mit $rows$ Zeilen und $cols$ Spalten an. Die Werte werden mit
+den Werten im Feld $init$ belegt. Die rows*cols Werte müssen zeilenweise
+abgelegt sein.
+}
+
+\proc{}{Matrix::Matrix}{const Matrix\& m}
+\descr{Legt eine neue Matrix als Kopie der gegebenen Matrix an 
+(Kopierkonstruktor).}
+
+\proc{}{Matrix::Matrix}{const IMatrix\& im}
+\descr{
+Legt eine neue Matrix mit den konvertierten Werten der gegebenen 
+Integer-Matrix an.
+}
+
+\proc{explicit}{Matrix::Matrix}{const Image\& m,int mode=RAW,int sign=UNSIGNED}
+\descr{
+Legt eine neue Matrix mit der Größe des Bildes $m$ an und trägt die Werte 
+in die Matrix ein. Es erfolgt eine Transformation der
+Werte entsprechend des durch $mode$ und $sign$ bestimmten Modus äquivalent 
+zu \see{ConvImgImgD}.
+}
+
+\proc{explicit}{Matrix::Matrix}{const ImageD \& m}
+\descr{
+Legt eine neue Matrix mit der Größe des Gleitkomma-Bildes $m$ 
+an und trägt die Werte in die Matrix ein.
+}
+
+\subsubsection{Operatoren}
+\begin{tabular}{|c|l|}
+\hline
+Operator & Funktion \\
+\hline
+Matrix = Matrix & Zuweisungs-Operator \\
+Matrix + Matrix & Matrix-Addition (elementweise)\\
+Matrix - Matrix & Matrix-Subtraktion (elementweise)\\
+- Matrix & Negierte Matrix\\
+Matrix * Matrix & Matrix-Multiplikation \\
+Matrix * double & Multiplikation aller Elemente mit einer Konstanten \\
+double * Matrix & Multiplikation aller Elemente mit einer Konstanten \\
+Matrix [int] & Zugriff auf Zeile einer Matrix (-> Vector) \\
+Matrix [int i][int j] & Zugriff auf Element der Matrix\\
+Matrix (int i1,int j1,int i2,int j2) & Teil-Matrix \\
+Matrix $||$ Matrix & Nebeneinander Anordnen und Verbinden \\
+Matrix \&\& Matrix & Untereinander Anordnen und Verbinden \\
+! Matrix & Transponierte Matrix \\
+\hline
+\end{tabular} \\
+Bei den Operatoren $||$ und \&\& können sinngemäß statt Matrizen auch 
+Vektoren angewendet werden. Diese werden als Spalten-Vektor ($||$) bzw.
+als Zeilen-Vektor (\&\&) interpretiert.\\
+\\
+Bei der Multiplikation ist anwendbar:
+\begin{tabular}{l}
+Vector * Matrix = Vector\\
+Matrix * Vector = Vector\\
+\end{tabular}
+
+Folgende Methoden unterstützen die Multiplikation mit der transponierten
+Matrix:
+\proch{Matrix}{Matrix::MulTrans}{const Matrix \&m2}{MatrixO.h}
+\descr{Gibt das Produkt der transponierten Matrix mit der Matrix $m2$ zurück.}
+\proch{Vector}{Matrix::MulTrans}{const Vector \&v}{MatrixO.h}
+\descr{Gibt das Produkt der transponierten Matrix mit dem Vektor $v$ zurück.}
+
+\subsubsection{Element-Funktionen}
+
+\proc{int}{Matrix::rows}{}
+\descr{Gibt Zeilenzahl der Matrix zurück.}
+
+\proc{int}{Matrix::cols}{}
+\descr{Gibt Spaltenzahl der Matrix zurück.}
+
+\proc{int}{Append}{const Vector \&v}
+\descr{Hängt den Inhalt des Vektors $v$ als neue Zeile an die bestehende
+  Matrix an. Die Größe des Vektors muss gleich der Zahl der Spalten der Matrix
+  sein.}
+
+\proc{void}{Matrix::ExchangeRow}{int i1,int i2}
+\descr{Austausch der Zeilen $i1$ und $i2$.}
+
+\proc{void}{Matrix::ExchangeCol}{int i1,int i2}
+\descr{Austausch der Spalten $i1$ und $i2$.}
+
+\proc{int}{Matrix::DeleteRow}{int n}
+\procf{int}{Matrix::DeleteRow}{int n1,int n2}
+\descr{
+Löscht die Zeile $n$ bzw. die Zeilen $n1$ bis $n2$ aus der
+Matrix.
+}
+
+\proc{int}{Matrix::DeleteCol}{int n}
+\procf{int}{Matrix::DeleteCol}{int n1,int n2}
+\descr{
+Löscht die Spalte $n$ bzw. die Spalten $n1$ bis $n2$ aus der
+Matrix.
+}
+
+\proc{double}{Matrix::MaxVal}{}
+\descr{Liefert den Wert des größten Elements der Matrix.}
+
+\proc{void}{Matrix::SumRows}{Vector \&sum}
+\proc{void}{Matrix::SumCols}{Vector \&sum}
+\descr{Trägt die Werte der Zeilensummen/Spaltensummen in den Vektor $sum$ ein.}
+
+\proc{int}{Matrix::AddDyadicProd}{const Vector \& v,const Vector \& w,double factor}
+\proc{int}{Matrix::AddDyadicProd}{const Vector \& v, double factor}
+\descr{Bildet das dyadische Produkt der Vektoren $v$ und $w$ beziehungsweise
+  von $v$ mit sich selbst, multipliziert dieses mit $factor$ und addiert
+  dieses zur Matrix.}
+
+\proc{int}{Matrix::Sort}{int col=0,bool asc=true}
+\descr{
+Sortiert die Zeilen der Matrix aufsteigend ($asc=true$) oder absteigend
+($asc=false$) nach dem Wert der Spalte $col$.
+}
+
+\subsection{Punktlisten und Polygone}
+\label{Punktliste}
+Listen von 2D-Punkten können als \bsee{Matrix} gespeichert werden, 
+viele Funktionen benutzen aber auch \verb+vector<Point>+ als Punktliste.\\
+In Matrizen wird jeder Punkt als eine Zeile der Matrix abgelegt.
+Die Matrix hat mindestens 2 Spalten, die die Koordinaten x und y der Ebene
+enthalten. Ist eine dritte Spalte vorhanden, wird diese in einigen Funktionen
+als Gewicht interpretiert. Zusätzlich vorhandene Spalten werden ignoriert und
+können zusätzlich punktbezogene Daten enthalten.
+
+In {\bf einigen Funktionen} werden solche Punktlisten als Polygon 
+interpretiert (siehe aber auch \bsee{Polygon}).
+Dabei werden aufeinanderfolgende Punkte und 
+der Anfangs- und Endpunkt der Punktliste logisch durch Kanten verbunden. 
+Der Anfangspunkt darf nicht als Endpunkt wiederholt werden, 
+sonst eine zusätzliche Kante der Länge Null eingeführt wird. 
+Die Kanten eines Polygons dürfen sich nicht 
+gegenseitig schneiden (Test durch IsPolygon()).
+
+\proc{int}{isPolygon}{const Matrix \& pl}
+\descr{Es wird geprüft, dass sich die Kanten eines Polygons nicht 
+gegenseitig schneiden.}
+
+\proch{bool}{InsidePolygon}{const Matrix \&pl,const Point \&p}{polygon.h}
+\descr{Es wird untersucht, ob der Punkt $p$ innerhalb des Polygons $pl$ liegt.}
+
+\proch{Matrix}{ReducePolygon}{const Matrix \&pl,int n}{polygon.h}
+\procf{Matrix}{ReducePolygon}{const Contur \&c,int n}
+\descr{Erzeugt ein reduziertes Polygon mit $n$ Ecken aus dem Polygon $pl$ und
+gibt dieses zurück.
+Dies geschieht durch suksessives Weglassen ``unwichtiger'' Ecken. Die
+Signifikanz einer Ecke ergibt sich wie folgt: Seien $e_k$ und $e_{k+1}$ die
+Vektoren der beiden anliegenden Kanten. Die Signifikanz ist dann
+\[
+s_k=\frac{|e_k x e_{k+1}|}{|e_k| + |e_{k+1}|}
+\]
+Beim alternativen Aufruf wird die Contur $c$ als Polygon interpretiert. 
+}
+
+\proch{Matrix}{FitPolygonContur}{const Matrix \&pl, const Contur \&c,int step=0}{polygon.h}
+\descr{Die Matrix $pl$ muss ein Polygon enthalten, welches 
+  näherungsweise die Contur $c$ beschreibt. Diese kann beispielsweise durch
+  \see{ReducePolygon} entstanden sein. Diese Funktion passt iterativ das
+  Polygon besser an die Kontur an. Der Parameter $step$ entspricht dem
+  Parameter $step$ von \see{FitLine}, welches intern verwendet
+  wird. Ein Speziallfall ist $n=-1$, dann wird Fitting mit linearer
+  Optimierung verwendet. Dies ist im allgemeinen robuster gegen Ausreißer,
+  dauert aber länger.}
+
+\proch{vector$<$Point$>$}{ConvexHull}{const vector$<$Point$>$ \&pl}{convexhull.h}
+\descr{
+Zu der übergebenen Punktliste $pl$ wird die konvexe Hülle erzeugt 
+und als vector$<$Point$>$ zurückgegeben. Die Punkte der zurückgegeben Liste 
+sind geordnet, so das die Punktfolge ein Polygon definiert. Ein \bsee{Polygon} kann 
+direkt mit Hilfe des Konstruktors erzeugt werden.
+}
+
+\proch{Matrix}{ConvexHull}{const Matrix \&pl}{convex.h}
+\procf{Contur}{ConvexHull}{const Contur \&c}
+\descr{
+Erzeugt die konvexe Hülle der als Matrix übergebenen Punktmenge bzw. der übergebenen Kontur.
+}
+
+\seealso{ConturPointlist}
+\seealso{PointlistContur}
+
+\subsection{ColorValue}
+\hypertarget{ColorValue}{}
+Die Klasse \class{ColorValue} dient der Speicherung von Farbwerten in Form
+von ganzzahligen Intensitätswerten für die Grundfarben Rot, Grün und 
+Blau. Werte vom Typ \class{ColorValue} werden zum Setzen und Lesen von 
+Werten in Farbbildern der Klasse \class{ColorImage} verwendet. Für 
+einen schnellen Zugriff 
+sind die int-Variablen \verb+red+, \verb+green+ und \verb+blue+ der 
+Klasse \verb+public+. Die Klasse \class{ColorValue} ist nicht 
+als Basisklasse einer Klassenhierarchie konzipiert und es sollten keine
+Klassen davon abgeleitet werden: Die Methoden sind alle nicht virtuell.
+
+\subsubsection{Konstruktoren}
+
+\proch{}{ColorValue::ColorValue}{}{ColorValue.h}
+\descr{Standard-Konstruktor. Die Farbwerte $red$,
+$green$ und $blue$ werden mit 0 intialisiert.}
+
+\proch{explicit}{ColorValue::ColorValue}{int val}{ColorValue.h}
+\descr{Typwandlungs-Konstruktor. Alle Farbwerte $red$,
+$green$ und $blue$ werden mit $val$ intialisiert.}
+
+\proch{}{ColorValue::ColorValue}{int redval,int greenval,int blueval}{ColorValue.h}
+\descr{Konstruktor, der die Farbwerte $red$,
+$green$ und $blue$ werden mit den gegebenen Werten intialisiert.}
+
+\subsubsection{Operatoren}
+
+\begin{center}
+\begin{tabular}{ccc@{=}c}
+%%Operand & Operator &  Operand & Resultat \\
+ColorVal & + & ColorVal & ColorVal\\
+ColorVal\& & += & ColorVal & const ColorVal\&\\
+ColorVal & - & ColorVal & ColorVal\\
+ColorVal\& & -= & ColorVal & const ColorVal\&\\
+ColorVal & * & int & ColorVal\\
+ColorVal\& & *= & int & const ColorVal\&\\
+ColorVal & / & int & ColorVal\\
+ColorVal\& & /= & int & const ColorVal\&\\
+ColorVal & * & double & ColorVal\\
+ColorVal\& & *= & double & const ColorVal\&\\
+ColorVal & / & double & ColorVal\\
+ColorVal\& & /= & double & const ColorVal\&\\
+\end{tabular}
+\end{center}
+
+\subsubsection{Methoden}
+\proch{double}{ColorValue::abs}{}{ColorValue.h}
+\descr{Berechnet den Betrag (Länge) des durch die Werte
+ $red$, $green$ und $blue$ gebildeten Vektors.}
+
+\proch{double}{ColorValue::abs2}{}{ColorValue.h}
+\descr{Berechnet das Quadrat des Betrages (Länge) des durch die Werte
+ $red$, $green$ und $blue$ gebildeten Vektors.}
+
+\proch{int}{ColorValue::absL1}{}{ColorValue.h}
+\descr{Summe der Beträge der Werte $red$, $green$ und $blue$.}
+
+\proch{int}{ColorValue::getGray}{}{ColorValue.h}
+\descr{Berechnet einen Grauwert als Mittelwert von 
+$red$, $green$ und $blue$.}
+
+\proch{ColorValue}{ColorValue::Limited}{int maxValue}{ColorValue.h}
+\descr{Ermittelt einen Farbwert, dessen Werte $red$, 
+$green$ und $blue$ im Interval $[0,maxValue]$ liegen.
+Werte ausserhalb des Intervalls werden auf den jeweiligen 
+Extremwert gesetzt. Dies kann benutzt werden, um beim Schreiben 
+in ein Farbbild mittels \bsee{ColorImage::setPixel} Überläufe zu
+vermeiden.}
+
+\subsection{Farbraum-Transformationen}
+Werte der Klasse \class{ColorValue} repräsentieren Farbwerte im
+RGB-Farbraum. Die folgenden Funktionen konvertieren diese RGB-Werte
+in andere Farbräume und zurück. Dabei werden Farbwerte in anderen 
+Farbräumen durch drei Gleitkomma-Werte vom Typ \verb+double+ beschrieben.
+Die Werte liegen im Intervall 0..1 bzw -0.5..0.5, nur bei Werten des
+Lab-Farbraumes werden die dort üblichen Bereich 0..100, -150..100 und
+-100..150 für L, a und b verwendet. Weiterhin gibt es Funktionen zur
+Farbraum-Transformation von Bildern (\see{ColorImageToHSI}..) .
+ 
+%Zu den Farbräumen siehe zum Beispiel 
+%\href{http://www.brucelindbloom.com/index.html?Math.html}{hier}.
+
+\proch{void}{RgbToHsi}{const ColorValue \&src, int maxval, double \&h, double \&s, double \&i}{ColorSpace.h}
+\procf{void}{RgbToHsi}{const ColorValue \&src, double \&h, double \&s, double \&i}
+\procf{void}{RgbToYuv}{const ColorValue \&src, int maxval, double \&h, double \&s, double \&i}
+\procf{void}{RgbToYuv}{const ColorValue \&src, double \&h, double \&s, double \&i}
+\procf{void}{RgbToXyz}{const ColorValue \&src, int maxval, double \&x, double \&y, double \&z}
+\procf{void}{RgbToXyz}{const ColorValue \&src, double \&x, double \&y, double \&z}
+\procf{void}{RgbToLab}{const ColorValue \&src, int maxval, double \&x, double \&y, double \&z}
+\procf{void}{RgbToLab}{const ColorValue \&src, double \&x, double \&y, double \&z}
+\descr{Transformation von Werten von \class{ColorValue} aus dem RGB-Farbraum in 
+die Farbräume HSI, YUV, XYZ und Lab. Wird der Maximalwert maxval angegeben, 
+so werden die RGB-Wert in \class{ColorValue} als Werte im Bereich 0..maxval 
+angenommen, sonst 0..255.}
+
+\proch{void}{HsiToRgb}{double h, double s, double i, ColorValue \&dst, int maxval = 255}{ColorSpace.h}
+\procf{void}{YuvToRgb}{double y, double u, double v, ColorValue \&dst, int maxval = 255}
+\procf{void}{XyzToRgb}{double x, double y, double z, ColorValue \&dst, int maxval = 255}
+\procf{void}{LabToRgb}{double l, double a, double b, ColorValue \&dst, int maxval = 255}
+\descr{Transformieren Farbwerte aus den Farbräumen HSI,YUV, XYZ und LAB in den
+RGB-Farbraum. Die RGB-Werte werden in Variablen der Klasse \class{ColorValue} 
+gespeichert. Der Umfang der RGB-Werte beträgt 0..maxval.}
+
+\proch{void}{HsiToRgb}{double h, double s, double i, double \&r, double \&g, double \&b}{ColorSpace.h}
+\procf{void}{RgbToHsi}{double r, double g, double b, double \&h, double \&s, double \&i}
+\procf{void}{YuvToRgb}{double y, double u, double v, double \&r, double \&g, double \&b}
+\procf{void}{RgbToYuv}{double r, double g, double b, double \&h, double \&s, double \&i}
+\procf{void}{RgbToXyz}{double r, double g, double b, double \&x, double \&y, double \&z}
+\procf{void}{XyzToRgb}{double x, double y, double z, double \&r, double \&g, double \&b}
+\procf{void}{XyzToLab}{double x, double y, double z, double \&l, double \&a, double \&b}
+\procf{void}{LabToXyz}{double l, double a, double b, double \&x, double \&y, double \&z}
+\procf{void}{RgbToLab}{double r, double g, double b, double \&x, double \&y, double \&z}
+\procf{void}{LabToRgb}{double l, double a, double b, double \&rr, double \&gg, double \&bb}
+\descr{Allgemeine Farbraumtransformationen.}

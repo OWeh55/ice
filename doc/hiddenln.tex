@@ -1,0 +1,135 @@
+\lsection{Abbildung von Szenenbeschreibungen}
+
+\subsection{Datenstrukturen}
+
+Für die Handhabung von räumlichen Geradensegmenten wird die Datenstruktur
+$ClipPointList$ verwendet, die eine verkettete Liste der Endpunkte von
+kollinearen Geradensegmenten ist. Die einzelnen Elemente der Liste enthalten
+jeweils sowohl die Raumkoordinaten als auch die Bildkoordinaten des jeweiligen
+Punktes. Das Ausblenden nicht sichtbarer Teile von Geradensegmenten erfolgt
+durch einfügen neuer Punkte in die Liste.
+\begprogr\begin{verbatim}
+typedef struct ClipPoint_
+{
+  struct ClipPoint_    *prev,*next;  /*Listenverkettung*/
+  double               pw[3];        /*Raumpunkt*/
+  double               pc[2];        /*Bildpunkt*/
+  double               l;            /*Abstand vom Anfangspunkt*/
+}ClipPoint;
+
+typedef struct
+{
+  ClipPoint            *first,*last; /*erstes und letztes Element der Liste*/
+  int                  n;            /*Anzahl der Elemente*/
+}ClipPointList;
+\end{verbatim}\endprogr
+
+
+\subsection{Verwaltung der Punktlisten}
+
+\proc{ClipPointList*}{NewClipPointList}{}
+\descr{
+Es wird eine leere Punktliste angelegt.
+}
+\proc{ClipPoint*}{InsertClipPoint}{ClipPointList *cl,ClipPoint *cp}
+\descr{
+Es wird ein Punkt $cp$ in die verkettete Punktliste $cl$ eingefügt.
+}
+\proc{void}{DeleteClipPoint}{ClipPoint *cp,ClipPointList *cl}
+\descr{
+Der Punkt $cp$ wird aus der verketteten Punktliste gelöscht.
+}
+\proc{void}{FreeClipPointList}{ClipPointList *cl}
+\descr{
+Die gesamte Punktliste $cl$ wird gelöscht.
+}
+
+
+\subsection{Bestimmung verdeckter Kanten}
+
+\proc{PointList}{Mesh3DPointList}{Mesh3D msh}
+\descr{
+Es wird eine Punktliste mit den Bildpunkten der Eckpunkte der 3D-Masche $msh$
+erzeugt.
+}
+\proc{int}{PlaneCrossing}{double p0[3],double p1[3],double pe[3],double
+n[3],double p[3]}
+\descr{
+Der Schnittpunkt der durch die Punkte $p0,p1$ verlaufenden Geraden mit der
+durch den Punkt $pe$ und den Normalenvektor $n$ gegebenen Ebene wird, falls er
+existiert, auf $p$ zurückgegeben. 
+}
+\proc{int}{LineCrossing}{double p0[3],double v0[3],double p1[3],double v1[3],double p[3]}
+\descr{
+Durch Ausgleichsrechnung wird ein ``Schnittpunkt'' der durch die Punkte $p0$
+bzw. $p1$ und die Richtungsvektoren $v0$ bzw. $v1$ gegebenen Raumgeraden bestimmt.
+}
+\proc{void}{MeshPlaneCrossing}{double p1[3],double p2[3],Mesh3D msh,double p[3]}
+\descr{
+Der Schnittpunkt der durch die Punkte $p1,p2$ verlaufenden Geraden mit der
+durch die 3D-Masche $msh$ bestimmten Ebene wird, falls er existiert, auf $p$
+zurückgegeben.
+}
+\proc{void}{MarkVisibleSurfaces}{ModelList S,camera cam}
+\descr{
+Alle der Kamera zugewandten Modellmaschen werden intern durch ein
+entsprechendes Flag markiert.
+}
+\proc{char}{EdgeConcave}{Edge3D edg}
+\descr{
+Es wird TRUE zurückgegeben, wenn in der 3D-Kante $edg$ zwei Flächen mit einem
+Winkel aufeinanderstoßen, der kleiner als 180 Grad ist.
+}
+\proc{int}{OnVisibleSideOfPlane}{double p[3],Mesh3D msh}
+\descr{
+Es wird TRUE zurückgegeben, wenn sich der Punkt $p$ auf der Seite der 3D-Masche
+$msh$ befindet, die vollständig außerhalb des zugehörigen Modells liegt.
+}
+\proc{int}{PointInMesh3D}{double p[2],Mesh3D msh}
+\descr{
+Es wird TRUE zurückgegeben,wenn sich der Bildpunkt $p$ innerhalb der in die
+Bildebene projizierten 3D-Masche $msh$ befindet.
+}
+\proc{int}{SegmentInMesh3D}{double p1[2],double p2[2],Mesh3D msh}
+\descr{
+Es wird TRUE zurückgegeben,wenn sich das Bildgeradensegment vollständig innerhalb der in die
+Bildebene projizierten 3D-Masche $msh$ befindet.
+}
+\proc{int}{ClipStraightLine}{ClipPoint *cp1,ClipPoint *cp2,ClipPointList
+*cl,Mesh3D msh,camera cam}
+\descr{
+Aus dem Liniensegment $cp1,cp2$ aus der verketteten Punktliste $cl$, werden
+die Teile ausgeblendet, die durch die 3D-Masche $msh$ verdeckt werden.
+}
+\proc{int}{CutEdge}{ClipPointList *cl,ModelList S,camera cam}
+\descr{
+Aus der durch die verkettete Punktliste $cl$ beschriebenen Menge von
+kollinearen Geradensegmenten werden die Teile ausgeblendet, die durch
+Bestandteile der Szenenbeschreibung $S$ verdeckt werden.
+}
+\proc{Description}{MapSzene}{ModelList S,camera cam}
+\descr{
+Es wird eine Bildbeschreibung erzeugt, die die vom Standpunkt der Kamera $cam$
+aus sichtbaren Teile der Szenenbeschreibung enthält.
+}
+\proc{void}{ChangeView}{ModelList S,camera cam}
+\descr{
+Nach einer Positionsveränderung der Kamera bzw. zur Initialisierung werden die
+Punktkorrespondenzen der Modellpunkte, die Sichtbarkeitsflags der Oberflächen
+und die Polygone der abgebildeten Modellflächen neu berechnet. Diese Funktion
+muß vor der Verwendung von MapEdge() ausgeführt werden.
+}
+\proc{Description}{MapEdge}{Edge3D edg,Frame *f,ModelList S, camera
+c,Description D,int *fl}
+\descr{
+Die 3D-Kante $edg$ in der Position $f$ wird in die Bildebene der Kamera $c$
+abgebildet. Die Teile der Kante, die durch Objekte der Szenenbeschreibung $S$
+verdeckt sind, werden ausgeblendet. Die verbleibenden Kantenstücken werden als
+2D-Kanten in die Bildbeschreibung $D$ eingetragen. Wenn für $D$ der
+NULL-Pointer übergeben wird, wird die Bildbeschreibung intern neu
+angelegt. Rückgabewert ist die Bildbeschreibung oder der NULL-Pointer im
+Fehlerfall. Auf $fl$ wird 0 zurückgegeben, wenn die Kante vollständig sichtbar
+ist, sonst 1.
+Vor der Verwendung von MapEdge() muß einmal bzw. erneut nach jeder
+Positionsänderung der Kamera die Funktion ChangeView() aufgerufen werden.
+}

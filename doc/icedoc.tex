@@ -1,0 +1,106 @@
+%\documentstyle[a4wide,titlepage,german,umlaut]{article}
+\documentclass[10pt,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{a4,german}
+\usepackage{epsfig}
+
+\usepackage{hyperref}
+
+\newcounter{referencecounter}
+
+\newcommand{\includefile}{INCLUDEFILE}
+\newcommand{\classname}{}
+
+\sloppy
+\input hyphexc.tex
+\textheight 23cm \textwidth 16cm \topmargin -0.6in
+\pagestyle{headings}
+
+\input macros.tex
+
+% Absätze durch vertikalen Abstand trennen, nicht einrücken
+\setlength{\parskip}{1.0ex plus 0.5ex minus 0.5ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+
+\title{Handbuch ICE}
+\author{{\bf Wolfgang Ortmann} und andere\\
+Friedrich-Schiller-Universität Jena, Institut für Informatik}
+\date{C++-Bibliothek zur Bildanalyse\\
+1992..2015}
+\maketitle
+
+%\begin{htmlonly}
+%\rightline{\link{FunktionsListe}{Alphabetische Funktionsliste}}
+%\end{htmlonly}
+
+\input einleit.tex
+\newpage
+\input bilder.tex
+\newpage
+\input visual.tex
+\newpage
+\input einaus.tex
+\newpage
+\input data.tex
+\newpage
+\input filter.tex
+\newpage
+\input konturen.tex
+\newpage
+\input geoobj.tex
+\newpage
+\input trafo.tex
+\newpage
+\input camera.tex
+\newpage
+\input momente.tex
+\newpage
+\input statist.tex
+\newpage
+\input klassif.tex
+\newpage
+\input functions.tex
+\newpage
+\input bearb.tex
+\newpage
+\input matrizen.tex
+\newpage
+\input segment.tex
+\newpage
+\input fitting.tex
+\newpage
+\input signal.tex
+\newpage
+\input register.tex
+\newpage
+\input graph.tex
+\newpage
+%\input velo.tex
+%\newpage
+\input grafik.tex
+\newpage
+\input numerik.tex
+\newpage
+\input tools.tex
+\newpage
+\input quaternion.tex
+\newpage
+%\input roboter.tex
+%\newpage
+\input fehler.tex
+\newpage
+\input style.tex
+\newpage
+\input obsolet.tex
+\newpage
+\input contributions.tex
+\newpage
+\section{Funktionsliste}
+\subsection{Thematisch sortierte Funktionsliste}
+\input icedoc_fl_section.tex
+\newpage
+\subsection{Alphabetisch sortierte Funktionsliste}
+\input icedoc_fl_sorted.tex
+\end{document}

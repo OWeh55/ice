@@ -1,0 +1,212 @@
+\nsection{Richtlinien zum Schreiben von ICE-Funktionen}{styleGuide}
+
+\subsection{Äußere Form}
+Die Bibliothek {\bf ICE} unterliegt der LGPL, der GNU Lesser General Public
+License. Neue Module, die Bestandteil der Bibliothek werden sollen, müssen
+unter den gleichen Bedingungen freigegeben werden. Dazu muss am Anfang jeder
+Datei der entsprechende Copyright-Eintrag vorgenommen werden.
+
+\begin{verbatim}
+/*
+ * ICE - C++ - Library for image processing 
+ *
+ * Copyright (C) 2011 FSU Jena, Digital Image Processing Group
+ * Contact: ice@uni-jena.de
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ */
+\end{verbatim}
+
+Es wird empfohlen, dass der jeweilige Autor sich darunter(!) mit der Jahreszahl
+einträgt.
+
+\begin{verbatim}
+// Mark Schuster, 2012
+\end{verbatim}
+
+Ein Block-Kommentar der Form
+\begin{verbatim}
+/*
+ * foo.cpp
+ * Implementierung der Aumentisierung als ICE-Funktion
+ */
+\end{verbatim}
+sollte die in der Datei implementierten Funktionen grundsätzlich erklären.
+
+Die Länge der Zeilen im Quelltext sollte 78 Zeichen nicht überschreiten. Alle
+Quellcodedateien müssen im utf8-Code kodiert sein. Um Kodierungsproblemen
+generell aus dem Weg zu gehen, sollten Umlaute und andere Sonderzeichen nicht
+verwendet werden. 
+
+\subsection{Programm-Stil}
+Unter einem Modul soll eine Sammlung von Funktionen verstanden werden, die
+ähnliche Inhalte für verschiedene Datentypen bereitstellen (zum Beispiel
+geometrische Transformationen für Punkte, Bilder und Vektoren) oder Funktionen,
+deren unmittelbares Zusammenspiel zum Erreichen einer Wirkung erforderlich
+ist (zum Beispiel Startpunktsuche und Konturfolge). 
+
+Ein Modul kann ein oder mehrere .cpp-Dateien mit Quellcode und ein oder
+mehrere .h-Header-Dateien umfassen. Oft ist es sinnvoll, {\bf eine} 
+Header-Datei und {\bf mehrere} Quellcode-Dateien zu verwenden.
+
+Jede Quellcode-Datei soll den zugehörigen Header einschließen. Dies ist 
+notwendig und sinnvoll, weil
+\begin{itemize}
+\item in den Header-Dateien definierte Konstanten in der Quelldatei angewendet
+  werden sollten,
+\item Fehler bei Widersprüchen zwischen Deklaration in der Header-Datei und 
+Implemetierung eher erkannt werden können.
+\end{itemize}
+
+Jede Datei soll genau die Header-Dateien einschließen, die zu ihrer
+Übersetzung nötig sind. 
+Die ``Sammel-Includedatei'' $image.h$ ist nur für die vereinfachte
+Programmierung einfacher Anwendungen gedacht und sollte in 
+ICE-Funktionsmodulen nicht verwendet werden. Eine Verwendung in 
+ICE-Funktionen selbst hätte zur Folge, dass jede Änderung einer 
+Header-Datei die Neuübersetzung aller dieser Module auslöst.
+
+Konstante Werte aller Art sollten in den Header-Dateien als Konstanten 
+definiert werden. Konstanten von generellem Interesse sind in ``defs.h''
+konzentriert. Konstanten der einzelnen Module oder einzelner Funktionen
+sollten in der jeweiligen Header-Datei definiert werden und sollten einen
+den Modul oder die Funktion charakterisierenden Prefix erhalten, um
+Kollisionen auszuschließen (zum Beispiel: TRM\_SHIFT, TRM\_AFFINE als 
+Konstanten für Transformationen). 
+
+Konstanten in Form von Präprozessor-Makros müssen groß geschrieben werden.
+Generell sind Konstanten der Form \verb+const int vier = 4;+ Präprozessor-Makros
+vorzuziehen. Insbesondere sollten in Klassen statische Klassen-Konstanten
+verwendet werden.
+
+Alle ICE-Funktionen sind im Namensraum {\bf ice} zu definieren.
+
+Alle Namen sollten so gewählt werden, dass der Sinn der Funktion, Methode oder
+Klasse möglichst gut erkennbar ist. Klassennamen sollten groß geschrieben 
+werden, Funktions- und Methoden-Namen klein.
+Der Name von Funktionen und Methoden sollte mit einem Verb beginnen.
+Schlecht ist zum Beispiel der Name der Funktion {\bf Line()} zum 
+Zeichnen von Geraden und Strecken, weil dies keine Aktion beinhaltet. 
+Besser wäre also {\bf drawLine()}. 
+Einzelne selbständige Namensbestandteile werden groß geschrieben, 
+unabhängig davon ob es sich um Substantive handelt oder nicht, 
+z.B. fitPolygonContur (CamelCase-Schreibweise).
+
+Neue Datentypen werden vorzugsweise als Klassen angelegt. 
+Basisfunktionalität zur Arbeit mit der Klasse sollte als Methode 
+implementiert werden. Dazu gehören besonders Konstruktoren, 
+Typwandlungskonstruktoren, Zugriffsmethoden.
+
+Bei Typwandlungskonstruktoren ist zu prüfen, wieweit eine versehentliche,
+ungewollte Typwandlung auftreten könnte: Ist dies der Fall, sollte der 
+Konstruktor durch das Schlüsselwort {\bf explicit} gekennzeichnet werden.
+
+Im Normalfall sollten alle Methoden als {\bf virtual} deklariert
+werden. Ausnahmen sind nur bei {\bf zeitkritischen Methoden}
+sinnvoll. Dies sollte auch klar dokumentiert werden, da sonst in 
+Zusammenhang mit abgeleiteten Klassen ein unerwartetes Verhalten 
+auftreten kann.
+
+Umfangreichere Funktionalität sollte nicht als Methode, sondern als Funktion
+implementiert werden, da bei Verwendung einer Klasse in einem Programm alle
+Methoden dazugelinkt werden.
+
+\subsection{Fehlerbehandlung}
+Ziel der Fehlerbehandlung ist, dass Fehlermeldungen möglichst nur durch die
+vom Anwender aufgerufenen Funktionen erfolgen. Deshalb muss jede ICE-Funktion,
+die andere Funktionen aufruft, bei denen Fehler auftreten können, diese
+auswerten und ihrerseits geeignet reagieren.
+
+Das bedeutet, dass vor Aufruf einer Funktion die Fehlermeldungen auszuschalten
+sind (\see{OffMessage}) und danach wieder einzuschalten. Die Funktionen zum
+Ein- und Ausschalten müssen unbedingt symmetrisch aufgerufen werden, da bei 
+Verschachtelung durch Aufruf anderer ICE-Funktionen jedes Ausschalten 
+wieder aufgehoben werden muss. 
+Nach dem Aufruf ist auf Fehler zu testen und bei Fehler geeignet zu 
+reagieren. Das kann auch das einfache Weiterreichen des Fehlers sein 
+(mit eventuell angepaßter Fehlermeldung).
+
+Details zur Fehlerbehandlung und geeignete Werkzeuge finden sich im Abschnitt
+\see{Fehlerbehandlung}.
+
+\subsection{Dokumentation}
+Jede Funktion ist in die Dokumentation aufzunehmen. Die Dokumenation erfolgt
+im TEX-Format, woraus sowohl eine druckbare Version als auch eine HTML-Version
+erzeugt wird.
+
+Die Funktionen müssen in eine geeignete Sektion eingeordnet werden. Ist keine
+entsprechende Sektion vorhanden, so muss diese angelegt werden. Neue Sektionen
+sollten neben den Funktionsbeschreibungen auch eine kurze allgemeine Einführung
+beinhalten. Diese soll insbesondere die zugrundeliegende Philosophie der
+Funktionen verdeutlichen.
+
+Die Beschreibung der Funktionen erfolgt mit folgenden Makros:
+\begin{itemize}
+\item
+\begin{verbatim}
+\proch{returntype}{funktionsname}{parameterliste}{includefile}
+\end{verbatim}
+Kopf der Funktionsdeklaration.
+\item
+\begin{verbatim}
+\procf{returntype}{funktionsname}{parameterliste}
+\end{verbatim}
+Weitere mögliche Form des Aufrufs, eine Deklaration mit {\bf proch} muss
+vorangegangen sein.
+\item
+\begin{verbatim}
+\descr{beschreibung}
+\end{verbatim}
+Inhaltliche Erklärung der Funktion.
+\end{itemize}
+
+Für Klassen erleichtern folgende Latex-Makros die Arbeit:
+\begin{itemize}
+\item
+\begin{verbatim}
+\ctor{klassenname}{parameterliste}{includefile}
+\end{verbatim}
+Der erste Konstruktor einer Klasse.
+\item
+\begin{verbatim}
+\ctorf{klassenname}{parameterliste}
+\end{verbatim}
+Folgende Konstruktoren einer Klasse. Die Verwendung von \verb+\ctor+ muss
+vorausgegangen sein.
+\item
+\begin{verbatim}
+\method{returntype}{methodenname}{parameterliste}
+\end{verbatim}
+Methoden einer Klasse. Die Verwendung von \verb+\ctor+ muss vorausgegangen 
+sein. Die Beschreibung der Methode wird mit \verb+\descr+ angehängt.
+\end{itemize}
+
+In der Funktionsbeschreibung werden die Namen von Parametern im 
+mathematischen Modus geschrieben, also mit \$ eingeklammert.\\
+
+Beispiel:
+\begin{verbatim}
+\proch{void}{OpenAlpha}{unsigned char *windowname}{visual.h}
+\descr{
+Es wird ein Textfenster mit dem Namen $windowname$ angelegt und 
+geöffnet. Auch ohne expliziten Aufruf dieser Funktion wird ein 
+Textfenster geöffnet, wenn eine Funktion zur Ausgabe bzw. Eingabe 
+aufgerufen wird.
+}
+\end{verbatim}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

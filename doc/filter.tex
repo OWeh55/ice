@@ -1,0 +1,503 @@
+\nsection{Filter}{filter}
+
+In diesem Abschnitt werden Filter-Operationen über Bilder beschrieben.
+Alle Typen von Bildrepräsentationen werden hier soweit es geht gemeinsam 
+abgehandelt (\class{Image}, \class{ImageD}, \class{ColorImage}). 
+Auf die Besonderheiten bei bestimmten Typen wird speziell hingewiesen. 
+Die Funktionen zur Bildfilterung benötigen im allgemeinen ein Quellbild
+und ein Zielbild. Bei fehlerfreier Abarbeitung wird OK zurückgegeben, sonst
+ein Fehlerkode.
+
+\subsection{Lineare lokale Filter}
+\hypertarget{LSIFilter}{}
+\subsubsection{Klasse LSIFilter}
+Die Klasse \class{LSIFilter} repräsentiert allgemeine LSI-Filter. 
+LSI-Filter können durch die Vorgabe von Filtermasken 
+(als \class{Matrix} oder \class{IMatrix}) oder mittels spezieller 
+Funktionen (z.B. \see{mkDirSmearFilter}) erzeugt werden.
+
+Ein LSI-Filter beschreibt immer eine LSI-Filterung der Form 
+\[ g \prime (x,y) = \sum_{i,j} f(i,j) \cdot g(x+i,y+j) ,\]
+wobei je nach Filtertyp unterschiedliche interne Repräsentationen 
+zur Anwendung kommen. Ganzzahlige Filter sind typischerweise 
+schneller als Gleitkomma-Filter (Initialisierung mit \class{IMatrix} 
+statt \class{Matrix}).
+ 
+\subtitle{Konstruktoren}
+\proch{}{LSIFilter::LSIFilter}{}{lsifilter.h}
+\descr{Standardkonstruktor. Ein durch den Standardkonstruktor erzeugtes 
+Filter ist nicht benutzbar, sondern es muss durch Zuweisung ein 
+richtiges Filter zugewiesen werden.}
+
+\proch{}{LSIFilter::LSIFilter}{const LSIFilter \&f}{lsifilter.h}
+\descr{Kopierkonstruktor.}
+
+\proch{}{LSIFilter::LSIFilter}{const Matrix \&m}{lsifilter.h}
+\descr{Konstruiert ein (double-)Filter mit der als \class{Matrix} $m$ 
+übergebenen Maske. 
+\[ g(x,y) = \sum_{i,j} m_{i,j} \cdot g(x+i,y+j) \]
+}
+
+\proch{}{LSIFilter::LSIFilter}{const IMatrix \&m,int norm}{lsifilter.h}
+\procf{}{LSIFilter::LSIFilter}{int *m,int norm}
+\descr{Konstruiert ein (int-)Filter mit der als \class{IMatrix} oder 
+C-Array $m$ übergebenen Maske.
+\[ g(x,y) = {1 \over norm} \cdot \sum_{i,j} m_{i,j} \cdot g(x+i,y+j) \]
+}
+
+\subtitle{Abfrage und Manipulation}
+
+\proch{double}{LSIFilter::getMask}{int x,int y}{lsifilter.h}
+\descr{Gibt den Wert der Filtermaske an der Stelle $x,y$ zurück.}
+
+\proch{void}{LSIFilter::NegateMask}{}{lsifilter.h}
+\descr{Negiert die Koeffizienten der Filtermaske.}
+
+\proch{double}{LSIFilter::proposeOffset}{const Image \&img}{lsifilter.h}
+\descr{Gibt einen Offset-Wert zurück, der bei der Filterung eines Integerbildes
+angewendet werden sollte, damit die Ergebniswerte im positiven ganzzahligen 
+Bereich der Grauwerte des Ergebnisbildes $img$ liegen.}
+
+
+\subsubsection{Filtererzeugung}
+Neben den Konstruktoren, die aus Matrizen mit den Filterkoeffizienten LSIFilter 
+erzeugen, gibt es Funktionen zur Erzeugung spezieller Filter.
+
+\proch{LSIFilter}{mkPolynomFilter}{int n,int grad,int i,int j}{lsifilter.h}
+\descr{Erzeugt einen Filter, der als Filter-Ergebnis den Koeffizienten $a_{i,j}$ eines 
+an der Stelle (x0,y0) an die Grauwertfunktion angepaßten Polynoms des Grades $grad$ 
+ermittelt.
+\[
+g(x,y) = \sum_{i,j} a_{i,j} \cdot (x-x_0)^i \cdot (y-y_0)^j 
+\]
+Folgende Aufrufe erzeugen Filter, die äquivalent zu anderen Filterfunktionen sind:\\
+\begin{tabular}{cc}
+  mkPolynomFilter(3,1,0,0) & \bsee{SmearImg} \\
+  mkPolynomFilter(3,1,1,0) & \bsee{GradXImg} \\
+  mkPolynomFilter(3,1,0,1) & \bsee{GradYImg} \\
+  mkPolynomFilter(3,2,0,0) & \bsee{MeanImg} \\
+  mkPolynomFilter(3,2,2,0) & \bsee{LaplaceXImg} \\
+  mkPolynomFilter(3,2,0,2) & \bsee{LaplaceYImg}
+\end{tabular}
+}
+
+\setlength{\unitlength}{1cm}
+\begin{picture}(6,6)
+  \epsfig{figure=dirsmear.eps,width=6cm}
+\end{picture}
+\proch{LSIFilter}{mkDirSmearFilter}{int n,double dir,double len,double width}{lsifilter.h}
+\descr{Erzeugt ein Mittelwertfilter, dessen Maske eine diskrete Approximation 
+der im Bild dargestellten roten Fläche darstellt.}
+
+\begin{picture}(6,6)
+  \epsfig{figure=dirdob.eps,width=6cm}
+\end{picture}
+\proch{LSIFilter}{mkDirDoBFilter}{int n,double dir,double len,double width}{lsifilter.h}
+\descr{Erzeugt ein dem DoB-Filter (\see{DoBImg}) ähnliches Filter, 
+dessen Maske eine diskrete Approximation des Bildes dargestellt. Dabei
+kennzeichnet die roten Fläche  positive Maskenwerte, die blaue Fläche negative
+Maskenwerte. Die Werte sind so gewählt, dass in einem homogenen Bild das Filter
+den Wert Null liefert.}
+
+\begin{picture}(6,6)
+  \epsfig{figure=diredge.eps,width=6cm}
+\end{picture}
+\proch{LSIFilter}{mkDirEdgeFilter}{int n,double dir,double rad}{lsifilter.h}
+\descr{Erzeugt ein Kanten-Filter, dessen Maske eine diskrete Approximation 
+des Bildes dargestellt. Dabei
+kennzeichet die roten Fläche  positive Maskenwerte, die blaue Fläche negative
+Maskenwerte. Die positiven und negativen Werte sind betragsmäßig gleich.}
+
+\subsubsection{Anwendung von LSIFilter}
+
+\proch{int}{LSIFilter::Filter}{const Image \&src,Image \&dst,int offset}{lsifilter.h}
+\procf{int}{LSIFilter::Filter}{const Image \&src,ImageD dst}
+\procf{int}{LSIFilter::Filter}{ImageD src,ImageD dst}
+\descr{Wendet das Filter auf das Bild $src$ an und speichert das Ergebnis
+im Bild $dest$. Im Falle der Integer-Bilder verschieben sich die 
+Ergebniswerte um $offset$. Damit kann erreichtwerden, dass negative 
+Filterergebnisse auf den Bereich des Zielbildes abgebildet werden 
+(\see{LSIFilter::proposeOffset}). }
+
+\proch{int}{LSIImg}{const Image \&src,Image \&dst,const LSIFilter \&f,int offset}{lsifilter.h}
+\descr{Wendet das Filter $f$ auf das Bild $src$ an und speichert das Ergebnis
+im Bild $dest$. Dies ist äquivalent zu LSIFilter::Filter(src,dst,offset).}
+
+\seealso{GetVal}
+
+\subtitle{Spezielle Aufrufformen}
+
+In den speziellen Aufrufformen wird das LSIFilter implizit generiert 
+und angewendet. Deshalb ergeben sich keine inhaltlichen Unterschiede 
+zur Erzeugung eines Filters mit nachfolgender Filterung.
+
+\proc{int}{LSIImg}{Image src,int nx,int ny,int *mask,int norm,int offset,Image dest}
+\descr{
+Allgemeines LSI-Filter. Mit mit den ungeraden Werten $nx$ und $ny$ wird 
+die Größe der Filtermaske angegeben (3,5,7,\dots). Die Filtermaske $mask$ 
+ist ein int-Array der Größe $ny \cdot nx$. Die Bildpunkte des 
+Zielbildes werden nach der Formel
+$$vd(x,y)={maxd \over norm \cdot maxs}\cdot \sum vs(x-i,y-j) \cdot mask(i,j) +
+offset$$
+berechnet.
+}
+\proc{int}{LSIImg}{Image src,int nx,int ny,double *mask,int offset,Image dest}
+\descr{
+Allgemeines LSI-Filter. Mit mit den ungeraden Werten $nx$ und $ny$ wird 
+die Größe der Filtermaske angegeben (3,5,7,\dots). Die Filtermaske $mask$ 
+ist ein double-Array der Größe $ny \cdot nx$. Die Bildpunkte des 
+Zielbildes werden nach der Formel
+$$vd(x,y)={maxd \over maxs}\cdot \sum vs(x-i,y-j) \cdot mask(i,j) + offset$$
+berechnet.
+}
+\proc{int}{LSIImg}{Image src,const Matrix \&mask,int offset,Image dest}
+\descr{
+Allgemeines LSI-Filter. Die Filtermaske $mask$ ist eine $Matrix$. 
+Die Bildpunkte des Zielbildes werden nach der Formel
+$$vd(x,y)={maxd \over maxs}\cdot \sum vs(x-i,y-j) \cdot mask(i,j) + offset$$
+berechnet.
+}
+\proc{int}{LSIImg}{Image src,const IMatrix \&mask,int norm,int offset,Image dest}
+\descr{
+Allgemeines LSI-Filter. Die Filtermaske $mask$ ist eine $IMatrix$. 
+Die Bildpunkte des Zielbildes werden nach der Formel
+$$vd(x,y)={maxd \over { maxs \cdot norm } }\cdot \sum vs(x-i,y-j) \cdot mask(i,j) + offset$$
+berechnet.
+}
+
+\subsubsection{Spezielle lineare lokale Filter}
+Die speziellen linearen lokalen Filter sind in der Laufzeit gegenüber 
+den allgemeinen LSI-Filtern (\class{LSIFilter} optimiert. Viele 
+beschränken sich auf eine 3*3-Umgebung.
+
+\proch{int}{SmearImg}{const Image \&src,Image \&dest,int n=3}{filter.h}
+\procf{int}{SmearImg}{const Image \&src,Image \&dest,int nx,int ny}
+\procf{int}{SmearImg}{const Image \&img,int n}
+\descr{
+Fenster-Mittelwertfilter. Das Fenster wird quadratisch (Größe $n$*$n$) 
+oder rechteckig (Größe $nx$*$ny$) gewählt. Die Laufzeit dieser (optimierten)
+Variante ist nicht von der Fenstergröße abhängig.
+}
+
+\proch{int}{SmearImgD}{ImageD src,ImageD dest,int nx,int ny}{darith.h}
+\procf{int}{SmearImgD}{ImageD src,ImageD dest,int n}
+\descr{
+Fenster-Mittelwertfilter. Das Fenster wird quadratisch (Größe $n$*$n$) 
+oder rechteckig (Größe $nx$*$ny$) gewählt. Hier wird jedoch nicht der 
+Mittelwert, sondern die Grauwert-Summe im Fenster als Ergebniswert 
+abgelegt. Die Laufzeit dieser (optimierten) Variante ist nicht von der 
+Fenstergröße abhängig.
+}
+
+\proch{int}{BoxImg}{const Image \&src,Image \&dest,int n=3}{filter.h}
+\procf{int}{BoxImg}{const Image \&src,Image \&dest,int nx,int ny}
+\descr{
+Boxfilter, der die Werte im Fenster summiert. Der Unterschied zu 
+\bsee{SmearImg} besteht in der fehlenden Division durch die Box-Größe. 
+Die Ergebniswerte können deshalb sehr groß werden und werden auf den 
+Grauwertumfang des Zielbildes beschränkt.
+Das Fenster wird quadratisch (Größe $n$*$n$) 
+oder rechteckig (Größe $nx$*$ny$) gewählt. Die Laufzeit dieser (optimierten)
+Variante ist nicht von der Fenstergröße abhängig.
+}
+
+\proch{int}{DoBImg}{Image src,Image dest,int n1,int n2,int mode=SMD\_SHIFT}{filter.h}
+\descr{
+''Difference of Boxes'' - Differenz zweier Fenster-Mittelwertfilter mit den
+Größen $n1$ und $n2$. Dieses Filter kann als schnelle Approximation des
+MexicanHat-Filters verwendet werden. Der Parameter $modus$ steuert, wie die
+Differenz (\see{SubImg}) gebildet wird:\\
+\begin{tabular}{|c|c|} \hline
+mode & Wert \\ \hline
+SMD\_ABSOLUTE & $vd=\vert v1-v2 \vert$ \\
+SMD\_POSITIVE & $vd=max(v1-v2,0)$ \\
+SMD\_SHIFT & $vd=v1-v2+max/2$ \\ \hline
+\end{tabular}\\
+}
+
+\proch{int}{GradXImg}{Image src,int norm,Image dest}{filter.h}
+\descr{
+Gradient in x-Richtung:
+$${norm\cdot maxd \over 6 \cdot maxs}\left[{ \matrix{-1&0&1\cr-1&0&1\cr-1&0&1}}
+\right] +{maxd \over 2}$$
+}
+\seealso{GradImg}
+\seealsonext{GradDirImg}
+
+\proc{int}{GradYImg}{Image src,int norm,Image dest}
+\descr{
+Gradient in y-Richtung:
+$${norm\cdot maxd \over 6 \cdot maxs}\left[{ \matrix{-1&-1&-1\cr0&0&0\cr1&1&1}}
+\right] +{maxd \over 2}$$
+}
+\seealso{GradImg}
+\seealsonext{GradDirImg}
+
+\proc{int}{MeanImg}{Image src,Image dest}
+\descr{gewichtetes Mittelwertfilter:
+$${maxd \over 9 \cdot maxs}\left[{ \matrix{-1&2&-1\cr2&5&2\cr-1&2&-1}}
+\right]$$
+}
+
+\proc{int}{LaplaceXImg}{Image src,int norm,Image dest}
+\descr{
+Laplacefilter in x-Richtung:
+$${norm\cdot maxd \over 12 \cdot maxs}\left[{ \matrix{1&-2&1\cr1&-2&1\cr1&-2&1}}
+\right] +{maxd \over 2}$$
+}
+\proc{int}{LaplaceYImg}{Image src,int norm,Image dest}
+\descr{
+Laplacefilter in y-Richtung:
+$${norm\cdot maxd \over 12 \cdot maxs}\left[{ \matrix{1&1&1\cr-2&-2&-2\cr1&1&1}}
+\right] +{maxd \over 2}$$
+}
+\proc{int}{LaplaceImg}{Image src,int norm,Image dest}
+\descr{
+Laplacefilter:
+$${norm\cdot maxd \over 16 \cdot maxs}\left[{ \matrix{2&-1&2\cr-1&-4&-1\cr2&-1&2}}
+\right] +{maxd \over 2}$$
+}
+
+\proc{int}{GaussImg}{const Image \&src,Image \&dest,int neighb,double sigma}
+\procf{int}{GaussImg}{const Image \&src,ImageD dest,int neighb,double sigma}
+\procf{int}{GaussImg}{ImageD src,ImageD dest,int neighb,double sigma}
+\descr{
+Gaussfilterung eines Bildes. Es wird eine Filtermaske der Größe
+$neighb*neighb$ nach der folgenden Formel berechnet:\\
+$$mask(i,j)={1\over norm}e^{i^2+j^2 \over 2 sigma^2}\quad ,\quad
+i,j=-{neighb-1 \over 2},\dots,{neighb-1 \over 2}$$
+$norm$ wird so festgelegt, daß die Summe der Filterkoeffizienten 1 ergibt.
+}
+
+\proch{int}{MexicanHatImg}{const Image \&src,Image \&dest,double sigma,int neighb=0}{filter.h}
+\procf{int}{MexicanHatImg}{const Image \&src,ImageD dest,double sigma,int neighb=0}
+\procf{int}{MexicanHatImg}{ImageD src,ImageD dest,double sigma,int neighb=0}
+\descr{
+Es wird das Mexican Hat-Filter (auch Laplace of Gaussian-Operator oder Marr-Hildret-Operator) 
+auf das Bild $src$ angewendet und das Ergebnis in Bild $dest$ gespeichert. 
+Dabei ist $sigma$ der Parameter der Gauss-Funktion, $neighb$ die Größe der Filtermaske.
+$neighb$ muss hinreichend groß gewählt werden, um das ideale Filter zu approximieren.
+Ist $neighb$ gleich Null, so wird die Filtermaske als nächstgrößte ungerade Zahl zu 
+$ 5 \cdot sigma$ gewählt.
+}
+
+\subsection{Nichtlineare lokale Filter}
+
+\proc{int}{GradImg}{const Image \&src,int norm,Image \&dest}
+\descr{Aus den Gradienten in x- und y-Richtung wird der Betrag berechnet:\\
+$$val={norm\cdot maxd \over maxs}\cdot \sqrt{gradx^2+grady^2}$$
+}
+
+\proc{int}{GradDirImg}{const Image \&src,Image \&dest}
+\descr{
+Es wird die Richtung des Gradienten bestimmt und auf die acht
+Freemanrichtungen (0 \dots 7) quantisiert.
+}
+
+\proch{int}{CalcDirectionImg}{const Image \&src,Image \&dir,int dsize=11}{filter.h}
+\proc{int}{CalcDirectionImg}{const Image \&src,Image \&dir,int dsize=11,ImageD eval}
+\descr{Im Bild $src$ wird aus dem Grauwertgradienten für jeden Punkt eine 
+Vorzugsrichtung ermittelt. Der Gradient wird dabei über eine Umgebung der 
+Größe $dsize$*$dsize$ gemittelt und der Winkel als Ergebnis in das Bild $dir$ eingetragen.
+Der Winkelbereich $0 \le \varphi < 2 \pi$ wird dabei auf den Grauwertumfang 
+des Zielbildes $dir$ abgebildet. 
+Das Bild $dir$ ist direkt geeignet zur Verwendung mit dem gerichteten 
+Filter \bsee{OrientedEdgeImg}.
+Wenn das double-Bild $eval$ als Parameter angegeben werden, wird auf diesem der
+Betrag des gemittelten Gradienten abgelegt, der als Maß für die Gerichtetheit im 
+jeweiligen Punkt verwendet werden kann.}
+
+\proch{int}{CalcDirectionStructImg}{const Image \&src,Image \&dir,int dsize=11}{filter.h}
+\proc{int}{CalcDirectionStructImg}{const Image \&src,Image \&dir,int dsize=11,ImageD lambda1,ImageD lambda2}
+\descr{Im Bild $src$ wird aus dem Grauwertgradienten mittels des 
+Struktur-Tensors für jeden Punkt eine Vorzugsrichtung ermittelt. 
+Der Winkel wird dabei über eine Umgebung der Größe $dsize$*$dsize$ 
+gemittelt und das Ergebnis in das Bild $dir$ eingetragen.
+Der Winkelbereich $0 \le \varphi < \pi$ wird dabei auf den 
+Grauwertumfang des Zielbildes $dir$ abgebildet.
+Das Bild $dir$ ist direkt geeignet zur Verwendung 
+mit den gerichteten Filtern \bsee{OrientedSmearImg} und \bsee{OrientedDoBImg}.
+Wenn die double-Bilder $lambda1$ und $lambda2$ 
+als Parameter angegeben werden, werden auf diesen die Eigenwerte 
+des Struktur-Tensors abgelegt, die als Maß für die Gerichtetheit im 
+jeweiligen Punkt verwendet werden können.}
+
+\proch{int}{OrientedSmearImg}{const Image \&src,const Image \&dir,
+  Image \&dest,int fsize=11,int flength=10,int fwidth=1}{filter.h}
+\proc{int}{OrientedDoBImg}{const Image \&src,const Image \&dir,
+  Image \&dest,int fsize=11,int flength=10,int fwidth=1}
+\descr{Gerichtete Mittelwertfilter (\see{mkDirSmearFilter}) bzw. 
+gerichtete DoB-Filter (\see{mkDirDoBFilter}) werden 
+punktweise angewendet, wobei die Orientierung des Filters aus dem 
+Bild $dir$ (\see{CalcDirectionStructImg}) entnommen wird. Zur Bedeutung der 
+Filterparameter siehe \bsee{mkDirSmearFilter} und \bsee{mkDirDoBFilter}.
+}
+
+\proch{int}{OrientedEdgeImg}{const Image \&src,const Image \&dir,
+  Image \&dest,int fsize=11,int rad=10}{filter.h}
+\descr{Der gerichtete Kantenfilter (\see{mkDirEdgeFilter}) wird 
+punktweise angewendet, wobei die Orientierung des Filters aus dem 
+Bild $dir$ (\see{CalcDirectionImg}) entnommen wird. Zur Bedeutung der 
+Filterparameter siehe \bsee{mkDirEdgeFilter}.
+}
+
+\subsection{Morphologische und Rangordnungs-Filter}
+\proch{int}{ErodeImg}{const Image \&src,int nx,int ny,Image \&dest}{filter.h}
+\procf{int}{ErodeImg}{const Image \&src,Image \&dest,int nx=3, int ny=-1}
+\descr{
+Es wird eine Erosion in der $nx$*$ny$-Umgebung durchgeführt.
+$nx$ und $ny$ müssen ungerade sein. Dies entspricht dem Minimum-Filter mit 
+dem gegebenen Fenster. Beim Aufruf in der zweiten Variante steht Weglassen von
+$ny$ für ein quadratisches Fenster. Der Vorzugswert für $nx$ ist 3.}
+\seealso{MinMaxImg}
+
+\proc{int}{ErodeImg}{const Image \&src,int neighb,int *mask,Image \&dest}
+\procf{int}{ErodeImg}{const Image \&src,int nx,int ny,int *mask,Image \&dest}
+\procf{int}{ErodeImg}{const Image \&src,const Imatrix \&mask,Image \&dest}
+\procf{int}{ErodeImg}{const Image \&src,Image \&dest,const IMatrix \&mask}
+\descr{
+Es wird eine verallgemeinerte Erosion mit dem in der Maske {\bf mask} 
+definierten strukturierenden Element durchgeführt. Die 
+Bildpunkte in der Umgebung werden für die Minimum-Bildung berücksichtigt, 
+wenn der enstsprechende Wert in der Maske verschieden von Null ist.\\
+Die Maske kann als C-Array gegeben sein und muss $neighb * neighb$ 
+beziehungsweise $nx * ny$ Elemente enthalten, wobei $neighb$, 
+$nx$ und $ny$ ungerade Zahlen (3, 5, 7,\dots) sein müssen.\\
+Wird {\bf mask} als \class{IMatrix} gegeben, so entspricht die 
+Nachbarschaftsgröße der Matrix-Größe. Diese Größen müssen ebenfalls 
+ungeradzahlig sein.
+}
+
+\proch{int}{DilateImg}{const Image \&src,int nx,int ny,Image \&dest}{filter.h}
+\procf{int}{DilateImg}{const Image \&src,Image \&dest,int nx=3, int ny=-1}
+\descr{
+Es wird eine Dilatation in der $nx$*$ny$-Umgebung durchgeführt.
+$nx$ und $ny$ müssen ungerade sein. Dies entspricht dem Maximum-Filter mit 
+dem gegebenen Fenster. Beim Aufruf in der zweiten Variante steht Weglassen von
+$ny$ für ein quadratisches Fenster. Der Vorzugswert für $nx$ ist 3.}
+\seealso{MinMaxImg}
+
+\proc{int}{DilateImg}{const Image \&src,int neighb,int *mask,Image \&dest}
+\procf{int}{DilateImg}{const Image \&src,int nx,int ny,int *mask,Image \&dest}
+\procf{int}{DilateImg}{const Image \&src,const Imatrix \&mask,Image \&dest}
+\procf{int}{DilateImg}{const Image \&src,Image \&dest,const IMatrix \&mask}
+\descr{
+Es wird eine verallgemeinerte Dilatation mit dem in der Maske {\bf mask} 
+definierten strukturierenden Element durchgeführt. Die 
+Bildpunkte in der Umgebung werden für die Maximum-Bildung berücksichtigt, 
+wenn der entsprechende Wert in der Maske verschieden von Null ist.\\
+Die Maske kann als C-Array gegeben sein und muss $neighb * neighb$ 
+beziehungsweise $nx * ny$ Elemente enthalten, wobei $neighb$, 
+$nx$ und $ny$ ungerade Zahlen (3, 5, 7,\dots) sein müssen.\\
+Wird {\bf mask} als \class{IMatrix} gegeben, so entspricht die 
+Nachbarschaftsgröße der Matrix-Größe. Diese Größen müssen ebenfalls 
+ungeradzahlig sein.
+}
+
+\proch{int}{OpeningImg}{const Image \&src,Image \&dest,int nx=3, int ny=-1}{filter.h}
+\procf{int}{OpeningImg}{const Image \&src,Image \&dest,const IMatrix \&mask}
+\descr{
+Es wird ein Opening in der $nx$*$ny$-Umgebung durchgeführt. Dies ist die 
+Hintereinanderausführung einer Erosion gefolgt von einer Dilatation. 
+$nx$ und $ny$ müssen ungerade sein. Weglassen von $ny$ steht für ein 
+quadratisches Fenster. Der Vorzugswert für $nx$ ist 3.\\
+Bei Angabe einer \class{IMatrix} als Maske, werden Erosion und Dilatation 
+mit dieser Maske ausgeführt.
+}
+
+\proch{int}{ClosingImg}{const Image \&src,Image \&dest,int nx=3, int ny=-1}{filter.h}
+\procf{int}{ClosingImg}{const Image \&src,Image \&dest,const IMatrix \&mask}
+\descr{
+Es wird ein Closing in der $nx$*$ny$-Umgebung durchgeführt. Dies ist die 
+Hintereinanderausführung einer Dilatation gefolgt von einer Erosion. 
+$nx$ und $ny$ müssen ungerade sein.
+Weglassen von $ny$ steht für ein quadratisches Fenster. 
+Der Vorzugswert für $nx$ ist 3.\\
+Bei Angabe einer \class{IMatrix} als Maske, werden Dilatation und Erosion
+mit dieser Maske ausgeführt.}
+
+\proc{int}{MinMaxImg}{const Image \&src,int nx, int ny,Image \&minimg, Image \&maximg}
+\descr{Bestimmt gleichzeitig das Resultat eines Minimum-Filters 
+(Erosion) und eines Maximum-Filters (Dilatation) mit gegebenem Fenster. 
+Wenn {\bf beide} Filter benötigt werden, ist die Kombination beider 
+Filter effektiver als die getrennte Ausführung von \bsee{ErodeImg} 
+und \bsee{DilateImg}.
+}
+
+Das folgende Beispiel soll die Verwendung von ErodeImg() und DilateImg() 
+demonstrieren.
+
+\begprogr
+\begin{verbatim}
+/*Erosion und Dilatation*/
+#include <image.h>
+
+void main(int argc,char *argv[])
+{
+  Image img;
+  int mask[3][3]={{1,0,0},{0,1,0},{0,0,1}};       // strukturierendes Element
+  img=ReadImg(argv[1],NULL);                      // Bild einlesen
+  Show(ON,img,"Original-Bild");                   // Bild darstellen
+  Image erode_img = NewImg(img);
+  Show(ON, erode_img, "Mit Maske erodiertes Bild");
+  ErodeImg(img,3,mask,erode_img);                 // Erosion
+  Image dilate_img = NewImg(img);
+  Show(ON, dilate_img, "Mit Maske dilatiertes Bild");
+  DilateImg(img,3,mask,dilate_img);                // Dilatation
+}
+\end{verbatim}
+\endprogr
+
+\proch{int}{RankImg}{const Image \&src,int neighb,int rank,Image \&dest}{rank.h}
+\procf{int}{RankImg}{const Image \&src,int nx,int ny,int rank,Image \&dest}
+\descr{
+Für jeden Bildpunkt wird in einer Umgebung der Größe $neighb*neighb$
+beziehungsweise $nx*ny$ der Wert mit dem Rang $rank$ bestimmt und 
+ins Zielbild eingetragen. $neighb$, $nx$ und $ny$ müssen ungerade sein.
+}
+
+\proch{int}{MedianImg}{const Image \&img,int size,Image \&dest}{rank.h}
+\descr{Bestimmt als Spezialfall von \bsee{RankImg} ein Bild $dest$, dessen
+  Pixel den Wert des Median der Werte in der Umgebung $neighb*neighb$ des
+  Originalbildes haben.}
+
+\proc{int}{SubRankImg}{const Image \&src,int neighb,int rank,Image \&dest}
+\descr{
+Für jeden Bildpunkt wird in einer Umgebung der Größe $neighb*neighb$ der Wert
+mit dem Rang $rank$ bestimmt und vom Grauwert dieses Punktes im Originalbild
+subtrahiert. Falls das Ergebnis kleiner als Null ist, wird Null im Zielbild
+eingetragen. $neighb$ muß eine ungerade Zahl sein.
+}
+
+\proch{int}{RelaxImg}{const Image \&src,Image \&dest,int neighb=3}{icefunc.h}
+\descr{
+Es wird ein Relaxationsfilter zur Schärfung auf Bild $img1$ angewendet und 
+das Ergebnis im Bild $img2$ abgespeichert. Dabei wird im Quellbild $src$ in
+einer $neighb*neighb$ Umgebung das Maximum und das Minimum der Grauwerte 
+bestimmt und im Ergebnisbild wird derjenige dieser beiden Werte eingetragen, 
+der näher am Originalgrauwert liegt. 
+}
+
+\proch{int}{SkelettImg}{const Image \&src,const Image \&dest,int lvl=1}{filter.h}
+\descr{Erzeugt nach dem Algorithmus von Zhang und Suen ein binäres Skelettbild. 
+Dabei wird das Quellbild als Binärbild betrachtet, in dem Grauwerte größer 
+gleich $lvl$ als Objekt-, die anderen als Untergrundpunkte betrachtet werden. 
+Das Ergebnis ist ein Binärbild, in dem die Skelett-Punkte mit dem maximalen 
+Grauwert eingetragen sind. Untergrundpunkte haben den Wert 0.}
+
+\subsection{Globale lineare Filterung}
+
+Als globale lineare Filterungs-Funktionen stellt ICE die
+Faltung zweier Bilder und deren Umkehrung bereit. Die linearen 
+globalen Filterungs-Funktionen basieren auf der Fourier- und der
+Hartleytransformation und sind deshalb dort dokumentiert.
+\newline
+\seealso{FourierImgD} \\
+\seealso{HartleyImgD} \\
+\seealso{ConvolutionImg} \\
+\seealso{InvConvolutionImg} 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

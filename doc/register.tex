@@ -1,0 +1,552 @@
+\nsection{Merkmale, Ähnlichkeiten und Abstandsmaße}{features}
+\label{Merkmale}
+
+Zur Klassifikation, zur Bestimmung von Ähnlichkeiten und zur Lösung von 
+Zuordnungsproblemen werden Merkmale von Bildern, Regionen und Objekten 
+ermittelt. Typischerweise sind Merkmale numerische Werte, die 
+charakteristische Eigenschaften beschreiben. Gewöhnlich kommen
+mehrere Merkmale zum Einsatz, die in ICE in einem \class{Vector} 
+oder als \vector{double} abgelegt werden. 
+
+\subsection{Abstandsmaße}
+\label{VectorDistance}
+Die (abstrakte) Klasse \verb+VectorDistance+ dient in ICE als Abstandsmaß und 
+kann bei der Klassifikation, bei Zuordnungsproblemen und zur Bestimmung von 
+Ähnlichkeitsmaßen verwendet werden. Die Klasse (und damit die abgeleiteten 
+Klassen für spezielle Abstandsmaße) definiert die Methode 
+\verb+Distance+ und den Operator \verb+operator()+, die den Abstand ihrer 
+Argumente ermitteln:
+
+\proch{double}{VectorDistance::Distance}{const vector$<$double$>$ \&x,const vector$<$double$>$ \&x}{vectordistance.h}
+\procf{double}{VectorDistance::Distance}{const Vector \&x,const Vector \&y}
+\procf{double}{VectorDistance::operator()}{const vector$<$double$>$ \&x,const vector$<$double$>$ \&y}
+\procf{double}{VectorDistance::operator()}{const Vector \&x,const Vector \&y}
+\descr{Es wird der Abstand der übergebenen Argumente ermittelt und zurückgegeben.}
+
+\subsubsection{EuclidianVectorDistance}
+\label{EuclidianVectorDistance}
+\verb+EuclidianVectorDistance+ ist eine von \bsee{VectorDistance} abgeleitete Klasse, die 
+die Distanz als Euklidische Distanz $ \sqrt{\sum_{i} (x_{i} - y_{i} )^2} $  berechnet.
+
+\subsubsection{CityBlockVectorDistance}
+\label{CityBlockVectorDistance}
+\verb+CityBlockVectorDistance+ ist eine von \verb+VectorDistance+ abgeleitete Klasse, die 
+die Distanz als CityBlock-Distanz $ \sum_{i} |x_{i} - y_{i}| $  berechnet.
+
+\subsubsection{QuadraticFormVectorDistance}
+\label{QuadraticFormVectorDistance}
+\verb+QuadraticFormVectorDistance+ ist eine von \verb+VectorDistance+ abgeleitete Klasse, die 
+die Distanz als Quadratische Form $ \sum_{i,j} a_{i,j} \cdot (x_{i} - y_{i} ) \cdot (x_{j} - y_{j} ) $  
+berechnet. Die Matrix $a$ wird über den Konstruktor vorgegeben:
+
+\proch{}{QuadraticFormVectorDistance::QuadraticFormVectorDistance}{const Matrix \&a}{vectordistance.h}
+\descr{Erzeugt eine QuadraticFormVectorDistance unter Verwendung der gegebenen Matrix $a$.}
+
+\subsubsection{EarthMoverVectorDistance}
+\label{EarthMoverVectorDistance}
+\verb+EarthMoverVectorDistance+ ist eine von \verb+VectorDistance+ 
+abgeleitete Klasse, die die Earth Mover-Distanz berechnet. Diese Distanz 
+ist sinnvoll einsetzbar, wenn benachbarte/aufeinderfolgende Merkmale in 
+Zusammenhang stehen, wie es bei den Häufigkeiten von Histogrammklassen 
+der Fall ist.
+
+Beispiel für die Berechnung der Distanzen zweier Bilder anhand des 
+Histogramms:
+\nopagebreak
+\begprogr
+\begin{verbatim}
+Image img1;
+Image img2;
+...
+Histogramm h1(img1);
+Histogramm h2(img2);
+
+vector<double> hvec1=h1.Rel();
+vector<double> hvec2=h2.Rel();
+EuklidianVectorDistanz ed;
+CityBlockVectorDistanz md;
+EarthMoverVectorDistanz emd;
+
+cout << "Euklidische Distanz: " << ed(hvec1,hvec2) << endl;
+cout << "City Block Distanz: " << md(hvec1,hvec2) << endl;
+cout << "Earth Mover Distanz: " << emd(hvec1,hvec2) << endl;
+\end{verbatim}
+\endprogr
+
+\subsection{Distanz-Matrix}
+\proch{Matrix}{DistanceMatrix}{const Matrix \&feat1, const Matrix \&feat2,
+  int mode=D\_EUKLID}{assignment.h}
+\procf{Matrix}{DistanceMatrix}{const Matrix \&feat1, int mode=D\_EUKLID}
+\procf{Matrix}{DistanceMatrix}{const Matrix \&feat1, const Matrix \& feat2, const VectorDistance \&dist}
+\procf{Matrix}{DistanceMatrix}{const Matrix \&feat1, const VectorDistance \&dist}
+\descr{
+Aus zwei Merkmalslisten $feat1$ und $feat2$ wird eine Kostenmatrix 
+aufgestellt, die geeignet ist, die Zuordnung zu ermitteln. Die Zahl 
+der Merkmale in beiden Listen muss gleich sein (gleiche Spaltenzahl).
+Die Zeilenzahl der Ergebnismatrix ist gleich der Zeilenzahl von $feat1$,
+die Spaltenzahl ist gleich der Zeilenzahl von $feat2$.\\
+Der Modus $mode$ gibt die zu verwendende Metrik an:\\
+\begin{tabular}{ll}
+D\_EUCLID    & Euklidischer Abstand\\
+D\_SQUARE    & Quadrat des euklidischen Abstands\\
+D\_CITYBLOCK & city block-Metrik (L1-Norm)\\
+\end{tabular}
+}
+\seealso{Hungarian}
+\seealsonext{TimeWarp}
+
+\nsection{Registrierung, Matching}{registration}
+
+Registrierung ist die Bestimmung von Transformationen, die Bilder oder
+Objekte ineinander überführen.
+
+\hypertarget{Trafo-Konstanten}{}
+Die Spezifikation der zu ermittelnden Transformation erfolgt in ICE 
+über Konstanten. Dabei nimmt die Spiegelung eine Sonderstellung ein.
+Da bei vielen Bildverarbeitungsaufgaben die Spiegelung auszuschließen ist,
+gibt es von den Transformations-Gruppen, die auch eine Spiegelung beinhalten,
+auch jeweils eine Variante ohne Spiegelung.
+
+\begin{tabular}{|l|l|l|} \hline
+* & mit Spiegelung & ohne Spiegelung \\ \hline
+projektive Transformation & TRM\_PROJECTIVE & - \\
+affine Transformation & TRM\_AFFINE & TRM\_AFFINE\_NOR \\
+Ähnlichkeitstransformation & TRM\_SIMILARITY & TRM\_SIMILARITY\_NOR \\
+Euklidische Transformation & TRM\_EUCLIDEAN & TRM\_EUCLIDEAN\_NOR \\
+Translation & - & TRM\_SHIFT \\ \hline
+\end{tabular}
+
+\subsection{Schätzung geometrischer Transformationen
+aus Punktkorrespondenzen}
+
+\proch{Trafo}{MatchPointlists}{const Matrix \&p1,const Matrix \&p2,int
+  mode=TRM\_PROJECTIVE}{geo.h}
+\procf{Trafo}{MatchPointlists}{const Matrix \&p1,const Matrix \&p2,
+int mode,const Vector \&w}
+\descr{Bestimmung einer an die gegebenen Punktreferenzen angepassten
+Transformation mittels Ausgleichsrechnung, bei der der quadratische 
+Fehler $\| T(p_1) - p_2\|^2$ minimiert wird.
+Die Punktreferenzen müssen als Punktlisten in den zwei Matrizen 
+$p1$ und $p2$ bereitgestellt werden, wobei in jeder Zeile ein Punkt 
+gespeichert sein muss. Die Spaltenzahl von p1 und p2 bestimmen die
+Diomension des Quell- bzw. Zielraumes.\\
+In einem (optionalen) Vektor $w$ ist für jedes Punktpaar ein 
+Gewicht anzugeben. Ohne $w$ werden alle Punktpaare gleich 
+gewichtet.\\
+Der Parameter $mode$ (\hyperlink{Trafo-Konstanten}{Trafo-Konstanten}) 
+bestimmt den Typ der geometrischen Transformation.
+\begin{itemize}
+\item TRM\_SHIFT - Translation
+\item TRM\_SIMILARITY\_NOR - Ähnlichkeits-Transformationen (ohne Spiegelung)
+\item TRM\_AFFINE - Affine Transformationen
+\item TRM\_PROJECTIVE - Projektive Transformationen
+\end{itemize}
+}
+\seealso{AffinFitMoments}
+\seealso{estimateTransformation}
+
+\proch{Trafo}{MatchPointlists}{const \vector{Point} \&pl1,
+  const \vector{Point} \&pl2, int mode = TRM\_PROJECTIVE}{geo.h}
+\procf{Trafo}{MatchPointlists}{const \vector{Point} \&pl1,
+  const \vector{Point} \&pl2, int mode = TRM\_PROJECTIVE, 
+  const \vector{double} \&weight}
+\descr{Spezialfall von MatchPointlists, der Punktlisten als 
+\vector{Point} akzeptiert. Diese Funktionen funktionieren genauso, 
+sind aber auf 2D-2D-Transformationen beschränkt.}
+
+\proc{Trafo}{MatchPointlists}{PointList pl1,PointList pl2,int mode}
+\descr{Spezialfall von MatchPointlists, bei dem die Punktlisten
+als Datentyp $PointList$ übergeben werden. 
+Dieser Typ ist veraltet und sollte nicht mehr genutzt werden. 
+Als Gewicht der 
+Punktpaare wird das in der Liste pl2 gespeicherte Gewicht 
+verwendet.}
+
+\proc{Trafo}{MatchPointlistsLinOpt}{const Matrix \&p1,const Matrix \&p2,int
+mode=TRM\_AFFINE}
+\procf{Trafo}{MatchPointlistsLinOpt}{const Matrix \&p1,const Matrix \&p2,int mode,const Vector \&w,double limit=1000000.0}
+\descr{Bestimmung einer an die gegebenen Punktreferenzen angepassten
+Transformation. Die Punktreferenzen müssen als Punktlisten in den 
+zwei Matrizen $p1$ und $p2$ bereitgestellt werden, wobei in jeder 
+Zeile ein Punkt gespeichert sein muß.
+In einem (optionalen) Vektor $w$ kann für jedes Punktpaar ein 
+Gewicht angegeben werden. Ohne $w$ werden alle Punktpaare gleich gewichtet.
+Die Transformation wird mittels linearer Optimierung (Simplexmethode) 
+bestimmt. Anders als bei der Methode der kleinsten Quadrate werden
+hier die Beträge des Fehlers $\|T(p_1) - p_2\|$ minimiert, wodurch Ausreißer
+das Ergebnis weniger verfälschen.
+Diese Funktion ist zur Zeit auf 2D-2D-Transformationen beschränkt.
+Der Parameter $limit$  wird im linearen Optimierungsmodell in einer 
+zusätzlichen Beschränkungsungleichung verwendet. Der Default-Wert ist
+1000000.0. Gegebenenfalls muss dieser Wert vergroessert werden.\\
+Der Parameter $mode$ bestimmt den Typ der geometrischen 
+Transformation (\hyperlink{Trafo-Konstanten}{Transformations-Konstanten}).
+\begin{itemize}
+\item TRM\_SHIFT - Translation (2 Parameter)
+\item TRM\_SIMILARITY\_NOR - Ähnlichkeits-Transformationen (4 Parameter)
+\item TRM\_AFFINE - Affine Transformationen (6 Parameter)
+\item TRM\_PROJECTIVE - Projektive Transformationen (8 Parameter)
+\end{itemize}
+}
+
+\proc{int}{MatchPointlistsLinOpt}{PointList pl1,PointList pl2,double
+tr[][3],int mode=TRM\_AFFINE,double limit=1000000.0}
+\descr{Analog MatchPointlistsLinOpt, die Punktlisten werden
+als Datentyp $PointList$ übergeben werden.
+Dieser Typ ist veraltet und sollte nicht mehr genutzt werden. 
+}
+\seealso{NewPointList}
+
+\subsection{Signalbasierte Methoden}
+Die implementierten signalbasierten Methoden der Registrierung 
+beruhen auf der Detektion von Verschiebungen mittels
+Shift Detection by Restoration (SDR), beschrieben zum Beispiel in \\
+
+{
+\noindent
+K.Voss,H.Süße,W.Ortmann,T.Baumbach: Shift detection by restoration\\
+Pattern Recognition 32(1999), Elsevier, pp. 2067-2068\\
+}
+
+SDR basiert auf dem Modell, eine Verschiebung durch eine 
+Faltung mit einem verschobenen Einheitsimpuls zu beschreiben. 
+Die Rekonstruktion dieser Faltungsmaske erlaubt die Bestimmung 
+der Lage des verschobenen Einheitsimpulses als Peak.
+
+Die elementaren Funktionen zur Rekonstruktion der Faltungsmaske
+der Verschiebung sind im Abschnitt Faltung und Kreuzkorrelation 
+dokumentiert (\see{InvConvolution}). Die Ermittlung der Peaks
+in den erhaltenen Bildern erfolgt mit der Funktion \see{PeakValuation}.
+
+\see{DetectShift} verwendet diese Funktionen um die Verschiebung im Bild 
+bzw. in einem Teil-Bild zu detektieren. Durch eine Blockmatching-artige
+Verwendung des Verfahrens kann \see{DetectTrafo} allgemeine 
+Transformationen bestimmen, wenn lokal die Transformation 
+einer Verschiebung nahekommt.. 
+Zur Unterdrückung des Einflusses globaler Helligkeitsschwankungen (Shading) 
+kann die Vorverarbeitung der Bilder mit \see{PreprocessImg} sinnvoll sein.
+
+\proc{int}{DetectShift}{Image img1,Image img2,
+       double \&dx,double \&dy,double \&val,double beta=0.1}
+\descr{
+In zwei Bilder wird mittels der SDR-Methode eine Verschiebung
+detektiert. Dazu werden die Funktionen zur Invertierung der
+Faltung (\see{InvConvolution}) und zur Peaksuche (\see{PeakValuation})
+verwendet. Es wird die Verschiebung ($dx$,$dy$) ermittelt, die das 
+Bild $img1$ in das Bild $img2$ überführt. Der zurückgegebene Wert 
+der Variable $val$ stellt ein Maß für die Güte dar. Der Parameter 
+$beta$ optimiert den Prozess und muss abhängig von Rauschen und 
+Störungen gewählt werden.}
+
+\proc{int}{DetectTrafo}{Image img1,Image img2,Trafo \&tr,
+double beta=0.1,int ct=3,int mode=DT\_NEARLY\_SHIFT}
+\descr{
+Es wird eine Transformation $tr$ ermittelt, die das Bild $img1$
+in das Bild $img2$ überführt. Dies geschieht durch Ermittlung 
+eines lokalen Verschiebungsvektors durch Anwendung
+der SDR-Methode auf Teilblöcke der Bilder und Anpassung einer
+projektiven 2D-2D-Transformation an die ermittelten 
+Verschiebungsvektoren. Der Parameter $beta$ optimiert den Prozess
+und muss abhängig von Rauschen und Störungen gewählt werden.\\
+Im ersten Schritt wird die globale Verschiebung anhand des 
+gesamten Bildes ermittelt. \\
+Ist der Parameter $ct>0$, so erfolgt danach eine $ct$-fache 
+iterative Anwendung der Verschiebungsdetektion in den Teilblöcken
+des Bildes.\\
+Der Parameter $mode$ steuert die Art der zu detektierenden 
+Transformation. Einziger zulässiger Wert ist zur Zeit 
+DT\_NEARLY\_SHIFT für die Detektion von Transformationen, die 
+näherungsweise eine Verschiebung darstellen.
+}
+
+\proc{int}{PreprocessImg}{(Image imgs,Image imgd)}
+\descr{
+Oft treten bei der Fouriertransformation von Bildern die sogenannten
+Fourierkreuze auf, die bei manchen Anwendungen störend sein können. Oft möchte
+man auch hohe Frequenzen abschwächen. Sollte dies in einer Anwendung nötig
+sein, so kann man das Bild vorher mit dieser Funktion vorverarbeiten. 
+Es hängt von der jeweiligen Anwendung ab, ob dies sinnvoll ist. Dabei ist 
+$imgs$ das Ausgangsbild, $imgd$ das Zielbild. Diese Funktion ist z.B. 
+sinnvoll, wenn man aus dem Amplitudenspektrum weitere Transformationen 
+berechnen will (Log-Polar-Transform).
+}
+
+\subsubsection{Peaksuche}
+
+\proc{double}{PeakValuation}{Image img,Image mark,double\& x0,double\& y0,
+        int mode=PN\_CONVOLUTION,int gnull=0,int zykl=TRUE}
+\descr{
+Es erfolgt die Suche nach dem globalen Maximum der Grauwertfunktion im 
+Bild $img$ und dessen Bewertung. Wird ein Markierungsbild $mark!=NULL$ 
+angegeben, so werden nur die unmarkierten Bildpunkte einbezogen. Die 
+zurückgegebene Bewertung $B$ liegt im Intervall $[0,1]$ und ist ein Maß 
+für den Abstand des Bildes vom Bild eines beliebig verschobenen 
+Einheitsimpulses. Für $B=1.0$ liegt ein idealer verschobener 
+Einheitsimpuls vor.\\
+Der Parameter $gnull>=0$ legt den Grauwert-Nullpunkt des Bildsignales 
+fest. Dieser liegt im allgemeinen bei $0$ oder $g_max/2$. 
+Mit $zykl=TRUE$ wird das Bild als zweifach zyklisch fortgesetzt 
+angesehen. Der Parameter $mode$ hat momentan keine Bedeutung.
+}
+
+\proc{int*}{Peak1D}{double* values,int anz,int\& panz,int zykl,int noise}
+\procf{IVector}{Peak1D}{const Vector\& vec,int panz,int zykl,int noise}
+\descr{
+Es erfolgt die Suche nach lokalen Maxima in der durch das Feld $values$
+oder den Vektor $vec$ repräsentierten eindimensionalen, diskreten 
+Funktion. Im Falle eines Feldes beschreibt der Parameter $anz$ die
+Anzahl der Funktionswerte (Größe des Feldes $values$). Die Anzahl der 
+zu suchenden Maxima wird durch $panz$ (>=0) festgelegt. Mit $panz=0$ 
+werden alle lokalen Maxima bestimmt.\\
+Mit $zykl=TRUE$ wird die Funktion als eine zyklisch fortgesetzte Funktion
+angesehen, was die Erkennung von Peaks an den Intervallrändern beeinflußt.
+Solche Funktionen ergeben sich zum Beispiel als Ergebnis der Entfaltung.\\
+Der Parameter $noise$ steuert die Rauschempfindlichkeit der Maximumsuche.
+Es werden alle Nebenpeaks, die sich maximal $noise$ Grauwertstufen über
+das größere der zwei direkt benachbarten lokalen Minima erheben, ignoriert.\\
+In der ersten Aufrufvariante ist der Rückgabeparameter ein neu angelegtes 
+Integer-Feld. Auf $panz$ wird dann die gefundene Anzahl der lokalen 
+Maxima (Größe des Rückgabefeldes) abgelegt. Dieses Feld ist vom Nutzer 
+freizugeben, sobald es nicht mehr benötigt wird. Im Falle eines Fehlers 
+wird NULL zurückgegeben und $panz$ wird auf $-1$ gesetzt.
+Die Rückgabe ist ebenfalls NULL, wenn die Funktion konstant ist.\\
+In der Vektorvariante wird ein neu angelegter Vektor zurückgegeben.
+}
+
+Im Falle der Suche mehrerer Peaks wird eine Datenstruktur vom Typ
+\see{PeakList} verwendet.
+
+\proc{PeakList}{ImgPeakList}{Image img,Image mark,int panz=0,int mingrw=0,
+        int zykl=FALSE, int noise=0,int feat=IPL\_NOFEAT,int gnull=0}
+\descr{
+Es erfolgt die Suche nach lokalen Extremwerten im Bild $img$. Wird ein
+Markierungsbild $mark!=NULL$ angegeben, so werden in die Extremwertsuche
+nur die unmarkierten Bildpunkte einbezogen. Die Anzahl der zu suchenden
+Extremwerte wird durch $panz$ ($>=0$) festgelegt. Mit $panz=0$ werden alle
+lokalen Extrema bestimmt. Für die Extremwerte kann mit $mingrw!=0$ ein
+Mindestgrauwert gefordert werden.\\
+Mit $zykl=TRUE$ wird das Bild als zweifach zyklisch fortgesetzt angesehen,
+was die Erkennung von Maxima/Minima an den Bildrändern beeinflußt.
+Solche Bilder ergeben sich zum Beispiel als Ergebnis der Entfaltung.\\
+Der Parameter $noise$ steuert die Rauschempfindlichkeit der Maximumsuche.
+Es werden alle Nebenpeaks, die sich maximal $noise$ Grauwertstufen über
+den maximalen Grauwert des Peak Tales erheben, ignoriert.\\
+Mit dem Parameter $feat$ werden die zurückgelieferten Daten festgelegt:
+\begin{itemize}
+\item IPL\_NOFEAT Koordinaten der Extrema
+\item IPL\_MINCONTUR Koordinaten und Kontur des minimalen Einzugsbereiches
+\item IPL\_MAXCONTUR Koordinaten und Kontur des maximalen Einzugsbereiches
+\item IPL\_STANDARD Koordinaten und Mittelwert/Streuung
+\item IPL\_ALL alle obigen Merkmale werden berechnet
+\end{itemize}
+Der Parameter $gnull>=0$ legt den Grauwert-Nullpunkt des Bildsignales fest.
+Dieser liegt im allgemeinen bei $0$ oder $g_{max}/2$.
+Die Rückgabe der Merkmale erfolgt als verkettete Liste von Elementen, die
+durch einen neuen Datentyp PeakList definiert sind.\\
+}
+
+\label{PeakList}
+Für die Beschreibung von Peakmerkmalen eines Bildes wird die Datenstruktur 
+$PeakList$ verwendet, die den Aufbau von verketteten Listen erlaubt.
+
+\begprogr\begin{verbatim}
+typedef struct _PeakList {
+  int        grw;
+  ConturList contur;
+  ConturList contur_max;
+  double     sx,sy,sxy,x,y;
+  _PeakList  *prev,*next;
+} *PeakList;
+\end{verbatim}\endprogr
+
+\proc{PeakList}{NewPeakList}{}
+\descr{
+Es wird eine neue, leere Peakliste angelegt.
+}
+
+\proc{}{FreePeakList}{PeakList pl}
+\descr{
+Sämtlicher von pl belegter Speicherplatz (inklusive aller eventuell 
+darin gespeicherten Konturen) wird freigegeben.
+}
+
+Beispiel für die Erzeugung einer Peakliste aus einem Bild:
+\begprogr
+\begin{verbatim}
+PeakList pl;
+pl=NewPeakList();
+if (ImgPeakList(img,20)==NULL) exit(-1);
+// .. bearbeiten/auslesen der Peakliste
+FreePeakList(pl);
+\end{verbatim}
+\endprogr
+
+\subsection{Merkmalsbasierte Methoden}
+
+Zuordnungsprobleme entstehen im Rahmen der Registrierung als Zuordnung von
+Punkten oder Objekten eines Bildes zu solchen des anderen
+Bildes. Ausgangspunkt für die Zuordnung sind oft (invariante) Merkmale der 
+Objekte. Es ist möglich, eine Kostenmatrix zu erstellen, die die Kosten der
+Zuordnung zweier Objekte zueinander bewertet. Dies wird oft die Distanz der
+Merkmale der Objekte sein. Je nach Randbedingungen ist die Zuordnung der
+Punkte zueinander ansonsten beliebig (\see{Hungarian}) oder es gibt 
+wie bei Konturpunkten eine vorgegebene Ordnung (\see{TimeWarp}).
+
+Nach Ermittlung der Zuordnung kann die Transformation zwischen den Objekten
+beziehungsweise den Bildern ermittelt werden (\see{MatchPointlists}..).
+
+\subsubsection{Zuordnungsprobleme}
+\proc{int}{AssignFunction}{const Matrix \&cost,IMatrix \&pairs,int mode}
+\descr{
+Dies ist eine Typdefinition für Funktionen, die anhand einer Kostenmatrix
+Zuordnungen herstellen. Implementierte Funktionen dieses Types sind
+\see{Hungarian} und \see{TimeWarp}.
+}
+
+\proc{double}{ReferenceCosts}{const Matrix \&costs,const IMatrix \&pairs}
+\descr{
+Anhand einer gegebenen Liste von Referenzen $pairs$ werden die Kosten 
+entspechend der Werte in der Kostenmatrix $costs$ ermittelt und zurückgegeben.
+Die Referenzen müssen als Paare von Indizes angegeben sein.
+}
+
+\proc{int}{Hungarian}{const Matrix \&cost,IMatrix \&reference\_pairs,
+double \&min\_cost}
+\procf{int}{Hungarian}{const Matrix \&cost,IMatrix \&reference\_pairs,
+int mode=0}
+\descr{
+Es wird ein allgemeines Zuordnungsproblem (m Quellen, n Ziele) mit der
+Ungarischen Methode gelöst. Das Problem wird allgemein durch eine 
+Kostenmatrix $cost$ beschrieben. $cost$ is eine Matrix mit m Zeilen 
+und n Spalten. Das Matrixelement cost[i][j] stellt die Kosten für 
+die Zuordnung der Quelle i zum Ziel j dar. Ein Beispiel einer Kostenmatrix 
+ist die Distanzmatrix (\see{DistanceMatrix}). 
+{\bf Intern wird nur mit ganzzahligen Kosten gerechnet}, wobei durch eine 
+interne Normierung der Kostenbereich auf den Integerbereich abgebildet
+wird. Der Parameter $mode$ steuert die Art der Normalisierung. Bei mode=0
+erfolgte eine lineare Transformation der Kostenwerte auf den Integer-Bereich,
+wobei der maximale Kostenwert auf einen festgelegten Integer-Wert abgebildet
+wird. $mode=1$ bewirkt eine Abbildung, die linear den minimalen Kostenwert auf
+die Null und den nächstgrößeren Kostenwert auf die 1 abbildet. Werte, die bei
+dieser Transformation den möglichen Maximalwert überschreiten, werden auf den
+Maximalwert gesetzt.\\ 
+Berechnet wird eine optimale Zuordnung im Sinne einer
+minimalen Gesamtkostensumme. In der Integer-Matrix reference\_pairs
+sind alle ermittelten optimalen Indexpaare enthalten. Diese Matrix 
+besitzt 2 Spalten und höchstens min(m,n) Zeilen. Ist die Anzahl der 
+Indexpaare kleiner als min(m,n) (return-Wert 1),so können für die nicht 
+belegten Indizes beliebige Zuordnungen vom Nutzer selbst getroffen werden, 
+da diese dann willkürlich sind. Auf min\_cost steht die optimale 
+Gesamtkostensumme zur Verfügung.
+}
+
+\proc{int}{TimeWarp}{const Matrix \&cost,IMatrix \&reference\_pairs,
+int mode=TW\_NORMAL}
+\descr{
+Es wird ein Zuordnungsproblem zwischen zwei Mengen gelöst, bei dem 
+die Ordnung der Objekte beider Mengen vorgegeben ist. Beispiele für 
+solche Mengen sind Funktionswerte diskreter Funktionen von der Zeit, 
+wie sie z.B. für Sprachanalyse typisch sind. In der Bildverarbeitung 
+treten dagegen oft als zyklische Funktionen die Merkmale von 
+Konturpunkten auf.
+Das Problem wird allgemein durch eine m*n-Kostenmatrix $cost$ beschrieben. 
+Das Matrixelement cost[i][j] stellt die Kosten für die Zuordnung der 
+Quelle i zum Ziel j dar. Lösung des Problems ist ein Weg in der Matrix 
+mit minimaler Kostensumme, wobei jeder Punkt des Weges einer Zuordnung eines
+Quellpunktes zu einem Zielpunkt entspricht.
+TimeWarping ermittelt eine Zuordnung in Form eines Weges vom 
+Startpunkt (0,0) zum Endpunkt (m,n).
+Dieser Weg ist optimal im Sinne minimaler Gesamtkosten. 
+In der Integer-Matrix reference\_pairs sind alle ermittelten optimalen
+Indexpaare enthalten. Diese Matrix besitzt 2 Spalten. Jede Zeile enthält
+ein Index-Paar der Zuordnung. Die Zuordnung kann mehrdeutig sein, ein
+Objekt der einen Menge kann mehreren Objekten der zweiten Menge zugeordnet
+sein.\\
+Der Parameter $mode$ beschreibt die Vorgehensweise:\\
+\begin{itemize}
+\item mode==TW\_NORMAL \\
+Die Wegsuche erfolgt vom Startpunkt (0,0) zum Endpunkt (m,n).
+Zusätzlich können folgende Modifikationen angegeben werden: 
+\begin{itemize}
+\item mode==TW\_NORMAL||TW\_BIDIRECTIONAL \\
+Es erfolgt eine zusätzliche Suche, bei der die Ordnung einer Menge 
+invertiert (enstpricht einer Spiegelung) wird. Ergebnis ist das Minimum 
+beider Suchschritte.
+\item mode==TW\_NORMAL||TW\_SEARCHSTART\\
+Die Funktionen werden als zyklisch angenommen (Konturen..). Jede Kombination
+von Startpunkten wird untersucht. (Vorsicht, zeitaufwendig!)
+\end{itemize}
+\item mode==TW\_REDUCED\\
+Die sehr zeitaufwendige Wegsuche für jeden möglichen Startpunkt bei 
+zyklischen Funktionen kann in gutartigen Fällen drastisch verkürzt 
+werden, wenn der feste Start- und Endpunkt aufgegeben wird. Dies 
+geschieht durch Angabe von TW\_REDUCED. Es ist hier nicht mehr 
+garantiert, dass sich ''der Kreis schließt''. Das bedeutet, dass eventuell 
+eine Funktion nur einem Teil der anderen zugeordnet wird. 
+Zusätzlich kann TW\_BIDIRECTIONAL angegeben werden. Dann erfolgt eine 
+zusätzliche Suche in entgegengesetzter Richtung. In jedem Fall erfolgt 
+die Wegsuche zyklisch.
+\end{itemize}
+\seealso{MatchObject}
+}
+\subsubsection{Objekt-Matching}
+\proc{Trafo}{MatchObject}{(const Contur \&cont1,const Contur \&cont2,int tmode,double \&eval,int mmode=MM\_SQUARE,int anz=0)}
+\procf{Trafo}{MatchObject}{(const Contur \&cont1,const Contur \&cont2,int tmode=TRM\_AFFINE)}
+\procf{Trafo}{MatchObject}{(const Contur \&cont1,const Matrix \&pl2,int tmode,double \&eval,int mmode=MM\_SQUARE,int anz=0)}
+\procf{Trafo}{MatchObject}{(const Contur \&cont1,const Matrix \&pl2,int tmode=TRM\_AFFINE)}
+\procf{Trafo}{MatchObject}{(const Matrix \&pl1,const Matrix \&pl2,int tmode,double \&eval,int mmode=MM\_SQUARE,int anz=0)}
+\procf{Trafo}{MatchObject}{(const Matrix \&pl1,const Matrix \&pl2,int tmode=TRM\_AFFINE)}
+\procf{Trafo}{MatchObject}{(const Matrix \&pl1,const Contur \&cont2,int tmode,double \&eval,int mmode=MM\_SQUARE,int anz=0)}
+\procf{Trafo}{MatchObject}{(const Matrix \&pl1,const Contur \&cont2,int tmode=TRM\_AFFINE)}
+\descr{
+Es wird eine Transformation (Klasse \see{Trafo}) ermittelt, die die Kontur 
+$cont1$ in die Kontur $cont2$ überführt. 
+Für den Standardfall $tmode$=TRM\_AFFINE wird eine affine
+Transformation der Klasse $Trafo$ zurückgegeben. Für jeden Konturpunkt beider
+Konturen werden aus Momenten affin invariante Merkmale berechnet und
+dem Konturpunkt zugeordnet. Es wird die Abstandsmatrix aller Punkte der
+einen zur anderen Kontur bezüglich dieser Invarianten berechnet. Bezüglich
+dieser Abstandsmatrix werden mittels dynamischer Programmierung 
+(\see{TimeWarp}) die Konturpunkte beider Konturen einander zugeordnet, 
+es wird eine Liste von Punkt-Referenzen ermittelt. Aus dieser Liste 
+wird die Transformation mittels der kleinsten Quadrate-Methode 
+($mmode$=MM\_SQUARE, \see{MatchPointlists}) oder mit den kleinsten 
+Absolutbeträgen (lineare Optimierung, $mmode$=MM\_LINEAR, 
+\see{MatchPointlistsLinOpt}) ermittelt.\\
+Die Bewertung des optimalen Weges in der Abstandsmatrix wird auf 
+$eval$ zurückgeliefert und kann als Güte der Anpassung benutzt werden. \\
+Wird die Methode der kleinsten Absolutbeträge benutzt, so kann die 
+Rechenzeit wesentlich steigen. Durch $anz$ kann man vorgeben, wieviele
+Konturpunkte in die Rechnung eingehen sollen, wobei $anz=0$ bedeutet, 
+daß alle Konturpunkte benutzt werden. \\
+Der gesamte Algorithmus ist äußerst robust gegenüber Störungen und 
+Rauschen der Kontur. Auch Symmetrien
+der Objekte haben keinen Einfluß auf die Güte. Der Algorithmus kann nur
+versagen, wenn die Objekte nicht durch eine affine Transformation ineinander
+überführbar sind, sondern z.B. durch starke projektive Verzerrungen.\\
+Alternativ kann MatchObject auch mit Punklisten (Typ \see{Matrix}) aufgerufen 
+werden. Dabei ist zu beachten, daß die Punkte in den Listen dicht 
+liegen müssen, wie zum Beispiel in Listen, die durch Konvertierung 
+aus Konturen entstanden sind.
+}
+\subsubsection{Winkelbestimmung von Objekten mit einer geschlossenen Kontur}
+\procf{int}{OrientationMoments}{double moment[15],double \&angle}
+\descr{Aus den (Flächen-)Momenten bis vierter Ordnung $moment[15]$ 
+eines Objektes mit einer geschlossenen Kontur wird eine Orientierung 
+berechnet. Zurückgegeben wird der Winkel $angle$ im Bogenmaß. 
+Es werden zunächst die Momente zweiter Ordnung benutzt (Rückgabewert 1)
+(Orientierung der Trägheitsellipse), wenn diese instabil sind 
+(nahe dem Trägheitskreis) die Momente dritter Ordnung (Rückgabewert 2), 
+wenn diese instabil sind, die Momente vierter Ordnung (Rückgabewert 3). 
+Wenn alles instabil sein sollte, dann wird kein Winkel berechnet und 
+es wird -1 zurückgegeben.  
+}
+
+\seealso{AffinFitMoments}
+\seealsonext{MatchPointlists}
+\seealsonext{MatchPointlistsLinOpt}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

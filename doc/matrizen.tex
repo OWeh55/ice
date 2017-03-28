@@ -1,0 +1,390 @@
+\nsection{Matrix-Algebra}{matrixAlgebra}
+\label{Matrix-Algebra}
+
+\subsection{Operationen mit Matrizen, Determinanten}
+Zur Lösung von Gleichungssystemen siehe Abschnitt \see{Gleichungssysteme}.
+
+\proc{Matrix}{Inverse}{const Matrix \&m}
+\descr{
+Berechnet die Inverse der Matrix $m$.
+}
+
+\proc{Matrix}{CholeskyInverse}{const Matrix \&m}
+\descr{
+Berechnet die Inverse der positiv definiten Matrix $m$ mit dem 
+Cholesky-Verfahren.
+}
+
+\proc{Matrix}{CholeskyDecomposition}{const Matrix \&m}
+\descr{Berechnet die Cholesky-Zerlegung $M=L*L^T$ der 
+positiv-definiten Matrix $m$. L wird zurückgegeben. 
+Falls $m$ nicht positiv-definit ist, wird ein Fehler ausgelöst!
+}
+
+\proc{bool}{IsPositivDefinit}{const Matrix \&m}
+\descr{Prüft, ob die Matrix $m$ positiv definit ist.
+Dies ist sehr zeitaufwendig. Sollen Funktionen wie die Cholesky-Zerlegung zur
+Anwendung kommen, die positiv definite Matrizen erfordern, so ist es
+effektiver, die entsprechende Funktion ohne vorherigen Test aufzurufen und auf
+den Fehler zu reagieren, wenn die Matrix nicht positiv definit ist.
+}
+
+\proc{double}{Determinant}{const Matrix \&m}
+\descr{
+Berechnet die Determinante der Matrix $m$.
+}
+
+\proc{double}{CholeskyDeterminant}{const Matrix \&m}
+\descr{
+Berechnet die Determinante der positiv definiten Matrix $m$.
+}
+
+\subsection{Gleichungssysteme}
+\label{Gleichungssysteme}
+
+\proc{Vector}{SolveLinEqu}{const Matrix \&M,const Vector \&i}
+\descr{
+Löst das Gleichungssystem $M \cdot x=i$ und gibt den Lösungsvektor
+$x$ zurück. Das Gleichungssystem darf auch überbestimmt sein.
+Für die Lösung wird eine LU-Zerlegung der Matrix $M$ angewendet. 
+Wenn viele Gleichungssysteme mit gleichem $M$ (und unterschiedlicher
+Inhomogenität $i$) zu lösen sind, sollte dies direkt mit der LU-Zerlegung
+(\see{LUDecompositionPacked}) realisiert werden.
+}
+\seealso{Solve2}
+
+\proch{int}{LUDecomposition}{const Matrix \&a,Matrix \&L,Matrix \&U}{ludecomp.h}
+\descr{Führt eine LU-Zerlegung der Matrix $a$ durch und gibt eine untere
+Dreiecksmatrix L und eine obere Dreiecksmatrix U zurück, so daß gilt:
+$a=L \cdot U$. {\it Sollen mittels LU-Zerlegung Gleichungssysteme gelöst
+werden, so ist die Variante \see{LUDecompositionPacked} vorzuziehen.}
+}
+
+\proc{int}{LUDecompositionPacked}{const Matrix \&a,Matrix \&LU,IVector \&indx,bool pivot=true}
+\descr{Führt eine LU-Zerlegung der Matrix $a$ durch und gibt eine untere und 
+eine obere Dreiecksmatrix in gepackter Form zurück. Mit $pivot=true$ wird eine
+Pivotisierung durchgeführt, der Vector $indx$ enthält dann die Informationen
+über die nötigen Vertauschungen. $LU$ und $indx$ enthalten die nötigen
+Informationen, um mittels \see{LUSolve} Gleichungssysteme der Form $M \cdot
+x=i$ zu lösen.}
+
+\proc{Vector}{LUSolve}{const Matrix \&LU,const IVector \&indx,const Vector
+\&i}
+\descr{Löst das Gleichungssystem $M \cdot x=i$, nachdem die Matrix $M$ mittels
+\see{LUDecompositionPacked} in die Matrix LU überführt wurde. $indx$ ist die
+ebenfalls von LUDecompositionPacked gelieferte Information über Vertauschungen
+bei der Pivotisierung. 
+}
+
+Durch Kombination der Funktionen LUDecompositionPacked und LUSolve ist es
+möglich, Gleichungssysteme der Form $M \cdot x=i$ zu lösen. Dies ist besonders 
+effektiv, wenn mehrere Gleichungssysteme mit gleicher Matrix $M$ und 
+unterschiedlicher Inhomogenität $i$ zu lösen sind:
+\begin{verbatim}
+/* Lösung linearer Gleichungssysteme mit LU-Zerlegung */
+
+Matrix M=
+     Vector(3,2,1) &&
+     Vector(1,-2,-1) &&
+     Vector(-2,1,1);
+
+Vector i1(1,2,3); // Inhomogenitäten
+Vector i2(3,-1,-2);
+Vector i3(-1,-1,-1);
+
+Vector x1,x2,x3; // Lösungsvektoren
+
+Matrix LU;
+IVector indx;
+
+// LU-Zerlegung mit Pivotisierung
+LUDecompPacked(M,LU,ind,true);
+
+// Lösung M*x1=i1
+x1 = LUSolve(LU,indx,i1);
+
+// Lösung M*x2=i2
+x2 = LUSolve(LU,indx,i2);
+
+// Lösung M*x1=i1
+x3 = LUSolve(LU,indx,i2);
+
+\end{verbatim}
+
+\proch{bool}{Solve2}{double a1,double b1,double i1,double a2,double b2,double i2,double \&x1,double \&x2}{numbase.h}
+\descr{Es wird das lineare Gleichungssystem 
+\[
+\begin{array}{c@{+}c@{=}c}
+  a_1 \cdot x_1 & b_1 \cdot x_2 & i_1 \\
+  a_2 \cdot x_1 & b_2 \cdot x_2 & i_2 \\
+\end{array}
+\]
+gelöst.}
+\seealso{SolveLinEqu}
+
+Die folgenden Funktionen sind überholt und sollten nicht mehr genutzt werden:
+
+\proc{int}{EquationSys}{MatrixStruct A,double *b,double *x}
+\descr{
+Es wird der Lösungsvektor $x$ des linearen Gleichungssystems $A x = b$
+bestimmt. $A$ muß eine quadratische Matrix sein.
+}
+
+\proc{int}{NormalEquationSys}{MatrixStruct A,double *b,double *x}
+\descr{
+Für das überbestimmte lineare Gleichungssystem $A x = b$ wird ein
+Lösungsvektor $x$ im Sinne der kleinsten Quadrate bestimmt, so 
+daß $\Vert Ax-b \Vert \to Min.$ gilt. Die Anzahl der Zeilen der 
+Matrix $A$ muß mindestens so groß wie die Anzahl der Spalten sein.
+}
+
+\proc{int}{NonLinEquSys}{FuncD *func,int dim,int *step,double *mse,double *x}
+\descr{
+Es wird die Lösung eines nichtlinearen Gleichungssystems der Form $func(x)=0$
+mit dem Verfahren von Newton-Raphson bestimmt. $func$ ist ein Feld von
+Funktionspointern mit dem Typ $FuncD$. Auf $x$ muß eine geeignete
+Anfangslösung bereitgestellt werden. $step$ gibt beim Aufruf die maximale
+Anzahl von Iterationsschritten an und nach der Abarbeitung die Anzahl der
+tatsächlich ausgeführten Iterationen. $mse$ gibt beim Funktionsaufruf eine
+obere Schranke für den mittleren quadratischen Fehler als Abbruchkriterium an
+und nach der Abarbeitung den tatsächlich erreichten Wert. Die Verwendung der
+Funktion soll mit dem folgenden Beispiel demonstriert werden:
+}
+\begin{verbatim}
+/* Lösung nichtlinearer Gleichungssysteme */
+#include <stdio.h>
+#include <math.h>
+#include <image.h>
+/* Funktionsdefinitionen */
+double func1 (double *ptrd)
+{ return ( -0.5*Sqr(ptrd[0]) + Sqr(ptrd[1])-sin(ptrd[0]) );}
+double func2 (double *ptrd)
+{ return ( -0.7*Cub(ptrd[1]) - ptrd[0] -10 );}
+
+void main(void)
+{
+  FuncD f[2]={&func1,&func2};                /* Funktionenvektor */
+  double sol[2]={ 1.0, 1.0 };                /* Startlösung */
+  double eps=1e-20;                          /* Abbruchkriterium */
+  int step=100;
+  NonLinEquSys (f,2,&step,&eps,sol);
+  printf("step %d eps %g\n",step,eps);
+  PrintVecRn("sol",sol,2);
+}
+\end{verbatim}
+\seealso{LMDif}
+
+\subsection{Eigenwerte, Zerlegungen}
+
+\proch{int}{Eigenvalue}{const Matrix \&a,Vector \&eval,Matrix \&evect}{mateigen.h}
+\procf{int}{Eigenvalue}{const Matrix \&a,Matrix \&eval,Matrix \&evect}
+\descr{Berechnet die Eigenwerte der Matrix $a$ und speichert diese im Vektor 
+$eval$. Die Spalten der Matrix $evect$ enthalten die zugehörigen Eigenvektoren.
+Alternativ können die Eigenwerte auch als Diagonalmatrix abgelegt werden.
+}
+
+\proch{int}{Eigenvalue}{double a,double b,double c,
+  double \&lambda1,double \&lambda2,Point \&eigen1,Point \&eigen2}{mateigen.h}
+\descr{Diese spezielle Variante von \bsee{Eigenvalue} berechnet die Eigenwerte 
+$lambda1$ und $lambda2$ und die Eigenvektoren $eigen1$ und $eigen2$ der Matrix 
+\[ m = \left( \begin{array}{cc}
+a & b \\
+b & c \\
+\end{array} \right) \]
+}
+
+\proc{int}{SingularValueDcmp}{const Matrix \&A,Matrix \&U,Matrix \&S,Matrix \&V}
+\procf{int}{SingularValueDcmp}{const Matrix \&A,Matrix \&U,Vector \&S,Matrix \&V}
+\descr{
+Für die Matrix $A$ wird die Singulärwertzerlegung $A=USV^T$ mit der 
+Diagonalmatrix $S$ der Singulärwerte berechnet. Alternativ können die
+Singulärwerte auch als Vector abgelegt werden. Die Anzahl der Zeilen 
+der Matrix $A$ muß größer oder gleich der Anzahl der Spalten sein,
+anderenfalls ist sie mit Null-Zeilen zu einer quadratischen Matrix 
+aufzufüllen.}
+
+\proch{int}{QRDecomposition}{const Matrix \&A,Matrix \&Q,Matrix \&R}{qrdecomp.h}
+\descr{Führt eine QR-Zerlegung der Matrix $M = Q \cdot R$ durch, wobei $Q$ 
+eine orthogonale Matrix und $R$ eine obere Dreiecksmatrix $R$ sind.}
+
+\seealso{LUDecomposition}
+
+Die folgenden Funktionen mit Matrizen des Types \see{MatrixStruct} sind
+überholt und sollten nicht mehr benutzt werden.
+
+\proc{MatrixStruct}{Mateigen}{MatrixStruct A,double *eval,MatrixStruct evect}
+\descr{
+Für eine symmetrische Matrix $A$ werden die Eigenwerte und die normierten 
+Eigenvektoren mit dem Jacobi-Verfahren berechnet. Die Eigenwerte werden 
+sortiert, beginnend mit dem größten Eigenwert, auf dem Vektor $eval$ 
+zurückgegeben. Die zugehörigen Eigenvektoren sind die Spaltenvektoren der 
+Matrix $evect$. Wenn für $evect$ der NULL-Pointer übergeben wird, wird die 
+Matrix intern angelegt.
+}
+
+\proc{int}{SingularValueDcmp}{MatrixStruct A,MatrixStruct *U,MatrixStruct *S,MatrixStruct *V}
+\descr{
+Für die Matrix $A$ wird die Singulärwertzerlegung $A=USV^T$ mit der 
+Diagonalmatrix $S$ der Singulärwerte berechnet. Die Anzahl der Zeilen 
+der Matrix $A$ muß größer oder gleich der Anzahl der Spalten sein,
+anderenfalls ist sie mit Null-Zeilen zu einer quadratischen Matrix 
+aufzufüllen. Für $U$, $S$ und $V$ können
+NULL-Pointer übergeben werden, die Matrizen werden dann intern angelegt.
+}
+
+\subsection{Optimierung}
+\proch{int}{LinearOptimization}{int rows,int columns,double **matrix,double
+*rside,double *costfunction,double *solution,double \&costs}{simplex.h}
+\descr{
+Für die lineare Optimierungsaufgabe  $matrix \cdot solution \leq rside$ und
+$costfunction \cdot solution \rightarrow minimum$ werden mittels der 
+Simplexmethode die Lösung $solution$ und die minimalen Kosten $costs$ 
+berechnet. 
+Die Matrix $matrix$ hat $rows$ Zeilen und $columns$ Spalten. Die Spaltenanzahl 
+ist gleich der Anzahl der Variablen.
+Der Rückkehrkode der Funktion  bestimmt den Typ der Lösung:
+\begin{itemize}
+\item $rc=0:$ - Lösung o.k.
+\item $rc=1:$ - Unbeschränkter zulässiger Bereich
+\item $rc=2:$ - Leerer zulässiger Bereich
+\end{itemize}
+}
+
+\proch{int}{LMDif}{Vector \&variable,int optnumber,LMFunc *func,int funcdim,int
+  \&inumber,int maxiter=MAX\_INT}{lmdif.h}
+\procf{int}{LMDif}{Vector \&variable,int optnumber,LMFunc *func,int funcdim}
+\procf{int}{LMDif}{Vector \&variable,IVector optvar,
+  LMFunc *func,int funcdim,int \&inumber,int maxiter=MAX\_INT}
+\procf{int}{LMDif}{Vector \&variable,IVector optvar,LMFunc *func,int funcdim}
+\descr{
+Mittels der Levenberg-Marquardt-Methode wird der euklidische Betrag der 
+vektoriellen Zielfunktion $func$ minimiert. 
+Die Funktion $func$ muß vom Typ $LMFunc$ sein, der wie folgt definiert ist:\\
+typedef int LMFunc(const Vector \&funcvar,Vector \&result);\\
+Der Vektor $funcvar$ stellt die Parameter der Funktion dar, $result$ ist der
+Ergebnisvektor. Der Ergebnisvektor muß die Dimension $funcdim$ besitzen.\\
+Mittels $variable$ wird LMDif eine Startlösung und weitere notwendige
+Parameter der Funktion $func$ übergeben. In diesem Parametervektor optimiert
+der Levenberg-Marquardt-Algorithmus 
+\begin{itemize}
+\item Die ersten $optnumber$ Parameter oder
+\item die Parameter, deren Index im Integer-Vektor $optvar$ aufgeführt ist.
+\end{itemize}
+Die Zahl der zu optimierenden Parameter darf die Dimension $funcdim$ der
+Zielfunktion $func$ nicht übersteigen.\\
+ Der Parameter $maxiter$ beschränkt die Iteration auf $maxiter$ Zyklen.
+Der Parameter $inumber$ gibt die tatsächlich ausgeführte Zahl von 
+Iterationen zurück.\\
+Der Rückgabewert gibt den Grund für die Beendigung der Optimierung zurück. Die
+Werte außer ERROR stellen keinen ICE-Fehler dar. Insbesondere die Werte 1 bis
+4 stellen in der Regel eine erfolgreiche Beendigung dar.
+\begin{tabular}{ll}
+{\bf Rückgabewert}&{\bf Grund des Abbruchs}\\
+ERROR & Rückgabewert im Fehlerfall, z.B. Parameterfehler \\
+1 & both actual and predicted relative reductions in the sum of squares
+  are at most ftol.\\
+2 & relative error between two consecutive iterates is at most xtol.\\
+3 & conditions for 1 and 2 both hold.\\
+4 & the cosine of the angle between fvec and any column of the jacobian
+  is at most gtol in absolute value.\\
+5 & number of calls to fcn has reached or exceeded maxfev.\\
+6 & ftol is too small. no further reduction in the sum of squares 
+  is possible.\\
+7 & xtol is too small. no further improvement in the approximate 
+  solution x is possible.\\
+8 & gtol is too small. fvec is orthogonal to the columns of the 
+  jacobian to machine precision.\\
+\end{tabular}
+}
+
+\proc{int}{LMDif}{const \vector{double*} \&ov,const LMFunctor \&fn,
+  int maxiter=MAX\_INT}
+\descr{Mittels der Levenberg-Marquardt-Methode wird der euklidische Betrag
+  einer vektoriellen Zielfunktion minimiert. Die Zielfunktion ist gegeben
+  durch den Operator() des Objektes fn. Der \vector{double*} ov von Zeigern auf
+  double-Werte verweist auf die zu optimierenden Parameter der Zielfunktion.
+  Der Parameter $maxiter$ beschränkt die Iteration auf $maxiter$ Zyklen.
+}
+
+$fn$ ist ein Objekt einer von $LMFunctor$ abgeleiteten Klasse. $LMFunctor$
+ist wie folgt als abstracte Klasse definiert:
+\begin{verbatim}
+  class LMFunctor {
+  public:
+    virtual int operator()(Vector \&result) const = NULL;
+    virtual int funcdim() const = NULL;
+  };
+\end{verbatim}
+Der Konstruktor der abgeleiteten Klasse ist zu nutzen, um alle für die
+Zielfunktion erforderlichen Parameter zu übergeben, was oft sinnvollerweise
+über eine Referenz erfolgt. Dazu gehören auch die
+Datenstrukturen, die die zu optimierenden Parameter enthalten. Die Funktion
+$funcdim$ muß die Dimensionalität der Fehlerfunktion zurückgeben. Dieser Wert
+dient vor allem dazu, den Ergebnis-Vektor der Fehlerfunktion
+bereitszustellen. Der überladenen Operator () wird von der Optimierung
+aufgerufen, um die Fehlerfunktion zu ermitteln. Dabei wird ein Vector
+geeigneter Größe übergeben, den die Operator-Methode belegen muß.
+
+Das folgende Beispielprogramm demonstriert die Verwendung von LMDif anhand
+einer Anpassung einer linearen Funktion an Stützstellen unter Minimierung der
+quadratische Fehlersumme.
+
+\begin{verbatim}
+class LinReg:public LMFunctor
+{
+private:
+// Referenzen auf die dem Konstruktor übergebenen Parameter
+  const Vector &x; // Referenz-Paare (Argument x,Funktionswert y)
+  const Vector &y;
+  Vector &fpara; // Parameter der linearen Funktion
+public:
+  // Konstruktor
+  // übernimmt (als Referenz) die zu optimierenden
+  // Parameter der linearen Funktion und die Referenz-Liste
+  LinReg(Vector &pp,const Vector &xp,const Vector &yp):
+    x(xp),y(yp),fpara(pp) { } ;
+  // Dimension der Fehlerfunktion
+  int funcdim() const {
+    return y.size();    // Ein Fehlerwert pro Funktionswert
+  }
+  // Fehler-Funktion
+  int operator () (Vector &result) const
+    {
+      int i;
+      for (i=0; i<x.size(); i++) // für jeden Funktionswert
+        result[i]=fpara[1]*x[i]+fpara[0] - y[i];
+      return 1;
+    }
+};
+
+int LinearRegression()
+{
+  int info;
+  int inumber=10000;
+  int i;
+
+  Vector x(1.0,5.0,9.0);// Die Stützstellen
+  Vector y(3.0,4.0,5.0);
+
+  Vector n(2); // Parameter der linearen Funktion
+
+  vector<double*> op(2); // Pointer auf zu optimierende Parameter
+  op[0]=&n[0];
+  op[1]=&n[1];
+
+  info=LMDif(op,        // Liste von Zeigern auf zu optimierende Parameter
+             LinReg(n,x,y), // Konstruktion des Funktors
+             1000,      // maximale Zahl der Iterationsschritte
+             inumber);  // Rückgabe der durchgeführten Iterationsschritte
+
+  cout << "Nach " << inumber << " Iterationen: " << endl;
+  cout << "Funktion: y= " << n[1] << "*x + " << n[0] << endl;
+  return OK;
+}
+
+\end{verbatim}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "icedoc_base"
+%%% End: 

@@ -1,0 +1,79 @@
+%%% Einleitung
+
+\nsection{Einführung}{introduction}
+
+ICE ist eine C-Bibliothek mit Werkzeugen für die Bildanalyse. Durch 
+ein weitgehend hardware- und betriebssystemunabhängiges
+Konzept der Bildverwaltung und Visualisierung ist eine Verwendung
+unter Unix/X-Window und MS-Windows möglich. 
+
+Als Compiler muß ein C++-Compiler verwendet werden. Erprobt wurde der 
+Einsatz von GNU-C++ (unter Linux und Windows). 
+
+Bilddaten sind Datenstrukturen im Hauptspeicher. Es können gleichzeitig
+beliebig viele unterschiedlich große Bilder verwaltet werden. 
+Für die Darstellung der Bilddaten werden Funktionen des Frameworks {\bf wxWidgets}
+verwendet.
+
+Die Funktionsprototypen der ICE-Funktionen und die benötigten Datenstrukturen
+sind in dem Headerfile {\em image.h} zusammengefaßt. Damit kann nach Einschluss 
+einer Datei die gesamte Funktionalität von ICE verwendet werden. Vor allem 
+in größeren Projekten sollte jedoch dem Einschließen der Einzel-Headerfiles 
+der Vorzug gegeben werden, da das Bilden des Projekts dadurch schneller erfolgt.
+
+Funktionen geben bei Fehlern bei Abarbeitung (z.B. durch falsche Parameter) 
+normalerweise eine Fehlermeldung aus. Die Abarbeitung des Programms kann dann
+interaktiv abgebrochen oder, falls dies sinnvoll ist, fortgesetzt werden. Um 
+eine Fehlerbehandlung durch das Anwenderprogramm zu ermöglichen, kann diese 
+Form der Fehlermeldung durch spezielle Funktionen (\see{OffMessage}) ein- und 
+ausgeschaltet werden.
+
+Das folgende Beispielprogramm soll die Verwendung der grundlegenden
+ICE-Funktionen demonstrieren.
+
+\begprogr
+\begin{verbatim}
+/* Erzeugung eines Graukeiles und Binarisierung */
+#include <stdio.h>
+#include <image.h>               /* ICE-Headerfile */
+void main(void)
+{
+  const int sx = 800;            /* Bildgroesse in x-Richtung */
+  const int sy = 600;            /* Bildgroesse in y-Richtung */
+  const int maxv = 255;          /* maximal einzutragender Datenwert */
+  Image img;                     /* Deklaration eines Bildes */
+  int thr = 100;                 /* Schwellwert für Binarisierung */
+
+  OpenAlpha("ICE Text Window");  /* Textfenster öffen */
+  SetAttribute(0,7,0,0);         /* Attribute setzen */
+  ClearAlpha();                  /* initialisieren */
+
+  img=NewImg(sx, sy, maxv)       /* Bild anfordern */
+  Show(ON, img);                 /* Bild zur Darstellung anmelden */
+  Printf("Graukeil\n");          /* Ausgabe in Alphanumerikfenster */
+                                 /* Graukeil erzeugen */
+  for(int y = 0; y < img->ysize; y++)
+    for(int x = 0; x < img->xsize; x++)
+      PutVal(img,x,y,x);         /* Grauwert schreiben */
+  GetChar();                     /* Tastendruck in Text- oder Bildfenster abwarten */
+
+  Printf("Binarisierung mit Schwellwert %d\n", thr);
+  for(int y = 0; y < img->ysize; y++)
+    for(int x = 0; x < img->xsize; x++)
+      {
+        int val = GetVal(img,x,y); /* Grauwert lesen */
+        if (val < thr) 
+          PutVal(img,x,y,0);
+        else 
+          PutVal(img,x,y,img->maxval);
+  }
+  GetChar();                     /* Tastendruck in Text- oder Bildfenster abwarten */
+  FreeImg(img);                  /* Freigabe des Bildes */ 
+}
+\end{verbatim}
+\endprogr
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

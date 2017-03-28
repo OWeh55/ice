@@ -1,0 +1,67 @@
+%\documentstyle[a4wide,titlepage,german,umlaut]{article}
+\documentclass[10pt,titlepage]{article}
+\usepackage[iso]{umlaute}
+\usepackage{a4,a4wide,german}
+
+\newcommand{\includefile}{}
+
+\sloppy
+\input hyphexc.tex
+\textheight 23cm \textwidth 16cm \topmargin-0.6in
+\pagestyle{headings}
+
+\input macros.tex
+
+\begin{document}
+\title{Handbuch ICE - Robotvision}
+%\subtitle{C-Bibliothek zur Bildanalyse}
+\author{Michael Schubert, Wolfgang Ortmann\\
+Friedrich-Schiller-Universität Jena, Institut für Informatik, 07740 Jena}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\newpage
+\input intro.tex
+\newpage
+\input trafo3d.tex
+\newpage
+\input kalib.tex
+\newpage
+\input reko.tex
+\newpage
+\input szdescr.tex
+\newpage
+\input modescr.tex
+\newpage
+\input matching.tex
+\newpage
+\input hiddenln.tex
+\newpage
+\input inspect.tex
+\newpage
+\input robcntl.tex
+\newpage
+
+\section{Funktionsliste}
+\subsection{Thematisch sortierte Funktionsliste}
+
+\input robdoc_docu.tex
+\newpage
+
+\subsection{Alphabetisch sortierte Funktionsliste}
+
+\input robdoc_docs.tex
+
+\pagebreak
+\end{document}
+
+
+
+
+
+
+
+
+
+
