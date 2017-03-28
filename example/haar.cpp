@@ -43,14 +43,14 @@ int main(int argc, char* argv[])
   Show(GRAY, img2, "transformiert");
 
   // Teilfenster mit groesse 2^n * 2^n
-  HaarImg(img1(Window(0, 0, xsize - 1, ysize - 1)), p, NORMAL, img2);
+  HaarImg(img1(Window(0, 0, xsize - 1, ysize - 1)), img2, p, NORMAL);
 
   GetChar();
 
   Image img3;
   img3.create(xsize, ysize, 255);
 
-  HaarImg(img2, p, INVERS, img3);
+  HaarImg(img2, img3, p, INVERS);
   Show(GRAY, img3, "zurücktransformiert");
   /*
   vector<int> iv{1,2,3,4, 4,3,2,1, 4,4,3,3, 4,4,1,1};

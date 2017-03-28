@@ -57,7 +57,7 @@ namespace ice
     return ok;
   }
 
-  int HaarImg(const Image& pic1, Image pic2, int depth = 1, int mode = NORMAL)
+  int HaarImg(const Image& pic1, Image &pic2, int depth, int mode)
   {
     if (depth < 1)
       {
