@@ -1,8 +1,8 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 2002 .. 2017 FSU Jena, Digital Image Processing Group
+ * Contact: noo@pandora.inf.uni-jena.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,13 +22,13 @@
 #include <limits.h>
 
 #include "message.h"  // for printing error messages
-#include "util.h"     // for MulDiv
-#include "macro.h"    // for min/max functions
 
 #include "picio.h"
 
 #include "ImageC.h"
 #include "ImageTemplate.h"
+
+using namespace std;
 
 namespace ice
 {

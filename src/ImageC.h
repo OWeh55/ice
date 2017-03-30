@@ -22,13 +22,9 @@
 #define __IMAGEC_H
 
 #include <string>
-#include <list>
-#include <limits>
 
-#include "defs.h"
 #include "Window.h"
 #include "ImageBase.h"
-#include "pixelreference.h"
 
 //#define CONTROLLED_REFRESH 1
 

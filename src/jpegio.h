@@ -22,7 +22,6 @@
 /* jpegio.h                                                               */
 /* Funktion: Bild E/A                                                    */
 /*************************************************************************/
-
 #ifndef _JPEGIO_H /* verhindern mehrfacher Verarbeitung in einem */
 #define _JPEGIO_H /* Programm */
 

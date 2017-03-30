@@ -55,7 +55,7 @@ namespace ice
                  int& maxval, int& nr);
 
 // Tool-functions for internal use of image load and save functions
-  extern unsigned char red[256], green[256], blue[256];
+// extern unsigned char red[256], green[256], blue[256];
 
   void bmp8img(unsigned char* bmp, int w, int h, Image& img);
   void bmp16img(unsigned char* bmp, int w, int h, Image& img);
