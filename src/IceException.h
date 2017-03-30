@@ -4,11 +4,13 @@
 #include <string>
 #include <exception>
 
-namespace ice {
-  class IceException: public std::exception {
+namespace ice
+{
+  class IceException: public std::exception
+  {
   public:
-    IceException(const string &where,const string &message): 
-      where_(where),message_(message)
+    IceException(const string& where, const string& message):
+      where_(where), message_(message)
     {
     }
     virtual string what() const
