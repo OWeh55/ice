@@ -505,8 +505,8 @@ namespace ice
 #undef FNAME
 
   /******************************************************/
-#define FNAME "InsidePolygon"
-  bool InsidePolygon(double p[2], PointList pl)
+#define FNAME "insidePolygon"
+  bool insidePolygon(double p[2], PointList pl)
   {
     int i, j, c = 0;
     double xp = p[0];
