@@ -26,11 +26,9 @@
 /* -------------------------------------------------------- */
 /*                 pan tilt unit control                    */
 /* -------------------------------------------------------- */
-using namespace std;
-
 namespace ice
 {
-  bool ptcommand(int port, const string& cmd);
+  bool ptcommand(int port, const std::string& cmd);
   int ptOpen(int port);
   void ptClose(int port);
   int ptMove(int port, int x, int y);

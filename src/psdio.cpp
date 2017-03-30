@@ -32,7 +32,7 @@ namespace ice
 {
 
 #define FNAME "WriteImg"
-  int WritePSDImg(const Image& img, const string& filename)
+  int WritePSDImg(const Image& img, const std::string& filename)
   {
     unsigned char head[] =
     {
@@ -104,7 +104,7 @@ namespace ice
   }
 
   int WritePSDImg(const Image& imgr, const Image& imgg, const Image& imgb,
-                  const string& filename)
+                  const std::string& filename)
   {
     char head[] =
     {
@@ -295,7 +295,7 @@ namespace ice
     return true;
   }
 
-  int InfPSDFile(const string& filename,
+  int InfPSDFile(const std::string& filename,
                  int& xsize, int& ysize,
                  int& maxval, int& nr)
   {

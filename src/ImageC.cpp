@@ -18,8 +18,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 #include <limits.h>
+#include <algorithm>
 
 #include "message.h"  // for printing error messages
 
@@ -257,8 +257,8 @@ namespace ice
 
     // Determine the local neighborhood of point(x, y), that means the 4 pixel positions
     //(xi, yi),(xi + 1, yi),(xi + 1, yi + 1), and(xi, yi + 1), that enclose(x, y)
-    x = ice::max<double>(x, 0.0);
-    y = ice::max<double>(y, 0.0);
+    x = max<double>(x, 0.0);
+    y = max<double>(y, 0.0);
     int xi  = (int) x;
     int xi1 = xi + 1;
     int yi  = (int) y;
@@ -292,8 +292,8 @@ namespace ice
 
     // Determine the local neighborhood of point(x, y), that means the 4 pixel positions
     //(xi, yi),(xi + 1, yi),(xi + 1, yi + 1), and(xi, yi + 1), that enclose(x, y)
-    x = ice::max<double>(x, 0.0);
-    y = ice::max<double>(y, 0.0);
+    x = max<double>(x, 0.0);
+    y = max<double>(y, 0.0);
     int xi  = (int) x;
     int xi1 = xi + 1;
     int yi  = (int) y;

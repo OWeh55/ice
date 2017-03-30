@@ -25,19 +25,17 @@
 #include "ibuffer.h"
 #include "exfile.h"
 
-using namespace std;
-
 namespace ice
 {
-  int InfPBMFile(const string& fname, int& xsize, int& ysize, int& maxval, int& nr);
+  int InfPBMFile(const std::string& fname, int& xsize, int& ysize, int& maxval, int& nr);
 
-  int ReadPBMImg(const string& str, Image& r, Image& g, Image& b,
+  int ReadPBMImg(const std::string& str, Image& r, Image& g, Image& b,
                  int flag = IB_SCALE);
-  Image ReadPBMImg(const string& str, Image& img, int flag = IB_SCALE);
+  Image ReadPBMImg(const std::string& str, Image& img, int flag = IB_SCALE);
 
   // high level write
-  int WritePBMImg(const Image& r, const Image& g, const Image& b, const string& str);
-  int WritePBMImg(const Image& img, const string& str);
+  int WritePBMImg(const Image& r, const Image& g, const Image& b, const std::string& str);
+  int WritePBMImg(const Image& img, const std::string& str);
 
   // low level write
   int WritePBMImg(const Image& r, const Image& g, const Image& b, EXFILE& fd);

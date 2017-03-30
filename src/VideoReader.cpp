@@ -58,7 +58,7 @@ namespace ice
         framenr++;
         return true;
       }
-    catch (const exception& ex)
+    catch (const std::exception& ex)
       {
         // read failed (eof..)
         return false;

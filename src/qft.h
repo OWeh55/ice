@@ -30,8 +30,6 @@
 #include "fourier.h"
 #include "base.h"
 
-using namespace std;
-
 #define POWER 1
 #define NORM 2
 #define LOG 3

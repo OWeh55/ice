@@ -91,7 +91,7 @@ namespace ice
     VideoWriter* writer;
 
     bool writemode; // write=true, read=false
-    string filename;
+    std::string filename;
   };
 
   class VideoFileCached
@@ -105,7 +105,7 @@ namespace ice
     static const int before = 1;
     static const int past_eof = 2;
 
-    VideoFileCached(const string& fn, int size);
+    VideoFileCached(const std::string& fn, int size);
     virtual ~VideoFileCached();
 
     virtual void getPara(int& xs, int& ys, int& mv, int& fps) const;
@@ -129,9 +129,9 @@ namespace ice
 
   private:
     VideoFile* videofile;
-    vector<Image> vr;
-    vector<Image> vg;
-    vector<Image> vb;
+    std::vector<Image> vr;
+    std::vector<Image> vg;
+    std::vector<Image> vb;
 
     int bsize;
 

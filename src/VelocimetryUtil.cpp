@@ -1,6 +1,8 @@
 #include "VelocimetryUtil.h"
 #include "macro.h"
 
+using namespace std;
+
 namespace ice
 {
   double** mallocDoubleArray(int w, int h);
@@ -911,7 +913,7 @@ namespace ice
   }
 
 #define  FNAME "parseParaFile"
-  int parseParaFile(const string& filename, map<string, string>& paraMap)
+  int parseParaFile(const std::string& filename, map<string, string>& paraMap)
   {
     ifstream inFile(filename.c_str(), ios_base::in);
     string  lineString;

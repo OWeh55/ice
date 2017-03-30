@@ -26,6 +26,8 @@
 #include "filter.h"
 #include "util.h"
 
+using namespace std;
+
 namespace ice
 {
 #define FNAME "OrientedSmearImg"

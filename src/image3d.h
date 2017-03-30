@@ -138,9 +138,9 @@ namespace ice
     }
 
 #define FNAME "Image3d::read"
-    int read(const string& filemask)
+    int read(const std::string& filemask)
     {
-      vector<string> fn;
+      std::vector<std::string> fn;
       Directory(fn, filemask, DIR_FILE | DIR_WITHPATH);
       if ((int)fn.size() == zsize)
         {

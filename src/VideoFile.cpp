@@ -31,6 +31,8 @@
 
 #include "VideoFile.h"
 
+using namespace std;
+
 namespace ice
 {
 //******* Videofile ***********************************************

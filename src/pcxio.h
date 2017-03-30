@@ -26,9 +26,6 @@
 
 namespace ice
 {
-
-  using namespace std;
-
   struct HeaderPCX
   {
     unsigned char Signature;

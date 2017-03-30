@@ -24,8 +24,6 @@
 
 #include <list>
 
-using namespace std;
-
 namespace ice
 {
 
@@ -56,7 +54,7 @@ namespace ice
 
   void Flip(Image img);
   void drawArrow(int x1, int y1, int x2, int y2, int val, int size, Image img);
-  int  parseParaFile(const char* filename, map<string, string>& paraMap);
+  int  parseParaFile(const char* filename, std::map<std::string, std::string>& paraMap);
   void shiftWindowD(ImageD imgD1, ImageD imgD2, int shiftX);
   void shiftWindow(Image img1, Image img2, int shiftX);
   Image pivRenormImg(Image img1, Image img2);

@@ -34,6 +34,8 @@
 #include "picio.h"
 #include "ibuffer.h"
 
+using namespace std;
+
 namespace ice
 {
 #define BI_RGB  0
@@ -68,7 +70,7 @@ namespace ice
     unsigned int iYPelsPerMeter, iColorsUsed, iClrImportant;
   } BMPInfo;
 
-  static string Error;
+  static std::string Error;
   static unsigned char r[256], g[256], b[256];
 
   int ReadBMPHeader(FILE* fp, BMPInfo& bmi)

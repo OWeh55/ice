@@ -20,7 +20,7 @@
  */
 
 /*
- * Util.h
+ * util.h
  * Funktion: Hilfsroutinen fuer diverse Zwecke
  *
  * Hilfsfunktion MulDiv
@@ -34,9 +34,6 @@
 #include <cmath>
 
 #include "base.h"
-
-
-using namespace std;
 
 namespace ice
 {

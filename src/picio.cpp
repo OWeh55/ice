@@ -46,6 +46,8 @@
 #include "bmpio.h"
 #include "pbmio.h"
 
+using namespace std;
+
 namespace ice
 {
   unsigned char red[256], green[256], blue[256];

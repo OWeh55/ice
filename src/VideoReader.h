@@ -40,14 +40,12 @@
 #include "PbmReader.h"
 #include "ibuffer.h"
 
-using namespace std;
-
 namespace ice
 {
   class VideoReader
   {
   public:
-    VideoReader(const string& fn);
+    VideoReader(const std::string& fn);
     virtual ~VideoReader();
     virtual void getPara(int& xs, int& ys, int& mv, int& fps) const;
     virtual bool read(const Image& ir, const Image& ig, const Image& ib);

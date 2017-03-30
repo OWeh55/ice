@@ -25,8 +25,6 @@
 #include "ClassifierNormal.h"
 #include "KDTree.h"
 
-using namespace std;
-
 namespace ice
 {
   class ClassifierKNN : public ClassifierNormal

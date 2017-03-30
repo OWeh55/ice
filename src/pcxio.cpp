@@ -31,6 +31,8 @@
 #include "picio.h"
 #include "pcxio.h"
 
+using namespace std;
+
 namespace ice
 {
 #define FNAME "ReadImgPCX"

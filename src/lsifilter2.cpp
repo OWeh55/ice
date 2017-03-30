@@ -32,10 +32,13 @@
 
 #include "lsifilter.h"
 
+using namespace std;
+
 namespace ice
 {
 
-  void lsih_std(const Image& pn1, const Image& pn2, const vector<int>& mask,
+  void lsih_std(const Image& pn1, const Image& pn2,
+                const std::vector<int>& mask,
                 int norm, int offset)
   {
     int dx = pn1->xsize;

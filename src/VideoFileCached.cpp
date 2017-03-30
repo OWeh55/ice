@@ -30,6 +30,8 @@
 #include "VideoFile.h"
 #include "dtime.h"
 
+using namespace std;
+
 namespace ice
 {
 //******* VideoFileCached ***********************************************
