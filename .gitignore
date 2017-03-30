@@ -13,6 +13,7 @@
 /src/x86_64-suse-linux
 # ignore backups and temporary files
 *~
+*.orig
 
 # possibly incomplete positive pattern
 #!*.cpp
