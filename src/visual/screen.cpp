@@ -83,38 +83,6 @@ namespace ice
     ::wxBell();
   }
 
-  int PrintErrorAlpha(const std::string& msg, int code, int mode)
-  {
-    // mode tells us whether we should display the error code (if mode >= 0)
-    // if mode is zero, the occured error is fatal and can't be ignored
-    // if mode is one, the occured error may be ignored
-    if (mode >= 0)
-      Printf("%s (%d)\n", msg.c_str(), code);
-    else
-      Printf("%s\n", msg.c_str());
-
-    // if the error may be ignored go ask the user whether to ignore it or not
-    if (mode == 1)
-      {
-        Printf("Type 'I' to ignore or 'A' to abort\n");
-        int Response = toupper(GetChar());
-        while (Response != 'A' && Response != 'I')
-          Response = toupper(GetChar());
-        return (Response == 'I');
-      }
-
-    // if a fatal error has occured tell the user so
-    if (mode == 0)
-      {
-        Printf("Press any key to abort\n");
-        GetChar();
-        return FALSE;
-      }
-
-    // if none of the above holds true the error can be ignored anyway
-    return TRUE;
-  }
-
   int AlphaSizeX()
   {
     return wxGetApp().GetConsoleWin()->GetScreenSize().x;

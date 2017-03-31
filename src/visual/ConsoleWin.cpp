@@ -174,15 +174,12 @@ namespace ice
     UpdateTimer.Start(100, true);
 
     // set redirection of error messages
-    PrintError = PrintErrorAlpha;
-
     SetFocus();
   }
 
   iceConsoleWin::~iceConsoleWin()
   {
     UpdateTimer.Stop();
-    PrintError = &PrintErrorStderr;
   }
 
   void iceConsoleWin::Refresh()

@@ -64,8 +64,6 @@ namespace ice
 
   void Bell();
 
-  int PrintErrorAlpha(const std::string& msg, int code, int mode);
-
   // get the size (in characters) of the console window
   int AlphaSizeX();
   int AlphaSizeY();

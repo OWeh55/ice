@@ -38,16 +38,6 @@ namespace ice
 // extended message - additional int value
   void Message(const std::string& func, const std::string& msg, int eval, int code);
 
-// detailed message - selected by macro
-  void Message_detailed(const std::string& func, const std::string& msg, int code,
-                        const std::string& file, int line);
-
-  typedef int PrintErrorFunction(const std::string& msg, int code, int mode);
-
-  int PrintErrorStderr(const std::string& msg, int code, int mode);
-
-  extern PrintErrorFunction* PrintError;
-
   int GetError();
   std::string GetErrorString();
   void SetOk();
@@ -56,11 +46,6 @@ namespace ice
   void OffMessage();
 
   extern int ErrorCode;
-
-#if 0
-#undef Message
-#define Message(a1,a2,a3) Message_detailed((a1),(a2),(a3),__FILE__,__LINE__)
-#endif
 }
 
 #endif

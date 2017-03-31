@@ -43,15 +43,13 @@ namespace ice
 {
   using namespace std;
 
-  PrintErrorFunction* PrintError = &PrintErrorStderr;
-
 // Fehlerkode
   int ErrorCode;
 
 // Flag "Anzeigen der Nachrichten"
 // Werte größer 0 schalten aus
 // Wird mit OffMessage und OnMessage geschaltet
-// muß immer paarweise verwendet werden (OffMessage...OnMessage);
+// muss immer paarweise verwendet werden (OffMessage...OnMessage);
   int e_message;
 
   static string e_msg;
@@ -77,28 +75,11 @@ namespace ice
         // durchgereichte Meldung. Hier wird der Fehlerkode ignoriert!
       }
 
-    message = loc + "() - " + e_msg; // Meldung zusammensetzen
+    message = loc + " - " + e_msg; // Meldung zusammensetzen
 
-    if (e_message == 0) // Soll Anzeige erfolgen
+    if (e_message <= 0) // Soll Anzeige erfolgen
       {
-        // Fehlermeldung mit Abfrage "Abort/Ignore"
-        if (!(*PrintError)(message, code, 1))
-          {
-            // abbrechen !!
-            exit(code);
-          }
-        else
-          {
-            // ignorieren
-            ErrorCode = OK;
-            return;
-          }
-      }
-
-    if (e_message == -1)
-      {
-        (*PrintError)(message, code, -1);
-        return;
+        cerr << "Error: " << message << endl;
       }
   }
 
@@ -134,25 +115,6 @@ namespace ice
       }
 
     Message(loc, xmsg, code);
-  }
-
-
-  void Message_detailed(const string& func, string msg, int code,
-                        string file, int line)
-  {
-    char temp[3000];
-
-    if (msg == "")
-      {
-        sprintf(temp, "%s [%s(%4d)]", e_msg.c_str(), file.c_str(), line);
-      }
-    else
-      {
-        sprintf(temp, "%s [%s(%4d)]", msg.c_str(), file.c_str(), line);
-      }
-
-    dmessage = temp;
-    Message(func, dmessage, code);
   }
 
   void OnMessage()

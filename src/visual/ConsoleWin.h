@@ -44,12 +44,6 @@
 #include "visual/attribute.h"
 #include "visual/Frame.h"
 
-// use min/max template from std if no WIN32 environment is around us
-#ifndef _MSC_VER
-using std::min;
-using std::max;
-#endif
-
 // SCREEN_XS and SCREEN_YS denote the width and height (in characters) of the contents
 // of a console window
 
@@ -279,10 +273,6 @@ namespace ice
 
     // The text point size. Maybe this value should be configurable.
     const unsigned char TextHeight;
-
-    // Prints the error message >ErrorMsg< at the last line, and waits for a keypress. Then it'll
-    // restore the screen as it was before this function was called.
-    void PrintErrorMsg(const char* ErrorMsg);
 
     // This class implements a thread-safe key buffer.
     class iceKeyBuffer
