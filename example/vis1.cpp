@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
        * Lesen / Schreiben mit Visualisierung
        */
 
-      Show(ON, img);
+      Show(GRAY, img);
       img.setPixel(0, 0, 0); // dummy write to force update
       usleep(msleep);
 

@@ -28,7 +28,7 @@ namespace ice
       auto classIt = clIndex.find(classname);
       if (classIt != clIndex.end())
         return classIt->second;
-      cout << "undefined classname " << classname << endl;
+      std::cout << "undefined classname " << classname << std::endl;
       throw ("undefined classname");
     }
 
@@ -50,7 +50,7 @@ namespace ice
   public:
     ClassifierWithNames(int nFeatures): cl(), nLabels(0), nFeatures(nFeatures), initialized(false) {};
 
-    ClassifierWithNames(const vector<Tlabel>& classnames, int nFeatures):
+    ClassifierWithNames(const std::vector<Tlabel>& classnames, int nFeatures):
       cl(), nLabels(0), nFeatures(nFeatures), initialized(false)
     {
       for (Tlabel n : classnames)
@@ -84,7 +84,7 @@ namespace ice
         }
     }
 
-    void addClass(const vector<Tlabel>& nl)
+    void addClass(const std::vector<Tlabel>& nl)
     {
       if (initialized)
         {
@@ -103,7 +103,7 @@ namespace ice
       return cl.Train(classNr(clname), feat);
     }
 
-    virtual int Train(const Matrix& features, const vector<Tlabel>& classn)
+    virtual int Train(const Matrix& features, const std::vector<Tlabel>& classn)
     {
       if (!initialized)
         init();
@@ -117,7 +117,7 @@ namespace ice
     }
 
     // verify classifier from classified sample list
-    virtual double Test(const Matrix& m, const vector<Tlabel>& classname)
+    virtual double Test(const Matrix& m, const std::vector<Tlabel>& classname)
     {
       if (!initialized)
         init();
@@ -147,7 +147,7 @@ namespace ice
     }
 
     // classify list of feature vectors and extend matrix with "class" column
-    virtual int Classify(const Matrix& m, vector<Tlabel>& cln)
+    virtual int Classify(const Matrix& m, std::vector<Tlabel>& cln)
     {
       if (!initialized)
         init();
