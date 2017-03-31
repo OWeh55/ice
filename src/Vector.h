@@ -36,9 +36,6 @@
 #include "numbase.h"
 #include "Point.h"
 
-#define VECTOR_ERROR(f,m,r,ret) { throw IceException("VectorT::" f,m,r); }
-#define VECTOR_ERROR3(f,m,r) { throw IceException("VectorT::" f,m,r); }
-
 namespace ice
 {
   template <typename T>
@@ -71,13 +68,6 @@ namespace ice
         {
           allocated = allocationsize;
           data = new T[allocated];
-
-          if (data == NULL)
-            {
-              allocated = 0;
-              dim = 0;
-              VECTOR_ERROR3("VectorT", M_NO_MEM, NO_MEM);
-            }
         }
       else
         {
@@ -201,15 +191,12 @@ namespace ice
       return data;
     }
 
-    int Resize(int newdim)
+    void Resize(int newdim)
     {
       if (newdim < 0)
-        {
-          VECTOR_ERROR("Resize", M_WRONG_DIM, WRONG_PARAM, ERROR);
-        }
+        throw IceException("Vector::Resize", M_WRONG_DIM, WRONG_PARAM);
 
       resize(newdim);
-      return OK;
     }
 
     // Konstruktoren
@@ -349,10 +336,7 @@ namespace ice
     operator pointT<T>() const
     {
       if (dim != 2)
-        {
-          VECTOR_ERROR("pointT", M_WRONG_DIM, WRONG_PARAM, pointT<T>());
-        }
-
+        throw IceException("Vector::Point", M_WRONG_DIM, WRONG_PARAM);
       return pointT<T>(data[0], data[1]);
     }
 
@@ -368,9 +352,7 @@ namespace ice
     const T& operator[](unsigned int i) const
     {
       if (i >= dim)
-        {
-          VECTOR_ERROR("operator[]", M_WRONG_INDEX, WRONG_PARAM, data[0]);
-        }
+        throw IceException("Vector::operator[]", M_WRONG_INDEX, WRONG_PARAM);
 
       return data[i];
     }
@@ -378,9 +360,7 @@ namespace ice
     T& operator[](unsigned int i)
     {
       if (i >= dim)
-        {
-          VECTOR_ERROR("operator[]", M_WRONG_INDEX, WRONG_PARAM, data[0]);
-        }
+        throw IceException("Vector::operator[]", M_WRONG_INDEX, WRONG_PARAM);
 
       return data[i];
     }
@@ -388,9 +368,7 @@ namespace ice
     VectorT operator()(unsigned int i1, unsigned int i2) const
     {
       if ((i1 > i2 + 1) || (i2 >= dim))
-        {
-          VECTOR_ERROR("operator()", M_WRONG_INDEX, WRONG_PARAM, *this);
-        }
+        throw IceException("Vector::operator()", M_WRONG_INDEX, WRONG_PARAM);
 
       VectorT ret(i2 - i1 + 1);
 
@@ -402,93 +380,62 @@ namespace ice
       return ret;
     }
 
-    int SetV(T x1, T x2, T x3, T x4)
+    void SetV(T x1, T x2, T x3, T x4)
     {
-      if (dim > 3)
-        {
-          data[3] = x4;
-        }
-      else
-        {
-          VECTOR_ERROR("SetV", M_WRONG_DIM, WRONG_PARAM, ERROR);
-        }
+      if (dim < 4)
+        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
 
-      return SetV(x1, x2, x3);
+      data[3] = x4;
+
+      SetV(x1, x2, x3);
     }
 
-    int SetV(T x1, T x2, T x3)
+    void SetV(T x1, T x2, T x3)
     {
-      if (dim > 2)
-        {
-          data[2] = x3;
-        }
-      else
-        {
-          VECTOR_ERROR("SetV", M_WRONG_DIM, WRONG_PARAM, ERROR);
-        }
+      if (dim < 3)
+        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
 
-      return SetV(x1, x2);
+      data[2] = x3;
+      SetV(x1, x2);
     }
 
-    int SetV(T x1, T x2)
+    void SetV(T x1, T x2)
     {
-      if (dim > 1)
-        {
-          data[1] = x2;
-        }
-      else
-        {
-          VECTOR_ERROR("SetV", M_WRONG_DIM, WRONG_PARAM, ERROR);
-        }
+      if (dim < 2)
+        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
 
-      return SetV(x1);
+      data[1] = x2;
+      SetV(x1);
     }
 
-    int SetV(T x1)
+    void SetV(T x1)
     {
-      if (dim > 1)
-        {
-          data[0] = x1;
-        }
-      else
-        {
-          VECTOR_ERROR("SetV", M_WRONG_DIM, WRONG_PARAM, ERROR);
-        }
+      if (dim < 1)
+        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
 
-      return OK;
+      data[0] = x1;
     }
 
-    int Set(T val)
+    void Set(T val)
     {
       for (unsigned int i = 0; i < dim; i++)
         {
           data[i] = val;
         }
-
-      return OK;
     }
 
-    int Exchange(unsigned int i1, unsigned int i2)
+    void Exchange(unsigned int i1, unsigned int i2)
     {
-      T h;
+      if ((i1 >= dim) || (i2 >= dim))
+        throw IceException("Vector::Exchange", M_WRONG_INDEX, WRONG_PARAM);
 
-      if ((i1 >= (int)dim) || (i2 >= (int)dim))
-        {
-          VECTOR_ERROR("Exchange", M_WRONG_INDEX, WRONG_PARAM, ERROR);
-        }
-
-      h = data[i1];
-      data[i1] = data[i2];
-      data[i2] = h;
-      return OK;
+      std::swap(data[i1], data[i2]);
     }
 
-    int Delete(unsigned int i1, unsigned int i2)
+    void Delete(unsigned int i1, unsigned int i2)
     {
       if ((i1 > i2) || (i2 >= dim))
-        {
-          VECTOR_ERROR("Delete", M_WRONG_INDEX, WRONG_PARAM, ERROR);
-        }
+        throw IceException("Vector::Delete", M_WRONG_INDEX, WRONG_PARAM);
 
       unsigned int diff = i2 - i1 + 1;
       unsigned int newdim = dim - diff;
@@ -499,15 +446,12 @@ namespace ice
         }
 
       resize(newdim);
-      return OK;
     }
 
-    int Delete(unsigned int i1)
+    void Delete(unsigned int i1)
     {
       if (i1 >= dim)
-        {
-          VECTOR_ERROR("Delete", M_WRONG_INDEX, WRONG_PARAM, ERROR);
-        }
+        throw IceException("Vector::Delete", M_WRONG_INDEX, WRONG_PARAM);
 
       int newdim = dim - 1;
 
@@ -517,10 +461,9 @@ namespace ice
         }
 
       resize(newdim);
-      return OK;
     }
 
-    int Sort(int order = 0)
+    void Sort(int order = 0)
     {
       switch (order)
         {
@@ -531,8 +474,6 @@ namespace ice
           sort(data, data + dim, std::greater<T>());
           break;
         }
-
-      return OK;
     }
 
     // arithmetische Operatoren
@@ -540,15 +481,11 @@ namespace ice
     const VectorT& operator+=(const VectorT& h)
     {
       if (dim != h.dim)
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+
+      for (unsigned int i = 0; i < dim; i++)
         {
-          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        }
-      else
-        {
-          for (unsigned int i = 0; i < dim; i++)
-            {
-              data[i] += h.data[i];
-            }
+          data[i] += h.data[i];
         }
 
       return *this;
@@ -566,15 +503,12 @@ namespace ice
     const VectorT& operator -= (const VectorT& rhs)
     {
       if (dim != rhs.dim)
+
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+
+      for (unsigned int i = 0; i < dim; i++)
         {
-          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        }
-      else
-        {
-          for (unsigned int i = 0; i < dim; i++)
-            {
-              data[i] -= rhs.data[i];
-            }
+          data[i] -= rhs.data[i];
         }
       return *this;
     }
@@ -605,17 +539,12 @@ namespace ice
       T dist = 0.0;
 
       if (dim != h.dim)
-        {
-          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        }
-      else
-        {
-          for (unsigned i = 0; i < dim; i++)
-            {
-              dist += Sqr(data[i] - h.data[i]);
-            }
-        }
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
 
+      for (unsigned i = 0; i < dim; i++)
+        {
+          dist += Sqr(data[i] - h.data[i]);
+        }
       return sqrt(dist);
     }
 
@@ -669,15 +598,11 @@ namespace ice
       T prod = 0;
 
       if (dim != h.dim)
+        throw IceException("Vector::operator*", M_WRONG_DIM, WRONG_PARAM);
+
+      for (unsigned int i = 0; i < dim; i++)
         {
-          VECTOR_ERROR("Operator*", M_VECTORDIM, WRONG_PARAM, 0);
-        }
-      else
-        {
-          for (unsigned int i = 0; i < dim; i++)
-            {
-              prod += data[i] * h.data[i];
-            }
+          prod += data[i] * h.data[i];
         }
 
       return prod;
@@ -771,21 +696,17 @@ namespace ice
       return l;
     }
 
-    int Normalize()
+    void Normalize()
     {
       double l = Length();
 
       if (l == 0)
-        {
-          VECTOR_ERROR("Normalize", "Can't normalize", WRONG_PARAM, ERROR);
-        }
+        throw IceException("Vector::Normalize", M_WRONG_PARAM, WRONG_PARAM);
 
       for (unsigned int j = 0; j < dim; j++)
         {
           data[j] /= l;
         }
-
-      return OK;
     }
 
     operator std::vector<T>() const
@@ -795,14 +716,12 @@ namespace ice
 
     friend bool operator == (const VectorT& v1, const VectorT& v2)
     {
-      int i;
-
       if (v2.Size() != v1.Size())
         {
           return false;
         }
 
-      for (i = 0; i < v1.Size(); i++)
+      for (int i = 0; i < v1.Size(); i++)
         if (v1[i] != v2[i])
           {
             return false;
@@ -843,9 +762,8 @@ namespace ice
 
       if (c != '<')
         {
-          throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
           is.clear();
-          return is;
+          throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         }
 
       if (is.peek() == '>')
@@ -863,9 +781,8 @@ namespace ice
 
           if ((c != ',') && (c != '#') && (c != '>'))
             {
-              throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
               is.clear();
-              return is;
+              throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
             }
         }
       while (c != '>');
@@ -883,8 +800,4 @@ namespace ice
   typedef VectorT<double> Vector;
   typedef VectorT<int> IVector;
 }
-
-#undef VECTOR_ERROR
-#undef VECTOR_ERROR3
-
 #endif

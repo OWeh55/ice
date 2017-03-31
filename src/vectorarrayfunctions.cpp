@@ -36,23 +36,17 @@
 namespace ice
 {
   /*
-   * 3-dim. and n-dim. vector
+   * 3-dim vector as double*
    */
   // The following functions are obsolete and shouldn't be used !!
 #define FNAME "MoveVec"
-
   double* MoveVec(double* v1, double* v2)
   {
     if (v1 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     if (v2 == NULL)
-      {
-        v2 = new double [3];
-      }
+      v2 = new double [3];
 
     v2[0] = v1[0];
     v2[1] = v1[1];
@@ -67,17 +61,9 @@ namespace ice
   double LengthVec(double* v)
   {
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
-    double l = 0;
-
-    for (int i = 0; i < 3; i++)
-      {
-        l += v[i] * v[i];
-      }
+    double l = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 
     return sqrt(l);
   }
@@ -88,15 +74,10 @@ namespace ice
   double* AddVec(double* v1, double* v2, double* v3)
   {
     if (v1 == NULL || v2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     if (v3 == NULL)
-      {
-        v3 = new double [3];
-      }
+      v3 = new double [3];
 
     v3[0] = v1[0] + v2[0];
     v3[1] = v1[1] + v2[1];
@@ -111,15 +92,10 @@ namespace ice
   double* SubVec(double* v1, double* v2, double* v3)
   {
     if (v1 == NULL || v2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     if (v3 == NULL)
-      {
-        v3 = new double [3];
-      }
+      v3 = new double [3];
 
     v3[0] = v1[0] - v2[0];
     v3[1] = v1[1] - v2[1];
@@ -130,27 +106,18 @@ namespace ice
 #undef FNAME
   /*******************************************************************/
 #define FNAME "NormVec"
-#define EPS 1e-10
   double* NormVec(double* v1, double* v2)
   {
     if (v1 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     double l = LengthVec(v1);
 
-    if (l < EPS)
-      {
-        throw IceException(FNAME, M_ZERO_VECTOR, WRONG_PARAM);
-        return nullptr;
-      }
+    if (l <= 0.0)
+      throw IceException(FNAME, M_ZERO_VECTOR, WRONG_PARAM);
 
     if (v2 == nullptr)
-      {
-        v2 = new double [3];
-      }
+      v2 = new double [3];
 
     v2[0] = v1[0] / l;
     v2[1] = v1[1] / l;
@@ -159,22 +126,16 @@ namespace ice
     return v2;
   }
 #undef FNAME
-#undef EPS
 
   /*******************************************************************/
+#define FNAME "ScaleVec"
   double* ScaleVec(double* v1, double fac, double* v2)
-#define FNAME "Scale"
   {
     if (v1 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     if (v2 == nullptr)
-      {
-        v2 = new double [3];
-      }
+      v2 = new double [3];
 
     v2[0] = v1[0] * fac;
     v2[1] = v1[1] * fac;
@@ -185,34 +146,16 @@ namespace ice
 #undef FNAME
 
   /*******************************************************************/
-  /* #define DEBUG */
+
 #define FNAME "ScalProdVec"
   double ScalProdVec(double v1[3], double v2[3])
   {
-    int i;
-    double scalar;
-
     if (v1 == nullptr || v2 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
-    scalar = 0;
-
-    for (i = 0; i < 3; i++)
-      {
-        scalar += v1[i] * v2[i];
-#if defined DEBUG
-        printf("scalar %f\n", scalar);
-        getchar();
-#endif
-      }
-
-    return scalar;
+    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
   }
 #undef FNAME
-#undef DEBUG
 
   /*******************************************************************/
 #define FNAME "CrossProdVec"
@@ -221,15 +164,10 @@ namespace ice
     double vintern[3];
 
     if (v1 == nullptr || v2 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     if (v3 == nullptr)
-      {
-        v3 = new double [3];
-      }
+      v3 = new double [3];
 
     vintern[0] = v1[1] * v2[2] - v1[2] * v2[1];
     vintern[1] = v1[2] * v2[0] - v1[0] * v2[2];
@@ -243,62 +181,50 @@ namespace ice
   double SpatProdVec(double v1[3], double v2[3], double v3[3])
   {
     double vintern[3];
-    double spat;
 
     if (v1 == nullptr || v2 == nullptr || v3 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return (0);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     CrossProdVec(v1, v2, vintern);
-    spat = ScalProdVec(vintern, v3);
-    return spat;
+    return ScalProdVec(vintern, v3);
   }
 #undef FNAME
 
   /*******************************************************************/
 #define FNAME "AngleVec"
-#define EPS 1e-10
+
   double AngleVec(double* v1, double* v2)
   {
     if (v1 == nullptr || v2 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return 0;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
 
     double l1 = LengthVec(v1);
     double l2 = LengthVec(v2);
 
-    if ((l1 * l2) < EPS)
-      {
-        throw IceException(FNAME, M_ZERO_VECTOR, ZERO_VECTOR);
-        return 0.0;
-      }
+    if (l1 == 0.0 || l2 == 0.0)
+      throw IceException(FNAME, M_ZERO_VECTOR, ZERO_VECTOR);
 
     return acos(ScalProdVec(v1, v2) / (l1 * l2));
   }
 #undef FNAME
-#undef EPS
 
-  /*******************************************************************/
+  /*
+   * n-dim vector as double *
+   */
 #define FNAME "PrintVecRn"
-  int PrintVecRn(const char* str, double* h, int dim)
+  void PrintVecRn(const char* str, double* h, int dim)
   {
-    int i;
     double* dptr;
 
     printf("*** %s\n", str);
     dptr = h;
 
-    for (i = 0; i < dim; i++)
+    for (int i = 0; i < dim; i++)
       {
         printf("%f   ", *dptr++);
       }
 
     printf("\n\n");
-    return OK;
   }
 #undef FNAME
 
@@ -306,28 +232,13 @@ namespace ice
 #define FNAME "MoveVecRn"
   double* MoveVecRn(double* v1, int dim, double* v2)
   {
-    int i;
-    double* dptr;
-
     if (v1 == nullptr)
-      {
-        throw IceException("FNAME", M_WRONG_VECTOR, WRONG_VECTOR);
-        return nullptr;
-      }
+      throw IceException("FNAME", M_WRONG_VECTOR, WRONG_VECTOR);
 
     if (v2 == nullptr)
-      {
-        dptr = (double*)malloc(dim * sizeof(double));
+      v2 = (double*)malloc(dim * sizeof(double));
 
-        for (i = 0; i < dim; i++)
-          {
-            *(dptr + i) = v1[i];
-          }
-
-        return dptr;
-      }
-
-    for (i = 0; i < dim; i++)
+    for (int i = 0; i < dim; i++)
       {
         v2[i] = v1[i];
       }
@@ -340,24 +251,17 @@ namespace ice
 #define FNAME "LengthVecRn"
   double LengthVecRn(double* v, int dim)
   {
-    int i;
-    double l;
-
     if (v == nullptr)
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+
+    double l2 = 0;
+
+    for (int i = 0; i < dim; i++)
       {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return (0);
+        l2 += v[i] * v[i];
       }
 
-    l = 0;
-
-    for (i = 0; i < dim; i++)
-      {
-        l += v[i] * v[i];
-      }
-
-    l = sqrt(l);
-    return l;
+    return sqrt(l2);
   }
 #undef FNAME
 
@@ -565,29 +469,21 @@ namespace ice
 
   /*******************************************************************/
 #define FNAME "ConvVecDI"
-  int ConvVecDI(double* dvec, int dim, int* ivec)
+  void ConvVecDI(double* dvec, int dim, int* ivec)
   /*
-    Konvertieren eines Double-Vektors in einen Integer-Vektor
+    Konvertieren eines double-Vektors in einen Integer-Vektor
   */
   {
     if ((dvec == nullptr) || (ivec == nullptr))
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
 
     for (int i = 0; i < dim; i++)
       {
         ivec[i] = (int)dvec[i];
       }
-
-    return OK;
   }
 #undef FNAME
 
@@ -596,28 +492,18 @@ namespace ice
   /*
     Konvertieren eines Integer-Vektors in einen Double-Vektor
   */
-  int ConvVecID(int* ivec, int dim, double* dvec)
+  void ConvVecID(int* ivec, int dim, double* dvec)
   {
-    int i;
-
     if ((dvec == nullptr) || (ivec == nullptr))
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
 
-    for (i = 0; i < dim; i++)
+    for (int i = 0; i < dim; i++)
       {
         dvec[i] = (double)ivec[i];
       }
-
-    return OK;
   }
 #undef FNAME
 }

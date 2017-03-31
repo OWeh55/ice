@@ -987,29 +987,18 @@ namespace ice
   int OverEquSys(double* m1, double* v1, int row, int col, double* x, double* mse)
   {
     int i, j;
-    int rc;
     double* m2, *v2, *mp;
     double w;
 
-    if ((m2 = (double*)malloc(col * col * sizeof(double))) == NULL)   /*Speicher fr Normalengleichungen*/
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (NO_MEM);
-      }
-
-    if ((v2 = (double*)malloc(col * sizeof(double))) == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        free(m2);
-        return (NO_MEM);
-      }
+    m2 = new double[col * col];
+    v2 = new double[col];
 
     NormalEqu(m1, v1, row, col, m2, v2);                   /*Normalengleichungen bestimmen*/
     IF_FAILED(EquSys(m2, v2, col, x))                      /*Normalengleichungssystem loesen*/
     {
       free(m2);
       free(v2);
-      throw IceException(FNAME, M_0, rc);
+      throw IceException(ex, FNAME);
     }
 
     mp = m1;
@@ -1029,8 +1018,8 @@ namespace ice
       }
 
     *mse = sqrt(*mse / row);
-    free(m2);
-    free(v2);
+    delete m2;
+    delete v2;
     return (OK);
   }
 #undef FNAME

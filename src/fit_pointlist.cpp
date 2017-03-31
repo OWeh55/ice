@@ -305,7 +305,6 @@ namespace ice
   Segment FitEllipseSegment(PointList pl, int adr1, int adr2, int step,
                             double* mdist, int* madr)
   {
-    int code;
     double* ptr;
     double etamin, eta, eta1, eta2, eta10, eta20;
     int i, len;
@@ -333,7 +332,7 @@ namespace ice
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
       }
 
-    RETURN_ERROR_IF_FAILED(code = FitEllipse(pl, adr1, adr2, step, par, mdist, madr));
+    RETURN_ERROR_IF_FAILED(FitEllipse(pl, adr1, adr2, step, par, mdist, madr));
 
     centre[0] = par[0];
     centre[1] = par[1];
@@ -360,7 +359,7 @@ namespace ice
           }
       }
 
-    code = SortVectorRn(ptr, len);
+    SortVectorRn(ptr, len);
 
     etamin = HUGE_VAL;
 

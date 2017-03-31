@@ -111,11 +111,10 @@ namespace ice
       return (s.p1 == p1) && (s.p2 == p2);
     }
 
-    int shift(int dx, int dy)
+    void shift(int dx, int dy)
     {
       p1.shift(dx, dy);
       p2.shift(dx, dy);
-      return OK;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Window& w)

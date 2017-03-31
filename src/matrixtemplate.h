@@ -358,7 +358,6 @@ namespace ice
       if (lhs.nColumns != rhs.nRows)
         {
           throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          return res;
         }
 
       for (int i = 0; i < lhs.nRows; i++)
@@ -387,7 +386,6 @@ namespace ice
       if ((int)lhs.size() != rhs.nRows)
         {
           throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          return res;
         }
 
       for (int j = 0; j < rhs.nColumns; ++j)
@@ -415,7 +413,6 @@ namespace ice
       if (lhs.nColumns != (int)rhs.size())
         {
           throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          return res;
         }
 
       for (int i = 0; i < lhs.nRows; ++i)
