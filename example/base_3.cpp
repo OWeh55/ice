@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
   wloop(m[last], x, y) PutVal(m[last], x, y, (GetVal(m[last], x, y) / FAK / 8) & 3);
   Delay(TIME);
   wloop(p[last], x, y)
-    PutVal(p[last], x, y, p[last]->maxval - GetVal(p[last], x, y));
+  PutVal(p[last], x, y, p[last]->maxval - GetVal(p[last], x, y));
   Delay(TIME);
   FreeImg(p[4]);
   p[4] = NewImg(p[3]);
@@ -59,11 +59,11 @@ int main(int argc, char* argv[])
   Show(_RGB, r, b, g);
 
   wloop(r, x, y)
-    {
-      PutVal(b, x, y, Min(255, Max(x, 255 - y)));
-      PutVal(g, x, y, Min(255, Max(x, y)));
-      PutVal(r, x, y, Min(255, Max(255 - x, y)));
-    }
+  {
+    PutVal(b, x, y, Min(255, Max(x, 255 - y)));
+    PutVal(g, x, y, Min(255, Max(x, y)));
+    PutVal(r, x, y, Min(255, Max(255 - x, y)));
+  }
   Delay(TIME);
   Display(OFF);
   Delay(TIME);

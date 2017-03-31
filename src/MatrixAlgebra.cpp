@@ -42,73 +42,74 @@ namespace ice
 #define FNAME "Matrix::CholeskyInverse"
   Matrix CholeskyInverse(const Matrix& mat)
   {
-    try {
-    int dimension = mat.cols();
-    
-    if (dimension != mat.rows())
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-    
-    Matrix l = CholeskyDecomposition(mat);
-
-    Matrix h(dimension, dimension);
-    Matrix lt(dimension, dimension);
-
-    for (int k = 0; k < dimension; k++)
+    try
       {
-        for (int i = 0; i < dimension; i++)
+        int dimension = mat.cols();
+
+        if (dimension != mat.rows())
+          throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
+
+        Matrix l = CholeskyDecomposition(mat);
+
+        Matrix h(dimension, dimension);
+        Matrix lt(dimension, dimension);
+
+        for (int k = 0; k < dimension; k++)
           {
-            if (k <= i)
+            for (int i = 0; i < dimension; i++)
               {
-                h[k][i] = mat[k][i];
+                if (k <= i)
+                  {
+                    h[k][i] = mat[k][i];
+                  }
+                else
+                  {
+                    h[k][i] = l[k][i];
+                  }
+
+                lt[k][i] = l[i][k];
               }
-            else
-              {
-                h[k][i] = l[k][i];
-              }
-	    
-            lt[k][i] = l[i][k];
           }
+
+        Matrix inverse(dimension, dimension);
+        Vector x(dimension);
+
+        for (int n = 0; n < dimension; n++)
+          {
+            x.Set(0.0);
+            x[n] = 1.0;
+
+            for (int i = 0; i < dimension; i++)
+              {
+                double sum = x[i];
+
+                for (int k = i - 1; k >= 0; k--)
+                  {
+                    sum -= h[i][k] * x[k];
+                  }
+
+                x[i] = sum / l[i][i];
+              }
+
+            for (int i = (dimension - 1); i >= 0; i--)
+              {
+                double sum = x[i];
+
+                for (int k = i + 1; k < dimension; k++)
+                  {
+                    sum -= h[k][i] * x[k];
+                  }
+
+                x[i] = sum / l[i][i];
+                inverse[i][n] = x[i];
+              }
+          }
+
+        return inverse;
       }
-
-    Matrix inverse(dimension, dimension);
-    Vector x(dimension);
-
-    for (int n = 0; n < dimension; n++)
+    catch (IceException& ex)
       {
-        x.Set(0.0);
-        x[n] = 1.0;
-
-        for (int i = 0; i < dimension; i++)
-          {
-            double sum = x[i];
-
-            for (int k = i - 1; k >= 0; k--)
-              {
-                sum -= h[i][k] * x[k];
-              }
-
-            x[i] = sum / l[i][i];
-          }
-
-        for (int i = (dimension - 1); i >= 0; i--)
-          {
-            double sum = x[i];
-
-            for (int k = i + 1; k < dimension; k++)
-              {
-                sum -= h[k][i] * x[k];
-              }
-
-            x[i] = sum / l[i][i];
-            inverse[i][n] = x[i];
-          }
-      }
-
-    return inverse;
-    }
-    catch (IceException &ex)
-      {
-	throw IceException(ex,FNAME);
+        throw IceException(ex, FNAME);
       }
   }
 #undef FNAME
@@ -218,7 +219,7 @@ namespace ice
         return false;
       }
 
-    double *Mat = new double[dim * dim];
+    double* Mat = new double[dim * dim];
 
     for (int j = 0; j < dim; j++)
       for (int i = 0; i < dim; i++)

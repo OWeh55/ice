@@ -91,10 +91,10 @@ int main(int argc, char* argv[])
   for (i = 0; i < RANG; i++)
     for (j = 0; j < RANG; j++)
       {
-        if (i == j)  
-	  f = fabs(1 - c[RANG * i + j]);
-        else  
-	  f = fabs(c[RANG * i + j]);
+        if (i == j)
+          f = fabs(1 - c[RANG * i + j]);
+        else
+          f = fabs(c[RANG * i + j]);
 
         if (f > maxf) maxf = f;
       }

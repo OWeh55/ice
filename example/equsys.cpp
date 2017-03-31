@@ -68,22 +68,23 @@ int main(int argc, char* argv[])
             };
 
 
-	  bool ok=true;
-	  try {
-	    lsg = EquSys(a, b, rang, x);
-	  }
-	  catch (IceException &ex)
-	    {
-	      ok=false;
-	    }
+          bool ok = true;
+          try
+            {
+              lsg = EquSys(a, b, rang, x);
+            }
+          catch (IceException& ex)
+            {
+              ok = false;
+            }
 
           if (ok)
             {
               if (equprobe(rang, a, x, b) == 0) printf("*");
               else printf("!");
             }
-          else 
-	    printf("\nRang %d Test %d Fehlercode %d \n", rang, tnr, lsg);
+          else
+            printf("\nRang %d Test %d Fehlercode %d \n", rang, tnr, lsg);
         };
     };
 
@@ -93,10 +94,11 @@ int main(int argc, char* argv[])
 
   printf("1 2  7 | 32\n3 6  3 | 13\n3 6 10 | 28\n");
 
-  try {
-    lsg = EquSys(na, nb, 3, x);
-  }
-  catch (IceException &ex)
+  try
+    {
+      lsg = EquSys(na, nb, 3, x);
+    }
+  catch (IceException& ex)
     {
       printf("\n Fehlercode %d \n", lsg);
     }
@@ -121,19 +123,20 @@ int main(int argc, char* argv[])
               for (j = 0; j < rang; j++) a[i * rang + j] = (double)rand() - randmaxhalbe;
             };
 
-	  try {
-	    lsg = OverEquSys(a, b, rang, rang + tnr, x, &s);
-	  }
-	  catch (IceException &ex)
-	    {
-	      printf("Fehlercode %d \n", lsg);
-	    }
+          try
+            {
+              lsg = OverEquSys(a, b, rang, rang + tnr, x, &s);
+            }
+          catch (IceException& ex)
+            {
+              printf("Fehlercode %d \n", lsg);
+            }
 
-	  if (lsg == OK) 
-	    {
-	      printf("Fehlersumme %9e\n", s);
-	      printf("Rang %d: Anzahl Gl. %d: ", rang, rang + tnr);
-	    }
+          if (lsg == OK)
+            {
+              printf("Fehlersumme %9e\n", s);
+              printf("Rang %d: Anzahl Gl. %d: ", rang, rang + tnr);
+            }
         };
     };
 

@@ -410,20 +410,20 @@ namespace ice
 
     if (m1 == NULL)
       throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-    
+
     if (m2 == NULL)
       mptr = (double*)malloc(row * col * sizeof(double));
     else
       mptr = m2;
-    
+
     size_a = dim * dim * sizeof(double);
     // Anforderung des dynamischen Speichers
     dpa = (double*) malloc(size_a);
     dpc = (double*)malloc(size_a);
-    
+
     // kopieren in dynamischen speicherbereich
     memcpy(dpa, m1, size_a);
-    
+
     // füllen der "Einheitsmatrix " und normalisieren dpa
     for (i = 0; i < dim * dim; i++)
       {
