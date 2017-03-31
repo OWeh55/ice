@@ -399,7 +399,7 @@ namespace ice
     double* mptr = NULL;
     int c, i, j, k, col, colh, row, rowh, offs, ret;
     double maxa, max, fh, fha;
-    double epsinst = 1e-100; // Grenze der Instabilitॊt
+    double epsinst = 1e-100; // Grenze der Instabilitaet
     double epsnull = 1e-200; // Definition 0
     double* dpa, *dpc;
     int size_a;
@@ -409,90 +409,31 @@ namespace ice
     maxa = 0;
 
     if (m1 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
-
+      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+    
     if (m2 == NULL)
-      {
-        mptr = (double*)malloc(row * col * sizeof(double));
-      }
+      mptr = (double*)malloc(row * col * sizeof(double));
     else
-      {
-        mptr = m2;
-      }
-
+      mptr = m2;
+    
     size_a = dim * dim * sizeof(double);
     // Anforderung des dynamischen Speichers
     dpa = (double*) malloc(size_a);
-
-    if (dpa == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-
-        if (m2 == NULL)
-          {
-            free(mptr);
-          }
-
-        return NULL;
-      }
-
     dpc = (double*)malloc(size_a);
-
-    if (dpc == NULL)
-      {
-        free(dpa);
-
-        if (m2 == NULL)
-          {
-            free(mptr);
-          }
-
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
-
+    
     // kopieren in dynamischen speicherbereich
     memcpy(dpa, m1, size_a);
-
+    
     // füllen der "Einheitsmatrix " und normalisieren dpa
     for (i = 0; i < dim * dim; i++)
       {
         dpc[i] = 0;
       }
 
-#if 0
-
-    for (i = 0; i < dim; i++)
-      {
-        fh = 0;
-
-        for (j = 0; j < dim; j++)
-          {
-            fh += fabs(dpa[dim * i + j]);
-          }
-
-        fh /= dim;
-        fh = sqrt(fh);
-
-        for (j = 0; j < dim; j++)
-          {
-            dpa[dim * i + j] /= fh;
-          }
-
-        dpc[i * dim + i] = 1 / fh;
-      }
-
-#else
-
     for (i = 0; i < dim; i++)
       {
         dpc[i * dim + i] = 1;
       }
-
-#endif
 
     // transformation des dynamischen A|C
     offs = 0;
@@ -609,7 +550,6 @@ namespace ice
           }
 
         throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
-        return NULL;
       }
 
     free(dpa);
@@ -623,7 +563,6 @@ namespace ice
           }
 
         throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
-        return NULL;
       }
 
     return mptr;

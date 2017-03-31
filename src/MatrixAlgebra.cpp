@@ -42,17 +42,13 @@ namespace ice
 #define FNAME "Matrix::CholeskyInverse"
   Matrix CholeskyInverse(const Matrix& mat)
   {
-    Matrix inverse;
-
+    try {
     int dimension = mat.cols();
-
+    
     if (dimension != mat.rows())
-      {
-        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, inverse);
-      }
-
-    Matrix l;
-    RETURN_IF_FAILED(l = CholeskyDecomposition(mat), inverse);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
+    
+    Matrix l = CholeskyDecomposition(mat);
 
     Matrix h(dimension, dimension);
     Matrix lt(dimension, dimension);
@@ -69,14 +65,12 @@ namespace ice
               {
                 h[k][i] = l[k][i];
               }
-
+	    
             lt[k][i] = l[i][k];
           }
       }
 
-    double sum;
-
-    inverse = Matrix(dimension, dimension);
+    Matrix inverse(dimension, dimension);
     Vector x(dimension);
 
     for (int n = 0; n < dimension; n++)
@@ -86,7 +80,7 @@ namespace ice
 
         for (int i = 0; i < dimension; i++)
           {
-            sum = x[i];
+            double sum = x[i];
 
             for (int k = i - 1; k >= 0; k--)
               {
@@ -98,7 +92,7 @@ namespace ice
 
         for (int i = (dimension - 1); i >= 0; i--)
           {
-            sum = x[i];
+            double sum = x[i];
 
             for (int k = i + 1; k < dimension; k++)
               {
@@ -111,6 +105,11 @@ namespace ice
       }
 
     return inverse;
+    }
+    catch (IceException &ex)
+      {
+	throw IceException(ex,FNAME);
+      }
   }
 #undef FNAME
 
@@ -120,15 +119,12 @@ namespace ice
     int dimension = mat.cols();
 
     if (mat.rows() != dimension)
-      {
-        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, Matrix());
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     Matrix res(dimension, dimension);
     res.Set(0.0);
 
     Matrix hilf2(mat);
-
 
     double sum;
 
@@ -170,14 +166,10 @@ namespace ice
 #define FNAME "Matrix::IsPositivDefinit()"
   bool IsPositivDefinit(const Matrix& mat)
   {
-    int i, j, k;
-
     int dimension = mat.cols();
 
     if (dimension != mat.rows())
-      {
-        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, false);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     Matrix hilf2(mat);
 
@@ -186,13 +178,13 @@ namespace ice
 
     double sum;
 
-    for (i = 0; i < dimension; i++)
+    for (int i = 0; i < dimension; i++)
       {
-        for (j = i; j < dimension; j++)
+        for (int j = i; j < dimension; j++)
           {
             sum = hilf2[i][j];
 
-            for (k = i - 1; k >= 0; k--)
+            for (int k = i - 1; k >= 0; k--)
               {
                 sum -= hilf2[i][k] * hilf2[j][k];
               }
@@ -219,8 +211,6 @@ namespace ice
 
   bool hasInverse(const Matrix& mat)
   {
-    int i, j;
-    double* Mat;
     int dim = mat.cols();
 
     if (dim != mat.rows())
@@ -228,18 +218,21 @@ namespace ice
         return false;
       }
 
-    Mat = new double[dim * dim];
+    double *Mat = new double[dim * dim];
 
-    for (j = 0; j < dim; j++)
-      for (i = 0; i < dim; i++)
+    for (int j = 0; j < dim; j++)
+      for (int i = 0; i < dim; i++)
         {
           Mat[j * dim + i] = mat[j][i];
         }
 
     IF_FAILED(InvertMatrix(Mat, dim, Mat))
     {
+      delete [] Mat;
       return false;
     }
+
+    delete [] Mat;
     return true;
   }
 

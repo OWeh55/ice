@@ -74,15 +74,14 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "TransformList"
-  int TransformList(const Trafo& tr, Matrix& m)
+  void TransformList(const Trafo& tr, Matrix& m)
   {
     Matrix temp;
     RETURN_ERROR_IF_FAILED(TransformList(tr, m, temp));
     m = temp;
-    return OK;
   }
 
-  int TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2)
+  void TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2)
   {
     if (&m1 == &m2)
       {
@@ -90,21 +89,15 @@ namespace ice
       }
 
     if (tr.dimSource > m1.cols())
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
 
     m2 = Matrix(m1.rows(), tr.dimTarget);
-    int i;
 
-    for (i = 0; i < m1.rows(); i++)
+    for (int i = 0; i < m1.rows(); i++)
       {
         Vector v = m1[i](0, tr.dimSource - 1);
         m2[i] = tr * v;
       }
-
-    return OK;
   }
 #undef FNAME
 }

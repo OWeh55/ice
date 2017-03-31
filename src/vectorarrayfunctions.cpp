@@ -445,27 +445,18 @@ namespace ice
 
   /*******************************************************************/
 #define FNAME "SortVectorRn"
-#define DEBUG 1
-
-  int SortVectorRn(double* ptr, int lng)
+  void SortVectorRn(double* ptr, int lng)
   // Sortieren eines Double-Arrays "ptr" der Laenge "lng"
   {
     if ((ptr == nullptr))
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
 
     if (lng >= 2)
       {
         std::sort(ptr, ptr + lng);
       }
-
-    return OK;
   }
 #undef FNAME
-#undef DEBUG
-
 
   /*******************************************************************/
 #define FNAME "ConvVecDI"

@@ -58,7 +58,7 @@ namespace ice
   double* ScaleVecRn(double* v1, int dim, double fac, double v2[3]);
   double  ScalProdVecRn(double* v1, double* v2, int dim);
   double  AngleVecRn(double* v1, double* v2, int dim);
-  int     SortVectorRn(double* v, int dim);
+  void    SortVectorRn(double* v, int dim);
   void    ConvVecDI(double* d, int dim, int* i);
   void    ConvVecID(int* i, int dim, double* d);
 }
