@@ -31,7 +31,7 @@ Programmmodul zu Zeichnen geometrischer Primitive
 #include <math.h>
 #include <stdlib.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 #include "contools.h"
@@ -66,13 +66,13 @@ namespace ice
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((val < 0) || (val > img->maxval) || (size < 2))
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -140,13 +140,11 @@ namespace ice
         c.Add(x + h, y);
         c.Add(x, y + h);
         c.Add(x - h, y);
-        OffMessage();
+
         FillRegion(c, val, img);
-        SetOk();
-        OnMessage();
         break;
       default:
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -165,35 +163,31 @@ namespace ice
       (val2 < 0) || (val2 > img->maxval)
     )
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (mode != DEFAULT && mode != NOFILL)
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
         return WRONG_PARAM;
       }
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(c = CircleContur(par));
-
-    OffMessage();
 
     if (mode == DEFAULT)
       {
         FillRegion(c, val2, img);
       }
 
-    SetOk();
     MarkContur(c, val1, img);
-    SetOk();
-    OnMessage();
+
     return OK;
   }
 #undef FNAME
@@ -206,19 +200,19 @@ namespace ice
 
     if ((val1 < 0) || (val2 < 0) || (val2 > img->maxval))
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (mode != DEFAULT && mode != NOFILL)
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
         return WRONG_PARAM;
       }
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -231,10 +225,7 @@ namespace ice
             RETURN_ERROR_IF_FAILED(FillRegion(c, val2, img));
           }
 
-        OffMessage();
         MarkContur(c, val1, img);
-        OnMessage();
-        SetOk();
       }
 
     return OK;
@@ -253,7 +244,7 @@ namespace ice
 
     if ((val < 0) || val > pic->maxval)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

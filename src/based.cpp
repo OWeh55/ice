@@ -25,7 +25,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "based.h"
 #include "util.h"
 
@@ -39,7 +39,7 @@ namespace ice
   {
     if (! i1.isValid() || ! i2.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -48,7 +48,7 @@ namespace ice
 
     if ((xs != i2.xsize) || (ys != i2.ysize))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -59,7 +59,7 @@ namespace ice
   {
     if (! i1.isValid() || ! i2.isValid() || ! i3.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -69,7 +69,7 @@ namespace ice
     if ((xs != i2.xsize) || (ys != i2.ysize) ||
         (xs != i3.xsize) || (ys != i3.ysize))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -102,7 +102,7 @@ namespace ice
 
     if (!img.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -148,13 +148,13 @@ namespace ice
 
     if (!inp.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!out.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -163,7 +163,7 @@ namespace ice
 
     if (!(out.xsize == sx && out.ysize == sy))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -208,13 +208,13 @@ namespace ice
 
     if (!IsImgD(input))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImg(out))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -270,7 +270,7 @@ namespace ice
 
     if (!(out.xsize == xs && out.ysize == ys))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -294,7 +294,7 @@ namespace ice
 
     if (! MatchImgD(src, dst, xs, ys))
       {
-        Message(FNAME, M_0, WRONG_PARAM);
+        throw IceException(FNAME, M_0, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -404,7 +404,7 @@ namespace ice
   {
     if (!IsImgD(img))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return false;
       }
     return img.inside(x, y);

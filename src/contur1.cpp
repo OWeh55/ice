@@ -30,7 +30,7 @@
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "conturfunctions.h"
@@ -51,7 +51,7 @@ namespace ice
 
     if (!c.isValid())
       {
-        Message(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
         return result;
       }
 
@@ -60,7 +60,7 @@ namespace ice
     IMatrix poly = IMatrix(0, 2);
     IF_FAILED(pl[0] = ConturPointlist(c))
     {
-      Message(FNAME, M_0, WRONG_PARAM);
+      throw IceException(FNAME, M_0, WRONG_PARAM);
       return result;
     }
     int xlen = x2 - x1 + 1;

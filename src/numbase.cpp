@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <ctime>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "dtime.h"
@@ -43,7 +43,7 @@ namespace ice
   {
     if (div == 0)
       {
-        Message(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
+        throw IceException(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
         return 0;
       }
 
@@ -68,7 +68,7 @@ namespace ice
   {
     if (div == 0.0)
       {
-        Message(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
+        throw IceException(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
         return 0;
       }
 
@@ -159,7 +159,7 @@ namespace ice
   {
     if (val > RAND_MAX)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

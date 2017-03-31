@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fourier.h"
@@ -54,13 +54,13 @@ namespace ice
   {
     if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if (option != NORMAL && option != INVERS)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -68,7 +68,7 @@ namespace ice
 
     if (n < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -126,13 +126,13 @@ namespace ice
 
     if (dim < 1 || dim != (int)srcim.size())
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (option != NORMAL && option != INVERS)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -190,13 +190,13 @@ namespace ice
 
     if (dim < 1 || dim != (int)im.size())
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (option != NORMAL && option != INVERS)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

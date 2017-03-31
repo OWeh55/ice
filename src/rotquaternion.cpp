@@ -27,7 +27,7 @@
 
 #include "defs.h"
 #include "Matrix.h"
-#include "message.h"
+#include "IceException.h"
 #include "Vector3d.h"
 
 #include "rotquaternion.h"
@@ -356,13 +356,6 @@ namespace ice
     Quaternion temp = in.getNormalize();
     RotQuaternion out = RotQuaternion();
 
-    if (GetError() == NOT_NORMALIZEABLE)
-      {
-        Message(FNAME, M_CONVERT_NOT_POSSIBLE, CONVERT_NOT_POSSIBLE);
-
-        return out;
-      }
-
     out.rot.setReal(temp.getReal());
     out.rot.setI(temp.getI());
     out.rot.setJ(temp.getJ());
@@ -379,7 +372,7 @@ namespace ice
 
     if (!(in.rows() == 3 && in.cols() == 3))
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
 
         return out;
       }
@@ -450,7 +443,7 @@ namespace ice
         return out;
       }
 
-    Message(FNAME, M_CONVERT_NOT_POSSIBLE, CONVERT_NOT_POSSIBLE);
+    throw IceException(FNAME, M_CONVERT_NOT_POSSIBLE, CONVERT_NOT_POSSIBLE);
 
     return out;
   }

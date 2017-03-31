@@ -25,7 +25,7 @@
  ************************************************/
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "util.h"
@@ -143,7 +143,7 @@ namespace ice
 
     if ((sx < 1) || ((sx & 1) != 1) || (norm == 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -304,7 +304,7 @@ namespace ice
 
     if ((sy < 1) || ((sy & 1) != 1) || (norm == 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

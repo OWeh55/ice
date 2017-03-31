@@ -28,7 +28,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "darith.h"
@@ -49,7 +49,7 @@ namespace ice
 
     if (beta < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -94,7 +94,7 @@ namespace ice
 
     if (beta < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

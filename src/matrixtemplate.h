@@ -7,7 +7,7 @@
 #include <initializer_list>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 
 namespace ice
@@ -357,7 +357,7 @@ namespace ice
 
       if (lhs.nColumns != rhs.nRows)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
           return res;
         }
 
@@ -386,7 +386,7 @@ namespace ice
 
       if ((int)lhs.size() != rhs.nRows)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
           return res;
         }
 
@@ -414,7 +414,7 @@ namespace ice
 
       if (lhs.nColumns != (int)rhs.size())
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
           return res;
         }
 

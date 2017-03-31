@@ -29,7 +29,7 @@
 #include "trafodualquaternion.h"
 #include "quatmatch.h"
 
-#include "message.h"
+#include "IceException.h"
 #include "Matrix.h"
 #include "Vector.h"
 #include "mateigen.h"
@@ -46,47 +46,23 @@ namespace ice
 
     if (!(orig.cols() == 3 && trans.cols() == 3))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-
-        return out;
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
     if (!(orig.rows() == trans.rows()))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-
-        return out;
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
     int k = orig.rows();
 
     Matrix c1 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
-
     Matrix c2 = Matrix(4, 4, 0);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
 
     Matrix lxi = Matrix(4, 4, 0);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
-
     Matrix myi = Matrix(4, 4, 0);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
 
     double x1;
     double x2;
@@ -175,14 +151,14 @@ namespace ice
 
     if (!(orig.cols() == 3 && trans.cols() == 3 && weights.cols() == 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
         return out;
       }
 
     if (!(orig.rows() == trans.rows() && orig.rows() == weights.rows()))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
         return out;
       }
@@ -191,39 +167,13 @@ namespace ice
 
     Matrix c1 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
-
     Matrix c2 = Matrix(4, 4, 0);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
 
     Matrix c3 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
-
-
     Matrix lxi = Matrix(4, 4, 0);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
-
     Matrix myi = Matrix(4, 4, 0);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-      }
 
     double x1;
     double x2;

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "momente.h"
 #include "lists.h"
@@ -104,7 +104,7 @@ namespace ice
   {
     if (mom[i00] == 0.0)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return Point(0, 0);
       }
 
@@ -119,7 +119,7 @@ namespace ice
 
     if ((xi < 0) || (yi < 0) || (s > 4))
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return mom[i00];
       }
 
@@ -133,7 +133,7 @@ namespace ice
 
     if ((xi < 0) || (yi < 0) || (s > 4))
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return mom[i00];
       }
 
@@ -429,7 +429,7 @@ namespace ice
     double momres[15];
     IF_FAILED(NormalizeMomentsTranslation(mom, momres, x, y))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Moments();
     }
     return Moments(momres);
@@ -447,7 +447,7 @@ namespace ice
     double momres[15];
     IF_FAILED(NormalizeMomentsXShearing(mom, momres, beta))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Moments();
     }
     return Moments(momres);
@@ -465,7 +465,7 @@ namespace ice
     double momres[15];
     IF_FAILED(NormalizeMomentsYShearing(mom, momres, beta))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Moments();
     }
     return Moments(momres);
@@ -484,7 +484,7 @@ namespace ice
       case anisotropic:
         return NormalizeScaling(alpha, beta);
       default:
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return *this;
       }
   }
@@ -495,7 +495,7 @@ namespace ice
     double momres[15];
     IF_FAILED(NormalizeMomentsArea(mom, momres, alpha))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Moments();
     }
     return Moments(momres);
@@ -509,7 +509,7 @@ namespace ice
     double momres[15];
     IF_FAILED(NormalizeMomentsScaling(mom, momres, alpha, beta))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Moments();
     }
     return Moments(momres);
@@ -528,7 +528,7 @@ namespace ice
     double c, s;
     IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Moments();
     }
     phi = atan2(s, c);
@@ -540,7 +540,7 @@ namespace ice
     double momres[15];
     IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Moments();
     }
     return Moments(momres);
@@ -551,8 +551,6 @@ namespace ice
   {
     double trd[3][3];
     double resd[15];
-
-    OffMessage();
 
     switch (mode)
       {
@@ -566,17 +564,7 @@ namespace ice
         AffinIterateMoments(mom, resd, trd);
         break;
       default:
-        OnMessage();
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return Moments();
-      }
-
-    OnMessage();
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, ERROR); // Fehlermeldung weiterreichen
-        return Moments();          // Rückkehr mit leeren Momenten
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
       }
 
     Matrix trm(3, 3);
@@ -603,7 +591,7 @@ namespace ice
   {
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return Moments();
       }
 
@@ -611,7 +599,7 @@ namespace ice
 
     if (fabs(trm[2][0]) + fabs(trm[2][1]) > EPSILON)
       {
-        Message(FNAME, M_TRAFO_NOTAFFINE, WRONG_PARAM);
+        throw IceException(FNAME, M_TRAFO_NOTAFFINE, WRONG_PARAM);
         return Moments();
       }
 

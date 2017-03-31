@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "util.h"
@@ -48,7 +48,7 @@ namespace ice
   {
     if (norm == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -97,7 +97,7 @@ namespace ice
   {
     if (norm == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -156,25 +156,25 @@ namespace ice
   {
     if (norm == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImg(src))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImgD(dest))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -198,19 +198,19 @@ namespace ice
 
     if (!IsImg(src))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImgD(dest))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -233,7 +233,7 @@ namespace ice
   {
     if (norm == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

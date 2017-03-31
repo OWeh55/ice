@@ -21,7 +21,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "based.h"
 #include "Trafo.h"
@@ -45,13 +45,13 @@ namespace ice
 
     if ((!IsImgD(hsimg)) || (!IsImgD(dimg)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

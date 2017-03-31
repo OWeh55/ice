@@ -68,7 +68,7 @@ namespace ice
 
     if (!isValid())
       {
-        Message(FNAME, M_INVALID_STRUCT, ERROR);
+        throw IceException(FNAME, M_INVALID_STRUCT, ERROR);
         return c;
       }
 
@@ -138,7 +138,7 @@ namespace ice
       case DPP_MEAN:
         return 0.5 * (dist1 + dist2);
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return 0.0;
       }
   }
@@ -173,7 +173,7 @@ namespace ice
             dist += pdist;
             break;
           default:
-            Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
             return 0.0;
           }
       }

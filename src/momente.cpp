@@ -31,7 +31,7 @@
 #include <stddef.h>
 #include <float.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "root.h"
 #include "gentrans.h"
@@ -220,7 +220,7 @@ namespace ice
 
     if (a1 < 0 || a2 < 0 || a1 >= pl->lng || a2 >= pl->lng)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -743,7 +743,7 @@ namespace ice
   {
     if (m[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return ERROR;
       }
 
@@ -773,7 +773,7 @@ namespace ice
 
     if (fabs(m[0]) < 1e-15)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -822,7 +822,7 @@ namespace ice
     // anisotrope Skalierungsnormierung
     if ((fabs(msk[3]) < 1e-5) || (fabs(msk[5]) < 1e-5))
       {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
+        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
         return ERROR;
       }
 
@@ -831,7 +831,7 @@ namespace ice
 
     if (h1 < 0 || h2 < 0)
       {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
+        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
         return ERROR;
       }
 
@@ -920,7 +920,7 @@ namespace ice
 
             if (h < 0)
               {
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
                 return ERROR;
               }
 
@@ -934,7 +934,7 @@ namespace ice
           {
             if (m2[7] == 0)
               {
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
                 return ERROR;
               }
             else
@@ -996,7 +996,7 @@ namespace ice
 
     if (imin < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return ERROR;
       }
 
@@ -1115,7 +1115,7 @@ namespace ice
     // iterative Scherungsnormierung maf13=maf31=0
     if ((maf[14] < EPSILON) && (maf[10] < EPSILON))
       {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
+        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
         return ERROR;
       }
 
@@ -1216,7 +1216,7 @@ namespace ice
 
     if (m[0] < EPSILON)
       {
-        Message(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
+        throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1283,7 +1283,7 @@ namespace ice
     // Flaeche darf nicht verschwinden
     if (m1[0] < EPSILON || m2[0] < EPSILON)
       {
-        Message(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
+        throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
         return DBL_MAX;
       }
 
@@ -1419,7 +1419,7 @@ namespace ice
 
     IF_FAILED(ret = AffinFitMoments(m1, m2, oldtr))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ret;
     }
 

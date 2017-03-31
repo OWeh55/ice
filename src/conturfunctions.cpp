@@ -30,7 +30,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "freeman.h"
 #include "macro.h"
 #include "numbase.h"
@@ -119,13 +119,13 @@ namespace ice
 
     if ((direct != HORZ) && (direct != VERT))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImg(imgv))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -146,14 +146,14 @@ namespace ice
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
         return WRONG_WINDOW;
       }
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
       {
         // cout << "nicht innerhalb:" << x << "," << y << " " << wxi << " " << wyi << " " << wxa << " " << wya << endl;
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return WRONG_STARTPOINT;
       }
 
@@ -374,7 +374,7 @@ namespace ice
 
     if (!IsImg(imgv))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return Contur();
       }
 
@@ -388,13 +388,13 @@ namespace ice
 
     if (xs < 0 || xs >= imgv->xsize || ys < 0 || ys >= imgv->ysize)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return Contur();
       }
 
     if (checkobjectstartchecked(imgv, imgo, object, pgl, xs, ys) != isobject)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return Contur();
       }
 
@@ -416,7 +416,7 @@ namespace ice
 
     if (cr == 4)                    // Startpunkt liegt im Objekt
       {
-        Message(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
         return Contur();
       }
 

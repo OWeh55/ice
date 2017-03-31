@@ -111,13 +111,13 @@ namespace ice
 
     if ((!IsImg(source)) || (!IsImg(oimg)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!(neighb & 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -126,7 +126,7 @@ namespace ice
         (oimg->maxval < 2)
        )
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -178,13 +178,13 @@ namespace ice
 
     if ((!IsImg(source)) || (!IsImg(oimg)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!(neighb & 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -193,7 +193,7 @@ namespace ice
         (oimg->maxval < 4)
        )
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -258,7 +258,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -266,7 +266,7 @@ namespace ice
     IF_FAILED(LocalSeg(hsource, img, neighb, level))
     {
       FreeImg(hsource);
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
     FreeImg(hsource);
@@ -277,7 +277,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -285,7 +285,7 @@ namespace ice
     IF_FAILED(LocalSeg(hsource, img, neighb, level, level2))
     {
       FreeImg(hsource);
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
     FreeImg(hsource);

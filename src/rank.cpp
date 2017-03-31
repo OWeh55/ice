@@ -32,7 +32,7 @@
 #include <math.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "arith.h"
 
 #include "rank.h"
@@ -126,7 +126,7 @@ namespace ice
 
     if ((fsize & 1) == 0 || rank < 0 || rank >= fsize * fsize)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -252,7 +252,7 @@ namespace ice
 
     if (((fsizex & 1) == 0) || ((fsizey & 1) == 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -384,7 +384,7 @@ namespace ice
 
     if ((size & 1) == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

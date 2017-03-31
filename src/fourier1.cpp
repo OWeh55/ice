@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "darith.h"
@@ -54,7 +54,7 @@ namespace ice
         direction = false;
         break;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

@@ -21,7 +21,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "ColorImage.h"
 #include "trafo_img.h"
@@ -38,7 +38,7 @@ namespace ice
   {
     if ((!simg.isValid()) || (!dimg.isValid()))
       {
-        Message(FNAME, M_INVALID, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

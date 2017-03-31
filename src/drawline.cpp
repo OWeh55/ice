@@ -30,7 +30,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "drawline.h"
 #include "lineseg.h"
@@ -199,13 +199,13 @@ namespace ice
     /* Parametertestung */
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((val < 0) || (val > img->maxval))
       {
-        Message(FNAME, M_VALTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -301,7 +301,7 @@ namespace ice
   {
     if ((p1.Size() != 2) || (p2.Size() != 2))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -340,7 +340,7 @@ namespace ice
         break;
       default:
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return WRONG_PARAM;
       }
       }
@@ -359,7 +359,7 @@ namespace ice
   {
     if ((p1.Size() != 2) || (p2.Size() != 2))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -388,7 +388,7 @@ namespace ice
   {
     if (p.Size() != 2)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

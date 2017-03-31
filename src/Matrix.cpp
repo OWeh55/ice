@@ -24,7 +24,7 @@
 #include <assert.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matrix_function.h"
 #include "numbase.h"
@@ -40,12 +40,11 @@ using namespace std;
 #define FILE_SEP '#'
 #endif
 
-#define ERR(f,m,r,ret) { Message("Matrix::" f,m,r); return ret; }
-#define ERR0(f,m,r) { Message("Matrix::" f,m,r); return; }
+#define ERR(f,m,r,ret) { throw IceException("Matrix::" f,m,r); }
+#define ERR0(f,m,r) { throw IceException("Matrix::" f,m,r); }
 
 namespace ice
 {
-
   // Konstruktoren
 #define FNAME "Matrix::Matrix"
   Matrix::Matrix(): nRows(0), nColumns(0), data(nullptr)
@@ -56,7 +55,7 @@ namespace ice
   {
     if (n < 0)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -84,7 +83,7 @@ namespace ice
   {
     if (n < 0)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -138,7 +137,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return;
       }
 
@@ -179,7 +178,7 @@ namespace ice
   {
     if (!IsImgD(imgd))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return;
       }
 
@@ -252,7 +251,7 @@ namespace ice
   {
     if (pl.size() != weight.size())
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return;
       }
 
@@ -329,7 +328,7 @@ namespace ice
 
     if (!dest)
       {
-        Message(FNAME, M_FILE_OPEN, WRONG_FILE);
+        throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -465,7 +464,7 @@ namespace ice
 
     IF_FAILED(NormMatrix(dptr, nRows, nColumns, mode, &norm))
     {
-      Message("Matrix::Norm", M_0, ERROR);
+      throw IceException("Matrix::Norm", M_0, ERROR);
       delete [] dptr;
       return 0.0;
     }
@@ -1121,7 +1120,7 @@ namespace ice
   {
     if (colnr >= nColumns)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1145,7 +1144,7 @@ namespace ice
   {
     if ((m.rows() != nRows) || (m.cols() != nColumns))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1165,7 +1164,7 @@ namespace ice
     // *this += v * !v
     if ((v.Size() != nRows) || (v.Size() != nColumns))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1187,7 +1186,7 @@ namespace ice
     // *this += v * !w
     if ((v.Size() != nRows) || (w.Size() != nColumns))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1234,7 +1233,7 @@ namespace ice
 
     if (c != '<')
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         is.clear(ios::badbit);
         return is;
       }
@@ -1263,7 +1262,7 @@ namespace ice
 
         if ((c != ',') && (c != '#') && (c != '>'))
           {
-            Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
             is.clear(ios::badbit);
             return is;
           }
@@ -1283,7 +1282,7 @@ namespace ice
 
     if (c != '<')
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         is.clear(ios::badbit);
       }
 
@@ -1302,7 +1301,7 @@ namespace ice
 
         if (v.Size() != cols())
           {
-            Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
             is.clear(ios::badbit);
           }
 
@@ -1310,7 +1309,7 @@ namespace ice
 
         if ((c != ',') && (c != '#') && (c != '>'))
           {
-            Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
             is.clear(ios::badbit);
           }
       }
@@ -1322,7 +1321,7 @@ namespace ice
   {
     if ((n < 0) || (n >= nColumns))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1336,7 +1335,7 @@ namespace ice
 
     if ((n1 < 0) || (n1 >= nColumns) || (n2 < 0) || (n2 >= nColumns))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1358,7 +1357,7 @@ namespace ice
   {
     if ((n < 0) || (n >= nRows))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1390,7 +1389,7 @@ namespace ice
   {
     if ((n1 < 0) || (n1 >= nRows) || (n2 < 0) || (n2 >= nRows))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1412,7 +1411,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1421,7 +1420,7 @@ namespace ice
 
     if ((img->xsize < sx) || (img->ysize < sy))
       {
-        Message(FNAME, M_WRONG_WINDOW, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_WINDOW, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

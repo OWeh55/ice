@@ -34,7 +34,7 @@ namespace ice
   {
     if (im.cols() < 2 || im.rows() < 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -275,7 +275,7 @@ namespace ice
       {
         // reducing to less then 3 point does not make sense
         // "reducing" to more then original points does not make sense
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 
@@ -367,7 +367,7 @@ namespace ice
       default:
       {
         // undefined mode
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 
@@ -385,7 +385,7 @@ namespace ice
   {
     if (prec < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 
@@ -475,7 +475,7 @@ namespace ice
       default:
       {
         // undefined mode
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 

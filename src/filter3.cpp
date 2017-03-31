@@ -25,7 +25,7 @@
 #include <map>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "arith.h"
@@ -405,7 +405,7 @@ namespace ice
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -648,7 +648,7 @@ namespace ice
     /*
       if ((sx<1)||((sx & 1)!=1)||(sy<1)||((sy & 1)!=1))
       {
-      Message(FNAME,M_WRONG_PARAM,WRONG_PARAM);
+    throw IceException(FNAME,M_WRONG_PARAM,WRONG_PARAM);
       return WRONG_PARAM;
       }
     */
@@ -717,7 +717,7 @@ namespace ice
 
     if ((n1 < 1) || ((n1 & 1) != 1) || (n2 < 1) || ((n2 & 1) != 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -806,7 +806,7 @@ namespace ice
                   {
                     if (nx != ny)
                       {
-                        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
                         return WRONG_PARAM;
                       }
 
@@ -914,7 +914,7 @@ namespace ice
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       };
 
@@ -948,7 +948,7 @@ namespace ice
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       };
 
@@ -1025,7 +1025,7 @@ namespace ice
   {
     if (size < 0 || sigma < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

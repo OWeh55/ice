@@ -86,7 +86,7 @@ namespace ice
       (jj < 0)
     )
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return LSIFilter();
       }
 

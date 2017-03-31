@@ -37,7 +37,7 @@ Analytische Geometrie
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "numbase.h"
 #include "Point.h"
@@ -92,7 +92,7 @@ namespace ice
 
     if (hs < EPSILON)
       {
-        Message(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
+        throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
         return (POINT_IDENTIC);
       }
 
@@ -119,7 +119,7 @@ namespace ice
 
     if (hs < EPSILON)
       {
-        Message(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
+        throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
         return res;
       }
 
@@ -234,7 +234,7 @@ namespace ice
 
     if (pl.cols() < 2)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return 0.0;
       }
 
@@ -558,7 +558,7 @@ label:
 
         if (a <= 0 || b <= 0)
           {
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return WRONG_PARAM;
           }
 
@@ -588,7 +588,7 @@ label:
 
         if (a <= 0 || b <= 0)
           {
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return WRONG_PARAM;
           }
 
@@ -608,7 +608,7 @@ label:
 
         if (p <= 0)
           {
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return WRONG_PARAM;
           }
 
@@ -626,7 +626,7 @@ label:
                  par[4] * xm * ym;
         return OK;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
   }
@@ -651,7 +651,7 @@ label:
 
     if (l < EPSILON)
       {
-        Message(FNAME, M_WRONG_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -709,7 +709,7 @@ label:
 
     if ((A <= 0) || (B <= 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return 0.0;
       }
 
@@ -840,7 +840,6 @@ label:
         koord[1] = y_e_or;
       }
 
-    SetOk();
     return (min_dist);
   }
 #undef FNAME

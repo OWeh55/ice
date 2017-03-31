@@ -47,13 +47,13 @@ namespace ice
 
     if (marker->maxval < minrange)
       {
-        Message(FNAME, M_LOWRANGE, WRONG_PARAM);
+        throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
         return res;
       }
 
     if (!Inside(img, start))
       {
-        Message(FNAME, M_OUTSIDE, WRONG_PARAM);
+        throw IceException(FNAME, M_OUTSIDE, WRONG_PARAM);
         return res;
       }
 
@@ -65,7 +65,7 @@ namespace ice
 
     if (GetVal(marker, start.x, start.y) != 0)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_PARAM);
         return res;
       }
 

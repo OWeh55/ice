@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
@@ -38,7 +38,7 @@ namespace ice
 
     if ((fp = fopen(name, "w")) == NULL)
       {
-        Message("WriteArrayD", "Kann File nicht Oeffnen", WRONG_FILE);
+        throw IceException("WriteArrayD", "Kann File nicht Oeffnen", WRONG_FILE);
         return (ERROR);
       }
 
@@ -61,7 +61,7 @@ namespace ice
 
     if ((fp = fopen(name, "r")) == NULL)
       {
-        Message("ReadArrayD", "File nicht gefunden", FILE_NOT_FOUND);
+        throw IceException("ReadArrayD", "File nicht gefunden", FILE_NOT_FOUND);
         return (FILE_NOT_FOUND);
       }
 

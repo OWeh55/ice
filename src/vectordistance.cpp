@@ -137,7 +137,7 @@ namespace ice
 
     if (dim != feat2.cols())
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return WRONG_MATRIX;
       }
 
@@ -211,7 +211,7 @@ namespace ice
 
     if (dim != feat2.cols())
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return WRONG_MATRIX;
       }
 
@@ -239,14 +239,14 @@ namespace ice
     unsigned int n2 = features_2.size();
     if (n1 < 1 || n2 < 1)
       {
-        Message(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     unsigned int feature_dim = features_1[0].size();
     if (features_2[0].size() != feature_dim)
       {
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

@@ -26,7 +26,7 @@
  *   W. Ortmann 3/99 ... 4/13
  */
 
-#include "message.h"
+#include "IceException.h"
 #include "base.h"
 #include "macro.h"
 
@@ -163,7 +163,7 @@ namespace ice
     if ((pn1.maxval >= MHISTSIZE) ||
         (sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -175,7 +175,7 @@ namespace ice
 
     if (pn2.maxval < maxval)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -315,7 +315,7 @@ namespace ice
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -424,7 +424,7 @@ namespace ice
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -521,7 +521,7 @@ namespace ice
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -661,13 +661,13 @@ namespace ice
 
     if (pn1.maxval >= MHISTSIZE)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -681,7 +681,7 @@ namespace ice
 
     if (pn2.maxval < maxval)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -818,7 +818,7 @@ namespace ice
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1342,7 +1342,7 @@ namespace ice
 
     if (pn1->maxval >= MHISTSIZE)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1352,14 +1352,14 @@ namespace ice
         (sy < 1) || ((sy & 1) != 1) ||
         (sx >= dx) || (sy >= dy))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((pn1->maxval != pn2->maxval) ||
         (pn2->maxval != pn3->maxval))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

@@ -31,7 +31,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "matrix_function.h"
@@ -158,15 +158,13 @@ namespace ice
   {
     int i, j;
     MatrixStruct A, B;
-    OffMessage();
+
     A = NewMatrix(MAT_DOUBLE, 4, 4);
     B = NewMatrix(MAT_DOUBLE, 4, 4);
-    OnMessage();
 
     if (A == nullptr || B == nullptr)
       {
-        Message(FNAME, M_0, ERROR);
-        return (nullptr);
+        throw IceException(FNAME, M_0, ERROR);
       }
 
     for (i = 0; i < 4; i++)
@@ -334,7 +332,7 @@ namespace ice
 
     if (stream == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, ERROR);
+        throw IceException(FNAME, M_FILE_OPEN, ERROR);
         return (ERROR);
       }
 
@@ -366,7 +364,7 @@ namespace ice
 
     if (stream == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, ERROR);
+        throw IceException(FNAME, M_FILE_OPEN, ERROR);
         return (ERROR);
       }
 
@@ -374,7 +372,7 @@ namespace ice
       {
         if (fgets(line, 100, stream) == nullptr)
           {
-            Message(FNAME, M_WRONG_FILE, ERROR);
+            throw IceException(FNAME, M_WRONG_FILE, ERROR);
             return (ERROR);
           }
       }
@@ -384,7 +382,7 @@ namespace ice
       {
         if (fgets(line, 100, stream) == nullptr)
           {
-            Message(FNAME, M_WRONG_FILE, ERROR);
+            throw IceException(FNAME, M_WRONG_FILE, ERROR);
             return (ERROR);
           }
 
@@ -392,7 +390,7 @@ namespace ice
 
         if (sscanf(line, "%le%le%le%le", frp, frp + 1, frp + 2, frp + 3) != 4)
           {
-            Message(FNAME, M_WRONG_FILE, ERROR);
+            throw IceException(FNAME, M_WRONG_FILE, ERROR);
             return (ERROR);
           }
       }
@@ -466,7 +464,7 @@ namespace ice
         frm->frame[2][2] = cb;
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, ERROR);
+        throw IceException(FNAME, M_WRONG_MODE, ERROR);
         return (nullptr);
       }
 
@@ -658,7 +656,7 @@ namespace ice
 
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, ERROR);
+        throw IceException(FNAME, M_WRONG_MODE, ERROR);
         return (ERROR);
       }
 
@@ -681,7 +679,7 @@ namespace ice
 
     if (l < 1e-15)
       {
-        Message(FNAME, RM_NO_BASIS, ERROR);
+        throw IceException(FNAME, RM_NO_BASIS, ERROR);
         return (nullptr);
       }
 
@@ -692,7 +690,7 @@ namespace ice
 
     if (l < 1e-15)
       {
-        Message(FNAME, RM_NO_BASIS, ERROR);
+        throw IceException(FNAME, RM_NO_BASIS, ERROR);
         return (nullptr);
       }
 
@@ -705,7 +703,7 @@ namespace ice
 
     if (l < 1e-15)
       {
-        Message(FNAME, RM_NO_BASIS, ERROR);
+        throw IceException(FNAME, RM_NO_BASIS, ERROR);
         return (nullptr);
       }
 

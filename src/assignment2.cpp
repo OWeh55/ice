@@ -30,7 +30,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "Matrix.h"
 #include "assignment.h"
@@ -118,7 +118,7 @@ namespace ice
 
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -279,7 +279,7 @@ namespace ice
 
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -463,7 +463,7 @@ namespace ice
 
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -686,7 +686,7 @@ namespace ice
         RETURN_ERROR_IF_FAILED(TimeWarpReduced(distance, ref, mode));
         break;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

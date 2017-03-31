@@ -30,7 +30,7 @@
 
 #include <math.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "based.h"
 #include "numbase.h"
@@ -66,7 +66,7 @@ namespace ice
 
     if ((p1 == NULL) || (t == NULL))
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return NULL;
       }
 
@@ -77,8 +77,7 @@ namespace ice
 
     if (fabs(ph[2]) < 1e-10)
       {
-        Message(FNAME, M_WRONG_TRANS, WRONG_TRANS);
-        return NULL;
+        throw IceException(FNAME, M_WRONG_TRANS, WRONG_TRANS);
       }
 
     if (p2 == NULL)
@@ -86,13 +85,12 @@ namespace ice
         ptr = (double*)malloc(2 * sizeof(double));
         ptr[0] = ph[0] / ph[2];
         ptr[1] = ph[1] / ph[2];
-        SetOk();
         return ptr;
       }
 
     p2[0] = ph[0] / ph[2];
     p2[1] = ph[1] / ph[2];
-    SetOk();
+
     return p2;
   }
 #undef FNAME
@@ -107,32 +105,23 @@ namespace ice
     int i;
     int x, y;
     double eps = 1e-15;
-    int rc;
 
     if (t == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return c2;
       }
 
     if (IsMatrixRegular((double*)t, 3, &eps) != true)
       {
-        Message(FNAME, M_NO_REGULAR, WRONG_TRANS);
+        throw IceException(FNAME, M_NO_REGULAR, WRONG_TRANS);
         return c2;
       }
 
     ds[0] = c1.StartX();
     ds[1] = c1.StartY();
-    OffMessage();
-    TransPoint(ds, t, dd);
-    rc = GetError();
-    OnMessage();
 
-    if (rc != OK)
-      {
-        Message(FNAME, M_INFINIT_POINT, INFINIT_POINT);
-        return c2;
-      }
+    RETURN_ERROR_IF_FAILED(TransPoint(ds, t, dd));
 
     c2.SetStart(RoundInt(dd[0]), RoundInt(dd[1]));
 
@@ -141,24 +130,7 @@ namespace ice
         c1.getPoint(i, x, y);
         ds[0] = x;
         ds[1] = y;
-        OffMessage();
-        TransPoint(ds, t, dd);
-        rc = GetError();
-        OnMessage();
-
-        if (rc != OK)
-          {
-            if (rc == WRONG_TRANS)
-              {
-                Message(FNAME, M_INFINIT_POINT, INFINIT_POINT);
-                return c2;
-              }
-            else
-              {
-                Message(FNAME, M_0, INTERN_ERROR);
-                return c2;
-              }
-          }
+        RETURN_ERROR_IF_FAILED(TransPoint(ds, t, dd));
 
         c2.Add(RoundInt(dd[0]), RoundInt(dd[1]));
       }
@@ -166,7 +138,6 @@ namespace ice
     return c2;
   }
 #undef FNAME
-#undef DEBUG
 
   /***************************************************************************/
 #define FNAME "TransImg"
@@ -192,7 +163,7 @@ namespace ice
 
     if (!IsImg(imgss) || !IsImg(imgd))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -205,7 +176,7 @@ namespace ice
 
         if (!IsImg(imgs))
           {
-            Message(FNAME, M_0, ERROR);
+            throw IceException(FNAME, M_0, ERROR);
             return ERROR;
           }
 
@@ -320,7 +291,6 @@ namespace ice
   }
 #undef FNAME
 
-
   /* Nichtöffentliche Funktionen */
 
   /* Bildzeile transformieren ***********************************************/
@@ -338,20 +308,19 @@ namespace ice
     m = mx * sqrt((Sqr(p[1][0] - p[0][0]) + Sqr(p[1][1] - p[0][1])) / (Sqr(p[2][0] - p[1][0]) + Sqr(p[2][1] - p[1][1])));
     hx = m * (p[2][0] - p[0][0]);
     hy = (p[2][1] - p[0][1]) / (p[2][0] - p[0][0]);
-    OffMessage();
-    PutVal(img2, 0, y2, GetVal(img1, (int)(p[0][0] + 0.5), (int)(p[0][1] + 0.5)));
+
+    PutVal(img2, 0, y2, GetValClipped(img1, (int)(p[0][0] + 0.5), (int)(p[0][1] + 0.5)));
 
     for (x2 = 1; x2 < img2.xsize - 1; x2++)
       {
         h = hx * nx[x2] / (1 + m * nx[x2]);
         x1 = (int)(p[0][0] + h + 0.5);
         y1 = (int)(p[0][1] + h * hy + 0.5);
-        PutVal(img2, x2, y2, GetVal(img1, x1, y1));
+        PutVal(img2, x2, y2, GetValClipped(img1, x1, y1));
       }
 
-    PutVal(img2, img2.xsize - 1, y2, GetVal(img1, (int)(p[2][0] + 0.5), (int)(p[2][1] + 0.5)));
-    SetOk();
-    OnMessage();
+    PutVal(img2, img2.xsize - 1, y2, GetValClipped(img1, (int)(p[2][0] + 0.5), (int)(p[2][1] + 0.5)));
+
     return 0;
   }
   /************************************************/
@@ -370,7 +339,7 @@ namespace ice
     m = mx * sqrt((Sqr(p[1][0] - p[0][0]) + Sqr(p[1][1] - p[0][1])) / (Sqr(p[2][0] - p[1][0]) + Sqr(p[2][1] - p[1][1])));
     hx = m * (p[2][0] - p[0][0]);
     hy = (p[2][1] - p[0][1]) / (p[2][0] - p[0][0]);
-    OffMessage();
+
     PutVal(img2, 0, y2, (int)(0.5 + GetInterpolVal(img1, p[0][0], p[0][1])));
 
     for (x2 = 1; x2 < img2.xsize - 1; x2++)
@@ -382,8 +351,6 @@ namespace ice
       }
 
     PutVal(img2, img2.xsize - 1, y2, (int)(0.5 + GetInterpolVal(img1, p[2][0], p[2][1])));
-    SetOk();
-    OnMessage();
     return 0;
   }
   /*************************************************/
@@ -461,14 +428,14 @@ namespace ice
     if ((Abs(t[2][0]) > eps) || (Abs(t[2][1]) > eps) || (Abs(t[2][2] - 1.0) > eps))
       {
         // not an affine transform
-        Message(FNAME, M_WRONG_TRANS, WRONG_TRANS);
+        throw IceException(FNAME, M_WRONG_TRANS, WRONG_TRANS);
         return WRONG_TRANS;
       }
 
 
     if (!IsImg(imgd) || !IsImg(imgss))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -481,7 +448,7 @@ namespace ice
 
         if (!IsImg(imgs))
           {
-            Message(FNAME, M_0, ERROR);
+            throw IceException(FNAME, M_0, ERROR);
             return ERROR;
           }
 

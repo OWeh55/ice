@@ -26,7 +26,7 @@
 
 #include "base.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "histogram.h"
 #include "drawline.h"
 #include "WindowWalker.h"
@@ -42,7 +42,7 @@ namespace ice
   {
     if (quantile < 0 || quantile >= 0.5)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -90,7 +90,7 @@ namespace ice
   {
     if (!h.isValid())
       {
-        Message(FNAME, M_INVALID_STRUCT, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_STRUCT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -113,7 +113,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -126,7 +126,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -144,7 +144,7 @@ namespace ice
     if (MatchImg(src, tgt) != OK)
 
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -170,7 +170,7 @@ namespace ice
   {
     if (max < min)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

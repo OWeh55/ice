@@ -25,7 +25,7 @@
 #include <malloc.h>
 
 #include "base.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "drawline.h"
 #include "paint.h"
@@ -67,17 +67,17 @@ namespace ice
       case classic:
         IF_FAILED(rc = WST1(temp, WSImg))
         {
-          Message(FNAME, M_0, rc);
+          throw IceException(FNAME, M_0, rc);
         }
         break;
       case marker:
         IF_FAILED(rc = WST2(temp, WSImg))
         {
-          Message(FNAME, M_0, rc);
+          throw IceException(FNAME, M_0, rc);
         }
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         rc = WRONG_PARAM;
         break;
       }
@@ -395,7 +395,7 @@ ende:
     // Test, ob Regionenzahl in Zielbild passt
     if (ret->maxval < current_label)
       {
-        Message(FNAME, M_LOWRANGE, WRONG_PARAM);
+        throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
         FreeImg(m3);
         ddelete(m1, xsize, ysize);
         return WRONG_PARAM;
@@ -497,7 +497,7 @@ ende:
 
         if (m1[j] == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
       }
@@ -720,7 +720,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     // Rueckgabebild
     if (ret->maxval < curlab)
       {
-        Message(FNAME, M_LOWRANGE, WRONG_PARAM);
+        throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -937,7 +937,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
     if (!IsImg(i) || !IsImg(io))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -959,7 +959,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
     if (!IsImg(i) || !IsImg(io))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1164,7 +1164,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
     if (!IsImg(i1) || treshold < 0)     // Eingabebild gueltig
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1230,7 +1230,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
     if (!IsImg(GrwImg) || !IsImg(WSHEDDeleted))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);   // ERROR - Bilder nicht initialisiert
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);   // ERROR - Bilder nicht initialisiert
         return WRONG_PARAM;
       }
 
@@ -1285,7 +1285,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {
         // Eingabebilder ungleich NULL?
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1349,7 +1349,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     if (!IsImg(i))
       {
         // Eingabebild gueltig
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

@@ -23,7 +23,7 @@
 #include <fstream>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matrix_function.h"
 #include "numbase.h"
@@ -49,7 +49,7 @@ namespace ice
 
     if (dim != m.rows())
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return h;
       }
 
@@ -88,7 +88,7 @@ namespace ice
 
         if (max == 0)
           {
-            Message(FNAME, M_NO_INVERSE, NO_SOLUTION);
+            throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
             return h;
           }
 
@@ -150,7 +150,7 @@ namespace ice
 
     if (dim != m.rows())
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return h;
       }
 
@@ -189,7 +189,7 @@ namespace ice
 
         if (max == 0)
           {
-            Message(FNAME, M_NO_INVERSE, NO_SOLUTION);
+            throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
             return h;
           }
 

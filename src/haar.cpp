@@ -19,7 +19,7 @@
  */
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "macro.h"
@@ -63,7 +63,7 @@ namespace ice
   {
     if (depth < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -75,13 +75,13 @@ namespace ice
 
     if (!check2p(nx, depth) || !check2p(ny, depth))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return (WRONG_PARAM);
       }
 
     if (mode != NORMAL && mode != INVERS)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return (WRONG_PARAM);
       }
 

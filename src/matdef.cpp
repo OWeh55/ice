@@ -27,7 +27,7 @@
 #include <malloc.h>
 #include <stdio.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matdef.h"
 
@@ -47,7 +47,7 @@ namespace ice
 
     if (csize < 1 || rsize < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return (nullptr);
       }
 
@@ -59,7 +59,7 @@ namespace ice
 
     if (mat == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (nullptr);
       }
 
@@ -85,7 +85,7 @@ namespace ice
 
         if (mat->data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return (nullptr);
           }
 
@@ -93,7 +93,7 @@ namespace ice
 
         if (mat->data[0] == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             free(mat->data);
             free(mat);
             return (nullptr);
@@ -112,7 +112,7 @@ namespace ice
 
         if (mat->datai == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return (nullptr);
           }
 
@@ -120,7 +120,7 @@ namespace ice
 
         if (mat->datai[0] == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             free(mat->datai);
             free(mat);
             return (nullptr);
@@ -139,7 +139,7 @@ namespace ice
 
         if (mat->datac == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return (nullptr);
           }
 
@@ -147,7 +147,7 @@ namespace ice
 
         if (mat->datac[0] == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             free(mat->datac);
             free(mat);
             return (nullptr);
@@ -162,7 +162,7 @@ namespace ice
         mat->datai = nullptr;
         break;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         free(mat);
         return (nullptr);
       }
@@ -195,7 +195,7 @@ namespace ice
   {
     if (IsMatrix(mat) == false)
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 
@@ -251,7 +251,7 @@ namespace ice
     /* Test der Matrizen */
     if (IsMatrix(m1) == false)
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (nullptr);
       }
 
@@ -259,14 +259,14 @@ namespace ice
       {
         if (IsMatrix(m2) == false)
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return (nullptr);
           }
         else
           {
             if (m1->type != m2->type || m1->csize != m2->rsize || m1->rsize != m2->csize)
               {
-                Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+                throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
                 return (nullptr);
               }
 
@@ -275,15 +275,7 @@ namespace ice
       }
     else
       {
-        OffMessage();
         dmat = NewMatrix(m1->type, m1->csize, m1->rsize);
-        OnMessage();
-
-        if (dmat == nullptr)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return (nullptr);
-          }
       }
 
     /* jetzt endlich passierts */
@@ -332,7 +324,7 @@ namespace ice
     /* Test der Matrizen */
     if (IsMatrix(m1) == false)
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (nullptr);
       }
 
@@ -340,14 +332,14 @@ namespace ice
       {
         if (IsMatrix(m2) == false)
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return (nullptr);
           }
         else
           {
             if (m1->type != m2->type || m1->csize != m2->csize || m1->rsize != m2->rsize)
               {
-                Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+                throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
                 return (nullptr);
               }
 
@@ -356,15 +348,7 @@ namespace ice
       }
     else
       {
-        OffMessage();
         dmat = NewMatrix(m1->type, m1->rsize, m1->csize);
-        OnMessage();
-
-        if (dmat == nullptr)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return (nullptr);
-          }
       }
 
     /* jetzt endlich passierts */
@@ -412,13 +396,13 @@ namespace ice
     /*Parametertest*/
     if (!IsMatrix(m1) || !IsMatrix(m2))
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (nullptr);
       }
 
     if (m1->type != m2->type || m1->csize != m2->rsize)
       {
-        Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+        throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
         return (nullptr);
       }
 
@@ -426,13 +410,13 @@ namespace ice
       {
         if (!IsMatrix(m3))
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return (nullptr);
           }
 
         if (m1->type != m3->type || m3->rsize != m1->rsize || m3->csize != m2->csize)
           {
-            Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
             return (nullptr);
           }
       }
@@ -443,7 +427,7 @@ namespace ice
 
         if (m3 == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return (nullptr);
           }
       }
@@ -495,7 +479,7 @@ namespace ice
 
     if (!IsMatrix(A))
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 

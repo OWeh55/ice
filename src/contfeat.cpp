@@ -27,7 +27,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "conturfunctions.h"
@@ -49,13 +49,13 @@ namespace ice
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((val < 0) || val > img->maxval)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -82,19 +82,19 @@ namespace ice
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((val < 0) || val > img->maxval)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!c.isClosed())
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return (CONOCLOSED);
       }
 
@@ -120,7 +120,7 @@ namespace ice
 
     if (!c.isClosed())
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return NULL;
       }
 
@@ -137,7 +137,7 @@ namespace ice
 
     if (pl == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -149,7 +149,7 @@ namespace ice
     if ((pl->xptr == NULL) || (pl->yptr == NULL) || (pl->wptr == NULL))
       {
         free(pl);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -175,7 +175,7 @@ namespace ice
 
     if (!c.isClosed())
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return points;
       }
 
@@ -248,7 +248,7 @@ namespace ice
 
     if (!c.isClosed())
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return CONOCLOSED;
       }
 
@@ -359,7 +359,7 @@ namespace ice
 
     if (!c.isClosed())
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return IPoint();
       }
 
@@ -397,7 +397,7 @@ namespace ice
 
     if (!c.isClosed())
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return Point();
       }
 
@@ -437,7 +437,7 @@ namespace ice
   {
     if (!c.isClosed())
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return CONOCLOSED;
       }
 

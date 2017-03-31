@@ -25,7 +25,7 @@
 
 #include "pointvalue.h"
 #include "PointListWalker.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 // --------------------------------------------------------------------------
@@ -95,7 +95,7 @@ namespace ice
     if ((!orig.inside(p)) || (maxSize <= 0) ||
         (stdmax <= 0))   // Parametertestung
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig -> Fehlermeldung
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig -> Fehlermeldung
         return Region();
       }
 
@@ -203,7 +203,7 @@ namespace ice
 
     if ((!orig.inside(p)) || (MaxSize <= 0))   // Parametertestung
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig
         return res;
       }
 

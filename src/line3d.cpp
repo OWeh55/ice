@@ -22,7 +22,7 @@
 using namespace std;
 
 #include <math.h>
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "line3d.h"
@@ -52,7 +52,7 @@ namespace ice
   {
     if (v.Size() < 6)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 

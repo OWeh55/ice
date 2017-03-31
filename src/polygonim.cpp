@@ -98,7 +98,7 @@ namespace ice
           FreePointList(pl);
         }
 
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return false;
     }
     double pp[2];
@@ -107,7 +107,7 @@ namespace ice
     IF_FAILED(res = InsidePolygon(pp, pl))
     {
       FreePointList(pl);
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return false;
     }
     FreePointList(pl);
@@ -240,7 +240,7 @@ namespace ice
             dist += pdist;
             break;
           default:
-            Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
             return 0.0;
           }
       }
@@ -260,7 +260,7 @@ namespace ice
     double dist1;
     IF_FAILED(dist1 = DistancePolygonPolygonDir(p1, p2, pmode))
     {
-      Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
       return 0.0;
     }
 
@@ -272,7 +272,7 @@ namespace ice
     double dist2;
     IF_FAILED(dist2 = DistancePolygonPolygonDir(p2, p1, pmode))
     {
-      Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
       return 0.0;
     }
 
@@ -303,7 +303,7 @@ namespace ice
       case DPP_MEAN:
         return 0.5 * (dist1 + dist2);
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return 0.0;
       }
   }
@@ -322,7 +322,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -629,7 +629,7 @@ namespace ice
       {
         // reducing to less then 3 point does not make sense
         // "reducing" to more then original points does not make sense
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return result;
       }
 
@@ -681,7 +681,7 @@ namespace ice
 
     if (n < 3)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return fpl;
       }
 
@@ -703,7 +703,7 @@ namespace ice
       {
         // reducing to less then 3 point does not make sense
         // "reducing" to more then original points does not make sense
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return result;
       }
 
@@ -745,7 +745,7 @@ namespace ice
 
     if (prec < 0.0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return fpl;
       }
 
@@ -837,7 +837,7 @@ namespace ice
           {
             if (ct == 0)
               {
-                Message(FNAME, M_WRONG_START, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_START, WRONG_PARAM);
               }
 
             return res;
@@ -900,7 +900,7 @@ namespace ice
                 if (IntersecLine(p1, phi1, p2, phi2, p) != OK)
                   {
                     // should not happen !?
-                    Message(FNAME, "Can´t fit", ERROR);
+                    throw IceException(FNAME, "Can´t fit", ERROR);
                     return res;
                   }
 
@@ -970,7 +970,7 @@ namespace ice
           {
             if (ct == 0)
               {
-                Message(FNAME, M_WRONG_START, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_START, WRONG_PARAM);
               }
 
             return res;
@@ -1032,7 +1032,7 @@ namespace ice
                 if (IntersecLine(p1, phi1, p2, phi2, p) != OK)
                   {
                     // should not happen !?
-                    Message(FNAME, "Can´t fit", ERROR);
+                    throw IceException(FNAME, "Can´t fit", ERROR);
                     return res;
                   }
 

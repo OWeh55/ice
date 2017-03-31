@@ -23,7 +23,7 @@
 #include <limits.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "util.h"
@@ -99,7 +99,7 @@ namespace ice
             valueFunction = get4l;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return Image();
             break;
           }
@@ -118,7 +118,7 @@ namespace ice
             valueFunction = get4h;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return Image();
             break;
           }
@@ -143,7 +143,7 @@ namespace ice
 
         if (!IsImg(himg))
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
 
             if (ib.can_delete)
               {
@@ -313,7 +313,7 @@ namespace ice
             valueFunction = get4l;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return WRONG_PARAM;
             break;
           }
@@ -332,7 +332,7 @@ namespace ice
             valueFunction = get4h;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return WRONG_PARAM;
             break;
           }
@@ -341,7 +341,7 @@ namespace ice
     if (ib.planes == 1)
       {
         // kein RGB-Bild
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
 
         if (ib.can_delete)
           {
@@ -395,7 +395,7 @@ namespace ice
 
     if ((imgr->maxval != imgg->maxval) || (imgr->maxval != imgb->maxval))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
 
         if (ib.can_delete)
           {
@@ -421,7 +421,7 @@ namespace ice
     if (ib.planes == 1)
       {
         // kein RGB-Bild
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
 
         if (ib.can_delete)
           {
@@ -458,7 +458,7 @@ namespace ice
                 rptr = gptr + ib.width * ib.linelength;
                 break;
               default:
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
                 if (ib.can_delete)
                   {
@@ -507,7 +507,7 @@ namespace ice
                     bptr = bptr + ib.valuesize * scal;
                     break;
                   default:
-                    Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
                     if (ib.can_delete)
                       {
@@ -587,7 +587,7 @@ namespace ice
     if (!IsImg(img))
       {
         // cerr << "isimg" << endl;
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -596,7 +596,7 @@ namespace ice
     if ((pt < 0) || (pt > 3))
       {
         // cerr << "img-typ" << endl;
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -690,7 +690,7 @@ namespace ice
                (T*)buffer + 2 * height * lineoffset, lineoffset, 1, 0, intensity);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         rc = WRONG_PARAM;
       }
 
@@ -704,7 +704,7 @@ namespace ice
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -717,7 +717,7 @@ namespace ice
 
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -779,7 +779,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -799,7 +799,7 @@ namespace ice
 
     if (ib.data == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -833,7 +833,7 @@ namespace ice
     // consistency checks at first
     if (!IsImg(RedImage) || !IsImg(GreenImage) || !IsImg(BlueImage))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -842,7 +842,7 @@ namespace ice
         RedImage->xsize != BlueImage->xsize  || RedImage->ysize != BlueImage->ysize ||
         RedImage->maxval != GreenImage->maxval || RedImage->maxval != BlueImage->maxval)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -863,7 +863,7 @@ namespace ice
 
     if (ImageBuffer.data == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -954,7 +954,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -962,7 +962,7 @@ namespace ice
 
     if ((pt < 0) || (pt > 3))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1076,7 +1076,7 @@ namespace ice
                  (T*)buffer + 2 * height * lineoffset, lineoffset, 1, 0, intensity);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         rc = WRONG_PARAM;
       }
 
@@ -1089,7 +1089,7 @@ namespace ice
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1102,7 +1102,7 @@ namespace ice
 
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

@@ -30,7 +30,7 @@
 #include "dualquaternion.h"
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 namespace ice
 {
@@ -92,13 +92,6 @@ namespace ice
   DualQuaternion DualQuaternion :: getInverse()
   {
     Quaternion nreal = (*this).real.getInverse();
-
-    if (GetError() == NO_QUATERNIONINVERSE)
-      {
-        Message(FNAME, M_NO_DUALQUATERNIONINVERSE, NO_DUALQUATERNIONINVERSE);
-        return (*this);
-      }
-
     Quaternion ndual = real * dual * nreal;
 
     return DualQuaternion(nreal, ndual);

@@ -33,7 +33,7 @@ using namespace std;
 #include "errno.h"
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"    // for min/max templates
 #include "strtool.h"
 #include "visual/screen.h"

@@ -25,7 +25,7 @@
 #include <float.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "Contur.h"
 #include "contools.h"
@@ -58,7 +58,7 @@ namespace ice
 
     if (nbr < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
 
@@ -66,7 +66,7 @@ namespace ice
 
     if (fi == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -81,7 +81,7 @@ namespace ice
 
     if (fi->entry == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -90,7 +90,6 @@ namespace ice
         fi->entry[i] = 0;
       }
 
-    SetOk();
     return fi;
   }
 #undef FNAME
@@ -101,7 +100,7 @@ namespace ice
   {
     if ((i < 0) || (i > fi->nbr - 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -132,7 +131,7 @@ namespace ice
 
     if (mode != DEFAULT)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return Image();
       }
 

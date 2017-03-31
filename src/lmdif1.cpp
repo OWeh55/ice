@@ -22,7 +22,7 @@
 #include <math.h>
 #include <float.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "Vector.h"
@@ -63,13 +63,13 @@ namespace ice
 
     if (running)
       {
-        Message(FNAME, M_NOT_NESTED, ERROR);
+        throw IceException(FNAME, M_NOT_NESTED, ERROR);
         return ERROR;
       }
 
     if ((optnumber < 1) || (optnumber > variable.Size() || funcdim < optnumber))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return ERROR;
       }
 
@@ -97,7 +97,7 @@ namespace ice
     if (info == 0)
       {
         /* Fehler sollte nicht auftreten, da vorher getestet */
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Fehler melden
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Fehler melden
         info = ERROR; // Rückgabewert vorbereiten
       }
 

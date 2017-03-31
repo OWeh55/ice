@@ -26,7 +26,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "contools.h"
 #include "numbase.h"
 #include "Matrix.h"
@@ -40,7 +40,7 @@ namespace ice
   {
     if (m.cols() < 2)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -55,7 +55,7 @@ namespace ice
 
     if (m.rows() < 3)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -70,7 +70,7 @@ namespace ice
 
     if (diff < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return pl;
       }
 

@@ -24,15 +24,15 @@
 #include <algorithm>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "IMatrix.h"
 
 #define PRECISION 1e-14
 
-#define vERR(f,m,r,ret) { Message("IMatrix::" f,m,r); return ret; }
-#define ERR0(f,m,r) { Message("IMatrix::" f,m,r); return; }
+#define vERR(f,m,r,ret) { throw IceException("IMatrix::" f,m,r); }
+#define ERR0(f,m,r) { throw IceException("IMatrix::" f,m,r); }
 
 namespace ice
 {
@@ -106,7 +106,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return;
       }
 
@@ -697,7 +697,7 @@ namespace ice
 
     if ((n < 0) || (n >= dim))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -729,7 +729,7 @@ namespace ice
 
     if ((n1 < 0) || (n1 >= dim) || (n2 < 0) || (n2 >= dim))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

@@ -33,7 +33,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "paint.h"
 #include "drawline.h"
@@ -88,7 +88,7 @@ namespace ice
 
     if ((number < 1) || (diff <= 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -98,7 +98,7 @@ namespace ice
 
     if (klasse == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         delete [] klasse;
         return NO_MEM;
       }
@@ -124,7 +124,7 @@ namespace ice
 
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 
@@ -185,13 +185,13 @@ namespace ice
   {
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return -1;
       }
 
     if ((index < 0) || (index > nClasses + 1))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return -1;
       }
 
@@ -203,19 +203,19 @@ namespace ice
   {
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return -1.0;
       }
 
     if (index < 0 || index > nClasses + 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return -1.0;
       }
 
     if (sum == 0)
       {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
+        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
         return -1.0;
       }
 
@@ -228,7 +228,7 @@ namespace ice
   {
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 
@@ -245,19 +245,19 @@ namespace ice
 
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 
     if ((q < 0.0) || (q > 0.5))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (sum == 0)
       {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
+        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
         return ERROR;
       }
 
@@ -303,13 +303,13 @@ namespace ice
   {
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return 0.0;
       }
 
     if (nr < 0 || nr > nClasses + 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return 0.0;
       }
 
@@ -321,13 +321,13 @@ namespace ice
     // hier nur "normale" Klassen
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return 0.0;
       }
 
     if (nr < 1 || nr > nClasses)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return 0.0;
       }
 
@@ -345,13 +345,13 @@ namespace ice
 
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 
     if (sum == 0)
       {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
+        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
         return ERROR;
       }
 
@@ -384,7 +384,7 @@ namespace ice
   {
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 
@@ -416,13 +416,13 @@ namespace ice
 
     if (!isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 
     if (!IsImg(b))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -527,13 +527,13 @@ namespace ice
 
     if (!IsImg(b))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return h;
       }
 
     if ((diff > b->xsize) || (diff > (b->ysize)) || diff < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return h;
       }
 

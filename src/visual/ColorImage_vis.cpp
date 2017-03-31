@@ -25,7 +25,6 @@
 
 #include "../macro.h"
 #include "../defs.h"
-#include "../message.h"
 
 #include "App.h"
 
@@ -42,7 +41,7 @@ namespace ice
   {
     if (!img.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return NULL;
       }
 
@@ -62,7 +61,7 @@ namespace ice
       case OFF:
         return wxGetApp().GetImageManager()->Show(OFF, GetVisual(img));
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
     return OK;
   }

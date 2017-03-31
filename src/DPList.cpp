@@ -22,7 +22,7 @@
 #include <string.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "DPList.h"
 
@@ -40,7 +40,7 @@ namespace ice
 
     if (pl == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -49,7 +49,7 @@ namespace ice
     if (pl->xptr == NULL)
       {
         delete pl;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -59,7 +59,7 @@ namespace ice
       {
         delete [](pl->xptr);
         delete pl;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -70,7 +70,7 @@ namespace ice
         delete [](pl->xptr);
         delete [](pl->yptr);
         delete pl;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -91,7 +91,7 @@ namespace ice
 
     if (pl == NULL)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return false;
       }
 
@@ -107,7 +107,7 @@ namespace ice
           }
         else
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return false;
           }
 
@@ -119,7 +119,7 @@ namespace ice
           }
         else
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return false;
           }
 
@@ -131,7 +131,7 @@ namespace ice
           }
         else
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return false;
           }
       }
@@ -154,7 +154,7 @@ namespace ice
 
     if (pl == NULL || num >= pl->lng)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return false;
       }
 
@@ -186,7 +186,7 @@ namespace ice
 
     if (pl == NULL)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return false;
       }
 

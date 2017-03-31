@@ -33,7 +33,7 @@ extern "C" {
 #include "defs.h"
 #include "base.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "exfile.h"
 #include "picio.h"
 
@@ -100,7 +100,7 @@ namespace ice
 
     if (!(IsImg(ir) && IsImg(ig) && IsImg(ib)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -114,7 +114,7 @@ namespace ice
       (gm != ig->maxval) || (gm != ib->maxval)
     )
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -125,7 +125,7 @@ namespace ice
 
     if ((output_file = fopen(fname.c_str(), FWMODUS)) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -144,7 +144,7 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -217,7 +217,7 @@ namespace ice
 
     if (! IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -232,7 +232,7 @@ namespace ice
 
     if ((output_file = fopen(fname.c_str(), FWMODUS)) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -251,7 +251,7 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -317,7 +317,7 @@ namespace ice
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -337,7 +337,7 @@ namespace ice
          */
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -377,7 +377,7 @@ namespace ice
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -403,7 +403,7 @@ namespace ice
             free(ib.data);
           }
 
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -462,7 +462,7 @@ namespace ice
 
     IF_FAILED(Buffer2Image(ib, imgr, imgg, imgb, flag))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     };
     return OK;
@@ -477,7 +477,7 @@ namespace ice
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return Image();
       }
 
@@ -503,7 +503,7 @@ namespace ice
             free(ib.data);
           }
 
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return Image();
       }
 
@@ -556,7 +556,7 @@ namespace ice
 
     IF_FAILED(img = Buffer2Image(ib, img, flag))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return Image();
     };
     return img;

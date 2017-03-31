@@ -29,7 +29,7 @@
 
 #include "Vector.h"
 #include "Matrix.h"
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "base.h"
 #include "macro.h"
@@ -46,89 +46,24 @@ namespace ice
     int M = input.getColumns();
     int N = input.getRows();
 
-    OffMessage();
-
     QuatMatrix o;
     o = QuatMatrix(N, M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector re1 = Vector(M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Vector im1 = Vector(M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector re2 = Vector(M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Vector im2 = Vector(M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Matrix mre1 = Matrix(N, M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Matrix mim1 = Matrix(N, M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Matrix mre2 = Matrix(N, M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Matrix mim2 = Matrix(N, M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     for (i = 0; i < N; i++)
       {
@@ -143,21 +78,7 @@ namespace ice
 
         Fourier(re1, im1, option);
 
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
-
         Fourier(re2, im2, option);
-
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
 
         mre1[i] = re1;
         mim1[i] = im1;
@@ -168,39 +89,11 @@ namespace ice
 
     Vector re3 = Vector(N);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector im3 = Vector(N);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Vector re4 = Vector(N);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector im4 = Vector(N);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     for (i = 0; i < M; i++)
       {
@@ -216,21 +109,7 @@ namespace ice
 
         Fourier(re3, im3, option);
 
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
-
         Fourier(re4, im4, option);
-
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
 
         for (j = 0; j < N; j++)
           {
@@ -253,7 +132,6 @@ namespace ice
 
     output = o;
 
-    OnMessage();
     return OK;
   }
 #undef FNAME
@@ -263,27 +141,23 @@ namespace ice
   {
     if (!IsImg(output))
       {
-        Message(FNAME, M_INVALID, INVALID);
-        return ERROR;
+        throw IceException(FNAME, M_INVALID, INVALID);
       }
 
     if (int(input.getColumns()) != output->xsize || int(input.getRows()) != output->ysize)
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return ERROR;
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
       }
 
     if (!(type == LOG || type == POWER || type == NORM))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
 
     if (!(mode == CENTER || mode == NOCENTER))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
     int maxcolor = output->maxval;
@@ -381,7 +255,7 @@ namespace ice
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
       {
-        Message(FNAME, M_INVALID, INVALID);
+        throw IceException(FNAME, M_INVALID, INVALID);
         return ERROR;
       }
 
@@ -389,19 +263,19 @@ namespace ice
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return ERROR;
       }
 
     if (r->maxval != g->maxval || r->maxval != b->maxval)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return ERROR;
       }
 
     if (!(mode == CENTER || mode == NOCENTER))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return ERROR;
       }
 
@@ -444,16 +318,16 @@ namespace ice
                 ys = i;
               }
 
-            OffMessage();
-            ew = input[i][j].getEigenwinkel();
+            bool ok = true;
+            IF_FAILED(ew = input[i][j].getEigenwinkel())
+            {
+              red = 255;
+              green = 255;
+              blue = 255;
+              ok = false;
+            }
 
-            if (GetError() == NO_QUATERNIONEIGENWINKEL)
-              {
-                red = 255;
-                green = 255;
-                blue = 255;
-              }
-            else
+            if (ok)
               {
                 if (ew < (2 * M_PI / 3))
                   {
@@ -468,9 +342,6 @@ namespace ice
                     blue = 3 * I - (red + green);
                   }
               }
-
-            SetOk();
-            OnMessage();
 
             PutVal(r, xs, ys, int(red));
             PutVal(g, xs, ys, int(green));
@@ -487,7 +358,7 @@ namespace ice
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
       {
-        Message(FNAME, M_INVALID, INVALID);
+        throw IceException(FNAME, M_INVALID, INVALID);
         return ERROR;
       }
 
@@ -495,19 +366,19 @@ namespace ice
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return ERROR;
       }
 
     if (r->maxval != g->maxval || r->maxval != b->maxval)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return ERROR;
       }
 
     if (!(mode == CENTER || mode == NOCENTER))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return ERROR;
       }
 
@@ -550,24 +421,21 @@ namespace ice
                 ys = i;
               }
 
-            OffMessage();
-            mu = input[i][j].getEigenachse();
+            bool ok = true;
+            IF_FAILED(mu = input[i][j].getEigenachse())
+            {
+              red = maxcolor;
+              green = maxcolor;
+              blue = maxcolor;
+              ok = false;
+            }
 
-            if (GetError() == NO_QUATERNIONEIGENACHSE)
-              {
-                red = maxcolor;
-                green = maxcolor;
-                blue = maxcolor;
-              }
-            else
+            if (ok)
               {
                 red = maxcolor / 2 + (maxcolor / 2) * mu.getI();
                 green = maxcolor / 2 + (maxcolor / 2) * mu.getJ();
                 blue = maxcolor / 2 + (maxcolor / 2) * mu.getK();
               }
-
-            SetOk();
-            OnMessage();
 
             PutVal(r, xs, ys, int(red));
             PutVal(g, xs, ys, int(green));
@@ -584,7 +452,7 @@ namespace ice
   {
     if (!(IsImg(alpha) && IsImg(beta) && IsImg(delta)))
       {
-        Message(FNAME, M_INVALID, INVALID);
+        throw IceException(FNAME, M_INVALID, INVALID);
         return ERROR;
       }
 
@@ -592,20 +460,20 @@ namespace ice
         int(input.getColumns()) != beta->xsize || int(input.getRows()) != beta->ysize ||
         int(input.getColumns()) != delta->xsize || int(input.getRows()) != delta->ysize)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return ERROR;
       }
 
     /*
         if(r->maxval != g->maxval || r->maxval != b->maxval)
         {
-          Message(FNAME,M_SIZES_DIFFER,WRONG_PARAM);
+    throw IceException(FNAME,M_SIZES_DIFFER,WRONG_PARAM);
           return ERROR;
         }*/
 
     if (!(mode == CENTER || mode == NOCENTER))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return ERROR;
       }
 
@@ -646,23 +514,22 @@ namespace ice
                 ys = i;
               }
 
-            OffMessage();
-            phases = input[i][j].getPhases();
 
-            if (GetError() == NO_QUATERNIONPHASES)
-              {
-                a = alpha->maxval;
-                b = beta->maxval;
-                d = delta->maxval;
-              }
-            else
+            bool ok = true;
+            IF_FAILED(phases = input[i][j].getPhases())
+            {
+              a = alpha->maxval;
+              b = beta->maxval;
+              d = delta->maxval;
+              ok = false;
+            }
+
+            if (ok)
               {
                 a = alpha->maxval / 2 + phases.x * (alpha->maxval) / (2 * M_PI);
                 b = beta->maxval / 2 + phases.y * (beta->maxval) / M_PI;
                 d = (delta->maxval - 1) / 2 + phases.z * 4 * ((delta->maxval - 1) / 2) / M_PI;
               }
-
-            OnMessage();
 
             PutVal(alpha, xs, ys, int(a));
             PutVal(beta, xs, ys, int(b));

@@ -22,7 +22,7 @@
 #include <iostream>
 #include <math.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "analygeo.h"
 #include "macro.h"
 
@@ -38,25 +38,25 @@ namespace ice
   {
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (a1 < 0 || a2 > pl->lng - 1)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (step < 0)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (pl->lng < 2)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -476,7 +476,7 @@ namespace ice
   {
     if ((m.cols() < 2) || (m.rows() < 2))
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -486,7 +486,7 @@ namespace ice
     IF_FAILED(FitLineLinOpt(pl, 0, m.rows() - 1, 1, par, limit))
     {
       FreePointList(pl);
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
     p = par[0];
@@ -501,7 +501,7 @@ namespace ice
 
     if (nPoints < 2)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return LineSeg();
       }
 
@@ -517,7 +517,7 @@ namespace ice
     IF_FAILED(FitLineLinOpt(ppl, 0, pl.size() - 1, step, par, limit))
     {
       FreePointList(ppl);
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return LineSeg();
     }
     LineSeg res(par[0], par[1]);
@@ -543,25 +543,25 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (a1 < 0 || a2 > pl->lng - 1)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (step < 0)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (pl->lng < 3)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -976,25 +976,25 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (a1 < 0 || a2 > pl->lng - 1)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (step < 0)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (pl->lng < 5)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

@@ -141,7 +141,7 @@ namespace ice
 
       if (!isvalid)
         {
-          Message(FNAME, M_NOT_INITIALISED, INVALID);
+          throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
           return;
         }
 

@@ -34,7 +34,7 @@
 #include <vector>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fit.h"
@@ -142,19 +142,19 @@ namespace ice
 
     if (pl.size() < 4)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (step < 0  || pl.size() != wv.size())
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (mode != 1 && mode != 2)
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -226,7 +226,7 @@ namespace ice
 
             if (cptr == NULL)
               {
-                Message(FNAME, M_WRONG_POINTS, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_POINTS, WRONG_PARAM);
                 return WRONG_PARAM;
               }
 
@@ -327,13 +327,11 @@ namespace ice
                   cov_2a->data[i][j] = cov_2[i][j];
                 }
 
-            OffMessage();
             code = EquationSys(cov_2a, re_2, loesung);
-            OnMessage();
 
             if (code != OK)
               {
-                Message(FNAME, M_0, INTERN_ERROR);
+                throw IceException(FNAME, M_0, INTERN_ERROR);
                 return INTERN_ERROR;
               }
 
@@ -343,15 +341,8 @@ namespace ice
             koef[3] = loesung[3];
             koef[4] = loesung[1];
             koef[5] = loesung[4];
-            OffMessage();
-            code = FeatureQuadrFunc(koef, feat, &type);
-            OnMessage();
 
-            if (code != OK)
-              {
-                Message(FNAME, M_0, INTERN_ERROR);
-                return INTERN_ERROR;
-              }
+            RETURN_ERROR_IF_FAILED(code = FeatureQuadrFunc(koef, feat, &type));
 
             if (type != ELLIPSE)
               {
@@ -397,7 +388,7 @@ namespace ice
     RETURN_IF_FAILED(rc = FitEllipse(pl, par, step, mode), Ellipse());
     if (rc != OK)
       {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
+        throw IceException(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
         return Ellipse();
       }
 
@@ -412,7 +403,7 @@ namespace ice
     RETURN_IF_FAILED(rc = FitEllipse(pl, weights, par, step, mode), Ellipse());
     if (rc != OK)
       {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
+        throw IceException(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
         return Ellipse();
       }
 
@@ -436,7 +427,7 @@ namespace ice
 
     if (rc != OK)
       {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
+        throw IceException(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
         return Ellipse();
       }
 

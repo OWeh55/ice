@@ -207,14 +207,14 @@ namespace ice
       }
   }
 
+#define FNAME "PbmReader::getImage"
   void PbmReader::getImage(const Image& r, const Image& g, const Image& b, int flag)
   {
     readBuffer();
-    IF_FAILED(MatchImg(r, g, b))
-    throw length_error("PbmReader - Images do not match");
+    RETURN_ERROR_IF_FAILED(MatchImg(r, g, b));
     Buffer2Image(ib, r, g, b, flag);
   }
-
+#undef FNAME
   void PbmReader::getImage(const Image& img, int flag)
   {
     readBuffer();

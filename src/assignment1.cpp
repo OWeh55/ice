@@ -43,7 +43,7 @@
 #include <malloc.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "assignment.h"
 #include "numbase.h"
 #include "Matrix.h"
@@ -111,7 +111,7 @@ namespace ice
 
     if ((m <= 0) || (n <= 0))
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return WRONG_MATRIX;
       }
 
@@ -121,7 +121,7 @@ namespace ice
 
     if (indices == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return ERROR;
       }
 
@@ -136,7 +136,7 @@ namespace ice
 
               if (c < 0.0)
                 {
-                  Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                  throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
                   return WRONG_PARAM;
                 }
 
@@ -218,7 +218,7 @@ namespace ice
 
     if (rc == 1)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return ERROR;
       }
 

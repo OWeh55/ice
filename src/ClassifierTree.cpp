@@ -23,7 +23,7 @@
 #include <assert.h>
 
 #include "vectortools.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "ClassifierTree.h"
@@ -38,7 +38,7 @@ namespace ice
     IF_FAILED(Init(classes, dimension, depth))
     {
       // if initialisation fails
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 #undef FNAME
@@ -48,7 +48,7 @@ namespace ice
   {
     if (nClasses == 0)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return;
       }
 

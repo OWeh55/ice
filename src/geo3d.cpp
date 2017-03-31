@@ -22,7 +22,7 @@
 using namespace std;
 
 #include <math.h>
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "Vector.h"
 #include "defs.h"

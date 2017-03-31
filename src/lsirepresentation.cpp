@@ -35,7 +35,7 @@ namespace ice
   {
     if ((x % 2 == 0) || (y % 2 == 0))
       {
-        Message("LSIFilter", M_WRONG_DIM, WRONG_PARAM);
+        throw IceException("LSIFilter", M_WRONG_DIM, WRONG_PARAM);
       }
   }
 }

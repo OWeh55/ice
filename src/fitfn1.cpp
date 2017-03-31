@@ -20,7 +20,7 @@
  */
 
 #include "base.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -38,7 +38,7 @@ namespace ice
   {
     if (v.size() < 1)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     co[0] = v[0];
@@ -59,7 +59,7 @@ namespace ice
   {
     if (v.size() < 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     co[0] = v[0];
@@ -81,7 +81,7 @@ namespace ice
   {
     if (v.Size() < 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     co[0] = v[0];

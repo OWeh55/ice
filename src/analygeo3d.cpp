@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "Matrix.h"
 #include "MatrixAlgebra.h"
@@ -81,7 +81,6 @@ namespace ice
     IF_FAILED(res = SolveLinEqu(m, p2v - p1v))
     {
       // parallele Geraden
-      SetOk();
       return Distance(l1.P1(), l2);
     }
     return (res[0] * d1v + p1v - res[1] * d2v - p2v).Length();
@@ -99,7 +98,6 @@ namespace ice
 
     IF_FAILED(res = SolveLinEqu(m, p2v - p1v))
     {
-      SetOk();
       dist = 1e99;
       res = Vector(0.0, 0.0);
       // parallele Geraden

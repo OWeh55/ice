@@ -27,7 +27,7 @@
 
 #include "exfile.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "picio.h"
 #include "PbmReader.h"
@@ -119,7 +119,7 @@ namespace ice
 
     if (fd.fd == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -139,7 +139,7 @@ namespace ice
 
     if ((fd = fopen(fname.c_str(), FWMODUS)) == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 

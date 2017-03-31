@@ -44,7 +44,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
     return v->SelectLine(p1, p2);
@@ -56,7 +56,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
     return v->SelectLineFromStart(p1, p2);
@@ -80,7 +80,7 @@ namespace ice
     p = (int*)malloc(maxp * 2 * sizeof(int));
     if (p == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (NULL);
       }
     /* let pp1 point to p */
@@ -122,7 +122,7 @@ namespace ice
             p = (int*)realloc(p, maxp * 2 * sizeof(int));
             if (p == NULL)
               {
-                Message(FNAME, M_NO_MEM, NO_MEM);
+                throw IceException(FNAME, M_NO_MEM, NO_MEM);
                 return (NULL);
               }
             pp2 = p + i * 2;

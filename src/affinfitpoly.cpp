@@ -23,7 +23,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "root.h"
 #include "momente.h"
@@ -54,7 +54,7 @@ namespace ice
 
     if (pl1 == NULL || pl2 == NULL)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return (-1);
       }
 
@@ -155,7 +155,7 @@ namespace ice
 
     if (pl1 == NULL || pl2 == NULL)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return (-1);
       }
 
@@ -168,7 +168,7 @@ namespace ice
     /* Flaeche darf nicht verschwinden */
     if (m1[0] < EPSILON || m2[0] < EPSILON)
       {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
+        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
         return DBL_MAX;
       }
 
@@ -301,7 +301,7 @@ namespace ice
 
     if (mx[0] < EPSILON)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -350,7 +350,7 @@ namespace ice
 
     if (mx[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -511,7 +511,7 @@ namespace ice
 
     if (mx[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return (-1);
       }
 
@@ -733,7 +733,7 @@ namespace ice
 
     if (mx[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return (-1);
       }
 
@@ -901,7 +901,7 @@ namespace ice
 
     if (mx[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return (-1);
       }
 
@@ -1192,13 +1192,13 @@ namespace ice
 
     if (mx[0] <= 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (n < 3 || n > 7)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1241,7 +1241,7 @@ namespace ice
 
     if (rc > 3)
       {
-        Message(FNAME, "LMDif " + LMDifMessage(rc), ERROR);
+        throw IceException(FNAME, "LMDif " + LMDifMessage(rc), ERROR);
         return ERROR;
       }
 
@@ -1317,7 +1317,7 @@ namespace ice
 
     if (mx[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return (-1);
       }
 

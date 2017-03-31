@@ -25,7 +25,7 @@
 #include <iomanip>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 namespace ice

@@ -22,7 +22,7 @@
 using namespace std;
 
 #include <math.h>
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "Vector.h"
 #include "defs.h"
@@ -47,7 +47,7 @@ namespace ice
   {
     if (v.Size() < 4)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -65,7 +65,7 @@ namespace ice
   {
     if (rp < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 

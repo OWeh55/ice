@@ -27,7 +27,7 @@
 #include <string.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "equsys.h"
@@ -77,7 +77,7 @@ namespace ice
 
     if (hb == NULL)
       {
-        Message("EquSysTest", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysTest", M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -164,13 +164,13 @@ namespace ice
 
     if (pa == NULL || pb == NULL || px == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, ERROR);
+        throw IceException(FNAME, M_WRONG_PTR, ERROR);
         return ERROR;
       };
 
     if (rang < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       };
 
@@ -181,7 +181,7 @@ namespace ice
 
         if (rc != OK)
           {
-            Message(FNAME, M_ZERO_DET, rc);
+            throw IceException(FNAME, M_ZERO_DET, rc);
             return rc;
           }
 
@@ -191,7 +191,7 @@ namespace ice
 
         if (rc != OK)
           {
-            Message(FNAME, M_ZERO_DET, rc);
+            throw IceException(FNAME, M_ZERO_DET, rc);
             return rc;
           }
 
@@ -202,7 +202,7 @@ namespace ice
 
         if (dpa == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return (NO_MEM);
           };
 
@@ -211,7 +211,7 @@ namespace ice
         if (dpb == NULL)
           {
             free(dpa);
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return (NO_MEM);
           };
 
@@ -270,7 +270,7 @@ namespace ice
             /* setzen der spalte "col" zu 0 ab zeile "colh+1" */
             if (fabs(*dpa) < 1e-20)
               {
-                Message(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
+                throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
                 free(dpa);
                 free(dpb);
                 return NUM_INSTABILITY;
@@ -347,13 +347,13 @@ namespace ice
         switch (ret)
           {
           case NO_SOLUTION:
-            Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+            throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
             break;
           case VARIOUS_SOLUTION:
-            Message(FNAME, M_SOL_MANIFOLD, VARIOUS_SOLUTION);
+            throw IceException(FNAME, M_SOL_MANIFOLD, VARIOUS_SOLUTION);
             break;
           case NUM_INSTABILITY:
-            Message(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
+            throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
             break;
           }
 
@@ -382,7 +382,7 @@ namespace ice
 
     if (row < 1 || col < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -417,7 +417,7 @@ namespace ice
 
     if (hA == NULL)
       {
-        Message("EquSysMultiple", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -428,7 +428,7 @@ namespace ice
 
     if (hb == NULL)
       {
-        Message("EquSysMultiple", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -455,7 +455,7 @@ namespace ice
 
     if (hb == NULL)
       {
-        Message("EquSysMultiple", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -803,8 +803,6 @@ namespace ice
     int size_mat, size_vec;
     int i, j, cont, nbr, rang;
     double heps, det, deriv, ceps = 1e-15;
-    int flag;
-
 
     size_mat = dim * dim * sizeof(double);
     size_vec = dim * sizeof(double);
@@ -867,19 +865,11 @@ namespace ice
 
         if (fabs(det) < ceps)
           {
-            Message(FNAME, M_WRONG_START, ERROR);
+            throw IceException(FNAME, M_WRONG_START, ERROR);
             return ERROR;
           }
 
-        OffMessage();
-        flag = EquSys(a, b, dim, x);
-        OnMessage();
-
-        if (flag != OK)
-          {
-            Message(FNAME, M_INTERN, ERROR);
-            return ERROR;
-          }
+        RETURN_ERROR_IF_FAILED(EquSys(a, b, dim, x));
 
 #if defined DEBUG
         printf("x:\n");
@@ -948,7 +938,7 @@ namespace ice
 
     if ((m1 == NULL) || (v1 == NULL) || (m2 == NULL) || (v2 == NULL))
       {
-        Message(FNAME, M_WRONG_PTR, ERROR);
+        throw IceException(FNAME, M_WRONG_PTR, ERROR);
         return (ERROR);
       }
 
@@ -1003,29 +993,24 @@ namespace ice
 
     if ((m2 = (double*)malloc(col * col * sizeof(double))) == NULL)   /*Speicher fr Normalengleichungen*/
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (NO_MEM);
       }
 
     if ((v2 = (double*)malloc(col * sizeof(double))) == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         free(m2);
         return (NO_MEM);
       }
 
     NormalEqu(m1, v1, row, col, m2, v2);                   /*Normalengleichungen bestimmen*/
-    OffMessage();
-    rc = EquSys(m2, v2, col, x);                           /*Normalengleichungssystem loesen*/
-    OnMessage();
-
-    if (rc != OK)
-      {
-        Message(FNAME, M_0, rc);
-        free(m2);
-        free(v2);
-        return (rc);
-      }
+    IF_FAILED(EquSys(m2, v2, col, x))                      /*Normalengleichungssystem loesen*/
+    {
+      free(m2);
+      free(v2);
+      throw IceException(FNAME, M_0, rc);
+    }
 
     mp = m1;
     *mse = 0;                                       /*mittleren qudratischen Fehler best.*/

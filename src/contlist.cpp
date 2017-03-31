@@ -21,7 +21,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "Contur.h"
 #include "contlist.h"
 
@@ -81,7 +81,7 @@ namespace ice
 
         if (hdata == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
 
@@ -99,7 +99,7 @@ namespace ice
   {
     if ((i < 0) || (i >= conturs))
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -124,7 +124,7 @@ namespace ice
 
     if ((i < 0) || (i > conturs))
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return NULL;
       }
 

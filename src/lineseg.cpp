@@ -21,7 +21,7 @@
 #include <math.h>
 
 #include "Vector.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "defs.h"
@@ -46,7 +46,7 @@ namespace ice
   {
     if (v.Size() < 4)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -60,7 +60,7 @@ namespace ice
   {
     if ((typep != line) && (typep != ray) && (typep != segment) && (typep != inv_ray))
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
       }
 
     type = typep;

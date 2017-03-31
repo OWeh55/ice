@@ -324,7 +324,7 @@ namespace ice
   {
     if (!src.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
     int xs = src.xsize;
@@ -335,7 +335,7 @@ namespace ice
 
     if (dx != xs || dy != ys)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -360,7 +360,7 @@ namespace ice
   {
     if (!dst.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -373,7 +373,7 @@ namespace ice
 
     if (dx != xs || dy != ys)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -396,7 +396,7 @@ namespace ice
   {
     if (!src.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
     int xs = src.xsize;
@@ -407,7 +407,7 @@ namespace ice
 
     if (dx != xs || dy != ys)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -430,7 +430,7 @@ namespace ice
   {
     if (!dst.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -443,7 +443,7 @@ namespace ice
 
     if (dx != xs || dy != ys)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -466,7 +466,7 @@ namespace ice
   {
     if (!src.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
     int xs = src.xsize;
@@ -477,7 +477,7 @@ namespace ice
 
     if (dx != xs || dy != ys)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -499,7 +499,7 @@ namespace ice
   {
     if (!dst.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
     int xs = dst.xsize;
@@ -510,7 +510,7 @@ namespace ice
 
     if (dx != xs || dy != ys)
       {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

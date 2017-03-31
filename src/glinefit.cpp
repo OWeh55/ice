@@ -29,7 +29,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "analygeo.h"
 #include "pointlist.h"
@@ -47,7 +47,7 @@ namespace ice
     int cp[4][2];
     Contur c;
     PointList pl;
-    int i, cnt, rc;
+    int i, cnt;
     double cc, ss;
     double par[2], mean = 0;
     double md;
@@ -57,15 +57,8 @@ namespace ice
       if((lp[0][1]<img->wyi+dist)||(lp[0][1]>img->wya-dist)) return(-1);
       if((lp[1][0]<img->wxi+dist)||(lp[1][0]>img->wxa-dist)) return(-1);
       if((lp[1][1]<img->wyi+dist)||(lp[1][1]>img->wya-dist)) return(-1);*/
-    OffMessage();
-    rc = ConvPointHesse(lp[0], lp[1], p, phi);
-    OnMessage();
 
-    if (rc != OK)
-      {
-        Message(FNAME, M_0, WRONG_PARAM);
-        return (-1);
-      }
+    ConvPointHesse(lp[0], lp[1], p, phi);
 
     cc = cos(*phi);
     ss = sin(*phi);
@@ -93,7 +86,7 @@ namespace ice
     if (mean == 0)
       {
         FreePointList(pl);
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return (-1);
       }
 
@@ -114,16 +107,11 @@ namespace ice
           }
       }
 
-    OffMessage();
-    rc = FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma);
-    OnMessage();
-
-    if (rc != OK)
-      {
-        FreePointList(pl);
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return (-1);
-      }
+    IF_FAILED(FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma))
+    {
+      FreePointList(pl);
+      throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+    }
 
     *p = par[0];
     *phi = par[1];
@@ -138,7 +126,7 @@ namespace ice
     Contur c;
     PointList pl;
     int x1, x2, y1, y2, g;
-    int i, x, y, rc;
+    int i, x, y;
     double cc, ss;
     double par[2], mean = 0, gew;
     double md;
@@ -223,14 +211,10 @@ namespace ice
           }
       }
 
-    OffMessage();
-    rc = FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma);
-    OnMessage();
-
-    if (rc != OK)
-      {
-        return (-1);
-      }
+    IF_FAILED(FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma))
+    {
+      return (-1);
+    }
 
     *p = par[0];
     *phi = par[1];

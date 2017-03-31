@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 
@@ -42,7 +42,7 @@ namespace ice
     IF_FAILED(Init(classes, dimension, nNeighbors))
     {
       // if initialisation fails
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 #undef FNAME

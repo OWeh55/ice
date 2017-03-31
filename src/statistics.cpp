@@ -31,7 +31,7 @@
 #include <string.h>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "matdef.h"
@@ -48,7 +48,7 @@ namespace ice
   {
     if (dimension < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         dim = 0;
       }
     else
@@ -67,7 +67,7 @@ namespace ice
   {
     if (dim < 1)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -86,7 +86,7 @@ namespace ice
   {
     if (dimension < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         dim = 0;
         return WRONG_PARAM;
       }
@@ -100,13 +100,13 @@ namespace ice
   {
     if (weight < 0.0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (val.Size() != dim)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -140,13 +140,13 @@ namespace ice
   {
     if (weight < 0.0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((int)val.size() != dim)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -180,7 +180,7 @@ namespace ice
   {
     if (vals.cols() != dim)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -198,7 +198,7 @@ namespace ice
     std::vector<double> res(dim);
     if (sweight == 0.0)
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
         return res;
       }
 
@@ -217,7 +217,7 @@ namespace ice
   {
     if (st.sweight == 0.0)
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
         return Vector(st.dim);
       }
 
@@ -244,7 +244,7 @@ namespace ice
     matrix<double> res(dim, dim);
     if (sweight == 0.0)
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
         return res;
       }
 
@@ -268,7 +268,7 @@ namespace ice
 
     if (st.sweight == 0.0)
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
         return res;
       }
 
@@ -296,13 +296,13 @@ namespace ice
 
     if (sweight == 0.0)
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
         return res;
       }
 
     IF_FAILED(res = getCovariance())
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return res;
     }
 
@@ -310,7 +310,7 @@ namespace ice
       {
         if (res[i][i] < 1e-32)
           {
-            Message(FNAME, M_ZERO_VARIANZ, ERROR);
+            throw IceException(FNAME, M_ZERO_VARIANZ, ERROR);
             return res;
           }
       }
@@ -337,13 +337,13 @@ namespace ice
 
     if (st.sweight == 0.0)
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
         return res;
       }
 
     IF_FAILED(res = Covariance(st))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return res;
     }
 
@@ -351,7 +351,7 @@ namespace ice
       {
         if (res[i][i] < 1e-32)
           {
-            Message(FNAME, M_ZERO_VARIANZ, ERROR);
+            throw IceException(FNAME, M_ZERO_VARIANZ, ERROR);
             return res;
           }
       }
@@ -416,7 +416,7 @@ namespace ice
 
     if ((c != ',') && (c != '#'))
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         inp.clear(std::ios::badbit);
         return inp;
       }

@@ -27,7 +27,7 @@
 #include <math.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "quaternion.h"
@@ -138,7 +138,7 @@ namespace ice
           }
       }
 
-    Message(FNAME, M_NO_QUATERNIONEIGENWINKEL, NO_QUATERNIONEIGENWINKEL);
+    throw IceException(FNAME, M_NO_QUATERNIONEIGENWINKEL, NO_QUATERNIONEIGENWINKEL);
 
     return -1.0;
   }
@@ -149,7 +149,7 @@ namespace ice
   {
     if (i == 0 && j == 0 && k == 0)
       {
-        Message(FNAME, M_NO_QUATERNIONEIGENACHSE, NO_QUATERNIONEIGENACHSE);
+        throw IceException(FNAME, M_NO_QUATERNIONEIGENACHSE, NO_QUATERNIONEIGENACHSE);
 
         return Quaternion(0, 0, 0, 0);
       }
@@ -171,19 +171,12 @@ namespace ice
 
     if (getSquareNorm() == 0)
       {
-        Message(FNAME, M_NO_QUATERNIONPHASES, NO_QUATERNIONPHASES);
+        throw IceException(FNAME, M_NO_QUATERNIONPHASES, NO_QUATERNIONPHASES);
 
         return Vector3d(0, 0, 0);
       }
 
     temp = getNormalize();
-
-    int error = GetError();
-
-    if (error == NOT_NORMALIZEABLE)
-      {
-        Message(FNAME, M_0, NO_QUATERNIONPHASES);
-      }
 
     double x = 2 * (temp.i * temp.j - temp.real * temp.k);
 
@@ -293,7 +286,7 @@ namespace ice
 
     if (norm == 0)
       {
-        Message(FNAME, M_NO_QUATERNIONINVERSE, NO_QUATERNIONINVERSE);
+        throw IceException(FNAME, M_NO_QUATERNIONINVERSE, NO_QUATERNIONINVERSE);
 
         return (*this);
       }
@@ -314,7 +307,7 @@ namespace ice
 
     if (norm == 0)
       {
-        Message(FNAME, M_NOT_NORMALIZEABLE, NOT_NORMALIZEABLE);
+        throw IceException(FNAME, M_NOT_NORMALIZEABLE, NOT_NORMALIZEABLE);
 
         return (*this);
       }

@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matdef.h"
 /*****************************************************************************
@@ -212,19 +212,19 @@ namespace ice
     /*Parametertestung*/
     if (!IsMatrix(A))
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 
     if (A->type != MAT_DOUBLE)
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 
     if (A->rsize != A->csize)
       {
-        Message(FNAME, M_NO_SQUARE, ERROR);
+        throw IceException(FNAME, M_NO_SQUARE, ERROR);
         return (ERROR);
       }
 
@@ -234,7 +234,7 @@ namespace ice
 
     if (indx == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (NO_MEM);
       }
 
@@ -243,7 +243,7 @@ namespace ice
     if (Ah == nullptr)
       {
         free(indx);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (NO_MEM);
       }
 
@@ -258,12 +258,12 @@ namespace ice
 
         if (rc == NO_MEM)
           {
-            Message(FNAME, M_NO_MEM, rc);
+            throw IceException(FNAME, M_NO_MEM, rc);
           }
 
         if (rc == NUM_INSTABILITY)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, rc);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
           }
 
         return (rc);
@@ -290,19 +290,19 @@ namespace ice
     /*Parametertestung*/
     if (!IsMatrix(A))
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 
     if (A->type != MAT_DOUBLE)
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 
     if (A->rsize < A->csize)
       {
-        Message(FNAME, M_MATRIX_SINGULAR, NUM_INSTABILITY);
+        throw IceException(FNAME, M_MATRIX_SINGULAR, NUM_INSTABILITY);
         return (NUM_INSTABILITY);
       }
 
@@ -312,7 +312,7 @@ namespace ice
 
     if (indx == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (NO_MEM);
       }
 
@@ -321,7 +321,7 @@ namespace ice
     if (Ah == nullptr)
       {
         free(indx);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (NO_MEM);
       }
 
@@ -344,12 +344,12 @@ namespace ice
 
         if (rc == NO_MEM)
           {
-            Message(FNAME, M_NO_MEM, rc);
+            throw IceException(FNAME, M_NO_MEM, rc);
           }
 
         if (rc == NUM_INSTABILITY)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, rc);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
           }
 
         return (rc);
@@ -384,19 +384,19 @@ namespace ice
     /*Parametertestung*/
     if (!IsMatrix(A))
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (nullptr);
       }
 
     if (A->type != MAT_DOUBLE)
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
         return (nullptr);
       }
 
     if (A->rsize != A->csize)
       {
-        Message(FNAME, M_NO_SQUARE, ERROR);
+        throw IceException(FNAME, M_NO_SQUARE, ERROR);
         return (nullptr);
       }
 
@@ -404,13 +404,13 @@ namespace ice
       {
         if (!IsMatrix(B))
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return (nullptr);
           }
 
         if (B->type != MAT_DOUBLE || B->rsize != A->rsize || B->csize != A->csize)
           {
-            Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
             return (nullptr);
           }
       }
@@ -428,7 +428,7 @@ namespace ice
 
     if (icol == nullptr || bcol == nullptr || indx == nullptr || Ah == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (nullptr);
       }
 
@@ -446,12 +446,12 @@ namespace ice
 
         if (rc == NO_MEM)
           {
-            Message(FNAME, M_NO_MEM, rc);
+            throw IceException(FNAME, M_NO_MEM, rc);
           }
 
         if (rc == NUM_INSTABILITY)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, rc);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
           }
 
         return (nullptr);
@@ -498,19 +498,19 @@ namespace ice
     /*Parametertestung*/
     if (!IsMatrix(A))
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (0);
       }
 
     if (A->type != MAT_DOUBLE)
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
         return (0);
       }
 
     if (A->rsize != A->csize)
       {
-        Message(FNAME, M_NO_SQUARE, ERROR);
+        throw IceException(FNAME, M_NO_SQUARE, ERROR);
         return (0);
       }
 
@@ -521,7 +521,7 @@ namespace ice
 
     if (indx == nullptr || Ah == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (0);
       }
 
@@ -536,12 +536,12 @@ namespace ice
 
         if (rc == NO_MEM)
           {
-            Message(FNAME, M_NO_MEM, rc);
+            throw IceException(FNAME, M_NO_MEM, rc);
           }
 
         if (rc == NUM_INSTABILITY)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, rc);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
           }
 
         return (0);

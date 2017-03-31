@@ -21,7 +21,7 @@
 
 #include <wx/wx.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "base.h"
 
@@ -303,7 +303,7 @@ namespace ice
   {
     if (vis == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return vis;
       }
 
@@ -321,7 +321,7 @@ namespace ice
       }
       default:
         // if no valid Mode was specified, there must be some error
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
   }
@@ -363,7 +363,7 @@ namespace ice
       {
         if (Img->maxval > ColorTable::maxEntries)
           {
-            Message(FNAME, M_HIGHRANGE_VIS, WRONG_PARAM);
+            throw IceException(FNAME, M_HIGHRANGE_VIS, WRONG_PARAM);
             return NULL;
           }
         // Windows MUST be created in main thread
@@ -398,7 +398,7 @@ namespace ice
       }
 
     // if no valid Mode was specified, there must be some error
-    Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
     return NULL;
   }
 
@@ -444,7 +444,7 @@ namespace ice
 
       default:
         // if no valid Mode was specified, there must be some error
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
   }
@@ -487,7 +487,7 @@ namespace ice
         // Check if the images match in size.
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize)
           {
-            Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
             return NULL;
           }
 
@@ -507,7 +507,7 @@ namespace ice
         // Check if the images match in size.
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize)
           {
-            Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
             return NULL;
           }
         if (Mode == OVERLAY1)
@@ -534,7 +534,7 @@ namespace ice
       } // switch(Mode)
 
     // if no valid Mode was specified, there must be some error
-    Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
     return NULL;
   }
 
@@ -567,7 +567,7 @@ namespace ice
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize ||
             Image2->xsize != Image3->xsize || Image2->ysize != Image3->ysize)
           {
-            Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
             return NULL;
           }
 
@@ -582,7 +582,7 @@ namespace ice
       } // switch(Mode)
 
     // if no valid Mode was specified, there must be some error
-    Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
     return NULL;
 
   }
@@ -625,7 +625,7 @@ namespace ice
             Image1->xsize != Image5->xsize || Image1->ysize != Image5->ysize ||
             Image1->xsize != Image6->xsize || Image1->ysize != Image6->ysize)
           {
-            Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
             return NULL;
           }
 
@@ -640,7 +640,7 @@ namespace ice
       } // switch(Mode)
 
     // if no valid Mode was specified, there must be some error
-    Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
     return NULL;
 
   }

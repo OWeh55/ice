@@ -2,7 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
@@ -338,7 +338,7 @@ namespace ice
 
     if ((val < 0) || (val > img->maxval))
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -346,7 +346,7 @@ namespace ice
 
     if (size_exp > 5)
       {
-        Message(FNAME, M_WRONG_MAGNITUDE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MAGNITUDE, WRONG_PARAM);
         return WRONG_PARAM;
       }
     else

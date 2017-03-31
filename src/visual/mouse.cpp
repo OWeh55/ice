@@ -20,7 +20,7 @@
  */
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "visual/visual.h"
 #include "visual/ImageWindow.h"
 #include "visual/mouse.h"
@@ -41,7 +41,7 @@ namespace ice
     // check if the parameters are valid
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -49,7 +49,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(p = GetVisual(img));
     if (p == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -65,7 +65,7 @@ namespace ice
   {
     if (!IsImg(Img) || x == NULL || y == NULL)
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
     return Mouse(Img, *x, *y);

@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "message.h"
+#include "IceException.h"
 #include "fit.h"
 
 #include "simplex.h"
@@ -48,25 +48,25 @@ namespace ice
 
     if (pl1 == NULL || pl2 == NULL)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (pl1->lng != pl2->lng)
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (limit < 0.0)
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (pl1->lng > MAXMATCHPOINTSLINOPT)
       {
-        Message(FNAME, M_TOO_MUCH_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_MUCH_POINTS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -87,7 +87,7 @@ namespace ice
         code = FitProjectiveLinOpt(pl1, pl2, tr, limit);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

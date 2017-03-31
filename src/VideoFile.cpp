@@ -60,18 +60,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
                 break;
               case 2:
               case 3:
-                Message(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
                 break;
               case 4:
               case 5:
-                Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
                 break;
               default:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
               }
 
             reader = nullptr;
@@ -85,7 +85,7 @@ namespace ice
           }
         catch (int error)
           {
-            Message(FNAME, M_FILE_OPEN + NumberString(error), WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN + NumberString(error), WRONG_FILE);
             writer = nullptr;
           }
       }
@@ -127,7 +127,7 @@ namespace ice
   {
     if (writer)
       {
-        Message(FNAME, "Cannot reset in write mode", WRONG_PARAM);
+        throw IceException(FNAME, "Cannot reset in write mode", WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -143,18 +143,18 @@ namespace ice
         switch (error)
           {
           case 1:
-            Message(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
             break;
           case 2:
           case 3:
-            Message(FNAME, M_WRONG_FILETYPE, filename, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILETYPE, filename, WRONG_FILE);
             break;
           case 4:
           case 5:
-            Message(FNAME, M_UNSUPPORTED_FILE, filename, WRONG_FILE);
+            throw IceException(FNAME, M_UNSUPPORTED_FILE, filename, WRONG_FILE);
             break;
           default:
-            Message(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
           }
 
         reader = nullptr;
@@ -169,7 +169,7 @@ namespace ice
   {
     if (reader || writer)
       {
-        Message(FNAME, M_ALREADY_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_ALREADY_OPEN, WRONG_STATE);
         return WRONG_STATE;
       }
 
@@ -184,18 +184,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
                 break;
               case 2:
               case 3:
-                Message(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
                 break;
               case 4:
               case 5:
-                Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
                 break;
               default:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
               }
 
             reader = nullptr;
@@ -218,10 +218,10 @@ namespace ice
               case 1:
               case 20:
               case 21:
-                Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
                 break;
               default:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
               }
 
             reader = nullptr;
@@ -239,7 +239,7 @@ namespace ice
   {
     if (!reader)
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
         return false;
       }
 
@@ -287,7 +287,7 @@ namespace ice
   {
     if (!reader)
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
         return false;
       }
 
@@ -306,7 +306,7 @@ namespace ice
   {
     if (!reader)
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
         return false;
       }
 
@@ -335,7 +335,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
       }
   }
 #undef FNAME
@@ -353,7 +353,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
       }
   }
 #undef FNAME
@@ -362,7 +362,7 @@ namespace ice
   {
     if (!writer)
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
         return false;
       }
 
@@ -375,13 +375,13 @@ namespace ice
         switch (error)
           {
           case 30:
-            Message(FNAME, "Cannot convert color space", error);
+            throw IceException(FNAME, "Cannot convert color space", error);
             break;
           case 31:
-            Message(FNAME, "Cannot encode video", error);
+            throw IceException(FNAME, "Cannot encode video", error);
             break;
           case 32:
-            Message(FNAME, "Cannot write video", error);
+            throw IceException(FNAME, "Cannot write video", error);
             break;
           }
         return false;

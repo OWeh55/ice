@@ -25,7 +25,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fouriertrafo.h"
@@ -44,7 +44,7 @@ namespace ice
     int dim = re.size();
     if (dim != (int)im.size())
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -82,7 +82,7 @@ namespace ice
   {
     if ((ms.rows() != 2) && (ms.cols() != 2))
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

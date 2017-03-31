@@ -24,7 +24,7 @@
  * Author: Alexander Lärz, 2005
  */
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "quatmatrix.h"
@@ -52,13 +52,13 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return;
           }
       }
     else
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_MATRIX);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_MATRIX);
         data = nullptr;
         return;
       }
@@ -82,7 +82,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return;
           }
       }
@@ -124,7 +124,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message("operator=", M_NO_MEM, NO_MEM);
+            throw IceException("operator=", M_NO_MEM, NO_MEM);
             return *this;
           }
       }
@@ -170,7 +170,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(rows)))
       {
-        Message("operator[]", "Wrong index", WRONG_PARAM);
+        throw IceException("operator[]", "Wrong index", WRONG_PARAM);
         return *data[0];
       }
 
@@ -181,7 +181,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(rows)))
       {
-        Message("operator[]", "Wrong index", WRONG_PARAM);
+        throw IceException("operator[]", "Wrong index", WRONG_PARAM);
         return *data[0];
       }
 
@@ -192,7 +192,7 @@ namespace ice
   {
     if ((qm1.rows != qm2.rows) || (qm1.columns != qm2.columns))
       {
-        Message("operator+", "Format doesn't match", WRONG_PARAM);
+        throw IceException("operator+", "Format doesn't match", WRONG_PARAM);
         return qm1;
       }
 
@@ -210,7 +210,7 @@ namespace ice
   {
     if ((qm1.rows != qm2.rows) || (qm1.columns != qm2.columns))
       {
-        Message("operator+", "Format doesn't match", WRONG_PARAM);
+        throw IceException("operator+", "Format doesn't match", WRONG_PARAM);
         return qm1;
       }
 

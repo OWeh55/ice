@@ -32,7 +32,7 @@
 
 #include "defs.h"
 #include "strtool.h"
-#include "message.h"
+#include "IceException.h"
 
 namespace ice
 {
@@ -183,7 +183,7 @@ namespace ice
 
     if (wchars < 0)
       {
-        Message(FNAME, M_WRONG_CODING, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_CODING, WRONG_PARAM);
         return res;
       }
 
@@ -202,7 +202,7 @@ namespace ice
 
     if (chars < 0)
       {
-        Message(FNAME, M_WRONG_CODING, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_CODING, WRONG_PARAM);
         return res;
       }
 

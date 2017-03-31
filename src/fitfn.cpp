@@ -20,7 +20,7 @@
  */
 
 #include "base.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -38,7 +38,7 @@ namespace ice
 
     if (m.cols() < 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -138,7 +138,7 @@ namespace ice
 
     if ((ord + 1) * (ord + 2) / 2 != vsize)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
   }
 #undef FNAME

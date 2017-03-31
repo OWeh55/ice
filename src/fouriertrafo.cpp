@@ -97,7 +97,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        Message(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete", ERROR);
       }
     else
       {
@@ -118,7 +118,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        Message(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete", ERROR);
       }
     else
       {
@@ -140,7 +140,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        Message(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete", ERROR);
       }
     else
       {
@@ -161,7 +161,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        Message(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete", ERROR);
       }
     else
       {
@@ -665,7 +665,7 @@ namespace ice
       {
         if (size != sourceSize)
           {
-            Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+            throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
             return false;
           }
       }

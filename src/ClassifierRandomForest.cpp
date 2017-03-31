@@ -21,7 +21,7 @@
 
 #include <set>
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "vectortools.h"
 #include "ClassifierRandomForest.h"
 
@@ -48,7 +48,7 @@ namespace ice
     nUse = nUsep;
     if (nUse > nTrees)
       {
-        Message(FNAME, M_WRONG_PARAMETER, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER, WRONG_PARAM);
         return;
       }
     for (unsigned int i = 0; i < classifiers.size(); ++i)

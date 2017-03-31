@@ -21,7 +21,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "Trafo.h"
 #include "contools.h"
@@ -125,13 +125,13 @@ namespace ice
 
     if ((points != p2.rows()) || (points != weight.Size()))
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return res;
       }
 
     if ((p1.cols() != 2) || (p2.cols() != 2))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return res;
       }
 
@@ -200,7 +200,7 @@ namespace ice
         return res;
       }
 
-    Message(FNAME, M_NUM_INSTABILITY, ERROR);
+    throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
     return res;
   }
 

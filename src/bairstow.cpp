@@ -2,7 +2,7 @@
 
 #include "numbase.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "bairstow.h"
 namespace ice
@@ -33,7 +33,7 @@ namespace ice
     if (a.Size() < 2)
       {
         rc = NO_SOLUTION;
-        Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+        throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
         return rc;
       }
 
@@ -58,7 +58,7 @@ namespace ice
             if (i1 >= inumber)
               {
                 rc = NO_SOLUTION;
-                Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+                throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
                 return rc;
               }
 

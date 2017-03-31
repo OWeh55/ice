@@ -32,12 +32,12 @@
 #include <vector>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "Point.h"
 
-#define VECTOR_ERROR(f,m,r,ret) { Message("VectorT::" f,m,r); return ret; }
-#define VECTOR_ERROR3(f,m,r) { Message("VectorT::" f,m,r); return; }
+#define VECTOR_ERROR(f,m,r,ret) { throw IceException("VectorT::" f,m,r); }
+#define VECTOR_ERROR3(f,m,r) { throw IceException("VectorT::" f,m,r); }
 
 namespace ice
 {
@@ -541,7 +541,7 @@ namespace ice
     {
       if (dim != h.dim)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         }
       else
         {
@@ -567,7 +567,7 @@ namespace ice
     {
       if (dim != rhs.dim)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         }
       else
         {
@@ -606,7 +606,7 @@ namespace ice
 
       if (dim != h.dim)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         }
       else
         {
@@ -843,7 +843,7 @@ namespace ice
 
       if (c != '<')
         {
-          Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+          throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
           is.clear();
           return is;
         }
@@ -863,7 +863,7 @@ namespace ice
 
           if ((c != ',') && (c != '#') && (c != '>'))
             {
-              Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+              throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
               is.clear();
               return is;
             }

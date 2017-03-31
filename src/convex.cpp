@@ -22,7 +22,7 @@
 #include <string.h>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "lists.h"
 #include "macro.h"
 
@@ -45,7 +45,7 @@ namespace ice
   {
     if (pl == NULL || pl->lng == 0)
       {
-        Message(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
         return NULL;
       }
 
@@ -95,7 +95,7 @@ namespace ice
 
     if (ymin == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -104,7 +104,7 @@ namespace ice
     if (ymax == NULL)
       {
         delete ymin;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -114,7 +114,7 @@ namespace ice
       {
         delete ymin;
         delete ymax;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -125,7 +125,7 @@ namespace ice
         delete ymin;
         delete ymax;
         delete imin;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -137,7 +137,7 @@ namespace ice
         delete ymax;
         delete imin;
         delete imax;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -196,7 +196,7 @@ namespace ice
         delete imin;
         delete imax;
         delete used;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -326,7 +326,7 @@ namespace ice
         delete imax;
         delete used;
         delete pl2;
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -381,7 +381,7 @@ namespace ice
 
     if (!c.isValid())
       {
-        Message(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
         return res;
       }
 
@@ -457,7 +457,7 @@ namespace ice
 
     if (pl1 == NULL || pl1->lng < 3 || pl2 == NULL || pl2->lng < 3)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return POLY_ERROR;
       }
 

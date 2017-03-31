@@ -21,7 +21,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "root.h"
 #include "momente.h"
@@ -74,7 +74,7 @@ namespace ice
 
     if (mx[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return -1;
       }
 
@@ -138,7 +138,7 @@ namespace ice
 
     if (mx[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return -1;
       }
 
@@ -159,7 +159,7 @@ namespace ice
 
     if (type != ELLIPSE)
       {
-        Message(FNAME, M_NO_ELLIPSE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_ELLIPSE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -182,7 +182,7 @@ namespace ice
 
     if (mom[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return (-1);
       }
 
@@ -439,7 +439,7 @@ namespace ice
 
     if (mom[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return ERROR;
       }
 
@@ -733,7 +733,7 @@ namespace ice
 
     if (mom[0] == 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return (-1);
       }
 
@@ -849,7 +849,7 @@ namespace ice
         mom[5] <= 0.0 || mom[10] <= 0.0 ||
         mom[12] <= 0.0 || mom[14] <= 0.0)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return (-1);
       }
 

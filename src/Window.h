@@ -24,7 +24,7 @@
 #include <iostream>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "numbase.h"
 #include "Point.h"

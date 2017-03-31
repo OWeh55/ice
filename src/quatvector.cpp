@@ -23,7 +23,7 @@
  * Author: Alexander Lärz, 2005
  */
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
@@ -50,13 +50,13 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return;
           }
       }
     else
       {
-        Message(FNAME, M_VECTORDIM, WRONG_VECTOR);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_VECTOR);
         data = nullptr;
         return;
       }
@@ -79,7 +79,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return;
           }
       }
@@ -117,7 +117,7 @@ namespace ice
 
             if (data == nullptr)
               {
-                Message("operator=", M_NO_MEM, NO_MEM);
+                throw IceException("operator=", M_NO_MEM, NO_MEM);
                 return *this;
               }
           }
@@ -150,7 +150,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(dimension)))
       {
-        Message("operator[]", "Wrong index", WRONG_PARAM);
+        throw IceException("operator[]", "Wrong index", WRONG_PARAM);
         return data[0];
       }
 
@@ -168,7 +168,7 @@ namespace ice
 
     if (qv1.dimension != qv2.dimension)
       {
-        Message("Operator+", "Wrong dimension", WRONG_PARAM);
+        throw IceException("Operator+", "Wrong dimension", WRONG_PARAM);
         return qv1;
       }
 
@@ -186,7 +186,7 @@ namespace ice
 
     if (qv1.dimension != qv2.dimension)
       {
-        Message("Operator+", "Wrong dimension", WRONG_PARAM);
+        throw IceException("Operator+", "Wrong dimension", WRONG_PARAM);
         return qv1;
       }
 

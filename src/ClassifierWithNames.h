@@ -70,7 +70,7 @@ namespace ice
     {
       if (initialized)
         {
-          Message(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
+          throw IceException(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
         }
       clIndex[cln] = nLabels;
       clName.push_back(cln);
@@ -81,7 +81,7 @@ namespace ice
     {
       if (initialized)
         {
-          Message(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
+          throw IceException(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
         }
 
       for (Tlabel i = cln1; i < cln2; i++)
@@ -94,7 +94,7 @@ namespace ice
     {
       if (initialized)
         {
-          Message(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
+          throw IceException(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
         }
 
       for (Tlabel d : nl)

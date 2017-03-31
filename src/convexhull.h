@@ -96,7 +96,7 @@ namespace ice
   {
     if (pl.size() == 0)
       {
-        Message(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

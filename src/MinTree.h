@@ -42,7 +42,7 @@ namespace ice
     {
       if (nPoints < 1)
         {
-          Message("MinTree::MinTree", M_EMPTY_POINTLIST, WRONG_PARAM);
+          throw IceException("MinTree::MinTree", M_EMPTY_POINTLIST, WRONG_PARAM);
           return;
         }
 

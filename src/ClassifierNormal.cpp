@@ -22,7 +22,7 @@
 #include <fstream>
 #include <string>
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "ClassifierNormal.h"
@@ -37,7 +37,7 @@ namespace ice
   {
     IF_FAILED(Init(classes, dimension))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 #undef FNAME

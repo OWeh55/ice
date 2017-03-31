@@ -43,7 +43,7 @@ namespace ice
     ImageD img;
     if ((xsize <= 0) || (ysize <= 0) || (minval > maxval))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return img;
       }
     img.create(xsize, ysize, minval, maxval);
@@ -56,7 +56,7 @@ namespace ice
 
     if (! im.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return res;
       }
 
@@ -80,7 +80,7 @@ namespace ice
 
     if (!img.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return res;
       }
 

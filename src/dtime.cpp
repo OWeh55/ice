@@ -38,8 +38,9 @@
 #endif
 #endif
 
+#include "defs.h"
 #include "dtime.h"
-#include "message.h"
+#include "IceException.h"
 
 namespace ice
 {
@@ -64,7 +65,7 @@ namespace ice
 
     if (i == -1)
       {
-        Message("TimeD()", "keine Zeit", -2000); /* kann nicht vorkommen ?! */
+        throw IceException("TimeD()", "keine Zeit", -2000); /* kann nicht vorkommen ?! */
         return (-1);
       }
 
@@ -127,7 +128,7 @@ namespace ice
         return TimeD2(true, true);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         break;
       }
 

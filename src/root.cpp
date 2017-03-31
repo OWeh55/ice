@@ -27,7 +27,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "analygeo.h"
@@ -182,7 +182,7 @@ namespace ice
               roottest(ch[2].real(), p3, p2, p1, p0, a0, a1, b0, b1))
            )
           {
-            Message(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
+            throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
             return NUM_INSTABILITY;
           }
 
@@ -256,7 +256,7 @@ namespace ice
   {
     if (x <= 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return 0;
       }
 

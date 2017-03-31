@@ -33,7 +33,7 @@ namespace ice
 
     if (pl.rows() < 3 || pl.cols() < 2)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -113,7 +113,7 @@ namespace ice
   {
     if (!c.isValid())
       {
-        Message(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -121,7 +121,7 @@ namespace ice
 
     if (nPoints < 3)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -151,7 +151,7 @@ namespace ice
 
     if (pl.rows() < 3 || pl.cols() < 2)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -162,7 +162,7 @@ namespace ice
       rpl->wptr[c1] = 1;
       }
       if(!IsPolygon(rpl)){
-      Message(FNAME,"KEIN GUELTIGES POLYGON",WRONG_PARAM);
+    throw IceException(FNAME,"KEIN GUELTIGES POLYGON",WRONG_PARAM);
       return WRONG_PARAM;
       }
       FreePointList(rpl);*/

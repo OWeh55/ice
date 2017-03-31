@@ -65,7 +65,7 @@ namespace ice
 
     if (mx(0, 0) < EPSILON)
       {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
         return tri;
       }
 
@@ -213,7 +213,7 @@ namespace ice
 
     if (n > 7)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return res;
       }
 
@@ -246,7 +246,7 @@ namespace ice
 
     if (n > 7)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return res;
       }
 

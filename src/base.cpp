@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "util.h"
 #include "base.h"
@@ -36,12 +36,12 @@ namespace ice
   {
     if (Value < 0)
       {
-        Message(FNAME, M_VALTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
         return WRONG_PARAM;
       }
     if (Value > img.maxval)
       {
-        Message(FNAME, M_VALTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_VALTOOLARGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
     return img.set(Value);

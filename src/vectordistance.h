@@ -131,7 +131,7 @@ namespace ice
 
     if (dim != feat2.cols())
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return WRONG_MATRIX;
       }
 

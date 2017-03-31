@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "darith.h"
@@ -59,7 +59,7 @@ namespace ice
 
         if (fr == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
 
@@ -93,7 +93,7 @@ namespace ice
 
         if (fr == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
 
@@ -149,7 +149,7 @@ namespace ice
     ConvImgImgD(src, srcd, NORMALIZED, SIGNED);
     IF_FAILED(HartleyImgD(srcd, dst, dir))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       FreeImgD(srcd);
       return ERROR;
     }

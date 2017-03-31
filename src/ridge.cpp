@@ -30,7 +30,7 @@
 #include <stddef.h>  /* notwendig fuer Unix !!! */
 #include <math.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "freeman.h"
@@ -96,25 +96,25 @@ namespace ice
 
     if ((dir != HORZ) && (dir != VERT))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImg(imgv))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if (!IsImg(imgo))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if (!(Inside(imgv, x, y)))
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return (WRONG_STARTPOINT);
       }
 
@@ -125,7 +125,7 @@ namespace ice
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
         return WRONG_WINDOW;
       }
 
@@ -292,13 +292,13 @@ namespace ice
 
     if (!IsImg(imgv))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return c;
       }
 
     if (!IsImg(imgo))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return c;
       }
 
@@ -309,13 +309,13 @@ namespace ice
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
         return c;
       }
 
     if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return c;
       }
 
@@ -329,7 +329,7 @@ namespace ice
 
         if (GetVal(imgo, xf, yf) != 0)
           {
-            Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+            throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
             return c;
           }
 

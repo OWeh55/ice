@@ -93,7 +93,7 @@ namespace ice
       zsize = fn.size();
       if (zsize == 0)
         {
-          Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
+          throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
           return;
         }
 
@@ -123,7 +123,7 @@ namespace ice
       zsize = files.size();
       if (zsize == 0)
         {
-          Message(FNAME, M_EMPTY_LIST, WRONG_PARAM);
+          throw IceException(FNAME, M_EMPTY_LIST, WRONG_PARAM);
           return;
         }
       for (unsigned int i = 0; i < files.size(); i++)
@@ -155,7 +155,7 @@ namespace ice
         }
       else
         {
-          Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
           return WRONG_PARAM;
         }
       return OK;
@@ -190,27 +190,27 @@ namespace ice
     {
       if (x < 0)
         {
-          Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+          throw IceException(FNAME, M_XTOOSMALL, WRONG_PARAM);
         }
       else if (x >= xsize)
         {
-          Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+          throw IceException(FNAME, M_XTOOLARGE, WRONG_PARAM);
         }
       else if (y < 0)
         {
-          Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+          throw IceException(FNAME, M_YTOOSMALL, WRONG_PARAM);
         }
       else if (y >= ysize)
         {
-          Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+          throw IceException(FNAME, M_YTOOLARGE, WRONG_PARAM);
         }
       else if (z < 0)
         {
-          Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+          throw IceException(FNAME, M_ZTOOSMALL, WRONG_PARAM);
         }
       else if (z >= zsize)
         {
-          Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+          throw IceException(FNAME, M_ZTOOLARGE, WRONG_PARAM);
         }
       else
         {
@@ -230,27 +230,27 @@ namespace ice
     {
       if (x < 0)
         {
-          Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+          throw IceException(FNAME, M_XTOOSMALL, WRONG_PARAM);
         }
       else if (x >= xsize)
         {
-          Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+          throw IceException(FNAME, M_XTOOLARGE, WRONG_PARAM);
         }
       else if (y < 0)
         {
-          Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+          throw IceException(FNAME, M_YTOOSMALL, WRONG_PARAM);
         }
       else if (y >= ysize)
         {
-          Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+          throw IceException(FNAME, M_YTOOLARGE, WRONG_PARAM);
         }
       else if (z < 0)
         {
-          Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+          throw IceException(FNAME, M_ZTOOSMALL, WRONG_PARAM);
         }
       else if (z >= zsize)
         {
-          Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+          throw IceException(FNAME, M_ZTOOLARGE, WRONG_PARAM);
         }
       else
         {
@@ -294,13 +294,13 @@ namespace ice
     {
       if (!isValid() || !img2.isValid())
         {
-          Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
           return WRONG_PARAM;
         }
 
       if ((xsize != img2.xsize) || (ysize != img2.ysize) || (zsize != img2.zsize))
         {
-          Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
           return WRONG_PARAM;
         }
 
@@ -362,11 +362,11 @@ namespace ice
 
       if (z < -0.5)
         {
-          Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+          throw IceException(FNAME, M_ZTOOSMALL, WRONG_PARAM);
         }
       else if (z > zsize)
         {
-          Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+          throw IceException(FNAME, M_ZTOOLARGE, WRONG_PARAM);
         }
       else if (z < 0)
         {

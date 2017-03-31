@@ -21,7 +21,7 @@
 #include <limits.h>
 #include <algorithm>
 
-#include "message.h"  // for printing error messages
+#include "IceException.h"
 
 #include "picio.h"
 
@@ -77,7 +77,7 @@ namespace ice
               }
             else
               {
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
               }
           }
       }
@@ -141,7 +141,7 @@ namespace ice
         imag = new iceImage3((iceImage3*)i.img, w, title);
         break;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
     xsize = imag->xsize;
@@ -156,13 +156,13 @@ namespace ice
   {
     if (!isValid() || !img2.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((xsize != img2->xsize) || (ysize != img2->ysize))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -183,7 +183,7 @@ namespace ice
   {
     if (SizeX <= 0 || SizeY <= 0 || MaxValue <= 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return Image();
       }
 
@@ -196,7 +196,7 @@ namespace ice
   {
     if (!IsImg(Img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return Image();
       }
 
@@ -218,7 +218,7 @@ namespace ice
   {
     if (!IsImg(imgp))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return Image();
       }
 
@@ -232,7 +232,7 @@ namespace ice
   {
     if (!IsImg(Img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

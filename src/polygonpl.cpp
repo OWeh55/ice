@@ -528,13 +528,13 @@ namespace ice
 
     if ((pl1 == nullptr) || (pl2 == nullptr))
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
+        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
         return nullptr;
       }
 
     if ((pl1->lng < 3) || (pl2->lng < 3))
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
+        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
         return nullptr;
       }
 
@@ -599,7 +599,7 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
+        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
         return false;
       }
 
@@ -626,13 +626,13 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
+        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
         return (-1);
       }
 
     if (pl->lng < 2)
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
+        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
         return (-1);
       }
 
@@ -697,7 +697,7 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
+        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
         return c;
       }
 
@@ -720,13 +720,13 @@ namespace ice
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, ERROR);
+        throw IceException(FNAME, M_WRONG_IMAGE, ERROR);
         return;
       }
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
+        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
         return;
       }
 

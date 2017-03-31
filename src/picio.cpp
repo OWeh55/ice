@@ -32,7 +32,7 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "util.h"
@@ -344,11 +344,11 @@ namespace ice
       case PSD:
         return ReadPSDImg(filename, img, flag);
       case UNSUPPORTED_TYP:
-        Message(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
         return Image();
       }
 
-    Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
     return Image();
   }
 
@@ -381,11 +381,11 @@ namespace ice
       case TIF:
         return ReadTIFImg(filename, ir, ig, ib, flag);
       case UNSUPPORTED_TYP:
-        Message(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
-    Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
     return WRONG_FILE;
   }
 #undef FNAME
@@ -418,14 +418,14 @@ namespace ice
         rc = WritePSDImg(img, filename);
         break;
       case UNSUPPORTED_TYP:
-        Message(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
       }
 
     WriteImgFileComment = "";
 
     if (rc == WRONG_FILE)
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
       }
 
     return rc;
@@ -459,7 +459,7 @@ namespace ice
         rc = WritePSDImg(ir, ig, ib, filename);
         break;
       case UNSUPPORTED_TYP:
-        Message(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
         break;
       }
 
@@ -467,7 +467,7 @@ namespace ice
 
     if (rc == WRONG_FILE)
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
       }
 
     return rc;
@@ -498,11 +498,11 @@ namespace ice
       case PSD:
         return InfPSDFile(fname, xsize, ysize, maxval, nr);
       case UNSUPPORTED_TYP:
-        Message(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
-    Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
     return WRONG_FILE;
   }
 

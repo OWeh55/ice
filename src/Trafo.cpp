@@ -24,7 +24,7 @@
 #include "defs.h"
 #include "numbase.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "Trafo.h"
 #include "Matrix.h"
@@ -84,7 +84,7 @@ namespace ice
   {
     if ((dimSourcep <= 0) || (dimTargetp < 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 
@@ -134,7 +134,7 @@ namespace ice
 
     IF_FAILED(normalize())
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
     return *this;
   }
@@ -184,7 +184,7 @@ namespace ice
     //    if (sum==0)
     if (m[dimTarget][dimSource] == 0.0)
       {
-        Message(FNAME, M_WRONG_TRAFO, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_TRAFO, WRONG_PARAM);
         return ERROR;
       }
 
@@ -198,7 +198,7 @@ namespace ice
   {
     if (dimTarget != 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -214,7 +214,7 @@ namespace ice
   {
     if (dimTarget != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -242,7 +242,7 @@ namespace ice
 
     if (dimTarget != s.Size())
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -267,7 +267,7 @@ namespace ice
 
     if (dimTarget - 1 < achse)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -285,7 +285,7 @@ namespace ice
     // 2D-rotation um einen Punkt (x0,y0)
     if (dimTarget != 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -309,7 +309,7 @@ namespace ice
     // 3D-Rotation um einen durch Punkt und Richtung gegebenen Strahl
     if (dimTarget != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -349,7 +349,7 @@ namespace ice
   {
     if (dimTarget != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -373,7 +373,7 @@ namespace ice
   {
     if (dimTarget != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -399,7 +399,7 @@ namespace ice
   {
     if (dimTarget != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -448,7 +448,7 @@ namespace ice
   {
     if (dimTarget < 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -480,7 +480,7 @@ namespace ice
     // Scherung in Y-Richtung (in Ebene!)
     if (dimTarget != 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -498,7 +498,7 @@ namespace ice
     // Scherung in X-Richtung (in Ebene!)
     if (dimTarget != 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -524,7 +524,7 @@ namespace ice
 
     if (dimTarget != 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -546,7 +546,7 @@ namespace ice
 
     if (dimTarget != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -575,7 +575,7 @@ namespace ice
 
     if ((dimTarget != f.Size()) || (dimTarget != center.Size()))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -611,7 +611,7 @@ namespace ice
 
     if (t2.dimSource != dimTarget)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return ERROR;
       }
 
@@ -628,7 +628,7 @@ namespace ice
 
     if (t2.dimSource != dimTarget)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return ERROR;
       }
 
@@ -644,7 +644,7 @@ namespace ice
   {
     if (dimSource != dimTarget)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -660,7 +660,7 @@ namespace ice
 
     if (dimSource != dimTarget)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
@@ -675,7 +675,7 @@ namespace ice
 
     if (t1.dimSource != t2.dimTarget)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
@@ -690,7 +690,7 @@ namespace ice
 
     if (t.dimSource != v.Size())
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
@@ -728,7 +728,7 @@ namespace ice
 
     if (t.dimSource != 3 || t.dimTarget != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
@@ -752,7 +752,7 @@ namespace ice
 
     if ((tr.dimSource != 2) || (tr.dimTarget != 2))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -803,7 +803,7 @@ namespace ice
 
     if ((tr.dimSource != 3) || (tr.dimTarget != 3))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -866,7 +866,7 @@ namespace ice
 
     if ((tr.dimSource != 3) || (tr.dimTarget != 2))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

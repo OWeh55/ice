@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "base.h"
 #include "convolution_fft.h"
@@ -44,19 +44,19 @@ namespace ice
 
     if (!IsImg(imgr))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
     IF_FAILED(InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
 
     IF_FAILED(val = PeakValuation(imgr, Image(), dx, dy))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
 
@@ -143,7 +143,7 @@ namespace ice
 
         if (val < MINVAL)
           {
-            Message(FNAME, "Can't detect global shift", ERROR);
+            throw IceException(FNAME, "Can't detect global shift", ERROR);
             return ERROR;
           }
 
@@ -228,7 +228,7 @@ namespace ice
     IF_FAILED(DetectTrafo(img1, img2, himg, tr, beta, ct, mode))
     {
       FreeImg(himg);
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
     return OK;

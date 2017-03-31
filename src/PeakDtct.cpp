@@ -60,7 +60,7 @@ namespace ice
       if (sortmode != SORT_X && sortmode != SORT_Y &&
           sortmode != SORT_VAL)
         {
-          Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         }
 
       xptr = yptr = wptr = vptr = nullptr;
@@ -103,7 +103,7 @@ namespace ice
 
           if (ptr == nullptr)
             {
-              Message(FNAME, M_NO_MEM, NO_MEM);
+              throw IceException(FNAME, M_NO_MEM, NO_MEM);
               return ERROR;
             }
 
@@ -125,7 +125,7 @@ namespace ice
 
           if (ptr == nullptr)
             {
-              Message(FNAME, M_NO_MEM, NO_MEM);
+              throw IceException(FNAME, M_NO_MEM, NO_MEM);
               return ERROR;
             }
 
@@ -147,7 +147,7 @@ namespace ice
 
           if (ptr == nullptr)
             {
-              Message(FNAME, M_NO_MEM, NO_MEM);
+              throw IceException(FNAME, M_NO_MEM, NO_MEM);
               return ERROR;
             }
 
@@ -296,7 +296,7 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -1287,7 +1287,7 @@ namespace ice
 
     if (index == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         FreeImg(mask1);
         return nullptr;
       }
@@ -1402,7 +1402,7 @@ namespace ice
         (IsImg(global_mark) && (img->xsize != global_mark->xsize ||
                                 img->ysize != global_mark->ysize)))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return nullptr;
       }
 
@@ -1457,7 +1457,7 @@ namespace ice
         IF_FAILED(mask2 = NewImg(img->xsize, img->ysize, 1))
         {
           FreeImg(mask1);
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return nullptr;
         }
         ClearImg(mask2);
@@ -1467,7 +1467,7 @@ namespace ice
     {
       FreeImg(mask1);
       FreeImg(mask2);
-      Message(FNAME, M_0, NO_MEM);
+      throw IceException(FNAME, M_0, NO_MEM);
       return nullptr;
     }
     ClearImg(mask3);
@@ -1528,7 +1528,7 @@ namespace ice
 
         if (pl == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return nullptr;
           }
         else
@@ -1611,7 +1611,7 @@ namespace ice
                 IF_FAILED(c = BinObj2ConturList(maxanz ? mask3 : mask1,
                                                 RoundInt(xp), RoundInt(yp)))
                 {
-                  Message(FNAME, M_0, ERROR);
+                  throw IceException(FNAME, M_0, ERROR);
 
                   if (pl)
                     {
@@ -1664,7 +1664,7 @@ namespace ice
                     IF_FAILED((c = BinObj2ConturList(maxanz ? mask3 : mask1,
                                                      RoundInt(xp), RoundInt(yp))))
                     {
-                      Message(FNAME, M_0, ERROR);
+                      throw IceException(FNAME, M_0, ERROR);
 
                       if (pl)
                         {
@@ -1723,7 +1723,7 @@ namespace ice
 
         if (pl == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return nullptr;
           }
         else
@@ -1754,7 +1754,7 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 
@@ -1786,7 +1786,7 @@ namespace ice
     if (!IsImg(img) || x < 0 || y < 0 || x >= img->xsize || y >= img->ysize ||
         (flag != IPL_MAXCONTUR && flag != IPL_MINCONTUR))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return c;
       }
 
@@ -1798,7 +1798,7 @@ namespace ice
 
     if (!IsImg(mask1))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return c;
       }
 
@@ -1828,7 +1828,7 @@ namespace ice
 
     IF_FAILED((c = BinObj2ConturList(mask1, x, y)))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       FreeImg(mask1);
       return c;
     }

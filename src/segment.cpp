@@ -50,7 +50,7 @@
 #include <math.h>
 
 #include "fit.h"
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "numbase.h"
 #include "analygeo.h"
@@ -198,10 +198,7 @@ namespace ice
         p1[1] = pl->yptr[pos_fi - 1];
       }
 
-    OffMessage();
     code =  ConvPointHesse(p0, p1, p, phi);
-    SetOk();
-    OnMessage();
 
     if (code != OK)
       {
@@ -218,8 +215,6 @@ namespace ice
       {
         *ratio = DBL_MAX;  /* soll schlecht bewertet werden */
       }
-
-    SetOk();
   }
 
 
@@ -521,10 +516,8 @@ namespace ice
     *y_cent = 0;
     *psi1   = 0;
     *psi2   = 0;
-    OffMessage();
+
     npl = NewPointList(pos_fi - pos_st + 1);
-    SetOk();
-    OnMessage();
 
     if (npl == nullptr)
       {
@@ -749,11 +742,7 @@ namespace ice
     }
     */
 
-    SetOk();
-    OffMessage();
     FreePointList(npl);
-    SetOk();
-    OnMessage();
   }
 
   /* ***************************************************************************
@@ -1335,13 +1324,10 @@ namespace ice
     *psi2 = 0;
     *w = 0;
 
-    OffMessage();
     npl = NewPointList(pos_fi - pos_st + 1);
-    OnMessage();
 
     if (npl == nullptr)
       {
-        SetOk();
         *pos_break = (pos_st + pos_fi) / 2 ;
         *max_dev = DBL_MAX;
         *ratio = DBL_MAX;
@@ -1386,10 +1372,7 @@ namespace ice
         *max_dev = DBL_MAX;
         *pos_break = (pos_st + pos_fi) / 2 ;
         *ratio = DBL_MAX;
-        OffMessage();
         FreePointList(npl);
-        SetOk();
-        OnMessage();
         return;
       }
 
@@ -1524,12 +1507,7 @@ namespace ice
         *psi2 = -temp;
       }
 
-    SetOk();
-    OffMessage();
     FreePointList(npl);
-    SetOk();
-    OnMessage();
-
   }
 
   /* ***************************************************************************
@@ -2164,19 +2142,19 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return (nullptr);
       }
 
     if ((mode < 0) || (mode > 2))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return (nullptr);
       }
 
     if (pl->lng < 2)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return (nullptr);
       }
 
@@ -2185,7 +2163,7 @@ namespace ice
 
     if (tree == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (nullptr);
       }
 
@@ -2193,7 +2171,7 @@ namespace ice
 
     if (code == -1)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (nullptr);
       }
 
@@ -2201,7 +2179,7 @@ namespace ice
 
     if (sl == nullptr)
       {
-        Message(FNAME, "Nicht genug Speicher för die Segmentliste", NO_MEM);
+        throw IceException(FNAME, "Nicht genug Speicher för die Segmentliste", NO_MEM);
         return (nullptr);
       }
 
@@ -2210,8 +2188,8 @@ namespace ice
 
     if (sl == nullptr)
       {
-        Message(FNAME, "Nicht genug Speicher beim Bearbeiten der Segmentliste",
-                NO_MEM);
+        throw IceException(FNAME, "Nicht genug Speicher beim Bearbeiten der Segmentliste",
+                           NO_MEM);
         return (nullptr);
       }
 
@@ -2219,8 +2197,8 @@ namespace ice
 
     if (segl == nullptr)
       {
-        Message(FNAME, "Nicht genug Speicher beim à¤¦ndern der Segmentliste",
-                NO_MEM);
+        throw IceException(FNAME, "Nicht genug Speicher beim à¤¦ndern der Segmentliste",
+                           NO_MEM);
         return (nullptr);
       }
 
@@ -2305,19 +2283,19 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return (nullptr);
       }
 
     if ((type < 1) || (type > 7) || (pa < 0) || (pe >= pl->lng) || (pa > pe))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return (nullptr);
       }
 
     if (pe == pa)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return (nullptr);
       }
 
@@ -2329,7 +2307,7 @@ namespace ice
 
         if (type == DS_ELLIPSE)
           {
-            Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+            throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
             return (nullptr);
           }
 
@@ -2344,7 +2322,7 @@ namespace ice
 
         if (type == DS_CIRCLE)
           {
-            Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+            throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
             return (nullptr);
           }
 
@@ -2357,7 +2335,7 @@ namespace ice
 
     if (sg == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (nullptr);
       }
 
@@ -2538,19 +2516,19 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return (nullptr);
       }
 
     if (((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) > 2) || max_dev <= 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return (nullptr);
       }
 
     if (pl->lng < 2)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return (nullptr);
       }
 
@@ -2652,17 +2630,13 @@ namespace ice
 
                 do   // solange, bis Punktliste zu Ende, oder laengstmoegliches Kreissegment gefunden
                   {
-
-                    OffMessage();
-                    sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
+                    bool ok = true;
                     // berechne Kreissegment und maximalen Abstand
-                    OnMessage();
-                    SetOk();
-
-                    if (sg_temp == nullptr)
-                      {
-                        break;  // Kreissegment konnte nicht berechnet werden
-                      }
+                    IF_FAILED(sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev))
+                    {
+                      ok = false;
+                      break;  // Kreissegment konnte nicht berechnet werden
+                    }
 
                     // (bei Fehler wird das Liniensegment genommen [besser als Abbruch?!])
 
@@ -2723,11 +2697,8 @@ namespace ice
                     do   // solange, bis Punktliste zuende, oder laengstmoegliches Segment gefunden
                       {
 
-                        OffMessage();
                         sg_temp = DetermineSegment(pl, start, ende, DS_ELLIPSE, nullptr, &max_adr, &s_max_dev);
                         // berechnet Ellipsensegment und max. Abstand
-                        OnMessage();
-                        SetOk();
 
                         if (sg_temp == nullptr)
                           {
@@ -2898,11 +2869,8 @@ namespace ice
                     do   // solange, bis Punktliste zu Ende, oder laengstmoegliches Kreissegment gefunden
                       {
 
-                        OffMessage();
                         sg_temp = DetermineSegment(pl, pl->lng - 1 - ende, pl->lng - 1 - start, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
                         // berechne Kreissegment und maximalen Abstand
-                        OnMessage();
-                        SetOk();
 
                         if (sg_temp == nullptr)
                           {
@@ -2968,11 +2936,8 @@ namespace ice
                         do   // solange, bis Punktliste zuende, oder laengstmoegliches Segment gefunden
                           {
 
-                            OffMessage();
                             sg_temp = DetermineSegment(pl, pl->lng - 1 - ende, pl->lng - 1 - start, DS_ELLIPSE, nullptr, &max_adr, &s_max_dev);
                             // berechnet Ellipsensegment und max. Abstand
-                            OnMessage();
-                            SetOk();
 
                             if (sg_temp == nullptr)
                               {
@@ -3058,10 +3023,8 @@ namespace ice
                 if (s_max_dev > max_dev && ende - start > 4 && (mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) < 2)
                   {
                     sg_temp = sg_ok;
-                    OffMessage();
+
                     sg_ok = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
-                    OnMessage();
-                    SetOk();
 
                     if (sg_ok)
                       {
@@ -3084,11 +3047,7 @@ namespace ice
                     if (temp_max_dev > max_dev && ende - start > 5 && (mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) == 0)
                       {
                         sg_temp = sg_ok;
-                        OffMessage();
                         sg_ok = DetermineSegment(pl, start, ende, DS_ELLIPSE, nullptr, &max_adr, &s_max_dev);
-                        OnMessage();
-                        SetOk();
-
                         if (sg_ok)
                           {
                             if (s_max_dev >= temp_max_dev || sg_ok->par[6] < 0)
@@ -3182,7 +3141,7 @@ namespace ice
         if (pl_temp == nullptr)
           {
             FreeSegmentList(sg);
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return (nullptr);
           }
 
@@ -3198,11 +3157,8 @@ namespace ice
             PutPoint(pl_temp, c++, pl->xptr[i], pl->yptr[i], 1);
           }
 
-        OffMessage();
         sg_temp = SegmentPointList(pl_temp, mode | SPL_NOCLOSE, max_dev);
         // SPL_NOCLOSE verhindert hier eine endlose Rekursion
-        OnMessage();
-        SetOk();
 
         FreePointList(pl_temp);
 

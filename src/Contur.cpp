@@ -34,7 +34,7 @@
 #include <algorithm>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -136,7 +136,7 @@ namespace ice
   {
     if (!isvalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -184,7 +184,7 @@ namespace ice
   {
     if (!isvalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -309,7 +309,7 @@ namespace ice
 
     if (!c.isvalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -417,7 +417,7 @@ namespace ice
   {
     if (!isvalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -485,7 +485,7 @@ namespace ice
 
     if (!isvalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, INVALID);
+        throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
         return res;
       }
 
@@ -503,7 +503,7 @@ namespace ice
       }
     else if (wantedIndex > nDirectionCodes)
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return res;
       }
 
@@ -542,13 +542,13 @@ namespace ice
 
     if (!isvalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, INVALID);
+        throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
         return INVALID;
       }
 
     if (!isclosed)
       {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
+        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
         return ERROR;
       }
 
@@ -595,7 +595,7 @@ namespace ice
 
     if (!isvalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, INVALID);
+        throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
         return INVALID;
       }
 

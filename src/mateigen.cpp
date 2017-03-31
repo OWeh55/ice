@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <malloc.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "mateigen.h"
 #include "matdef.h"
@@ -46,13 +46,13 @@ namespace ice
     /* Testung der Parameter */
     if (IsMatrix(A) == false)
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return nullptr;
       }
 
     if (A->type != MAT_DOUBLE)
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
         return nullptr;
       }
 
@@ -61,27 +61,19 @@ namespace ice
 
     if (evect == nullptr)
       {
-        OffMessage();
         evect = NewMatrix(0, n, n);
-        OnMessage();
-
-        if (evect == nullptr)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return nullptr;
-          }
       }
     else
       {
         if (IsMatrix(evect) == false)
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return nullptr;
           }
 
         if (evect->csize != n || evect->rsize != n || evect->type != MAT_DOUBLE)
           {
-            Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
             return nullptr;
           }
       }
@@ -95,7 +87,7 @@ namespace ice
 
     if (b == nullptr || z == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -226,7 +218,7 @@ namespace ice
     FreeMatrix(Amat);
     free(b);
     free(z);
-    Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+    throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
     return nullptr;
   }
 
@@ -289,13 +281,13 @@ namespace ice
     /* Testung der Parameter */
     if (IsMatrix(A) == false)
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 
     if (A->type != MAT_DOUBLE)
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
         return (WRONG_MATRIX);
       }
 
@@ -304,7 +296,7 @@ namespace ice
 
     if (m < n)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -312,27 +304,19 @@ namespace ice
     /* Matrix U */
     if (*U == nullptr)
       {
-        OffMessage();
         *U = NewMatrix(MAT_DOUBLE, m, n);
-        OnMessage();
-
-        if (*U == nullptr)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return (NO_MEM);
-          }
       }
     else
       {
         if (IsMatrix(*U) == false)
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return (WRONG_MATRIX);
           }
 
         if ((*U)->rsize != m || (*U)->type != MAT_DOUBLE || (*U)->csize != n)
           {
-            Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
             return (MAT_NO_COMPAT);
           }
       }
@@ -340,27 +324,19 @@ namespace ice
     /* W - Die Singulaerwerte */
     if (*W == nullptr)
       {
-        OffMessage();
         *W = NewMatrix(0, n, n);
-        OnMessage();
-
-        if (*W == nullptr)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return (NO_MEM);
-          }
       }
     else
       {
         if (IsMatrix(*W) == false)
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return (WRONG_MATRIX);
           }
 
         if ((*W)->rsize != n || (*W)->type != MAT_DOUBLE || (*W)->csize != n)
           {
-            Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
             return (MAT_NO_COMPAT);
           }
       }
@@ -374,27 +350,19 @@ namespace ice
     /* Matrix V */
     if (*V == nullptr)
       {
-        OffMessage();
         *V = NewMatrix(0, n, n);
-        OnMessage();
-
-        if (*V == nullptr)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return (NO_MEM);
-          }
       }
     else
       {
         if (! IsMatrix(*V))
           {
-            Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
             return (WRONG_MATRIX);
           }
 
         if ((*V)->rsize != n || (*V)->type != MAT_DOUBLE || (*V)->csize != n)
           {
-            Message(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
+            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
             return (MAT_NO_COMPAT);
           }
       }
@@ -668,7 +636,7 @@ namespace ice
 
             if (its == 40)
               {
-                Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+                throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
                 return NO_SOLUTION;
               }
 

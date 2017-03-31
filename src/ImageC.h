@@ -298,13 +298,13 @@ namespace ice
     {
       if ((unsigned int)x >= (unsigned int)xsize)
         {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
           return 0;
         }
 
       if ((unsigned int)y >= (unsigned int)ysize)
         {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
           return 0;
         }
 
@@ -315,13 +315,13 @@ namespace ice
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
         {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
           return 0;
         }
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
         {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
           return 0;
         }
 
@@ -393,19 +393,19 @@ namespace ice
     {
       if ((unsigned int)x >= (unsigned int)xsize)
         {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
       if ((unsigned int)y >= (unsigned int)ysize)
         {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
       if ((unsigned int)val > (unsigned int)maxval)
         {
-          Message(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
@@ -416,19 +416,19 @@ namespace ice
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
         {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
         {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
       if ((unsigned int)val > (unsigned int)maxval)
         {
-          Message(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
@@ -478,13 +478,13 @@ namespace ice
     {
       if ((unsigned int)x >= (unsigned int)xsize)
         {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
       if ((unsigned int)y >= (unsigned int)ysize)
         {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
@@ -506,13 +506,13 @@ namespace ice
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
         {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
         {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
           return;
         }
 

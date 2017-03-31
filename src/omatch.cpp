@@ -23,7 +23,7 @@
 #include <algorithm>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "vectordistance.h"
 #include "numbase.h"
 #include "analygeo.h"
@@ -228,7 +228,7 @@ namespace ice
       {
         if ((state & st_first) == 0)
           {
-            Message(FNAME, M_EMPTY_POINTLIST, ERROR);
+            throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
             return;
           }
         interpolatePointList(pl1, distance);
@@ -238,7 +238,7 @@ namespace ice
       {
         if ((state & st_second) == 0)
           {
-            Message(FNAME, M_EMPTY_POINTLIST, ERROR);
+            throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
             return;
           }
         interpolatePointList(pl2, distance);
@@ -252,7 +252,7 @@ namespace ice
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
-        Message(FNAME, M_EMPTY_POINTLIST, ERROR);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
         return;
       }
 
@@ -260,14 +260,14 @@ namespace ice
 
     if (ObjectPointFeatures(pl1, hu_p1, trmode) != 0)
       {
-        Message(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
+        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
         return;
       }
 
     matrix<double> hu_p2;
     if (ObjectPointFeatures(pl2, hu_p2, trmode) != 0)
       {
-        Message(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
+        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
         return;
       }
 
@@ -286,7 +286,7 @@ namespace ice
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
-        Message(FNAME, M_EMPTY_POINTLIST, ERROR);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
         return;
       }
 
@@ -314,14 +314,14 @@ namespace ice
     matrix<double> hu_p1;
     if (ObjectPointFeatures(p1, hu_p1, trmode) != 0)
       {
-        Message(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
+        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
         return;
       }
 
     matrix<double> hu_p2;
     if (ObjectPointFeatures(p2, hu_p2, trmode) != 0)
       {
-        Message(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
+        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
         return;
       }
 
@@ -361,7 +361,7 @@ namespace ice
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
-        Message(FNAME, M_EMPTY_POINTLIST, ERROR);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
         return;
       }
     if ((state & st_references) == 0)
@@ -382,7 +382,7 @@ namespace ice
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
-        Message(FNAME, M_EMPTY_POINTLIST, ERROR);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
         return;
       }
     if ((state & st_references) == 0)
@@ -412,7 +412,7 @@ namespace ice
         IF_FAILED(res = MatchPointlistsLinOpt(OrderedPointList1, OrderedPointList2,
                                               trmode))
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return res;
         }
         break;
@@ -420,12 +420,12 @@ namespace ice
         IF_FAILED(res = MatchPointlists(OrderedPointList1, OrderedPointList2,
                                         trmode))
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return res;
         }
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return res;
       }
 
@@ -651,7 +651,7 @@ namespace ice
 
     if (feat1.cols() != feat2.cols())
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return ret;
       }
 

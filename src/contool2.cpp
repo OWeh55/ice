@@ -33,7 +33,7 @@
 #include <iostream>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "based.h"
@@ -66,7 +66,7 @@ namespace ice
 
     if (data == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return c;
       }
 
@@ -167,7 +167,7 @@ namespace ice
 
     if (fabs(par[3] - par[4]) > 2 * M_PI)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return c;
       }
 
@@ -223,7 +223,7 @@ namespace ice
 
     IF_FAILED(c = GetContur(ps, cs_cls, &e, 0))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return c;
     }
     return c;
@@ -287,7 +287,7 @@ namespace ice
     if (fabs(PHI1 - PHI2) > 2 * M_PI ||
         fabs(PHI1 - PHI2)*RA < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return c;
       }
 
@@ -342,7 +342,7 @@ namespace ice
 
     IF_FAILED(c = GetContur(ps, es_cls, &e, 0))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return c;
     }
     return c;
@@ -403,7 +403,7 @@ namespace ice
 
     IF_FAILED(c = GetContur(ps, e_cls, &e, 0))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return c;
     }
     return c;

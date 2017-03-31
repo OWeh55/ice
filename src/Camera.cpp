@@ -340,7 +340,7 @@ namespace ice
 
     if (v.size() != 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return vh;
       }
 

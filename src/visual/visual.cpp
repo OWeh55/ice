@@ -23,7 +23,7 @@
 
 #include "visual/App.h"
 #include "visual/ImageMgr.h"
-#include "message.h"
+#include "IceException.h"
 #include "visual/GreyImageWindow.h"
 #include "visual/GreyImageColorTableWindow.h"
 #include "visual/OverlayImageWindow.h"
@@ -49,7 +49,7 @@ namespace ice
   {
     if (!IsImg(Img))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -76,7 +76,7 @@ namespace ice
       }
 
     // if no valid Mode was specified, return some error code
-    Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
     return WRONG_PARAM;
   }
 
@@ -84,7 +84,7 @@ namespace ice
   {
     if (!IsImg(Img))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -104,7 +104,7 @@ namespace ice
       }
 
     // if no valid Mode was specified, return some error code
-    Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
     return WRONG_PARAM;
   }
 
@@ -139,7 +139,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
     return v->Zoom(ZoomFactor);
@@ -165,7 +165,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -180,7 +180,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -210,7 +210,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -226,7 +226,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
     RETURN_ERROR_IF_FAILED(v->GetGreyColor(Entry, Red, Green, Blue));
@@ -242,7 +242,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
     RETURN_ERROR_IF_FAILED(v->GetOverlayColor(Entry, Red, Green, Blue));
@@ -292,7 +292,7 @@ namespace ice
         return 1;
 
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return ERROR;
       }
   }
@@ -309,7 +309,7 @@ namespace ice
   {
     if (!IsImg(Img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode, Img.Img(), name);
@@ -335,7 +335,7 @@ namespace ice
     if ((!IsImg(Image1)) ||
         (!IsImg(Image2)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode,
@@ -354,7 +354,7 @@ namespace ice
         (!IsImg(Image2)) ||
         (!IsImg(Image3)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode,
@@ -381,7 +381,7 @@ namespace ice
       (!IsImg(Image6))
     )
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode,

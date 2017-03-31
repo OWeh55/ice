@@ -24,7 +24,7 @@
 #include <math.h>
 #include <string>
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "MatrixAlgebra.h"
@@ -49,7 +49,7 @@ namespace ice
     IF_FAILED(Init(classes, dimension))
     {
       // if initialisation fails
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 
@@ -61,7 +61,7 @@ namespace ice
     IF_FAILED(Init(nClasses, dim))
     {
       // if initialisation fails
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 #undef FNAME
@@ -189,23 +189,25 @@ namespace ice
           }
 
         double det = 0.0;
+        bool ok = true;
 
-        OffMessage();
-        det = CholeskyDeterminant(sigma_k);
-        OnMessage();
+        IF_FAILED(det = CholeskyDeterminant(sigma_k))
+        {
+          ok = false;
+        }
 
-        while ((GetError() != OK) || (fabs(det) < epsilonNumerics))
+        while (!ok || (fabs(det) < epsilonNumerics))
           {
-            SetOk();
-
             for (int k = 0; k < nFeatures; k++)
               {
                 sigma_k[k][k] += epsilon;
               }
 
-            OffMessage();
-            det = CholeskyDeterminant(sigma_k);
-            OnMessage();
+            ok = true;
+            IF_FAILED(det = CholeskyDeterminant(sigma_k))
+            {
+              ok = false;
+            }
           }
 
         Matrix Inverse = CholeskyInverse(sigma_k);
@@ -300,7 +302,7 @@ namespace ice
                 break;
 
               default:
-                Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
                 return WRONG_PARAM;
               }
 
@@ -484,7 +486,7 @@ namespace ice
     source >> id;
     if (id != "ClassifierBayes")
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -553,7 +555,7 @@ namespace ice
 
     if (source.fail() || source.bad())
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
     state = ready;

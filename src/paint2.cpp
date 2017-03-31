@@ -30,7 +30,7 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
@@ -66,19 +66,19 @@ namespace ice
 
     if ((val1 < 0) || (val2 < 0) || (val1 > img->maxval) || (val2 > img->maxval))
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (mode != DEFAULT && mode != NOFILL)
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
         return WRONG_PARAM;
       }
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -108,19 +108,19 @@ namespace ice
     if ((val1 < 0) || (val2 < 0) ||
         (val1 > img->maxval) || (val2 > img->maxval))
       {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (mode != DEFAULT && mode != NOFILL)
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
         return WRONG_PARAM;
       }
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -151,7 +151,7 @@ namespace ice
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -201,7 +201,7 @@ namespace ice
 
     if ((dx < 4) || (dy < 4))
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
         *xs = *ys = 0;
         return WRONG_WINDOW;
       }
@@ -209,7 +209,7 @@ namespace ice
     if (! Inside(img, xc, yc))
       {
         *xs = *ys = 0;
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return WRONG_STARTPOINT;
       }
 
@@ -317,13 +317,13 @@ namespace ice
 
     if ((dx < 1) || (dy < 1))
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
         return ERROR;
       }
 
     if (decision(func, parray, xs, ys, dx, dy) == 0)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return ERROR;
       }
 
@@ -343,7 +343,7 @@ namespace ice
 
     if (ct >= 4)
       {
-        Message(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
         return ERROR;
       }
 
@@ -359,7 +359,7 @@ namespace ice
 
     if (ct >= 4)
       {
-        Message("calc_function", M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
+        throw IceException("calc_function", M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
         return WRONG_STARTPOINT;
       }
 

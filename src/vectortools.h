@@ -25,7 +25,7 @@
 #include <iomanip>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 namespace ice
@@ -135,7 +135,7 @@ namespace ice
       {
         if (c != '<')
           {
-            Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
             is.clear();
             return is;
           }
@@ -154,7 +154,7 @@ namespace ice
 
             if ((c != ',') && (c != '>'))
               {
-                Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
                 is.clear();
                 return is;
               }

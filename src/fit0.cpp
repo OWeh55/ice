@@ -25,7 +25,7 @@
 
 #include <vector>
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fit.h"

@@ -23,7 +23,7 @@
 
 #include "matrixarith.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "MatrixAlgebra.h"
 #include "ClassifierBayes2.h"
@@ -38,7 +38,7 @@ namespace ice
     IF_FAILED(Init(classes, dimension, ap1, ap2, ac12, ac21))
     {
       // if initialisation fails
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 #undef FNAME
@@ -132,7 +132,7 @@ namespace ice
     source >> id;
     if (id != "ClassifierBayes2")
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -149,7 +149,7 @@ namespace ice
 
     if (source.fail() || source.bad())
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 

@@ -27,7 +27,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "visual/xio.h"
 
@@ -47,7 +47,7 @@ namespace ice
 
     if (!h.isInit)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 

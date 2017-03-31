@@ -126,7 +126,7 @@
 #include "matrixarith.h"
 #include "matrixtools.h"
 #include "MaxSrch.h"
-#include "message.h"
+#include "IceException.h"
 #include "MinTree.h"
 #include "momente.h"
 #include "moments.h"

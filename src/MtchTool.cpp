@@ -182,7 +182,7 @@ namespace ice
     if (re == NULL || im == NULL ||
         re->xsize != im->xsize || re->ysize != im->ysize)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
 
@@ -192,13 +192,13 @@ namespace ice
 
         if (dest == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NULL;
           }
       }
     else if (dest->xsize != re->xsize || dest->ysize != re->ysize)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
 
@@ -242,7 +242,7 @@ namespace ice
       dx < 0 || dy < 0
     )
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -261,7 +261,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -278,7 +278,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -313,7 +313,7 @@ namespace ice
   {
     if (!img.isValid())
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return -1;
       }
 
@@ -372,7 +372,7 @@ namespace ice
 
     if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img->xsize || sy >= img->ysize)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return ConturList();
       }
 
@@ -382,7 +382,7 @@ namespace ice
 
     if (!IsImg(mark))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return ConturList();
       }
 
@@ -425,7 +425,7 @@ namespace ice
 
         if (pl == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return ConturList();
           }
 
@@ -486,7 +486,7 @@ namespace ice
 
         if (plnrm == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             FreePointList(pl);
             return ConturList();
           }

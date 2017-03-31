@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "Matrix.h"
 #include "lmdif.h"
@@ -98,7 +98,7 @@ namespace ice
 
       if ((uv.rows() != points) || (xyz.cols() < 3) || (uv.cols() < 2))
         {
-          Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
           return;
         }
     };
@@ -176,7 +176,7 @@ namespace ice
 
     if (info > 3)
       {
-        Message(FNAME, "LMDif:" + LMDifMessage(info), ERROR);
+        throw IceException(FNAME, "LMDif:" + LMDifMessage(info), ERROR);
         return ERROR;
       }
 

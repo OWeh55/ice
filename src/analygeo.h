@@ -67,7 +67,7 @@ namespace ice
 
     if (dd < EPSILON)
       {
-        Message(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
+        throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
         return (POINT_IDENTIC);
       }
 

@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 
@@ -44,7 +44,7 @@ namespace ice
     IF_FAILED(Init(classes, dimension, nNeighbors, norm))
     {
       // if initialisation fails
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 #undef FNAME
@@ -100,7 +100,7 @@ namespace ice
     const ClassSample* rp = tree.findNearest(fn);
     if (rp == NULL)
       {
-        Message(FNAME, M_NOT_INITIALISED, 2);
+        throw IceException(FNAME, M_NOT_INITIALISED, 2);
         return -1;
       }
     return rp->classNr;
@@ -154,7 +154,7 @@ namespace ice
     source >> id;
     if (id != "ClassifierNearestNeighbor")
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
     source >> nFeatures;

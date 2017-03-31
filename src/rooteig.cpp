@@ -28,7 +28,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matrix_function.h"
 #include "vectorarrayfunctions.h"
@@ -117,7 +117,7 @@ namespace ice
             free(zplus);
             free(zminus);
             free(vec1);
-            Message(FNAME, M_NO_REGULAR, NO_REGULAR);
+            throw IceException(FNAME, M_NO_REGULAR, NO_REGULAR);
             return NO_REGULAR;
           }
 
@@ -176,7 +176,7 @@ namespace ice
             PrintVecRn("h1", h1, dim);
             getchar();
 #endif
-            Message(FNAME, M_NO_REGULAR, NO_REGULAR);
+            throw IceException(FNAME, M_NO_REGULAR, NO_REGULAR);
             return NO_REGULAR;
           }
 

@@ -21,7 +21,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "Trafo.h"
 #include "contools.h"
@@ -47,14 +47,14 @@ namespace ice
 
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
     IMatrix m;
     IF_FAILED(m = ConturPointlist(c))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return res;
     }
 
@@ -91,7 +91,7 @@ namespace ice
 
     if (tr.dimSource > m1.cols())
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

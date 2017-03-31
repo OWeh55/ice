@@ -21,7 +21,7 @@
 
 #include <limits.h>
 
-#include "message.h"  // for printing error messages
+#include "IceException.h"
 #include "util.h"     // for MulDiv
 #include "macro.h"    // for min/max functions
 #include "ImageBase.h"
@@ -71,8 +71,7 @@ namespace ice
   {
     if (grayvalue > maxval)
       {
-        ice::Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
     for (int y = 0; y < ysize; y++)

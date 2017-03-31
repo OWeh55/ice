@@ -31,7 +31,7 @@
 #include <limits.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -112,7 +112,7 @@ namespace ice
 
     if (!c.isValid())
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return segmente;
       }
 
@@ -126,7 +126,7 @@ namespace ice
 
     if (slist == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return segmente;
       }
 
@@ -151,7 +151,7 @@ namespace ice
           {
             if (append_seglist(slist, xx, yy) != OK)
               {
-                Message(FNAME, M_NO_MEM, NO_MEM);
+                throw IceException(FNAME, M_NO_MEM, NO_MEM);
 
                 for (i = 0; i < yanz; i++)
                   {

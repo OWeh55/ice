@@ -21,7 +21,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "contools.h"
 #include "simplex.h"
@@ -129,7 +129,7 @@ namespace ice
 
     IF_FAILED(rv = SolveLinearEquation(a, r))
     {
-      Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+      throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
       return Trafo();
     }
 
@@ -239,25 +239,25 @@ namespace ice
 
     if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return res;
       }
 
     if (dim2 > dim1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return res;
       }
 
     if ((dim1 != dim2) && (mode != TRM_AFFINE) && (mode != TRM_PROJECTIVE))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return res;
       }
 
     if ((mode == TRM_SIMILARITY_NOR) && ((dim1 != 2) || (dim2 != 2)))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return res;
       }
 
@@ -367,7 +367,7 @@ namespace ice
 
         IF_FAILED(rv = SolveLinEqu(a, r))
         {
-          Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+          throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
           return res;
         }
 
@@ -405,7 +405,7 @@ namespace ice
 
             IF_FAILED(rv = SolveLinEqu(a, r))
             {
-              Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+              throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
               return res;
             }
 
@@ -423,21 +423,21 @@ namespace ice
         // affine transformation as first approximation
         IF_FAILED(res = MatchPointlists(p1, p2, TRM_AFFINE, weights))
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return res;
         }
 
         // iterative refinement to projective transformation
         IF_FAILED(res = iterateProjective(res, p1, p2, weights))
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
         }
         return res;
       }
       break;
 
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return res;
       }
 
@@ -460,7 +460,7 @@ namespace ice
 
     if ((pl1 == NULL) || (pl2 == NULL))
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return res;
       }
 
@@ -468,7 +468,7 @@ namespace ice
 
     if (pl2->lng != pnumber)
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return res;
       }
 
@@ -487,7 +487,7 @@ namespace ice
 
     IF_FAILED(res = MatchPointlists(p1, p2, mode, w))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return res;
     }
     return res;
@@ -501,7 +501,7 @@ namespace ice
 
     if (pl2.size() != pnumber)
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return res;
       }
 
@@ -540,7 +540,7 @@ namespace ice
 
     if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return res;
       }
 
@@ -548,7 +548,7 @@ namespace ice
 
     if ((dim2 != 2) || (dim1 != 2))   // for linear opt. only 2 dimensions
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return res;
       }
 
@@ -564,7 +564,7 @@ namespace ice
 
     IF_FAILED(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return res;
     }
 
@@ -591,7 +591,7 @@ namespace ice
 
     IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return res;
     }
     return res;
@@ -610,7 +610,7 @@ namespace ice
 
     IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return res;
     }
     return res;
@@ -627,7 +627,7 @@ namespace ice
     Matrix tmatrix(3, 3, 1);
     if ((nPoints != (int)p2.size()) || (nPoints != (int)weights.size()))
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return tmatrix;
       }
 
@@ -647,7 +647,7 @@ namespace ice
 
     IF_FAILED(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return tmatrix;
     }
 

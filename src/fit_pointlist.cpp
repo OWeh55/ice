@@ -72,14 +72,13 @@ namespace ice
   {
     double p, phi, ss, cc, h, lmin, lmax, xm, ym;
     double par[2];
-    int ad, rc;
+    int ad;
     double* xptr, *yptr;
     Segment sl;
-    rc = OK;
 
     if ((ad2 - ad1) < 2)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return nullptr;
       }
 
@@ -87,22 +86,18 @@ namespace ice
 
     if (sl == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
     sl->prev = nullptr;
     sl->next = nullptr;
-    OffMessage();
-    FitLine(pl, ad1, ad2, step, par, dmax, adr);
-    OnMessage();
 
-    if (rc == ERROR)
-      {
-        Message(FNAME, "Kein Segment angepasst", WRONG_PARAM);
-        free(sl);
-        return nullptr;
-      }
+    IF_FAILED(FitLine(pl, ad1, ad2, step, par, dmax, adr))
+    {
+      free(sl);
+      throw IceException(FNAME, "Kein Segment angepasst", WRONG_PARAM);
+    }
 
     p = par[0];
     phi = par[1];
@@ -199,19 +194,19 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return nullptr;
       }
 
     if ((adr1 < 0) || (adr2 < 0) || (adr2 < adr1) || (adr2 > pl->lng - 1))
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return nullptr;
       }
 
     if ((adr2 - adr1) < 6)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
         return nullptr;
       }
 
@@ -226,7 +221,7 @@ namespace ice
 
     if (ptr == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -271,7 +266,7 @@ namespace ice
     if ((segm = (Segment)malloc(sizeof(struct Segment_))) == nullptr)
       {
         free(ptr);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -287,7 +282,7 @@ namespace ice
     segm->par[4] = eta20;
     segm->prev = nullptr;
     segm->next = nullptr;
-    SetOk();
+
     free(ptr);
     return segm;
   }
@@ -323,51 +318,31 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return nullptr;
       }
 
     if ((adr1 < 0) || (adr2 < 0) || (adr2 < adr1) || (adr2 > pl->lng - 1))
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return nullptr;
       }
 
     if ((adr2 - adr1) < 6)
       {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return nullptr;
+        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
       }
 
-    OffMessage();
-    code = FitEllipse(pl, adr1, adr2, step, par, mdist, madr);
-    OnMessage();
+    RETURN_ERROR_IF_FAILED(code = FitEllipse(pl, adr1, adr2, step, par, mdist, madr));
+
     centre[0] = par[0];
     centre[1] = par[1];
     a = par[2];
     b = par[3];
     phi = par[4];
 
-    if (code == NO_ELLIPSE)
-      {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return nullptr;
-      }
-
-    if (code != OK)
-      {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return nullptr;
-      }
-
     len = adr2 - adr1 + 1;
     ptr = (double*)malloc(len * sizeof(double));
-
-    if (ptr == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
-      }
 
     for (i = adr1; i <= adr2; i++)
       {
@@ -411,7 +386,7 @@ namespace ice
     if ((segm = (Segment)malloc(sizeof(struct Segment_))) == nullptr)
       {
         free(ptr);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -467,7 +442,6 @@ namespace ice
     segm->par[6] = eta20;
     segm->prev = nullptr;
     segm->next = nullptr;
-    SetOk();
     free(ptr);
     return segm;
   }

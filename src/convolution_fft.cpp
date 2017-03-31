@@ -23,7 +23,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "base.h"
 #include "based.h"
@@ -258,7 +258,7 @@ namespace ice
 
     if (noise < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return rc;
       }
 
@@ -402,7 +402,7 @@ namespace ice
       {
         if (xs != dd.xsize || ys != dd.ysize)
           {
-            Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
             return WRONG_PARAM;
           }
       }

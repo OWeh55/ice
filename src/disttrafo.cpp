@@ -21,7 +21,7 @@
 #include <math.h>
 
 #include "distance.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -97,19 +97,19 @@ namespace ice
 
     if (!IsImg(orig))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if (!IsImg(dist))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if (orig == dist)
       {
-        Message(FNAME, M_SAME_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_SAME_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -124,13 +124,13 @@ namespace ice
 
     if ((mode < 1) || (mode > 2))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (fabs(step) > maxdist)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -153,7 +153,7 @@ namespace ice
 
     if ((pegl < 0) || (pegl > orig->maxval))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -161,19 +161,19 @@ namespace ice
       {
         if ((xs != dir->xsize) || (ys != dir->ysize))
           {
-            Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
+            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
             return WRONG_PARAM;
           }
 
         if ((orig == dir) || (dist == dir))
           {
-            Message(FNAME, M_SAME_IMAGE, WRONG_PARAM);
+            throw IceException(FNAME, M_SAME_IMAGE, WRONG_PARAM);
             return WRONG_PARAM;
           }
 
         if (dir->maxval < 8)
           {
-            Message(FNAME, M_LOWRANGE, WRONG_PARAM);
+            throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
             return WRONG_PARAM;
           }
       }
@@ -183,7 +183,7 @@ namespace ice
 
     if (!IsImg(ibin))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -192,7 +192,7 @@ namespace ice
     if (!IsImg(inr))
       {
         FreeImg(ibin);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 

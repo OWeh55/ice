@@ -24,7 +24,7 @@
 
 #include "vectortools.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "ClassifierMinimumDistance.h"
 
@@ -38,7 +38,7 @@ namespace ice
     IF_FAILED(Init(classes, dimension))
     {
       // if initialisation fails
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
     }
   }
 #undef FNAME
@@ -123,7 +123,7 @@ namespace ice
     source >> id;
     if (id != "ClassifierMinimumDistance")
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -149,19 +149,19 @@ namespace ice
 
     if ((cl < 0) || (cl >= nClasses))
       {
-        Message(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
         return ret;
       }
 
     if (nClasses == 0)
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ret;
       }
 
     if (par[cl][nFeatures] == 0)
       {
-        Message(FNAME, M_NOT_TRAINED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_TRAINED, WRONG_PARAM);
         return ret;
       }
 

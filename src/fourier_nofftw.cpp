@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "darith.h"
@@ -85,7 +85,7 @@ namespace ice
 
         if (sint == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
 
@@ -93,7 +93,7 @@ namespace ice
 
         if (cost == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
       }
@@ -236,7 +236,7 @@ namespace ice
 
     if (makesincostab(n, wi, wr, back) != OK)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -244,7 +244,7 @@ namespace ice
 
     if (tr == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -252,7 +252,7 @@ namespace ice
 
     if (ti == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -303,19 +303,19 @@ namespace ice
 
     if (option != NORMAL && option != INVERS)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (n < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -360,7 +360,7 @@ namespace ice
 
     if (option != NORMAL && option != INVERS)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -368,7 +368,7 @@ namespace ice
 
     if (dim < 1 || dim != dstim.size())
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -404,7 +404,7 @@ namespace ice
 
     if (option != NORMAL && option != INVERS)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -412,7 +412,7 @@ namespace ice
 
     if (dim < 1 || dim != srcim.size())
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

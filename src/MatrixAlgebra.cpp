@@ -23,7 +23,7 @@
 #include <fstream>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matrix_function.h"
 #include "numbase.h"
@@ -33,7 +33,7 @@
 
 #define PRECISION 1e-200
 
-#define ERR(f,m,r,ret) { Message(f,m,r); return ret; }
+#define ERR(f,m,r,ret) { throw IceException(f,m,r); }
 
 using std::vector;
 namespace ice
@@ -510,7 +510,7 @@ namespace ice
     // LU-Zerlegung
     IF_FAILED(LUDecompositionPacked(m, LU, indx, true))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
     // Lösen von L*U*x=i
@@ -530,7 +530,7 @@ namespace ice
     // LU-Zerlegung
     IF_FAILED(LUDecompositionPacked(A, LU, index, true))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
     // Lösen von L*U*x=b
@@ -567,7 +567,7 @@ namespace ice
 
     if (rc != OK)
       {
-        Message(FNAME, M_0, ERROR);
+        throw IceException(FNAME, M_0, ERROR);
         return res;
       }
 
@@ -615,7 +615,7 @@ namespace ice
 
     if (rc != OK)
       {
-        Message(FNAME, M_0, ERROR);
+        throw IceException(FNAME, M_0, ERROR);
         return res;
       }
 

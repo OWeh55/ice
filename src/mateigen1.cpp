@@ -25,7 +25,7 @@
 
 #include <utility>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "mateigen.h"
 #include "Matrix.h"
@@ -75,7 +75,7 @@ namespace ice
 
     if (n != A.rows())
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -213,7 +213,7 @@ namespace ice
         //
       }
 
-    Message(FNAME, "Too many iterations", NO_SOLUTION);
+    throw IceException(FNAME, "Too many iterations", NO_SOLUTION);
     return ERROR;
   }
 #undef ROTATE
@@ -290,7 +290,7 @@ namespace ice
     int n = A.cols();
     if (n != A.rows())
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -428,7 +428,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, "Too many iterations", NO_SOLUTION);
+        throw IceException(FNAME, "Too many iterations", NO_SOLUTION);
         return ERROR;
       }
   }
@@ -535,7 +535,7 @@ namespace ice
 
     if (m < n)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -828,7 +828,7 @@ namespace ice
 
             if (its == 40)
               {
-                Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+                throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
                 return NO_SOLUTION;
               }
 

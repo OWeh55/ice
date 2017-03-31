@@ -27,7 +27,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "arith.h"
 #include "matrix_function.h"
@@ -72,7 +72,7 @@ namespace ice
 
     if (Trans == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return ERROR;
       }
 
@@ -84,7 +84,7 @@ namespace ice
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -103,7 +103,7 @@ namespace ice
 
     if (Trans == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return ERROR;
       }
 
@@ -121,7 +121,7 @@ namespace ice
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -139,7 +139,7 @@ namespace ice
 
     if (Trans == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return ERROR;
       }
 
@@ -153,7 +153,7 @@ namespace ice
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -173,7 +173,7 @@ namespace ice
 
     if (Trans == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return ERROR;
       }
 
@@ -189,7 +189,7 @@ namespace ice
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -197,7 +197,7 @@ namespace ice
 
     if (fac < eps)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -219,7 +219,7 @@ namespace ice
 
     if (Trans == NULL)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return ERROR;
       }
 
@@ -238,7 +238,7 @@ namespace ice
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -246,7 +246,7 @@ namespace ice
 
     if (fac < eps)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -270,7 +270,7 @@ namespace ice
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -278,7 +278,7 @@ namespace ice
 
     if (fac < eps)
       {
-        Message(FNAME, M_NO_PROJ, ERROR);
+        throw IceException(FNAME, M_NO_PROJ, ERROR);
         return ERROR;
       }
 
@@ -296,13 +296,13 @@ namespace ice
 
     if (pl1->lng < 4)
       {
-        Message(FNAME, M_MISS_P, ERROR);
+        throw IceException(FNAME, M_MISS_P, ERROR);
         return (ERROR);
       }
 
     if (pl2->lng < pl1->lng)
       {
-        Message(FNAME, M_WRONG_POINTLIST, ERROR);
+        throw IceException(FNAME, M_WRONG_POINTLIST, ERROR);
         return (ERROR);
       }
 
@@ -310,7 +310,7 @@ namespace ice
 
     if (A == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (ERROR);
       }
 
@@ -319,7 +319,7 @@ namespace ice
     if (ih == NULL)
       {
         free(A);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (ERROR);
       }
 
@@ -346,16 +346,15 @@ namespace ice
         *(ip++) = pl2->yptr[i] * w;
       }
 
-    OffMessage();
     rc = NormalEquationSys(A, ih, (double*)tr);
-    OnMessage();
+
     FreeMatrix(A);
     free(ih);
     tr[2][2] = 1;
 
     if (rc != OK)
       {
-        Message(FNAME, M_0, ERROR);
+        throw IceException(FNAME, M_0, ERROR);
         return (ERROR);
       }
 
@@ -372,13 +371,13 @@ namespace ice
 
     if (pl1->lng < 3)
       {
-        Message(FNAME, M_MISS_P, ERROR);
+        throw IceException(FNAME, M_MISS_P, ERROR);
         return (ERROR);
       }
 
     if (pl2->lng < pl1->lng)
       {
-        Message(FNAME, M_WRONG_POINTLIST, ERROR);
+        throw IceException(FNAME, M_WRONG_POINTLIST, ERROR);
         return (ERROR);
       }
 
@@ -386,7 +385,7 @@ namespace ice
 
     if (A == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (ERROR);
       }
 
@@ -395,7 +394,7 @@ namespace ice
     if (ih == NULL)
       {
         FreeMatrix(A);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return (ERROR);
       }
 
@@ -423,9 +422,8 @@ namespace ice
         *(ip++) = pl2->yptr[i] * w;
       }
 
-    OffMessage();
     rc = NormalEquationSys(A, ih, (double*)tr);
-    OnMessage();
+
     FreeMatrix(A);
     free(ih);
     tr[2][0] = 0;
@@ -434,7 +432,7 @@ namespace ice
 
     if (rc != OK)
       {
-        Message(FNAME, M_0, ERROR);
+        throw IceException(FNAME, M_0, ERROR);
         return (ERROR);
       }
 

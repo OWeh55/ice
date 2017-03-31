@@ -71,7 +71,7 @@ namespace ice
   {
     if (newfather < rootval || newfather > size || x < 0 || x > size)
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return;
       }
 

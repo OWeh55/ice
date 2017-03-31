@@ -32,7 +32,7 @@
 #include <ctype.h>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "visual/screen.h"
 #include "visual/xio.h"
@@ -53,7 +53,7 @@ namespace ice
       (y1 < 0) || (y1 > y2) || (y2 > ym)
     )
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -113,7 +113,7 @@ namespace ice
 
     if ((xs > xm - 2) || (ys > ym - 2))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -266,7 +266,7 @@ namespace ice
     char s[STRLEN];
     if (strlen(yns) < 2)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return 0;
       }
     yn[0] = tolower(yns[0]);
@@ -291,7 +291,7 @@ namespace ice
     string s;
     if (yns.length() < 2)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return 0;
       }
     yn[0] = toupper(yns[0]);

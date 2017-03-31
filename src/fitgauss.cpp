@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -51,7 +51,7 @@ namespace ice
 
     if (dim <= 0)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -86,7 +86,7 @@ namespace ice
   {
     if ((int)p.size() != dim)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -125,7 +125,7 @@ namespace ice
   {
     if ((p.cols() != dim) || (p.rows() != v.Size()))
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 
@@ -151,7 +151,7 @@ namespace ice
 
     IF_FAILED(para = SolveLinEqu(Matrix(sum), Vector(gsum)))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return;
     }
 
@@ -177,7 +177,7 @@ namespace ice
   {
     if (!finished)
       {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
+        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
         return;
       }
     v = para;
@@ -187,7 +187,7 @@ namespace ice
   {
     if (!finished)
       {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
+        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
         return;
       }
     v = Vector(para);
@@ -197,7 +197,7 @@ namespace ice
   {
     if (!finished)
       {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
+        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
         return 0;
       }
     return var / wsum;

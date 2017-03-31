@@ -40,7 +40,7 @@ namespace ice
 
     if (!IsImg(imgd))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return Image();
       }
 
@@ -119,7 +119,7 @@ namespace ice
 
         if (!IsImg(imgs))
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
 

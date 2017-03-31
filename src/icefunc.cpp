@@ -28,7 +28,7 @@
 #endif
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "conturfunctions.h"
 #include "histogram.h"
@@ -156,7 +156,7 @@ namespace ice
 
     if (!IsImg(imgd))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NO_MEM;
       }
 
@@ -266,7 +266,7 @@ namespace ice
   {
     if (!IsImg(img) || (typ != RI_90GRAD && typ != RI_180GRAD && typ != RI_270GRAD))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return false;
       }
 
@@ -280,7 +280,7 @@ namespace ice
 
         if (!IsImg(img2))
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return false;
           }
 
@@ -352,7 +352,7 @@ namespace ice
         (mode2 != ALL_EXTREMA && mode2 != FIRST_EXTREMA && mode2 != LAST_EXTREMA && mode2 != MID_EXTREMA && mode2 != NO_EXTREMA) ||
         (mode == NO_EXTREMA && mode2 == NO_EXTREMA))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -360,7 +360,7 @@ namespace ice
 
     if (!IsImg(imgd) || imgd->maxval != 1 || imgd->xsize != img->xsize || imgd->ysize != img->ysize)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1114,7 +1114,7 @@ namespace ice
 
         if (!IsImg(temp))
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
 
@@ -1123,7 +1123,7 @@ namespace ice
         if (!IsImg(temp2))
           {
             FreeImg(temp);
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return NO_MEM;
           }
 

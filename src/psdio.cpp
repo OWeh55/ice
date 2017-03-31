@@ -72,7 +72,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_HIGHRANGE, WRONG_PARAM);
+        throw IceException(FNAME, M_HIGHRANGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -164,7 +164,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_HIGHRANGE, WRONG_PARAM);
+        throw IceException(FNAME, M_HIGHRANGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -360,7 +360,7 @@ namespace ice
 
     if ((fd = fopen(filename.c_str(), FRMODUS)) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -368,7 +368,7 @@ namespace ice
 
     if (!read_header(fd, xsize, ysize, bits, nr))
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         fclose(fd);
         return WRONG_FILE;
       }
@@ -397,13 +397,13 @@ namespace ice
 
     if ((fd = fopen(fname.c_str(), FRMODUS)) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return Image();
       }
 
     if (!read_header(fd, xs, ys, bits, ch))
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         fclose(fd);
         return Image();
       }
@@ -413,7 +413,7 @@ namespace ice
 
     if (pic == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         fclose(fd);
         return Image();
       }
@@ -451,13 +451,13 @@ namespace ice
 
     if ((fd = fopen(fname.c_str(), FRMODUS)) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
     if (!read_header(fd, xs, ys, bits, ch))
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         fclose(fd);
         return WRONG_FILE;
       }
@@ -467,7 +467,7 @@ namespace ice
 
     if (pic == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         fclose(fd);
         return NO_MEM;
       }

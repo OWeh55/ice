@@ -30,7 +30,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -58,13 +58,13 @@ namespace ice
 
     if ((direct != HORZ) && (direct != VERT))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImg(imgv))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -80,7 +80,7 @@ namespace ice
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
         return WRONG_WINDOW;
       }
 
@@ -122,7 +122,7 @@ namespace ice
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return WRONG_STARTPOINT;
       }
 
@@ -500,19 +500,19 @@ namespace ice
 
     if (!IsImg(imgv))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return Contur();
       }
 
     if (!IsImg(imgo))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return Contur();
       }
 
     IF_FAILED(MatchImg(imgv, imgo))
     {
-      Message(FNAME, M_0, WRONG_PARAM);
+      throw IceException(FNAME, M_0, WRONG_PARAM);
       return Contur();
     }
 
@@ -524,13 +524,13 @@ namespace ice
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
       {
 
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
         return Contur();
       }
 
     if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return Contur();
       }
 
@@ -544,7 +544,7 @@ namespace ice
 
     if ((val = GradVal(imgv, imgo, xs, ys, &startdir)) < pgl)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return Contur();
       }
 
@@ -1046,7 +1046,7 @@ namespace ice
 
     if (cls == NULL)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return Contur();
       }
 
@@ -1064,7 +1064,7 @@ namespace ice
 
     if (cr == 4)                    /* Startpunkt liegt im Objekt */
       {
-        Message(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
         return Contur();
       }
 
@@ -1080,7 +1080,7 @@ namespace ice
 
     if (cr == 8)                    /* Startpunkt liegt im Untergrund */
       {
-        Message(FNAME, M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
         return Contur();
       }
 

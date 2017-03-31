@@ -269,7 +269,7 @@ namespace ice
     // compute A from B
     if (!IsPositivDefinit(B))
       {
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
         return B;
       }
 
@@ -791,7 +791,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, "wrong number of objects"/*M_INTERN*/, ERROR);
+        throw IceException(FNAME, "wrong number of objects"/*M_INTERN*/, ERROR);
         return number_of_found_objects;
       }
 
@@ -976,7 +976,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
         return number_of_points;
       }
   }
@@ -1047,7 +1047,7 @@ namespace ice
 
     if (error != 0)
       {
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
         return error;
       }
 
@@ -1166,7 +1166,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1276,7 +1276,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
         delete[] cps;
         delete[] all_repro_coords;
         return ERROR;
@@ -1333,7 +1333,7 @@ namespace ice
                 }
 #endif
 
-                Message(FNAME, M_INTERN, NO_UNIQUE_SOLUTION);
+                throw IceException(FNAME, M_INTERN, NO_UNIQUE_SOLUTION);
                 delete[] cps;
                 delete[] all_repro_coords;
                 return NO_UNIQUE_SOLUTION;
@@ -1395,7 +1395,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     delete[] cps;
@@ -1419,7 +1419,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
 
         return WRONG_PARAM;
       }
@@ -1441,7 +1441,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1463,7 +1463,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
 
         return WRONG_PARAM;
       }
@@ -1483,7 +1483,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1506,7 +1506,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1530,7 +1530,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1551,7 +1551,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
 
         return WRONG_PARAM;
       }
@@ -1570,7 +1570,7 @@ namespace ice
             }
 #endif
 
-            Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
 
             return WRONG_PARAM;
           }
@@ -1606,7 +1606,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1627,7 +1627,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
 
         return WRONG_PARAM;
       }
@@ -1646,7 +1646,7 @@ namespace ice
             }
 #endif
 
-            Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
 
             return WRONG_PARAM;
           }
@@ -1675,7 +1675,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1696,7 +1696,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1741,7 +1741,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1762,7 +1762,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
 
         return WRONG_PARAM;
       }
@@ -1799,7 +1799,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1821,7 +1821,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
 
         return WRONG_PARAM;
       }
@@ -1856,7 +1856,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1877,7 +1877,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1922,7 +1922,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN, ERROR);
       }
 
     return error;
@@ -1943,7 +1943,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
         Image img = NewImg(dimx, dimy, 255);
 

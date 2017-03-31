@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -39,7 +39,7 @@ namespace ice
 
     if (m.cols() < 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -58,7 +58,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -76,7 +76,7 @@ namespace ice
   {
     if (!IsImgD(img))
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -96,7 +96,7 @@ namespace ice
   {
     if (v.Size() < 1)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     co[0] = v[0];
@@ -128,7 +128,7 @@ namespace ice
   {
     if (v.Size() < 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     co[0] = v[0];
@@ -168,7 +168,7 @@ namespace ice
 
     if (v.Size() < 6)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     for (i = 0; i < 6; i++)
@@ -270,7 +270,7 @@ namespace ice
   {
     if (v.Size() < 6)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     init(v[0], v[1], v[2], v[3], v[4], v[5]);
@@ -329,7 +329,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return 0;
         }
       }
@@ -346,7 +346,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return Vector(0);
         }
       }
@@ -361,7 +361,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return ERROR;
         }
       }
@@ -384,7 +384,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return ERROR;
         }
       }
@@ -407,7 +407,7 @@ namespace ice
 
     if (s < 6)
       {
-        Message(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -474,7 +474,7 @@ namespace ice
   {
     if (v.Size() < 3)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
     init(v[0], v[1], v[2]);
@@ -519,7 +519,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return 0;
         }
       }
@@ -534,7 +534,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return ERROR;
         }
       }
@@ -551,7 +551,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return Vector(0);
         }
       }
@@ -569,7 +569,7 @@ namespace ice
       {
         IfFailed(calc_c())
         {
-          Message(FNAME, M_0, ERROR);
+          throw IceException(FNAME, M_0, ERROR);
           return ERROR;
         }
       }
@@ -590,7 +590,7 @@ namespace ice
 
     if (s < 6)
       {
-        Message(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
+        throw IceException(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

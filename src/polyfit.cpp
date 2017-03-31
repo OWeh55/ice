@@ -32,7 +32,7 @@
 #include <math.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "fit_pointlist.h"
 #include "Contur.h"
 #include "contools.h"
@@ -379,15 +379,12 @@ namespace ice
       }
 
     segn = (Segment)malloc(sizeof(struct Segment_));
-    OffMessage();
-    rc = ConvPointHesse(p1, p2, &segn->par[0], &segn->par[1]);
-    OnMessage();
 
-    if (rc != OK)
-      {
-        free(segn);
-        return (ERROR);
-      }
+    IF_FAILED(ConvPointHesse(p1, p2, &segn->par[0], &segn->par[1]))
+    {
+      free(segn);
+      return (ERROR);
+    }
 
     segn->prev = seg;
     segn->next = seg->next;
@@ -551,7 +548,7 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
         return (nullptr);
       }
 
@@ -644,7 +641,7 @@ namespace ice
 
     if (i == 0)
       {
-        Message(FNAME, "Can't fit polygon", ERROR);
+        throw IceException(FNAME, "Can't fit polygon", ERROR);
         return nullptr;
       }
 

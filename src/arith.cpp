@@ -25,7 +25,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
@@ -103,7 +103,7 @@ namespace ice
               break;
             default:
             {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
               return WRONG_PARAM;
             }
             }
@@ -154,7 +154,7 @@ namespace ice
         break;
       default:
       {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
         return WRONG_PARAM;
       }
       }
@@ -233,7 +233,7 @@ namespace ice
               break;
             default:
             {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
               return WRONG_PARAM;
             }
             }
@@ -296,7 +296,7 @@ namespace ice
               break;
             default:
             {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
               return WRONG_PARAM;
             }
             }
@@ -349,7 +349,7 @@ namespace ice
               break;
             default:
             {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
               return WRONG_PARAM;
             }
             }
@@ -373,7 +373,7 @@ namespace ice
 
     if ((!IsImg(p)) || (!IsImg(dest)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -546,7 +546,7 @@ namespace ice
 
     if ((bin < 1) || (bin > src->maxval) || (val < 0) || (val > dest->maxval))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -705,7 +705,7 @@ namespace ice
 
     if (! IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return max;
       }
 
@@ -744,7 +744,7 @@ namespace ice
 
     if (! IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return tmp;
       }
 

@@ -23,7 +23,7 @@
 #include "macro.h"
 #include "float.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "peak1d.h"
 

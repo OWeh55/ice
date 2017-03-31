@@ -195,13 +195,13 @@ namespace ice
   {
     if ((int)PosX >= (int)xsize)
       {
-        Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_XTOOLARGE, WRONG_PARAM);
         return nullptr;
       }
 
     if ((int)PosY >= (int)ysize)
       {
-        Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_YTOOLARGE, WRONG_PARAM);
         return nullptr;
       }
 

@@ -22,7 +22,7 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "exfile.h"
@@ -63,7 +63,7 @@ namespace ice
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -99,19 +99,19 @@ namespace ice
 
     if (typ != 2)   /* nur RGB und keine Kompression */
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
     if (interleave != 0)   /*nur ohne Interleave */
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
     if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -126,7 +126,7 @@ namespace ice
         ib.maxval = 31;
         break;
       default:
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
@@ -156,7 +156,7 @@ namespace ice
 
     if (!IsImg(r) || !IsImg(g) || !IsImg(b))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return (WRONG_PARAM);
       }
 
@@ -247,7 +247,7 @@ namespace ice
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return Image();
       }
 
@@ -283,19 +283,19 @@ namespace ice
 
     if (typ != 2)   /* nur RGB und keine Kompression */
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return Image();
       }
 
     if (interleave != 0)   /*nur ohne Interleave */
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return Image();
       }
 
     if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return Image();
       }
 
@@ -310,7 +310,7 @@ namespace ice
         ib.maxval = 31;
         break;
       default:
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return Image();
       }
 
@@ -391,7 +391,7 @@ namespace ice
 
     if ((fd = fopen(hname.c_str(), FWMODUS)) == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return FILE_NOT_FOUND;
       }
 
@@ -505,7 +505,7 @@ namespace ice
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return ERROR;
       }
 
@@ -531,19 +531,19 @@ namespace ice
 
     if (typ != 2)   /* nur RGB und keine Kompression */
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
     if (interleave != 0)   /*nur ohne Interleave */
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
     if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 

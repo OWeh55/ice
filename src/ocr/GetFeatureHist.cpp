@@ -74,17 +74,7 @@ int GetFeatureHist::get_feature(const Image& pic,
   double phi_1 = 0;
 
   pl1 = ConturPointList(c, 1);
-  SetOk();
-  if (pl1 == NULL)
-    {
-      return 100;
-    }
-  SetOk();
   pl2 = NewPointList(pl1->lng);
-  if (pl2 == NULL)
-    {
-      return 100;
-    }
 
   FourierD(pl1->xptr, pl1->yptr, pl1->lng, NORMAL, pl2->xptr, pl2->yptr); // Fourierdeskriptoren berechnen
 

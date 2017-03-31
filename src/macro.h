@@ -26,7 +26,7 @@
 #ifndef _MACRO_H  /* verhindern mehrfacher Verarbeitung in einem */
 #define _MACRO_H  /* Programm */
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "defs.h"
 
@@ -40,16 +40,12 @@ namespace ice
   for (x = 0; x < (Img).xsize; x++)
 
 // Fehlerbehandlung in Prozeduren
-#define IF_FAILED(action) OffMessage(); action; OnMessage(); if(GetError()!=OK)
+#define IF_FAILED(action) try { action; } catch(IceException ex)
 
-#define RETURN_IF_FAILED(action,ret) { IF_FAILED(action) \
-{ Message(FNAME,M_0,ERROR); return ret; }}
-
-#define RETURN_VOID_IF_FAILED(action) { IF_FAILED(action) \
-{ Message(FNAME,M_0,ERROR); return; }}
-
-#define RETURN_NULL_IF_FAILED(action) { RETURN_IF_FAILED(action,NULL) }
-#define RETURN_ERROR_IF_FAILED(action) { RETURN_IF_FAILED(action,GetError()) }
+#define RETURN_ERROR_IF_FAILED(action) try { action; } catch(IceException &ex) { throw IceException(ex, FNAME); }
+#define RETURN_IF_FAILED(action,ret) RETURN_ERROR_IF_FAILED(action)
+#define RETURN_VOID_IF_FAILED(action) RETURN_ERROR_IF_FAILED(action)
+#define RETURN_NULL_IF_FAILED(action) RETURN_ERROR_IF_FAILED(action)
 }
 
 #endif /*IFDEF _MACRO_H */

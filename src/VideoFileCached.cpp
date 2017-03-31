@@ -72,21 +72,21 @@ namespace ice
         switch (error)
           {
           case 1:
-            Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
             break;
           case 2:
           case 3:
-            Message(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
             break;
           case 4:
           case 5:
-            Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+            throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
             break;
           case 6:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             break;
           default:
-            Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
           }
 
         videofile = nullptr;
@@ -138,7 +138,7 @@ namespace ice
   {
     if (!videofile)
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
         return false;
       }
 
@@ -186,7 +186,7 @@ namespace ice
   {
     if (!videofile)
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
       }
 
     videofile->getPara(xsize, ysize, maxval, fpsp);

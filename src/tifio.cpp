@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "picio.h"
 
 #include "util.h"
@@ -88,7 +88,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
       }
     return img;
   }
@@ -157,7 +157,7 @@ namespace ice
       }
     else
       {
-        Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
         return WRONG_PARAM;
       }
   }
@@ -189,7 +189,7 @@ namespace ice
         return OK;
       }
 
-    Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
+    throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
     return WRONG_PARAM;
   }
 #undef FNAME
@@ -200,7 +200,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -209,7 +209,7 @@ namespace ice
     // Open the TIFF file
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, ERROR);
+        throw IceException(FNAME, M_FILE_OPEN, ERROR);
         return ERROR;
       }
 
@@ -251,7 +251,7 @@ namespace ice
   {
     if (! imgr.isValid() && imgg.isValid() && imgb.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -263,7 +263,7 @@ namespace ice
     // Open the TIFF file
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, ERROR);
+        throw IceException(FNAME, M_FILE_OPEN, ERROR);
         return ERROR;
       }
 

@@ -42,7 +42,7 @@ namespace ice
     {
       if (v.Size() != 3)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         }
 
       x = v[0];
@@ -53,7 +53,7 @@ namespace ice
     {
       if (v.Size() != 3)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         }
 
       x = v[0];
@@ -64,7 +64,7 @@ namespace ice
     {
       if (v.size() != 3)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         }
 
       x = v[0];
@@ -113,7 +113,7 @@ namespace ice
         case 2:
           return z;
         default:
-          Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
           return x;
         }
 
@@ -131,7 +131,7 @@ namespace ice
         case 2:
           return z;
         default:
-          Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
           return x;
         }
 
@@ -266,7 +266,7 @@ namespace ice
 
       if (l == 0)
         {
-          Message(FNAME, M_ZERO_VECTOR, WRONG_PARAM);
+          throw IceException(FNAME, M_ZERO_VECTOR, WRONG_PARAM);
           return;
         }
       double fac = 1.0 / l;
@@ -292,7 +292,7 @@ namespace ice
     {
       if (v.Size() != 3)
         {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
           return *this;
         }
 

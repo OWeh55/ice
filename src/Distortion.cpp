@@ -70,7 +70,7 @@ namespace ice
 
     if (v.size() != 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
@@ -107,7 +107,7 @@ namespace ice
 
     if (v.size() != 2)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return result;
       }
 
@@ -136,13 +136,13 @@ namespace ice
   {
     if (!IsImg(source) || !IsImg(dest))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (dest->maxval != source->maxval)
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -313,7 +313,7 @@ namespace ice
     //    cout << LMDifMessage(rc) << endl;
     if (rc > 4)
       {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
+        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
         return ERROR;
       }
     else
@@ -440,7 +440,7 @@ namespace ice
     int nrlist = marker.size();
     if ((int)orig.size() != nrlist)
       {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -518,7 +518,7 @@ namespace ice
 #endif
     if (rc > 4)
       {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
+        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
         return ERROR;
       }
     else

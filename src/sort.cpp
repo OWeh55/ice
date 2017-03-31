@@ -22,7 +22,7 @@
 #include <stdlib.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "fit.h"
 #include "matdef.h"
 #include "sort.h"
@@ -64,7 +64,7 @@ namespace ice
         sortarray = pl->wptr;
         break;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
 
@@ -73,7 +73,7 @@ namespace ice
 
     if (ix == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -90,7 +90,7 @@ namespace ice
     if (pls == NULL)
       {
         free(ix);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -172,13 +172,13 @@ namespace ice
 
     if (!IsMatrix(mat))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
 
     if (col >= mat->csize)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return NULL;
       }
 
@@ -189,7 +189,7 @@ namespace ice
 
     if (ix == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 
@@ -204,7 +204,7 @@ namespace ice
     if (mats == NULL)
       {
         free(ix);
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
       }
 

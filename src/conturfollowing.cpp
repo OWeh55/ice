@@ -182,7 +182,7 @@ namespace ice
 
     if (of(start) != isobject)
       {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
         return res;
       }
 
@@ -200,7 +200,7 @@ namespace ice
 
     if (cr == 4)                    // Startpunkt liegt im Objekt
       {
-        Message(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
         return res;
       }
 

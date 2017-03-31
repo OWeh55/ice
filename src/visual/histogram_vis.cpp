@@ -27,7 +27,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "paint.h"
 #include "drawline.h"
 
@@ -44,7 +44,7 @@ namespace ice
     int min, max;
     if (!h.isValid())
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return ERROR;
       }
 

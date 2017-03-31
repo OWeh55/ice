@@ -69,10 +69,10 @@ namespace ice
           switch (error)
             {
             case 1:
-              Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
               break;
             case 2:
-              Message(FNAME, M_FILE_OPEN, WRONG_FILE);
+              throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
             }
         }
       catch (...)
@@ -230,10 +230,10 @@ namespace ice
           switch (error)
             {
             case 1:
-              Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
               break;
             case 2:
-              Message(FNAME, M_FILE_OPEN, WRONG_FILE);
+              throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
             }
         }
       catch (...)

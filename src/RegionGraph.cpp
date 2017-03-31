@@ -325,7 +325,7 @@ namespace ice
     if (!IsImg(source) || !IsImg(labImg) || !IsImg(retImg))
       {
         // Eingabebilder gültig?
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
     CopiedLabImg = NewImg(labImg, true);  //CopyImg(labImg,CopiedLabImg);
@@ -898,7 +898,7 @@ ende:
 
     if (!IsImg(retImg))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -972,7 +972,7 @@ ende:
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1052,7 +1052,7 @@ ende:
     // Bilder initialisert und Schwellwert fuer Wasserscheidenlinien groesser 0 ?
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg) || Treshold < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -1065,7 +1065,7 @@ ende:
 
     if (EG == nullptr)
       {
-        Message(FNAME, M_NOT_INITIALISED , WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED , WRONG_PARAM);
         return WRONG_PARAM;
       }
 

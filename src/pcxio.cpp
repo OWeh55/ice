@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 #include "util.h"
@@ -53,13 +53,13 @@ namespace ice
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return Image();
       }
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL)
       {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
+        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
         return Image();
       }
 
@@ -67,7 +67,7 @@ namespace ice
 
     if (Header.Signature != 0x0a)
       {
-        Message(FNAME, "Kein PCX-File !!!", ERROR);
+        throw IceException(FNAME, "Kein PCX-File !!!", ERROR);
         fclose(fd);
       }
 
@@ -91,7 +91,7 @@ namespace ice
         break;
       default:
         fclose(fd);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         return Image();
       }
 
@@ -110,7 +110,7 @@ namespace ice
         if (!IsImg(img))
           {
             fclose(fd);
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             return Image();
           }
 
@@ -139,7 +139,7 @@ namespace ice
                   }
 
                 free(PCXLine);
-                Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
                 return Image();
               }
 
@@ -158,7 +158,7 @@ namespace ice
                       }
 
                     free(PCXLine);
-                    Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+                    throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
                     return Image();
                   }
 
@@ -176,7 +176,7 @@ namespace ice
                           }
 
                         free(PCXLine);
-                        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+                        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
                         return Image();
                       }
                   }
@@ -222,13 +222,13 @@ namespace ice
 
     if (!IsImg(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((fd = fopen(hname.c_str(), FWMODUS)) == NULL)
       {
-        Message(FNAME, "File kann nicht eroeffnet werden", ERROR);
+        throw IceException(FNAME, "File kann nicht eroeffnet werden", ERROR);
         return ERROR;
       }
 
@@ -307,7 +307,7 @@ namespace ice
     /* Schreiben des PCX-Headers in PCX-File */
     if (fwrite(&Header, 128, 1, fd) == 0)
       {
-        Message(FNAME, "Fehler beim Schreiben des Headers", ERROR);
+        throw IceException(FNAME, "Fehler beim Schreiben des Headers", ERROR);
         return ERROR;
       }
 

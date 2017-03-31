@@ -27,7 +27,7 @@
 #include "Matrix.h"
 #include "ludecomp.h"
 
-#include "message.h"
+#include "IceException.h"
 #include "math.h"
 
 namespace ice
@@ -54,7 +54,7 @@ namespace ice
 
     if (dim != a.rows())   // auf quadratische Matrix testen
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -81,7 +81,7 @@ namespace ice
 
         if (big == 0)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
             return WRONG_PARAM;
           }
 
@@ -142,7 +142,7 @@ namespace ice
 
         if (LU(j, j) == 0)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
             return ERROR;
           }
 
@@ -176,7 +176,7 @@ namespace ice
 
     if (dim != a.rows())   // auf quadratische Matrix testen
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -203,7 +203,7 @@ namespace ice
 
         if (big == 0)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
             return WRONG_PARAM;
           }
 
@@ -267,7 +267,7 @@ namespace ice
 
         if (LU[j][j] == 0.0)
           {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
             return ERROR;
           }
 
@@ -381,19 +381,19 @@ namespace ice
 
     if (dim != LU.rows())   // auf quadratische Matrix testen
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return res;
       }
 
     if (indx.Size() != dim)   // Größe permutation korrekt
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
     if (b.Size() != dim)   // Größe inhomogenität korrekt
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
@@ -447,19 +447,19 @@ namespace ice
 
     if (dim != LU.rows())
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return res;
       }
 
     if ((int)indx.size() != dim)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 
     if ((int)b.size() != dim)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return res;
       }
 

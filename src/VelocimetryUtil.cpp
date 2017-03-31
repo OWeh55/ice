@@ -19,7 +19,7 @@ namespace ice
     if ((minDisplacementX >= maxDisplacementX) ||
         (minDisplacementY >= maxDisplacementY))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -104,7 +104,7 @@ namespace ice
 
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -276,7 +276,7 @@ namespace ice
     if ((minDisplacementX >= maxDisplacementX) ||
         (minDisplacementY >= maxDisplacementY))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -343,7 +343,7 @@ namespace ice
 
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
       {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -498,7 +498,7 @@ namespace ice
 
     if (noise < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return rc;
       }
 
@@ -614,7 +614,7 @@ namespace ice
 
     if (iterationNumber <= 0 || lambda <= 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -779,13 +779,13 @@ namespace ice
 
     if (!(IsImgD(xDelta) && IsImgD(yDelta)))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if (!(IsImg(img)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -794,7 +794,7 @@ namespace ice
 
     if (!(subSampleSize > 0 && subSampleSize <= sizeX && subSampleSize <= sizeY && vectorScale != 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -922,7 +922,7 @@ namespace ice
 
     if (!inFile)
       {
-        Message(FNAME, M_FILE_OPEN, WRONG_PARAM);
+        throw IceException(FNAME, M_FILE_OPEN, WRONG_PARAM);
         return 1;
       }
 

@@ -27,7 +27,7 @@
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fit.h"
@@ -57,7 +57,7 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_NO_MEM, ERROR);
+        throw IceException(FNAME, M_NO_MEM, ERROR);
         return nullptr;
       }
 
@@ -75,19 +75,19 @@ namespace ice
   {
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (adr < 0 || adr > pl->lng)
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (weight < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -104,7 +104,7 @@ namespace ice
   {
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -132,7 +132,7 @@ namespace ice
 
     if (diff < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return nullptr;
       }
 
@@ -140,7 +140,7 @@ namespace ice
 
     if (pl == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -151,7 +151,7 @@ namespace ice
 
     if ((pl->xptr == nullptr) || (pl->yptr == nullptr) || (pl->wptr == nullptr))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         free(pl);
         return nullptr;
       }
@@ -251,13 +251,13 @@ namespace ice
   {
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (ad1 < 0 || ad1 > pl->lng - 1 || ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -279,14 +279,14 @@ namespace ice
   {
     if (pl == nullptr)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (ad1 < 0 || ad1 > pl->lng - 1 ||
         ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -308,7 +308,7 @@ namespace ice
   {
     if ((m.cols() < 2))
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return nullptr;
       }
 

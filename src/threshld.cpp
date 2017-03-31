@@ -28,7 +28,7 @@
 #include <limits>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "hist.h"
 #include "threshld.h"
@@ -51,7 +51,7 @@ namespace ice
 
     if (!hist.valid())
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return 0;
       }
 
@@ -79,7 +79,7 @@ namespace ice
 
     if (nn == 0)
       {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
+        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
         return 0.0;
       }
 
@@ -178,7 +178,7 @@ namespace ice
 
     if (!hist.isValid())
       {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
+        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
         return 0;
       }
 
@@ -207,7 +207,7 @@ namespace ice
 
     if (nn == 0)
       {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
+        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
         return 0;
       }
 

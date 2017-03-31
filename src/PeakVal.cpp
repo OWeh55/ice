@@ -29,7 +29,7 @@
 #include <math.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 
 
@@ -62,7 +62,7 @@ namespace ice
         (mode != PN_NORMAL && mode != PN_CONVOLUTION) ||
         graynull < 0 || graynull > img.maxval)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return DBL_MAX;
       }
 
@@ -155,7 +155,7 @@ namespace ice
 
     if (grwd == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return 0.0;
       }
 

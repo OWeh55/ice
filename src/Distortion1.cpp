@@ -127,7 +127,7 @@ namespace ice
     if (! ReadPara(is, "x0", x0) || ! ReadPara(is, "y0", y0) ||
         ! ReadPara(is, "d2", d2) || ! ReadPara(is, "d4", d4))
       {
-        Message(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
         return;
       }
   }
@@ -143,7 +143,7 @@ namespace ice
   {
     if (v.size() != 4)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return;
       }
 

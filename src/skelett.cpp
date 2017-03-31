@@ -210,7 +210,7 @@ namespace ice
 
     if (maxv < 2)
       {
-        Message(FNAME, M_LOWRANGE, ERROR);
+        throw IceException(FNAME, M_LOWRANGE, ERROR);
         return ERROR;
       }
 

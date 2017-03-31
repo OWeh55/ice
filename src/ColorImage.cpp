@@ -23,7 +23,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "picio.h"
 #include "ColorImage.h"
@@ -60,7 +60,7 @@ namespace ice
   {
     if ((!IsImg(rot)) || (!IsImg(gruen)) || (!IsImg(blau)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
       }
     else
       {
@@ -211,7 +211,7 @@ namespace ice
     //    std::cout << img2.isValid() << std::endl;
     if (!isValid() || !img2.isValid())
       {
-        Message(FNAME, M_INVALID, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID, WRONG_PARAM);
         return WRONG_PARAM;
       }
     //    std::cout << "match1" << std::endl;
@@ -224,7 +224,7 @@ namespace ice
   {
     if (!isValid() || !img2.isValid() || !img3.isValid())
       {
-        Message(FNAME, M_INVALID, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

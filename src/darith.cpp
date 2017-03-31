@@ -24,7 +24,7 @@
 #include <float.h>
 #include <limits.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 #include "WindowWalker.h"
@@ -56,7 +56,7 @@ namespace ice
   {
     if (!p.isValid())
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
         return WRONG_PARAM;
       }
     for (int y = 0; y < p.ysize; ++y)
@@ -173,7 +173,7 @@ namespace ice
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -199,7 +199,7 @@ namespace ice
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -225,7 +225,7 @@ namespace ice
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -246,7 +246,7 @@ namespace ice
   {
     if (! IsImgD(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return 0;
       }
 
@@ -274,7 +274,7 @@ namespace ice
     IPoint res(-1, -1); // point outside == not found
     if (! IsImgD(imgD) || ! IsImg(mark))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return res;
       }
 
@@ -283,7 +283,7 @@ namespace ice
 
     if (xSize != mark.xsize || ySize != mark.ysize)
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return res;
 
       }
@@ -323,7 +323,7 @@ namespace ice
   {
     if (! IsImgD(img))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return 0;
       }
 
@@ -371,13 +371,13 @@ namespace ice
 
     if ((!IsImgD(imgs)) || (!IsImgD(imgd)))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -432,13 +432,13 @@ namespace ice
 
     if (!IsImg(imgs))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -450,7 +450,7 @@ namespace ice
 
     if (!IsImg(imgd))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -503,7 +503,7 @@ namespace ice
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
           {
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return WRONG_PARAM;
           }
       }
@@ -511,20 +511,20 @@ namespace ice
       {
         if (!IsImgD(imgs))
           {
-            Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+            throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
             return WRONG_POINTER;
           }
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImgD(imgd))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -558,13 +558,13 @@ namespace ice
 
     if (!IsImgD(imgs))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return himgd;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return himgd;
       }
 
@@ -632,13 +632,13 @@ namespace ice
 
     if (!IsImg(imgs))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -650,7 +650,7 @@ namespace ice
 
     if (!IsImg(imgd))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
         return WRONG_POINTER;
       }
 
@@ -702,20 +702,20 @@ namespace ice
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
           {
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
             return WRONG_PARAM;
           }
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (!IsImgD(imgd))
       {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
         return WRONG_POINTER;
       }
 

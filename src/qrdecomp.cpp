@@ -2,7 +2,7 @@
 #include "qrdecomp.h"
 
 #include "numbase.h"
-#include "message.h"
+#include "IceException.h"
 
 namespace ice
 {
@@ -18,7 +18,7 @@ namespace ice
 
     if (A.rows() != dim)
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -91,7 +91,7 @@ namespace ice
 
     if (A.rows() != dim)
       {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
         return WRONG_PARAM;
       }
 

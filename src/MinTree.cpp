@@ -66,7 +66,7 @@ namespace ice
   {
     if (nPoints < 1)
       {
-        Message(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
         return;
       }
 
@@ -130,7 +130,7 @@ namespace ice
   {
     if (nPoints < 1)
       {
-        Message(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
         return;
       }
 
@@ -271,7 +271,7 @@ namespace ice
   {
     if (nPoints < 1 || distances.cols() != nPoints)
       {
-        Message(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
         return;
       }
 
@@ -404,7 +404,7 @@ namespace ice
 
     if (nTree > 1)
       {
-        Message(FNAME, "More than one tree", ERROR);
+        throw IceException(FNAME, "More than one tree", ERROR);
         return res;
       }
 

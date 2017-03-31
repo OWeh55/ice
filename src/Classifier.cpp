@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include "matrixtools.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "Classifier.h"
@@ -33,7 +33,7 @@ namespace ice
   {
     if (state == invalid)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return;
       }
     _reset();
@@ -43,7 +43,7 @@ namespace ice
   {
     if ((dimension < 1) || (classes < 2))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 
@@ -59,19 +59,19 @@ namespace ice
   {
     if (state != training)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((int)s.features.size() != nFeatures)
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (s.classNr < 0 || s.classNr >= nClasses)
       {
-        Message(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
         return WRONG_PARAM;
       }
     classTrained[s.classNr]++;
@@ -98,13 +98,13 @@ namespace ice
   {
     if ((m.rows() < 1) || (m.cols() != nFeatures + 1))
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (state != training)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -130,14 +130,14 @@ namespace ice
   {
     if (state != training)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if ((m.rows() < 1) || (m.cols() != nFeatures) ||
         (m.rows() != classnr.Size()))
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -155,7 +155,7 @@ namespace ice
   {
     if (state != training)
       {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -168,7 +168,7 @@ namespace ice
 
     if (!allTrained)
       {
-        Message(FNAME, M_NOT_TRAINED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_TRAINED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -193,13 +193,13 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
         return -3;
       }
 
     if (nFeatures != (int)feat.size())
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return -3;
       }
     std::vector<double> prob;
@@ -211,13 +211,13 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
         return -3;
       }
 
     if (nFeatures != (int)feat.size())
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
         return -3;
       }
     prob.resize(nClasses);
@@ -252,13 +252,13 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
     if (nFeatures != m.cols())
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
@@ -278,7 +278,7 @@ namespace ice
     IVector cl;
     IF_FAILED(Classify(m, cl))
     {
-      Message(FNAME, M_0, ERROR);
+      throw IceException(FNAME, M_0, ERROR);
       return ERROR;
     }
     m = m || (Vector)cl;
@@ -292,7 +292,7 @@ namespace ice
     std::ifstream is(fn.c_str());
     if (!is.good())
       {
-        Message(FNAME, M_FILE_OPEN, WRONG_FILE);
+        throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
         return WRONG_FILE;
       }
     return read(is);
@@ -300,7 +300,7 @@ namespace ice
 
   int Classifier::read(std::istream& is)
   {
-    Message(FNAME, M_NOT_IMPLEMENTED, ERROR);
+    throw IceException(FNAME, M_NOT_IMPLEMENTED, ERROR);
     return ERROR;
   }
 
@@ -310,13 +310,13 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
+        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
         return ERROR;
       }
     std::ofstream os(fn.c_str());
     if (!os.good())
       {
-        Message(FNAME, M_FILE_OPEN, WRONG_FILE);
+        throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
         return WRONG_FILE;
       }
     return write(os);
@@ -324,7 +324,7 @@ namespace ice
 
   int Classifier::write(std::ostream& os) const
   {
-    Message(FNAME, M_NOT_IMPLEMENTED, ERROR);
+    throw IceException(FNAME, M_NOT_IMPLEMENTED, ERROR);
     return ERROR;
   }
 #undef FNAME
@@ -335,19 +335,19 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
         return 0.0;
       }
 
     if (sl.size() < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return 0.0;
       }
 
     if (nFeatures != (int)sl[0].features.size())
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return 0.0;
       }
 
@@ -368,13 +368,13 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
         return 0.0;
       }
 
     if (nFeatures != m.cols() - 1)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return 0.0;
       }
 
@@ -396,13 +396,13 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
         return 0.0;
       }
 
     if ((nFeatures != m.cols()) || (m.rows() != clnr.Size()))
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return 0.0;
       }
 
@@ -424,13 +424,13 @@ namespace ice
   {
     if (state != ready)
       {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
+        throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
         return 0.0;
       }
 
     if (nFeatures != m.cols() - 1)
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
         return 0.0;
       }
 

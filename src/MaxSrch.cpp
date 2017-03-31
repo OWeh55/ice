@@ -31,7 +31,7 @@ namespace ice
   {
     if (!IsImg(img))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -41,7 +41,7 @@ namespace ice
 
     if (ms == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         return nullptr;
       }
 
@@ -56,7 +56,7 @@ namespace ice
 
     if (ms->hists == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
         delete ms;
         return nullptr;
       }
@@ -67,7 +67,7 @@ namespace ice
 
         if (ms->hists[a] == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
 
             for (aa = 0; aa < a; aa++)
               {
@@ -91,7 +91,7 @@ namespace ice
 
     if (ms->allhist == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM, NO_MEM);
 
         for (aa = 0; aa < ms->areaanz; aa++)
           {
@@ -149,7 +149,7 @@ namespace ice
   {
     if (ms == nullptr)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return;
       }
 
@@ -172,7 +172,7 @@ namespace ice
 
     if (ms == nullptr || !IsImg(img) || !IsImg(imgo))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return false;
       }
 

@@ -23,7 +23,7 @@
 #include <stddef.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "arith.h"

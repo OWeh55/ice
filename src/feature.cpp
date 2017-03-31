@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <stddef.h>  /* notwendig fuer Unix !!! */
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 #include "contools.h"
@@ -55,7 +55,7 @@ namespace ice
     if ((fabs(m310) < EPS) || (fabs(m320) < EPS) || (fabs(m312) < EPS) ||
         (fabs(m410) < EPS) || (fabs(m420) < EPS) || (fabs(m412) < EPS))
       {
-        Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+        throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
         *i1 = *i2 = 0;
         return (NO_SOLUTION);
       }
@@ -144,7 +144,7 @@ namespace ice
     if ((fabs(m310) < EPS) || (fabs(m320) < EPS) || (fabs(m312) < EPS) ||
         (fabs(m410) < EPS) || (fabs(m420) < EPS) || (fabs(m412) < EPS))
       {
-        Message(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+        throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
         *i1 = *i2 = 0;
         return (NO_SOLUTION);
       }
@@ -187,13 +187,13 @@ namespace ice
 
     if ((!IsImg(quelle)) || (!IsImgD(ziel)))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
         return pic;
       }
 
     if (p < 0 || q < 0 || n <= 0 || ((n & 1) == 0))
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return pic;
       }
 
