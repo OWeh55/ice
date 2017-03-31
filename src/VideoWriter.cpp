@@ -104,7 +104,7 @@ namespace ice
   bool VideoWriter::write(const Image& ir, const Image& ig, const Image& ib)
   {
     int xa, ya;
-    ReturnIfFailed(MatchImg(ir, ig, ib, xa, ya), false);
+    RETURN_IF_FAILED(MatchImg(ir, ig, ib, xa, ya), false);
 
     if (xsize == 0) // image size already set ?
       setPara(xa, ya, 255, 0 , 0);

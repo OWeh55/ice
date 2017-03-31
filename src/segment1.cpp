@@ -161,9 +161,9 @@ namespace ice
                     double stdmax, int maxSize)
   {
     Region res;
-    ReturnErrorIfFailed(MatchImg(orig, mark));
-    ReturnErrorIfFailed(res = RegionGrowGrw(p, orig, stdmax, maxSize));
-    ReturnErrorIfFailed(res.draw(mark, val));
+    RETURN_ERROR_IF_FAILED(MatchImg(orig, mark));
+    RETURN_ERROR_IF_FAILED(res = RegionGrowGrw(p, orig, stdmax, maxSize));
+    RETURN_ERROR_IF_FAILED(res.draw(mark, val));
     return OK;
   }
 
@@ -272,9 +272,9 @@ namespace ice
                  int  maxSize, int refval)
   {
     Region res;
-    ReturnErrorIfFailed(MatchImg(orig, mark));
-    ReturnErrorIfFailed(res = RegionGrow(x, y, orig, maxSize, refval));
-    ReturnErrorIfFailed(res.draw(mark, val));
+    RETURN_ERROR_IF_FAILED(MatchImg(orig, mark));
+    RETURN_ERROR_IF_FAILED(res = RegionGrow(x, y, orig, maxSize, refval));
+    RETURN_ERROR_IF_FAILED(res.draw(mark, val));
     return OK;
   }
 

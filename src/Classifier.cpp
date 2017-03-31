@@ -260,7 +260,7 @@ namespace ice
   int Classifier::Classify(Matrix& m) const
   {
     IVector cl;
-    IfFailed(Classify(m, cl))
+    IF_FAILED(Classify(m, cl))
     {
       Message(FNAME, M_0, ERROR);
       return ERROR;

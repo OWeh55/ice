@@ -139,7 +139,7 @@ namespace ice
       for (int j = 0; j < i; j++)
         sum[i][j] = sum[j][i];
 
-    IfFailed(para = SolveLinEqu(Matrix(sum), Vector(gsum)))
+    IF_FAILED(para = SolveLinEqu(Matrix(sum), Vector(gsum)))
     {
       Message(FNAME, M_0, ERROR);
       return;

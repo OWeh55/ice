@@ -59,7 +59,7 @@ namespace ice
 
     // invert trafo
     tri = tr;
-    ReturnErrorIfFailed(tri.Invert());
+    RETURN_ERROR_IF_FAILED(tri.Invert());
 
     // if source=dest then temporary Image needed
     if (hsimg == dimg)

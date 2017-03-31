@@ -48,7 +48,7 @@ namespace ice
     int rc = OK;
     Image temp;
 
-    ReturnErrorIfFailed(MatchImg(in, WSImg));
+    RETURN_ERROR_IF_FAILED(MatchImg(in, WSImg));
 
     bool needs_temp = in == WSImg;
 
@@ -63,13 +63,13 @@ namespace ice
     switch (mode)
       {
       case classic:
-        IfFailed(rc = WST1(temp, WSImg))
+        IF_FAILED(rc = WST1(temp, WSImg))
         {
           Message(FNAME, M_0, rc);
         }
         break;
       case marker:
-        IfFailed(rc = WST2(temp, WSImg))
+        IF_FAILED(rc = WST2(temp, WSImg))
         {
           Message(FNAME, M_0, rc);
         }
@@ -896,7 +896,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 //   int prune(Image i, Image o, int tresh)
 //   {
 //     int x,y;
-//     ReturnErrorIfFailed(MatchImg(i,o));
+//     RETURN_ERROR_IF_FAILED(MatchImg(i,o));
 //     wloop(i,x,y)
 //       {
 //  if (GetVal(i,x,y)<tresh) PutVal(o,x,y,0);
@@ -910,7 +910,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 //   int imposeMinima(Image i, Image o)
 //   {
 //     int x,y;
-//     ReturnErrorIfFailed(MatchImg(i,o));
+//     RETURN_ERROR_IF_FAILED(MatchImg(i,o));
 //     wloop(i,x,y)
 //       {
 //  if (GetVal(i,x,y)==0) PutVal(o,x,y,0);

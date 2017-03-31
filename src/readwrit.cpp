@@ -27,9 +27,10 @@
 
 #include "readwrit.h"
 
+using namespace std;
+
 namespace ice
 {
-
   int WriteArrayD(double* ptrd, int number, char* name)
   {
     FILE* fp;

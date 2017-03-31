@@ -67,9 +67,9 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed((SmearImg(src.redImage(), dest.redImage(), nx, ny)));
-    ReturnErrorIfFailed((SmearImg(src.greenImage(), dest.greenImage(), nx, ny)));
-    ReturnErrorIfFailed((SmearImg(src.blueImage(), dest.blueImage(), nx, ny)));
+    RETURN_ERROR_IF_FAILED((SmearImg(src.redImage(), dest.redImage(), nx, ny)));
+    RETURN_ERROR_IF_FAILED((SmearImg(src.greenImage(), dest.greenImage(), nx, ny)));
+    RETURN_ERROR_IF_FAILED((SmearImg(src.blueImage(), dest.blueImage(), nx, ny)));
 
     return OK;
   }
@@ -78,10 +78,10 @@ namespace ice
 #define FNAME "DoBImg"
   int DoBImg(const ColorImage& src, const ColorImage& dest, int n1, int n2, int smode)
   {
-    ReturnErrorIfFailed(src.match(dest));
-    ReturnErrorIfFailed(DoBImg(src.redImage(), dest.redImage(), n1, n2, smode));
-    ReturnErrorIfFailed(DoBImg(src.greenImage(), dest.greenImage(), n1, n2, smode));
-    ReturnErrorIfFailed(DoBImg(src.blueImage(), dest.blueImage(), n1, n2, smode));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
+    RETURN_ERROR_IF_FAILED(DoBImg(src.redImage(), dest.redImage(), n1, n2, smode));
+    RETURN_ERROR_IF_FAILED(DoBImg(src.greenImage(), dest.greenImage(), n1, n2, smode));
+    RETURN_ERROR_IF_FAILED(DoBImg(src.blueImage(), dest.blueImage(), n1, n2, smode));
     return OK;
   }
 #undef FNAME
@@ -89,10 +89,10 @@ namespace ice
 #define FNAME "MeanImg"
   int MeanImg(const ColorImage& src, const ColorImage& dest)
   {
-    ReturnErrorIfFailed(src.match(dest));
-    ReturnErrorIfFailed((MeanImg(src.redImage(), dest.redImage())));
-    ReturnErrorIfFailed((MeanImg(src.greenImage(), dest.greenImage())));
-    ReturnErrorIfFailed((MeanImg(src.blueImage(), dest.blueImage())));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
+    RETURN_ERROR_IF_FAILED((MeanImg(src.redImage(), dest.redImage())));
+    RETURN_ERROR_IF_FAILED((MeanImg(src.greenImage(), dest.greenImage())));
+    RETURN_ERROR_IF_FAILED((MeanImg(src.blueImage(), dest.blueImage())));
 
     return OK;
   }
@@ -101,10 +101,10 @@ namespace ice
 #define FNAME "GaussImg"
   int GaussImg(const ColorImage& src, int neighb, double sigma, const ColorImage& dest)
   {
-    ReturnErrorIfFailed(src.match(dest));
-    ReturnErrorIfFailed((GaussImg(src.redImage(), dest.redImage(), neighb, sigma)));
-    ReturnErrorIfFailed((GaussImg(src.greenImage(), dest.greenImage(), neighb, sigma)));
-    ReturnErrorIfFailed((GaussImg(src.blueImage(), dest.blueImage(), neighb, sigma)));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
+    RETURN_ERROR_IF_FAILED((GaussImg(src.redImage(), dest.redImage(), neighb, sigma)));
+    RETURN_ERROR_IF_FAILED((GaussImg(src.greenImage(), dest.greenImage(), neighb, sigma)));
+    RETURN_ERROR_IF_FAILED((GaussImg(src.blueImage(), dest.blueImage(), neighb, sigma)));
 
     return OK;
   }
@@ -115,11 +115,11 @@ namespace ice
 #define FNAME "GradXImg"
   int GradXImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((GradXImg(src.redImage(), dest.redImage())));
-    ReturnErrorIfFailed((GradXImg(src.greenImage(), dest.greenImage())));
-    ReturnErrorIfFailed((GradXImg(src.blueImage(), dest.blueImage())));
+    RETURN_ERROR_IF_FAILED((GradXImg(src.redImage(), dest.redImage())));
+    RETURN_ERROR_IF_FAILED((GradXImg(src.greenImage(), dest.greenImage())));
+    RETURN_ERROR_IF_FAILED((GradXImg(src.blueImage(), dest.blueImage())));
 
     return OK;
   }
@@ -128,11 +128,11 @@ namespace ice
 #define FNAME "GradYImg"
   int GradYImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((GradYImg(src.redImage(), dest.redImage(), norm)));
-    ReturnErrorIfFailed((GradYImg(src.greenImage(), dest.greenImage(), norm)));
-    ReturnErrorIfFailed((GradYImg(src.blueImage(), dest.blueImage(), norm)));
+    RETURN_ERROR_IF_FAILED((GradYImg(src.redImage(), dest.redImage(), norm)));
+    RETURN_ERROR_IF_FAILED((GradYImg(src.greenImage(), dest.greenImage(), norm)));
+    RETURN_ERROR_IF_FAILED((GradYImg(src.blueImage(), dest.blueImage(), norm)));
 
     return OK;
   }
@@ -141,11 +141,11 @@ namespace ice
 #define FNAME "LaplaceXImg"
   int LaplaceXImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((LaplaceXImg(src.redImage(), dest.redImage(), norm)));
-    ReturnErrorIfFailed((LaplaceXImg(src.greenImage(), dest.greenImage(), norm)));
-    ReturnErrorIfFailed((LaplaceXImg(src.blueImage(), dest.blueImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceXImg(src.redImage(), dest.redImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceXImg(src.greenImage(), dest.greenImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceXImg(src.blueImage(), dest.blueImage(), norm)));
 
     return OK;
   }
@@ -154,11 +154,11 @@ namespace ice
 #define FNAME "LaplaceYImg"
   int LaplaceYImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((LaplaceYImg(src.redImage(), dest.redImage(), norm)));
-    ReturnErrorIfFailed((LaplaceYImg(src.greenImage(), dest.greenImage(), norm)));
-    ReturnErrorIfFailed((LaplaceYImg(src.blueImage(), dest.blueImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceYImg(src.redImage(), dest.redImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceYImg(src.greenImage(), dest.greenImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceYImg(src.blueImage(), dest.blueImage(), norm)));
 
     return OK;
   }
@@ -167,11 +167,11 @@ namespace ice
 #define FNAME "LaplaceImg"
   int LaplaceImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((LaplaceImg(src.redImage(), dest.redImage(), norm)));
-    ReturnErrorIfFailed((LaplaceImg(src.greenImage(), dest.greenImage(), norm)));
-    ReturnErrorIfFailed((LaplaceImg(src.blueImage(), dest.blueImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceImg(src.redImage(), dest.redImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceImg(src.greenImage(), dest.greenImage(), norm)));
+    RETURN_ERROR_IF_FAILED((LaplaceImg(src.blueImage(), dest.blueImage(), norm)));
 
     return OK;
   }
@@ -180,44 +180,44 @@ namespace ice
 #define FNAME "LSIImg"
   int LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, int* mask, int norm, int offset)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, norm, offset)));
-    ReturnErrorIfFailed((LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, norm, offset)));
-    ReturnErrorIfFailed((LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, norm, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, norm, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, norm, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, norm, offset)));
 
     return OK;
   }
 
   int LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, double* mask, int offset)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, offset)));
-    ReturnErrorIfFailed((LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, offset)));
-    ReturnErrorIfFailed((LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, offset)));
 
     return OK;
   }
 
   int LSIImg(const ColorImage& src, const ColorImage& dest, const Matrix& mask, int offset)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((LSIImg(src.redImage(), dest.redImage(), mask, offset)));
-    ReturnErrorIfFailed((LSIImg(src.greenImage(), dest.greenImage(), mask, offset)));
-    ReturnErrorIfFailed((LSIImg(src.blueImage(), dest.blueImage(), mask, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), mask, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), mask, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), mask, offset)));
 
     return OK;
   }
 
   int LSIImg(const ColorImage& src, const ColorImage& dest, const IMatrix& mask, int norm, int offset)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((LSIImg(src.redImage(), dest.redImage(), mask, norm, offset)));
-    ReturnErrorIfFailed((LSIImg(src.greenImage(), dest.greenImage(), mask, norm, offset)));
-    ReturnErrorIfFailed((LSIImg(src.blueImage(), dest.blueImage(), mask, norm, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), mask, norm, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), mask, norm, offset)));
+    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), mask, norm, offset)));
 
     return OK;
   }
@@ -226,11 +226,11 @@ namespace ice
 #define FNAME "MexicanHatImg"
   int MexicanHatImg(const ColorImage& src, const ColorImage& dest, double sigma, int neighb)
   {
-    ReturnErrorIfFailed(src.match(dest));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
 
-    ReturnErrorIfFailed((MexicanHatImg(src.redImage(), dest.redImage(), sigma, neighb)));
-    ReturnErrorIfFailed((MexicanHatImg(src.greenImage(), dest.greenImage(), sigma, neighb)));
-    ReturnErrorIfFailed((MexicanHatImg(src.blueImage(), dest.blueImage(), sigma, neighb)));
+    RETURN_ERROR_IF_FAILED((MexicanHatImg(src.redImage(), dest.redImage(), sigma, neighb)));
+    RETURN_ERROR_IF_FAILED((MexicanHatImg(src.greenImage(), dest.greenImage(), sigma, neighb)));
+    RETURN_ERROR_IF_FAILED((MexicanHatImg(src.blueImage(), dest.blueImage(), sigma, neighb)));
 
     return OK;
   }

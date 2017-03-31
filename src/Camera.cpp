@@ -373,7 +373,7 @@ namespace ice
 
     for (i = 0; i < 3; i++) a[i] = T[i][3];
 
-    ReturnIfFailed(A = -Inverse(A), Line3d());
+    RETURN_IF_FAILED(A = -Inverse(A), Line3d());
     Vector c1 = A * a;   // Projektionszentrum
     Vector c2 = A * bpu + c1; // Zweiter Punkt im Raum
     return Line3d(Vector3d(c1), Vector3d(c2)); //Strahl zurückgeben

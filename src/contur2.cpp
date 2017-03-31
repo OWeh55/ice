@@ -70,7 +70,7 @@ namespace ice
 
     if (IsImg(imgo))
       {
-        ReturnErrorIfFailed(MatchImg(imgo, imgv));
+        RETURN_ERROR_IF_FAILED(MatchImg(imgo, imgv));
       }
 
     wxi = 0;
@@ -417,7 +417,7 @@ namespace ice
         return Contur();
       }
 
-    IfFailed(MatchImg(imgv, imgo))
+    IF_FAILED(MatchImg(imgv, imgo))
     {
       Message(FNAME, M_0, WRONG_PARAM);
       return Contur();
@@ -710,7 +710,7 @@ namespace ice
         return NOT_FOUND;
       }
 
-    ReturnErrorIfFailed(c.getPoint(index, x, y));
+    RETURN_ERROR_IF_FAILED(c.getPoint(index, x, y));
 
     g = GradVal(imgv, imgo, x, y, &dir);
 
@@ -781,7 +781,7 @@ namespace ice
     par[0] = p[0];
     par[1] = p[1];
     par[2] = r;
-    ReturnErrorIfFailed(c = CircleContur(par));
+    RETURN_ERROR_IF_FAILED(c = CircleContur(par));
     i = 0;
     c.getPoint(i, x, y);
     g = GradVal(imgv, imgo, x, y, &dir);

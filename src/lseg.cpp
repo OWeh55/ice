@@ -255,7 +255,7 @@ namespace ice
       }
 
     Image hsource = NewImg(img);
-    IfFailed(LocalSeg(hsource, img, neighb, level))
+    IF_FAILED(LocalSeg(hsource, img, neighb, level))
     {
       FreeImg(hsource);
       Message(FNAME, M_0, ERROR);
@@ -274,7 +274,7 @@ namespace ice
       }
 
     Image hsource = NewImg(img);
-    IfFailed(LocalSeg(hsource, img, neighb, level, level2))
+    IF_FAILED(LocalSeg(hsource, img, neighb, level, level2))
     {
       FreeImg(hsource);
       Message(FNAME, M_0, ERROR);

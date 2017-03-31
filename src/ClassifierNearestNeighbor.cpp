@@ -41,7 +41,7 @@ namespace ice
     ClassifierNormal(classes, dimension),
     nNeighbors(nNeighbors), norm(norm)
   {
-    IfFailed(Init(classes, dimension, nNeighbors, norm))
+    IF_FAILED(Init(classes, dimension, nNeighbors, norm))
     {
       // if initialisation fails
       Message(FNAME, M_0, ERROR);

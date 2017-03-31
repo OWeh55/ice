@@ -573,7 +573,7 @@ namespace ice
                             IMatrix& ref, int mode)
   {
     double cost1, costm;
-    ReturnErrorIfFailed(CheapestWayNWSO(distance, 0, ref));
+    RETURN_ERROR_IF_FAILED(CheapestWayNWSO(distance, 0, ref));
     costm = ReferenceCosts(distance, ref);
 
     if ((mode & TW_SEARCHSTART) > 0)
@@ -583,7 +583,7 @@ namespace ice
         for (int y = 1; y < ny; y++)
           {
             IMatrix ref2;
-            ReturnErrorIfFailed(CheapestWayNWSO(distance, y, ref2));
+            RETURN_ERROR_IF_FAILED(CheapestWayNWSO(distance, y, ref2));
             cost1 = ReferenceCosts(distance, ref2);
 
             if (cost1 < costm)
@@ -599,7 +599,7 @@ namespace ice
         // auch entgegengesetzte Diasgonalenrichtung untersuchen
         int ny = distance.cols();
         IMatrix ref2;
-        ReturnErrorIfFailed(CheapestWaySWNO(distance, ny - 1, ref2));
+        RETURN_ERROR_IF_FAILED(CheapestWaySWNO(distance, ny - 1, ref2));
         cost1 = ReferenceCosts(distance, ref2);
 
         if (cost1 < costm)
@@ -612,7 +612,7 @@ namespace ice
           {
             for (int y = 0; y < ny - 1; y++)
               {
-                ReturnErrorIfFailed(CheapestWaySWNO(distance, y, ref2));
+                RETURN_ERROR_IF_FAILED(CheapestWaySWNO(distance, y, ref2));
                 cost1 = ReferenceCosts(distance, ref2);
 
                 if (cost1 < costm)
@@ -632,12 +632,12 @@ namespace ice
   {
     IMatrix ref2;
     double cost1, cost2;
-    ReturnErrorIfFailed(CheapestWayUpDown(distance, 1, ref));
+    RETURN_ERROR_IF_FAILED(CheapestWayUpDown(distance, 1, ref));
 
     if ((mode & TW_BIDIRECTIONAL) > 0)
       {
         cost1 = ReferenceCosts(distance, ref);
-        ReturnErrorIfFailed(CheapestWayUpDown(distance, -1, ref2));
+        RETURN_ERROR_IF_FAILED(CheapestWayUpDown(distance, -1, ref2));
         cost2 = ReferenceCosts(distance, ref2);
 
         if (cost2 < cost1) ref = ref2;
@@ -652,10 +652,10 @@ namespace ice
     switch (mode & TW_MODEMASK)
       {
       case TW_NORMAL:
-        ReturnErrorIfFailed(TimeWarpNormal(distance, ref, mode));
+        RETURN_ERROR_IF_FAILED(TimeWarpNormal(distance, ref, mode));
         break;
       case TW_REDUCED:
-        ReturnErrorIfFailed(TimeWarpReduced(distance, ref, mode));
+        RETURN_ERROR_IF_FAILED(TimeWarpReduced(distance, ref, mode));
         break;
       default:
         Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);

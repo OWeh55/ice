@@ -58,7 +58,7 @@ namespace ice
     c.getRect(x1, y1, x2, y2);
     IMatrix pl[2];
     IMatrix poly = IMatrix(0, 2);
-    IfFailed(pl[0] = ConturPointlist(c))
+    IF_FAILED(pl[0] = ConturPointlist(c))
     {
       Message(FNAME, M_0, WRONG_PARAM);
       return result;

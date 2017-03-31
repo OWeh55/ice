@@ -185,7 +185,7 @@ namespace ice
         a0 = -min * a1;
       }
 
-    ReturnErrorIfFailed(GrayTransform(src, tgt, a1, a0));
+    RETURN_ERROR_IF_FAILED(GrayTransform(src, tgt, a1, a0));
 
     return OK;
   }
@@ -201,9 +201,9 @@ namespace ice
                     double quantile)
   {
     int min, max;
-    ReturnErrorIfFailed(GetGrayLimits(img, min, max, mode,
-                                      quantile));
-    ReturnErrorIfFailed(GrayTransformLimits(img, tgt, min, max));
+    RETURN_ERROR_IF_FAILED(GetGrayLimits(img, min, max, mode,
+                                         quantile));
+    RETURN_ERROR_IF_FAILED(GrayTransformLimits(img, tgt, min, max));
     return OK;
   }
 

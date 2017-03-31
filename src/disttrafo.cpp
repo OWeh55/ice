@@ -104,7 +104,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImg(orig, dist, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(orig, dist, xs, ys));
 
     maxdist = RoundInt(sqrt((double)(xs * xs + ys * ys)));
 

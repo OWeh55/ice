@@ -144,7 +144,7 @@ namespace ice
   int SkeletonImg(const Image& pic, const Image& skelett, int lvl)
   {
     int dimx, dimy;
-    ReturnErrorIfFailed(MatchImg(pic, skelett, dimx, dimy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
 
     int maxv = skelett->maxval;
 
@@ -231,7 +231,7 @@ namespace ice
   int skeletonImg(const Image& pic, const Image& skelett, int lvl)
   {
     int dimx, dimy;
-    ReturnErrorIfFailed(MatchImg(pic, skelett, dimx, dimy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
 
     int maxv = skelett->maxval;
 

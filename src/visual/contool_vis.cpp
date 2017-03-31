@@ -39,6 +39,8 @@
 
 #include "contools.h"
 
+using namespace std;
+
 namespace ice
 {
   /**********************************************************

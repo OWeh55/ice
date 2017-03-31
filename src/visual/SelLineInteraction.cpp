@@ -23,7 +23,9 @@
 #include <wx/dcclient.h>  // needed for wxGTK >= 2.5.x 
 
 #include "visual/SelLineInteraction.h"
-#include "macro.h"  // for min/max templates
+//#include "macro.h"  // for min/max templates
+
+using namespace std;
 
 namespace ice
 {
@@ -66,7 +68,7 @@ namespace ice
     // We use logical function wxXOR (see explanation at iceSelectPointInteraction::DrawCursor).
     wxClientDC ClientDC(imageWindow);
     ClientDC.SetLogicalFunction(wxXOR);
-    unsigned int LineWidth = ice::max<int> (1, imageWindow->GetZoomFactor());
+    unsigned int LineWidth = max<int> (1, imageWindow->GetZoomFactor());
     wxPen Pen(wxColor(128, 128, 128),  // const wxColour& colour
               LineWidth, // int width
               wxSOLID); // int style

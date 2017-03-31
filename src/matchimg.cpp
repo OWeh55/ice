@@ -37,7 +37,7 @@ namespace ice
                   double beta)
   {
     int sx, sy;
-    ReturnErrorIfFailed(MatchImg(img1, img2, sx, sy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, sx, sy));
 
     Image imgr;
     imgr.create(sx, sy, 255);
@@ -48,13 +48,13 @@ namespace ice
         return NO_MEM;
       }
 
-    IfFailed(InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS))
+    IF_FAILED(InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS))
     {
       Message(FNAME, M_0, ERROR);
       return ERROR;
     }
 
-    IfFailed(val = PeakValuation(imgr, Image(), dx, dy))
+    IF_FAILED(val = PeakValuation(imgr, Image(), dx, dy))
     {
       Message(FNAME, M_0, ERROR);
       return ERROR;
@@ -124,7 +124,7 @@ namespace ice
   {
     int sx, sy;
 
-    ReturnErrorIfFailed(MatchImg(img1, img2, himg, sx, sy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, himg, sx, sy));
 
     Trafo tri; // Inverse Transformation zu tr;
     Trafo trd; // "Korrektur-Transformation" während Iteration
@@ -218,7 +218,7 @@ namespace ice
                   int mode)
   {
     Image himg = NewImg(img2);
-    IfFailed(DetectTrafo(img1, img2, himg, tr, beta, ct, mode))
+    IF_FAILED(DetectTrafo(img1, img2, himg, tr, beta, ct, mode))
     {
       FreeImg(himg);
       Message(FNAME, M_0, ERROR);

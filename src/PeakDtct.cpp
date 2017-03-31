@@ -20,7 +20,7 @@
  */
 // Peaksuche - 1998 Torsten Baumbach
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <float.h>
 #include <limits.h>
 
@@ -29,6 +29,8 @@
 #include "MtchTool.h"
 #include "DPList.h"
 #include "MaxSrch.h"
+
+using namespace std;
 
 namespace ice
 {
@@ -1252,9 +1254,9 @@ namespace ice
     if (use_masks)
       {
 
-        ReturnNullIfFailed(mask1 = NewImg(img->xsize, img->ysize, 2));
+        RETURN_NULL_IF_FAILED(mask1 = NewImg(img->xsize, img->ysize, 2));
         ClearImg(mask1);
-        IfFailed(mask2 = NewImg(img->xsize, img->ysize, 1))
+        IF_FAILED(mask2 = NewImg(img->xsize, img->ysize, 1))
         {
           FreeImg(mask1);
           Message(FNAME, M_0, ERROR);
@@ -1263,7 +1265,7 @@ namespace ice
         ClearImg(mask2);
       }
 
-    IfFailed(mask3 = NewImg(img->xsize, img->ysize, 1))
+    IF_FAILED(mask3 = NewImg(img->xsize, img->ysize, 1))
     {
       FreeImg(mask1);
       FreeImg(mask2);
@@ -1394,8 +1396,8 @@ namespace ice
                 while (rc)
                   rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
 
-                IfFailed(c = BinObj2ConturList(maxanz ? mask3 : mask1,
-                                               RoundInt(xp), RoundInt(yp)))
+                IF_FAILED(c = BinObj2ConturList(maxanz ? mask3 : mask1,
+                                                RoundInt(xp), RoundInt(yp)))
                 {
                   Message(FNAME, M_0, ERROR);
 
@@ -1439,8 +1441,8 @@ namespace ice
                     while (rc)
                       rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
 
-                    IfFailed((c = BinObj2ConturList(maxanz ? mask3 : mask1,
-                                                    RoundInt(xp), RoundInt(yp))))
+                    IF_FAILED((c = BinObj2ConturList(maxanz ? mask3 : mask1,
+                                                     RoundInt(xp), RoundInt(yp))))
                     {
                       Message(FNAME, M_0, ERROR);
 
@@ -1586,7 +1588,7 @@ namespace ice
       }
     while (rc);
 
-    IfFailed((c = BinObj2ConturList(mask1, x, y)))
+    IF_FAILED((c = BinObj2ConturList(mask1, x, y)))
     {
       Message(FNAME, M_0, ERROR);
       FreeImg(mask1);

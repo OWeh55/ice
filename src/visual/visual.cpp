@@ -54,7 +54,7 @@ namespace ice
       }
 
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(Img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
 
     // if the image is not visualized, do nothing
 
@@ -87,7 +87,7 @@ namespace ice
       }
 
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(Img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
 
     // if the image is not visualized, do nothing
 
@@ -130,7 +130,7 @@ namespace ice
   int Zoom(Image Img, int ZoomFactor, int, int)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(Img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
@@ -148,7 +148,7 @@ namespace ice
   int SetGreyColor(unsigned int Entry,
                    unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue)
   {
-    ReturnErrorIfFailed(wxGetApp().GetImageManager()->SetGreyColor(Entry, RedValue, GreenValue, BlueValue));
+    RETURN_ERROR_IF_FAILED(wxGetApp().GetImageManager()->SetGreyColor(Entry, RedValue, GreenValue, BlueValue));
     return OK;
   }
 
@@ -156,14 +156,14 @@ namespace ice
                    unsigned char Red, unsigned char Green, unsigned char Blue)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(v->SetGreyColor(Entry, Red, Green, Blue));
+    RETURN_ERROR_IF_FAILED(v->SetGreyColor(Entry, Red, Green, Blue));
     return OK;
   }
 #undef FNAME
@@ -171,20 +171,20 @@ namespace ice
   int SetGreyLUT(Image img, unsigned int First, unsigned int Last)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(v->SetGreyLUT(First, Last));
+    RETURN_ERROR_IF_FAILED(v->SetGreyLUT(First, Last));
     return OK;
   }
 
   int SetGreyLUT(unsigned int First, unsigned int Last)
   {
-    ReturnErrorIfFailed(wxGetApp().GetImageManager()->SetGreyLUT(First, Last));
+    RETURN_ERROR_IF_FAILED(wxGetApp().GetImageManager()->SetGreyLUT(First, Last));
     return OK;
   }
 
@@ -193,7 +193,7 @@ namespace ice
   int SetOverlayColor(unsigned int Entry,
                       unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue)
   {
-    ReturnErrorIfFailed(wxGetApp().GetImageManager()->SetOverlayColor(Entry, RedValue, GreenValue, BlueValue));
+    RETURN_ERROR_IF_FAILED(wxGetApp().GetImageManager()->SetOverlayColor(Entry, RedValue, GreenValue, BlueValue));
     return OK;
   }
 
@@ -201,14 +201,14 @@ namespace ice
                       unsigned char Red, unsigned char Green, unsigned char Blue)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(v->SetOverlayColor(Entry, Red, Green, Blue));
+    RETURN_ERROR_IF_FAILED(v->SetOverlayColor(Entry, Red, Green, Blue));
     return OK;
   }
 #undef FNAME
@@ -217,13 +217,13 @@ namespace ice
                    unsigned char& Red, unsigned char& Green, unsigned char& Blue)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
-    ReturnErrorIfFailed(v->GetGreyColor(Entry, Red, Green, Blue));
+    RETURN_ERROR_IF_FAILED(v->GetGreyColor(Entry, Red, Green, Blue));
     return OK;
   }
 
@@ -233,13 +233,13 @@ namespace ice
                       unsigned char& Red, unsigned char& Green, unsigned char& Blue)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
         return WRONG_PARAM;
       }
-    ReturnErrorIfFailed(v->GetOverlayColor(Entry, Red, Green, Blue));
+    RETURN_ERROR_IF_FAILED(v->GetOverlayColor(Entry, Red, Green, Blue));
     return OK;
   }
 #undef FNAME

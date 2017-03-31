@@ -182,7 +182,7 @@ namespace ice
                         int mode)
   {
     Matrix res;
-    ReturnIfFailed(DistanceMatrix(feat1, feat2, res, mode), res);
+    RETURN_IF_FAILED(DistanceMatrix(feat1, feat2, res, mode), res);
     return res;
   }
 
@@ -190,7 +190,7 @@ namespace ice
   Matrix DistanceMatrix(const Matrix& feat, int mode)
   {
     Matrix res;
-    ReturnIfFailed(DistanceMatrix(feat, feat, res, mode), res);
+    RETURN_IF_FAILED(DistanceMatrix(feat, feat, res, mode), res);
     return res;
   }
 
@@ -262,14 +262,14 @@ namespace ice
   Matrix DistanceMatrix(const Matrix& feat1, const Matrix& feat2, const VectorDistance& dist)
   {
     Matrix res;
-    ReturnIfFailed(DistanceMatrix(feat1, feat2, res, dist), res);
+    RETURN_IF_FAILED(DistanceMatrix(feat1, feat2, res, dist), res);
     return res;
   }
 
   Matrix DistanceMatrix(const Matrix& feat, const VectorDistance& dist)
   {
     Matrix res;
-    ReturnIfFailed(DistanceMatrix(feat, feat, res, dist), res);
+    RETURN_IF_FAILED(DistanceMatrix(feat, feat, res, dist), res);
     return res;
   }
 

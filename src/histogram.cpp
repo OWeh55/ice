@@ -397,7 +397,7 @@ namespace ice
   int Histogram::Statistic(int& n, double& xm, double& xs) const
   {
     double dummy;
-    ReturnErrorIfFailed(Statistic(n, xm, xs, dummy));
+    RETURN_ERROR_IF_FAILED(Statistic(n, xm, xs, dummy));
     return OK;
   };
 

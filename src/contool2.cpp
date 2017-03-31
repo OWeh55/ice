@@ -203,7 +203,7 @@ namespace ice
         Freeman(i).move(ps[0], ps[1]);
       }
 
-    IfFailed(c = GetContur(ps, cs_cls, &e, 0))
+    IF_FAILED(c = GetContur(ps, cs_cls, &e, 0))
     {
       Message(FNAME, M_0, ERROR);
       return c;
@@ -310,7 +310,7 @@ namespace ice
         Freeman(i).move(ps[0], ps[1]);
       }
 
-    IfFailed(c = GetContur(ps, es_cls, &e, 0))
+    IF_FAILED(c = GetContur(ps, es_cls, &e, 0))
     {
       Message(FNAME, M_0, ERROR);
       return c;
@@ -364,7 +364,7 @@ namespace ice
 
     ps[0]--;
 
-    IfFailed(c = GetContur(ps, e_cls, &e, 0))
+    IF_FAILED(c = GetContur(ps, e_cls, &e, 0))
     {
       Message(FNAME, M_0, ERROR);
       return c;

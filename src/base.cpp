@@ -79,7 +79,7 @@ namespace ice
   int CopyImg(const Image& SourceImage, const Image& DestinationImage)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImg(SourceImage, DestinationImage, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(SourceImage, DestinationImage, xs, ys));
 
     int sourcetype = SourceImage->ImageType();
 
@@ -213,14 +213,14 @@ namespace ice
   int MatchImg(const Image& i1, const Image& i2)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImg(i1, i2, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(i1, i2, xs, ys));
     return OK;
   }
 
   int MatchImg(const Image& i1, const Image& i2, const Image& i3)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImg(i1, i2, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(i1, i2, i3, xs, ys));
     return OK;
   }
 #undef FNAME

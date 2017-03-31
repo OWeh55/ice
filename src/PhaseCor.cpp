@@ -39,7 +39,7 @@ namespace ice
   {
     int xs, ys;
 
-    ReturnErrorIfFailed(MatchImgD(imgd1, imgd2, img_dest, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(imgd1, imgd2, img_dest, xs, ys));
 
     ImageD imgd1i = NewImgD(xs, ys, -DBL_MAX, DBL_MAX);
     ImageD imgd2i = NewImgD(xs, ys, -DBL_MAX, DBL_MAX);
@@ -94,13 +94,13 @@ namespace ice
   int PhaseCorrelationImg(Image img1, Image img2, Image img)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImg(img1, img2, img, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, img, xs, ys));
 
     ImageD imgd1 = NewImgD(img1, true);
     ImageD imgd2 = NewImgD(img2, true);
     ImageD imgd = NewImgD(img);
 
-    ReturnErrorIfFailed(PhaseCorrelationImgD(imgd1, imgd2, imgd));
+    RETURN_ERROR_IF_FAILED(PhaseCorrelationImgD(imgd1, imgd2, imgd));
 
     int x, y;
     double gmaxabs = 0, gmin = DBL_MAX, gmax = -DBL_MAX, g;

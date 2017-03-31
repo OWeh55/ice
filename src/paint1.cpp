@@ -173,7 +173,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(c = CircleContur(par));
+    RETURN_ERROR_IF_FAILED(c = CircleContur(par));
 
     OffMessage();
 
@@ -211,13 +211,13 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(c = EllipseContur(par));
+    RETURN_ERROR_IF_FAILED(c = EllipseContur(par));
 
     if (c.isClosed())
       {
         if (mode != NOFILL)
           {
-            ReturnErrorIfFailed(FillRegion(c, val2, img));
+            RETURN_ERROR_IF_FAILED(FillRegion(c, val2, img));
           }
 
         OffMessage();

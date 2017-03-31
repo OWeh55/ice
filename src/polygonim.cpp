@@ -89,7 +89,7 @@ namespace ice
     RETURN_IF_FAILED(CheckPolygon(m), false);
     int res = false;
     PointList pl;
-    IfFailed(pl = Matrix2PointList(m))
+    IF_FAILED(pl = Matrix2PointList(m))
     {
       if (pl != NULL) FreePointList(pl);
 
@@ -99,7 +99,7 @@ namespace ice
     double pp[2];
     pp[0] = p.x;
     pp[1] = p.y;
-    IfFailed(res = InsidePolygon(pp, pl))
+    IF_FAILED(res = InsidePolygon(pp, pl))
     {
       FreePointList(pl);
       Message(FNAME, M_0, ERROR);
@@ -307,7 +307,7 @@ namespace ice
         int y1 = RoundInt(pl[i][1]);
         int x2 = RoundInt(pl[j][0]);
         int y2 = RoundInt(pl[j][1]);
-        ReturnErrorIfFailed(Line(x1, y1, x2, y2, val, 0, img));
+        RETURN_ERROR_IF_FAILED(Line(x1, y1, x2, y2, val, 0, img));
 
         if (img.inside(x1, y1) && (marker > 0))
           {
@@ -315,7 +315,7 @@ namespace ice
 
             if (mcolor < 0) mcolor = val;
 
-            ReturnErrorIfFailed(Marker(marker, x1, y1, mcolor, size, img));
+            RETURN_ERROR_IF_FAILED(Marker(marker, x1, y1, mcolor, size, img));
           }
       }
 

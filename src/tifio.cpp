@@ -109,7 +109,7 @@ namespace ice
         int ys;
         int xs;
 
-        ReturnErrorIfFailed(MatchImg(imgr, imgg, imgb, xs, ys));
+        RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
 
         uint32* Buffer = new uint32[Width * Height];
 
@@ -234,7 +234,7 @@ namespace ice
       }
 
     int xs, ys;
-    ReturnErrorIfFailed(MatchImg(imgr, imgg, imgb, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
 
     TIFF* image;
 

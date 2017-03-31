@@ -240,7 +240,7 @@ namespace ice
     Image b = NewImg(img->xsize, img->ysize, img->maxval);
 
     bool ok = false;
-    ReturnIfFailed(ok = reader->read(r, g, b), false);
+    RETURN_IF_FAILED(ok = reader->read(r, g, b), false);
 
     if (!ok)
       return false;
@@ -282,7 +282,7 @@ namespace ice
       }
 
     bool ok = false;
-    ReturnIfFailed(ok = reader->read(imgr, imgg, imgb), false);
+    RETURN_IF_FAILED(ok = reader->read(imgr, imgg, imgb), false);
 
     if (!ok)
       return false;
@@ -299,7 +299,7 @@ namespace ice
       }
 
     bool ok = false;
-    ReturnIfFailed(ok = reader -> read(), false);
+    RETURN_IF_FAILED(ok = reader -> read(), false);
 
     if (!ok)
       return false;

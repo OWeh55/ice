@@ -457,7 +457,7 @@ namespace ice
     PointList pl = Matrix2PointList(m);
     double par[2];
 
-    IfFailed(FitLineLinOpt(pl, 0, m.rows() - 1, 1, par, limit))
+    IF_FAILED(FitLineLinOpt(pl, 0, m.rows() - 1, 1, par, limit))
     {
       FreePointList(pl);
       Message(FNAME, M_0, ERROR);
@@ -486,7 +486,7 @@ namespace ice
 
     double par[2];
 
-    IfFailed(FitLineLinOpt(ppl, 0, pl.size() - 1, step, par, limit))
+    IF_FAILED(FitLineLinOpt(ppl, 0, pl.size() - 1, step, par, limit))
     {
       FreePointList(ppl);
       Message(FNAME, M_0, ERROR);

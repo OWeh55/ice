@@ -123,7 +123,7 @@ namespace ice
 
     if (IsImg(imgo))
       {
-        ReturnErrorIfFailed(MatchImg(imgv, imgo));
+        RETURN_ERROR_IF_FAILED(MatchImg(imgv, imgo));
       }
 
     wxi = 0;
@@ -366,7 +366,7 @@ namespace ice
 
     if (IsImg(imgo))
       {
-        IfFailed(MatchImg(imgv, imgo))
+        IF_FAILED(MatchImg(imgv, imgo))
         {
           return c;
         }

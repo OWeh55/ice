@@ -493,8 +493,8 @@ namespace ice
 
                 EG->edges[i]->Index = EG->EdgeNodeCount;
                 // Zugriff auf Kante zwischen i und nb moeglich machen
-                ReturnNullIfFailed(EG->setIndex(i, nb, EG->EdgeNodeCount));
-                ReturnNullIfFailed(EG->setIndex(nb, i, EG->EdgeNodeCount));
+                RETURN_NULL_IF_FAILED(EG->setIndex(i, nb, EG->EdgeNodeCount));
+                RETURN_NULL_IF_FAILED(EG->setIndex(nb, i, EG->EdgeNodeCount));
 
                 EG->EdgeNodeCount++;
               }

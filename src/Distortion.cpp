@@ -517,7 +517,7 @@ namespace ice
       opl[i] = Point(orig[i][0], orig[i][1]);
 
     Point center(mx, my);
-    ReturnErrorIfFailed(Calc(mpl, opl, tr, center));
+    RETURN_ERROR_IF_FAILED(Calc(mpl, opl, tr, center));
 
     return OK;
   }
@@ -552,7 +552,7 @@ namespace ice
     for (int i = 0; i < orig.rows(); i++)
       opl[i] = Point(orig[i][0], orig[i][1]);
 
-    ReturnErrorIfFailed(Calc(mpl, opl, tr));
+    RETURN_ERROR_IF_FAILED(Calc(mpl, opl, tr));
     return OK;
   }
 
@@ -572,7 +572,7 @@ namespace ice
     for (int i = 0; i < orig.rows(); i++)
       opl[i] = Point(orig[i][0], orig[i][1]);
 
-    ReturnErrorIfFailed(Calc(mpl, opl));
+    RETURN_ERROR_IF_FAILED(Calc(mpl, opl));
     return OK;
   }
 

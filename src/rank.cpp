@@ -122,7 +122,7 @@ namespace ice
 
     int size2 = fsize / 2;
 
-    ReturnErrorIfFailed(MatchImg(img, imgd, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
 
     x1 = size2;
     x2 = imgd->xsize - 1 - size2; /* Fenster fuer Rangfilter */
@@ -233,7 +233,7 @@ namespace ice
     int sizex = fsizex / 2;
     int sizey = fsizey / 2;
 
-    ReturnErrorIfFailed(MatchImg(img, imgd, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
 
     x1 = sizex;
     x2 = imgd->xsize - 1 - sizex; /* Fenster fuer Rangfilter */
@@ -347,7 +347,7 @@ namespace ice
       }
 
     int rank = (size * size) / 2;
-    ReturnErrorIfFailed(ret = RankImg(img, size, rank, imgd));
+    RETURN_ERROR_IF_FAILED(ret = RankImg(img, size, rank, imgd));
     return ret;
   }
 #undef FNAME

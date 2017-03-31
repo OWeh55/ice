@@ -33,21 +33,11 @@
 #include "visual/ConsoleWin.h"  // for passing through key events to the console window
 #include "visual/ImageMgr.h"
 
-#ifdef EVENTDEBUG
-#include <iostream>
-using namespace std;
-#endif
-
 #include <iostream>
 using namespace std;
 
 #include "macro.h"          // for min/max templates
 #include "visual/mouse.h"
-
-#if DEBUG
-#include <iostream>
-using namespace std;
-#endif
 
 namespace ice
 {
@@ -245,8 +235,8 @@ namespace ice
   {
     wxSize AvailableSize = ParentFrame->GetClientSize();
 
-    AvailableSize.SetWidth(ice::max<int>(0, AvailableSize.GetWidth()));
-    AvailableSize.SetHeight(ice::max<int>(0, AvailableSize.GetHeight()));
+    AvailableSize.SetWidth(max<int>(0, AvailableSize.GetWidth()));
+    AvailableSize.SetHeight(max<int>(0, AvailableSize.GetHeight()));
 
     // if the window is too small to display anything, we don't change the zoom factor and do nothing
     if ((AvailableSize.GetWidth() == 0) || (AvailableSize.GetHeight() == 0))
@@ -255,11 +245,11 @@ namespace ice
       }
 
     // determine the optimal zoom factor (zoom in)
-    int NewZoomFactor = ice::min<int>(AvailableSize.GetWidth() / SizeX,
-                                      AvailableSize.GetHeight() / SizeY);
+    int NewZoomFactor = min<int>(AvailableSize.GetWidth() / SizeX,
+                                 AvailableSize.GetHeight() / SizeY);
     if (NewZoomFactor == 0) // have to zoom out ?
-      NewZoomFactor = -ice::max<int>((SizeX + AvailableSize.GetWidth() - 1) / AvailableSize.GetWidth(),
-                                     (SizeY + AvailableSize.GetHeight() - 1) / AvailableSize.GetHeight());
+      NewZoomFactor = -max<int>((SizeX + AvailableSize.GetWidth() - 1) / AvailableSize.GetWidth(),
+                                (SizeY + AvailableSize.GetHeight() - 1) / AvailableSize.GetHeight());
 
     return NewZoomFactor;
   }
@@ -640,7 +630,7 @@ namespace ice
     // This just swapes the most significant bit of the destination color.
     wxClientDC ClientDC(this);
     ClientDC.SetLogicalFunction(wxXOR);
-    unsigned int LineWidth = ice::max<int>(1, GetZoomFactor());
+    unsigned int LineWidth = max<int>(1, GetZoomFactor());
     ClientDC.SetPen(wxPen(wxColor(128, 128, 128), // const  wxColour& colour
                           LineWidth, // int width
                           wxSOLID)); // int style

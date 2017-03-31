@@ -46,7 +46,7 @@ namespace ice
       }
 
     Visual p;
-    ReturnErrorIfFailed(p = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(p = GetVisual(img));
     if (p == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);

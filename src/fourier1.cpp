@@ -59,8 +59,8 @@ namespace ice
       }
 
     int xs, ys;
-    ReturnErrorIfFailed(MatchImgD(srcre, srcim, re));
-    ReturnErrorIfFailed(MatchImgD(srcre, re, im, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(srcre, srcim, re));
+    RETURN_ERROR_IF_FAILED(MatchImgD(srcre, re, im, xs, ys));
 
     vector<double> vreal(xs);
     vector<double> vimag(xs);

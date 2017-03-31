@@ -37,7 +37,7 @@ namespace ice
                        int filter_size, int filter_length, int filter_width)
   {
     int dimx, dimy;
-    ReturnErrorIfFailed(MatchImg(pic, dir, dest, dimx, dimy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
 
     int dirsteps = dir->maxval + 1;
     double dirfac = M_PI / dirsteps;
@@ -71,10 +71,10 @@ namespace ice
                        const ColorImage& dest,
                        int filter_size, int filter_length, int filter_width)
   {
-    ReturnErrorIfFailed(src.match(dest));
-    ReturnErrorIfFailed(OrientedSmearImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width));
-    ReturnErrorIfFailed(OrientedSmearImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width));
-    ReturnErrorIfFailed(OrientedSmearImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
+    RETURN_ERROR_IF_FAILED(OrientedSmearImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width));
+    RETURN_ERROR_IF_FAILED(OrientedSmearImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width));
+    RETURN_ERROR_IF_FAILED(OrientedSmearImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width));
     return OK;
   }
 
@@ -87,7 +87,7 @@ namespace ice
                       int filter_size, int filter_rad)
   {
     int dimx, dimy;
-    ReturnErrorIfFailed(MatchImg(pic, dir, dest, dimx, dimy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
 
     int dirsteps = dir->maxval + 1;
     double dirfac = 2 * M_PI / dirsteps;
@@ -121,10 +121,10 @@ namespace ice
                       const ColorImage& dest,
                       int filter_size, int filter_rad)
   {
-    ReturnErrorIfFailed(src.match(dest));
-    ReturnErrorIfFailed(OrientedEdgeImg(src.redImage(), dir, dest.redImage(), filter_size, filter_rad));
-    ReturnErrorIfFailed(OrientedEdgeImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_rad));
-    ReturnErrorIfFailed(OrientedEdgeImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_rad));
+    RETURN_ERROR_IF_FAILED(src.match(dest));
+    RETURN_ERROR_IF_FAILED(OrientedEdgeImg(src.redImage(), dir, dest.redImage(), filter_size, filter_rad));
+    RETURN_ERROR_IF_FAILED(OrientedEdgeImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_rad));
+    RETURN_ERROR_IF_FAILED(OrientedEdgeImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_rad));
     return OK;
   }
 
@@ -136,7 +136,7 @@ namespace ice
                      int filter_size, int filter_length, int filter_width)
   {
     int dimx, dimy;
-    ReturnErrorIfFailed(MatchImg(pic, dir, dest, dimx, dimy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
 
     int dirsteps = dir->maxval + 1;
     double dirfac = M_PI / dirsteps;
@@ -170,10 +170,10 @@ namespace ice
                      const ColorImage& dest,
                      int filter_size, int filter_length, int filter_width)
   {
-    ReturnErrorIfFailed(src.match(src, dest));
-    ReturnErrorIfFailed(OrientedDoBImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width));
-    ReturnErrorIfFailed(OrientedDoBImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width));
-    ReturnErrorIfFailed(OrientedDoBImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width));
+    RETURN_ERROR_IF_FAILED(src.match(src, dest));
+    RETURN_ERROR_IF_FAILED(OrientedDoBImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width));
+    RETURN_ERROR_IF_FAILED(OrientedDoBImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width));
+    RETURN_ERROR_IF_FAILED(OrientedDoBImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width));
     return OK;
   }
 

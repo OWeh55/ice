@@ -281,10 +281,10 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(Add(c.start));
+    RETURN_ERROR_IF_FAILED(Add(c.start));
 
     for (i = 0; i < c.nDirectionCodes; i++)
-      ReturnErrorIfFailed(Add(c.data[i]));
+      RETURN_ERROR_IF_FAILED(Add(c.data[i]));
 
     cachedIndex = 0;
     cachedPoint = start;

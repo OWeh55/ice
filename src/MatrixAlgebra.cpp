@@ -50,7 +50,7 @@ namespace ice
       ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, inverse);
 
     Matrix l;
-    ReturnIfFailed(l = CholeskyDecomposition(mat), inverse);
+    RETURN_IF_FAILED(l = CholeskyDecomposition(mat), inverse);
 
     Matrix h(dimension, dimension);
     Matrix lt(dimension, dimension);
@@ -436,7 +436,7 @@ namespace ice
     int dimension = m.cols();
     Matrix l;
 
-    ReturnIfFailed(l = CholeskyDecomposition(m), 0.0);
+    RETURN_IF_FAILED(l = CholeskyDecomposition(m), 0.0);
 
     double det = 1;
 
@@ -456,7 +456,7 @@ namespace ice
     IVector indx;
 
     // LU-Zerlegung
-    IfFailed(LUDecompositionPacked(m, LU, indx, true))
+    IF_FAILED(LUDecompositionPacked(m, LU, indx, true))
     {
       Message(FNAME, M_0, ERROR);
       return ERROR;
@@ -476,7 +476,7 @@ namespace ice
     vector<int> index;
 
     // LU-Zerlegung
-    IfFailed(LUDecompositionPacked(A, LU, index, true))
+    IF_FAILED(LUDecompositionPacked(A, LU, index, true))
     {
       Message(FNAME, M_0, ERROR);
       return ERROR;

@@ -120,7 +120,7 @@ namespace ice
     int x, y, changed, neighbors, m[5][5];
     int dx, dy;
 
-    ReturnErrorIfFailed(MatchImg(img1, img2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, dx, dy));
 
     imgd = NewImg(img1->xsize, img1->ysize, 1);
 
@@ -1002,7 +1002,7 @@ namespace ice
   int HistogramEqual(const Image& img, Image& imgd)
   {
     int dx, dy;
-    ReturnErrorIfFailed(MatchImg(img, imgd, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
 
     Histogram h(img);
 
@@ -1072,7 +1072,7 @@ namespace ice
   int RelaxImg(const Image& img, const Image& imgd, int n)
   {
     int dx, dy;
-    ReturnErrorIfFailed(MatchImg(img, imgd, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
     Image maxImage;
     maxImage.create(img);
     Image minImage;

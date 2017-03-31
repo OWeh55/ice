@@ -167,7 +167,7 @@ namespace ice
   int HistogramEqualization(const Image& img, const Image& imgd, double reg)
   {
     int dx, dy;
-    ReturnErrorIfFailed(MatchImg(img, imgd, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
 
     vector<int> histx;
     HistogramEqualizationLUT(img, histx, imgd->maxval, reg);

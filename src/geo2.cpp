@@ -52,7 +52,7 @@ namespace ice
       }
 
     IMatrix m;
-    IfFailed(m = ConturPointlist(c))
+    IF_FAILED(m = ConturPointlist(c))
     {
       Message(FNAME, M_0, ERROR);
       return res;
@@ -77,7 +77,7 @@ namespace ice
   int TransformList(const Trafo& tr, Matrix& m)
   {
     Matrix temp;
-    ReturnErrorIfFailed(TransformList(tr, m, temp));
+    RETURN_ERROR_IF_FAILED(TransformList(tr, m, temp));
     m = temp;
     return OK;
   }

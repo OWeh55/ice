@@ -425,7 +425,7 @@ namespace ice
   int FitParallelogramMoments(const double m[], Matrix& mat)
   {
     double corner[4][2];
-    ReturnErrorIfFailed(FitParallelogramMoments(m, corner));
+    RETURN_ERROR_IF_FAILED(FitParallelogramMoments(m, corner));
     mat = Matrix(4, 2);
     mat[0] = Vector(corner[0][0], corner[0][1]);
     mat[1] = Vector(corner[1][0], corner[1][1]);
@@ -439,7 +439,7 @@ namespace ice
   int FitParallelogramMoments(const double m[], Matrix& mat, double& guetemass)
   {
     double corner[4][2];
-    ReturnErrorIfFailed(FitParallelogramMoments(m, corner, guetemass));
+    RETURN_ERROR_IF_FAILED(FitParallelogramMoments(m, corner, guetemass));
     mat = Matrix(4, 2);
     mat[0] = Vector(corner[0][0], corner[0][1]);
     mat[1] = Vector(corner[1][0], corner[1][1]);

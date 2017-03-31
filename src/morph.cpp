@@ -32,6 +32,8 @@
 
 #include "filter.h"
 
+using namespace std;
+
 namespace ice
 {
 //--------------------------------------
@@ -154,7 +156,7 @@ namespace ice
     int sx1 = sx / 2;
     int sy1 = sy / 2;
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
     int maxval = pn1.maxval;
 
     if (pn2.maxval < maxval)
@@ -306,7 +308,7 @@ namespace ice
     int sx1 = sx / 2;
     int sy1 = sy / 2;
 
-    ReturnErrorIfFailed(MatchImg(imgs, destinationImage, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
 
     if (imgs.maxval < MHISTSIZE)
       return DilateImgO(imgs, sx, sy, destinationImage);
@@ -399,7 +401,7 @@ namespace ice
         needs_temp = true;
       }
 
-    ReturnErrorIfFailed(MatchImg(imgs, destinationImage, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
 
     int nx2 = nbhx / 2;
     int ny2 = nbhy / 2;
@@ -476,7 +478,7 @@ namespace ice
         needs_temp = true;
       }
 
-    ReturnErrorIfFailed(MatchImg(imgs, destinationImage, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
 
     int nx2 = nbhx / 2;
     int ny2 = nbhy / 2;
@@ -597,7 +599,7 @@ namespace ice
     int sy1 = sy / 2;
     int dx, dy;
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     int maxval = pn1.maxval;
 
@@ -747,7 +749,7 @@ namespace ice
     int sx1 = sx / 2;
     int sy1 = sy / 2;
 
-    ReturnErrorIfFailed(MatchImg(imgs, destinationImage, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
 
     if (imgs.maxval < MHISTSIZE)
       return ErodeImgO(imgs, sx, sy, destinationImage);
@@ -826,8 +828,8 @@ namespace ice
   int OpeningImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0) ny = nx;
-    ReturnErrorIfFailed(ErodeImg(img1, nx, ny, img2));
-    ReturnErrorIfFailed(DilateImg(img2, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(ErodeImg(img1, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(DilateImg(img2, nx, ny, img2));
     return OK;
   }
 #undef FNAME
@@ -835,8 +837,8 @@ namespace ice
   int ClosingImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0) ny = nx;
-    ReturnErrorIfFailed(DilateImg(img1, nx, ny, img2));
-    ReturnErrorIfFailed(ErodeImg(img2, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(DilateImg(img1, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(ErodeImg(img2, nx, ny, img2));
     return OK;
   }
 #undef FNAME
@@ -844,16 +846,16 @@ namespace ice
 #define FNAME "OpeningImg"
   int OpeningImg(const Image& img1, const Image& img2, const IMatrix& m)
   {
-    ReturnErrorIfFailed(ErodeImg(img1, img2, m));
-    ReturnErrorIfFailed(DilateImg(img2, img2, m));
+    RETURN_ERROR_IF_FAILED(ErodeImg(img1, img2, m));
+    RETURN_ERROR_IF_FAILED(DilateImg(img2, img2, m));
     return OK;
   }
 #undef FNAME
 #define FNAME "ClosingImg"
   int ClosingImg(const Image& img1, const Image& img2, const IMatrix& m)
   {
-    ReturnErrorIfFailed(DilateImg(img1, img2, m));
-    ReturnErrorIfFailed(ErodeImg(img2, img2, m));
+    RETURN_ERROR_IF_FAILED(DilateImg(img1, img2, m));
+    RETURN_ERROR_IF_FAILED(ErodeImg(img2, img2, m));
     return OK;
   }
 #undef FNAME
@@ -1237,7 +1239,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, pn3, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     if ((sx < 1) || ((sx & 1) != 1) ||
         (sy < 1) || ((sy & 1) != 1) ||

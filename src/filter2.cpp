@@ -50,7 +50,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 
@@ -114,7 +114,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 
@@ -184,7 +184,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 
@@ -248,7 +248,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 
@@ -319,7 +319,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 
@@ -385,7 +385,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 

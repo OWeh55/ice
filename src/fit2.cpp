@@ -208,7 +208,7 @@ namespace ice
                 int step)
   {
     Circle c;
-    ReturnErrorIfFailed(c = FitCircle(pl, step));
+    RETURN_ERROR_IF_FAILED(c = FitCircle(pl, step));
     xm = c.getPos().x;
     ym = c.getPos().y;
     rad = c.getR();
@@ -218,7 +218,7 @@ namespace ice
   int FitCircle(const Matrix& pl, double* par, int step)
   {
     Circle c;
-    ReturnErrorIfFailed(c = FitCircle(pl, step));
+    RETURN_ERROR_IF_FAILED(c = FitCircle(pl, step));
     par[0] = c.getPos().x;
     par[1] = c.getPos().y;
     par[2] = c.getR();

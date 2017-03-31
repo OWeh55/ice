@@ -29,6 +29,8 @@
 #include "based.h"
 #include "util.h"
 
+using namespace std;
+
 namespace ice
 {
 
@@ -77,14 +79,14 @@ namespace ice
   int MatchImgD(const ImageD& i1, const ImageD& i2)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImgD(i1, i2, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, xs, ys));
     return OK;
   }
 
   int MatchImgD(const ImageD& i1, const ImageD& i2, const ImageD& i3)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImgD(i1, i2, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
     return OK;
   }
 
@@ -307,8 +309,8 @@ namespace ice
 
     // Determine the local neighborhood of point (x, y), that means the 4 pixel positions
     // (xi, yi), (xi + 1, yi), (xi + 1, yi + 1), and (xi, yi + 1), that enclose (x, y)
-    x = ice::max<double> (x, 0.0);
-    y = ice::max<double> (y, 0.0);
+    x = max<double> (x, 0.0);
+    y = max<double> (y, 0.0);
     int xi  = (int) x;
     int xi1 = xi + 1;
     int yi  = (int) y;
@@ -343,8 +345,8 @@ namespace ice
 
     // Determine the local neighborhood of point (x, y), that means the 4 pixel positions
     // (xi, yi), (xi + 1, yi), (xi + 1, yi + 1), and (xi, yi + 1), that enclose (x, y)
-    x = ice::max<double> (x, 0.0);
-    y = ice::max<double> (y, 0.0);
+    x = max<double> (x, 0.0);
+    y = max<double> (y, 0.0);
     int xi  = (int) x;
     int xi1 = xi + 1;
     int yi  = (int) y;

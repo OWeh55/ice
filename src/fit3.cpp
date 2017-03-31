@@ -220,7 +220,7 @@ namespace ice
 
             MoveMatrix((double*)cov, 6, 6, (double*)tvec);
 
-            ReturnErrorIfFailed(cptr = InvertMatrix((double*)tvec, 6, (double*)cov));
+            RETURN_ERROR_IF_FAILED(cptr = InvertMatrix((double*)tvec, 6, (double*)cov));
 
             if (cptr == NULL)
               {
@@ -228,9 +228,9 @@ namespace ice
                 return WRONG_PARAM;
               }
 
-            ReturnErrorIfFailed(EigenVal((double*)cov, 6, eval, (double*)evec));
+            RETURN_ERROR_IF_FAILED(EigenVal((double*)cov, 6, eval, (double*)evec));
 
-            ReturnErrorIfFailed(FeatureQuadrFunc(evec[0], feat, &type));
+            RETURN_ERROR_IF_FAILED(FeatureQuadrFunc(evec[0], feat, &type));
 
             if (type != ELLIPSE)
               {
@@ -378,7 +378,7 @@ namespace ice
   {
     double par[5];
     int rc;
-    ReturnIfFailed(rc = FitEllipse(pl, par, step, mode), Ellipse());
+    RETURN_IF_FAILED(rc = FitEllipse(pl, par, step, mode), Ellipse());
     if (rc != OK)
       {
         Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
@@ -393,7 +393,7 @@ namespace ice
   {
     double par[5];
     int rc;
-    ReturnIfFailed(rc = FitEllipse(pl, weights, par, step, mode), Ellipse());
+    RETURN_IF_FAILED(rc = FitEllipse(pl, weights, par, step, mode), Ellipse());
     if (rc != OK)
       {
         Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
@@ -416,7 +416,7 @@ namespace ice
   {
     double par[5];
     int rc;
-    ReturnIfFailed(rc = FitEllipse(pl, par, step, mode), Ellipse());
+    RETURN_IF_FAILED(rc = FitEllipse(pl, par, step, mode), Ellipse());
 
     if (rc != OK)
       {

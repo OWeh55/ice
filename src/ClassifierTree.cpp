@@ -35,7 +35,7 @@ namespace ice
 #define FNAME "ClassifierTree::ClassifierTree()"
   ClassifierTree::ClassifierTree(int classes, int dimension, int depth)
   {
-    IfFailed(Init(classes, dimension, depth))
+    IF_FAILED(Init(classes, dimension, depth))
     {
       // if initialisation fails
       Message(FNAME, M_0, ERROR);

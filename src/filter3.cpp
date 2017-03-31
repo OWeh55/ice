@@ -50,7 +50,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 
@@ -112,7 +112,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest, dx, dy));
 
     Image tmp = src;
 
@@ -393,7 +393,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     int typ1 = pn1->ImageType();
     int typ2 = pn2->ImageType();
@@ -622,7 +622,7 @@ namespace ice
       }
     */
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     int typ1 = pn1->ImageType();
     int typ2 = pn2->ImageType();
@@ -690,12 +690,12 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImg(imgs, imgd, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
     Image box1 = NewImg(dx, dy, imgs->maxval);
     Image box2 = NewImg(dx, dy, imgs->maxval);
-    ReturnErrorIfFailed(SmearImg(imgs, box1, n1));
-    ReturnErrorIfFailed(SmearImg(imgs, box2, n2));
-    ReturnErrorIfFailed(SubImg(box1, box2, imgd, mode));
+    RETURN_ERROR_IF_FAILED(SmearImg(imgs, box1, n1));
+    RETURN_ERROR_IF_FAILED(SmearImg(imgs, box2, n2));
+    RETURN_ERROR_IF_FAILED(SubImg(box1, box2, imgd, mode));
 
     return OK;
   }
@@ -715,7 +715,7 @@ namespace ice
     int dx, dy;
     int  x,  y;
 
-    ReturnErrorIfFailed(MatchImg(imgs, imgd, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
 
     Image imgs_wide = NewImg(dx + 2 * boundary_x,
                              dy + 2 * boundary_y,
@@ -870,7 +870,7 @@ namespace ice
     /* Bildgrößen ueberpruefen */
     int dx, dy;
 
-    ReturnErrorIfFailed(MatchImg(img1, img2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, dx, dy));
 
     Image himg = NewImg(img1);
 
@@ -904,7 +904,7 @@ namespace ice
     /* Bildgrößen ueberpruefen */
     int dx, dy;
 
-    ReturnErrorIfFailed(MatchImgD(img1, img2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(img1, img2, dx, dy));
 
     /* eindimensionale Gaussfunktion berechnen */
     Matrix gf(1, size);
@@ -989,8 +989,8 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    ReturnErrorIfFailed(mkMexicanHatFilter(sigma, size, f));
-    ReturnErrorIfFailed(f.Filter(img1, img2, img2->maxval / 2));
+    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2, img2->maxval / 2));
     return OK;
   }
 
@@ -998,8 +998,8 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    ReturnErrorIfFailed(mkMexicanHatFilter(sigma, size, f));
-    ReturnErrorIfFailed(f.Filter(img1, img2));
+    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
     return OK;
   }
 
@@ -1007,8 +1007,8 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    ReturnErrorIfFailed(mkMexicanHatFilter(sigma, size, f));
-    ReturnErrorIfFailed(f.Filter(img1, img2));
+    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
     return OK;
   }
 

@@ -14,7 +14,7 @@ namespace ice
                              int minDisplacementX, int minDisplacementY,
                              int maxDisplacementX, int maxDisplacementY)
   {
-    ReturnErrorIfFailed(MatchImgD(img1, img2, img3));
+    RETURN_ERROR_IF_FAILED(MatchImgD(img1, img2, img3));
 
     if ((minDisplacementX >= maxDisplacementX) ||
         (minDisplacementY >= maxDisplacementY))
@@ -23,10 +23,10 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(directCrossCorrelation(img1, img2, img3,
-                        0, 0, img1.xsize, img1.ysize,
-                        0, 0, minDisplacementX, minDisplacementY,
-                        maxDisplacementX, maxDisplacementY));
+    RETURN_ERROR_IF_FAILED(directCrossCorrelation(img1, img2, img3,
+                           0, 0, img1.xsize, img1.ysize,
+                           0, 0, minDisplacementX, minDisplacementY,
+                           maxDisplacementX, maxDisplacementY));
     return OK;
   }
 
@@ -100,7 +100,7 @@ namespace ice
                              int minDisplacementX, int minDisplacementY,
                              int maxDisplacementX, int maxDisplacementY)
   {
-    ReturnErrorIfFailed(MatchImg(img1, img2, img3));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, img3));
 
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
       {
@@ -108,11 +108,11 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(directCrossCorrelation(img1, img2, img3,
-                        0, 0, img1->xsize, img1->ysize,
-                        0, 0,
-                        minDisplacementX, minDisplacementY,
-                        maxDisplacementX, maxDisplacementY));
+    RETURN_ERROR_IF_FAILED(directCrossCorrelation(img1, img2, img3,
+                           0, 0, img1->xsize, img1->ysize,
+                           0, 0,
+                           minDisplacementX, minDisplacementY,
+                           maxDisplacementX, maxDisplacementY));
     return OK;
   }
 
@@ -271,7 +271,7 @@ namespace ice
                          int minDisplacementX, int minDisplacementY,
                          int maxDisplacementX, int maxDisplacementY)
   {
-    ReturnErrorIfFailed(MatchImgD(img1, img2, img3));
+    RETURN_ERROR_IF_FAILED(MatchImgD(img1, img2, img3));
 
     if ((minDisplacementX >= maxDisplacementX) ||
         (minDisplacementY >= maxDisplacementY))
@@ -280,11 +280,11 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(directSquaredError(img1, img2, img3,
-                                           0, 0, img1.xsize, img1.ysize,
-                                           0, 0,
-                                           minDisplacementX, minDisplacementY,
-                                           maxDisplacementX, maxDisplacementY));
+    RETURN_ERROR_IF_FAILED(directSquaredError(img1, img2, img3,
+                           0, 0, img1.xsize, img1.ysize,
+                           0, 0,
+                           minDisplacementX, minDisplacementY,
+                           maxDisplacementX, maxDisplacementY));
     return OK;
   }
 
@@ -339,7 +339,7 @@ namespace ice
                          int minDisplacementX, int minDisplacementY,
                          int maxDisplacementX, int maxDisplacementY)
   {
-    ReturnErrorIfFailed(MatchImg(img1, img2, img3));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, img3));
 
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
       {
@@ -347,10 +347,10 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(directSquaredError(img1, img2, img3,
-                                           0, 0, img1->xsize, img1->ysize,
-                                           0, 0, minDisplacementX, minDisplacementY,
-                                           maxDisplacementX, maxDisplacementY));
+    RETURN_ERROR_IF_FAILED(directSquaredError(img1, img2, img3,
+                           0, 0, img1->xsize, img1->ysize,
+                           0, 0, minDisplacementX, minDisplacementY,
+                           maxDisplacementX, maxDisplacementY));
     return OK;
   }
 
@@ -422,14 +422,14 @@ namespace ice
     double r3 = 0, im3 = 0;
     //    double efactor;
 
-    ReturnIfFailed(MatchImgD(is1, is2, xs, ys), rc);
+    RETURN_IF_FAILED(MatchImgD(is1, is2, xs, ys), rc);
 
     x0 = (xs + 1) / 2;
     y0 = (ys + 1) / 2;
 
     if (id.isValid())
       {
-        ReturnIfFailed(MatchImgD(is1, id), rc);
+        RETURN_IF_FAILED(MatchImgD(is1, id), rc);
         rc = id;
       }
     else
@@ -504,7 +504,7 @@ namespace ice
 
     double noise2 = noise * noise;
 
-    ReturnIfFailed(MatchImgD(is1, is2, xs, ys), id);
+    RETURN_IF_FAILED(MatchImgD(is1, is2, xs, ys), id);
 
     x0 = (xs + 1) / 2;
     y0 = (ys + 1) / 2;
@@ -585,7 +585,7 @@ namespace ice
   {
     int xs, ys;
 
-    ReturnIfFailed(MatchImg(img1, img2, img3, xs, ys), img3);
+    RETURN_IF_FAILED(MatchImg(img1, img2, img3, xs, ys), img3);
 
     ImageD ds1 = NewImgD(xs, ys);
     ImageD ds2 = NewImgD(xs, ys);
@@ -606,11 +606,11 @@ namespace ice
     int kWidth;
     int kHeight;
 
-    ReturnErrorIfFailed(MatchImg(img1, img2, kWidth, kHeight));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, kWidth, kHeight));
     int kWidthd;
     int kHeightd;
 
-    ReturnErrorIfFailed(MatchImgD(xDelta, xDelta, kWidthd, kHeightd));
+    RETURN_ERROR_IF_FAILED(MatchImgD(xDelta, xDelta, kWidthd, kHeightd));
 
     if (iterationNumber <= 0 || lambda <= 0)
       {
@@ -829,7 +829,7 @@ namespace ice
             y1 = j * subSampleSize + (subSampleSize / 2);
             x2 = x1 + xd * vectorScale;
             y2 = y1 + yd * vectorScale;
-            ReturnErrorIfFailed(drawArrow((int)x1, (int)y1, (int)(x2), (int)y2, color, (int)(5), img));
+            RETURN_ERROR_IF_FAILED(drawArrow((int)x1, (int)y1, (int)(x2), (int)y2, color, (int)(5), img));
           }
       }
 

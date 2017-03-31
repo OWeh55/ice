@@ -51,7 +51,7 @@ namespace ice
     int xs, ys;
     PixelFloatType r, i, p;
 
-    ReturnErrorIfFailed(MatchImgD(re, im, nrm, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(re, im, nrm, xs, ys));
 
     for (x = 0; x < xs; x++)
       for (y = 0; y < ys; y++)
@@ -91,7 +91,7 @@ namespace ice
 
     double sqrt21 = 1 / 2.0;
 
-    ReturnErrorIfFailed(MatchImgD(im, nrm, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(im, nrm, xs, ys));
 
     ImageD h = NewImgD(xs, ys);
 
@@ -143,8 +143,8 @@ namespace ice
     int xs, ys;
     double cmp[2], db, dp;
 
-    ReturnErrorIfFailed(MatchImgD(re, im, b));
-    ReturnErrorIfFailed(MatchImgD(b, p, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(re, im, b));
+    RETURN_ERROR_IF_FAILED(MatchImgD(b, p, xs, ys));
 
     for (int y = 0; y < re.ysize; ++y)
       for (int x = 0; x < re.xsize; ++x)
@@ -168,7 +168,7 @@ namespace ice
     ImageD source;
     double v1, v2, cmp[2], db, dp;
 
-    ReturnErrorIfFailed(MatchImgD(im, b, p, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(im, b, p, xs, ys));
 
     if ((im == p) || (im == b))
       {
@@ -207,8 +207,8 @@ namespace ice
     double m, p;
     double cmp[2];
 
-    ReturnErrorIfFailed(MatchImgD(mag, phase, re));
-    ReturnErrorIfFailed(MatchImgD(re, im, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(mag, phase, re));
+    RETURN_ERROR_IF_FAILED(MatchImgD(re, im, xs, ys));
 
     for (int y = 0; y < mag.ysize; ++y)
       for (int x = 0; x < mag.xsize; ++x)
@@ -229,7 +229,7 @@ namespace ice
     double m, p;
     double cmp[2];
 
-    ReturnErrorIfFailed(MatchImgD(mag, phase, im, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(mag, phase, im, xs, ys));
 
     for (int y = 0; y < mag.ysize; ++y)
       for (int x = 0; x < mag.xsize; ++x)
@@ -249,7 +249,7 @@ namespace ice
   int PowerSpectrumImgD(ImageD img, ImageD spec, int mode)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImgD(img, spec, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(img, spec, xs, ys));
     HartleyImgD(img, spec);
     PowerSpectrumHImgD(spec, spec, mode);
     return OK;
@@ -261,7 +261,7 @@ namespace ice
   {
     ImageD temp = NewImgD(img);
     RETURN_ERROR_IF_FAILED(HartleyImgD(img, temp));
-    ReturnErrorIfFailed(MPSpectrumHImgD(temp, mag, phase));
+    RETURN_ERROR_IF_FAILED(MPSpectrumHImgD(temp, mag, phase));
     FreeImgD(temp);
     return OK;
   }
@@ -271,7 +271,7 @@ namespace ice
   int CepstrumImgD(ImageD img, ImageD ceps)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImgD(img, ceps, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(img, ceps, xs, ys));
     PowerSpectrumImgD(img, ceps, MD_LOG);
     PowerSpectrumImgD(ceps, ceps);
     return OK;

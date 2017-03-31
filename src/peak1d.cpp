@@ -169,7 +169,7 @@ namespace ice
       vv[i] = v[i];
 
     std::vector<int> ip;
-    IfFailed(ip = peak1d(vv, cyclic, noise))
+    IF_FAILED(ip = peak1d(vv, cyclic, noise))
     {
       return ret;
     }

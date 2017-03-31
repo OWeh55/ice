@@ -119,11 +119,11 @@ namespace ice
 #define FNAME "grab_program"
   int grab_program(int ch, ibuffer& ib)
   {
-    ReturnErrorIfFailed(system(DD(ch)->scan.c_str()));
+    RETURN_ERROR_IF_FAILED(system(DD(ch)->scan.c_str()));
     if (ib.planes == 1)
       {
         Image pi;
-        ReturnErrorIfFailed(pi = ReadImg(DD(ch)->filename, pi));
+        RETURN_ERROR_IF_FAILED(pi = ReadImg(DD(ch)->filename, pi));
         unlink(DD(ch)->filename.c_str());
         Image2Buffer(pi, ib);
         FreeImg(pi);
@@ -134,7 +134,7 @@ namespace ice
         Image pig;
         Image pib;
         //      cout << "1" << endl;
-        ReturnErrorIfFailed(ReadImg(DD(ch)->filename, pir, pig, pib));
+        RETURN_ERROR_IF_FAILED(ReadImg(DD(ch)->filename, pir, pig, pib));
         //      cout << "2" << endl;
         unlink(DD(ch)->filename.c_str());
         //      cout << "3" << endl;

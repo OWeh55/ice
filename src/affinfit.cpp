@@ -79,13 +79,13 @@ namespace ice
       }
 
     double xs, ys;
-    ReturnErrorIfFailed(NormalizeMomentsTranslation(mx, mtrans, xs, ys));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(mx, mtrans, xs, ys));
     x0 = -xs;
     y0 = -ys;
 
     //    cout << "FitCircleM" << x0 << ","<<y0<< endl;
     double alpha;
-    ReturnErrorIfFailed(NormalizeMomentsArea(mtrans, mtrop, alpha));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsArea(mtrans, mtrop, alpha));
     radius = 1.0 / sqrt(M_PI) / alpha;
 
     /************************************************************************
@@ -144,7 +144,7 @@ namespace ice
 
     double sx, sy;
 
-    ReturnErrorIfFailed(NormalizeMomentsTranslation(mx, mtrans, sx, sy));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(mx, mtrans, sx, sy));
 
     det = mtrans[5] * mtrans[3] - mtrans[4] * mtrans[4];
 
@@ -468,7 +468,7 @@ namespace ice
     ZW = NewMatrix(MAT_DOUBLE, 3, 3);
 
     double xs_o, ys_o;
-    ReturnErrorIfFailed(NormalizeMomentsTranslation(mom, moments_sh, xs_o, ys_o));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(mom, moments_sh, xs_o, ys_o));
 
     /* Schwerpunkt (-xs_o,-ys_o) des Objektes bestimmt */
     InitTrans(ctr);

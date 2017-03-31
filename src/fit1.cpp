@@ -277,7 +277,7 @@ namespace ice
   int FitLine(const Matrix& m, double& p, double& fi, int step)
   {
     LineSeg fitted_line;
-    ReturnErrorIfFailed(fitted_line = FitLine(m, step));
+    RETURN_ERROR_IF_FAILED(fitted_line = FitLine(m, step));
     fitted_line.CalcHesse(p, fi);
     return OK;
   }
@@ -285,7 +285,7 @@ namespace ice
   int FitLine(const Matrix& pl, double* par, int step)
   {
     double p, fi;
-    ReturnErrorIfFailed(FitLine(pl, p, fi, step));
+    RETURN_ERROR_IF_FAILED(FitLine(pl, p, fi, step));
     par[0] = p;
     par[1] = fi;
     return OK;

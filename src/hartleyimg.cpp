@@ -48,7 +48,7 @@ namespace ice
     double* fr;
     double v1, v2, v3, v4, d;
 
-    ReturnErrorIfFailed(MatchImgD(src, res, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(src, res, xs, ys));
 
     xsh = xs / 2;
     ysh = ys / 2;
@@ -137,7 +137,7 @@ namespace ice
   {
     ImageD srcd = NewImgD(src);
     ConvImgImgD(src, srcd, NORMALIZED, SIGNED);
-    IfFailed(HartleyImgD(srcd, dst, dir))
+    IF_FAILED(HartleyImgD(srcd, dst, dir))
     {
       Message(FNAME, M_0, ERROR);
       FreeImgD(srcd);

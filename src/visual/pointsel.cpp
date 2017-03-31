@@ -50,7 +50,7 @@ namespace ice
     Visual v;
     IPoint p;
     int rc;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
@@ -68,7 +68,7 @@ namespace ice
   IVector SelVector(int mode, const Image& img, int& rc)
   {
     int point[2];
-    IfFailed(rc = SelPoint(mode, img, point))
+    IF_FAILED(rc = SelPoint(mode, img, point))
     {
       Message(FNAME, M_0, ERROR);
       return IVector();
@@ -98,7 +98,7 @@ namespace ice
   IPoint SelPoint(int mode, const Image& img, int& rc)
   {
     int point[2];
-    IfFailed(rc = SelPoint(mode, img, point))
+    IF_FAILED(rc = SelPoint(mode, img, point))
     {
       Message(FNAME, M_0, ERROR);
       return IPoint(point[0], point[1]);

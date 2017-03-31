@@ -439,7 +439,7 @@ namespace ice
     if (!IsImg(imgb))
       imgb = NewImg(ib.width, ib.height, ib.maxval);
 
-    IfFailed(Buffer2Image(ib, imgr, imgg, imgb, flag))
+    IF_FAILED(Buffer2Image(ib, imgr, imgg, imgb, flag))
     {
       Message(FNAME, M_0, ERROR);
       return ERROR;
@@ -524,7 +524,7 @@ namespace ice
     if (!IsImg(img))
       img = NewImg(ib.width, ib.height, ib.maxval);
 
-    IfFailed(img = Buffer2Image(ib, img, flag))
+    IF_FAILED(img = Buffer2Image(ib, img, flag))
     {
       Message(FNAME, M_0, ERROR);
       return Image();

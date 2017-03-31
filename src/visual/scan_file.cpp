@@ -95,7 +95,7 @@ namespace ice
           {
             fclose(f);
             int nr;
-            ReturnErrorIfFailed(InfImgFile(DD(ch)->filename, x, y, maxval, nr));
+            RETURN_ERROR_IF_FAILED(InfImgFile(DD(ch)->filename, x, y, maxval, nr));
           }
       }
     else
@@ -119,13 +119,13 @@ namespace ice
     Image pib;
     if (ib.planes == 1)
       {
-        ReturnErrorIfFailed(pi = ReadImg(DD(ch)->filename, pi));
+        RETURN_ERROR_IF_FAILED(pi = ReadImg(DD(ch)->filename, pi));
         Image2Buffer(pi, ib);
         FreeImg(pi);
       }
     else
       {
-        ReturnErrorIfFailed(ReadImg(DD(ch)->filename, pi, pig, pib));
+        RETURN_ERROR_IF_FAILED(ReadImg(DD(ch)->filename, pi, pig, pib));
         Image2Buffer(pi, pig, pib, ib);
         FreeImg(pi);
         FreeImg(pig);

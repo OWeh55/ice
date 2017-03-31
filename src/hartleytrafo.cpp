@@ -160,7 +160,7 @@ namespace ice
     double* d = dst.getDataPointer();
 
     int n = src.Size();
-    IfFailed(HartleyD(s, n, d))
+    IF_FAILED(HartleyD(s, n, d))
     {
       Message(FNAME, M_0, ERROR);
       return ERROR;
@@ -170,7 +170,7 @@ namespace ice
 
   int Hartley(Vector& vec)
   {
-    ReturnErrorIfFailed(Hartley(vec, vec));
+    RETURN_ERROR_IF_FAILED(Hartley(vec, vec));
     return OK;
   }
 #undef FNAME

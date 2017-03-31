@@ -127,7 +127,7 @@ namespace ice
 
     int width, height;
 
-    ReturnErrorIfFailed(MatchImg(imgr, imgg, imgb, width, height));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, width, height));
 
     int maxval = imgr->maxval;
 

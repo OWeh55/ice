@@ -31,7 +31,7 @@ namespace ice
   int correctShading(const Image& img, const Image& imgd, Function2dWithFitting& fn)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImg(img, imgd, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, xs, ys));
 
     fn.Fit(img);
 

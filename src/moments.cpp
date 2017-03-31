@@ -296,7 +296,7 @@ namespace ice
   Moments Moments::CentralMoments() const
   {
     double res[15];
-    ReturnIfFailed(CalcCentralMoments(mom, res), Moments());
+    RETURN_IF_FAILED(CalcCentralMoments(mom, res), Moments());
     return Moments(res);
   }
 #undef FNAME
@@ -411,7 +411,7 @@ namespace ice
   Moments Moments::NormalizeTranslation(double& x, double& y) const
   {
     double momres[15];
-    IfFailed(NormalizeMomentsTranslation(mom, momres, x, y))
+    IF_FAILED(NormalizeMomentsTranslation(mom, momres, x, y))
     {
       Message(FNAME, M_0, ERROR);
       return Moments();
@@ -429,7 +429,7 @@ namespace ice
   Moments Moments::NormalizeXShearing(double& beta) const
   {
     double momres[15];
-    IfFailed(NormalizeMomentsXShearing(mom, momres, beta))
+    IF_FAILED(NormalizeMomentsXShearing(mom, momres, beta))
     {
       Message(FNAME, M_0, ERROR);
       return Moments();
@@ -447,7 +447,7 @@ namespace ice
   Moments Moments::NormalizeYShearing(double& beta) const
   {
     double momres[15];
-    IfFailed(NormalizeMomentsYShearing(mom, momres, beta))
+    IF_FAILED(NormalizeMomentsYShearing(mom, momres, beta))
     {
       Message(FNAME, M_0, ERROR);
       return Moments();
@@ -477,7 +477,7 @@ namespace ice
   {
     //  std::cout << "***************1"<<std::endl;
     double momres[15];
-    IfFailed(NormalizeMomentsArea(mom, momres, alpha))
+    IF_FAILED(NormalizeMomentsArea(mom, momres, alpha))
     {
       Message(FNAME, M_0, ERROR);
       return Moments();
@@ -491,7 +491,7 @@ namespace ice
 //    for (int i=0;i<15;i++)
 //      std::cout << i << ": " << mom[i] << std::endl;
     double momres[15];
-    IfFailed(NormalizeMomentsScaling(mom, momres, alpha, beta))
+    IF_FAILED(NormalizeMomentsScaling(mom, momres, alpha, beta))
     {
       Message(FNAME, M_0, ERROR);
       return Moments();
@@ -510,7 +510,7 @@ namespace ice
   {
     double momres[15];
     double c, s;
-    IfFailed(NormalizeMomentsRotation(mom, momres, c, s))
+    IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
     {
       Message(FNAME, M_0, ERROR);
       return Moments();
@@ -522,7 +522,7 @@ namespace ice
   Moments Moments::NormalizeRotation(double& c, double& s) const
   {
     double momres[15];
-    IfFailed(NormalizeMomentsRotation(mom, momres, c, s))
+    IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
     {
       Message(FNAME, M_0, ERROR);
       return Moments();

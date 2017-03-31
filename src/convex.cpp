@@ -326,7 +326,7 @@ namespace ice
 
     Matrix res(0, 2);
     std::vector<Point> rpl;
-    IfFailed(ConvexHull<Point>(vpl, rpl))
+    IF_FAILED(ConvexHull<Point>(vpl, rpl))
     {
       return res;
     }

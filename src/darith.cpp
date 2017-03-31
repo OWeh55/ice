@@ -42,7 +42,7 @@ namespace ice
 #define FNAME "ClearImgD"
   int ClearImgD(ImageD p)
   {
-    ReturnErrorIfFailed(SetImgD(p, 0));
+    RETURN_ERROR_IF_FAILED(SetImgD(p, 0));
     return OK;
   }
 #undef FNAME
@@ -72,7 +72,7 @@ namespace ice
   {
 
     int dx, dy;
-    ReturnErrorIfFailed(MatchImgD(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, dx, dy));
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
@@ -171,7 +171,7 @@ namespace ice
         return WRONG_POINTER;
       }
 
-    ReturnErrorIfFailed(MatchImgD(pn1, pn2, pn3, hx, hy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
@@ -195,7 +195,7 @@ namespace ice
         return WRONG_POINTER;
       }
 
-    ReturnErrorIfFailed(MatchImgD(pn1, pn2, pn3, hx, hy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
@@ -219,7 +219,7 @@ namespace ice
         return WRONG_POINTER;
       }
 
-    ReturnErrorIfFailed(MatchImgD(pn1, pn2, hx, hy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, hx, hy));
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)

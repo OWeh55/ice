@@ -197,7 +197,7 @@ namespace ice
         return WRONG_PARAM;
       }
     //    std::cout << "match1" << std::endl;
-    ReturnErrorIfFailed(red.match(img2.red));
+    RETURN_ERROR_IF_FAILED(red.match(img2.red));
     //    std::cout << "match2" << std::endl;
     return OK;
   }
@@ -210,8 +210,8 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(red.match(img2.red));
-    ReturnErrorIfFailed(red.match(img3.red));
+    RETURN_ERROR_IF_FAILED(red.match(img2.red));
+    RETURN_ERROR_IF_FAILED(red.match(img3.red));
     return OK;
   }
 
@@ -234,16 +234,16 @@ namespace ice
 #define FNAME "ColorImage::set"
   int ColorImage::set(ColorValue cv) const // Set all pixel to value
   {
-    ReturnErrorIfFailed(SetImg(red, maxval - cv.red));
-    ReturnErrorIfFailed(SetImg(green, maxval - cv.green));
-    ReturnErrorIfFailed(SetImg(blue, maxval - cv.blue));
+    RETURN_ERROR_IF_FAILED(SetImg(red, maxval - cv.red));
+    RETURN_ERROR_IF_FAILED(SetImg(green, maxval - cv.green));
+    RETURN_ERROR_IF_FAILED(SetImg(blue, maxval - cv.blue));
     return OK;
   }
   int ColorImage::set(int r, int g, int b) const // Set all pixel to value
   {
-    ReturnErrorIfFailed(SetImg(red, r));
-    ReturnErrorIfFailed(SetImg(green, g));
-    ReturnErrorIfFailed(SetImg(blue, b));
+    RETURN_ERROR_IF_FAILED(SetImg(red, r));
+    RETURN_ERROR_IF_FAILED(SetImg(green, g));
+    RETURN_ERROR_IF_FAILED(SetImg(blue, b));
     return OK;
   }
 #undef FNAME

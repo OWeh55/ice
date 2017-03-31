@@ -83,7 +83,7 @@ namespace ice
       }
 
     // offene Contur des Kreisbogensegments
-    ReturnErrorIfFailed(c = CircleSegmentContur(par));
+    RETURN_ERROR_IF_FAILED(c = CircleSegmentContur(par));
 
     if (mode != NOFILL)
       {
@@ -91,10 +91,10 @@ namespace ice
         Contur c1(c);
         c1.Add(RoundInt(par[0]), RoundInt(par[1]));
         c1.Add(c1.StartX(), c1.StartY());
-        ReturnErrorIfFailed(FillRegion(c1, val2, img));
+        RETURN_ERROR_IF_FAILED(FillRegion(c1, val2, img));
       }
 
-    ReturnErrorIfFailed(MarkContur(c, val1, img));
+    RETURN_ERROR_IF_FAILED(MarkContur(c, val1, img));
 
     return OK;
   }
@@ -124,7 +124,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(c = EllipseSegmentContur(par));
+    RETURN_ERROR_IF_FAILED(c = EllipseSegmentContur(par));
 
     if (mode != NOFILL)
       {
@@ -132,10 +132,10 @@ namespace ice
         c.Add(RoundInt(par[0]), RoundInt(par[1]));
         c.Add(c.StartX(), c.StartY());
 
-        ReturnErrorIfFailed(FillRegion(c, val2, img));
+        RETURN_ERROR_IF_FAILED(FillRegion(c, val2, img));
       }
 
-    ReturnErrorIfFailed(MarkContur(c, val1, img));
+    RETURN_ERROR_IF_FAILED(MarkContur(c, val1, img));
     return OK;
   }
 #undef FNAME
@@ -194,7 +194,7 @@ namespace ice
     int diff = 20;
     int result;
 
-    ReturnErrorIfFailed(MatchImg(img, imgh, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgh, dx, dy));
 
     if ((dx < 4) || (dy < 4))
       {
@@ -278,7 +278,7 @@ namespace ice
     int xxo, yyo;
     int exist;
 
-    ReturnErrorIfFailed(MatchImg(img, imgh, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img, imgh, dx, dy));
 
     if ((dx < 1) || (dy < 1))
       {

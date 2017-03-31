@@ -804,7 +804,7 @@ namespace ice
                         int& xt, int& yt)
   {
     double xtf, ytf;
-    ReturnErrorIfFailed(Transform(tr, xt, yt, xtf, ytf));
+    RETURN_ERROR_IF_FAILED(Transform(tr, xt, yt, xtf, ytf));
     xt = RoundInt(xtf);
     yt = RoundInt(ytf);
     return OK;
@@ -813,7 +813,7 @@ namespace ice
   int TransformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt)
   {
     double xs, ys;
-    ReturnErrorIfFailed(Transform(tr, x, y, xs, ys));
+    RETURN_ERROR_IF_FAILED(Transform(tr, x, y, xs, ys));
     xt = RoundInt(xs);
     yt = RoundInt(ys);
     return OK;
@@ -826,7 +826,7 @@ namespace ice
     xt = x;
     yt = y;
     zt = z;
-    ReturnErrorIfFailed(Transform(tr, xt, yt, zt));
+    RETURN_ERROR_IF_FAILED(Transform(tr, xt, yt, zt));
     return OK;
   }
 

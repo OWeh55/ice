@@ -41,7 +41,7 @@ namespace ice
   int SelLine(const Image& img, IPoint& p1, IPoint& p2)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
@@ -53,7 +53,7 @@ namespace ice
   int SelLineFromStart(const Image& img, const IPoint& p1, IPoint& p2)
   {
     Visual v;
-    ReturnErrorIfFailed(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
       {
         Message(FNAME, M_NOT_VIS, WRONG_PARAM);
@@ -65,7 +65,7 @@ namespace ice
   LineSeg SelLine(const Image& img)
   {
     IPoint p1, p2;
-    ReturnIfFailed(SelLine(img, p1, p2), LineSeg());
+    RETURN_IF_FAILED(SelLine(img, p1, p2), LineSeg());
     return LineSeg(p1, p2);
   }
 #undef FNAME

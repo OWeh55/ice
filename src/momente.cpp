@@ -831,13 +831,13 @@ namespace ice
   {
     double alpha, beta, gamma, c, s, xs, ys;
 
-    ReturnErrorIfFailed(NormalizeMomentsTranslation(m, ms, xs, ys));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(m, ms, xs, ys));
 
-    ReturnErrorIfFailed(NormalizeMomentsXShearing(ms, ms, beta));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsXShearing(ms, ms, beta));
 
-    ReturnErrorIfFailed(NormalizeMomentsScaling(ms, ms, alpha, gamma));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsScaling(ms, ms, alpha, gamma));
 
-    ReturnErrorIfFailed(NormalizeMomentsRotation(ms, ms, c, s));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsRotation(ms, ms, c, s));
 
     InitTrans(atr);
     // Berechnung der Transformationsmatrix
@@ -867,7 +867,7 @@ namespace ice
     PosSign(m1, m2);
 
     //Translationsnormierung
-    ReturnErrorIfFailed(NormalizeMomentsTranslation(m2, m2, xs, ys));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(m2, m2, xs, ys));
 
     if (fabs(m2[9]) < 1e-15)
       {
@@ -1020,16 +1020,16 @@ namespace ice
 
     if (trans)
       {
-        ReturnErrorIfFailed(NormalizeMomentsTranslation(m, ms, xs, ys));
+        RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(m, ms, xs, ys));
       }
     else
       {
         CopyMoments(m, ms);
       }
 
-    ReturnErrorIfFailed(NormalizeMomentsXShearing(ms, ms, beta));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsXShearing(ms, ms, beta));
 
-    ReturnErrorIfFailed(NormalizeMomentsScaling(ms, ms, alpha, gamma));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsScaling(ms, ms, alpha, gamma));
 
     HuInvariants(ms, hu);
 
@@ -1049,7 +1049,7 @@ namespace ice
     PosSign(m, maf);
 
     //Translationsnormierung
-    ReturnErrorIfFailed(NormalizeMomentsTranslation(maf, maf, xs, ys));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(maf, maf, xs, ys));
 
     InitTrans(atr);
     // evtl. instabile Standardlage bei achsenparallelen Figuren,
@@ -1097,7 +1097,7 @@ namespace ice
       }
 
     // anisotrope Skalierungsnormierung
-    ReturnErrorIfFailed(NormalizeMomentsScaling(maf, maf, gamma, delta));
+    RETURN_ERROR_IF_FAILED(NormalizeMomentsScaling(maf, maf, gamma, delta));
 
     atr[0][0] *= gamma;
     atr[0][1] *= gamma;
@@ -1234,11 +1234,11 @@ namespace ice
       }
 
     double dx, dy;
-    ReturnIfFailed(NormalizeMomentsTranslation(m1, mx, dx, dy), 0.0);
+    RETURN_IF_FAILED(NormalizeMomentsTranslation(m1, mx, dx, dy), 0.0);
     //    TranslateMoments(m1,-m1[1]/m1[0],-m1[2]/m1[0],mx);
 
     // Normierung der Momente durch isotrope Skalierung auf gleiche Fläche
-    ReturnIfFailed(NormalizeMomentsArea(mx, mx), 0.0);
+    RETURN_IF_FAILED(NormalizeMomentsArea(mx, mx), 0.0);
 
     // optimale Methode auswaehlen
     s3 = 0.0;
@@ -1353,7 +1353,7 @@ namespace ice
     double ret;
     int i, j;
 
-    IfFailed(ret = AffinFitMoments(m1, m2, oldtr))
+    IF_FAILED(ret = AffinFitMoments(m1, m2, oldtr))
     {
       Message(FNAME, M_0, ERROR);
       return ret;

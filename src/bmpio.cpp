@@ -854,7 +854,7 @@ namespace ice
         return WRONG_POINTER;
       }
 
-    ReturnErrorIfFailed(MatchImg(ir, ig, ib, w, h));
+    RETURN_ERROR_IF_FAILED(MatchImg(ir, ig, ib, w, h));
 
     bperlin = ((w * 24 + 31) / 32) * 4;   /* # bytes written per line */
 

@@ -38,7 +38,7 @@ namespace ice
     ab = 0;
     bb = 0;
 
-    ReturnErrorIfFailed(MatchImg(img1, img2));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2));
 
     WindowWalker w(img1);
     for (w.init(); !w.ready(); w.next())
@@ -61,7 +61,7 @@ namespace ice
   double CorrCoefficient(const Image& img1, const Image& img2)
   {
     int n, a, b, aa, ab, bb;
-    ReturnErrorIfFailed(momente(img1, img2, n, a, b, aa, ab, bb));
+    RETURN_ERROR_IF_FAILED(momente(img1, img2, n, a, b, aa, ab, bb));
     double dn = n, da = a, db = b, daa = aa, dab = ab, dbb = bb;
 
     double z = dab - da * db / dn;

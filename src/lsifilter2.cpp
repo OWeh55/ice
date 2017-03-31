@@ -147,7 +147,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     if (pn1->getDataPtr() == pn2->getDataPtr())
       {
@@ -304,7 +304,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     if (pn1->getDataPtr() == pn2->getDataPtr())
       {

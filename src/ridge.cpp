@@ -38,6 +38,8 @@
 #include "contfeat.h"
 #include "conturfunctions.h"
 
+using namespace std;
+
 namespace ice
 {
 #define BOFF 2

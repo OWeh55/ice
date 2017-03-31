@@ -73,7 +73,7 @@ namespace ice
     int val;
     int gzahl;
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, pn3, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     gmax1 = pn1->maxval + pn2->maxval; /*maximaler wert bei addition */
     gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
@@ -135,7 +135,7 @@ namespace ice
     int gzahl, gnull;
     int val;
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, pn3, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     /* maximalwerte des Ergebnisses ermitteln */
     gzahl = pn3->maxval + 1;
@@ -237,7 +237,7 @@ namespace ice
              int smode, int mode)
   {
     int rc;
-    ReturnErrorIfFailed(rc = SubImg(pn1, pn2, smode, pn3, mode));
+    RETURN_ERROR_IF_FAILED(rc = SubImg(pn1, pn2, smode, pn3, mode));
     return rc;
   }
 
@@ -254,7 +254,7 @@ namespace ice
     int val;
     int gzahl;
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, pn3, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     gmax1 = Max(pn1->maxval, pn2->maxval); /*maximaler wert*/
     gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
@@ -307,7 +307,7 @@ namespace ice
     int gmax, gmax1;
     int val, gzahl;
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, pn3, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     gmax1 = Min(pn1->maxval, pn2->maxval); /*maximaler wert*/
     gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
@@ -434,7 +434,7 @@ namespace ice
 
   int InvertImg(const Image& pn1, const Image& pn2)
   {
-    ReturnErrorIfFailed(MatchImg(pn1, pn2));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2));
 
     int gmax1 = pn1->maxval; /* maximalwert Quellbild */
     int gmax2 = pn2->maxval; /* maximalwert Zielbild */
@@ -470,7 +470,7 @@ namespace ice
   int InvertImg(const Image& pn)
   {
     int ret;
-    ReturnErrorIfFailed(ret = InvertImg(pn, pn));
+    RETURN_ERROR_IF_FAILED(ret = InvertImg(pn, pn));
     return ret;
   }
 #undef FNAME
@@ -509,7 +509,7 @@ namespace ice
 
   int BinImg(const Image& src, const Image& dest, int bin, int val)
   {
-    ReturnErrorIfFailed(MatchImg(src, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     if (val < 0) val = dest->maxval;
 
@@ -576,7 +576,7 @@ namespace ice
 
     int dx, dy;
 
-    ReturnErrorIfFailed(MatchImg(pn1, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     int gmax = pn2->maxval; /* maximalwert aus Zielbild ermitteln */
 
@@ -630,7 +630,7 @@ namespace ice
 
   bool equalImg(const Image& img1, const Image& img2)
   {
-    ReturnIfFailed(MatchImg(img1, img2), false);
+    RETURN_IF_FAILED(MatchImg(img1, img2), false);
 
     if (img1->ImageType() == img2->ImageType())
       {

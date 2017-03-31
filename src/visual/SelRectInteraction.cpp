@@ -22,7 +22,8 @@
 #include <wx/wx.h>
 #include <wx/dcclient.h>  // needed for wxGTK >= 2.5.x 
 //#include <iostream>
-//using namespace std;
+
+using namespace std;
 
 #include "visual/SelRectInteraction.h"
 #include "macro.h"  // for min/max templates
@@ -77,8 +78,8 @@ namespace ice
     // determine the upper left corner of the rectangle that is determined by FirstPoint
     // and SecondPoint
     wxPoint TopLeftCornerWin =
-      imageWindow->translateImage2WinPos(IPoint(ice::min<int> (FirstPoint.x, SecondPoint.x),
-                                         ice::min<int> (FirstPoint.y, SecondPoint.y)));
+      imageWindow->translateImage2WinPos(IPoint(min<int> (FirstPoint.x, SecondPoint.x),
+                                         min<int> (FirstPoint.y, SecondPoint.y)));
     ClientDC.DrawRectangle(TopLeftCornerWin.x,  // wxCoord x
                            TopLeftCornerWin.y, // wxCoord y
                            (abs(FirstPoint.x - SecondPoint.x) + 1) * imageWindow->GetZoomFactor(),   // wxCoord width
@@ -204,10 +205,10 @@ namespace ice
 
   Window iceSelectRectInteraction::GetSelectedRect() const
   {
-    return Window(ice::min<int> (FirstPoint.x, SecondPoint.x),  // top left corner x
-                  ice::min<int> (FirstPoint.y, SecondPoint.y),  // top left corner y
-                  ice::max<int> (FirstPoint.x, SecondPoint.x),  // bottom right corner x
-                  ice::max<int> (FirstPoint.y, SecondPoint.y)); // bottom right corner y
+    return Window(min<int> (FirstPoint.x, SecondPoint.x),  // top left corner x
+                  min<int> (FirstPoint.y, SecondPoint.y),  // top left corner y
+                  max<int> (FirstPoint.x, SecondPoint.x),  // bottom right corner x
+                  max<int> (FirstPoint.y, SecondPoint.y)); // bottom right corner y
 
   }
 

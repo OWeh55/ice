@@ -29,7 +29,7 @@ namespace ice
   int Shift(const Image& simg, const Image& dimg, int dx, int dy, int mode)
   {
     int sx, sy;
-    ReturnErrorIfFailed(MatchImg(simg, dimg, sx, sy));
+    RETURN_ERROR_IF_FAILED(MatchImg(simg, dimg, sx, sy));
 
     Image himg = simg;
 

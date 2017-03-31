@@ -372,7 +372,7 @@ namespace ice
         imgb = NewImg(xs, ys, ib.maxval);
       }
 #endif
-    ReturnErrorIfFailed(MatchImg(imgr, imgg, imgb, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
 
     if ((imgr->maxval != imgg->maxval) || (imgr->maxval != imgb->maxval))
       {
@@ -667,7 +667,7 @@ namespace ice
     int width;
     int height;
 
-    ReturnErrorIfFailed(MatchImg(imgr, imgg, imgb, width, height));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, width, height));
 
     int pt = imgr->ImageType();
 
@@ -1036,7 +1036,7 @@ namespace ice
     int width;
     int height;
 
-    ReturnErrorIfFailed(MatchImg(imgr, imgg, imgb, width, height));
+    RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, width, height));
 
     int pt = imgr->ImageType();
 

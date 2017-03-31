@@ -35,7 +35,7 @@ namespace ice
 #define FNAME "ClassifierMinimumDistance::ClassifierMinimumDistance()"
   ClassifierMinimumDistance::ClassifierMinimumDistance(int classes, int dimension)
   {
-    IfFailed(Init(classes, dimension))
+    IF_FAILED(Init(classes, dimension))
     {
       // if initialisation fails
       Message(FNAME, M_0, ERROR);

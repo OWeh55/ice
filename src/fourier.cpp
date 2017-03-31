@@ -74,7 +74,7 @@ namespace ice
 
   int Fourier(Vector& re, Vector& im, int option)
   {
-    ReturnErrorIfFailed(Fourier(re, im, option, re, im));
+    RETURN_ERROR_IF_FAILED(Fourier(re, im, option, re, im));
     return OK;
   }
 
@@ -91,7 +91,7 @@ namespace ice
     else
       md = ms;
 
-    ReturnErrorIfFailed(Fourier(md[0], md[1], option));
+    RETURN_ERROR_IF_FAILED(Fourier(md[0], md[1], option));
 
     if (ms.rows() != 2)
       md = !md;
@@ -101,7 +101,7 @@ namespace ice
 
   int Fourier(Matrix& ms, int option)
   {
-    ReturnErrorIfFailed(Fourier(ms, option, ms));
+    RETURN_ERROR_IF_FAILED(Fourier(ms, option, ms));
     return OK;
   }
 #undef FNAME

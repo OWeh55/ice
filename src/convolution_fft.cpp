@@ -43,7 +43,7 @@ namespace ice
     double r1, i1, r2, i2;
     double efac = sqrt((double)s);
     // "mixed" FFT s1->real,s2->imag
-    ReturnErrorIfFailed(Fourier(s1, s2, NORMAL, h1, h2));
+    RETURN_ERROR_IF_FAILED(Fourier(s1, s2, NORMAL, h1, h2));
     d = Vector(s);
 
     for (i = 0; i < s; i++)
@@ -62,7 +62,7 @@ namespace ice
         d[i] = (r1 * r2 - i1 * i2 - r1 * i2 - r2 * i1) * efac;
       }
 
-    ReturnErrorIfFailed(Hartley(d));
+    RETURN_ERROR_IF_FAILED(Hartley(d));
     return OK;
   }
 #undef FNAME
@@ -80,7 +80,7 @@ namespace ice
     double noise2 = noise * noise;
 
     // "mixed" FFT s1->real,s2->imag
-    ReturnErrorIfFailed(Fourier(s1, s2, NORMAL, h1, h2));
+    RETURN_ERROR_IF_FAILED(Fourier(s1, s2, NORMAL, h1, h2));
     d = Vector(s);
 
     for (i = 0; i < s; i++)
@@ -122,7 +122,7 @@ namespace ice
         d[i] = r3 - im3;
       }
 
-    ReturnErrorIfFailed(Hartley(d));
+    RETURN_ERROR_IF_FAILED(Hartley(d));
     return OK;
   }
 #undef FNAME
@@ -204,7 +204,7 @@ namespace ice
   {
     int xs, ys;
 
-    ReturnErrorIfFailed(MatchImg(is1, is2, id, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(is1, is2, id, xs, ys));
 
     ImageD ds1 = NewImgD(is1);
     ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
@@ -258,14 +258,14 @@ namespace ice
 
     double noise2 = noise * noise;
 
-    ReturnIfFailed(MatchImgD(is1, is2, xs, ys), rc);
+    RETURN_IF_FAILED(MatchImgD(is1, is2, xs, ys), rc);
 
     x0 = xs / 2;
     y0 = ys / 2;
 
     if (id.isValid())
       {
-        ReturnIfFailed(MatchImgD(is1, id), rc);
+        RETURN_IF_FAILED(MatchImgD(is1, id), rc);
         rc = id;
       }
     else
@@ -343,7 +343,7 @@ namespace ice
                         double factor, double noise, int mode)
   {
     int xs, ys;
-    ReturnErrorIfFailed(MatchImg(is1, is2, id, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(is1, is2, id, xs, ys));
 
     ImageD ds1 = NewImgD(xs, ys);
     ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
@@ -379,7 +379,7 @@ namespace ice
   {
     int xs, ys;
 
-    ReturnErrorIfFailed(MatchImg(is1, is2, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(is1, is2, xs, ys));
 
     ImageD ds1 = NewImgD(xs, ys);
     ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);

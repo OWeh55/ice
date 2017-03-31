@@ -31,8 +31,8 @@ namespace ice
               double* par, double* maxdis, int* maxadr)
   {
     Matrix m;
-    ReturnErrorIfFailed(PointList2Matrix(pl, ad1, ad2, m));
-    ReturnErrorIfFailed(FitLine(m, par, step));
+    RETURN_ERROR_IF_FAILED(PointList2Matrix(pl, ad1, ad2, m));
+    RETURN_ERROR_IF_FAILED(FitLine(m, par, step));
 
     double cc = cos(par[1]);
     double ss = sin(par[1]);
@@ -142,8 +142,8 @@ namespace ice
   /* Zielfunktion: A(xx+yy)+Bx+Cy+D=0 */
   {
     Matrix m;
-    ReturnErrorIfFailed(PointList2Matrix(pl, ad1, ad2, m));
-    ReturnErrorIfFailed(FitCircle(m, par, step));
+    RETURN_ERROR_IF_FAILED(PointList2Matrix(pl, ad1, ad2, m));
+    RETURN_ERROR_IF_FAILED(FitCircle(m, par, step));
 
     *maxdis = -HUGE_VAL;
 
@@ -433,8 +433,8 @@ namespace ice
                  double* par, double* mdist, int* madr, int mode)
   {
     Matrix m;
-    ReturnErrorIfFailed(PointList2Matrix(pl, ad1, ad2, m));
-    ReturnErrorIfFailed(FitEllipse(m, par, step));
+    RETURN_ERROR_IF_FAILED(PointList2Matrix(pl, ad1, ad2, m));
+    RETURN_ERROR_IF_FAILED(FitEllipse(m, par, step));
 
     if ((mdist != nullptr) && madr != nullptr)
       {

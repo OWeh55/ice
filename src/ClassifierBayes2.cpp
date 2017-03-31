@@ -35,7 +35,7 @@ namespace ice
                                      double ap1, double ap2, // probability
                                      double ac12, double ac21) // costs
   {
-    IfFailed(Init(classes, dimension, ap1, ap2, ac12, ac21))
+    IF_FAILED(Init(classes, dimension, ap1, ap2, ac12, ac21))
     {
       // if initialisation fails
       Message(FNAME, M_0, ERROR);

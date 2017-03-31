@@ -91,7 +91,7 @@ namespace ice
   {
     Matrix triangle(0, 2);
     double p[3][2];
-    ReturnIfFailed(FitEquilateraltriangleMoments(m.oldMoments(), p, guetemass), triangle);
+    RETURN_IF_FAILED(FitEquilateraltriangleMoments(m.oldMoments(), p, guetemass), triangle);
 
     for (int i = 0; i < 3; i++)
       triangle.Append(Vector(p[i][0], p[i][1]));
@@ -109,7 +109,7 @@ namespace ice
   {
     Matrix triangle(0, 2);
     double p[3][2];
-    ReturnIfFailed(FitIsoscelestriangleMoments(m.oldMoments(), p, guetemass), triangle);
+    RETURN_IF_FAILED(FitIsoscelestriangleMoments(m.oldMoments(), p, guetemass), triangle);
 
     for (int i = 0; i < 3; i++)
       triangle.Append(Vector(p[i][0], p[i][1]));
@@ -277,13 +277,13 @@ namespace ice
 #define FNAME "FitCircle"
   int FitCircle(const Moments& m, double& x0, double& y0, double& radius)
   {
-    ReturnErrorIfFailed(FitCircleMoments(m.oldMoments(), x0, y0, radius));
+    RETURN_ERROR_IF_FAILED(FitCircleMoments(m.oldMoments(), x0, y0, radius));
     return OK;
   }
 
   int FitCircle(const Moments& m, double& x0, double& y0, double& radius, double& guetemass)
   {
-    ReturnErrorIfFailed(FitCircleMoments(m.oldMoments(), x0, y0, radius, guetemass));
+    RETURN_ERROR_IF_FAILED(FitCircleMoments(m.oldMoments(), x0, y0, radius, guetemass));
     return OK;
   }
 
@@ -312,7 +312,7 @@ namespace ice
   double Orientation(const Moments& m)
   {
     double fi;
-    ReturnIfFailed(OrientationMoments(m.oldMoments(), fi), 0.0);
+    RETURN_IF_FAILED(OrientationMoments(m.oldMoments(), fi), 0.0);
     return fi;
   }
 #undef FNAME

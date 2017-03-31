@@ -46,7 +46,7 @@ namespace ice
     Classifier(classes, dimension), rejection(rejectionp), diagonal(_diagonal),
     apm(apmp)
   {
-    IfFailed(Init(classes, dimension))
+    IF_FAILED(Init(classes, dimension))
     {
       // if initialisation fails
       Message(FNAME, M_0, ERROR);
@@ -58,7 +58,7 @@ namespace ice
     Classifier(nClasses, dim), rejection(rejection), apm(APM_CONSTRUCTOR)
   {
     p_k = app;
-    IfFailed(Init(nClasses, dim))
+    IF_FAILED(Init(nClasses, dim))
     {
       // if initialisation fails
       Message(FNAME, M_0, ERROR);

@@ -228,7 +228,7 @@ namespace ice
   int ScanInfo(int ch, int& xm, int& ym, int& maxval, int& channels,
                int& flags, string& descr)
   {
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
     channels = channelnum;
     //  cout << "info channels " << channels << endl;
     if (ch < 0 || ch >= channels)
@@ -250,7 +250,7 @@ namespace ice
   int ScanWindow(int ch, int x1, int y1, int x2, int y2)
   {
     int h;
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -293,7 +293,7 @@ namespace ice
 #define FNAME "ScanDialog"
   int ScanDialog(int ch)
   {
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -315,7 +315,7 @@ namespace ice
 #define FNAME "ScanPreview"
   int ScanPreview(int ch, int on)
   {
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -343,7 +343,7 @@ namespace ice
                         int brightness, int contrast,
                         int saturation, int hue)
   {
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -366,7 +366,7 @@ namespace ice
                         int& brightness, int& contrast,
                         int& saturation, int& hue)
   {
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -389,7 +389,7 @@ namespace ice
   int ScanImg(int ch, Image& pi, int interactive)
   {
     ibuffer ib;
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -443,7 +443,7 @@ namespace ice
   int ScanImg(int ch, Image& pr, Image& pg, Image& pb, int interactive)
   {
     int xs, ys;
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -457,7 +457,7 @@ namespace ice
         return ERROR;
       }
 
-    ReturnErrorIfFailed(MatchImg(pr, pg, pb, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImg(pr, pg, pb, xs, ys));
 
     ibuffer ib;
 
@@ -502,7 +502,7 @@ namespace ice
 #define FNAME "ScanSetExtData"
   int ScanSetExtData(int ch, int datanr, int val, int issubchannel)
   {
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -525,7 +525,7 @@ namespace ice
 #define FNAME "ScanGetExtData"
   int ScanGetExtData(int ch, int datanr, int& val, int& issubchannel, string& desc)
   {
-    ReturnErrorIfFailed(ScanInit());
+    RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
       {
@@ -551,7 +551,7 @@ namespace ice
     string sdummy;
     int idummy;
 
-    ReturnErrorIfFailed(ScanGetExtData(ch, datanr, val, idummy, sdummy));
+    RETURN_ERROR_IF_FAILED(ScanGetExtData(ch, datanr, val, idummy, sdummy));
     return OK;
   }
 #undef FNAME

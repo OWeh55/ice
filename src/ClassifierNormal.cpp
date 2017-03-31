@@ -35,7 +35,7 @@ namespace ice
   ClassifierNormal::ClassifierNormal(int classes, int dimension):
     Classifier(classes, dimension)
   {
-    IfFailed(Init(classes, dimension))
+    IF_FAILED(Init(classes, dimension))
     {
       Message(FNAME, M_0, ERROR);
     }

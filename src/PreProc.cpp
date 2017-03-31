@@ -105,7 +105,7 @@ namespace ice
   int PreprocessImg(Image img1, Image img2)
   {
     int dx, dy;
-    ReturnErrorIfFailed(MatchImg(img1, img2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, dx, dy));
     int   newimg = false;
     Image imgd = img2;
     Image imgs = img1;

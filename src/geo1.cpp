@@ -451,7 +451,7 @@ namespace ice
         w[i] = pl2->wptr[i];
       }
 
-    IfFailed(res = MatchPointlists(p1, p2, mode, w))
+    IF_FAILED(res = MatchPointlists(p1, p2, mode, w))
     {
       Message(FNAME, M_0, ERROR);
       return res;
@@ -528,7 +528,7 @@ namespace ice
         PutPoint(pl2, i, p2[i][0], p2[i][1], weights[i]);
       }
 
-    IfFailed(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
+    IF_FAILED(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
     {
       Message(FNAME, M_0, ERROR);
       return res;
@@ -550,7 +550,7 @@ namespace ice
 
     for (i = 0; i < p1.rows(); i++) weights[i] = 1.0;
 
-    IfFailed(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
+    IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
     {
       Message(FNAME, M_0, ERROR);
       return res;
@@ -567,7 +567,7 @@ namespace ice
     for (int i = 0; i < (int)p1.size(); i++)
       weights[i] = 1.0;
 
-    IfFailed(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
+    IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
     {
       Message(FNAME, M_0, ERROR);
       return res;
@@ -604,7 +604,7 @@ namespace ice
         // cout << p1[i].x << "," << p1[i].y << " - " <<p2[i].x << "," << p2[i].y <<endl;
       }
 
-    IfFailed(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
+    IF_FAILED(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
     {
       Message(FNAME, M_0, ERROR);
       return tmatrix;

@@ -44,9 +44,9 @@ namespace ice
     double dr1, di1, dr2, di2, dr3, di3;
     double factor;
 
-    ReturnErrorIfFailed(MatchImgD(r1, i1, r2));
-    ReturnErrorIfFailed(MatchImgD(r2, i2, r3));
-    ReturnErrorIfFailed(MatchImgD(r3, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r1, i1, r2));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r2, i2, r3));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r3, i3, xs, ys));
 
     factor = sqrt(double(xs)) * sqrt(double(ys));
     for (int y = 0; y < r1.ysize; ++y)
@@ -74,7 +74,7 @@ namespace ice
     int NEED_TEMP = false;
     ImageD hdest;
 
-    ReturnErrorIfFailed(MatchImgD(i1, i2, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
 
     if ((i3 == i1) || (i3 == i2))
       {
@@ -125,9 +125,9 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImgD(r1, i1, r2, xs, ys));
-    ReturnErrorIfFailed(MatchImgD(r2, i2, r3, xs, ys));
-    ReturnErrorIfFailed(MatchImgD(r3, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r1, i1, r2, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r2, i2, r3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r3, i3, xs, ys));
 
     factor = 1 / sqrt(double(xs * ys));
 
@@ -186,7 +186,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImgD(i1, i2, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
 
     if ((i3 == i1) || (i3 == i2))
       {
@@ -253,9 +253,9 @@ namespace ice
     double dr1, di1, dr2, di2, dr3, di3;
     double factor;
 
-    ReturnErrorIfFailed(MatchImgD(r1, i1, r2, xs, ys));
-    ReturnErrorIfFailed(MatchImgD(r2, i2, r3, xs, ys));
-    ReturnErrorIfFailed(MatchImgD(r3, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r1, i1, r2, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r2, i2, r3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(r3, i3, xs, ys));
 
     factor = sqrt(double(xs)) * sqrt(double(ys));
     for (int y = 0; y < r1.ysize; ++y)
@@ -283,7 +283,7 @@ namespace ice
     int NEED_TEMP = false;
     ImageD hdest;
 
-    ReturnErrorIfFailed(MatchImgD(i1, i2, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
 
     if ((i3 == i1) || (i3 == i2))
       {
@@ -325,7 +325,7 @@ namespace ice
 
     ImageD h1, h2;
 
-    ReturnErrorIfFailed(MatchImgD(i1, i2, i3, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
 
     h1 = NewImgD(xs, ys);
     h2 = NewImgD(xs, ys);

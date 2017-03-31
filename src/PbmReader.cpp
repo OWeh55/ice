@@ -180,7 +180,7 @@ namespace ice
   void PbmReader::getImage(const Image& r, const Image& g, const Image& b, int flag)
   {
     readBuffer();
-    IfFailed(MatchImg(r, g, b))
+    IF_FAILED(MatchImg(r, g, b))
     throw length_error("PbmReader - Images do not match");
     Buffer2Image(ib, r, g, b, flag);
   }

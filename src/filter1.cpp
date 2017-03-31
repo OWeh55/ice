@@ -45,7 +45,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -97,7 +97,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -156,7 +156,7 @@ namespace ice
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -208,7 +208,7 @@ namespace ice
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -264,7 +264,7 @@ namespace ice
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    ReturnErrorIfFailed(MatchImg(src, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -396,7 +396,7 @@ namespace ice
     int vy1, vy2, vy3, vx, vy, xoff, yoff;
     char has_temp;
 
-    ReturnErrorIfFailed(MatchImg(pn1p, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
 
     Image pn1 = pn1p;
 
@@ -473,7 +473,7 @@ namespace ice
                              ImageD lambda1, ImageD lambda2 // Eigenwerte zurückgeben
                             )
   {
-    ReturnErrorIfFailed(MatchImg(pic, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
       {
@@ -605,7 +605,7 @@ namespace ice
                        ImageD lambda1 // Gradienten-Betrag ^ 2 als Gütemass
                       )
   {
-    ReturnErrorIfFailed(MatchImg(pic, dest));
+    RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
       {
@@ -686,7 +686,7 @@ namespace ice
     int vy1, vy2, vy3, vx, vy, xoff, yoff;
     char has_temp;
 
-    ReturnErrorIfFailed(MatchImg(pn1p, pn2, dx, dy));
+    RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
 
     if ((pn2->maxval < 7))
       {

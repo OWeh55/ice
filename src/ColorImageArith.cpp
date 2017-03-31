@@ -55,9 +55,9 @@ namespace ice
    */
   int SetImg(const ColorImage& img, unsigned int val)
   {
-    ReturnErrorIfFailed((SetImg(img.redImage(), val)));
-    ReturnErrorIfFailed((SetImg(img.greenImage(), val)));
-    ReturnErrorIfFailed((SetImg(img.blueImage(), val)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), val)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), val)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), val)));
 
     return OK;
   }
@@ -65,18 +65,18 @@ namespace ice
   int SetImg(const ColorImage& img, const ColorValue& val)
   {
     int maxval = img.maxval;
-    ReturnErrorIfFailed((SetImg(img.redImage(), maxval - val.red)));
-    ReturnErrorIfFailed((SetImg(img.greenImage(), maxval - val.green)));
-    ReturnErrorIfFailed((SetImg(img.blueImage(), maxval - val.blue)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), maxval - val.red)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), maxval - val.green)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), maxval - val.blue)));
 
     return OK;
   }
 
   int SetImg(const ColorImage& img, const Function2d& fn)
   {
-    ReturnErrorIfFailed((SetImg(img.redImage(), fn)));
-    ReturnErrorIfFailed((SetImg(img.greenImage(), fn)));
-    ReturnErrorIfFailed((SetImg(img.blueImage(), fn)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), fn)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), fn)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), fn)));
 
     return OK;
   }
@@ -84,9 +84,9 @@ namespace ice
   int SetImg(const ColorImage& img, const Function2d& fn1,
              const Function2d& fn2, const Function2d& fn3)
   {
-    ReturnErrorIfFailed((SetImg(img.redImage(), fn1)));
-    ReturnErrorIfFailed((SetImg(img.greenImage(), fn2)));
-    ReturnErrorIfFailed((SetImg(img.blueImage(), fn3)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), fn1)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), fn2)));
+    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), fn3)));
 
     return OK;
   }
@@ -95,10 +95,10 @@ namespace ice
 #define FNAME "AddImg"
   int AddImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest, int mode)
   {
-    ReturnErrorIfFailed(img1.match(img2, dest));
-    ReturnErrorIfFailed(AddImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
-    ReturnErrorIfFailed(AddImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
-    ReturnErrorIfFailed(AddImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
+    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
+    RETURN_ERROR_IF_FAILED(AddImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
+    RETURN_ERROR_IF_FAILED(AddImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
+    RETURN_ERROR_IF_FAILED(AddImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
     return OK;
   }
 #undef FNAME
@@ -106,10 +106,10 @@ namespace ice
 #define FNAME "SubImg"
   int SubImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest, int mode, int smode)
   {
-    ReturnErrorIfFailed(img1.match(img2, dest));
-    ReturnErrorIfFailed(SubImg(img1.redImage(), img2.redImage(), dest.redImage(), mode, smode));
-    ReturnErrorIfFailed(SubImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode, smode));
-    ReturnErrorIfFailed(SubImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode, smode));
+    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
+    RETURN_ERROR_IF_FAILED(SubImg(img1.redImage(), img2.redImage(), dest.redImage(), mode, smode));
+    RETURN_ERROR_IF_FAILED(SubImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode, smode));
+    RETURN_ERROR_IF_FAILED(SubImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode, smode));
     return OK;
   }
 #undef FNAME
@@ -118,10 +118,10 @@ namespace ice
   int MaxImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
              int mode)
   {
-    ReturnErrorIfFailed(img1.match(img2, dest));
-    ReturnErrorIfFailed(MaxImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
-    ReturnErrorIfFailed(MaxImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
-    ReturnErrorIfFailed(MaxImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
+    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
+    RETURN_ERROR_IF_FAILED(MaxImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
+    RETURN_ERROR_IF_FAILED(MaxImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
+    RETURN_ERROR_IF_FAILED(MaxImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
     return OK;
   }
 #undef FNAME
@@ -130,10 +130,10 @@ namespace ice
   int MinImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
              int mode)
   {
-    ReturnErrorIfFailed(img1.match(img2, dest));
-    ReturnErrorIfFailed(MinImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
-    ReturnErrorIfFailed(MinImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
-    ReturnErrorIfFailed(MinImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
+    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
+    RETURN_ERROR_IF_FAILED(MinImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
+    RETURN_ERROR_IF_FAILED(MinImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
+    RETURN_ERROR_IF_FAILED(MinImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
     return OK;
   }
 #undef FNAME
@@ -153,9 +153,9 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(RenormImg(src.redImage(), dest.redImage()));
-    ReturnErrorIfFailed(RenormImg(src.greenImage(), dest.greenImage()));
-    ReturnErrorIfFailed(RenormImg(src.blueImage(), dest.blueImage()));
+    RETURN_ERROR_IF_FAILED(RenormImg(src.redImage(), dest.redImage()));
+    RETURN_ERROR_IF_FAILED(RenormImg(src.greenImage(), dest.greenImage()));
+    RETURN_ERROR_IF_FAILED(RenormImg(src.blueImage(), dest.blueImage()));
     return OK;
   }
 #undef FNAME

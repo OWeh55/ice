@@ -67,9 +67,9 @@ namespace ice
         fval = 0;
       }
 
-    ReturnErrorIfFailed(drawCircleSegment(par, val, fval, mode, img));
-    ReturnErrorIfFailed(draw(LineSeg(p, Point(p.x + rad * cos(phi1), p.y + rad * sin(phi1))), img, val));
-    ReturnErrorIfFailed(draw(LineSeg(p, Point(p.x + rad * cos(phi2), p.y + rad * sin(phi2))), img, val));
+    RETURN_ERROR_IF_FAILED(drawCircleSegment(par, val, fval, mode, img));
+    RETURN_ERROR_IF_FAILED(draw(LineSeg(p, Point(p.x + rad * cos(phi1), p.y + rad * sin(phi1))), img, val));
+    RETURN_ERROR_IF_FAILED(draw(LineSeg(p, Point(p.x + rad * cos(phi2), p.y + rad * sin(phi2))), img, val));
     return OK;
   }
 
@@ -107,7 +107,7 @@ namespace ice
     par[4] = es.getPhi();
     par[5] = es.getPhi1();
     par[6] = es.getPhi2();
-    ReturnErrorIfFailed(drawEllipseSegment(par, val, fval, mode, img));
+    RETURN_ERROR_IF_FAILED(drawEllipseSegment(par, val, fval, mode, img));
     return OK;
   }
 

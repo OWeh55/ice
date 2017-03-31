@@ -53,8 +53,8 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImgD(re, im, dre, xs, ys));
-    ReturnErrorIfFailed(MatchImgD(dre, dim, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(re, im, dre, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(dre, dim, xs, ys));
 
     for (int y = 0; y < re.ysize; ++y)
       for (int x = 0; x < re.xsize; ++x)
@@ -98,7 +98,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(MatchImgD(im, nrm, xs, ys));
+    RETURN_ERROR_IF_FAILED(MatchImgD(im, nrm, xs, ys));
 
     h = NewImgD(xs, ys);
 

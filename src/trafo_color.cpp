@@ -42,9 +42,9 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    ReturnErrorIfFailed(Transform(tr, simg.redImage(), dimg.redImage(), mode));
-    ReturnErrorIfFailed(Transform(tr, simg.greenImage(), dimg.greenImage(), mode));
-    ReturnErrorIfFailed(Transform(tr, simg.blueImage(), dimg.blueImage(), mode));
+    RETURN_ERROR_IF_FAILED(Transform(tr, simg.redImage(), dimg.redImage(), mode));
+    RETURN_ERROR_IF_FAILED(Transform(tr, simg.greenImage(), dimg.greenImage(), mode));
+    RETURN_ERROR_IF_FAILED(Transform(tr, simg.blueImage(), dimg.blueImage(), mode));
     return OK;
   }
 

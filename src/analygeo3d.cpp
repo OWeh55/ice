@@ -76,7 +76,7 @@ namespace ice
     Matrix m = d1v || (-1 * d2v);
     Vector res;
 
-    IfFailed(res = SolveLinEqu(m, p2v - p1v))
+    IF_FAILED(res = SolveLinEqu(m, p2v - p1v))
     {
       // parallele Geraden
       SetOk();
@@ -95,7 +95,7 @@ namespace ice
     Vector3d d2v(l2.DP());
     Matrix m = d1v || (-d2v) ;
 
-    IfFailed(res = SolveLinEqu(m, p2v - p1v))
+    IF_FAILED(res = SolveLinEqu(m, p2v - p1v))
     {
       SetOk();
       dist = 1e99;

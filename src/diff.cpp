@@ -109,7 +109,7 @@ namespace ice
 
     int dx, dy;
 
-    ReturnIfFailed(MatchImg(img1, img2, dx, dy), res);
+    RETURN_IF_FAILED(MatchImg(img1, img2, dx, dy), res);
 
     int ptype = img1->ImageType();
 

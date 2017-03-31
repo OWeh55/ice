@@ -280,7 +280,7 @@ namespace ice
         return res;
       }
 
-    IfFailed(res = getCovariance())
+    IF_FAILED(res = getCovariance())
     {
       Message(FNAME, M_0, ERROR);
       return res;
@@ -321,7 +321,7 @@ namespace ice
         return res;
       }
 
-    IfFailed(res = Covariance(st))
+    IF_FAILED(res = Covariance(st))
     {
       Message(FNAME, M_0, ERROR);
       return res;
@@ -355,7 +355,7 @@ namespace ice
   int Write(const Statistics& st, const std::string& fn)
   {
     std::ofstream out(fn.c_str());
-    ReturnErrorIfFailed(out << st);
+    RETURN_ERROR_IF_FAILED(out << st);
     out.close();
     return OK;
   }
@@ -381,7 +381,7 @@ namespace ice
   int Read(Statistics& st, const std::string& fn)
   {
     std::ifstream inp(fn.c_str());
-    ReturnErrorIfFailed(inp >> st);
+    RETURN_ERROR_IF_FAILED(inp >> st);
     inp.close();
     return OK;
   }

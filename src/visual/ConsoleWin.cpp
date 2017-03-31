@@ -662,7 +662,7 @@ namespace ice
 
       case '\b': // a.k.a. backspace(BS)
         // move the cursor one back if possible
-        CurrContent.CursorPos.x = ice::max(CurrContent.CursorPos.x - 1, 0);
+        CurrContent.CursorPos.x = max(CurrContent.CursorPos.x - 1, 0);
         CurrContent[CurrContent.CursorPos].Char = ' ';
         break;
 
