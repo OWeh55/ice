@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
   wloop(m[last], x, y) PutVal(m[last], x, y, (GetVal(m[last], x, y) / FAK / 8) & 3);
   Delay(TIME);
   wloop(p[last], x, y)
-  PutVal(p[last], x, y, p[last]->maxval - GetVal(p[last], x, y));
+    PutVal(p[last], x, y, p[last]->maxval - GetVal(p[last], x, y));
   Delay(TIME);
   FreeImg(p[4]);
   p[4] = NewImg(p[3]);
@@ -55,35 +55,20 @@ int main(int argc, char* argv[])
   r = NewImg(256, 256, 255);
   g = NewImg(256, 256, 255);
   b = NewImg(256, 256, 255);
-  OffMessage();
-  Show(_RGB, r, b, g);
-  code = GetError();
-  OnMessage();
 
-  if (code == OK)
+  Show(_RGB, r, b, g);
+
+  wloop(r, x, y)
     {
-      wloop(r, x, y)
-      {
-        PutVal(b, x, y, Min(255, Max(x, 255 - y)));
-        PutVal(g, x, y, Min(255, Max(x, y)));
-        PutVal(r, x, y, Min(255, Max(255 - x, y)));
-      }
-      Delay(TIME);
-      Display(OFF);
-      Delay(TIME);
-      Display(ON); /*update RGB-Bild */
-      Delay(TIME);
+      PutVal(b, x, y, Min(255, Max(x, 255 - y)));
+      PutVal(g, x, y, Min(255, Max(x, y)));
+      PutVal(r, x, y, Min(255, Max(255 - x, y)));
     }
-  else
-    {
-      Display(OFF);
-      ClearAlpha();
-      SetAlphaCursor(10, 5);
-      printf("Grafik nicht echtfarbenfaehig");
-      SetAlphaCursor(18, 18);
-      printf("Bitte warten !!!\n");
-      Delay(5.0);
-    }
+  Delay(TIME);
+  Display(OFF);
+  Delay(TIME);
+  Display(ON); /*update RGB-Bild */
+  Delay(TIME);
 
   Display(OFF);
   return 0;

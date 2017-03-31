@@ -99,7 +99,6 @@ namespace ice
         }
 
       throw IceException(FNAME, M_0, ERROR);
-      return false;
     }
     double pp[2];
     pp[0] = p.x;
@@ -108,7 +107,6 @@ namespace ice
     {
       FreePointList(pl);
       throw IceException(FNAME, M_0, ERROR);
-      return false;
     }
     FreePointList(pl);
     return res;

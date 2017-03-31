@@ -11,8 +11,7 @@ int hpc(const Contur& c, Matrix& cm, int steps = SANZ)
 
   if (!c.isValid() || !c.isClosed())
     {
-      Message(FNAME, M_CONTUR_NOT_CLOSED, WRONG_PARAM);
-      return WRONG_PARAM;
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED, WRONG_PARAM);
     }
 
   MomentRegion(c, mom, xys);

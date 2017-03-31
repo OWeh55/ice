@@ -378,13 +378,13 @@ int DetectShift1(Image img1, Image img2,
   imgr = NewImg(sx, sy, 255);
 
 //  Show(ON,imgr);
-  IfFailed(InvConvolutionImg(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS))
+  IF_FAILED(InvConvolutionImg(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS))
   {
     FreeImg(imgr);
     return ERROR;
   }
 
-  IfFailed(val = PeakValuation(imgr, Image(), dxy[0], dxy[1]))
+  IF_FAILED(val = PeakValuation(imgr, Image(), dxy[0], dxy[1]))
   {
     FreeImg(imgr);
     return ERROR;

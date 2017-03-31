@@ -3,7 +3,6 @@
 #include <math.h>
 
 #include <image.h>
-#include <message.h>
 #include <defs.h>
 #include <macro.h>
 #include <numbase.h>

@@ -67,20 +67,23 @@ int main(int argc, char* argv[])
               for (j = 0; j < rang; j++) a[i * rang + j] = (double)rand() - randmaxhalbe;
             };
 
-          OffMessage();
 
-          lsg = EquSys(a, b, rang, x);
+	  bool ok=true;
+	  try {
+	    lsg = EquSys(a, b, rang, x);
+	  }
+	  catch (IceException &ex)
+	    {
+	      ok=false;
+	    }
 
-          SetOk();
-
-          OnMessage();
-
-          if (lsg == OK)
+          if (ok)
             {
               if (equprobe(rang, a, x, b) == 0) printf("*");
               else printf("!");
             }
-          else printf("\nRang %d Test %d Fehlercode %d \n", rang, tnr, lsg);
+          else 
+	    printf("\nRang %d Test %d Fehlercode %d \n", rang, tnr, lsg);
         };
     };
 
@@ -90,13 +93,13 @@ int main(int argc, char* argv[])
 
   printf("1 2  7 | 32\n3 6  3 | 13\n3 6 10 | 28\n");
 
-  OffMessage();
-
-  lsg = EquSys(na, nb, 3, x);
-
-  SetOk();
-
-  OnMessage();
+  try {
+    lsg = EquSys(na, nb, 3, x);
+  }
+  catch (IceException &ex)
+    {
+      printf("\n Fehlercode %d \n", lsg);
+    }
 
   if ((lsg == NUM_INSTABILITY) || (lsg == OK))
     {
@@ -104,7 +107,6 @@ int main(int argc, char* argv[])
       printf("Lösungsvektor:\n %9.2e\n %9.2e\n %9.2e\n", x[0], x[1], x[2]);
       printf("max. Abweichung %9.2e\n", equprobe(3, na, x, nb));
     }
-  else printf("\n Fehlercode %d \n", lsg);
 
   printf("\n\nTeste überbestimmte lineare Gleichungssysteme vom Rang 1 bis %d (je %d) \n", RANGMAX, RANGANZ);
 
@@ -119,18 +121,19 @@ int main(int argc, char* argv[])
               for (j = 0; j < rang; j++) a[i * rang + j] = (double)rand() - randmaxhalbe;
             };
 
-          OffMessage();
+	  try {
+	    lsg = OverEquSys(a, b, rang, rang + tnr, x, &s);
+	  }
+	  catch (IceException &ex)
+	    {
+	      printf("Fehlercode %d \n", lsg);
+	    }
 
-          lsg = OverEquSys(a, b, rang, rang + tnr, x, &s);
-
-          SetOk();
-
-          OnMessage();
-
-          printf("Rang %d: Anzahl Gl. %d: ", rang, rang + tnr);
-
-          if (lsg == OK) printf("Fehlersumme %9e\n", s);
-          else printf("Fehlercode %d \n", lsg);
+	  if (lsg == OK) 
+	    {
+	      printf("Fehlersumme %9e\n", s);
+	      printf("Rang %d: Anzahl Gl. %d: ", rang, rang + tnr);
+	    }
         };
     };
 

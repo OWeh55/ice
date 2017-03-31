@@ -41,10 +41,7 @@ int main(int argc, char* argv[])
 
   while (SearchGradStart(img, imgm, pgl, 5, ps, HORZ) == OK)
     {
-      OffMessage();
       c = CalcGradContur(img, imgm, pgl1, 40, ps, 0);
-      OnMessage();
-
       if (c.isValid())
         {
           if (c.Number() > 8)
