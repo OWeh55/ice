@@ -61,7 +61,9 @@ namespace ice
       }
     for (int y = 0; y < p.ysize; ++y)
       for (int x = 0; x < p.xsize; ++x)
-        PutValD(p, x, y, val);
+        {
+          PutValD(p, x, y, val);
+        }
     return OK;
   }
 #undef FNAME
@@ -80,7 +82,7 @@ namespace ice
     ImageD tmp = NewImgD(dx - sx + 1, dy);
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int y1 = y;
         int x1 = 0, x2 = 0;
@@ -105,9 +107,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        PutValD(pn2, x, y, 0);
+        {
+          PutValD(pn2, x, y, 0);
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0;
         int yt = 0;
@@ -144,7 +148,9 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        PutValD(pn2, x, y, 0);
+        {
+          PutValD(pn2, x, y, 0);
+        }
 
     //    FreeImgD(tmp);
     return OK;
@@ -175,7 +181,9 @@ namespace ice
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
-        PutValD(pn3, i, j, GetValD(pn1, i, j) + GetValD(pn2, i, j));
+        {
+          PutValD(pn3, i, j, GetValD(pn1, i, j) + GetValD(pn2, i, j));
+        }
 
     return OK;
   }
@@ -199,7 +207,9 @@ namespace ice
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
-        PutValD(pn3, i, j, GetValD(pn1, i, j)*GetValD(pn2, i, j));
+        {
+          PutValD(pn3, i, j, GetValD(pn1, i, j)*GetValD(pn2, i, j));
+        }
 
     return OK;
   }
@@ -223,7 +233,9 @@ namespace ice
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
-        PutValD(pn2, i, j, GetValD(pn1, i, j));
+        {
+          PutValD(pn2, i, j, GetValD(pn1, i, j));
+        }
 
     return OK;
   }
@@ -395,9 +407,13 @@ namespace ice
           ys = p[1] + y0;
 
           if (imgs.inside(xs, ys))
-            PutValD(imgd, x, y, GetInterpolValD(imgs, xs, ys));
+            {
+              PutValD(imgd, x, y, GetInterpolValD(imgs, xs, ys));
+            }
           else
-            PutValD(imgd, x, y, 0.0);
+            {
+              PutValD(imgd, x, y, 0.0);
+            }
         }
     return OK;
   }
@@ -463,8 +479,13 @@ namespace ice
             (xs >= 0) && (xs < imgs->xsize) &&
             (ys >= 0) && (ys < imgs->ysize)
           )
-            PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
-          else PutVal(himgd, x, y, 0);
+            {
+              PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
+            }
+          else
+            {
+              PutVal(himgd, x, y, 0);
+            }
         }
     return OK;
   }
@@ -586,8 +607,13 @@ namespace ice
             (xs >= 0) && (xs < imgs.xsize) &&
             (ys >= 0) && (ys < imgs.ysize)
           )
-            PutValD(himgd, x, y, GetInterpolValD(imgs, xs, ys));
-          else PutValD(himgd, x, y, 0.0);
+            {
+              PutValD(himgd, x, y, GetInterpolValD(imgs, xs, ys));
+            }
+          else
+            {
+              PutValD(himgd, x, y, 0.0);
+            }
         }
     return himgd;
   }
@@ -652,8 +678,13 @@ namespace ice
         (xs >= 0) && (xs < imgs->xsize) &&
         (ys >= 0) && (ys < imgs->ysize)
       )
-        PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
-      else PutVal(himgd, x, y, 0);
+        {
+          PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
+        }
+      else
+        {
+          PutVal(himgd, x, y, 0);
+        }
     }
     return OK;
   }

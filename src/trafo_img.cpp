@@ -68,7 +68,9 @@ namespace ice
         has_temp = true;
       }
     else
-      tsimg = hsimg;
+      {
+        tsimg = hsimg;
+      }
 
     bool projective = true;
 
@@ -87,7 +89,9 @@ namespace ice
 //    if ((tri.m[2][0]==0.0)&&(tri.m[2][1]==0.0)&&(tri.m[2][2]==1.0))
 //      projective=false;
     if ((m20 == 0.0) && (m21 == 0.0) && (m22 == 1.0))
-      projective = false;
+      {
+        projective = false;
+      }
 
     // max. values for grayvalue
     mv1 = tsimg->maxval + 1;
@@ -125,7 +129,10 @@ namespace ice
                 {
                   PutVal(dimg, x, y, 0);
 
-                  if (IsImg(mark)) PutVal(mark, x, y, val);
+                  if (IsImg(mark))
+                    {
+                      PutVal(mark, x, y, val);
+                    }
                 }
 
 #endif
@@ -161,7 +168,10 @@ namespace ice
                 {
                   PutValUnchecked(dimg, x, y, 0);
 
-                  if (IsImg(mark)) PutValUnchecked(mark, x, y, val);
+                  if (IsImg(mark))
+                    {
+                      PutValUnchecked(mark, x, y, val);
+                    }
                 }
 
 #endif
@@ -169,7 +179,7 @@ namespace ice
             }
           }
       }
-    else // if (mode!=INTERPOL)
+    else     // if (mode!=INTERPOL)
       {
         if (mv1 == mv2)
           {

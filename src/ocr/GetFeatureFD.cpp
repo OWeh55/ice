@@ -62,21 +62,31 @@ int GetFeatureFD::get_feature(const Image& pic,
   if (fabs(pl2->xptr[1]) < 1.0e-12)
     {
       if (pl2->yptr[1] > 0)
-        phi_1 = M_PI / 2.0;
+        {
+          phi_1 = M_PI / 2.0;
+        }
       if (pl2->yptr[1] < 0)
-        phi_1 = -M_PI / 2.0;
+        {
+          phi_1 = -M_PI / 2.0;
+        }
       if (fabs(pl2->yptr[1]) < 1.0e-12)
         {
           return 3;
         }
     }
   else
-    phi_1 = atan(pl2->yptr[1] / pl2->xptr[1]);  // Phase des 1. FK
+    {
+      phi_1 = atan(pl2->yptr[1] / pl2->xptr[1]);  // Phase des 1. FK
+    }
 
   if (pl2->xptr[1] < 0 && pl2->yptr[1] < 0)
-    phi_1 += M_PI;
+    {
+      phi_1 += M_PI;
+    }
   if (pl2->xptr[1] < 0 && pl2->yptr[1] > 0)
-    phi_1 += M_PI;
+    {
+      phi_1 += M_PI;
+    }
 
   // die ersten 2*fd-2 Merkmale berechnen
   for (i = 0; i < fd / 2; ++i)

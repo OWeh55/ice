@@ -46,10 +46,14 @@ namespace ice
 
     if (m.cols() > 2)
       for (int i = 0; i < samples; i++)
-        FitVal(m[i][0], m[i][1], m[i][2]);
+        {
+          FitVal(m[i][0], m[i][1], m[i][2]);
+        }
     else
       for (int i = 0; i < samples; i++)
-        FitVal(m[i][0], m[i][1]);
+        {
+          FitVal(m[i][0], m[i][1]);
+        }
 
 
     FitFinish();
@@ -127,7 +131,10 @@ namespace ice
     vsize = v.Size();
     ord = 0;
 
-    while ((ord + 1) * (ord + 2) / 2 < vsize) ord++;
+    while ((ord + 1) * (ord + 2) / 2 < vsize)
+      {
+        ord++;
+      }
 
     if ((ord + 1) * (ord + 2) / 2 != vsize)
       {

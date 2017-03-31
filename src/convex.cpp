@@ -54,7 +54,9 @@ namespace ice
         PointList pl2 = NewPointList(3);
 
         for (int i = 0; i < pl->lng; i++)
-          PutPoint(pl2, 0, pl->xptr[i], pl->yptr[i], pl->wptr[i]);
+          {
+            PutPoint(pl2, 0, pl->xptr[i], pl->yptr[i], pl->wptr[i]);
+          }
 
         return pl2;
       }
@@ -66,13 +68,25 @@ namespace ice
 
     for (nr = 0; nr < pl->lng; nr++)
       {
-        if (xi > pl->xptr[nr]) xi = (int)(pl->xptr[nr]);
+        if (xi > pl->xptr[nr])
+          {
+            xi = (int)(pl->xptr[nr]);
+          }
 
-        if (yi > pl->yptr[nr]) yi = (int)(pl->yptr[nr]);
+        if (yi > pl->yptr[nr])
+          {
+            yi = (int)(pl->yptr[nr]);
+          }
 
-        if (xa < pl->xptr[nr]) xa = (int)(pl->xptr[nr]);
+        if (xa < pl->xptr[nr])
+          {
+            xa = (int)(pl->xptr[nr]);
+          }
 
-        if (ya < pl->yptr[nr]) ya = (int)(pl->yptr[nr]);
+        if (ya < pl->yptr[nr])
+          {
+            ya = (int)(pl->yptr[nr]);
+          }
       }
 
     int xsize = xa - xi + 1;
@@ -140,7 +154,10 @@ namespace ice
       {
         int index = (int)(pl->xptr[nr] - xi);
 
-        if (ymin[index] == INT_MAX) usedcnt++;
+        if (ymin[index] == INT_MAX)
+          {
+            usedcnt++;
+          }
 
         if (ymin[index] > pl->yptr[nr])
           {
@@ -219,7 +236,10 @@ namespace ice
               {
                 nr++;
 
-                if (current == xsize - 1) break;
+                if (current == xsize - 1)
+                  {
+                    break;
+                  }
 
                 while (ymin[++current] == INT_MAX);
               }
@@ -228,7 +248,10 @@ namespace ice
           {
             nr++;
 
-            if (current == xsize - 1) break;
+            if (current == xsize - 1)
+              {
+                break;
+              }
 
             while (ymin[++current] == INT_MAX);
           }
@@ -255,12 +278,18 @@ namespace ice
                               pl->xptr[imax[pl2[nr - 1]]], pl->yptr[imax[pl2[nr - 1]]],
                               pl->xptr[imax[pl2[nr]]], pl->yptr[imax[pl2[nr]]]);
 
-            if (det < 0) nr--;
+            if (det < 0)
+              {
+                nr--;
+              }
             else
               {
                 nr++;
 
-                if (current == 0) break;
+                if (current == 0)
+                  {
+                    break;
+                  }
 
                 do
                   {
@@ -273,7 +302,10 @@ namespace ice
           {
             nr++;
 
-            if (current == 0) break;
+            if (current == 0)
+              {
+                break;
+              }
 
             do
               {
@@ -299,10 +331,14 @@ namespace ice
       }
 
     for (current = 0; current <= nr2; current++)
-      PutPoint(pl3, current, pl->xptr[imin[pl2[current]]], pl->yptr[imin[pl2[current]]], pl->wptr[imin[pl2[current]]]);
+      {
+        PutPoint(pl3, current, pl->xptr[imin[pl2[current]]], pl->yptr[imin[pl2[current]]], pl->wptr[imin[pl2[current]]]);
+      }
 
     for (current = nr2 + 1; current < nr; current++)
-      PutPoint(pl3, current, pl->xptr[imax[pl2[current]]], pl->yptr[imax[pl2[current]]], pl->wptr[imax[pl2[current]]]);
+      {
+        PutPoint(pl3, current, pl->xptr[imax[pl2[current]]], pl->yptr[imax[pl2[current]]], pl->wptr[imax[pl2[current]]]);
+      }
 
     delete ymin;
     delete ymax;
@@ -332,7 +368,9 @@ namespace ice
     }
 
     for (unsigned int i = 0; i < rpl.size(); i++)
-      res.Append(Vector(rpl[i].x, rpl[i].y));
+      {
+        res.Append(Vector(rpl[i].x, rpl[i].y));
+      }
 
     return res;
   }
@@ -348,7 +386,9 @@ namespace ice
       }
 
     if (c.Number() < 3)
-      return c;
+      {
+        return c;
+      }
 
     bool hole = c.isHole();
 
@@ -359,7 +399,9 @@ namespace ice
 
     res.SetStart(pl[0]);
     for (unsigned int i = 1; i < pl.size(); i++)
-      res.Add(pl[i]);
+      {
+        res.Add(pl[i]);
+      }
     res.Add(pl[0]); // close contur
 
     if (hole)
@@ -387,7 +429,9 @@ namespace ice
     det2 = TriangleDet(x11, y11, x12, y12, xm2, ym2);
 
     if (det1 * det2 > 0)
-      return false;
+      {
+        return false;
+      }
 
     xm1 = (x21 + x22 + x11) / 3;
     ym1 = (y21 + y22 + y11) / 3;
@@ -426,7 +470,10 @@ namespace ice
             if (LinesIntersect(pl1->xptr[i], pl1->yptr[i],
                                pl1->xptr[(i + 1) % (pl1->lng)], pl1->yptr[(i + 1) % (pl1->lng)],
                                pl2->xptr[j], pl2->yptr[j],
-                               pl2->xptr[(j + 1) % (pl2->lng)], pl2->yptr[(j + 1) % (pl2->lng)])) return POLY_INTERSECT;
+                               pl2->xptr[(j + 1) % (pl2->lng)], pl2->yptr[(j + 1) % (pl2->lng)]))
+              {
+                return POLY_INTERSECT;
+              }
           }
       }
 
@@ -444,17 +491,26 @@ namespace ice
           {
             sign1 = 1;
 
-            if (sign2 == 1) break;
+            if (sign2 == 1)
+              {
+                break;
+              }
           }
         else if (det < 0)
           {
             sign2 = 1;
 
-            if (sign1 == 1) break;
+            if (sign1 == 1)
+              {
+                break;
+              }
           }
       }
 
-    if (sign1 == 0 || sign2 == 0) return POLY_1_IN_2;
+    if (sign1 == 0 || sign2 == 0)
+      {
+        return POLY_1_IN_2;
+      }
 
     sign1 = sign2 = 0;
 
@@ -468,17 +524,26 @@ namespace ice
           {
             sign1 = 1;
 
-            if (sign2 == 1) break;
+            if (sign2 == 1)
+              {
+                break;
+              }
           }
         else if (det < 0)
           {
             sign2 = 1;
 
-            if (sign1 == 1) break;
+            if (sign1 == 1)
+              {
+                break;
+              }
           }
       }
 
-    if (sign1 == 0 || sign2 == 0) return POLY_2_IN_1;
+    if (sign1 == 0 || sign2 == 0)
+      {
+        return POLY_2_IN_1;
+      }
 
     return POLY_DISJUNKT;
   }

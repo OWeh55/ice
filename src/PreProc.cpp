@@ -64,7 +64,10 @@ namespace ice
 
           g = Min(imgd->maxval, Max(0, (int)(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0))));
 
-          if (gradmax < g) gradmax = g;
+          if (gradmax < g)
+            {
+              gradmax = g;
+            }
         }
 
     for (x = 1; x < img->xsize - 1; x++)
@@ -128,7 +131,10 @@ namespace ice
 
     if (!IsImg(temp))
       {
-        if (newimg) FreeImg(imgs);
+        if (newimg)
+          {
+            FreeImg(imgs);
+          }
 
         return NO_MEM;
       }
@@ -145,7 +151,10 @@ namespace ice
             g = (int)(g * (Gauss2D(x, y, (imgs->xsize) / 2, (imgs->ysize) / 2, (imgs->xsize) / 3.5, (imgs->ysize) / 3.5, 0) / maxgauss));
             PutVal(temp, x, y, g);
 
-            if (g > max) max = g;
+            if (g > max)
+              {
+                max = g;
+              }
           }
       }
 
@@ -153,7 +162,9 @@ namespace ice
       {
         for (y = 0; y < imgs->ysize; y++)
           for (x = 0; x < imgs->xsize; x++)
-            PutVal(imgd, x, y, GetVal(imgs, x, y));
+            {
+              PutVal(imgd, x, y, GetVal(imgs, x, y));
+            }
       }
     else
       {
@@ -172,7 +183,10 @@ namespace ice
 
     FreeImg(temp);
 
-    if (newimg) FreeImg(imgs);
+    if (newimg)
+      {
+        FreeImg(imgs);
+      }
 
     return OK;
   }

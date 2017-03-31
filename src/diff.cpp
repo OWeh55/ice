@@ -37,7 +37,9 @@ namespace ice
 
     for (int y = 0; y < dy; y++)
       for (int x = 0; x < dx; x++)
-        res += abs(p1[y][x] - p2[y][x]);
+        {
+          res += abs(p1[y][x] - p2[y][x]);
+        }
 
     return res / dx / dy;
   }

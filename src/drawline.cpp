@@ -67,13 +67,17 @@ namespace ice
   static void _LineX(int x1, int x2, int y, int val, const Image& img)
   {
     for (int x = x1; x <= x2; x++)
-      img.setPixelClipped(x, y, val);
+      {
+        img.setPixelClipped(x, y, val);
+      }
   }
 
   static void _LineY(int x, int y1, int y2, int val, const Image& img)
   {
     for (int y = y1; y <= y2; y++)
-      img.setPixelClipped(x, y, val);
+      {
+        img.setPixelClipped(x, y, val);
+      }
   }
 
   void _Line(int x1, int y1, int x2, int y2, int val, const Image& img)
@@ -82,12 +86,16 @@ namespace ice
     int dy = y2 - y1;
 
     if (dy == 0)
-      _LineX(x1, x2, y1, val, img);
+      {
+        _LineX(x1, x2, y1, val, img);
+      }
 
     int dx = x2 - x1;
 
     if (dx == 0)
-      _LineY(x1, y1, y2, val, img);
+      {
+        _LineY(x1, y1, y2, val, img);
+      }
 
     if (abs(dy) <= abs(dx))
       {
@@ -201,7 +209,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    if (img.inside(x1, y1) && img.inside(x2, y2)) // keine weitere Umrechnungen
+    if (img.inside(x1, y1) && img.inside(x2, y2))   // keine weitere Umrechnungen
       {
         _Line(x1, y1, x2, y2, val, img);
         return OK;
@@ -229,14 +237,18 @@ namespace ice
         mye = (img->xsize - 1 - p1.x) / dp.x;
 
         if (!ls.limitMys(mya, mye))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
 
         ou = true;
       }
     else
       {
         if ((p1.x < 0) || (p1.x >= img->xsize))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
       }
 
     // test oberer und unterer Rand
@@ -247,13 +259,21 @@ namespace ice
         my2 = (img->ysize - 1 - p1.y) / dp.y;
 
         if (!ls.limitMys(my1, my2))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
 
         if (ou)
           {
-            if (my1 > mya) mya = my1;
+            if (my1 > mya)
+              {
+                mya = my1;
+              }
 
-            if (my2 < mye) mye = my2;
+            if (my2 < mye)
+              {
+                mye = my2;
+              }
           }
         else
           {
@@ -264,7 +284,9 @@ namespace ice
     else
       {
         if ((p1.y < 0) || (p1.y >= img->ysize))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
       }
 
     p1 = ls.RelPoint(mya);
@@ -324,9 +346,13 @@ namespace ice
       }
 
     if (lmode == LineSeg::segment)
-      return Line(p1, p2, val, img);
+      {
+        return Line(p1, p2, val, img);
+      }
     else
-      return draw(LineSeg(p1, p2, lmode), img, val);
+      {
+        return draw(LineSeg(p1, p2, lmode), img, val);
+      }
   }
 
   int Line(const IVector& p1, const IVector& p2, int val, int mode, const Image& img)

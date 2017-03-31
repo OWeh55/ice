@@ -49,7 +49,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
@@ -77,7 +79,9 @@ namespace ice
             // get mean value
             for (int a = 0; a < nx; a++)
               for (int b = 0; b < ny; b++)
-                mid += Pixels[y + b][x + a];
+                {
+                  mid += Pixels[y + b][x + a];
+                }
 
             mid /= (nx * ny);
 
@@ -100,7 +104,9 @@ namespace ice
                   // get mean value by shifting pixelvalues by xAkt
                   for (int a = 0; a < nx; a++)
                     for (int b = 0; b < ny; b++)
-                      mid += (xAkt + Pixels[y + b][x + a]) % maxVal1;
+                      {
+                        mid += (xAkt + Pixels[y + b][x + a]) % maxVal1;
+                      }
 
                   mid /= (nx * ny);
 
@@ -121,7 +127,9 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += (mask[j * nx + i] * ((xBest + Pixels[y + j][x + i]) % maxVal1));
+                {
+                  tmpVal += (mask[j * nx + i] * ((xBest + Pixels[y + j][x + i]) % maxVal1));
+                }
 
             Pixeld[y + ny2][x + nx2] = limited(offset + (((tmpVal / norm) - xBest) % maxVal1), maxVal);
           }
@@ -142,7 +150,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
@@ -166,7 +176,9 @@ namespace ice
             // get mean value
             for (int a = 0; a < nx; a++)
               for (int b = 0; b < ny; b++)
-                mid += tmp.getPixelUnchecked(x + a, y + b);
+                {
+                  mid += tmp.getPixelUnchecked(x + a, y + b);
+                }
 
             mid /= (nx * ny);
 
@@ -189,7 +201,9 @@ namespace ice
                   // get mean value by shifting pixelvalues by xAkt
                   for (int a = 0; a < nx; a++)
                     for (int b = 0; b < ny; b++)
-                      mid += (xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal;
+                      {
+                        mid += (xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal;
+                      }
 
                   mid /= (nx * ny);
 
@@ -210,7 +224,9 @@ namespace ice
 
             for (int i = 0; i < nx; i++)
               for (int j = 0; j < ny; j++)
-                tmpVal += mask[i] * ((xBest + tmp.getPixelUnchecked(x + i, y + j)) % maxVal);
+                {
+                  tmpVal += mask[i] * ((xBest + tmp.getPixelUnchecked(x + i, y + j)) % maxVal);
+                }
 
             dest.setPixelUnchecked(x + nx2, y + ny2, limited(offset + tmpVal / norm, maxVal));
           }
@@ -242,7 +258,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
@@ -269,7 +287,9 @@ namespace ice
             // get mean value
             for (int a = 0; a < nx; a++)
               for (int b = 0; b < ny; b++)
-                mid += Pixels[y + b][x + a];
+                {
+                  mid += Pixels[y + b][x + a];
+                }
 
             mid /= (nx * ny);
 
@@ -292,7 +312,9 @@ namespace ice
                   // get mean value by shifting pixelvalues by xAkt
                   for (int a = 0; a < nx; a++)
                     for (int b = 0; b < ny; b++)
-                      mid += (xAkt + Pixels[y + b][x + a]) % maxVal;
+                      {
+                        mid += (xAkt + Pixels[y + b][x + a]) % maxVal;
+                      }
 
                   mid /= (nx * ny);
 
@@ -313,7 +335,9 @@ namespace ice
 
             for (int i = 0; i < nx; i++)
               for (int j = 0; j < ny; j++)
-                tmpVal += mask[i] * ((xBest + Pixels[y + j][x + i]) % maxVal);
+                {
+                  tmpVal += mask[i] * ((xBest + Pixels[y + j][x + i]) % maxVal);
+                }
 
             Pixeld[y + ny2][x + nx2] = limited(RoundInt(tmpVal), maxVal);
           }
@@ -334,7 +358,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
@@ -358,7 +384,9 @@ namespace ice
             // get mean value
             for (int a = 0; a < nx; a++)
               for (int b = 0; b < ny; b++)
-                mid += tmp.getPixelUnchecked(x + a, y + b);
+                {
+                  mid += tmp.getPixelUnchecked(x + a, y + b);
+                }
 
             mid /= (nx * ny);
 
@@ -381,7 +409,9 @@ namespace ice
                   // get mean value by shifting pixelvalues by xAkt
                   for (int a = 0; a < nx; a++)
                     for (int b = 0; b < ny; b++)
-                      mid += (xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal;
+                      {
+                        mid += (xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal;
+                      }
 
                   mid /= (nx * ny);
 
@@ -402,7 +432,9 @@ namespace ice
 
             for (int i = 0; i < nx; i++)
               for (int j = 0; j < ny; j++)
-                tmpVal += mask[i] * ((xBest + tmp.getPixelUnchecked(x + i, y + j)) % maxVal);
+                {
+                  tmpVal += mask[i] * ((xBest + tmp.getPixelUnchecked(x + i, y + j)) % maxVal);
+                }
 
             dest.setPixelUnchecked(x + nx2, y + ny2, limited(RoundInt(tmpVal), maxVal));
           }

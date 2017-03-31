@@ -79,7 +79,7 @@ namespace ice
     gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
 
     // jetzt addieren
-    if (gmax == gmax1)  /* keine Normierung noetig */
+    if (gmax == gmax1)   /* keine Normierung noetig */
       {
         LOOP { PutVal(pn3, x, y, VAL1 + VAL2); }
       }
@@ -164,7 +164,7 @@ namespace ice
     //
     // jetzt subtrahieren
     //
-    if (gmax == gmax1) // Überlaufbehandlung ist überflüssig
+    if (gmax == gmax1)   // Überlaufbehandlung ist überflüssig
       {
         switch (smode)
           {
@@ -194,13 +194,22 @@ namespace ice
               break;
             case SMD_POSITIVE:
 
-              if (val < 0) val = 0;
+              if (val < 0)
+                {
+                  val = 0;
+                }
 
               break;
             case SMD_SHIFT:
 
-              if (mode == MD_NORMALIZE) val = val + pn2->maxval;
-              else val = val + gnull;
+              if (mode == MD_NORMALIZE)
+                {
+                  val = val + pn2->maxval;
+                }
+              else
+                {
+                  val = val + gnull;
+                }
 
               break;
             }
@@ -215,7 +224,10 @@ namespace ice
               break;
             case MD_MODULO:
 
-              while (val < 0) val += gzahl;
+              while (val < 0)
+                {
+                  val += gzahl;
+                }
 
               val = val % gzahl;
               break;
@@ -260,7 +272,7 @@ namespace ice
     gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Maximum-Bild erzeugen */
-    if (gmax == gmax1)  /* keine Normierung noetig */
+    if (gmax == gmax1)   /* keine Normierung noetig */
       {
         LOOP { PutVal(pn3, x, y, Max(VAL1, VAL2)); }
       }
@@ -313,7 +325,7 @@ namespace ice
     gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Minimum-Bild erzeugen */
-    if (gmax == gmax1)  /* keine Normierung noetig */
+    if (gmax == gmax1)   /* keine Normierung noetig */
       {
         LOOP { PutVal(pn3, x, y, Min(VAL1, VAL2)); }
       }
@@ -393,7 +405,7 @@ namespace ice
     int gmax2 = pn2->maxval;  /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt inverses Bild erzeugen */
-    if (gmax1 == gmax2) /* keine Normierung noetig */
+    if (gmax1 == gmax2)   /* keine Normierung noetig */
       {
         wloop(pn1, x, y)
         {
@@ -440,13 +452,17 @@ namespace ice
     int gmax2 = pn2->maxval; /* maximalwert Zielbild */
 
     if (gmax1 != gmax2)
-      return InvertImg_core_std(pn1, pn2);
+      {
+        return InvertImg_core_std(pn1, pn2);
+      }
 
     int pt1 = pn1->ImageType();
     int pt2 = pn2->ImageType();
 
     if (pt1 != pt2)
-      return InvertImg_core_std(pn1, pn2);
+      {
+        return InvertImg_core_std(pn1, pn2);
+      }
 
     switch (pt1)
       {
@@ -487,8 +503,14 @@ namespace ice
     for (int y = 0; y < src->ysize; y++)
       for (int x = 0; x < src->xsize; x++)
         {
-          if (Pixels[y][x] < (unsigned int)bin) Pixeld[y][x] = 0;
-          else Pixeld[y][x] = val;
+          if (Pixels[y][x] < (unsigned int)bin)
+            {
+              Pixeld[y][x] = 0;
+            }
+          else
+            {
+              Pixeld[y][x] = val;
+            }
         }
 
 #ifdef CONTROLLED_REFRESH
@@ -502,8 +524,14 @@ namespace ice
     for (p.y = 0; p.y < src->ysize; p.y++)
       for (p.x = 0; p.x < src->xsize; p.x++)
         {
-          if (GetValUnchecked(src, p) < bin) PutValUnchecked(dest, p, 0);
-          else PutValUnchecked(dest, p, val);
+          if (GetValUnchecked(src, p) < bin)
+            {
+              PutValUnchecked(dest, p, 0);
+            }
+          else
+            {
+              PutValUnchecked(dest, p, val);
+            }
         }
   }
 
@@ -511,7 +539,10 @@ namespace ice
   {
     RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
-    if (val < 0) val = dest->maxval;
+    if (val < 0)
+      {
+        val = dest->maxval;
+      }
 
     if ((bin < 1) || (bin > src->maxval) || (val < 0) || (val > dest->maxval))
       {
@@ -585,10 +616,18 @@ namespace ice
         {
           int v = (VAL1 * a + b) / 10;
 
-          if (v < 0) PutVal(pn2, x, y, 0);
-          else if (y > gmax) PutVal(pn2, x, y, gmax);
+          if (v < 0)
+            {
+              PutVal(pn2, x, y, 0);
+            }
+          else if (y > gmax)
+            {
+              PutVal(pn2, x, y, gmax);
+            }
           else
-            PutVal(pn2, x, y, v);
+            {
+              PutVal(pn2, x, y, v);
+            }
         }
 
     return OK;
@@ -601,7 +640,9 @@ namespace ice
   {
     if ((img1->xsize != img2->xsize) ||
         (img1->ysize != img2->ysize))
-      return false;
+      {
+        return false;
+      }
 
     ValueType** const Pixel1 = (ValueType** const)(img1->getDataPtr());
     ValueType** const Pixel2 = (ValueType** const)(img2->getDataPtr());
@@ -609,7 +650,9 @@ namespace ice
     for (int y = 0; y < img1->ysize; y++)
       for (int x = 0; x < img1->xsize; x++)
         if (Pixel1[y][x] != Pixel2[y][x])
-          return false;
+          {
+            return false;
+          }
 
     return true;
   }
@@ -618,12 +661,16 @@ namespace ice
   {
     if ((img1->xsize != img2->xsize) ||
         (img1->ysize != img2->ysize))
-      return false;
+      {
+        return false;
+      }
 
     for (int y = 0; y < img1->ysize; y++)
       for (int x = 0; x < img1->xsize; x++)
         if (img1.getPixelUnchecked(x, y) != img2.getPixelUnchecked(x, y))
-          return false;
+          {
+            return false;
+          }
 
     return true;
   }

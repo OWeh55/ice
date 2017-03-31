@@ -42,11 +42,17 @@ namespace ice
   {
     int i;
 
-    for (i = 0; i < n; i++)(*varvec)[i] = x[i];
+    for (i = 0; i < n; i++)
+      {
+        (*varvec)[i] = x[i];
+      }
 
     function(*varvec, *funcresult);
 
-    for (i = 0; i < m; i++) fva[i] = (*funcresult)[i];
+    for (i = 0; i < m; i++)
+      {
+        fva[i] = (*funcresult)[i];
+      }
 
     return 0;
   }
@@ -73,7 +79,10 @@ namespace ice
 
     double* x = new double[optnumber];
 
-    for (i = 0; i < optnumber; i++) x[i] = variable[i];
+    for (i = 0; i < optnumber; i++)
+      {
+        x[i] = variable[i];
+      }
 
     function = fcn;
 

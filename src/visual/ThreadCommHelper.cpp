@@ -40,9 +40,13 @@ namespace ice
     // unlock both mutexes so that the user thread isn't blocked anymore
     // (if it is still running)
     if (CurrMutexUser == 1)
-      MutexA.Unlock();
+      {
+        MutexA.Unlock();
+      }
     else
-      MutexB.Unlock();
+      {
+        MutexB.Unlock();
+      }
   }
 
   void ThreadCommHelper::WaitForMainThread()

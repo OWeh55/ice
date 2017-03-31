@@ -52,7 +52,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 6;
     int gmax2 = dest->maxval * norm;
@@ -104,7 +106,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 6;
     int gmax2 = dest->maxval * norm;
@@ -164,7 +168,9 @@ namespace ice
     // where we wrote before we need to copy the source image if
     // it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 6;
     int gmax2 = dest->maxval * norm;
@@ -216,7 +222,9 @@ namespace ice
     // where we wrote before we need to copy the source image if
     // it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 6;
     int gmax2 = dest->maxval * norm;
@@ -271,7 +279,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 6;
     int gmax2 = dest->maxval * norm;
@@ -405,7 +415,10 @@ namespace ice
         pn1 = NewImg(pn2, true);  /*temporaeres Bild anlegen*/
         has_temp = 1;
       }
-    else has_temp = 0;
+    else
+      {
+        has_temp = 0;
+      }
 
     gmax1 = pn1->maxval * 6;
     gmax2 = pn2->maxval * norm;
@@ -580,10 +593,14 @@ namespace ice
 
           // store eigenvalues in ImageD if given
           if (lambda1.isValid())
-            PutValD(lambda1, x, y, lambda_1);
+            {
+              PutValD(lambda1, x, y, lambda_1);
+            }
 
           if (lambda2.isValid())
-            PutValD(lambda2, x, y, lambda_2);
+            {
+              PutValD(lambda2, x, y, lambda_2);
+            }
 
           // calculate angle
           double direction = eigen.phi();
@@ -663,7 +680,9 @@ namespace ice
           double lambda_1 = gxv * gxv + gyv * gyv;
 
           if (lambda1.isValid())
-            PutValD(lambda1, x, y, lambda_1);
+            {
+              PutValD(lambda1, x, y, lambda_1);
+            }
 
           // Jetzt Winkel  bestimmen !
           double direction = atan2(gyv, gxv);
@@ -701,7 +720,10 @@ namespace ice
         pn1 = NewImg(pn2, true);  /*temporaeres Quellbild anlegen*/
         has_temp = 1;
       }
-    else   has_temp = 0;
+    else
+      {
+        has_temp = 0;
+      }
 
     for (x = 0; x < dx; x++)
       {
@@ -738,20 +760,44 @@ namespace ice
         vy = vy3 - vy1;
 
         if (vx == 0)
-          if (vy < 0) Direction = 6;
-          else Direction = 2;
+          if (vy < 0)
+            {
+              Direction = 6;
+            }
+          else
+            {
+              Direction = 2;
+            }
         else
           {
             val = abs(10000 * vy / vx);
 
-            if (val < 4142) Direction = 0;
-            else if (val < 24142) Direction = 1;
-            else Direction = 2;
+            if (val < 4142)
+              {
+                Direction = 0;
+              }
+            else if (val < 24142)
+              {
+                Direction = 1;
+              }
+            else
+              {
+                Direction = 2;
+              }
 
             if (vx < 0)
-              if (vy < 0) Direction = Direction + 4;
-              else Direction = 4 - Direction;
-            else if ((vy < 0) && (Direction > 0)) Direction = 8 - Direction;
+              if (vy < 0)
+                {
+                  Direction = Direction + 4;
+                }
+              else
+                {
+                  Direction = 4 - Direction;
+                }
+            else if ((vy < 0) && (Direction > 0))
+              {
+                Direction = 8 - Direction;
+              }
           }
 
         PutValUnchecked(pn2, x + xoff, 1, Direction);
@@ -771,20 +817,44 @@ namespace ice
             vy = vy3 - vy1;
 
             if (vx == 0)
-              if (vy < 0) Direction = 6;
-              else Direction = 2;
+              if (vy < 0)
+                {
+                  Direction = 6;
+                }
+              else
+                {
+                  Direction = 2;
+                }
             else
               {
                 val = abs(10000 * vy / vx);
 
-                if (val < 4142) Direction = 0;
-                else if (val < 24142) Direction = 1;
-                else Direction = 2;
+                if (val < 4142)
+                  {
+                    Direction = 0;
+                  }
+                else if (val < 24142)
+                  {
+                    Direction = 1;
+                  }
+                else
+                  {
+                    Direction = 2;
+                  }
 
                 if (vx < 0)
-                  if (vy < 0) Direction = Direction + 4;
-                  else Direction = 4 - Direction;
-                else if ((vy < 0) && (Direction > 0)) Direction = 8 - Direction;
+                  if (vy < 0)
+                    {
+                      Direction = Direction + 4;
+                    }
+                  else
+                    {
+                      Direction = 4 - Direction;
+                    }
+                else if ((vy < 0) && (Direction > 0))
+                  {
+                    Direction = 8 - Direction;
+                  }
               }
 
             PutValUnchecked(pn2, x + xoff, y + yoff, Direction);

@@ -54,18 +54,32 @@ namespace ice
     int i, j;
     double h[3], *p;
 
-    if (p2 == p1)p = h;
-    else p = p2;
+    if (p2 == p1)
+      {
+        p = h;
+      }
+    else
+      {
+        p = p2;
+      }
 
     for (i = 0; i < 3; i++)
       {
         for (j = 0, p[i] = f->frame[i][3]; j < 3; j++)
-          p[i] += p1[j] * f->frame[i][j];
+          {
+            p[i] += p1[j] * f->frame[i][j];
+          }
       }
 
-    if (p == p2) return (p2);
+    if (p == p2)
+      {
+        return (p2);
+      }
 
-    for (i = 0; i < 3; i++) p2[i] = p[i];
+    for (i = 0; i < 3; i++)
+      {
+        p2[i] = p[i];
+      }
 
     return (p2);
   }
@@ -75,17 +89,30 @@ namespace ice
     double vr[3], *v;
     int i, j;
 
-    if (v2 == v1) v = vr;
-    else v = v2;
+    if (v2 == v1)
+      {
+        v = vr;
+      }
+    else
+      {
+        v = v2;
+      }
 
     for (i = 0; i < 3; i++)
       for (j = 0, v[i] = 0; j < 3; j++)
-        v[i] += f->frame[i][j] * v1[j];
+        {
+          v[i] += f->frame[i][j] * v1[j];
+        }
 
-    if (v == v2) return (v2);
+    if (v == v2)
+      {
+        return (v2);
+      }
 
     for (i = 0; i < 3; i++)
-      v2[i] = v[i];
+      {
+        v2[i] = v[i];
+      }
 
     return (v2);
   }
@@ -97,19 +124,31 @@ namespace ice
     Frame fr, *f;
 
     if (f3 == f1 || f3 == f2)
-      f = &fr;
-    else f = f3;
+      {
+        f = &fr;
+      }
+    else
+      {
+        f = f3;
+      }
 
     for (i = 0; i < 4; i++)
       for (j = 0; j < 4; j++)
         for (k = 0, f->frame[i][j] = 0; k < 4; k++)
-          f->frame[i][j] += f1->frame[i][k] * f2->frame[k][j];
+          {
+            f->frame[i][j] += f1->frame[i][k] * f2->frame[k][j];
+          }
 
-    if (f == f3) return (f3);
+    if (f == f3)
+      {
+        return (f3);
+      }
 
     for (i = 0; i < 4; i++)
       for (j = 0; j < 4; j++)
-        f3->frame[i][j] = f->frame[i][j];
+        {
+          f3->frame[i][j] = f->frame[i][j];
+        }
 
     return (f3);
   }
@@ -132,13 +171,17 @@ namespace ice
 
     for (i = 0; i < 4; i++)
       for (j = 0; j < 4; j++)
-        A->data[i][j] = f1->frame[i][j];
+        {
+          A->data[i][j] = f1->frame[i][j];
+        }
 
     InvertMat(A, B);
 
     for (i = 0; i < 4; i++)
       for (j = 0; j < 4; j++)
-        f2->frame[i][j] = B->data[i][j];
+        {
+          f2->frame[i][j] = B->data[i][j];
+        }
 
     FreeMatrix(A);
     FreeMatrix(B);
@@ -152,7 +195,9 @@ namespace ice
 
     for (i = 0; i < 4; i++)
       for (j = 0; j < 4; j++)
-        f2->frame[i][j] = f1->frame[i][j];
+        {
+          f2->frame[i][j] = f1->frame[i][j];
+        }
 
     f2->err = f1->err;
     return (OK);
@@ -172,7 +217,9 @@ namespace ice
     for (i = 0; i < 3; i++)
       {
         for (j = 0; j < 3; j++)
-          frm->frame[i][j] = a[j][i];
+          {
+            frm->frame[i][j] = a[j][i];
+          }
 
         frm->frame[i][3] = cam->c[i];
         frm->frame[3][i] = 0;
@@ -194,20 +241,31 @@ namespace ice
     MulMatrix((double*)cam->a, (double*)f1.frame, 3, 4, 4, (double*)a);
 
     /*Normierung*/
-    if (fabs(a[2][3]) > 1e-5) norm = a[2][3];
+    if (fabs(a[2][3]) > 1e-5)
+      {
+        norm = a[2][3];
+      }
     else
       {
-        for (i = 0, norm = 0; i < 4; i++) norm += a[2][i] * a[2][i];
+        for (i = 0, norm = 0; i < 4; i++)
+          {
+            norm += a[2][i] * a[2][i];
+          }
 
         norm = sqrt(norm);
       }
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 4; j++)
-        cam->a[i][j] = a[i][j] / norm;
+        {
+          cam->a[i][j] = a[i][j] / norm;
+        }
 
     /*Sehstrahlvektoren transformieren*/
-    for (i = 0; i < 3; i++)FTransVec(cam->ac[i], f, cam->ac[i]);
+    for (i = 0; i < 3; i++)
+      {
+        FTransVec(cam->ac[i], f, cam->ac[i]);
+      }
 
     /*Projektionszentrum transformieren*/
     FTransPoint(cam->c, f, cam->c);
@@ -244,7 +302,10 @@ namespace ice
         l = LengthVec(base[2]);
       }
 
-    if ((i == n) && (l < 1e-15)) return (ERROR);
+    if ((i == n) && (l < 1e-15))
+      {
+        return (ERROR);
+      }
 
     NormVec(base[0], base[0]);
     NormVec(base[2], base[2]);
@@ -252,7 +313,10 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       {
-        for (j = 0; j < 4; j++) f->frame[i][j] = base[j][i];
+        for (j = 0; j < 4; j++)
+          {
+            f->frame[i][j] = base[j][i];
+          }
 
         f->frame[3][i] = 0;
       }
@@ -279,7 +343,9 @@ namespace ice
     for (i = 0; i < 4; i++)
       {
         for (j = 0; j < 4; j++)
-          fprintf(stream, "%10.5f  ", f->frame[i][j]);
+          {
+            fprintf(stream, "%10.5f  ", f->frame[i][j]);
+          }
 
         fprintf(stream, "\n");
       }
@@ -430,8 +496,14 @@ namespace ice
       case 0:
         par1[0] = atan2(f->frame[2][1], f->frame[2][2]);
 
-        if (par1[0] > 0) par2[0] = par1[0] - M_PI;
-        else par2[0] = par1[0] + M_PI;
+        if (par1[0] > 0)
+          {
+            par2[0] = par1[0] - M_PI;
+          }
+        else
+          {
+            par2[0] = par1[0] + M_PI;
+          }
 
         sa = sin(par1[0]);
 
@@ -449,15 +521,27 @@ namespace ice
 
         par1[2] = atan2(f->frame[1][0], f->frame[0][0]);
 
-        if (par1[2] > 0) par2[2] = par1[2] - M_PI;
-        else par2[2] = par1[2] + M_PI;
+        if (par1[2] > 0)
+          {
+            par2[2] = par1[2] - M_PI;
+          }
+        else
+          {
+            par2[2] = par1[2] + M_PI;
+          }
 
         break;
       case 1:
         par1[2] = atan2(-f->frame[0][1], f->frame[0][0]);
 
-        if (par1[2] > 0) par2[2] = par1[2] - M_PI;
-        else par2[2] = par1[2] + M_PI;
+        if (par1[2] > 0)
+          {
+            par2[2] = par1[2] - M_PI;
+          }
+        else
+          {
+            par2[2] = par1[2] + M_PI;
+          }
 
         sa = sin(par1[2]);
 
@@ -475,15 +559,27 @@ namespace ice
 
         par1[0] = atan2(-f->frame[1][2], f->frame[2][2]);
 
-        if (par1[0] > 0) par2[0] = par1[0] - M_PI;
-        else par2[0] = par1[0] + M_PI;
+        if (par1[0] > 0)
+          {
+            par2[0] = par1[0] - M_PI;
+          }
+        else
+          {
+            par2[0] = par1[0] + M_PI;
+          }
 
         break;
       case 2:
         par1[2] = atan2(f->frame[2][1], f->frame[2][2]);
 
-        if (par1[2] > 0) par2[2] = par1[2] - M_PI;
-        else par2[2] = par1[2] + M_PI;
+        if (par1[2] > 0)
+          {
+            par2[2] = par1[2] - M_PI;
+          }
+        else
+          {
+            par2[2] = par1[2] + M_PI;
+          }
 
         sa = sin(par1[2]);
 
@@ -501,8 +597,14 @@ namespace ice
 
         par1[0] = atan2(f->frame[1][0], f->frame[0][0]);
 
-        if (par1[0] > 0) par2[0] = par1[0] - M_PI;
-        else par2[0] = par1[0] + M_PI;
+        if (par1[0] > 0)
+          {
+            par2[0] = par1[0] - M_PI;
+          }
+        else
+          {
+            par2[0] = par1[0] + M_PI;
+          }
 
         break;
       case 3:
@@ -519,8 +621,14 @@ namespace ice
           {
             par1[0] = atan2(f->frame[1][2], f->frame[0][2]);
 
-            if (par1[0] > 0) par2[0] = par1[0] - M_PI;
-            else par2[0] = par1[0] + M_PI;
+            if (par1[0] > 0)
+              {
+                par2[0] = par1[0] - M_PI;
+              }
+            else
+              {
+                par2[0] = par1[0] + M_PI;
+              }
 
             sa = sin(par1[0]);
 
@@ -538,8 +646,14 @@ namespace ice
 
             par1[2] = atan2(f->frame[2][1], -f->frame[2][0]);
 
-            if (par1[2] > 0) par2[2] = par1[2] - M_PI;
-            else par2[2] = par1[2] + M_PI;
+            if (par1[2] > 0)
+              {
+                par2[2] = par1[2] - M_PI;
+              }
+            else
+              {
+                par2[2] = par1[2] + M_PI;
+              }
           }
 
         break;

@@ -58,7 +58,10 @@ namespace ice
       }
     while (i != ad2);
 
-    if (ss == 0.0) return 1;
+    if (ss == 0.0)
+      {
+        return 1;
+      }
 
     return OK;
   }
@@ -115,9 +118,15 @@ namespace ice
       {
         h = *yptr * cc - *xptr * ss;
 
-        if (h < lmin) lmin = h; /*minimaler Fusspunkt*/
+        if (h < lmin)
+          {
+            lmin = h;  /*minimaler Fusspunkt*/
+          }
 
-        if (h > lmax) lmax = h;     /*maximaler Fusspunkt*/
+        if (h > lmax)
+          {
+            lmax = h;  /*maximaler Fusspunkt*/
+          }
 
         xptr++;
         yptr++;
@@ -226,8 +235,14 @@ namespace ice
         eta = atan2(pl->yptr[i] - centre[1], pl->xptr[i] - centre[0]);
         eta = fmod(eta, M_PI * 2);
 
-        if (eta < 0) ptr[i - adr1] = eta + M_PI * 2;
-        else ptr[i - adr1] = eta;
+        if (eta < 0)
+          {
+            ptr[i - adr1] = eta + M_PI * 2;
+          }
+        else
+          {
+            ptr[i - adr1] = eta;
+          }
       }
 
     SortVectorRn(ptr, len);
@@ -240,7 +255,10 @@ namespace ice
         eta2 = ptr[(i + len - 1) % len];
         eta = eta2 - eta1;
 
-        if (eta < 0) eta += M_PI * 2;
+        if (eta < 0)
+          {
+            eta += M_PI * 2;
+          }
 
         if ((eta < etamin) && (eta > eps))
           {
@@ -357,8 +375,14 @@ namespace ice
         eta -= phi;
         eta = fmod(eta, M_PI * 2);
 
-        if (eta < 0) ptr[i - adr1] = eta + M_PI * 2;
-        else ptr[i - adr1] = eta;
+        if (eta < 0)
+          {
+            ptr[i - adr1] = eta + M_PI * 2;
+          }
+        else
+          {
+            ptr[i - adr1] = eta;
+          }
       }
 
     code = SortVectorRn(ptr, len);
@@ -371,7 +395,10 @@ namespace ice
         eta2 = ptr[(i + len - 1) % len];
         eta = eta2 - eta1;
 
-        if (eta < 0) eta += M_PI * 2;
+        if (eta < 0)
+          {
+            eta += M_PI * 2;
+          }
 
         if ((eta < etamin) && (eta > eps))
           {
@@ -394,9 +421,18 @@ namespace ice
     ss = sin(phi);
     eta = eta10 - phi;
 
-    if (eta > M_PI * 3 / 2) eta = atan(a / b * tan(eta)) + M_PI * 2;
-    else if (eta > M_PI / 2) eta = atan(a / b * tan(eta)) + M_PI;
-    else eta = atan(a / b * tan(eta));
+    if (eta > M_PI * 3 / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI * 2;
+      }
+    else if (eta > M_PI / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI;
+      }
+    else
+      {
+        eta = atan(a / b * tan(eta));
+      }
 
     x = a * cos(eta);
     y = b * sin(eta);
@@ -404,9 +440,18 @@ namespace ice
     segm->p0[1] = x * ss + y * cc + centre[1];
     eta = eta20 - phi;
 
-    if (eta > M_PI * 3 / 2)eta = atan(a / b * tan(eta)) + M_PI * 2;
-    else if (eta > M_PI / 2)eta = atan(a / b * tan(eta)) + M_PI;
-    else eta = atan(a / b * tan(eta));
+    if (eta > M_PI * 3 / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI * 2;
+      }
+    else if (eta > M_PI / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI;
+      }
+    else
+      {
+        eta = atan(a / b * tan(eta));
+      }
 
     x = a * cos(eta);
     y = b * sin(eta);

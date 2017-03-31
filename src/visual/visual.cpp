@@ -59,7 +59,9 @@ namespace ice
     // if the image is not visualized, do nothing
 
     if (v == NULL)
-      return OK;
+      {
+        return OK;
+      }
 
     if (Mode == ON)
       {
@@ -92,10 +94,14 @@ namespace ice
     // if the image is not visualized, do nothing
 
     if (v == NULL)
-      return OK;
+      {
+        return OK;
+      }
 
     if (Mode == SET)
-      return v->SetCursor(x, y);
+      {
+        return v->SetCursor(x, y);
+      }
 
     // if no valid Mode was specified, return some error code
     Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
@@ -322,7 +328,9 @@ namespace ice
               const std::string& name)
   {
     if ((Mode == OVERLAY) && (!IsImg(Image1)))
-      return Show(Mode, Image2, name);
+      {
+        return Show(Mode, Image2, name);
+      }
 
     if ((!IsImg(Image1)) ||
         (!IsImg(Image2)))
@@ -407,7 +415,9 @@ namespace ice
   {
     //    std::cout << "GetVisual" << std::endl;
     if (!IsImg(img))
-      return NULL;
+      {
+        return NULL;
+      }
     //    std::cout << "GetVisual(isImage!)" << std::endl;
     return wxGetApp().GetImageManager()->GetVisual(img.Img());
   }
@@ -416,7 +426,9 @@ namespace ice
   {
     Visual v = NULL;
     if (!img.isValid())
-      return v;
+      {
+        return v;
+      }
     v = wxGetApp().GetImageManager()->GetVisual(img.redImage().Img());
     return v;
   }

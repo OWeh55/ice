@@ -113,8 +113,14 @@ namespace ice
       for (int x = 0; x < img.xsize; ++x)
         {
           val = img.getPixelUnchecked(x, y);
-          if (max < val) max = val;
-          if (min > val) min = val;
+          if (max < val)
+            {
+              max = val;
+            }
+          if (min > val)
+            {
+              min = val;
+            }
         }
 
     if (min == max)
@@ -162,10 +168,14 @@ namespace ice
       }
 
     if (sign == SIGNED)
-      goff = (inp->maxval + 1) / 2;
+      {
+        goff = (inp->maxval + 1) / 2;
+      }
 
     if (modus == NORMALIZED)
-      factor = 4.0 / (inp->maxval + 1);
+      {
+        factor = 4.0 / (inp->maxval + 1);
+      }
 
     sx = Min(sx, out.xsize);
     sy = Min(sy, out.ysize);
@@ -213,7 +223,9 @@ namespace ice
     ImageD inp(input); // copy to allow modification of limits
 
     if (modus == ADAPTIVE)
-      UpdateLimitImgD(inp);
+      {
+        UpdateLimitImgD(inp);
+      }
 
     if (sign == SIGNED)
       {
@@ -291,8 +303,14 @@ namespace ice
         {
           PixelFloatType v = src.getPixel(x, y);
 
-          if (v != 0.0) v = log10(v);
-          else v = -1e12;
+          if (v != 0.0)
+            {
+              v = log10(v);
+            }
+          else
+            {
+              v = -1e12;
+            }
 
           dst.setPixel(x, y, v);
         }
@@ -305,7 +323,9 @@ namespace ice
   {
     // if x and y are to far outside the image border, we simply return zero
     if (x < -0.5 || y < -0.5)
-      return 0;
+      {
+        return 0;
+      }
 
     // Determine the local neighborhood of point (x, y), that means the 4 pixel positions
     // (xi, yi), (xi + 1, yi), (xi + 1, yi + 1), and (xi, yi + 1), that enclose (x, y)
@@ -319,10 +339,14 @@ namespace ice
     // check
 
     if ((xi >= img.xsize) || (yi >= img.ysize))
-      return 0.0;
+      {
+        return 0.0;
+      }
 
     if ((xi1 == img.xsize) || (yi1 == img.ysize))
-      return GetValD(img, xi, yi); // rechter/unterer Rand
+      {
+        return GetValD(img, xi, yi);  // rechter/unterer Rand
+      }
 
     double dx  = x - (double) xi;
     double dx1 = 1.0 - dx;
@@ -341,7 +365,9 @@ namespace ice
 
     // if x and y are to far outside the image border, we simply return false
     if (x < -0.5 || y < -0.5)
-      return false;
+      {
+        return false;
+      }
 
     // Determine the local neighborhood of point (x, y), that means the 4 pixel positions
     // (xi, yi), (xi + 1, yi), (xi + 1, yi + 1), and (xi, yi + 1), that enclose (x, y)
@@ -353,10 +379,14 @@ namespace ice
     int yi1 = yi + 1;
 
     if ((xi >= img.xsize) || (yi >= img.ysize))
-      return 0.0;
+      {
+        return 0.0;
+      }
 
     if ((xi1 == img.xsize) || (yi1 == img.ysize))
-      return GetValD(img, xi, yi); // rechter/unterer Rand
+      {
+        return GetValD(img, xi, yi);  // rechter/unterer Rand
+      }
 
     double dx  = x - (double) xi;
     double dx1 = 1.0 - dx;

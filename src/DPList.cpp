@@ -101,7 +101,10 @@ namespace ice
         pl->aktlng += BLOCKSIZE;
         int* ptr = (int*)realloc(pl->xptr, pl->aktlng * sizeof(int));
 
-        if (ptr) pl->xptr = ptr;
+        if (ptr)
+          {
+            pl->xptr = ptr;
+          }
         else
           {
             Message(FNAME, M_NO_MEM, NO_MEM);
@@ -110,7 +113,10 @@ namespace ice
 
         ptr = (int*)realloc(pl->yptr, pl->aktlng * sizeof(int));
 
-        if (ptr) pl->yptr = ptr;
+        if (ptr)
+          {
+            pl->yptr = ptr;
+          }
         else
           {
             Message(FNAME, M_NO_MEM, NO_MEM);
@@ -119,7 +125,10 @@ namespace ice
 
         ptr = (int*)realloc(pl->wptr, pl->aktlng * sizeof(int));
 
-        if (ptr) pl->wptr = ptr;
+        if (ptr)
+          {
+            pl->wptr = ptr;
+          }
         else
           {
             Message(FNAME, M_NO_MEM, NO_MEM);

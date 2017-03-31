@@ -158,7 +158,9 @@ namespace ice
     void init()
     {
       for (int i = 0; i < 15; i++)
-        mom[i] = 0.0;
+        {
+          mom[i] = 0.0;
+        }
     }
   };
 }

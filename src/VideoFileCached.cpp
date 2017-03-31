@@ -43,7 +43,9 @@ namespace ice
     try
       {
         if (size < 2)
-          throw 6;
+          {
+            throw 6;
+          }
 
         videofile = new VideoFile(fn);
         int xs, ys, mv, fps;
@@ -61,7 +63,9 @@ namespace ice
 
         // ersten Frame lesen
         if (!videofile->read(vr[0], vg[0], vb[0]))
-          throw 3;
+          {
+            throw 3;
+          }
       }
     catch (int error)
       {
@@ -96,7 +100,10 @@ namespace ice
 
   VideoFileCached::~VideoFileCached()
   {
-    if (videofile) delete videofile;
+    if (videofile)
+      {
+        delete videofile;
+      }
   }
 
   void VideoFileCached::fillbuffer(int frame_nr)
@@ -106,7 +113,9 @@ namespace ice
       {
         // cout << ">" << end_bidx << endl;
         if (!videofile->read(vr[end_bidx], vg[end_bidx], vb[end_bidx]))
-          error = past_eof;
+          {
+            error = past_eof;
+          }
         else
           {
             last_frame++;
@@ -136,9 +145,13 @@ namespace ice
     error = no_error;
 
     if (frame == next)
-      frame = framenr + 1;
+      {
+        frame = framenr + 1;
+      }
     else if (frame == prev)
-      frame = framenr - 1;
+      {
+        frame = framenr - 1;
+      }
 
     if (frame < first_frame)
       {
@@ -149,7 +162,9 @@ namespace ice
     //    cout << "read " << frame << "  " << first_frame << ".." << last_frame << endl;
 
     if (frame > last_frame)
-      fillbuffer(frame);
+      {
+        fillbuffer(frame);
+      }
 
     if (error == no_error)
       {

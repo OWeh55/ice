@@ -50,7 +50,9 @@ namespace ice
     for (int i = 0; i < p && ok; i++)
       {
         if (n % 2 != 0)
-          ok = false;
+          {
+            ok = false;
+          }
 
         n /= 2;
       }
@@ -84,9 +86,13 @@ namespace ice
       }
 
     if (mode == NORMAL)
-      Haar(pic1, pic2, depth);
+      {
+        Haar(pic1, pic2, depth);
+      }
     else
-      HaarInv(pic1, pic2, depth);
+      {
+        HaarInv(pic1, pic2, depth);
+      }
 
     return OK;
   }
@@ -143,7 +149,9 @@ namespace ice
   {
     int hsize = v.size();
     for (int i = 0; i < steps; i++)
-      hsize /= 2;
+      {
+        hsize /= 2;
+      }
 
     for (int i = 0; i < steps; i++)
       {

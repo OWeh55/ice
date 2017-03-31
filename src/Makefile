@@ -59,6 +59,7 @@ LIBDIR := ../lib/$(MACHTYPE)
 ASTYLE := astyle
 # format options for beautifier
 ASTYLE_OPT = --style=gnu --unpad-paren --pad-header --pad-oper --indent-namespaces --indent=spaces=2 --convert-tabs --align-pointer=type --align-reference=type
+#ASTYLE_OPT = --style=1tbs --unpad-paren --pad-header --pad-oper --indent-namespaces --indent=spaces=2 --convert-tabs --align-pointer=type --align-reference=type
 
 ALLDIRS := . $(SUBDIRS) $(VISDIR)
 VPATH := $(SUBDIRS)

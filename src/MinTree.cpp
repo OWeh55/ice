@@ -43,7 +43,7 @@ namespace ice
           ret = true;
         }
 
-    if (ret) // wenn erster Punkt gefunden
+    if (ret)   // wenn erster Punkt gefunden
       {
         // weitere Punkte testen
         for (int k = minidx; k < nPoints; k++)
@@ -113,7 +113,7 @@ namespace ice
                 // i <-> mini ist Kandidat für eine kürzere Verbindung zum Baum
                 // double newDistance = Distance2(pmin, pointList[i]);
                 double newDistance = (pmin - pointList[i]).r2();
-                if (newDistance < edgeLength[i]) // kuerzer ?!
+                if (newDistance < edgeLength[i])   // kuerzer ?!
                   {
                     edgeLength[i] = newDistance;
                     qu[i] = mini;
@@ -178,7 +178,7 @@ namespace ice
                 // i <-> mini ist Kandidat für eine kürzere Verbindung zum Baum
                 // double newDistance = Distance2(pmin, pointList[i]);
                 double newDistance = vd(pmin, pointList[i]);
-                if (newDistance < edgeLength[i]) // kuerzer ?!
+                if (newDistance < edgeLength[i])   // kuerzer ?!
                   {
                     edgeLength[i] = newDistance;
                     qu[i] = mini;
@@ -197,7 +197,7 @@ namespace ice
     for (int i = 0; i < tree.Size(); i++)
       {
         int father = tree.Father(i);
-        if (father != Forest::rootval) // Knoten ist nicht die Wurzel
+        if (father != Forest::rootval)   // Knoten ist nicht die Wurzel
           {
             result.setFather(i, father);
             treelen += sqrt(edgeLength[i]);
@@ -222,7 +222,7 @@ namespace ice
       {
         int father = tree.Father(i);
 
-        if (father != Forest::rootval) // Knoten ist nicht die Wurzel
+        if (father != Forest::rootval)   // Knoten ist nicht die Wurzel
           {
             if (maxlen == 0.0 || edgeLength[i] < maxlen2)
               {
@@ -247,7 +247,7 @@ namespace ice
         int k = 0;
         for (int i = 0; i < nPoints; i++)
           {
-            if (! tree.isRoot(i)) // Knoten ist nicht die Wurzel
+            if (! tree.isRoot(i))   // Knoten ist nicht die Wurzel
               {
                 edgeLengthSorted[k] = edgeLength[i];
                 k++;
@@ -257,7 +257,9 @@ namespace ice
         sort(edgeLengthSorted.begin(), edgeLengthSorted.end());
 
         if (nCluster >= nEdges)
-          nCluster = nEdges - 1;
+          {
+            nCluster = nEdges - 1;
+          }
 
         maxlen = sqrt(edgeLengthSorted[nEdges + 1 - nCluster]);
       }
@@ -314,7 +316,7 @@ namespace ice
                 // i <-> mini ist Kandidat für eine kürzere Verbindung zum Baum
                 double newDistance = distances[mini][i];
 
-                if (newDistance < edgeLength[i]) // kuerzer ?!
+                if (newDistance < edgeLength[i])   // kuerzer ?!
                   {
                     edgeLength[i] = newDistance;
                     qu[i] = mini;
@@ -337,7 +339,9 @@ namespace ice
     vector<Point> pl;
 
     for (int i = 0; i < pointList.rows(); i++)
-      pl.push_back(Point(pointList[i]));
+      {
+        pl.push_back(Point(pointList[i]));
+      }
 
     return computeMinTree(pl, f, maxlen);
   }
@@ -348,7 +352,7 @@ namespace ice
   {
     for (int i = 0; i < f.Size(); i++)
       {
-        if (!f.isRoot(i) && f.getRefCount(i) == 0) // Blatt
+        if (!f.isRoot(i) && f.getRefCount(i) == 0)   // Blatt
           {
             unsigned int next = f.Father(i);
             double len = Distance(points[i], points[next]);
@@ -383,7 +387,9 @@ namespace ice
     vector<Point> pl;
 
     for (int i = 0; i < points.rows(); i++)
-      pl.push_back(Point(points[i]));
+      {
+        pl.push_back(Point(points[i]));
+      }
 
     return cutShortBranches(f, pl, minlen);
   }

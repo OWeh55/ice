@@ -80,36 +80,66 @@ namespace ice
     SubVec(p[2], p[0], v2);
     CrossProdVec(v1, v2, v3);
 
-    if (ScalProdVec(v3, n) > 0) m320 = LengthVec(v3);
-    else m320 = -LengthVec(v3);
+    if (ScalProdVec(v3, n) > 0)
+      {
+        m320 = LengthVec(v3);
+      }
+    else
+      {
+        m320 = -LengthVec(v3);
+      }
 
     SubVec(p[3], p[1], v1);
     SubVec(p[1], p[2], v2);
     CrossProdVec(v1, v2, v3);
 
-    if (ScalProdVec(v3, n) > 0) m312 = LengthVec(v3);
-    else m312 = -LengthVec(v3);
+    if (ScalProdVec(v3, n) > 0)
+      {
+        m312 = LengthVec(v3);
+      }
+    else
+      {
+        m312 = -LengthVec(v3);
+      }
 
     SubVec(p[4], p[1], v1);
     SubVec(p[1], p[0], v2);
     CrossProdVec(v1, v2, v3);
 
-    if (ScalProdVec(v3, n) > 0) m410 = LengthVec(v3);
-    else m410 = -LengthVec(v3);
+    if (ScalProdVec(v3, n) > 0)
+      {
+        m410 = LengthVec(v3);
+      }
+    else
+      {
+        m410 = -LengthVec(v3);
+      }
 
     SubVec(p[4], p[2], v1);
     SubVec(p[2], p[0], v2);
     CrossProdVec(v1, v2, v3);
 
-    if (ScalProdVec(v3, n) > 0) m420 = LengthVec(v3);
-    else m420 = -LengthVec(v3);
+    if (ScalProdVec(v3, n) > 0)
+      {
+        m420 = LengthVec(v3);
+      }
+    else
+      {
+        m420 = -LengthVec(v3);
+      }
 
     SubVec(p[4], p[1], v1);
     SubVec(p[1], p[2], v2);
     CrossProdVec(v1, v2, v3);
 
-    if (ScalProdVec(v3, n) > 0) m412 = LengthVec(v3);
-    else m412 = -LengthVec(v3);
+    if (ScalProdVec(v3, n) > 0)
+      {
+        m412 = LengthVec(v3);
+      }
+    else
+      {
+        m412 = -LengthVec(v3);
+      }
 
     if ((fabs(m310) < EPS) || (fabs(m320) < EPS) || (fabs(m312) < EPS) ||
         (fabs(m410) < EPS) || (fabs(m420) < EPS) || (fabs(m412) < EPS))
@@ -136,7 +166,9 @@ namespace ice
         prod = 1.0;
 
         for (j = 1; j <= p; j++)
-          prod *= (double) i;
+          {
+            prod *= (double) i;
+          }
 
         mask[i + n] = prod;
       }
@@ -177,7 +209,10 @@ namespace ice
           {
             sum = 0;
 
-            for (k = -n; k <= n; k++) sum = sum + GetVal(quelle, j + k, i) * mask[k + n];
+            for (k = -n; k <= n; k++)
+              {
+                sum = sum + GetVal(quelle, j + k, i) * mask[k + n];
+              }
 
             PutValD(pic, j, i, sum);
           }
@@ -191,7 +226,10 @@ namespace ice
           {
             sum = 0;
 
-            for (k = -n; k <= n; k++) sum = sum + GetValD(pic, i, j + k) * mask[k + n];
+            for (k = -n; k <= n; k++)
+              {
+                sum = sum + GetValD(pic, i, j + k) * mask[k + n];
+              }
 
             PutValD(ziel, i, j, sum);
           }

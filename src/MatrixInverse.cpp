@@ -66,10 +66,18 @@ namespace ice
             s = 0;
 
             for (int j = k; j < dim; j++)
-              s = s + fabs(h[i][j]);
+              {
+                s = s + fabs(h[i][j]);
+              }
 
-            if (s != 0) q = fabs(h[i][k]) / s;
-            else q = 0;
+            if (s != 0)
+              {
+                q = fabs(h[i][k]) / s;
+              }
+            else
+              {
+                q = 0;
+              }
 
             if (q > max)
               {
@@ -159,10 +167,18 @@ namespace ice
             s = 0;
 
             for (int j = k; j < dim; j++)
-              s = s + fabs(h[i][j]);
+              {
+                s = s + fabs(h[i][j]);
+              }
 
-            if (s != 0) q = fabs(h[i][k]) / s;
-            else q = 0;
+            if (s != 0)
+              {
+                q = fabs(h[i][k]) / s;
+              }
+            else
+              {
+                q = 0;
+              }
 
             if (q > max)
               {

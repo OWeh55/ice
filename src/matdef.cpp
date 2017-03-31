@@ -99,7 +99,10 @@ namespace ice
             return (nullptr);
           }
 
-        for (dptr = mat->data[0], i = 1; i < rsize; i++) mat->data[i] = dptr += csize;
+        for (dptr = mat->data[0], i = 1; i < rsize; i++)
+          {
+            mat->data[i] = dptr += csize;
+          }
 
         mat->datai = nullptr;
         mat->datac = nullptr;
@@ -123,7 +126,10 @@ namespace ice
             return (nullptr);
           }
 
-        for (iptr = mat->datai[0], i = 1; i < rsize; i++) mat->datai[i] = iptr += csize;
+        for (iptr = mat->datai[0], i = 1; i < rsize; i++)
+          {
+            mat->datai[i] = iptr += csize;
+          }
 
         mat->data = nullptr;
         mat->datac = nullptr;
@@ -147,7 +153,10 @@ namespace ice
             return (nullptr);
           }
 
-        for (cptr = mat->datac[0], i = 1; i < rsize; i++) mat->datac[i] = cptr += csize;
+        for (cptr = mat->datac[0], i = 1; i < rsize; i++)
+          {
+            mat->datac[i] = cptr += csize;
+          }
 
         mat->data = nullptr;
         mat->datai = nullptr;
@@ -169,7 +178,10 @@ namespace ice
 
     while (tmat != nullptr)
       {
-        if (mat == tmat) return (true);
+        if (mat == tmat)
+          {
+            return (true);
+          }
 
         tmat = tmat->next;
       }
@@ -204,13 +216,25 @@ namespace ice
       }
 
     /* Aushaengen aus Kette */
-    if (first_mat == mat) first_mat = mat->next;
+    if (first_mat == mat)
+      {
+        first_mat = mat->next;
+      }
 
-    if (last_mat == mat) last_mat = mat->prev;
+    if (last_mat == mat)
+      {
+        last_mat = mat->prev;
+      }
 
-    if (mat->next != nullptr) mat->next->prev = mat->prev;
+    if (mat->next != nullptr)
+      {
+        mat->next->prev = mat->prev;
+      }
 
-    if (mat->prev != nullptr) mat->prev->next = mat->next;
+    if (mat->prev != nullptr)
+      {
+        mat->prev->next = mat->next;
+      }
 
     free(mat);
     return (OK);
@@ -268,19 +292,28 @@ namespace ice
       case MAT_DOUBLE:
 
         for (i = 0; i < m1->rsize; i++)
-          for (j = 0; j < m1->csize; j++) dmat->data[j][i] = m1->data[i][j];
+          for (j = 0; j < m1->csize; j++)
+            {
+              dmat->data[j][i] = m1->data[i][j];
+            }
 
         break;
       case MAT_INT:
 
         for (i = 0; i < m1->rsize; i++)
-          for (j = 0; j < m1->csize; j++) dmat->datai[j][i] = m1->datai[i][j];
+          for (j = 0; j < m1->csize; j++)
+            {
+              dmat->datai[j][i] = m1->datai[i][j];
+            }
 
         break;
       case MAT_CHAR:
 
         for (i = 0; i < m1->rsize; i++)
-          for (j = 0; j < m1->csize; j++) dmat->datac[j][i] = m1->datac[i][j];
+          for (j = 0; j < m1->csize; j++)
+            {
+              dmat->datac[j][i] = m1->datac[i][j];
+            }
 
         break;
       }
@@ -340,19 +373,28 @@ namespace ice
       case MAT_DOUBLE:
 
         for (i = 0; i < m1->rsize; i++)
-          for (j = 0; j < m1->csize; j++) dmat->data[i][j] = m1->data[i][j];
+          for (j = 0; j < m1->csize; j++)
+            {
+              dmat->data[i][j] = m1->data[i][j];
+            }
 
         break;
       case MAT_INT:
 
         for (i = 0; i < m1->rsize; i++)
-          for (j = 0; j < m1->csize; j++) dmat->datai[i][j] = m1->datai[i][j];
+          for (j = 0; j < m1->csize; j++)
+            {
+              dmat->datai[i][j] = m1->datai[i][j];
+            }
 
         break;
       case MAT_CHAR:
 
         for (i = 0; i < m1->rsize; i++)
-          for (j = 0; j < m1->csize; j++) dmat->datac[i][j] = m1->datac[i][j];
+          for (j = 0; j < m1->csize; j++)
+            {
+              dmat->datac[i][j] = m1->datac[i][j];
+            }
 
         break;
       }
@@ -414,7 +456,9 @@ namespace ice
         for (i = 0; i < m1->rsize; i++)
           for (j = 0; j < m2->csize; j++)
             for (k = 0, m3->data[i][j] = 0; k < m1->csize; k++)
-              m3->data[i][j] += m1->data[i][k] * m2->data[k][j];
+              {
+                m3->data[i][j] += m1->data[i][k] * m2->data[k][j];
+              }
 
         break;
       case MAT_INT:
@@ -422,7 +466,9 @@ namespace ice
         for (i = 0; i < m1->rsize; i++)
           for (j = 0; j < m2->csize; j++)
             for (k = 0, m3->datai[i][j] = 0; k < m1->csize; k++)
-              m3->datai[i][j] += m1->datai[i][k] * m2->datai[k][j];
+              {
+                m3->datai[i][j] += m1->datai[i][k] * m2->datai[k][j];
+              }
 
         break;
       case MAT_CHAR:
@@ -430,7 +476,9 @@ namespace ice
         for (i = 0; i < m1->rsize; i++)
           for (j = 0; j < m2->csize; j++)
             for (k = 0, m3->datac[i][j] = 0; k < m1->csize; k++)
-              m3->datac[i][j] += m1->datac[i][k] * m2->datac[k][j];
+              {
+                m3->datac[i][j] += m1->datac[i][k] * m2->datac[k][j];
+              }
 
         break;
       }
@@ -457,21 +505,27 @@ namespace ice
 
         for (i = 0; i < A->rsize; i++)
           for (j = 0, x[i] = 0; j < A->csize; j++)
-            x[i] += A->data[i][j] * b[j];
+            {
+              x[i] += A->data[i][j] * b[j];
+            }
 
         break;
       case MAT_INT:
 
         for (i = 0; i < A->rsize; i++)
           for (j = 0, x[i] = 0; j < A->csize; j++)
-            x[i] += A->datai[i][j] * b[j];
+            {
+              x[i] += A->datai[i][j] * b[j];
+            }
 
         break;
       case MAT_CHAR:
 
         for (i = 0; i < A->rsize; i++)
           for (j = 0, x[i] = 0; j < A->csize; j++)
-            x[i] += A->datac[i][j] * b[j];
+            {
+              x[i] += A->datac[i][j] * b[j];
+            }
 
         break;
       }

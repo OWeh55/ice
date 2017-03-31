@@ -41,12 +41,18 @@ namespace ice
     int i;
 
     // get parameters from double[] to Vector
-    for (i = 0; i < n; i++)(*varvec)[(*optvec)[i]] = x[i];
+    for (i = 0; i < n; i++)
+      {
+        (*varvec)[(*optvec)[i]] = x[i];
+      }
 
     function(*varvec, *funcresult);
 
     // return distances as double[]
-    for (i = 0; i < m; i++) fva[i] = (*funcresult)[i];
+    for (i = 0; i < m; i++)
+      {
+        fva[i] = (*funcresult)[i];
+      }
 
     return 0;
   }
@@ -85,7 +91,9 @@ namespace ice
     double* x = new double[optnumber];
 
     for (i = 0; i < optnumber; i++)
-      x[i] = variable[optvar[i]];
+      {
+        x[i] = variable[optvar[i]];
+      }
 
     function = fcn;
 
@@ -102,7 +110,10 @@ namespace ice
         info = ERROR; // Rückgabewert vorbereiten
       }
 
-    for (i = 0; i < optnumber; i++) variable[optvar[i]] = x[i];
+    for (i = 0; i < optnumber; i++)
+      {
+        variable[optvar[i]] = x[i];
+      }
 
     delete varvec;
     delete optvec;

@@ -175,13 +175,17 @@ namespace ice
     /*virtual*/ void setPixelClipped(IPoint p, ColorValue rgb) const
     {
       if (inside(p))
-        setPixelLimited(p, rgb);
+        {
+          setPixelLimited(p, rgb);
+        }
     }
 
     /*virtual*/ void setPixelClipped(int x, int y, ColorValue rgb) const
     {
       if (inside(x, y))
-        setPixelLimited(x, y, rgb);
+        {
+          setPixelLimited(x, y, rgb);
+        }
     }
 
     /*virtual*/ int clear() const
@@ -253,39 +257,75 @@ namespace ice
 
     /*virtual*/ bool inside(IPoint p) const
     {
-      if (p.x < 0) return false;
+      if (p.x < 0)
+        {
+          return false;
+        }
 
-      if (p.y < 0) return false;
+      if (p.y < 0)
+        {
+          return false;
+        }
 
-      if (p.x >= xsize) return false;
+      if (p.x >= xsize)
+        {
+          return false;
+        }
 
-      if (p.y >= ysize) return false;
+      if (p.y >= ysize)
+        {
+          return false;
+        }
 
       return true;
     }
 
     /*virtual*/ bool inside(const Point& p) const
     {
-      if (p.x < -0.5) return false;
+      if (p.x < -0.5)
+        {
+          return false;
+        }
 
-      if (p.y < -0.5) return false;
+      if (p.y < -0.5)
+        {
+          return false;
+        }
 
-      if (p.x >= xsize - 0.5) return false;
+      if (p.x >= xsize - 0.5)
+        {
+          return false;
+        }
 
-      if (p.y >= ysize - 0.5) return false;
+      if (p.y >= ysize - 0.5)
+        {
+          return false;
+        }
 
       return true;
     }
 
     /*virtual*/ bool inside(int x, int y) const
     {
-      if (x < 0) return false;
+      if (x < 0)
+        {
+          return false;
+        }
 
-      if (y < 0) return false;
+      if (y < 0)
+        {
+          return false;
+        }
 
-      if (x >= xsize) return false;
+      if (x >= xsize)
+        {
+          return false;
+        }
 
-      if (y >= ysize) return false;
+      if (y >= ysize)
+        {
+          return false;
+        }
 
       return true;
     }

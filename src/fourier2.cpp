@@ -70,8 +70,14 @@ namespace ice
               break;
             case MD_LOG:
 
-              if (p != 0.0) p = log10(p);
-              else p = -1e12;
+              if (p != 0.0)
+                {
+                  p = log10(p);
+                }
+              else
+                {
+                  p = -1e12;
+                }
 
               PutValD(nrm, x, y, p);
               break;
@@ -116,8 +122,14 @@ namespace ice
                 break;
               case MD_LOG:
 
-                if (p != 0.0) p = log10(p);
-                else p = -1e12;
+                if (p != 0.0)
+                  {
+                    p = log10(p);
+                  }
+                else
+                  {
+                    p = -1e12;
+                  }
 
                 break;
               }
@@ -128,7 +140,9 @@ namespace ice
 
     for (int y = 0; y < h.ysize; ++y)
       for (int x = 0; x < h.xsize; ++x)
-        PutValD(nrm, x, y, GetValD(h, x, y));
+        {
+          PutValD(nrm, x, y, GetValD(h, x, y));
+        }
 
     FreeImgD(h);
     return OK;
@@ -176,9 +190,14 @@ namespace ice
         source = NewImgD(xs, ys);
         for (int y = 0; y < ys; ++y)
           for (int x = 0; x < xs; ++x)
-            PutValD(source, x, y, GetValD(im, x, y));
+            {
+              PutValD(source, x, y, GetValD(im, x, y));
+            }
       }
-    else source = im;
+    else
+      {
+        source = im;
+      }
 
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
@@ -194,7 +213,10 @@ namespace ice
           PutValD(p, x, y, dp);
         }
 
-    if (NEED_TEMP) FreeImgD(source);
+    if (NEED_TEMP)
+      {
+        FreeImgD(source);
+      }
 
     return OK;
   }

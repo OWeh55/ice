@@ -98,7 +98,9 @@ namespace ice
         d2 = -d2;
       }
     else
-      pp = -pp;
+      {
+        pp = -pp;
+      }
 
     phi = atan2(d2, d1);
     return;
@@ -134,7 +136,9 @@ namespace ice
     double alpha2 = sec.OrientationAngle();
 
     while (alpha2 < alpha1)
-      alpha2 += 2 * M_PI;
+      {
+        alpha2 += 2 * M_PI;
+      }
 
     return alpha2 - alpha1;
   }
@@ -194,22 +198,34 @@ namespace ice
     // check if inside (of line segment or ray)
     if (type & begin_l)
       {
-        if (my1 < 0.0) return false;
+        if (my1 < 0.0)
+          {
+            return false;
+          }
       }
 
     if (type & end_l)
       {
-        if (my1 > 1.0) return false;
+        if (my1 > 1.0)
+          {
+            return false;
+          }
       }
 
     if (second.type & begin_l)
       {
-        if (my2 < 0.0) return false;
+        if (my2 < 0.0)
+          {
+            return false;
+          }
       }
 
     if (second.type & end_l)
       {
-        if (my2 > 1.0) return false;
+        if (my2 > 1.0)
+          {
+            return false;
+          }
       }
 
     return true;

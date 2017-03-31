@@ -43,14 +43,19 @@ namespace ice
     conturs = cl.conturs;
 
     for (i = 0; i < conturs; i++)
-      data[i] = new Contur(*(cl.data[i]));
+      {
+        data[i] = new Contur(*(cl.data[i]));
+      }
   }
 
   ConturList& ConturList::operator=(const ConturList& cl)
   {
     int i;
 
-    for (i = 0; i < conturs; i++) delete data[i];
+    for (i = 0; i < conturs; i++)
+      {
+        delete data[i];
+      }
 
     free(data);
     data = (Contur**)malloc(cl.datalen * sizeof(Contur*));
@@ -58,7 +63,9 @@ namespace ice
     conturs = cl.conturs;
     {
       for (i = 0; i < conturs; i++)
-        data[i] = new Contur(*(cl.data[i]));
+        {
+          data[i] = new Contur(*(cl.data[i]));
+        }
     }
     return *this;
   }
@@ -98,7 +105,10 @@ namespace ice
 
     delete data[i];
 
-    for (i = i + 1; i < conturs; i++) data[i - 1] = data[i];
+    for (i = i + 1; i < conturs; i++)
+      {
+        data[i - 1] = data[i];
+      }
 
     conturs--;
     return OK;
@@ -107,7 +117,10 @@ namespace ice
 #define FNAME "ConturList::Contur"
   Contur* ConturList::GetContur(int i)
   {
-    if (i == conturs) return NULL; // No more conturs, but no Error
+    if (i == conturs)
+      {
+        return NULL;  // No more conturs, but no Error
+      }
 
     if ((i < 0) || (i > conturs))
       {
@@ -122,7 +135,10 @@ namespace ice
   {
     int i;
 
-    for (i = 0; i < conturs; i++) delete data[i];
+    for (i = 0; i < conturs; i++)
+      {
+        delete data[i];
+      }
 
     free(data);
   }

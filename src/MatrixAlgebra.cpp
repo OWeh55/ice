@@ -47,7 +47,9 @@ namespace ice
     int dimension = mat.cols();
 
     if (dimension != mat.rows())
-      ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, inverse);
+      {
+        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, inverse);
+      }
 
     Matrix l;
     RETURN_IF_FAILED(l = CholeskyDecomposition(mat), inverse);
@@ -60,9 +62,13 @@ namespace ice
         for (int i = 0; i < dimension; i++)
           {
             if (k <= i)
-              h[k][i] = mat[k][i];
+              {
+                h[k][i] = mat[k][i];
+              }
             else
-              h[k][i] = l[k][i];
+              {
+                h[k][i] = l[k][i];
+              }
 
             lt[k][i] = l[i][k];
           }
@@ -114,7 +120,9 @@ namespace ice
     int dimension = mat.cols();
 
     if (mat.rows() != dimension)
-      ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, Matrix());
+      {
+        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, Matrix());
+      }
 
     Matrix res(dimension, dimension);
     res.Set(0.0);
@@ -137,12 +145,16 @@ namespace ice
           if (i == j)
             {
               if (sum <= 0.0)
-                ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+                {
+                  ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+                }
 
               res.at(i).at(i) = sqrt(sum);
             }
           else
-            hilf2.at(j).at(i) = sum / res.at(i).at(i);
+            {
+              hilf2.at(j).at(i) = sum / res.at(i).at(i);
+            }
         }
 
     for (int i = 0; i < dimension; i++)
@@ -163,7 +175,9 @@ namespace ice
     int dimension = mat.cols();
 
     if (dimension != mat.rows())
-      ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, false);
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, false);
+      }
 
     Matrix hilf2(mat);
 
@@ -185,7 +199,10 @@ namespace ice
 
             if (i == j)
               {
-                if (sum <= 0.0) return false;
+                if (sum <= 0.0)
+                  {
+                    return false;
+                  }
 
                 h[i][i] = sqrt(sum);
               }
@@ -206,13 +223,18 @@ namespace ice
     double* Mat;
     int dim = mat.cols();
 
-    if (dim != mat.rows()) return false;
+    if (dim != mat.rows())
+      {
+        return false;
+      }
 
     Mat = new double[dim * dim];
 
     for (j = 0; j < dim; j++)
       for (i = 0; i < dim; i++)
-        Mat[j * dim + i] = mat[j][i];
+        {
+          Mat[j * dim + i] = mat[j][i];
+        }
 
     IF_FAILED(InvertMatrix(Mat, dim, Mat))
     {
@@ -228,9 +250,15 @@ namespace ice
     double max;
     max = 0;
 
-    if (m.rows() == 0) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, -1);
+    if (m.rows() == 0)
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, -1);
+      }
 
-    if ((j1 < 0) || (j1 >= m.cols())) ERR(FNAME, M_WRONG_PARAM, WRONG_PARAM, -1);
+    if ((j1 < 0) || (j1 >= m.cols()))
+      {
+        ERR(FNAME, M_WRONG_PARAM, WRONG_PARAM, -1);
+      }
 
     for (int j = j1; j < m.rows(); j++)
       {
@@ -254,9 +282,15 @@ namespace ice
   {
     int i, j, k;
 
-    if (m.cols() != m.rows()) ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+    if (m.cols() != m.rows())
+      {
+        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+      }
 
-    if (m.rows() == 1) return m[0][0];
+    if (m.rows() == 1)
+      {
+        return m[0][0];
+      }
 
     int dim = m.rows();
     double det = 1.0;
@@ -298,7 +332,10 @@ namespace ice
               }
           }
 
-        if (max == 0) return 0;
+        if (max == 0)
+          {
+            return 0;
+          }
 
         if (p_k[k] != k)
           {
@@ -324,7 +361,10 @@ namespace ice
               }
           }
 
-        for (j = (k + 1); j < dim; j++) h[j][k] = 0;
+        for (j = (k + 1); j < dim; j++)
+          {
+            h[j][k] = 0;
+          }
       }
 
     det = sign;
@@ -340,9 +380,14 @@ namespace ice
   double Determinant(const matrix<double>& m)
   {
     if (m.cols() != m.rows())
-      ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+      {
+        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+      }
 
-    if (m.rows() == 1) return m[0][0];
+    if (m.rows() == 1)
+      {
+        return m[0][0];
+      }
 
     int dim = m.rows();
 
@@ -385,7 +430,10 @@ namespace ice
               }
           }
 
-        if (max == 0) return 0;
+        if (max == 0)
+          {
+            return 0;
+          }
 
         if (p_k[k] != k)
           {
@@ -412,7 +460,9 @@ namespace ice
           }
 
         for (int j = (k + 1); j < dim; j++)
-          h[j][k] = 0;
+          {
+            h[j][k] = 0;
+          }
       }
 
     double det = sign;
@@ -441,7 +491,9 @@ namespace ice
     double det = 1;
 
     for (int k = 0; k < dimension; k++)
-      det = det * l[k][k];
+      {
+        det = det * l[k][k];
+      }
 
     return det * det;
   }
@@ -491,9 +543,15 @@ namespace ice
     int rc;
     Vector res(v);
 
-    if (v.Size() != m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+    if (v.Size() != m.rows())
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+      }
 
-    if (m.cols() > m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+    if (m.cols() > m.rows())
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+      }
 
     // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
     if (m.cols() < m.rows())
@@ -523,9 +581,15 @@ namespace ice
   {
     std::vector<double> res(m.cols());
 
-    if ((int)b.size() != m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+    if ((int)b.size() != m.rows())
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+      }
 
-    if (m.cols() > m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+    if (m.cols() > m.rows())
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+      }
 
     int rc;
 
@@ -538,7 +602,9 @@ namespace ice
           {
             bb[i] = 0;
             for (int k = 0; k < m.rows(); ++k)
-              bb[i] += m[k][i] * b[k];
+              {
+                bb[i] += m[k][i] * b[k];
+              }
           }
         rc = SolveLinearEquation1(a, bb, res);
       }

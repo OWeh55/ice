@@ -119,7 +119,9 @@ namespace ice
     SingularValueDcmp(A, U, S, V);
 
     for (int i = 0; i < S.cols(); i++)
-      S[i][i] = 1.0;
+      {
+        S[i][i] = 1.0;
+      }
 
     return U * S * (!V);
   }
@@ -134,7 +136,9 @@ namespace ice
     int mat_size = 2 * num_points;
 
     if (mat_size < 9)
-      mat_size = 9;
+      {
+        mat_size = 9;
+      }
 
     Matrix A(mat_size, 9);
     int num_eqn = 0;
@@ -168,7 +172,9 @@ namespace ice
     for (; num_eqn < mat_size; num_eqn++)
       {
         for (int i = 0; i < 9; i++)
-          A[num_eqn][i] = 0.0;
+          {
+            A[num_eqn][i] = 0.0;
+          }
       }
 
     // compute SVD
@@ -289,21 +295,29 @@ namespace ice
     Vector h(3);
 
     for (int i = 0; i < 3; i++)
-      h[i] = H[i][0];
+      {
+        h[i] = H[i][0];
+      }
 
     Vector r = A * h;
     double lambda = 1.0 / r.Length();
 
     for (int i = 0; i < 3; i++)
-      ret->R[i][0] = r[i];
+      {
+        ret->R[i][0] = r[i];
+      }
 
     for (int i = 0; i < 3; i++)
-      h[i] = H[i][1];
+      {
+        h[i] = H[i][1];
+      }
 
     r = A * h;
 
     for (int i = 0; i < 3; i++)
-      ret->R[i][1] = r[i];
+      {
+        ret->R[i][1] = r[i];
+      }
 
     // in theory r1 and r2 have the same length... we take the mean anyway
     lambda = (lambda + (1.0 / r.Length())) / 2.0;
@@ -315,7 +329,9 @@ namespace ice
     ret->R = Orthonormalize(ret->R);
 
     for (int i = 0; i < 3; i++)
-      h[i] = H[i][2];
+      {
+        h[i] = H[i][2];
+      }
 
     ret->t = A * h;
 
@@ -356,7 +372,9 @@ namespace ice
             h = sqrt((x - u) * (x - u) + (y - v) * (y - v));
 
             if (h < dist)
-              dist = h;
+              {
+                dist = h;
+              }
           }
 
         sum1 += dist;
@@ -379,7 +397,9 @@ namespace ice
             h = sqrt((x - u) * (x - u) + (y - v) * (y - v));
 
             if (h < dist)
-              dist = h;
+              {
+                dist = h;
+              }
           }
 
         sum2 += dist;
@@ -543,7 +563,10 @@ namespace ice
     // Lokale Kontursuche
     int neighb = (int)(dimmax / 100.0);
 
-    if (neighb % 2 == 0) neighb++;
+    if (neighb % 2 == 0)
+      {
+        neighb++;
+      }
 
     LocalSeg(pic2, mark1, neighb, 30);
 
@@ -563,13 +586,21 @@ namespace ice
                 FeatureContur(c, length, area, form, conv);
 
                 if (area > 0.0)
-                  FillRegion(c, 3, mark1);
+                  {
+                    FillRegion(c, 3, mark1);
+                  }
 
 
                 // wenn Objektgroesse oder Form nicht stimmt wird das Objekt nicht benutzt
-                if (area > ((dimx * dimy) /  100.0)) continue;
+                if (area > ((dimx * dimy) /  100.0))
+                  {
+                    continue;
+                  }
 
-                if (area < ((dimx * dimy) / 8000.0)) continue;
+                if (area < ((dimx * dimy) / 8000.0))
+                  {
+                    continue;
+                  }
 
                 /*
                   CopyImg(mark1,debug_mark);
@@ -578,7 +609,10 @@ namespace ice
                   form, conv);
                   getchar();
                 */
-                if (form > 2.9) continue;
+                if (form > 2.9)
+                  {
+                    continue;
+                  }
 
                 Moments mom(c);
                 Matrix m = ReducePolygon(c, 4);
@@ -600,11 +634,20 @@ namespace ice
                 double l6 = (p2 - p4).Length();
 
                 // wenn Objektgroesse oder Form nicht stimmt wird das Objekt nicht benutzt
-                if (fabs(l1 - l3) > ((l1 + l3) * 0.2)) continue;
+                if (fabs(l1 - l3) > ((l1 + l3) * 0.2))
+                  {
+                    continue;
+                  }
 
-                if (fabs(l2 - l4) > ((l2 + l4) * 0.2)) continue;
+                if (fabs(l2 - l4) > ((l2 + l4) * 0.2))
+                  {
+                    continue;
+                  }
 
-                if (fabs(l5 - l6) > ((l5 + l6) * 0.7)) continue;
+                if (fabs(l5 - l6) > ((l5 + l6) * 0.7))
+                  {
+                    continue;
+                  }
 
                 Vector intersection;
 
@@ -651,7 +694,9 @@ namespace ice
                     distance = Distance(h_matrix[i][0], h_matrix[i][1], h_matrix[j][0], h_matrix[j][1]);
 
                     if (distance < matrix_of_min_distance[i])
-                      matrix_of_min_distance[i] = distance;
+                      {
+                        matrix_of_min_distance[i] = distance;
+                      }
                   }
               }
           }
@@ -659,7 +704,9 @@ namespace ice
         distance = 0.0;
 
         for (i = 0; i < number_of_found_objects; i++)
-          sort_matrix_of_min_distance[i] = matrix_of_min_distance[i];
+          {
+            sort_matrix_of_min_distance[i] = matrix_of_min_distance[i];
+          }
 
         sort(sort_matrix_of_min_distance,
              sort_matrix_of_min_distance + number_of_found_objects);
@@ -704,10 +751,14 @@ namespace ice
         }
 
       if (IsImg(debug_image))
-        CopyImg(pic1, debug_image);
+        {
+          CopyImg(pic1, debug_image);
+        }
 
       if (IsImg(debug_mark))
-        CopyImg(mark1, debug_mark);
+        {
+          CopyImg(mark1, debug_mark);
+        }
 
       printf("Anzahl gefundener Objekte: %d\n", number_of_found_objects);
       printf("die gelben Punkte markieren den Mittelpunkt der gefundenen Objekte\n");
@@ -715,10 +766,14 @@ namespace ice
       getchar();
 
       if (IsImg(debug_image))
-        ClearImg(debug_image);
+        {
+          ClearImg(debug_image);
+        }
 
       if (IsImg(debug_mark))
-        ClearImg(debug_mark);
+        {
+          ClearImg(debug_mark);
+        }
     }
 #endif
 
@@ -801,7 +856,9 @@ namespace ice
     Vector gewichte(M_MIN);
 
     for (i = 0; i < M_MIN; i++)
-      gewichte[i] = 1.0;
+      {
+        gewichte[i] = 1.0;
+      }
 
     double min_distance, phi_min;
 
@@ -819,7 +876,9 @@ namespace ice
         // Abstandsmatrix bestimmen
         for (i = 0; i < M; i++)
           for (j = 0; j < M; j++)
-            Abstand_2[i][j] = 0.0;
+            {
+              Abstand_2[i][j] = 0.0;
+            }
 
         for (i = 0; i < number_of_searched_objects; i++)
           for (j = 0; j < number_of_found_objects; j++)
@@ -841,10 +900,16 @@ namespace ice
             j = reference_pairs[k][1];
 
             if (number_of_searched_objects < number_of_found_objects)
-              if (i >= M_MIN) continue;
+              if (i >= M_MIN)
+                {
+                  continue;
+                }
 
             if (number_of_searched_objects > number_of_found_objects)
-              if (j >= M_MIN) continue;
+              if (j >= M_MIN)
+                {
+                  continue;
+                }
 
             x1 = int(m3[l][0] = m1_rot[i][0]);
             y1 = int(m3[l][1] = m1_rot[i][1]);
@@ -876,7 +941,9 @@ namespace ice
     // Abstandsmatrix bestimmen
     for (i = 0; i < M; i++)
       for (j = 0; j < M; j++)
-        Abstand_2[i][j] = 0.0;
+        {
+          Abstand_2[i][j] = 0.0;
+        }
 
     for (i = 0; i < number_of_searched_objects; i++)
       for (j = 0; j < number_of_found_objects; j++)
@@ -1071,14 +1138,18 @@ namespace ice
 #ifdef selfcalib_debug
         {
           if (IsImg(debug_image))
-            CopyImg(image, debug_image);
+            {
+              CopyImg(image, debug_image);
+            }
 
           printf("Entzeichnetes Bild\n");
           printf("weiter mit <Enter> ...\n");
           getchar();
 
           if (IsImg(debug_image))
-            ClearImg(debug_image);
+            {
+              ClearImg(debug_image);
+            }
         }
 #endif
 
@@ -1184,7 +1255,9 @@ namespace ice
                      fabs(image1_coords[k][0]) < fabs(image2_coords[k][0]) * 1.01) &&
                     (fabs(image1_coords[k][1]) > fabs(image2_coords[k][1]) * 0.99 &&
                      fabs(image1_coords[k][1]) < fabs(image2_coords[k][1]) * 1.01))
-                  anzahl_gleicher_werte++;
+                  {
+                    anzahl_gleicher_werte++;
+                  }
 
                 //printf("anz: %d   i: %d   j: %d   k: %d    ", anzahl_gleicher_werte, i, j, k);
                 //printf("x: %f   x: %f   y: %f   y: %f\n", image1_coords[k][0], image2_coords[k][0], image1_coords[k][1], image2_coords[k][1]);
@@ -1508,7 +1581,9 @@ namespace ice
     vector<Camera> cv(imagepoints.size());
 
     for (unsigned int i = 0; i < imagepoints.size(); i++)
-      cv[i] = c;
+      {
+        cv[i] = c;
+      }
 
     int number_of_images = imagepoints.size();
     vector<Image> images(number_of_images);
@@ -1630,7 +1705,9 @@ namespace ice
     vector<Camera> cv(H.size());
 
     for (unsigned int i = 0; i < H.size(); i++)
-      cv[i] = c;
+      {
+        cv[i] = c;
+      }
 
     int number_of_images = H.size();
     int actual_image_number = 0;
@@ -1809,7 +1886,9 @@ namespace ice
     vector<Camera> cv(images.size());
 
     for (unsigned int i = 0; i < images.size(); i++)
-      cv[i] = c;
+      {
+        cv[i] = c;
+      }
 
     int number_of_images = images.size();
     int actual_image_number = 0;
@@ -1937,7 +2016,9 @@ namespace ice
         c.SetStart((int)pl[3][0], (int)pl[3][1]);
 
         for (int j = 0; j < 4; j++)
-          c.Add((int)pl[j][0], (int)pl[j][1]);
+          {
+            c.Add((int)pl[j][0], (int)pl[j][1]);
+          }
 
         FillRegion(c, 255, img);
       }

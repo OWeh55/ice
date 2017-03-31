@@ -57,7 +57,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp = NewImg(dest, true);
+      {
+        tmp = NewImg(dest, true);
+      }
 
     int gmax1 = src->maxval * 9;
     int gmax2 = dest->maxval;
@@ -119,7 +121,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp = NewImg(dest, true);
+      {
+        tmp = NewImg(dest, true);
+      }
 
     int gmax1 = src->maxval * 9;
     int gmax2 = dest->maxval;
@@ -213,7 +217,7 @@ namespace ice
     Image tmp = NewImg(dx - sx + 1, dy, sx * pn1->maxval);
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int y1 = y;
         int x1 = 0, x2 = 0;
@@ -238,12 +242,14 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
 
     int ct = sx * sy;
     int adjustment = ct / 2; // adjustment for rounding
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0;
         int yt = 0;
@@ -280,7 +286,9 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
 
     FreeImg(tmp);
   }
@@ -301,10 +309,12 @@ namespace ice
     int** tmp = new int* [hx];
 
     for (int i = 0; i < hx; i++)
-      tmp[i] = new int[dy];
+      {
+        tmp[i] = new int[dy];
+      }
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int x1 = 0, x2 = 0;
         int gsum = 0;
@@ -331,9 +341,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0, yt = 0;
         int gsum = 0;
@@ -370,14 +382,18 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
 #ifdef CONTROLLED_REFRESH
     pn2->needRefresh();
 #endif
 
     for (int i = 0; i < hx; i++)
-      delete [] tmp[i];
+      {
+        delete [] tmp[i];
+      }
 
     delete [] tmp;
   }
@@ -399,7 +415,9 @@ namespace ice
     int typ2 = pn2->ImageType();
 
     if (typ1 != typ2)
-      smear_core_std(pn1, pn2, sx, sy);
+      {
+        smear_core_std(pn1, pn2, sx, sy);
+      }
     else
       {
         switch (typ1)
@@ -446,7 +464,7 @@ namespace ice
     Image tmp = NewImg(dx - sx + 1, dy, sx * pn1->maxval);
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int y1 = y;
         int x1 = 0, x2 = 0;
@@ -471,9 +489,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0;
         int yt = 0;
@@ -511,7 +531,9 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
 
     FreeImg(tmp);
   }
@@ -532,10 +554,13 @@ namespace ice
     int hx = dx - sx + 1;
     int** tmp = new int* [hx];
 
-    for (int i = 0; i < hx; i++) tmp[i] = new int[dy];
+    for (int i = 0; i < hx; i++)
+      {
+        tmp[i] = new int[dy];
+      }
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int x1 = 0, x2 = 0;
         int gsum = 0;
@@ -559,9 +584,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0, yt = 0;
         int gsum = 0;
@@ -598,14 +625,18 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
 #ifdef CONTROLLED_REFRESH
     pn2->needRefresh();
 #endif
 
     for (int i = 0; i < hx; i++)
-      delete [] tmp[i];
+      {
+        delete [] tmp[i];
+      }
 
     delete [] tmp;
   }
@@ -726,13 +757,25 @@ namespace ice
       int xo = x - boundary_x;
       int yo = y - boundary_y;
 
-      if (xo < 0) xo = 0;
+      if (xo < 0)
+        {
+          xo = 0;
+        }
 
-      if (yo < 0) yo = 0;
+      if (yo < 0)
+        {
+          yo = 0;
+        }
 
-      if (xo >= dx) xo = dx - 1;
+      if (xo >= dx)
+        {
+          xo = dx - 1;
+        }
 
-      if (yo >= dy) yo = dy - 1;
+      if (yo >= dy)
+        {
+          yo = dy - 1;
+        }
 
       PutValUnchecked(imgs_wide, x, y,
                       GetValUnchecked(imgs, xo, yo));
@@ -812,12 +855,16 @@ namespace ice
                   v    = (diff * (box1_s + imgs->maxval)) / (diff + box1_s);
 
                   if (v > current_val)
-                    PutValUnchecked(imgd, x, y, v);
+                    {
+                      PutValUnchecked(imgd, x, y, v);
+                    }
                 }
               else
                 {
                   if (diff > current_val)
-                    PutValUnchecked(imgd, x, y, diff);
+                    {
+                      PutValUnchecked(imgd, x, y, diff);
+                    }
                 }
             }
         }
@@ -835,13 +882,17 @@ namespace ice
     double sigma2 = 2 * sigma * sigma;
 
     for (int i = 0; i <= half; i++)
-      gf[0][half - i] = gf[0][half + i] = exp(-i * i / sigma2);
+      {
+        gf[0][half - i] = gf[0][half + i] = exp(-i * i / sigma2);
+      }
 
     // Gausfunktion normieren auf 1.0
     double summe = 0.0;
 
     for (int i = 0; i < size; i++)
-      summe += gf[0][i];
+      {
+        summe += gf[0][i];
+      }
 
     for (int i = 0; i < size; i++)
       {
@@ -954,7 +1005,9 @@ namespace ice
             f[y][x] = c;
 
             if (c > 0)
-              sump += c;
+              {
+                sump += c;
+              }
           }
       }
 
@@ -977,7 +1030,9 @@ namespace ice
       }
 
     if (size == 0)
-      size = (int)(sigma * 5) | 1;
+      {
+        size = (int)(sigma * 5) | 1;
+      }
 
     Matrix fc(size, size);
     mkLoG(fc, sigma);

@@ -32,7 +32,9 @@ namespace ice
     ReturnErrorIfFailed(source.match(dest));
 
     for (int z = 0; z < source.zsize; z++)
-      BinImg(source[z], dest[z], threshold, value);
+      {
+        BinImg(source[z], dest[z], threshold, value);
+      }
     return OK;
   }
 
@@ -40,7 +42,9 @@ namespace ice
   int BinImg(const Image3d<T>& image, typename T::ValueType threshold = 1)
   {
     for (int z = 0; z < image.zsize; z++)
-      BinImg(image[z], threshold);
+      {
+        BinImg(image[z], threshold);
+      }
     return OK;
   }
 #undef FNAME
@@ -51,14 +55,18 @@ namespace ice
     ReturnErrorIfFailed(source.match(dest));
 
     for (int z = 0; z < source.zsize; z++)
-      InvertImg(source[z], dest[z]);
+      {
+        InvertImg(source[z], dest[z]);
+      }
     return OK;
   }
   template<typename T>
   int InvertImg(const Image3d<T>& image)
   {
     for (int z = 0; z < image.zsize; z++)
-      InvertImg(image[z]);
+      {
+        InvertImg(image[z]);
+      }
     return OK;
   }
 #undef FNAME

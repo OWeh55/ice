@@ -133,7 +133,9 @@ namespace ice
 
     for (int i = 1; i < 4; i++)
       for (int j = 0; j < i; j++)
-        cov[i][j] = cov[j][i];
+        {
+          cov[i][j] = cov[j][i];
+        }
 
     Vector eval;
     Matrix evec;
@@ -161,7 +163,9 @@ namespace ice
     std::vector<double> weight(pl.size());
 
     for (unsigned int i = 0; i < pl.size(); i++)
-      weight[i] = 1.0;
+      {
+        weight[i] = 1.0;
+      }
 
     return FitCircle(pl, weight);
   }
@@ -191,7 +195,9 @@ namespace ice
         step--;
 
         if (step >= 0)
-          mse = new_weights(pl, weight, res);
+          {
+            mse = new_weights(pl, weight, res);
+          }
       }
 
     return res;

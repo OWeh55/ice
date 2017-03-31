@@ -157,10 +157,14 @@ namespace ice
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 12; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 12; i < n; ++i)
-      c[i] = -gew[i - 12];
+      {
+        c[i] = -gew[i - 12];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -184,10 +188,14 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 13; ++i)
-      ka[i] = i * (N + 1);
+      {
+        ka[i] = i * (N + 1);
+      }
 
     for (i = 13; i < 13 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
 
     // Speziell: Füllen von ia
@@ -229,7 +237,9 @@ namespace ice
     // Speziell: Füllen von a
 
     for (i = 0; i < NN - 1; ++i)
-      a[i] = pl1->xptr[i];
+      {
+        a[i] = pl1->xptr[i];
+      }
 
     a[NN - 1] = 1.0;
     k = 0;
@@ -261,10 +271,14 @@ namespace ice
     a[4 * NN - 1] = 1.0;
 
     for (i = 4 * NN; i < 5 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 5 * NN; i < 6 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[6 * NN - 1] = 1.0;
 
@@ -306,10 +320,14 @@ namespace ice
     a[10 * NN - 1] = 1.0;
 
     for (i = 10 * NN; i < 11 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 11 * NN; i < 12 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[12 * NN - 1] = 1.0;
 
@@ -330,34 +348,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < (12 * NN + 4 * N); ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();
@@ -496,10 +524,14 @@ namespace ice
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 12; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 12; i < n; ++i)
-      c[i] = -gew[i - 12];
+      {
+        c[i] = -gew[i - 12];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -523,10 +555,14 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 13; ++i)
-      ka[i] = i * (N + 1);
+      {
+        ka[i] = i * (N + 1);
+      }
 
     for (i = 13; i < 13 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
 
     // Speziell: Füllen von ia
@@ -568,7 +604,9 @@ namespace ice
     // Speziell: Füllen von a
 
     for (i = 0; i < NN - 1; ++i)
-      a[i] = 0.0;
+      {
+        a[i] = 0.0;
+      }
 
     a[NN - 1] = 1.0;
     k = 0;
@@ -599,10 +637,14 @@ namespace ice
     a[4 * NN - 1] = 1.0;
 
     for (i = 4 * NN; i < 5 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 5 * NN; i < 6 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[6 * NN - 1] = 1.0;
 
@@ -644,10 +686,14 @@ namespace ice
     a[10 * NN - 1] = 1.0;
 
     for (i = 10 * NN; i < 11 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 11 * NN; i < 12 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[12 * NN - 1] = 1.0;
 
@@ -668,34 +714,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < (12 * NN + 4 * N); ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();
@@ -833,10 +889,14 @@ namespace ice
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 8; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 8; i < n; ++i)
-      c[i] = -gew[i - 8];
+      {
+        c[i] = -gew[i - 8];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -860,13 +920,19 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 5; ++i)
-      ka[i] = i * (2 * N + 1);
+      {
+        ka[i] = i * (2 * N + 1);
+      }
 
     for (i = 5; i < 9; ++i)
-      ka[i] = ka[i - 1] + NN;
+      {
+        ka[i] = ka[i - 1] + NN;
+      }
 
     for (i = 9; i < 9 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // **********************
 
@@ -968,18 +1034,26 @@ namespace ice
     l = 4 * N2_1;
 
     for (i = l; i < l + NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = l + NN; i < l + 2 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[l + 2 * NN - 1] = 1.0;
 
     for (i = l + 2 * NN; i < l + 3 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = l + 3 * NN; i < l + 4 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[l + 4 * NN - 1] = 1.0;
 
@@ -999,34 +1073,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < nz ; ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();
@@ -1163,10 +1247,14 @@ namespace ice
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 16; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 16; i < n; ++i)
-      c[i] = -gew[i - 16];
+      {
+        c[i] = -gew[i - 16];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -1190,13 +1278,19 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 13; ++i)
-      ka[i] = i * (N + 1);
+      {
+        ka[i] = i * (N + 1);
+      }
 
     for (i = 13; i < 17; ++i)
-      ka[i] = ka[i - 1] + N2_1;
+      {
+        ka[i] = ka[i - 1] + N2_1;
+      }
 
     for (i = 17; i < 17 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
 
     // Speziell: Füllen von ia
@@ -1254,7 +1348,9 @@ namespace ice
     // Speziell: Füllen von a *****************************
 
     for (i = 0; i < NN - 1; ++i)
-      a[i] = pl1->xptr[i];
+      {
+        a[i] = pl1->xptr[i];
+      }
 
     a[NN - 1] = 1.0;
     k = 0;
@@ -1286,10 +1382,14 @@ namespace ice
     a[4 * NN - 1] = 1.0;
 
     for (i = 4 * NN; i < 5 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 5 * NN; i < 6 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[6 * NN - 1] = 1.0;
 
@@ -1331,10 +1431,14 @@ namespace ice
     a[10 * NN - 1] = 1.0;
 
     for (i = 10 * NN; i < 11 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 11 * NN; i < 12 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[12 * NN - 1] = 1.0;
     l = 12 * NN;
@@ -1400,34 +1504,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < (nz); ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();

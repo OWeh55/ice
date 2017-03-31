@@ -44,7 +44,10 @@ namespace ice
   {
     int r;
 
-    do r = ioctl(fd, request, arg);
+    do
+      {
+        r = ioctl(fd, request, arg);
+      }
     while (-1 == r && EINTR == errno);
 
     return r;
@@ -120,9 +123,13 @@ namespace ice
 
       case IO_METHOD_AUTO:
         if (cap.capabilities & V4L2_CAP_STREAMING)
-          io = IO_METHOD_MMAP;
+          {
+            io = IO_METHOD_MMAP;
+          }
         else if (cap.capabilities & V4L2_CAP_READWRITE)
-          io = IO_METHOD_READ;
+          {
+            io = IO_METHOD_READ;
+          }
         else
           {
             std::cerr << devName << " no i/o method found" << std::endl;
@@ -260,7 +267,9 @@ namespace ice
   bool V4L2Device::setMode(Mode mode)
   {
     if (state == streaming)
-      return false;
+      {
+        return false;
+      }
 
     free_buffers(); // remove previously set up buffers
 
@@ -300,7 +309,9 @@ namespace ice
     fmt.fmt.pix.pixelformat = mode.fmt;
 
     if (-1 == xioctl(fd, VIDIOC_S_FMT, &fmt))
-      errno_exit("VIDIOC_S_FMT");
+      {
+        errno_exit("VIDIOC_S_FMT");
+      }
 
     if (mode.fmt != V4L2_PIX_FMT_YUYV &&
         mode.fmt != V4L2_PIX_FMT_RGB24)
@@ -323,7 +334,9 @@ namespace ice
     streampara.parm.capture.timeperframe = mode.framerate;
 
     if (xioctl(fd, VIDIOC_S_PARM , &streampara) != 0)
-      errno_exit("VIDIOC_S_PARM");
+      {
+        errno_exit("VIDIOC_S_PARM");
+      }
 
     currentMode = mode;
 
@@ -363,18 +376,24 @@ namespace ice
     for (unsigned int i = 0; i < modes.size(); ++i)
       {
         if (modes[i].width >= width && modes[i].height >= height)
-          possibleModes.push_back(modes[i]);
+          {
+            possibleModes.push_back(modes[i]);
+          }
       }
 
     if (possibleModes.empty())
-      return false;
+      {
+        return false;
+      }
 
     int minsize = possibleModes[0].width * possibleModes[0].height;
     for (unsigned int i = 1; i < possibleModes.size(); ++i)
       {
         int isize = possibleModes[i].width * possibleModes[i].height;
         if (isize < minsize)
-          minsize = isize;
+          {
+            minsize = isize;
+          }
       }
 
     std::vector<Mode> bestModes;
@@ -382,7 +401,9 @@ namespace ice
       {
         int isize = possibleModes[i].width * possibleModes[i].height;
         if (isize == minsize)
-          bestModes.push_back(possibleModes[i]);
+          {
+            bestModes.push_back(possibleModes[i]);
+          }
       }
 
 
@@ -405,7 +426,9 @@ namespace ice
   {
     // destructor of buffer destroys buffer
     if (-1 == close(fd))
-      errno_exit("close");
+      {
+        errno_exit("close");
+      }
   }
 
   int V4L2Device::getFd() const
@@ -415,8 +438,14 @@ namespace ice
 
   /*static*/ int V4L2Device::clamp8(int x)
   {
-    if (x < 0) return 0;
-    if (x > 255) return 255;
+    if (x < 0)
+      {
+        return 0;
+      }
+    if (x > 255)
+      {
+        return 255;
+      }
     return x;
     //    return (x < 0) ? 0 : ((x > 255) ? 255 : x);
   }
@@ -486,7 +515,9 @@ namespace ice
                 }
           }
         else
-          std::cerr << "process_image: pixel format not supported" << std::endl;
+          {
+            std::cerr << "process_image: pixel format not supported" << std::endl;
+          }
       }
   }
 
@@ -519,7 +550,7 @@ namespace ice
     buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     buf.memory = V4L2_MEMORY_MMAP;
 
-    if (-1 == xioctl(fd, VIDIOC_DQBUF, &buf)) // get filled buffer from driver
+    if (-1 == xioctl(fd, VIDIOC_DQBUF, &buf))   // get filled buffer from driver
       {
         switch (errno)
           {
@@ -539,8 +570,10 @@ namespace ice
 
     process_image(buffers[buf.index].getStart(), buffer);
 
-    if (-1 == xioctl(fd, VIDIOC_QBUF, &buf)) // enqueue buffer again
-      errno_exit("VIDIOC_QBUF");
+    if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))   // enqueue buffer again
+      {
+        errno_exit("VIDIOC_QBUF");
+      }
     return 1;
   }
 
@@ -571,14 +604,18 @@ namespace ice
     for (i = 0; i < buffers.size(); ++i)
       if (buf.m.userptr == (unsigned long) buffers[i].getStart()
           && buf.length == buffers[i].getLength())
-        break;
+        {
+          break;
+        }
 
     assert(i < buffers.size());
 
     process_image((void*) buf.m.userptr, buffer);
 
     if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
-      errno_exit("VIDIOC_QBUF");
+      {
+        errno_exit("VIDIOC_QBUF");
+      }
     return 1;
   }
 
@@ -611,7 +648,7 @@ namespace ice
         return;
       }
     bool frame_read = false;
-    while (!frame_read) // select() loop
+    while (!frame_read)   // select() loop
       {
         fd_set fds;
         struct timeval tv;
@@ -627,7 +664,9 @@ namespace ice
         r = ::select(fd + 1, &fds, NULL, NULL, &tv);
 
         if ((r == -1) && (EINTR != errno))
-          errno_exit("select");
+          {
+            errno_exit("select");
+          }
 
         if (r == 0)
           {
@@ -772,7 +811,9 @@ namespace ice
 
     process_image(buffers[buf.index].getStart(), imgr, imgg, imgb);
     if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
-      errno_exit("VIDIOC_QBUF");
+      {
+        errno_exit("VIDIOC_QBUF");
+      }
     return 1;
   }
 
@@ -788,7 +829,9 @@ namespace ice
     while (-1 != xioctl(fd, VIDIOC_DQBUF, &buf))
       {
         if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
-          errno_exit("VIDIOC_QBUF");
+          {
+            errno_exit("VIDIOC_QBUF");
+          }
       }
     return 1;
   }
@@ -822,14 +865,18 @@ namespace ice
     for (i = 0; i < buffers.size(); ++i)
       if (buf.m.userptr == (unsigned long) buffers[i].getStart()
           && buf.length == buffers[i].getLength())
-        break;
+        {
+          break;
+        }
 
     assert(i < buffers.size());
 
     process_image((void*) buf.m.userptr, imgr, imgg, imgb);
 
     if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
-      errno_exit("VIDIOC_QBUF");
+      {
+        errno_exit("VIDIOC_QBUF");
+      }
     return 1;
   }
 
@@ -844,7 +891,9 @@ namespace ice
     if (-1 == xioctl(fd, VIDIOC_DQBUF, &buf))
       {
         if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
-          errno_exit("VIDIOC_QBUF");
+          {
+            errno_exit("VIDIOC_QBUF");
+          }
       }
     return 1;
   }
@@ -897,7 +946,7 @@ namespace ice
         return;
       }
     bool frame_read = false;
-    while (!frame_read) // select loop
+    while (!frame_read)   // select loop
       {
         fd_set fds;
         struct timeval tv;
@@ -913,7 +962,9 @@ namespace ice
         r = ::select(fd + 1, &fds, nullptr, nullptr, &tv);
 
         if ((r == -1) && (EINTR != errno))
-          errno_exit("select");
+          {
+            errno_exit("select");
+          }
 
         if (r == 0)
           {
@@ -939,7 +990,9 @@ namespace ice
       case IO_METHOD_USERPTR:
         type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         if (-1 == xioctl(fd, VIDIOC_STREAMOFF, &type))
-          errno_exit("VIDIOC_STREAMOFF");
+          {
+            errno_exit("VIDIOC_STREAMOFF");
+          }
         break;
       }
     state = setUp;
@@ -948,7 +1001,9 @@ namespace ice
   void V4L2Device::startCapturing()
   {
     if (state != setUp)
-      return;
+      {
+        return;
+      }
 
     enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
@@ -971,11 +1026,15 @@ namespace ice
             buf.index = i;
 
             if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
-              errno_exit("VIDIOC_QBUF");
+              {
+                errno_exit("VIDIOC_QBUF");
+              }
           }
 
         if (-1 == xioctl(fd, VIDIOC_STREAMON, &type))
-          errno_exit("VIDIOC_STREAMON");
+          {
+            errno_exit("VIDIOC_STREAMON");
+          }
         state = streaming;
         break;
 
@@ -993,11 +1052,15 @@ namespace ice
             buf.length = buffers[i].getLength();
 
             if (-1 == xioctl(fd, VIDIOC_QBUF, &buf))
-              errno_exit("VIDIOC_QBUF");
+              {
+                errno_exit("VIDIOC_QBUF");
+              }
           }
 
         if (-1 == xioctl(fd, VIDIOC_STREAMON, &type))
-          errno_exit("VIDIOC_STREAMON");
+          {
+            errno_exit("VIDIOC_STREAMON");
+          }
         state = streaming;
         break;
       default:
@@ -1060,7 +1123,9 @@ namespace ice
         buf.index = bufferNr;
 
         if (-1 == xioctl(fd, VIDIOC_QUERYBUF, &buf))
-          errno_exit("VIDIOC_QUERYBUF");
+          {
+            errno_exit("VIDIOC_QUERYBUF");
+          }
 
         // buffers[bufferNr] = buffer(buf.length,
         //                            mmap(nullptr /* start anywhere */,
@@ -1073,14 +1138,18 @@ namespace ice
         buffers[bufferNr] = buffer(buf.length, fd, buf.m.offset);
 
         if (MAP_FAILED == buffers[bufferNr].getStart())
-          errno_exit("mmap");
+          {
+            errno_exit("mmap");
+          }
       }
   }
 
   void V4L2Device::free_buffers()
   {
     for (unsigned int i = 0; i < buffers.size(); ++i)
-      buffers[i].destroy();
+      {
+        buffers[i].destroy();
+      }
     buffers.clear();
   }
 

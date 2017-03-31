@@ -49,7 +49,10 @@ namespace ice
     /*Hilfsvektor*/
     vv = (double*)malloc(n * sizeof(double));
 
-    if (vv == NULL) return (NO_MEM);
+    if (vv == NULL)
+      {
+        return (NO_MEM);
+      }
 
     *d = 1.0;
 
@@ -60,7 +63,9 @@ namespace ice
 
         for (j = 0; j < n; j++)
           if ((temp = fabs(a[i][j])) > big)
-            big = temp;
+            {
+              big = temp;
+            }
 
         if (big == 0.0)
           {
@@ -78,7 +83,9 @@ namespace ice
             sum = a[i][j];
 
             for (k = 0; k < i; k++)
-              sum -= a[i][k] * a[k][j];
+              {
+                sum -= a[i][k] * a[k][j];
+              }
 
             a[i][j] = sum;
           }
@@ -90,7 +97,9 @@ namespace ice
             sum = a[i][j];
 
             for (k = 0; k < j; k++)
-              sum -= a[i][k] * a[k][j];
+              {
+                sum -= a[i][k] * a[k][j];
+              }
 
             a[i][j] = sum;
 
@@ -148,7 +157,10 @@ namespace ice
     int i, ii = -1, ip, j;
     double sum;
 
-    if (x != b) for (i = 0; i < n; i++) x[i] = b[i];
+    if (x != b) for (i = 0; i < n; i++)
+        {
+          x[i] = b[i];
+        }
 
     for (i = 0; i < n; i++)
       {
@@ -158,9 +170,13 @@ namespace ice
 
         if (ii >= 0)
           for (j = ii; j < i; j++)
-            sum -= a[i][j] * x[j];
+            {
+              sum -= a[i][j] * x[j];
+            }
         else if (sum)
-          ii = i;
+          {
+            ii = i;
+          }
 
         x[i] = sum;
       }
@@ -170,7 +186,9 @@ namespace ice
         sum = x[i];
 
         for (j = i + 1; j < n; j++)
-          sum -= a[i][j] * x[j];
+          {
+            sum -= a[i][j] * x[j];
+          }
 
         x[i] = sum / a[i][i];
       }
@@ -238,9 +256,15 @@ namespace ice
         free(indx);
         FreeMatrix(Ah);
 
-        if (rc == NO_MEM) Message(FNAME, M_NO_MEM, rc);
+        if (rc == NO_MEM)
+          {
+            Message(FNAME, M_NO_MEM, rc);
+          }
 
-        if (rc == NUM_INSTABILITY) Message(FNAME, M_MATRIX_SINGULAR, rc);
+        if (rc == NUM_INSTABILITY)
+          {
+            Message(FNAME, M_MATRIX_SINGULAR, rc);
+          }
 
         return (rc);
       }
@@ -305,7 +329,9 @@ namespace ice
     for (i = 0; i < n; i++)
       for (j = 0; j < n; j++)
         for (k = 0, Ah->data[i][j] = 0; k < A->rsize; k++)
-          Ah->data[i][j] += A->data[k][i] * A->data[k][j];
+          {
+            Ah->data[i][j] += A->data[k][i] * A->data[k][j];
+          }
 
     a = Ah->data;
     /*LU-Dekomposition*/
@@ -316,9 +342,15 @@ namespace ice
         free(indx);
         FreeMatrix(Ah);
 
-        if (rc == NO_MEM) Message(FNAME, M_NO_MEM, rc);
+        if (rc == NO_MEM)
+          {
+            Message(FNAME, M_NO_MEM, rc);
+          }
 
-        if (rc == NUM_INSTABILITY) Message(FNAME, M_MATRIX_SINGULAR, rc);
+        if (rc == NUM_INSTABILITY)
+          {
+            Message(FNAME, M_MATRIX_SINGULAR, rc);
+          }
 
         return (rc);
       }
@@ -326,7 +358,9 @@ namespace ice
     /* A^T*b */
     for (i = 0; i < n; i++)
       for (j = 0, x[i] = 0; j < A->rsize; j++)
-        x[i] += A->data[j][i] * b[j];
+        {
+          x[i] += A->data[j][i] * b[j];
+        }
 
     /*Rücksubstitution*/
     rc = lubacksub(a, x, n, indx, x);
@@ -410,22 +444,34 @@ namespace ice
         free(bcol);
         FreeMatrix(Ah);
 
-        if (rc == NO_MEM) Message(FNAME, M_NO_MEM, rc);
+        if (rc == NO_MEM)
+          {
+            Message(FNAME, M_NO_MEM, rc);
+          }
 
-        if (rc == NUM_INSTABILITY) Message(FNAME, M_MATRIX_SINGULAR, rc);
+        if (rc == NUM_INSTABILITY)
+          {
+            Message(FNAME, M_MATRIX_SINGULAR, rc);
+          }
 
         return (nullptr);
       }
 
     /*Rücksubstitution fuer jede Spalte der Einheitsmatrix*/
-    for (i = 0; i < n; i++) icol[i] = 0;
+    for (i = 0; i < n; i++)
+      {
+        icol[i] = 0;
+      }
 
     for (i = 0; i < n; i++)
       {
         icol[i] = 1;
         rc = lubacksub(a, icol, n, indx, bcol);
 
-        for (j = 0; j < n; j++) b[j][i] = bcol[j];
+        for (j = 0; j < n; j++)
+          {
+            b[j][i] = bcol[j];
+          }
 
         icol[i] = 0;
       }
@@ -488,14 +534,23 @@ namespace ice
         free(indx);
         FreeMatrix(Ah);
 
-        if (rc == NO_MEM) Message(FNAME, M_NO_MEM, rc);
+        if (rc == NO_MEM)
+          {
+            Message(FNAME, M_NO_MEM, rc);
+          }
 
-        if (rc == NUM_INSTABILITY) Message(FNAME, M_MATRIX_SINGULAR, rc);
+        if (rc == NUM_INSTABILITY)
+          {
+            Message(FNAME, M_MATRIX_SINGULAR, rc);
+          }
 
         return (0);
       }
 
-    for (i = 0; i < n; i++)d *= a[i][i];
+    for (i = 0; i < n; i++)
+      {
+        d *= a[i][i];
+      }
 
     free(indx);
     FreeMatrix(Ah);

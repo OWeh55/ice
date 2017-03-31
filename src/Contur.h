@@ -69,7 +69,9 @@ namespace ice
     void Close() // Close Contur = return to start point
     {
       if (isvalid && !isclosed)
-        Add(start);
+        {
+          Add(start);
+        }
     }
 
     int Add(const Contur& c); // Contur anhängen
@@ -146,7 +148,9 @@ namespace ice
       int nPoints = nDirectionCodes + 1;
 
       if (isclosed && !close)
-        nPoints--;                   // do not add start point again
+        {
+          nPoints--;  // do not add start point again
+        }
 
       pl.resize(nPoints);
 
@@ -184,7 +188,9 @@ namespace ice
     inline int getDirections(std::vector<Freeman>& fc) const
     {
       if (!isvalid)
-        return ERROR;
+        {
+          return ERROR;
+        }
       fc = data;
       return OK;
     }

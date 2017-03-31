@@ -52,9 +52,9 @@ namespace ice
   // use fftw3
   void FourierTrafo::setParameter(int newSize, bool newForward)
   {
-    if ((newSize != size) || (newForward != forward)) // changes?
+    if ((newSize != size) || (newForward != forward))   // changes?
       {
-        if (size > 0) // already initialised
+        if (size > 0)   // already initialised
           {
             // free old array
             fftw_free(in);
@@ -243,7 +243,7 @@ namespace ice
   // NOFFTW3
   void FourierTrafo::setParameter(int newsize, bool newforward)
   {
-    if ((newsize != size) || (newforward != forward)) // changes?
+    if ((newsize != size) || (newforward != forward))   // changes?
       {
         size = newsize;
         forward = newforward;
@@ -273,9 +273,13 @@ namespace ice
         double fi = 2 * M_PI * i / size;
 
         if (forward)
-          sinTab[i] = sin(fi);
+          {
+            sinTab[i] = sin(fi);
+          }
         else
-          sinTab[i] = -sin(fi);
+          {
+            sinTab[i] = -sin(fi);
+          }
 
         cosTab[i] = cos(fi);
       }
@@ -285,7 +289,9 @@ namespace ice
   {
     int ln = 0;
     for (int i = 1; i < size; i = i + i)
-      ln++;
+      {
+        ln++;
+      }
 
     /* Do the bit reversal */
     int i2 = size >> 1;
@@ -312,7 +318,9 @@ namespace ice
     /* ln = log_2(size) */
     int ln = 0;
     for (int i = 1; i < size; i = i + i)
-      ln++;
+      {
+        ln++;
+      }
 
     doBitReversal();
 
@@ -344,7 +352,9 @@ namespace ice
           }
         sindelta = sqrt((1.0 - cosdelta) / 2.0);
         if (forward)
-          sindelta = -sindelta;
+          {
+            sindelta = -sindelta;
+          }
         cosdelta = sqrt((1.0 + cosdelta) / 2.0);
       }
   }
@@ -371,14 +381,16 @@ namespace ice
 
   void FourierTrafo::transform()
   {
-    if ((size & (size - 1)) == 0) // size is potence of 2 ?
+    if ((size & (size - 1)) == 0)   // size is potence of 2 ?
       {
         out_real = in_real;
         out_imag = in_imag;
         FFT();
       }
     else
-      FT();
+      {
+        FT();
+      }
     state = sDone;
   }
 
@@ -474,7 +486,9 @@ namespace ice
     vector<double> res;
     double absim = getResult(res);
     for (int i = 0; i < size; ++i)
-      v[row][i] = res[i];
+      {
+        v[row][i] = res[i];
+      }
     return absim;
   }
 
@@ -497,7 +511,9 @@ namespace ice
     vector<double> res;
     double absim = getResult(res);
     for (int i = 0; i < size; ++i)
-      v[i][col] = res[i];
+      {
+        v[i][col] = res[i];
+      }
     return absim;
   }
 
@@ -518,7 +534,9 @@ namespace ice
   {
     vector<double> thisrow(v.cols());
     for (int i = 0; i < v.cols(); ++i)
-      thisrow[i] = v[row][i];
+      {
+        thisrow[i] = v[row][i];
+      }
     setInput(thisrow);
   }
 
@@ -526,10 +544,14 @@ namespace ice
   {
     vector<double> rowr(vr.cols());
     for (int i = 0; i < vr.cols(); ++i)
-      rowr[i] = vr[row][i];
+      {
+        rowr[i] = vr[row][i];
+      }
     vector<double> rowi(vi.cols());
     for (int i = 0; i < vi.cols(); ++i)
-      rowi[i] = vi[row][i];
+      {
+        rowi[i] = vi[row][i];
+      }
     setInput(rowr, rowi);
   }
 
@@ -537,7 +559,9 @@ namespace ice
   {
     vector<int> thisrow(v.cols());
     for (int i = 0; i < v.cols(); ++i)
-      thisrow[i] = v[row][i];
+      {
+        thisrow[i] = v[row][i];
+      }
     setInput(thisrow, factor);
   }
 
@@ -545,10 +569,14 @@ namespace ice
   {
     vector<int> rowr(vr.cols());
     for (int i = 0; i < vr.cols(); ++i)
-      rowr[i] = vr[row][i];
+      {
+        rowr[i] = vr[row][i];
+      }
     vector<int> rowi(vi.cols());
     for (int i = 0; i < vi.cols(); ++i)
-      rowi[i] = vi[row][i];
+      {
+        rowi[i] = vi[row][i];
+      }
     setInput(rowr, rowi, factor);
   }
 
@@ -556,7 +584,9 @@ namespace ice
   {
     vector<double> thiscol(v.rows());
     for (int i = 0; i < v.rows(); ++i)
-      thiscol[i] = v[i][col];
+      {
+        thiscol[i] = v[i][col];
+      }
     setInput(thiscol);
   }
 
@@ -564,10 +594,14 @@ namespace ice
   {
     vector<double> colr(vr.rows());
     for (int i = 0; i < vr.rows(); ++i)
-      colr[i] = vr[i][col];
+      {
+        colr[i] = vr[i][col];
+      }
     vector<double> coli(vi.rows());
     for (int i = 0; i < vi.rows(); ++i)
-      coli[i] = vi[i][col];
+      {
+        coli[i] = vi[i][col];
+      }
     setInput(colr, coli);
   }
 
@@ -575,7 +609,9 @@ namespace ice
   {
     vector<int> thiscol(v.rows());
     for (int i = 0; i < v.rows(); ++i)
-      thiscol[i] = v[i][col];
+      {
+        thiscol[i] = v[i][col];
+      }
     setInput(thiscol, factor);
   }
 
@@ -583,10 +619,14 @@ namespace ice
   {
     vector<int> colr(vr.rows());
     for (int i = 0; i < vr.rows(); ++i)
-      colr[i] = vr[i][col];
+      {
+        colr[i] = vr[i][col];
+      }
     vector<int> coli(vi.rows());
     for (int i = 0; i < vi.rows(); ++i)
-      coli[i] = vi[i][col];
+      {
+        coli[i] = vi[i][col];
+      }
     setInput(colr, coli, factor);
   }
 
@@ -617,7 +657,7 @@ namespace ice
 
   bool FourierTrafo::checkParameter(int sourceSize)
   {
-    if (state == sNull) // no set
+    if (state == sNull)   // no set
       {
         setParameter(sourceSize);
       }

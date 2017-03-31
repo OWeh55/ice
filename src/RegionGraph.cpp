@@ -99,7 +99,10 @@ namespace ice
     int i;
 
     if (!Nb.empty())
-      for (i = 0; i < int(Nb.size()); i++) if (Nb[i] == NodeNumber) return true;
+      for (i = 0; i < int(Nb.size()); i++) if (Nb[i] == NodeNumber)
+          {
+            return true;
+          }
 
     return false;
   }
@@ -130,7 +133,10 @@ namespace ice
     if (NodeNumber != -1)
       {
         if (!Nb.empty())
-          for (IntIter = Nb.begin(); IntIter != Nb.end(); ++IntIter) if (*IntIter == NodeNumber) return;
+          for (IntIter = Nb.begin(); IntIter != Nb.end(); ++IntIter) if (*IntIter == NodeNumber)
+              {
+                return;
+              }
 
         Nb.push_back(NodeNumber);
         Degree = Nb.size(); // Knotengrad erhoehen
@@ -154,7 +160,10 @@ namespace ice
 
         return true;
       }
-    else return false;
+    else
+      {
+        return false;
+      }
 
     return true;
   }
@@ -179,8 +188,14 @@ namespace ice
 // durchschnittlichen Grauwert der Region berechnen
   void RegionNode::CompGRWMW()
   {
-    if (PixelAnz == 0) GrwMw = 0;
-    else GrwMw = GrwSum / PixelAnz;
+    if (PixelAnz == 0)
+      {
+        GrwMw = 0;
+      }
+    else
+      {
+        GrwMw = GrwSum / PixelAnz;
+      }
   }
 
 // Varianz der Grauwerte der Region berechnen
@@ -198,9 +213,13 @@ namespace ice
         }
 
     if (PixelAnz == 1 || PixelAnz == 0)
-      GrwVar = 0; // bei nur einem Pixel, ist Varianz Null
+      {
+        GrwVar = 0;  // bei nur einem Pixel, ist Varianz Null
+      }
     else
-      GrwVar = sqrt((float)1 / (PixelAnz - 1) * GrwQuadSum);
+      {
+        GrwVar = sqrt((float)1 / (PixelAnz - 1) * GrwQuadSum);
+      }
   }
 
 // Regionenpixel in working-Bild einzeichnen
@@ -351,7 +370,9 @@ namespace ice
   void RegionGraph::DeleteRegion(int RegNumber)
   {
     if (regions[RegNumber])
-      regions[RegNumber] = nullptr;
+      {
+        regions[RegNumber] = nullptr;
+      }
   }
 
   int EdgeGraph::getIndex(int r1, int r2)
@@ -526,11 +547,15 @@ namespace ice
 
         for (j = EG->RegionAccessLUT[r1]; j < EG->RegionAccessLUT[r1 + 1]; j++)
           if (EG->EdgeNodeAccessLUT[j].to != r2)
-            en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            {
+              en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            }
 
         for (j = EG->RegionAccessLUT[r2]; j < EG->RegionAccessLUT[r2 + 1]; j++)
           if (EG->EdgeNodeAccessLUT[j].to != r1)
-            en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            {
+              en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            }
 
         EG->Sorted[en->GRWWert].push_back(i);
       }
@@ -550,7 +575,10 @@ namespace ice
         int nb = edges[node]->Nb[n];
 
         // Knoten hat Wasserscheiden oder Becken als Nachbar?
-        if (edges[nb]->Status == -3 || edges[nb]->Status > 0) return true;
+        if (edges[nb]->Status == -3 || edges[nb]->Status > 0)
+          {
+            return true;
+          }
       }
 
     return false;
@@ -577,8 +605,10 @@ namespace ice
                 // Knoten noch nicht verarbeitet oder Wasserscheide
                 if ((edges[node]->Status == -1) || (edges[node]->Status == -3 && WshedNb))
                   // Nachbarknoten ist Becken zugehoerig, Knoten mit selbem Label versehen
-                  edges[node]->Status = edges[nb]->Status;
-                else  // 2 Becken treffen aufeinander
+                  {
+                    edges[node]->Status = edges[nb]->Status;
+                  }
+                else   // 2 Becken treffen aufeinander
                   if (edges[nb]->Status != edges[node]->Status)
                     {
                       edges[node]->Status = -3;
@@ -728,7 +758,9 @@ ende:
     for (k = 0; k < 256; k++)
       for (i = 0; i < int(Sorted[k].size()); i++)
 
-        edges[Sorted[k][i]]->drawWSHDPixel(i1, 0);
+        {
+          edges[Sorted[k][i]]->drawWSHDPixel(i1, 0);
+        }
   }
 
 
@@ -756,7 +788,9 @@ ende:
           // Wasserscheidenlinie einzeichnen, wenn Grauwertdifferenz zwischen den Regionen
           // groesser als der "tresh"-Schwellwert ist
           if (edges[Sorted[k][i]]->GRWWert > tresh)
-            edges[Sorted[k][i]]->drawWSHDPixel(wsheds, 0);
+            {
+              edges[Sorted[k][i]]->drawWSHDPixel(wsheds, 0);
+            }
 
   }
 
@@ -798,9 +832,15 @@ ende:
           int grw = GetVal(sourceImg, xpos, ypos);
 
           // minimalen und maximalen Grauwert der Region ermitteln
-          if (currReg->GrwMin < grw) currReg->GrwMin = grw;
+          if (currReg->GrwMin < grw)
+            {
+              currReg->GrwMin = grw;
+            }
 
-          if (currReg->GrwMax > grw) currReg->GrwMax = grw;
+          if (currReg->GrwMax > grw)
+            {
+              currReg->GrwMax = grw;
+            }
 
           // Grauwert des Pixel zur Mittelwertsumme addieren
           currReg->GrwSum += grw;
@@ -813,7 +853,7 @@ ende:
             if ((GetVal(workImg, xn, yn) == 0))
               {
                 // Punkt ist Regionenpixel?
-                if (GetVal(labImg, xn, yn) != 0) // Pixel != Wasserscheide?
+                if (GetVal(labImg, xn, yn) != 0)   // Pixel != Wasserscheide?
                   {
 
                     grwNb = GetVal(sourceImg, xn, yn);
@@ -949,7 +989,10 @@ ende:
     wloop(Original, x, y)
     {
 
-      if (GetVal(WSImg, x, y) == 0) PutVal(mark, x, y, 1);
+      if (GetVal(WSImg, x, y) == 0)
+        {
+          PutVal(mark, x, y, 1);
+        }
       else if (GetVal(mark, x, y) == 0)
         {
 

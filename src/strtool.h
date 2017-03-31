@@ -45,12 +45,16 @@ namespace ice
         width = -width;
       }
     else
-      os.fill(' ');
+      {
+        os.fill(' ');
+      }
 
     os.width(width);
 
     if (os << val)
-      return os.str();
+      {
+        return os.str();
+      }
 
     return "conversion error";
   }
@@ -61,10 +65,15 @@ namespace ice
     std::ostringstream o;
     o.width(width);
 
-    if (prec > 0) o.precision(prec);
+    if (prec > 0)
+      {
+        o.precision(prec);
+      }
 
     if (o << val)
-      return o.str();
+      {
+        return o.str();
+      }
 
     return "conversion error";
   }

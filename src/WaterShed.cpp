@@ -58,7 +58,9 @@ namespace ice
         temp = NewImg(in, true);  /* temporaeres Eingabebild anlegen*/
       }
     else
-      temp = in;
+      {
+        temp = in;
+      }
 
     switch (mode)
       {
@@ -80,7 +82,10 @@ namespace ice
         break;
       }
 
-    if (needs_temp) FreeImg(temp); // temporaeres Bild freigeben
+    if (needs_temp)
+      {
+        FreeImg(temp);  // temporaeres Bild freigeben
+      }
 
     return rc;
   }
@@ -92,7 +97,9 @@ namespace ice
     int** m = new int* [y];
 
     for (int j = 0; j < y; j++)
-      m[j] = new int [x];
+      {
+        m[j] = new int [x];
+      }
 
     return m;
   }
@@ -102,7 +109,9 @@ namespace ice
     // Speicher fuer dyn. Array freigeben
 
     for (int j = 0; j < y; j++)
-      delete [] m[j];
+      {
+        delete [] m[j];
+      }
 
     delete [] m;
   }
@@ -150,11 +159,14 @@ namespace ice
     // Distanzbild initialisieren
     SetImg(m3, 0);
 
-    wloop(i, x, y) // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
+    wloop(i, x, y)   // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
     {
       int level = GetVal(i, x, y);
 
-      if (level > max) max = level;
+      if (level > max)
+        {
+          max = level;
+        }
 
       struct STPoint temp = {x, y, level};
       b2[level].push_back(temp);
@@ -326,7 +338,7 @@ ende:
 
               PutVal(m3, x, y, 0);      // Distanz 0 setzen (Punkt entweder WS, Beckenpixel (also schon verarbeitet) oder jetzt neues Minimum)
 
-              if (GetValM(m1, x, y) == MASK) // Pixel wurde noch nicht bearbeitet, MARK Wert in m2
+              if (GetValM(m1, x, y) == MASK)   // Pixel wurde noch nicht bearbeitet, MARK Wert in m2
                 {
                   current_label++;    // neues Label
 
@@ -373,7 +385,10 @@ ende:
 
     for (int y = 0; y < ysize; y++)   // Wasserscheiden von WSHED=-3 auf 0 setzen
       for (int x = 0; x < xsize; x++)
-        if (m1[y][x] == WSHD) m1[y][x] = 0;
+        if (m1[y][x] == WSHD)
+          {
+            m1[y][x] = 0;
+          }
 
     cout << current_label << endl;
 
@@ -494,7 +509,10 @@ ende:
     {
       int level = GetVal(i, x, y);
 
-      if (level > max) max = level;
+      if (level > max)
+        {
+          max = level;
+        }
 
       struct STPoint stptemp = {x, y, level};
       b2[level].push_back(stptemp);
@@ -688,9 +706,15 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     for (int y = 0; y < ymax; y++)
       for (int x = 0; x < xmax; x++)
         {
-          if (m1[y][x] == WSHD) m1[y][x] = 0;
+          if (m1[y][x] == WSHD)
+            {
+              m1[y][x] = 0;
+            }
 
-          if (m1[y][x] < 0) m1[y][x] = curlab;
+          if (m1[y][x] < 0)
+            {
+              m1[y][x] = curlab;
+            }
         }
 
     // Rueckgabebild
@@ -761,7 +785,10 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
       {
         gh = GetVal(i, x - 1, y);
 
-        if (gh < gp) return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
         second = GetVal(i, x - 1, y);
 
@@ -769,18 +796,30 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
           {
             gh = GetVal(i, x - 1, y - 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
 
         if (y < ymax)
           {
             gh = GetVal(i, x - 1, y + 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
       }
 
@@ -789,26 +828,44 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
       {
         gh = GetVal(i, x + 1, y);
 
-        if (gh < gp) return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
-        if (second > gh) second = gh;
+        if (second > gh)
+          {
+            second = gh;
+          }
 
         if (y > 0)
           {
             gh = GetVal(i, x + 1, y - 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
 
         if (y < ymax)
           {
             gh = GetVal(i, x + 1, y + 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
       }
 
@@ -817,18 +874,30 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
       {
         gh = GetVal(i, x, y - 1);
 
-        if (gh < gp)  return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
-        if (second > gh) second = gh;
+        if (second > gh)
+          {
+            second = gh;
+          }
       }
 
     if (y < ymax)
       {
         gh = GetVal(i, x, y + 1);
 
-        if (gh < gp)  return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
-        if (second > gh) second = gh;
+        if (second > gh)
+          {
+            second = gh;
+          }
       }
 
     return second;
@@ -841,13 +910,19 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
     int x, y;
     Image temp = NewImg(i);
-    wloop(i, x, y)  // Minima zu Plateaupixel zurecht stutzen
+    wloop(i, x, y)   // Minima zu Plateaupixel zurecht stutzen
     {
 
       int val = PixelIsMinimum2(i, x, y);
 
-      if (val != -1) PutVal(temp, x, y, val); // Punkt x,y ist Minimum: mit zweitkleinstem Wert ersetzen
-      else PutVal(temp, x, y, GetVal(i, x, y)); // Punkt kein Minimum: Wert uebernehmen
+      if (val != -1)
+        {
+          PutVal(temp, x, y, val);  // Punkt x,y ist Minimum: mit zweitkleinstem Wert ersetzen
+        }
+      else
+        {
+          PutVal(temp, x, y, GetVal(i, x, y));  // Punkt kein Minimum: Wert uebernehmen
+        }
     }
     CopyImg(temp, io);
     return OK;
@@ -866,7 +941,10 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
         return WRONG_PARAM;
       }
 
-    wloop(i, x, y) if (PixelIsMinimum(i, x, y)) PutVal(io, x, y, 0);
+    wloop(i, x, y) if (PixelIsMinimum(i, x, y))
+      {
+        PutVal(io, x, y, 0);
+      }
 
     return OK;
   }
@@ -885,7 +963,10 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
         return WRONG_PARAM;
       }
 
-    wloop(i, x, y) if (PixelIsMaximum(i, x, y)) PutVal(io, x, y, 0);
+    wloop(i, x, y) if (PixelIsMaximum(i, x, y))
+      {
+        PutVal(io, x, y, 0);
+      }
 
     return OK;
   }
@@ -1055,14 +1136,20 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     });
 
     for (it = nb_set.begin(); it != nb_set.end(); it++)
-      grwsum += *it;
+      {
+        grwsum += *it;
+      }
 
     size_set = nb_set.size();
 
     if (size_set == 0)
-      count = 1;
+      {
+        count = 1;
+      }
     else
-      count = size_set;
+      {
+        count = size_set;
+      }
 
     return grwsum / count;
   }
@@ -1122,10 +1209,12 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
                 });
               }
 
-          if (int(PQ.size()) < treshold)  // Marker loeschen, wenn er weniger als treshold Pixel enthaelt.
+          if (int(PQ.size()) < treshold)   // Marker loeschen, wenn er weniger als treshold Pixel enthaelt.
             {
               for (int n = 0; n < int(PQ.size()); n++)
-                PutVal(i1, PQ[n].x, PQ[n].y, i1->maxval);
+                {
+                  PutVal(i1, PQ[n].x, PQ[n].y, i1->maxval);
+                }
             }
         }
     }
@@ -1165,10 +1254,19 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
                      );
 
           // durschnittlichen Grauwert der Nachbarpunkte in Rueckgabebild eintragen
-          if (RegPixelAnz != 0) PutVal(WSHEDDeleted, x, y, (GRWSum / RegPixelAnz));
-          else PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
+          if (RegPixelAnz != 0)
+            {
+              PutVal(WSHEDDeleted, x, y, (GRWSum / RegPixelAnz));
+            }
+          else
+            {
+              PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
+            }
         }                     // wenn keine WS, Grauwert uebernehmen
-      else PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
+      else
+        {
+          PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
+        }
     }
     return OK;
   }
@@ -1225,7 +1323,10 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
         int regSize = (290 - wurzel / scale2Grw);     // skalieren
 
-        if (regSize < 0)  regSize = 0;
+        if (regSize < 0)
+          {
+            regSize = 0;
+          }
 
         PutVal(Histo, 10 + regGrw[i], regSize, 0);    // Region i hinsichtlich Groesse und durchschnittlichen Grauwert einzeichnen
       }

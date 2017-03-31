@@ -38,16 +38,28 @@ namespace ice
 
   static void killnode(TNODE* node)
   {
-    if (node->left  != nullptr) killnode(node->left);;
+    if (node->left  != nullptr)
+      {
+        killnode(node->left);
+      };
 
-    if (node->right != nullptr) killnode(node->right);;
+    if (node->right != nullptr)
+      {
+        killnode(node->right);
+      };
 
-    if (node != nullptr) FREE(node);
+    if (node != nullptr)
+      {
+        FREE(node);
+      }
   }
 
   void killtree()
   {
-    if (si4_root != nullptr) killnode(si4_root);
+    if (si4_root != nullptr)
+      {
+        killnode(si4_root);
+      }
 
     si4_root = nullptr;
   }
@@ -210,7 +222,10 @@ namespace ice
 
     for (node = curnode->parent; node != nullptr; node = node->parent)
       {
-        if (node->data > curnode->data) break;
+        if (node->data > curnode->data)
+          {
+            break;
+          }
       }
 
     curnode = node;
@@ -262,7 +277,10 @@ namespace ice
 
     for (node = curnode->parent; node != nullptr; node = node->parent)
       {
-        if (node->data < curnode->data) break;
+        if (node->data < curnode->data)
+          {
+            break;
+          }
       }
 
     curnode = node;
@@ -318,7 +336,10 @@ namespace ice
 
   void printtree()
   {
-    if (si4_root != nullptr) printf("root node is %4d\n", si4_root->data);
+    if (si4_root != nullptr)
+      {
+        printf("root node is %4d\n", si4_root->data);
+      }
 
     printf("  data parent left right\n");
     printnode(si4_root);

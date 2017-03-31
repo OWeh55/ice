@@ -42,7 +42,10 @@ namespace ice
     int i;
     double dotprod = 0.0e0;
 
-    for (i = 0; i < n; i++) dotprod += x[i] * y[i];
+    for (i = 0; i < n; i++)
+      {
+        dotprod += x[i] * y[i];
+      }
 
     return (dotprod);
   }
@@ -55,14 +58,19 @@ namespace ice
   {
     int i, j, k;
 
-    for (i = 0; i < m; i++) y[i] = 0.0e0;
+    for (i = 0; i < m; i++)
+      {
+        y[i] = 0.0e0;
+      }
 
     for (i = 0; i < m; i++)
       {
         j = basis[i];
 
         for (k = ka[j]; k < ka[j + 1]; k++)
-          y[ia[k]] += a[k] * x[i];
+          {
+            y[ia[k]] += a[k] * x[i];
+          }
       }
   }
 
@@ -74,14 +82,19 @@ namespace ice
   {
     int i, j, k;
 
-    for (i = 0; i < m; i++) y[i] = 0.0e0;
+    for (i = 0; i < m; i++)
+      {
+        y[i] = 0.0e0;
+      }
 
     for (i = 0; i < m; i++)
       {
         j = basis[i];
 
         for (k = ka[j]; k < ka[j + 1]; k++)
-          y[i] += a[k] * x[ia[k]];
+          {
+            y[i] += a[k] * x[ia[k]];
+          }
       }
   }
 
@@ -92,11 +105,16 @@ namespace ice
   {
     int i, j, k;
 
-    for (i = 0; i < m; i++) y[i] = 0.0e0;
+    for (i = 0; i < m; i++)
+      {
+        y[i] = 0.0e0;
+      }
 
     for (j = 0; j < n; j++)
       for (k = ka[j]; k < ka[j + 1]; k++)
-        y[ia[k]] += a[k] * x[j];
+        {
+          y[ia[k]] += a[k] * x[j];
+        }
   }
 
   /*---------------------------------------------------------------+
@@ -148,7 +166,10 @@ namespace ice
     int i;
     double maxv = 0.0e0;
 
-    for (i = 0; i < n; i++) maxv = Max(maxv, Abs(x[i]));
+    for (i = 0; i < n; i++)
+      {
+        maxv = Max(maxv, Abs(x[i]));
+      }
 
     return (maxv);
   }

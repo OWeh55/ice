@@ -36,7 +36,9 @@ namespace ice
   GaussFit::GaussFit(int pdim): dim(pdim)
   {
     if (dim > 0)
-      Init(dim);
+      {
+        Init(dim);
+      }
   }
 
 #define FNAME "GaussFit::FitInit"
@@ -58,17 +60,23 @@ namespace ice
     wsum = 0;
     para.resize(dim);
     for (int i = 0; i < dim; i++)
-      para[i] = 0;
+      {
+        para[i] = 0;
+      }
     sum.resize(dim);
     for (int i = 0; i < dim; i++)
       {
         sum[i].resize(dim);
         for (int j = 0; j < dim; j++)
-          sum[i][j] = 0;
+          {
+            sum[i][j] = 0;
+          }
       }
     gsum.resize(dim);
     for (int i = 0; i < dim; i++)
-      gsum[i] = 0;
+      {
+        gsum[i] = 0;
+      }
 
     finished = false;
   }
@@ -137,7 +145,9 @@ namespace ice
     // "dreiecksmatrix" zu richtigen Matrix vervollständigen
     for (int i = 1; i < dim; i++)
       for (int j = 0; j < i; j++)
-        sum[i][j] = sum[j][i];
+        {
+          sum[i][j] = sum[j][i];
+        }
 
     IF_FAILED(para = SolveLinEqu(Matrix(sum), Vector(gsum)))
     {
@@ -150,10 +160,14 @@ namespace ice
 
     for (int i = 0; i < dim; i++)
       for (int j = 0; j < dim; j++)
-        var += sum[i][j] * para[i] * para[j];
+        {
+          var += sum[i][j] * para[i] * para[j];
+        }
 
     for (int i = 0; i < dim; i++)
-      var -= 2 * gsum[i] * para[i];
+      {
+        var -= 2 * gsum[i] * para[i];
+      }
 
     finished = true;
   }

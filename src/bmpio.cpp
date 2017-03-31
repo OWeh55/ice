@@ -164,7 +164,10 @@ namespace ice
         /* skip ahead to colormap, using biSize */
         c = bmi.iSize - 40;    /* 40 bytes read from biSize to biClrImportant */
 
-        for (i = 0; i < c; i++) getc(fp);
+        for (i = 0; i < c; i++)
+          {
+            getc(fp);
+          }
 
         bPad = bmi.fOffBits - (bmi.iSize + 14);
       }
@@ -189,7 +192,10 @@ namespace ice
               }
           }
 
-        if (FERROR(fp)) return false;
+        if (FERROR(fp))
+          {
+            return false;
+          }
       }
 
     if (bmi.iSize != WIN_OS2_OLD)
@@ -233,8 +239,14 @@ namespace ice
     ysize = bmi.iHeight;
     maxval = 255; /* max. value in Colormap */
 
-    if (bmi.iBitCount == 24) nr = 3;
-    else nr = 1;
+    if (bmi.iBitCount == 24)
+      {
+        nr = 3;
+      }
+    else
+      {
+        nr = 1;
+      }
 
     return BMP;
   }
@@ -283,7 +295,9 @@ namespace ice
         cmaplen = (bmi.iColorsUsed) ? bmi.iColorsUsed : 1 << bmi.iBitCount;
 
         for (unsigned int i = 0; i < cmaplen; ++i)
-          r[i] = GRAYVALUE(r[i], g[i], b[i]);
+          {
+            r[i] = GRAYVALUE(r[i], g[i], b[i]);
+          }
       }
 
     /* create pic8 or pic24 */
@@ -367,7 +381,9 @@ namespace ice
       }
 
     if (!IsImg(img))
-      img = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        img = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, img, flag);
   }
@@ -478,11 +494,17 @@ namespace ice
       }
 
     if (!IsImg(red))
-      red = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        red = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(green))
-      green = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        green = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(blue))
-      blue = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        blue = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, red, green, blue, flag);
   }
@@ -503,7 +525,7 @@ namespace ice
 
         for (j = bitnum = 0; j < padw; j++, bitnum++)
           {
-            if ((bitnum & 7) == 0) /* read the next byte */
+            if ((bitnum & 7) == 0)   /* read the next byte */
               {
                 c = getc(fp);
                 bitnum = 0;
@@ -516,7 +538,10 @@ namespace ice
               }
           }
 
-        if (FERROR(fp)) break;
+        if (FERROR(fp))
+          {
+            break;
+          }
       }
 
     return (FERROR(fp));
@@ -557,7 +582,10 @@ namespace ice
                   }
               }
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }
       }
 
@@ -581,7 +609,9 @@ namespace ice
                 c1 = getc(fp);
 
                 for (i = 0; i < c; i++, x++, pp++)
-                  *pp = (i & 1) ? (c1 & 0x0f) : ((c1 >> 4) & 0x0f);
+                  {
+                    *pp = (i & 1) ? (c1 & 0x0f) : ((c1 >> 4) & 0x0f);
+                  }
               }
 
             else      /* c==0x00  :  escape codes */
@@ -601,7 +631,10 @@ namespace ice
                     pp = pic8 + x + (h - y - 1) * w;
                   }
 
-                else if (c == 0x01) break;               /* end of pic8 */
+                else if (c == 0x01)
+                  {
+                    break;  /* end of pic8 */
+                  }
 
                 else if (c == 0x02)                      /* delta */
                   {
@@ -616,16 +649,25 @@ namespace ice
                   {
                     for (i = 0; i < c; i++, x++, pp++)
                       {
-                        if ((i & 1) == 0) c1 = getc(fp);
+                        if ((i & 1) == 0)
+                          {
+                            c1 = getc(fp);
+                          }
 
                         *pp = (i & 1) ? (c1 & 0x0f) : ((c1 >> 4) & 0x0f);
                       }
 
-                    if (((c & 3) == 1) || ((c & 3) == 2)) getc(fp); /* read pad byte */
+                    if (((c & 3) == 1) || ((c & 3) == 2))
+                      {
+                        getc(fp);  /* read pad byte */
+                      }
                   }
               }  /* escape processing */
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }  /* while */
       }
 
@@ -634,7 +676,10 @@ namespace ice
         fprintf(stderr, "unknown BMP compression type 0x%0x\n", comp);
       }
 
-    if (FERROR(fp)) rv = 1;
+    if (FERROR(fp))
+      {
+        rv = 1;
+      }
 
     return rv;
   }
@@ -661,12 +706,21 @@ namespace ice
               {
                 c = getc(fp);
 
-                if (c == EOF) rv = true;
+                if (c == EOF)
+                  {
+                    rv = true;
+                  }
 
-                if (j < (int) w) *pp++ = c;
+                if (j < (int) w)
+                  {
+                    *pp++ = c;
+                  }
               }
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }
       }
 
@@ -689,7 +743,10 @@ namespace ice
               {
                 c1 = getc(fp);
 
-                for (i = 0; i < c; i++, x++, pp++) *pp = c1;
+                for (i = 0; i < c; i++, x++, pp++)
+                  {
+                    *pp = c1;
+                  }
               }
 
             else      /* c==0x00  :  escape codes */
@@ -709,7 +766,10 @@ namespace ice
                     pp = pic8 + x + (h - y - 1) * w;
                   }
 
-                else if (c == 0x01) break;               /* end of pic8 */
+                else if (c == 0x01)
+                  {
+                    break;  /* end of pic8 */
+                  }
 
                 else if (c == 0x02)                      /* delta */
                   {
@@ -728,11 +788,17 @@ namespace ice
                         *pp = c1;
                       }
 
-                    if (c & 1) getc(fp);  /* odd length run: read an extra pad byte */
+                    if (c & 1)
+                      {
+                        getc(fp);  /* odd length run: read an extra pad byte */
+                      }
                   }
               }  /* escape processing */
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }  /* while */
       }
 
@@ -741,7 +807,10 @@ namespace ice
         fprintf(stderr, "unknown BMP compression type 0x%0x\n", comp);
       }
 
-    if (FERROR(fp)) rv = true;
+    if (FERROR(fp))
+      {
+        rv = true;
+      }
 
     return rv;
   }
@@ -768,11 +837,17 @@ namespace ice
             pp += 3;
           }
 
-        for (j = 0; j < padb; j++) getc(fp);
+        for (j = 0; j < padb; j++)
+          {
+            getc(fp);
+          }
 
         rv = (FERROR(fp));
 
-        if (rv) break;
+        if (rv)
+          {
+            break;
+          }
       }
 
     return rv;
@@ -965,7 +1040,10 @@ namespace ice
         nbits = 8;
       }
 
-    if (nc > 256) nc = 256;
+    if (nc > 256)
+      {
+        nc = 256;
+      }
 
     bperlin = ((w * nbits + 31) / 32) * 4;   /* # bytes written per line */
 
@@ -1138,9 +1216,15 @@ namespace ice
       {
         pp = pic8 + (i * w);
 
-        for (j = 0; j < w; j++) putc(*pp++, fp);
+        for (j = 0; j < w; j++)
+          {
+            putc(*pp++, fp);
+          }
 
-        for (; j < padw; j++) putc(0, fp);
+        for (; j < padw; j++)
+          {
+            putc(0, fp);
+          }
       }
   }
 
@@ -1165,7 +1249,10 @@ namespace ice
             pp += 3;
           }
 
-        for (j = 0; j < padb; j++) putc(0, fp);
+        for (j = 0; j < padb; j++)
+          {
+            putc(0, fp);
+          }
       }
   }
 #undef FNAME

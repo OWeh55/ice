@@ -234,14 +234,18 @@ namespace ice
       VisNumber++;
 
       if (VisNumber == 0)
-        dfp = nullptr;
+        {
+          dfp = nullptr;
+        }
     }
 
     /* does the callback */
     virtual void destroy()
     {
       if (dfp != nullptr)
-        (*dfp)(this);
+        {
+          (*dfp)(this);
+        }
 
       dfp = nullptr;
       VisNumber = 0;

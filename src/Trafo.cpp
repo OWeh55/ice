@@ -66,7 +66,9 @@ namespace ice
 
     for (int i = 0; i < mp.rows(); i++)
       for (int j = 0; j < mp.cols(); j++)
-        m[i][j] = mp[i][j];
+        {
+          m[i][j] = mp[i][j];
+        }
     normalize();
   }
 
@@ -97,10 +99,14 @@ namespace ice
     m.init(dimTarget + 1, dimSource + 1, 1); // init as identity
 
     for (int i = 0; i < dimTarget; i++)
-      m[i][dimSource] = 0.0;
+      {
+        m[i][dimSource] = 0.0;
+      }
 
     for (int j = 0; j < dimSource; j++)
-      m[dimTarget][j] = 0.0;
+      {
+        m[dimTarget][j] = 0.0;
+      }
 
     m[dimTarget][dimSource] = 1.0;
   }
@@ -122,7 +128,9 @@ namespace ice
 
     for (int i = 0; i < mat.rows(); i++)
       for (int j = 0; j < mat.cols(); j++)
-        m[i][j] = mat[i][j];
+        {
+          m[i][j] = mat[i][j];
+        }
 
     IF_FAILED(normalize())
     {
@@ -156,7 +164,9 @@ namespace ice
 
     for (int i = 0; i <= dimTarget; i++)
       for (int k = 0; k <= dimSource; k++)
-        res[i][k] = m[i][k];
+        {
+          res[i][k] = m[i][k];
+        }
 
     return res;
   }
@@ -240,7 +250,9 @@ namespace ice
     matrix<double> h(dimTarget + 1, dimTarget + 1, 1);
 
     for (i = 0; i < dimTarget; i++)
-      h[i][dimTarget] = s[i];
+      {
+        h[i][dimTarget] = s[i];
+      }
 
     m = h * m;
 
@@ -260,7 +272,9 @@ namespace ice
       }
 
     for (i = 0; i < dimSource; i++)
-      m[achse][i] = -m[achse][i];
+      {
+        m[achse][i] = -m[achse][i];
+      }
 
     return OK;
   }
@@ -444,9 +458,13 @@ namespace ice
       for (int j = 0; j < dimTarget + 1; j++)
         {
           if (i == j)
-            h[i][j] = 1.0;
+            {
+              h[i][j] = 1.0;
+            }
           else
-            h[i][j] = 0.0;
+            {
+              h[i][j] = 0.0;
+            }
         }
 
     m = h * m;
@@ -566,7 +584,9 @@ namespace ice
     matrix<double> h(dimTarget + 1, dimTarget + 1, 1);
 
     for (i = 0; i < dimTarget; i++)
-      h[i][i] = f[i];
+      {
+        h[i][i] = f[i];
+      }
 
     h[dimTarget][dimTarget] = 1.0;
 
@@ -679,7 +699,9 @@ namespace ice
     double norm = 0;
 
     for (int i = 0; i < t.dimSource; i++)
-      norm += t.m[t.dimTarget][i] * v[i];
+      {
+        norm += t.m[t.dimTarget][i] * v[i];
+      }
 
     norm += t.m[t.dimTarget][t.dimSource];
 
@@ -688,7 +710,9 @@ namespace ice
         double sum = 0.0;
 
         for (int k = 0; k < t.dimSource; k++)
-          sum += t.m[i][k] * v[k];
+          {
+            sum += t.m[i][k] * v[k];
+          }
 
         sum += t.m[i][t.dimSource];
 
@@ -751,7 +775,9 @@ namespace ice
   {
     int res = OK;
     for (unsigned int i = 0; i < pl.size() && res == OK; i++)
-      res = Transform(tr, pl[i]);
+      {
+        res = Transform(tr, pl[i]);
+      }
     return OK;
   }
 
@@ -760,7 +786,9 @@ namespace ice
     int res = OK;
     pl2.resize(pl1.size());
     for (unsigned int i = 0; i < pl1.size() && res == OK; i++)
-      res = Transform(tr, pl1[i], pl2[i]);
+      {
+        res = Transform(tr, pl1[i], pl2[i]);
+      }
     return OK;
   }
 

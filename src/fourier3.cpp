@@ -81,7 +81,10 @@ namespace ice
         NEED_TEMP = true;
         hdest = NewImgD(xs, ys);
       }
-    else hdest = i3;
+    else
+      {
+        hdest = i3;
+      }
 
     factor = sqrt(double(xs)) * sqrt(double(ys)) / 2;
 
@@ -102,7 +105,9 @@ namespace ice
       {
         for (int y = 0; y < i1.ysize; ++y)
           for (int x = 0; x < i1.xsize; ++x)
-            PutValD(i3, x, y, GetValD(hdest, x, y));
+            {
+              PutValD(i3, x, y, GetValD(hdest, x, y));
+            }
         FreeImgD(hdest);
       }
 
@@ -193,7 +198,10 @@ namespace ice
         NEED_TEMP = true;
         hdest = NewImgD(xs, ys);
       }
-    else hdest = i3;
+    else
+      {
+        hdest = i3;
+      }
 
     factor = 1 / sqrt(double(xs * ys));
     for (int y = 0; y < i1.ysize; ++y)
@@ -237,7 +245,9 @@ namespace ice
       {
         for (int y = 0; y < i3.ysize; ++y)
           for (int x = 0; x < i3.xsize; ++x)
-            PutValD(i3, x, y, GetValD(hdest, x, y));
+            {
+              PutValD(i3, x, y, GetValD(hdest, x, y));
+            }
         FreeImgD(hdest);
       }
 
@@ -290,7 +300,10 @@ namespace ice
         NEED_TEMP = true;
         hdest = NewImgD(xs, ys);
       }
-    else hdest = i3;
+    else
+      {
+        hdest = i3;
+      }
 
     factor = sqrt(double(xs)) * sqrt(double(ys)) / 2;
 
@@ -311,7 +324,9 @@ namespace ice
       {
         for (int y = 0; y < i3.ysize; ++y)
           for (int x = 0; x < i3.xsize; ++x)
-            PutValD(i3, x, y, GetValD(hdest, x, y));
+            {
+              PutValD(i3, x, y, GetValD(hdest, x, y));
+            }
         FreeImgD(hdest);
       }
 

@@ -106,13 +106,19 @@ namespace ice
     // weitere Quadranten durch Kopie und Spiegelung
 
     for (j = 1; j <= i; j++)                   // 2. Quadrant
-      c.Add(8 - data[i - j]);
+      {
+        c.Add(8 - data[i - j]);
+      }
 
     for (j = 0; j < i; j++)                    // 3. Quadrant
-      c.Add((data[j] + 4) % 8);
+      {
+        c.Add((data[j] + 4) % 8);
+      }
 
     for (j = 1; j <= i; j++)                   // 4. Quadrant
-      c.Add(((8 - data[i - j]) + 4) % 8);
+      {
+        c.Add(((8 - data[i - j]) + 4) % 8);
+      }
 
     return c;
   }
@@ -131,7 +137,10 @@ namespace ice
     double phi, f;
     phi = atan2(y - e->ym, x - e->xm);
 
-    if (phi < e->phi_a) phi += 2 * M_PI;
+    if (phi < e->phi_a)
+      {
+        phi += 2 * M_PI;
+      }
 
     if (phi > e->phi_e)
       {
@@ -140,7 +149,10 @@ namespace ice
 
     f = Sqr(x - e->xm) + Sqr(y - e->ym) - e->rr;
 
-    if (f <= 0) return 0;
+    if (f <= 0)
+      {
+        return 0;
+      }
 
     return -1;
   }
@@ -177,7 +189,10 @@ namespace ice
         e.phi_e -= 2 * M_PI;
       }
 
-    if (e.phi_a > e.phi_e) e.phi_e += 2 * M_PI;
+    if (e.phi_a > e.phi_e)
+      {
+        e.phi_e += 2 * M_PI;
+      }
 
     /*Startpunkt bestimmen*/
     ps[0] = RoundInt(par[2] * cos(e.phi_a) + par[0]);
@@ -197,7 +212,10 @@ namespace ice
           {
             Freeman(i).move(ps[0], ps[1], xf, yf);
 
-            if (cs_cls(xf, yf, &e) == 0) break;
+            if (cs_cls(xf, yf, &e) == 0)
+              {
+                break;
+              }
           }
 
         Freeman(i).move(ps[0], ps[1]);
@@ -226,7 +244,10 @@ namespace ice
     e = (ESparam*)param;
     phi = atan2(y - e->ym, x - e->xm);
 
-    if (phi < e->phi_a) phi += 2 * M_PI;
+    if (phi < e->phi_a)
+      {
+        phi += 2 * M_PI;
+      }
 
     if (phi > e->phi_e)
       {
@@ -236,7 +257,10 @@ namespace ice
     f = Sqr((x - e->xm) * e->cc + (y - e->ym) * e->ss) / e->aa + \
         Sqr(-(x - e->xm) * e->ss + (y - e->ym) * e->cc) / e->bb - 1;
 
-    if (f <= 0) return (0);
+    if (f <= 0)
+      {
+        return (0);
+      }
 
     return (-1);
   }
@@ -288,7 +312,10 @@ namespace ice
         e.phi_e -= 2 * M_PI;
       }
 
-    if (e.phi_a > e.phi_e) e.phi_e += 2 * M_PI;
+    if (e.phi_a > e.phi_e)
+      {
+        e.phi_e += 2 * M_PI;
+      }
 
     /*Startpunkt bestimmen*/
     phi = PHI1;
@@ -304,7 +331,10 @@ namespace ice
           {
             Freeman(i).move(ps[0], ps[1], xf, yf);
 
-            if (es_cls(xf, yf, &e) == 0) break;
+            if (es_cls(xf, yf, &e) == 0)
+              {
+                break;
+              }
           }
 
         Freeman(i).move(ps[0], ps[1]);
@@ -334,7 +364,9 @@ namespace ice
         Sqr(-(x - e->xm) * e->ss + (y - e->ym) * e->cc) / e->bb - 1;
 
     if (f <= 0)
-      return 0;
+      {
+        return 0;
+      }
 
     return -1;
   }
@@ -345,7 +377,9 @@ namespace ice
     Contur c(RoundInt(par[0]), RoundInt(par[1]));
 
     if ((par[2] < 1.0) && (par[3] < 1.0))
-      return c;
+      {
+        return c;
+      }
 
     Eparam e;
     int ps[2];
@@ -360,7 +394,10 @@ namespace ice
     ps[0] = (int)par[0];
     ps[1] = (int)par[1];
 
-    while (e_cls(ps[0], ps[1], &e) == 0) ps[0]++;
+    while (e_cls(ps[0], ps[1], &e) == 0)
+      {
+        ps[0]++;
+      }
 
     ps[0]--;
 

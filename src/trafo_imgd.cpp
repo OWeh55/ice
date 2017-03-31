@@ -66,7 +66,9 @@ namespace ice
         has_temp = true;
       }
     else
-      tsimg = hsimg;
+      {
+        tsimg = hsimg;
+      }
 
     bool projective = true;
 
@@ -85,7 +87,9 @@ namespace ice
     //      projective=false;
 
     if ((m20 == 0.0) && (m21 == 0.0) && (m22 == 1.0))
-      projective = false;
+      {
+        projective = false;
+      }
 
     if (mode != INTERPOL)
       {
@@ -113,12 +117,15 @@ namespace ice
                 {
                   PutValD(dimg, x, y, 0);
 
-                  if (IsImg(mark)) PutVal(mark, x, y, val);
+                  if (IsImg(mark))
+                    {
+                      PutVal(mark, x, y, val);
+                    }
                 }
             }
       }
 
-    else // if (mode!=INTERPOL)
+    else   // if (mode!=INTERPOL)
       {
         for (int y = 0; y < dimg.ysize; ++y)
           for (int x = 0; x < dimg.xsize; ++x)

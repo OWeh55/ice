@@ -66,7 +66,10 @@ namespace ice
         sd += d * d;
       }
 
-    if (sd == 0) return 0.0;
+    if (sd == 0)
+      {
+        return 0.0;
+      }
 
     sd /= pl.size();
 
@@ -106,8 +109,14 @@ namespace ice
 
     double p, fi;
 
-    if (s1 < s2) fi = phi1;
-    else fi = phi2;
+    if (s1 < s2)
+      {
+        fi = phi1;
+      }
+    else
+      {
+        fi = phi2;
+      }
 
     p = x * cos(fi) + y * sin(fi);
 
@@ -194,7 +203,7 @@ namespace ice
         xy += px * py * pw;
       }
 
-    if (n < 1e-10) // sum of weights too small
+    if (n < 1e-10)   // sum of weights too small
       {
         Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
         return LineSeg();
@@ -239,7 +248,9 @@ namespace ice
         res = FitLine(pl, weight);
 
         if (i < n - 1)
-          mse = new_weights(pl, weight, res);
+          {
+            mse = new_weights(pl, weight, res);
+          }
       }
 
     return res;

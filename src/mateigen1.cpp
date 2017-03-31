@@ -95,7 +95,9 @@ namespace ice
     for (int ip = 0; ip < n; ip++)
       {
         for (int iq = 0; iq < n; iq++)
-          evect.at(ip).at(iq) = 0.0;
+          {
+            evect.at(ip).at(iq) = 0.0;
+          }
 
         evect.at(ip).at(ip) = 1.0;
       }
@@ -115,7 +117,9 @@ namespace ice
         for (int ip = 0; ip < n - 1; ip++)
           {
             for (int iq = ip + 1; iq < n; iq++)
-              sm += fabs(Amat.at(ip).at(iq));
+              {
+                sm += fabs(Amat.at(ip).at(iq));
+              }
           }
 
         //    Printf("%d: %f\n",i,sm);
@@ -126,9 +130,13 @@ namespace ice
           }
 
         if (i < 4)
-          tresh = 0.2 * sm / (n * n);
+          {
+            tresh = 0.2 * sm / (n * n);
+          }
         else
-          tresh = 0.0;
+          {
+            tresh = 0.0;
+          }
 
         for (int ip = 0; ip < n - 1; ip++)
           {
@@ -138,20 +146,26 @@ namespace ice
 
                 if (i > 4 && fabs(eval.at(ip)) + g == fabs(eval.at(ip))
                     && fabs(eval.at(iq)) + g == fabs(eval.at(iq)))
-                  Amat.at(ip).at(iq) = 0.0;
+                  {
+                    Amat.at(ip).at(iq) = 0.0;
+                  }
                 else if (fabs(Amat.at(ip).at(iq)) > tresh)
                   {
                     h = eval.at(iq) - eval.at(ip);
 
                     if (fabs(h) + g == fabs(h))
-                      t = (Amat.at(ip).at(iq)) / h;
+                      {
+                        t = (Amat.at(ip).at(iq)) / h;
+                      }
                     else
                       {
                         theta = 0.5 * h / (Amat.at(ip).at(iq));
                         t = 1.0 / (fabs(theta) + sqrt(1.0 + theta * theta));
 
                         if (theta < 0.0)
-                          t = -t;
+                          {
+                            t = -t;
+                          }
                       }
 
                     c = 1.0 / sqrt(1 + t * t);
@@ -238,7 +252,7 @@ namespace ice
               }
           }
 
-        if (idx_max != i) // Tausch nötig ?
+        if (idx_max != i)   // Tausch nötig ?
           {
             // tauschen
             std::swap(d[idx_max], d[i]);
@@ -253,13 +267,17 @@ namespace ice
         // eigenvektor erzeugen
         std::vector<double> v;
         for (int k = 0; k < n; ++k)
-          v.push_back(mv[k][i]);
+          {
+            v.push_back(mv[k][i]);
+          }
         ev.push_back(v);
       }
 
     std::vector<double> v;
     for (int k = 0; k < n; ++k)
-      v.push_back(mv[k][n - 1]);
+      {
+        v.push_back(mv[k][n - 1]);
+      }
     ev.push_back(v);
   }
 
@@ -279,7 +297,9 @@ namespace ice
     // symmetrize matrix
     for (int ip = 0; ip < n; ip++)
       for (int iq = 0; iq < ip; iq++)
-        Amat[ip][iq] = Amat[iq][ip] = 0.5 * (Amat[ip][iq] + Amat[iq][ip]);
+        {
+          Amat[ip][iq] = Amat[iq][ip] = 0.5 * (Amat[ip][iq] + Amat[iq][ip]);
+        }
 
     matrix<double> evect(n, n);
     eval.resize(n);
@@ -291,7 +311,9 @@ namespace ice
     for (int ip = 0; ip < n; ip++)
       {
         for (int iq = 0; iq < n; iq++)
-          evect[ip][iq] = 0.0;
+          {
+            evect[ip][iq] = 0.0;
+          }
 
         evect[ip][ip] = 1.0;
       }
@@ -312,7 +334,9 @@ namespace ice
         for (int ip = 0; ip < n - 1; ip++)
           {
             for (int iq = ip + 1; iq < n; iq++)
-              sm += fabs(Amat[ip][iq]);
+              {
+                sm += fabs(Amat[ip][iq]);
+              }
           }
 
         //    Printf("%d: %f\n",i,sm);
@@ -329,20 +353,26 @@ namespace ice
 
                     if (i > 4 && fabs(eval[ip]) + g == fabs(eval[ip])
                         && fabs(eval[iq]) + g == fabs(eval[iq]))
-                      Amat[ip][iq] = 0.0;
+                      {
+                        Amat[ip][iq] = 0.0;
+                      }
                     else if (fabs(Amat[ip][iq]) > thresh)
                       {
                         double h = eval[iq] - eval[ip];
                         double t;
                         if (fabs(h) + g == fabs(h))
-                          t = Amat[ip][iq] / h;
+                          {
+                            t = Amat[ip][iq] / h;
+                          }
                         else
                           {
                             double theta = 0.5 * h / Amat[ip][iq];
                             t = 1.0 / (fabs(theta) + sqrt(1.0 + theta * theta));
 
                             if (theta < 0.0)
-                              t = -t;
+                              {
+                                t = -t;
+                              }
                           }
 
                         double c = 1.0 / sqrt(1 + t * t);
@@ -428,7 +458,7 @@ namespace ice
               }
           }
 
-        if (idx_max != i) // Tausch nötig ?
+        if (idx_max != i)   // Tausch nötig ?
           {
             // tauschen
             double p = d.at(idx_max);
@@ -467,14 +497,23 @@ namespace ice
             ct = at / bt;
             return bt * sqrt(1.0 + ct * ct);
           }
-        else return 0.0;
+        else
+          {
+            return 0.0;
+          }
       }
   }
 
   static inline double sign_nr(double a, double b)
   {
-    if (b >= 0.0) return fabs(a);
-    else return -fabs(a);
+    if (b >= 0.0)
+      {
+        return fabs(a);
+      }
+    else
+      {
+        return -fabs(a);
+      }
   }
 
   int SingularValueDcmp(const Matrix& A, Matrix& a, Vector& w, Matrix& v)
@@ -523,7 +562,9 @@ namespace ice
         if (i < m)
           {
             for (int k = i; k < m; k++)
-              scale += fabs(a.at(k).at(i));
+              {
+                scale += fabs(a.at(k).at(i));
+              }
 
             if (scale)
               {
@@ -545,17 +586,23 @@ namespace ice
                         s1 = 0.0;
 
                         for (int k = i; k < m; k++)
-                          s1 += a.at(k).at(i) * a.at(k).at(j);
+                          {
+                            s1 += a.at(k).at(i) * a.at(k).at(j);
+                          }
 
                         f = s1 / h;
 
                         for (int k = i; k < m; k++)
-                          a.at(k).at(j) += f * a.at(k).at(i);
+                          {
+                            a.at(k).at(j) += f * a.at(k).at(i);
+                          }
                       }
                   }
 
                 for (int k = i; k < m; k++)
-                  a.at(k).at(i) *= scale;
+                  {
+                    a.at(k).at(i) *= scale;
+                  }
               }
           }
 
@@ -565,7 +612,9 @@ namespace ice
         if (i < m && i != n - 1)
           {
             for (int k = l; k < n; k++)
-              scale += fabs(a.at(i).at(k));
+              {
+                scale += fabs(a.at(i).at(k));
+              }
 
             if (scale)
               {
@@ -581,7 +630,9 @@ namespace ice
                 a.at(i).at(l) = f - g;
 
                 for (int k = l; k < n; k++)
-                  rv1.at(k) = a.at(i).at(k) / h;
+                  {
+                    rv1.at(k) = a.at(i).at(k) / h;
+                  }
 
                 if (i != m - 1)
                   {
@@ -590,15 +641,21 @@ namespace ice
                         s1 = 0.0;
 
                         for (int k = l; k < n; k++)
-                          s1 += a.at(j).at(k) * a.at(i).at(k);
+                          {
+                            s1 += a.at(j).at(k) * a.at(i).at(k);
+                          }
 
                         for (int k = l; k < n; k++)
-                          a.at(j).at(k) += s1 * rv1.at(k);
+                          {
+                            a.at(j).at(k) += s1 * rv1.at(k);
+                          }
                       }
                   }
 
                 for (int k = l; k < n; k++)
-                  a.at(i).at(k) *= scale;
+                  {
+                    a.at(i).at(k) *= scale;
+                  }
               }
           }
 
@@ -612,22 +669,30 @@ namespace ice
             if (g)
               {
                 for (int j = l; j < n; j++)
-                  v.at(j).at(i) = (a.at(i).at(j) / a.at(i).at(l)) / g;
+                  {
+                    v.at(j).at(i) = (a.at(i).at(j) / a.at(i).at(l)) / g;
+                  }
 
                 for (int j = l; j < n; j++)
                   {
                     s1 = 0.0;
 
                     for (int k = l; k < n; k++)
-                      s1 += a.at(i).at(k) * v.at(k).at(j);
+                      {
+                        s1 += a.at(i).at(k) * v.at(k).at(j);
+                      }
 
                     for (int k = l; k < n; k++)
-                      v.at(k).at(j) += s1 * v.at(k).at(i);
+                      {
+                        v.at(k).at(j) += s1 * v.at(k).at(i);
+                      }
                   }
               }
 
             for (int j = l; j < n; j++)
-              v.at(i).at(j) = v.at(j).at(i) = 0.0;
+              {
+                v.at(i).at(j) = v.at(j).at(i) = 0.0;
+              }
           }
 
         v.at(i).at(i) = 1.0;
@@ -642,7 +707,9 @@ namespace ice
 
         if (i < n - 1)
           for (int j = l; j < n; j++)
-            a.at(i).at(j) = 0.0;
+            {
+              a.at(i).at(j) = 0.0;
+            }
 
         if (g != 0)
           {
@@ -655,22 +722,30 @@ namespace ice
                     s1 = 0.0;
 
                     for (int k = l; k < m; k++)
-                      s1 += a.at(k).at(i) * a.at(k).at(j);
+                      {
+                        s1 += a.at(k).at(i) * a.at(k).at(j);
+                      }
 
                     f = (s1 / a.at(i).at(i)) * g;
 
                     for (int k = i; k < m; k++)
-                      a.at(k).at(j) += f * a.at(k).at(i);
+                      {
+                        a.at(k).at(j) += f * a.at(k).at(i);
+                      }
                   }
               }
 
             for (int j = i; j < m; j++)
-              a.at(j).at(i) *= g;
+              {
+                a.at(j).at(i) *= g;
+              }
           }
         else
           {
             for (int j = i; j < m; j++)
-              a.at(j).at(i) = 0.0;
+              {
+                a.at(j).at(i) = 0.0;
+              }
           }
 
         ++a.at(i).at(i);
@@ -743,7 +818,9 @@ namespace ice
                     w.at(k) = -z;
 
                     for (int j = 0; j < n; j++)
-                      v.at(j).at(k) = (-v.at(j).at(k));
+                      {
+                        v.at(j).at(k) = (-v.at(j).at(k));
+                      }
                   }
 
                 break;

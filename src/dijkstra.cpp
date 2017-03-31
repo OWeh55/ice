@@ -80,10 +80,12 @@ namespace ice
         heap.pop();
         int state = GetVal(marker, ap);
 
-        if (state == 1) // reached destination
-          ready = true;
+        if (state == 1)   // reached destination
+          {
+            ready = true;
+          }
 
-        if (state < 2) // point unhandled
+        if (state < 2)   // point unhandled
           {
             PutVal(marker, ap, ap.dir.Int() + 2);
 
@@ -98,12 +100,16 @@ namespace ice
                       {
                         int mrk = GetVal(marker, np);
 
-                        if (mrk < 2) // unbehandelt
+                        if (mrk < 2)   // unbehandelt
                           {
                             if (dir & 1)
-                              np.val += cf(img, np) * 1.414;
+                              {
+                                np.val += cf(img, np) * 1.414;
+                              }
                             else
-                              np.val += cf(img, np);
+                              {
+                                np.val += cf(img, np);
+                              }
 
                             np.dir = dir;
                             heap.push(np);

@@ -59,7 +59,10 @@ namespace ice
     (*functor)(*funcresult);
 
     // return distances as double[]
-    for (i = 0; i < m; i++) fva[i] = (*funcresult)[i];
+    for (i = 0; i < m; i++)
+      {
+        fva[i] = (*funcresult)[i];
+      }
 
     return 0;
   }
@@ -96,7 +99,9 @@ namespace ice
     double* x = new double[onr];
 
     for (i = 0; i < onr; i++)
-      x[i] = *refvecp[i];
+      {
+        x[i] = *refvecp[i];
+      }
 
     // Funktor merken für Fehlerfunktion
     functor = &fcn;
@@ -116,7 +121,9 @@ namespace ice
       }
 
     for (i = 0; i < onr; i++)
-      *refvecp[i] = x[i];
+      {
+        *refvecp[i] = x[i];
+      }
 
     delete funcresult;
     delete [] x;

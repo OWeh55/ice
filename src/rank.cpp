@@ -53,7 +53,9 @@ namespace ice
       counter = new int[classes];
       counter[0] = nValues;
       for (int i = 1; i < classes; i++)
-        counter[i] = 0;
+        {
+          counter[i] = 0;
+        }
     }
 
     ~minimalHistogram()
@@ -82,11 +84,15 @@ namespace ice
     {
       counter[val1]++;
       if (val1 < rankindex)
-        addval--;
+        {
+          addval--;
+        }
 
       counter[val2]--;
       if (val2 < rankindex)
-        addval++;
+        {
+          addval++;
+        }
 
       return 0;
     }
@@ -102,9 +108,13 @@ namespace ice
   void PutValL(const Image& img, int x, int y, int val)
   {
     if (val < 0)
-      PutVal(img, x, y, 0);
+      {
+        PutVal(img, x, y, 0);
+      }
     else
-      PutVal(img, x, y, val);
+      {
+        PutVal(img, x, y, val);
+      }
   }
 
   /*************************************************/
@@ -136,20 +146,28 @@ namespace ice
       }
 
     for (y = 0; y < y1; y++)
-      for (x = 0; x < imgd->xsize; x++)  /*Rand zuruecksetzen*/
-        PutVal(imgd, x, y, 0);
+      for (x = 0; x < imgd->xsize; x++)   /*Rand zuruecksetzen*/
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
     for (y = y2; y < imgd->ysize; y++)
       for (x = 0; x < imgd->xsize; x++)
-        PutVal(imgd, x, y, 0);
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
     for (x = 0; x < x1; x++)
       for (y = 0; y < imgd->ysize; y++)
-        PutVal(imgd, x, y, 0);
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
     for (x = x2; x < imgd->xsize; x++)
       for (y = 0; y < imgd->ysize; y++)
-        PutVal(imgd, x, y, 0);
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
 
     minimalHistogram rh(img.maxval + 1, fsize * fsize, rank);
@@ -159,7 +177,9 @@ namespace ice
 
     for (int i = x - size2; i <= x + size2; i++)
       for (int j = y - size2; j <= y + size2; j++)
-        rh.addsub(GetVal(img, i, j), 0);
+        {
+          rh.addsub(GetVal(img, i, j), 0);
+        }
 
     PutValL(imgd, x, y, GetVal(img, x, y) - rh.get());
 
@@ -179,7 +199,10 @@ namespace ice
 
         y++;
 
-        if (y > y2) break;
+        if (y > y2)
+          {
+            break;
+          }
 
         for (i = x - size2; i <= x + size2; i++)
           {
@@ -202,7 +225,10 @@ namespace ice
 
         y++;
 
-        if (y > y2) break;
+        if (y > y2)
+          {
+            break;
+          }
 
         for (i = x - size2; i <= x + size2; i++)
           {
@@ -247,20 +273,28 @@ namespace ice
       }
 
     for (y = 0; y < y1; y++)
-      for (x = 0; x < imgd->xsize; x++)  /*Rand zuruecksetzen*/
-        PutVal(imgd, x, y, 0);
+      for (x = 0; x < imgd->xsize; x++)   /*Rand zuruecksetzen*/
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
     for (y = y2; y < imgd->ysize; y++)
       for (x = 0; x < imgd->xsize; x++)
-        PutVal(imgd, x, y, 0);
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
     for (x = 0; x < x1; x++)
       for (y = 0; y < imgd->ysize; y++)
-        PutVal(imgd, x, y, 0);
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
     for (x = x2; x < imgd->xsize; x++)
       for (y = 0; y < imgd->ysize; y++)
-        PutVal(imgd, x, y, 0);
+        {
+          PutVal(imgd, x, y, 0);
+        }
 
     x = x1;
     y = y1;
@@ -271,7 +305,9 @@ namespace ice
 
     for (j = y - sizey; j <= y + sizey; j++) /*.. initialisieren*/
       for (i = xl; i <= xr; i++)
-        rh.addsub(GetVal(img, i, j), 0);
+        {
+          rh.addsub(GetVal(img, i, j), 0);
+        }
 
     PutVal(imgd, x, y, rh.get()); /*erster Punkt*/
 
@@ -292,7 +328,10 @@ namespace ice
 
         y++;                             /*naechste Zeile*/
 
-        if (y > y2) break;
+        if (y > y2)
+          {
+            break;
+          }
 
         for (i = xl; i <= xr; i++)
           {
@@ -316,7 +355,10 @@ namespace ice
 
         y++;                               /*nächste Zeile*/
 
-        if (y > y2) break;
+        if (y > y2)
+          {
+            break;
+          }
 
         for (i = xl; i <= xr; i++)
           {

@@ -32,7 +32,9 @@ namespace ice
     for (int z = 0; z < zs; z++)
       for (int y = 0; y < ys; y++)
         for (int x = 0; x < xs; x++)
-          m(x, y, z) = img.getPixel(x, y, z);
+          {
+            m(x, y, z) = img.getPixel(x, y, z);
+          }
   }
 
   void Matrix2Image(const Matrix3d& m, Image3d<Image>& img, int mode)
@@ -45,7 +47,9 @@ namespace ice
         for (int z = 0; z < zs; z++)
           for (int y = 0; y < ys; y++)
             for (int x = 0; x < xs; x++)
-              img.setPixel(x, y, z, limited(m(x, y, z), 0, 255));
+              {
+                img.setPixel(x, y, z, limited(m(x, y, z), 0, 255));
+              }
       }
     else if (mode == 1)
       {

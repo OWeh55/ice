@@ -42,7 +42,10 @@ namespace ice
 
   nodep graph::AddNode(int pid)
   {
-    if (pid < 0) pid = maxnodeid++;
+    if (pid < 0)
+      {
+        pid = maxnodeid++;
+      }
 
     nodep n = new node(pid);
     return AddNode(nodetree, n);
@@ -50,7 +53,10 @@ namespace ice
 
   nodep graph::AddNode(const Vector& f, int pid)
   {
-    if (pid < 0) pid = maxnodeid++;
+    if (pid < 0)
+      {
+        pid = maxnodeid++;
+      }
 
     nodep n = new node(f, pid);
     return AddNode(nodetree, n);
@@ -58,10 +64,19 @@ namespace ice
 
   nodep graph::AddNode(nodep& nt, nodep n)
   {
-    if (nt == NULL) return nt = n;
+    if (nt == NULL)
+      {
+        return nt = n;
+      }
 
-    if (nt->id < n->id) return AddNode(nt->left, n);
-    else return AddNode(nt->right, n);
+    if (nt->id < n->id)
+      {
+        return AddNode(nt->left, n);
+      }
+    else
+      {
+        return AddNode(nt->right, n);
+      }
   }
 
   void graph::DelNodeTree(nodep& nt)

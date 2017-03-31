@@ -62,19 +62,31 @@ namespace ice
 
     Matrix c1 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     Matrix c2 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     Matrix lxi = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     Matrix myi = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     double x1;
     double x2;
@@ -179,24 +191,39 @@ namespace ice
 
     Matrix c1 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     Matrix c2 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     Matrix c3 = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
 
     Matrix lxi = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     Matrix myi = Matrix(4, 4, 0);
 
-    if (GetError() != OK)Message(FNAME, M_0, GetError());
+    if (GetError() != OK)
+      {
+        Message(FNAME, M_0, GetError());
+      }
 
     double x1;
     double x2;
@@ -258,7 +285,10 @@ namespace ice
         c2 = c2 + wi * !(lxi - myi);
       }
 
-    for (int i = 0; i < 4; i++) c3[i][i] = 0.5 / sum_weights; //in fact, this is (c3 + !c3)^(-1)
+    for (int i = 0; i < 4; i++)
+      {
+        c3[i][i] = 0.5 / sum_weights;  //in fact, this is (c3 + !c3)^(-1)
+      }
 
     //Matrix A = (1.0/double(k))*(!c2)*c2 + 2*c1;
     Matrix A = 2 * (!c2) * c3 * c2 + c1 + (!c1);

@@ -103,7 +103,10 @@ namespace ice
 
     for (i = 0; i < pl->lng; i++)
       {
-        if (pl->wptr[i] < thr) pl->wptr[i] = 0;
+        if (pl->wptr[i] < thr)
+          {
+            pl->wptr[i] = 0;
+          }
         else
           {
             mean += pl->wptr[i];
@@ -146,7 +149,9 @@ namespace ice
         (Inside(img, (int)lp[0][0], (int)lp[0][1]) &&
          Inside(img, (int)lp[1][0], (int)lp[1][1]))
        )
-      return -1;
+      {
+        return -1;
+      }
 
     ConvPointHesse(lp[0], lp[1], p, phi);
 
@@ -207,7 +212,10 @@ namespace ice
 
     for (i = 0; i < pl->lng; i++)
       {
-        if (pl->wptr[i] < thr) pl->wptr[i] = 0;
+        if (pl->wptr[i] < thr)
+          {
+            pl->wptr[i] = 0;
+          }
         else
           {
             mean += pl->wptr[i];
@@ -219,7 +227,10 @@ namespace ice
     rc = FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma);
     OnMessage();
 
-    if (rc != OK) return (-1);
+    if (rc != OK)
+      {
+        return (-1);
+      }
 
     *p = par[0];
     *phi = par[1];

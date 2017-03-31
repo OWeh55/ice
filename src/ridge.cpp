@@ -65,7 +65,10 @@ namespace ice
             Freeman(dir2).move(xx, yy, xf, yf);
             s = v + GetVal(img, xf, yf);
 
-            if (s < smin) smin = s;
+            if (s < smin)
+              {
+                smin = s;
+              }
 
             if (s > smax)
               {
@@ -127,9 +130,15 @@ namespace ice
       }
 
     /* an verkleinertes Suchfenster anpassen*/
-    if (x < wxi) x = wxi;
+    if (x < wxi)
+      {
+        x = wxi;
+      }
 
-    if (y < wyi) y = wyi;
+    if (y < wyi)
+      {
+        y = wyi;
+      }
 
     if (x > wxa)
       {
@@ -138,7 +147,10 @@ namespace ice
             y++;
             x = wxi;
           }
-        else return (NOT_FOUND);
+        else
+          {
+            return (NOT_FOUND);
+          }
       }
 
     if (y > wya)
@@ -148,9 +160,15 @@ namespace ice
             x++;
             y = wyi;
 
-            if (x > wxa) return (NOT_FOUND);
+            if (x > wxa)
+              {
+                return (NOT_FOUND);
+              }
           }
-        else return (NOT_FOUND);
+        else
+          {
+            return (NOT_FOUND);
+          }
       }
 
     if (dir == HORZ)
@@ -182,7 +200,10 @@ namespace ice
                             s += GetVal(imgo, xf, yf);
                           }
 
-                        if (s == 0) return (OK);
+                        if (s == 0)
+                          {
+                            return (OK);
+                          }
                       }
                   }
 
@@ -229,7 +250,10 @@ namespace ice
                             s += GetVal(imgo, xf, yf);
                           }
 
-                        if (s == 0) return (OK);
+                        if (s == 0)
+                          {
+                            return (OK);
+                          }
                       }
                   }
 
@@ -339,13 +363,22 @@ namespace ice
       {
         aktdir = r_NextDir(imgv, xx, yy, aktdir, val);
 
-        if (val < pgl) break;
+        if (val < pgl)
+          {
+            break;
+          }
 
         Freeman(aktdir).move(xx, yy, xn, yn);
 
-        if (GetVal(imgo, xn, yn) != 0) break;
+        if (GetVal(imgo, xn, yn) != 0)
+          {
+            break;
+          }
 
-        if (xn < wxi || xn > wxa || yn < wyi || yn > wya) break;
+        if (xn < wxi || xn > wxa || yn < wyi || yn > wya)
+          {
+            break;
+          }
 
         xx = xn;
         yy = yn;
@@ -364,13 +397,22 @@ namespace ice
       {
         aktdir = r_NextDir(imgv, xx, yy, aktdir, val);
 
-        if (val < pgl) break;
+        if (val < pgl)
+          {
+            break;
+          }
 
         Freeman(aktdir).move(xx, yy, xn, yn);
 
-        if (GetVal(imgo, xn, yn) != 0) break;
+        if (GetVal(imgo, xn, yn) != 0)
+          {
+            break;
+          }
 
-        if (xn < wxi || xn > wxa || yn < wyi || yn > wya) break;
+        if (xn < wxi || xn > wxa || yn < wyi || yn > wya)
+          {
+            break;
+          }
 
         xx = xn;
         yy = yn;

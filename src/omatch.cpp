@@ -44,8 +44,14 @@ namespace ice
     // very special (optimized) modulo.
     // works only, if b > 0
     // and a within [-b..2b)
-    if (a < 0) return a + b;
-    if (a >= b) return a - b;
+    if (a < 0)
+      {
+        return a + b;
+      }
+    if (a >= b)
+      {
+        return a - b;
+      }
     return a;
   }
 
@@ -63,7 +69,7 @@ namespace ice
 
     vector<double> min(ny);
 
-    for (int y = 0; y < ny; y++) // first column, all rows
+    for (int y = 0; y < ny; y++)   // first column, all rows
       {
         min[y] = distance[0][y];
       }
@@ -72,10 +78,10 @@ namespace ice
     int dy1 = (maindir > 0) ? -1 : 1;
     int dy2 = (maindir > 0) ? -2 : 2;
 
-    for (int x = 1; x < nx; ++x) // all columns
+    for (int x = 1; x < nx; ++x)   // all columns
       {
         vector<double> next_min(ny);
-        for (int y = 0; y < ny; y++) // all rows
+        for (int y = 0; y < ny; y++)   // all rows
           {
             int y1 = MyMod(y + dy1, ny);
             int y2 = MyMod(y + dy2, ny);
@@ -133,7 +139,9 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < c.Number(); ++i)
-      p1.push_back(c.getPoint(i));
+      {
+        p1.push_back(c.getPoint(i));
+      }
 
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
@@ -144,7 +152,9 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < m.rows(); ++i)
-      p1.push_back(Point(m[i][0], m[i][1]));
+      {
+        p1.push_back(Point(m[i][0], m[i][1]));
+      }
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -154,7 +164,9 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < m.rows(); ++i)
-      p1.push_back(Point(m[i][0], m[i][1]));
+      {
+        p1.push_back(Point(m[i][0], m[i][1]));
+      }
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -164,7 +176,9 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < (int)pl.size(); ++i)
-      p1.push_back(Point(pl[i]));
+      {
+        p1.push_back(Point(pl[i]));
+      }
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -174,7 +188,9 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < (int)pl.size(); ++i)
-      p1.push_back(pl[i]);
+      {
+        p1.push_back(pl[i]);
+      }
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -191,7 +207,9 @@ namespace ice
           {
             int i1 = i + 1;
             if (i1 >= (int)pl.size())
-              i1 = 0;
+              {
+                i1 = 0;
+              }
             pl_new.push_back(pl[i]);
 
             if ((pl[i1] - pl[i]).r() > distance)
@@ -273,12 +291,16 @@ namespace ice
       }
 
     if (pl1.size() >= pl2.size())
-      calcReferences(pl1, pl2);
+      {
+        calcReferences(pl1, pl2);
+      }
     else
       {
         calcReferences(pl2, pl1);
         for (int i = 0; i < (int)references.rows(); ++i)
-          std::swap(references[i][0], references[i][1]);
+          {
+            std::swap(references[i][0], references[i][1]);
+          }
       }
     state |= st_references;
   }
@@ -343,7 +365,9 @@ namespace ice
         return;
       }
     if ((state & st_references) == 0)
-      calcReferences();
+      {
+        calcReferences();
+      }
     i1.resize(references.rows());
     i2.resize(references.rows());
     for (int i = 0; i < (int)references.rows(); ++i)
@@ -362,7 +386,9 @@ namespace ice
         return;
       }
     if ((state & st_references) == 0)
-      calcReferences();
+      {
+        calcReferences();
+      }
     opl1.resize(references.rows());
     opl2.resize(references.rows());
     for (int i = 0; i < (int)references.rows(); ++i)
@@ -456,9 +482,13 @@ namespace ice
       {
         vector<double> ff;
         if (HomoAffinHuInvar(m, ff, pl[i], tmode) != 0)
-          return 1;
+          {
+            return 1;
+          }
         for (int k = 0; k < 9; ++k)
-          feat[i][k] = ff[k];
+          {
+            feat[i][k] = ff[k];
+          }
       }
 
     return 0;
@@ -484,7 +514,7 @@ namespace ice
     //    int y1, y2;
     int dy1, dy2;
 
-    for (int y = 0; y < ny; y++) // first column, all rows
+    for (int y = 0; y < ny; y++)   // first column, all rows
       {
         min1[y] = distance[0][y];
       }
@@ -502,9 +532,9 @@ namespace ice
         dy2 = 2;
       }
 
-    for (int x = 1; x < nx; x++) // all columns
+    for (int x = 1; x < nx; x++)   // all columns
       {
-        for (int y = 0; y < ny; y++) // all rows
+        for (int y = 0; y < ny; y++)   // all rows
           {
             int y1 = MyMod(y + dy1, ny);
             int y2 = MyMod(y + dy2, ny);
@@ -534,7 +564,7 @@ namespace ice
 
         if (x < nx)
           {
-            for (int y = 0; y < ny; y++) // all rows
+            for (int y = 0; y < ny; y++)   // all rows
               {
                 int y1 = MyMod(y + dy1, ny);
                 int y2 = MyMod(y + dy2, ny);
@@ -566,7 +596,9 @@ namespace ice
     if (minarray == 1)
       {
         for (int i = 0; i < ny; i++)
-          min2[i] = min1[i];
+          {
+            min2[i] = min1[i];
+          }
       }
 
     double minimum = min2[0];
@@ -651,7 +683,10 @@ namespace ice
 #endif
             distance.at(i).at(j) = dist;
 
-            if (dist > max) max = dist;
+            if (dist > max)
+              {
+                max = dist;
+              }
           }
       }
 

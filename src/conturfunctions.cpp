@@ -50,7 +50,9 @@ namespace ice
     if (IsImg(imgo))
       {
         if (GetValUnchecked(imgo, x, y) != 0)
-          return isunknown;
+          {
+            return isunknown;
+          }
       }
 
     return object(imgv, x, y, pgl);
@@ -61,7 +63,9 @@ namespace ice
       int x, int y)
   {
     if ((x < 0) || (x >= imgv->xsize) || (y < 0) || (y >= imgv->ysize))
-      return isunknown;
+      {
+        return isunknown;
+      }
 
     return checkobjectstart(imgv, imgo, object, pgl, x, y);
   }
@@ -72,12 +76,16 @@ namespace ice
       object_rc marked, object_rc outside)
   {
     if ((x < 0) || (x >= imgv->xsize) || (y < 0) || (y >= imgv->ysize))
-      return outside;
+      {
+        return outside;
+      }
 
     if (IsImg(imgo))
       {
         if (GetValUnchecked(imgo, x, y) != 0)
-          return marked;
+          {
+            return marked;
+          }
       }
 
     return object(imgv, x, y, pgl);
@@ -131,7 +139,10 @@ namespace ice
     wxa = imgv->xsize - 1;
     wya = imgv->ysize - 1;
 
-    if (object == NULL) object = ObjectThr;
+    if (object == NULL)
+      {
+        object = ObjectThr;
+      }
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
       {
@@ -356,7 +367,10 @@ namespace ice
     xs = ps[0];
     ys = ps[1];
 
-    if (object == NULL) object = ObjectThr;
+    if (object == NULL)
+      {
+        object = ObjectThr;
+      }
 
     if (!IsImg(imgv))
       {
@@ -503,7 +517,7 @@ namespace ice
                         stop = true;
                       }
                   }
-                else /* obj==isobject */
+                else     /* obj==isobject */
                   {
                     // ?? XX
                     // ?? XX
@@ -544,7 +558,7 @@ namespace ice
                             //y2 = y4;
                             c.Add((dir + dir2) & 7);
                           }
-                        else /* obj == isunknown */
+                        else     /* obj == isunknown */
                           {
                             // uu XX
                             // uu XX
@@ -566,7 +580,7 @@ namespace ice
       }
     while (second && stop);
 
-    if (!second) // zwei durchläufe waren nötig
+    if (!second)   // zwei durchläufe waren nötig
       {
         c.InvDir();
         c.Add(c1);

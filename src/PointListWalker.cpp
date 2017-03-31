@@ -31,7 +31,9 @@ namespace ice
     y += dp.y;
 
     for (unsigned int i = 0; i < pl.size(); ++i)
-      pl[i] += dp;
+      {
+        pl[i] += dp;
+      }
     init();
   }
 

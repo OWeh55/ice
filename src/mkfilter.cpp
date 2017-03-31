@@ -34,22 +34,32 @@ namespace ice
     int p = 1;
 
     for (int i = 0; i < e; i++)
-      p *= b;
+      {
+        p *= b;
+      }
 
     return p;
   }
 #else
   static int powi(int b, int e)
   {
-    if (e < 1) return 1;
+    if (e < 1)
+      {
+        return 1;
+      }
     else
       {
         int p = powi(b, e / 2);
         p = p * p;
 
-        if (e % 2 == 0) return p;
+        if (e % 2 == 0)
+          {
+            return p;
+          }
         else
-          return b * p;
+          {
+            return b * p;
+          }
       }
   }
 #endif
@@ -107,7 +117,9 @@ namespace ice
 
     for (int j = 0; j < m; j++)
       for (int i = 0; i < m; i++)
-        mask[i][j] = az[zidx][j * m + i];
+        {
+          mask[i][j] = az[zidx][j * m + i];
+        }
 
     return LSIFilter(mask);
   }
@@ -133,7 +145,9 @@ namespace ice
 
             for (int xyi = yi * xfak; xyi < (yi + 1)*xfak; xyi++)
               for (int xxi = xi * xfak; xxi < (xi + 1)*xfak; xxi++)
-                sum += huge[xyi][xxi];
+                {
+                  sum += huge[xyi][xxi];
+                }
 
             small[yi][xi] = sum;
             //      cout << sum << " ";

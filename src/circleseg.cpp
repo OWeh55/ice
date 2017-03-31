@@ -42,7 +42,10 @@ namespace ice
     phi1 = FMod(phi1, 2 * M_PI);
     phi2 = FMod(phi2, 2 * M_PI);
 
-    if (phi2 < phi1) phi2 += 2 * M_PI;
+    if (phi2 < phi1)
+      {
+        phi2 += 2 * M_PI;
+      }
   }
 
   CircleSeg::CircleSeg(const Vector& v) : Circle(v)
@@ -89,14 +92,18 @@ namespace ice
     double res = LineSeg(p, Point(p.x + r * cos(phi1), p.y + r * sin(phi1))).distance_(pp);
 
     if ((d = LineSeg(p, Point(p.x + r * cos(phi2), p.y + r * sin(phi2))).distance_(pp)) < res)
-      res = d;
+      {
+        res = d;
+      }
 
     Point delta = pp - p;
     double fi = FMod(delta.phi(), 2 * M_PI);
 
     if (phi_inside(fi))
       if ((d = Circle::distance_(pp)) < res)
-        res = d;
+        {
+          res = d;
+        }
 
     return res;
   }

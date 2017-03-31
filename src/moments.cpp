@@ -35,7 +35,9 @@ namespace ice
   Moments::Moments(double m[15])
   {
     for (int i = 0; i < 15; i++)
-      mom[i] = m[i];
+      {
+        mom[i] = m[i];
+      }
   }
 
   Moments::Moments(const Region& r)
@@ -82,12 +84,16 @@ namespace ice
     if (mom[0] < 0)
       {
         for (int i = 0; i < 15; i++)
-          res.mom[i] = -mom[i];
+          {
+            res.mom[i] = -mom[i];
+          }
       }
     else
       {
         for (int i = 0; i < 15; i++)
-          res.mom[i] = mom[i];
+          {
+            res.mom[i] = mom[i];
+          }
       }
 
     return res;
@@ -140,7 +146,9 @@ namespace ice
     int i;
 
     for (i = 0; i < 15; i++)
-      mom[i] += m.mom[i];
+      {
+        mom[i] += m.mom[i];
+      }
 
     return OK;
   }
@@ -150,7 +158,9 @@ namespace ice
     int i;
 
     for (i = 0; i < 15; i++)
-      mom[i] += m[i];
+      {
+        mom[i] += m[i];
+      }
 
     return OK;
   }
@@ -369,7 +379,9 @@ namespace ice
     int i;
 
     for (i = 0; i < 4; i++)
-      res[i] = flu[i];
+      {
+        res[i] = flu[i];
+      }
 
     return res;
   }
@@ -382,7 +394,9 @@ namespace ice
     ice::HuInvariants(mom, hu);
 
     for (int i = 0; i < 7; i++)
-      res[i] = hu[i];
+      {
+        res[i] = hu[i];
+      }
 
     return res;
   }
@@ -396,7 +410,9 @@ namespace ice
     int i;
 
     for (i = 0; i < 7; i++)
-      res[i] = hu[i];
+      {
+        res[i] = hu[i];
+      }
 
     return res;
   }
@@ -568,7 +584,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trm[i][j] = trd[i][j];
+        {
+          trm[i][j] = trd[i][j];
+        }
 
     tr = Trafo(trm);
     return Moments(resd);
@@ -602,7 +620,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trd[i][j] = trm[i][j];
+        {
+          trd[i][j] = trm[i][j];
+        }
 
     double resd[15];
     AffinTransMoments(mom, trd, resd);

@@ -102,7 +102,9 @@ namespace ice
 
     for (i = 0; i < segm.rows(); i++)
       for (x = segm[i][1]; x <= segm[i][2]; x++)
-        img.setPixelClipped(x, segm[i][0], val);
+        {
+          img.setPixelClipped(x, segm[i][0], val);
+        }
 
     return OK;
   }
@@ -127,7 +129,9 @@ namespace ice
 
     for (i = 0; i < segm.rows(); i++)
       for (j = segm[i][1]; j < segm[i][2]; j++)
-        points = points && IVector(j, segm[i][0]);
+        {
+          points = points && IVector(j, segm[i][0]);
+        }
 
     pl = (PointList)malloc(sizeof(struct PointList_));
 
@@ -179,7 +183,9 @@ namespace ice
 
     for (i = 0; i < segm.rows(); i++)
       for (j = segm[i][1]; j < segm[i][2]; j++)
-        points.Append(IVector(j, segm[i][0]));
+        {
+          points.Append(IVector(j, segm[i][0]));
+        }
 
     return points;
   }
@@ -197,7 +203,10 @@ namespace ice
     double l1 = 0, l2 = 0;
     int i, z1;
 
-    if (c.Number() < (2 * s1)) return 0.0;
+    if (c.Number() < (2 * s1))
+      {
+        return 0.0;
+      }
 
     z1 = s1;
 
@@ -206,9 +215,13 @@ namespace ice
         c.getDirection(i).move(p);
 
         if ((c.DirCode(i) & 1) == 0)
-          l2++;
+          {
+            l2++;
+          }
         else
-          l2 += M_SQRT2;
+          {
+            l2 += M_SQRT2;
+          }
 
         z1--;
 
@@ -221,7 +234,9 @@ namespace ice
       }
 
     if (z1 < s1)
-      l1 += sqrt(Sqr(p.x - p1.x) + Sqr(p.y - p1.y));
+      {
+        l1 += sqrt(Sqr(p.x - p1.x) + Sqr(p.y - p1.y));
+      }
 
     return l2 / l1;
   }
@@ -241,7 +256,9 @@ namespace ice
     IMatrix segm = ConturSegmentlist(c);
 
     for (int i = 0; i < 15; i++)
-      mm[i] = 0;
+      {
+        mm[i] = 0;
+      }
 
     for (int i = 0; i < segm.rows(); i++)
       {
@@ -364,7 +381,10 @@ namespace ice
         m01 += x0 * y;
       }
 
-    if (m00 == 0) return IPoint();
+    if (m00 == 0)
+      {
+        return IPoint();
+      }
 
     return IPoint(m10 / m00, m01 / m00);
   }
@@ -399,7 +419,10 @@ namespace ice
         m01 += x0 * y;
       }
 
-    if (m00 == 0) return Point();
+    if (m00 == 0)
+      {
+        return Point();
+      }
 
     return Point((double)m10 / (double)m00, (double)m01 / (double)m00);
   }
@@ -451,9 +474,13 @@ namespace ice
             UpdateLimits(mmin, mmax, x - y);
 
             if ((rcode.Int() & 1) == 0)
-              nGeradeSchritte++;
+              {
+                nGeradeSchritte++;
+              }
             else
-              nSchraegeSchritte++;
+              {
+                nSchraegeSchritte++;
+              }
 
             switch (rcode.Int())
               {

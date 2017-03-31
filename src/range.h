@@ -19,8 +19,14 @@ namespace ice
 
     void update(T val)
     {
-      if (val < lowest) lowest = val;
-      if (val > highest) highest = val;
+      if (val < lowest)
+        {
+          lowest = val;
+        }
+      if (val > highest)
+        {
+          highest = val;
+        }
     }
 
     bool isValid() const

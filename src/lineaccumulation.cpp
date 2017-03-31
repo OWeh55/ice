@@ -30,7 +30,9 @@ namespace ice
   LineSeg detectLine(const std::vector<Point>& pl)
   {
     if (pl.size() < 2)
-      throw logic_error("detectLine - not enough points");
+      {
+        throw logic_error("detectLine - not enough points");
+      }
 
     double pmax2 = 0;
     for (unsigned int i = 0; i < pl.size(); i++)
@@ -38,7 +40,9 @@ namespace ice
         double p = pl[i].r2();
 
         if (p > pmax2)
-          pmax2 = p;
+          {
+            pmax2 = p;
+          }
       }
 
     int pmax = ceil(sqrt(pmax2));
@@ -69,13 +73,19 @@ namespace ice
     int nPoints = pl.size();
 
     if (nPoints < 2)
-      throw logic_error("detectLine - not enough points");
+      {
+        throw logic_error("detectLine - not enough points");
+      }
 
     if (nPairs < 0)
-      throw logic_error("detectLine - wrong number of pairs");
+      {
+        throw logic_error("detectLine - wrong number of pairs");
+      }
 
-    if (nPairs == 0 || nPairs > nPoints * nPoints) // no limitation
-      return detectLine(pl);
+    if (nPairs == 0 || nPairs > nPoints * nPoints)   // no limitation
+      {
+        return detectLine(pl);
+      }
 
     // find max distance to origin
     double pmax2 = 0;
@@ -84,7 +94,9 @@ namespace ice
       {
         double p = pl[i].r2();
         if (p > pmax2)
-          pmax2 = p;
+          {
+            pmax2 = p;
+          }
       }
 
     int pmax = ceil(sqrt(pmax2));
@@ -98,7 +110,9 @@ namespace ice
         int i2 = Random(nPoints - 1);
 
         while (i1 == i2)
-          i2 = Random(nPoints - 1);
+          {
+            i2 = Random(nPoints - 1);
+          }
 
         LineSeg aline(pl[i1], pl[i2], LineSeg::line);
 

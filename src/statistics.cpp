@@ -51,7 +51,10 @@ namespace ice
         Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         dim = 0;
       }
-    else Init(dimension);
+    else
+      {
+        Init(dimension);
+      }
   }
 #undef FNAME
 
@@ -108,7 +111,9 @@ namespace ice
       }
 
     for (int i = 0; i < dim; i++)
-      akk[i] += val.at(i) * weight;
+      {
+        akk[i] += val.at(i) * weight;
+      }
 
     double weight_squared = Sqr(weight);
 
@@ -121,7 +126,9 @@ namespace ice
             sakk[i][j] += val_i * val[j];
 
             if (i != j)
-              sakk[j][i] = sakk[i][j];
+              {
+                sakk[j][i] = sakk[i][j];
+              }
           }
       }
 
@@ -144,7 +151,9 @@ namespace ice
       }
 
     for (int i = 0; i < dim; i++)
-      akk[i] += val[i] * weight;
+      {
+        akk[i] += val[i] * weight;
+      }
 
     double weight_squared = Sqr(weight);
 
@@ -157,7 +166,9 @@ namespace ice
             sakk[i][j] += val_i * val[j];
 
             if (i != j)
-              sakk[j][i] = sakk[i][j];
+              {
+                sakk[j][i] = sakk[i][j];
+              }
           }
       }
 
@@ -174,7 +185,9 @@ namespace ice
       }
 
     for (int i = 0; i < vals.rows(); i++)
-      put(vals[i]);
+      {
+        put(vals[i]);
+      }
 
     return OK;
   }
@@ -192,7 +205,9 @@ namespace ice
     double inv_weight = 1 / sweight;
 
     for (int i = 0; i < dim; i++)
-      res[i] = akk[i] * inv_weight;
+      {
+        res[i] = akk[i] * inv_weight;
+      }
 
     return res;
   }
@@ -210,7 +225,9 @@ namespace ice
     double inv_weight = 1 / st.sweight;
 
     for (int i = 0; i < st.dim; i++)
-      mean[i] = st.akk[i] * inv_weight;
+      {
+        mean[i] = st.akk[i] * inv_weight;
+      }
 
     return mean;
   }
@@ -263,7 +280,10 @@ namespace ice
           double cov = (st.sakk[i][j] - st.akk[i] * st.akk[j] * nrm) * nrm;
           res.at(i).at(j) = cov;
 
-          if (i != j) res.at(j).at(i) = cov;
+          if (i != j)
+            {
+              res.at(j).at(i) = cov;
+            }
         }
 
     return res;
@@ -371,7 +391,9 @@ namespace ice
 
     for (int i = 0; i < st.dim; i++)
       for (int j = 0; j < st.dim; j++)
-        sakk[i][j] = st.sakk[i][j];
+        {
+          sakk[i][j] = st.sakk[i][j];
+        }
 
     out << sakk << std::endl ;
     return out;
@@ -407,13 +429,17 @@ namespace ice
     st.akk.resize(akk.size());
 
     for (unsigned int i = 0; i < akk.size(); i++)
-      st.akk[i] = akk[i];
+      {
+        st.akk[i] = akk[i];
+      }
 
     st.sakk.resize(sakk.rows(), std::vector<double>(sakk.cols()));
 
     for (int i = 0; i < sakk.rows(); i++)
       for (int j = 0; j < sakk.cols(); j++)
-        st.sakk[i][j] = sakk[i][j];
+        {
+          st.sakk[i][j] = sakk[i][j];
+        }
 
     return inp;
   }

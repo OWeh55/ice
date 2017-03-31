@@ -63,9 +63,13 @@ namespace ice
   int ClassifierBayes2::_train(const ClassSample& s)
   {
     if (s.classNr == 0)
-      Put(st1, s.features);
+      {
+        Put(st1, s.features);
+      }
     else
-      Put(st2, s.features);
+      {
+        Put(st2, s.features);
+      }
     return OK;
   }
 #undef FNAME
@@ -81,8 +85,14 @@ namespace ice
 
     double ent = dif2 * (sigma2 * dif2) - dif1 * (sigma1 * dif1) - limit;
 
-    if (ent > 0)  return 0;
-    else return 1;
+    if (ent > 0)
+      {
+        return 0;
+      }
+    else
+      {
+        return 1;
+      }
   }
 #undef FNAME
 #define FNAME "ClassifierBayes2::Finish"

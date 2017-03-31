@@ -319,13 +319,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {
@@ -356,7 +362,10 @@ namespace ice
                   {
                     help = log10(1.0 + snorm) / logf(1 + maxnorm * maxnorm) * (maxcolor - 1);
                   }
-                else help = 0;
+                else
+                  {
+                    help = 0;
+                  }
 
                 PutVal(output, xs, ys, int(help));
               }
@@ -415,13 +424,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {
@@ -515,13 +530,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {
@@ -605,13 +626,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {

@@ -1035,7 +1035,7 @@ namespace ice
     double maximum = DBL_MIN;
     double minimum = DBL_MAX;
 
-    for (x = 0; x < w; x++)  // Maximum finden
+    for (x = 0; x < w; x++)   // Maximum finden
       {
         for (y = 0; y < h; y++)
           {
@@ -1047,7 +1047,7 @@ namespace ice
     //~ printf("min %e max %e \n",minimum,maximum);
     maximum = maximum - minimum;
 
-    for (x = 0; x < w; x++)  // nach img kopieren
+    for (x = 0; x < w; x++)   // nach img kopieren
       {
         for (y = 0; y < h; y++)
           {

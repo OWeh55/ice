@@ -102,12 +102,16 @@ namespace ice
         for (int k = 0; k < dim2; k++)
           {
             for (int i = 0; i < dim1; i++)
-              a[j * dim2 + k][k * (dim1 + 1) + i] = p1[j][i] * weight;
+              {
+                a[j * dim2 + k][k * (dim1 + 1) + i] = p1[j][i] * weight;
+              }
 
             a[j * dim2 + k][k * (dim1 + 1) + dim1] = 1.0 * weight;
 
             for (int i = 0; i < dim1; i++)
-              a[j * dim2 + k][dim2 * (dim1 + 1) + i] = -p1[j][i] * p2[j][k] * weight;
+              {
+                a[j * dim2 + k][dim2 * (dim1 + 1) + i] = -p1[j][i] * p2[j][k] * weight;
+              }
 
             a[j * dim2 + k][(dim1 + 1) * (dim2 + 1) - 1] = -p2[j][k] * weight;
             r[j * dim2 + k] = 0.0;
@@ -115,7 +119,9 @@ namespace ice
       }
 
     for (int i = 0; i < dim1 + 1; i++)
-      a[nPoints * dim2][dim2 * (dim1 + 1) + i] = 1.0;
+      {
+        a[nPoints * dim2][dim2 * (dim1 + 1) + i] = 1.0;
+      }
 
     r[nPoints * dim2] = 1.0;
 
@@ -130,7 +136,9 @@ namespace ice
     matrix<double> tmatrix(dim1 + 1, dim2 + 1);
     for (int k = 0; k < dim2 + 1; k++)
       for (int i = 0; i < dim1 + 1; i++)
-        tmatrix[k][i] = rv[k * (dim1 + 1) + i];
+        {
+          tmatrix[k][i] = rv[k * (dim1 + 1) + i];
+        }
 
     // cout << tmatrix << endl;
 
@@ -143,7 +151,9 @@ namespace ice
     int i = 0;
     for (int k = 0; k < m.rows(); ++k)
       for (int l = 0; l < m.cols(); ++l)
-        v[i++] = m[k][l];
+        {
+          v[i++] = m[k][l];
+        }
   }
 
   void Vector2Trafo(const vector<double>& v, Trafo& tr)
@@ -152,7 +162,9 @@ namespace ice
     int i = 0;
     for (int k = 0; k < m.rows(); ++k)
       for (int l = 0; l < m.cols(); ++l)
-        m[k][l] = v[i++];
+        {
+          m[k][l] = v[i++];
+        }
     tr = Trafo(m);
   }
 
@@ -182,7 +194,9 @@ namespace ice
       int k = 0;
       for (int i = 0; i < (int)p2.rows(); ++i)
         for (int l = 0; l < (int) p2.cols(); ++l)
-          result[k++] = (pointsTransformed[i][l] - p2[i][l]) * w[i];
+          {
+            result[k++] = (pointsTransformed[i][l] - p2[i][l]) * w[i];
+          }
       return 1;
     }
   };
@@ -197,7 +211,9 @@ namespace ice
 
     vector<double*> pp(trpara.size() - 1);
     for (int i = 0; i < (int)pp.size(); ++i)
-      pp[i] = &trpara[i];
+      {
+        pp[i] = &trpara[i];
+      }
 
     int inumber;
     LMDif(pp,      // Liste von Zeigern auf zu optimierende Parameter
@@ -254,7 +270,9 @@ namespace ice
         weightsum = 0;
 
         for (int i = 0; i < dim1; i++)
-          shift[i] = 0;
+          {
+            shift[i] = 0;
+          }
 
         for (int j = 0; j < nPoints; j++)
           {
@@ -267,7 +285,9 @@ namespace ice
           }
 
         for (int i = 0; i < dim1; i++)
-          res.m[i][dim2] = shift[i] / weightsum;
+          {
+            res.m[i][dim2] = shift[i] / weightsum;
+          }
       }
       break;
       case TRM_SCALE_SHIFT:
@@ -280,12 +300,16 @@ namespace ice
 
         for (int j = 0; j < nPoints; j++)
           for (int i = 0; i < dim2; i++)
-            sum1[i] += weights[j] * p1[j][i];
+            {
+              sum1[i] += weights[j] * p1[j][i];
+            }
 
         for (int j = 0; j < nPoints; j++)
           {
             for (int i = 0; i < dim1; i++)
-              sum2[i] += weights[j] * p2[j][i];
+              {
+                sum2[i] += weights[j] * p2[j][i];
+              }
 
             weightsum += weights[j];
           }
@@ -303,11 +327,15 @@ namespace ice
         Vector shift(dim1);
 
         for (int i = 0; i < dim1; i++)
-          shift[i] = 0;
+          {
+            shift[i] = 0;
+          }
 
         for (int j = 0; j < nPoints; j++)
           for (int i = 0; i < dim1; i++)
-            shift[i] += (p2[j][i] - alpha * p1[j][i]) * weights[j];
+            {
+              shift[i] += (p2[j][i] - alpha * p1[j][i]) * weights[j];
+            }
 
         for (int i = 0; i < dim1; i++)
           {
@@ -361,7 +389,9 @@ namespace ice
         for (int j = 0; j < nPoints; j++)
           {
             for (int i = 0; i < dim1; i++)
-              a[j][i] = p1[j][i] * weights[j];
+              {
+                a[j][i] = p1[j][i] * weights[j];
+              }
 
             a[j][dim1] = 1.0 * weights[j];
           }
@@ -369,7 +399,9 @@ namespace ice
         for (int k = 0; k < dim2; k++)
           {
             for (int j = 0; j < nPoints; j++)
-              r[j] = p2[j][k] * weights[j];
+              {
+                r[j] = p2[j][k] * weights[j];
+              }
 
             IF_FAILED(rv = SolveLinEqu(a, r))
             {
@@ -378,7 +410,9 @@ namespace ice
             }
 
             for (int i = 0; i < dim1 + 1; i++)
-              res.m[k][i] = rv[i];
+              {
+                res.m[k][i] = rv[i];
+              }
           }
 
         break;
@@ -512,7 +546,7 @@ namespace ice
 
     nPoints = p1.rows();
 
-    if ((dim2 != 2) || (dim1 != 2)) // for linear opt. only 2 dimensions
+    if ((dim2 != 2) || (dim1 != 2))   // for linear opt. only 2 dimensions
       {
         Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
         return res;
@@ -536,7 +570,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        tmatrix[i][j] = tr[i][j];
+        {
+          tmatrix[i][j] = tr[i][j];
+        }
 
     return tmatrix;
   }
@@ -548,7 +584,10 @@ namespace ice
     int i;
     Trafo res;
 
-    for (i = 0; i < p1.rows(); i++) weights[i] = 1.0;
+    for (i = 0; i < p1.rows(); i++)
+      {
+        weights[i] = 1.0;
+      }
 
     IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
     {
@@ -565,7 +604,9 @@ namespace ice
 
     Trafo res;
     for (int i = 0; i < (int)p1.size(); i++)
-      weights[i] = 1.0;
+      {
+        weights[i] = 1.0;
+      }
 
     IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
     {
@@ -614,14 +655,18 @@ namespace ice
     for (int i = 0; i < 3; i++)
       {
         for (int j = 0; j < 3; j++)
-          cout << tr[i][j] << " " ;
+          {
+            cout << tr[i][j] << " " ;
+          }
         cout << endl;
       }
 #endif
 
     for (int i = 0; i < 3; i++)
       for (int j = 0; j < 3; j++)
-        tmatrix[i][j] = tr[i][j];
+        {
+          tmatrix[i][j] = tr[i][j];
+        }
 
     return tmatrix;
   }

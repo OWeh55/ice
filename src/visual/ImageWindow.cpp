@@ -154,7 +154,10 @@ namespace ice
 #ifdef CONTROLLED_REFRESH
     while (NeedsUpdate())  /* nothing */ ;  // avoid new paint
 #endif
-    while (PaintIsRunning) usleep(1000);
+    while (PaintIsRunning)
+      {
+        usleep(1000);
+      }
 
     for (unsigned int i = 0; i < imgs.size(); i++)
       {
@@ -168,7 +171,9 @@ namespace ice
   bool ImageWindow::addImage(ImageBase* img)
   {
     if ((img->xsize != SizeX) || (img->ysize != SizeY))
-      return false;
+      {
+        return false;
+      }
 #ifdef CONTROLLED_REFRESH
     int* tsp = img->startVis(DestroyWindows);
     imgs.push_back(new ImageStructInt(img, tsp));
@@ -182,7 +187,9 @@ namespace ice
   bool ImageWindow::addImage(ImageD* img)
   {
     if ((img->xsize != SizeX) || (img->ysize != SizeY))
-      return false;
+      {
+        return false;
+      }
 #ifdef CONTROLLED_REFRESH
     int* tsp = img->startVis(DestroyWindowsD);
     imgs.push_back(new ImageStructDouble(img, tsp));
@@ -200,7 +207,9 @@ namespace ice
     for (unsigned int i = 0; i < imgs.size() && ! isShown; i++)
       {
         if (imgs[i]->ImageType() == 1)
-          isShown = ((ImageStructInt*)imgs[i])->Img() == img;
+          {
+            isShown = ((ImageStructInt*)imgs[i])->Img() == img;
+          }
       }
     return isShown;
   }
@@ -211,7 +220,9 @@ namespace ice
     for (unsigned int i = 0; i < imgs.size() && ! isShown; i++)
       {
         if (imgs[i]->ImageType() == 2)
-          isShown = ((ImageStructDouble*)imgs[i])->Img()->getMatrixPointer() == img->getMatrixPointer();
+          {
+            isShown = ((ImageStructDouble*)imgs[i])->Img()->getMatrixPointer() == img->getMatrixPointer();
+          }
       }
     return isShown;
   }
@@ -268,7 +279,9 @@ namespace ice
 
     // is there something to change
     if (NewZoomFactor == ZoomFactor)
-      return;
+      {
+        return;
+      }
 
     SetZoomFactor(NewZoomFactor);
 
@@ -296,7 +309,9 @@ namespace ice
   {
     // return ERROR, if we haven't created the actual GUI window
     if (NeedsCreation)
-      return ERROR;
+      {
+        return ERROR;
+      }
 
     wxCommandEvent Event(ZOOM);
     Event.SetInt(zoomfactor);
@@ -312,16 +327,28 @@ namespace ice
     if (KeyEvent.GetKeyCode() == '>')
       {
         // ZoomFactor -1 is essentially the same as ZoomFactor +1, so it can be skipped
-        if (ZoomFactor == -2) DoZoom(1);
-        else DoZoom(ZoomFactor + 1);
+        if (ZoomFactor == -2)
+          {
+            DoZoom(1);
+          }
+        else
+          {
+            DoZoom(ZoomFactor + 1);
+          }
         return;
       }
 
     if (KeyEvent.GetKeyCode() == '<')
       {
         // ZoomFactor -1 is essentially the same as ZoomFactor +1, so it can be skipped
-        if (ZoomFactor == 1) DoZoom(-2);
-        else DoZoom(ZoomFactor - 1);
+        if (ZoomFactor == 1)
+          {
+            DoZoom(-2);
+          }
+        else
+          {
+            DoZoom(ZoomFactor - 1);
+          }
         return;
       }
 
@@ -455,10 +482,22 @@ namespace ice
 
     //  cout << "Image: " << ix0 << "," << iy0 << " -- " << ix1 << "," << iy1 << endl;
     // limit to image size
-    if (ix0 < 0) ix0 = 0;
-    if (iy0 < 0) iy0 = 0;
-    if (ix1 >= SizeX) ix1 = SizeX - 1;
-    if (iy1 >= SizeY) iy1 = SizeY - 1;
+    if (ix0 < 0)
+      {
+        ix0 = 0;
+      }
+    if (iy0 < 0)
+      {
+        iy0 = 0;
+      }
+    if (ix1 >= SizeX)
+      {
+        ix1 = SizeX - 1;
+      }
+    if (iy1 >= SizeY)
+      {
+        iy1 = SizeY - 1;
+      }
 
     // cout << "Image: " << ix0 << "," << iy0 << " -- " << ix1 << "," << iy1 << endl;
 
@@ -484,7 +523,9 @@ namespace ice
           {
             PixelArray = new unsigned char[bmwidth * bmheight * 3];
             if (PixelArray == NULL)
-              throw std::bad_alloc();
+              {
+                throw std::bad_alloc();
+              }
           }
         catch (std::bad_alloc&)
           {
@@ -547,21 +588,31 @@ namespace ice
     // Rand grau färben
     dc.SetBrush(*wxGREY_BRUSH);
     dc.SetPen(*wxGREY_PEN);
-    if (bmx0 > wx0) // linker Rand sichtbar ?
-      dc.DrawRectangle(wx0 + scrolloffset_x, wy0 + scrolloffset_y, bmx0 - wx0, height);
+    if (bmx0 > wx0)   // linker Rand sichtbar ?
+      {
+        dc.DrawRectangle(wx0 + scrolloffset_x, wy0 + scrolloffset_y, bmx0 - wx0, height);
+      }
 
-    if (bmy0 > wy0) // oberer Rand sichtbar ?
-      dc.DrawRectangle(wx0 + scrolloffset_x, wy0 + scrolloffset_y, width, bmy0 - wy0);
+    if (bmy0 > wy0)   // oberer Rand sichtbar ?
+      {
+        dc.DrawRectangle(wx0 + scrolloffset_x, wy0 + scrolloffset_y, width, bmy0 - wy0);
+      }
 
-    if (bmy1 < wy1) // unterer Rand sichtbar ?
-      dc.DrawRectangle(wx0 + scrolloffset_x, bmy1 + 1 + scrolloffset_y, width, wy1 - bmy1);
+    if (bmy1 < wy1)   // unterer Rand sichtbar ?
+      {
+        dc.DrawRectangle(wx0 + scrolloffset_x, bmy1 + 1 + scrolloffset_y, width, wy1 - bmy1);
+      }
 
-    if (bmx1 < wx1) // rechter Rand sichtbar ?
-      dc.DrawRectangle(bmx1 + 1 + scrolloffset_x, wy0 + scrolloffset_y, wx1 - bmx1, height);
+    if (bmx1 < wx1)   // rechter Rand sichtbar ?
+      {
+        dc.DrawRectangle(bmx1 + 1 + scrolloffset_x, wy0 + scrolloffset_y, wx1 - bmx1, height);
+      }
 
     // paint the image cursor, if necessary
     if (CursorIsEnabled)
-      DrawCursor(CursorPosition);
+      {
+        DrawCursor(CursorPosition);
+      }
 
     PaintIsRunning = false;
   }
@@ -671,7 +722,9 @@ namespace ice
   void ImageWindow::OnCursorUpdate(wxCommandEvent& Event)
   {
     if (!CursorIsEnabled)
-      return;
+      {
+        return;
+      }
 
     // extract the new cursor position from Event
     IPoint OldCursorPos = CursorPosition;
@@ -691,7 +744,9 @@ namespace ice
   int ImageWindow::SetCursor(int x, int y)
   {
     if (!GetImageRect().inside(x, y))
-      return WRONG_PARAM;
+      {
+        return WRONG_PARAM;
+      }
 
     // just tell the main thread that the position of the cursor may have changed
     EnableCursor(true);
@@ -708,9 +763,13 @@ namespace ice
     IPoint MousePosImg = translateWin2ImagePos(MousePosition);
 
     if (GetImageRect().inside(MousePosImg))
-      MouseFlags |= M_IN_WINDOW;
+      {
+        MouseFlags |= M_IN_WINDOW;
+      }
     else
-      MouseFlags &= ~M_IN_WINDOW;
+      {
+        MouseFlags &= ~M_IN_WINDOW;
+      }
 
     //    cout << MousePosImg.x << ","<<MousePosImg.y << endl;
     x = MousePosImg.x;
@@ -728,23 +787,59 @@ namespace ice
     cout << "M ";
     cout.flush();
 #endif
-    if (Event.LeftIsDown()) MouseFlags |= M_LEFT_DOWN;
-    else MouseFlags &= ~M_LEFT_DOWN;
+    if (Event.LeftIsDown())
+      {
+        MouseFlags |= M_LEFT_DOWN;
+      }
+    else
+      {
+        MouseFlags &= ~M_LEFT_DOWN;
+      }
 
-    if (Event.LeftDown()) MouseFlags |= M_LEFT_PRESSED;
-    if (Event.LeftUp()) MouseFlags |= M_LEFT_RELEASED;
+    if (Event.LeftDown())
+      {
+        MouseFlags |= M_LEFT_PRESSED;
+      }
+    if (Event.LeftUp())
+      {
+        MouseFlags |= M_LEFT_RELEASED;
+      }
 
-    if (Event.MiddleIsDown()) MouseFlags |= M_MIDDLE_DOWN;
-    else MouseFlags &= ~M_MIDDLE_DOWN;
+    if (Event.MiddleIsDown())
+      {
+        MouseFlags |= M_MIDDLE_DOWN;
+      }
+    else
+      {
+        MouseFlags &= ~M_MIDDLE_DOWN;
+      }
 
-    if (Event.MiddleDown()) MouseFlags |= M_MIDDLE_PRESSED;
-    if (Event.MiddleUp()) MouseFlags |= M_MIDDLE_RELEASED;
+    if (Event.MiddleDown())
+      {
+        MouseFlags |= M_MIDDLE_PRESSED;
+      }
+    if (Event.MiddleUp())
+      {
+        MouseFlags |= M_MIDDLE_RELEASED;
+      }
 
-    if (Event.RightIsDown()) MouseFlags |= M_RIGHT_DOWN;
-    else MouseFlags &= ~M_RIGHT_DOWN;
+    if (Event.RightIsDown())
+      {
+        MouseFlags |= M_RIGHT_DOWN;
+      }
+    else
+      {
+        MouseFlags &= ~M_RIGHT_DOWN;
+      }
 
-    if (Event.RightDown()) MouseFlags |= M_RIGHT_PRESSED;
-    if (Event.RightUp()) MouseFlags |= M_RIGHT_RELEASED;
+    if (Event.RightDown())
+      {
+        MouseFlags |= M_RIGHT_PRESSED;
+      }
+    if (Event.RightUp())
+      {
+        MouseFlags |= M_RIGHT_RELEASED;
+      }
 
     if (Event.Moving() || Event.Dragging())
       {

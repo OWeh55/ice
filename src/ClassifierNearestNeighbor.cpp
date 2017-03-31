@@ -62,7 +62,9 @@ namespace ice
   bool ClassifierNearestNeighbor::_finish()
   {
     if (norm)
-      doNormalization(normalizeScaling);
+      {
+        doNormalization(normalizeScaling);
+      }
     tree.create(samples);
     //    tree.statistics();
     samples.clear();
@@ -78,12 +80,18 @@ namespace ice
   {
     std::vector<double> fn(feat);
     if (norm)
-      normalize(fn);
+      {
+        normalize(fn);
+      }
 
     if (nNeighbors == 1)
-      return _classify1(fn, probs);
+      {
+        return _classify1(fn, probs);
+      }
     else
-      return _classifyk(fn, probs);
+      {
+        return _classifyk(fn, probs);
+      }
   }
 
   int ClassifierNearestNeighbor::_classify1(const std::vector<double>& fn,
@@ -130,7 +138,9 @@ namespace ice
           {
             max = probs[i];
             if (max > rejection_threshold)
-              maxClass = i;
+              {
+                maxClass = i;
+              }
           }
       }
 
@@ -152,7 +162,9 @@ namespace ice
     source >> nNeighbors;
     source >> norm;
     if (norm)
-      readNormalization(source);
+      {
+        readNormalization(source);
+      }
     Init(nClasses, nFeatures, nNeighbors, norm);
     tree.read(source);
     state = ready;
@@ -168,7 +180,9 @@ namespace ice
     dest << nNeighbors << " ";
     dest << norm << endl ;
     if (norm)
-      writeNormalization(dest);
+      {
+        writeNormalization(dest);
+      }
     tree.write(dest);
     return OK;
   }

@@ -49,21 +49,35 @@ namespace ice
   {
     int i;
 
-    if (n < 0) ERR0("IMatrix()", "Wrong dimension", WRONG_PARAM);
+    if (n < 0)
+      {
+        ERR0("IMatrix()", "Wrong dimension", WRONG_PARAM);
+      }
 
     dim = n;
     dimv = m;
 
-    if (n > 0) data = (IVector**)malloc(n * sizeof(IVector*));
-    else data = nullptr;
+    if (n > 0)
+      {
+        data = (IVector**)malloc(n * sizeof(IVector*));
+      }
+    else
+      {
+        data = nullptr;
+      }
 
-    for (i = 0; i < n; i++) data[i] = new IVector(m);
+    for (i = 0; i < n; i++)
+      {
+        data[i] = new IVector(m);
+      }
 
     if (init == 1)
       {
         //initialize as unity matrix
         for (i = 0; i < n && i < m; i++)
-          (*data[i])[i] = 1;
+          {
+            (*data[i])[i] = 1;
+          }
       }
   }
 
@@ -73,10 +87,19 @@ namespace ice
     dim = m.dim;
     dimv = m.dimv;
 
-    if (dim > 0) data = (IVector**)malloc(dim * sizeof(IVector*));
-    else data = nullptr;
+    if (dim > 0)
+      {
+        data = (IVector**)malloc(dim * sizeof(IVector*));
+      }
+    else
+      {
+        data = nullptr;
+      }
 
-    for (i = 0; i < dim; i++) data[i] = new IVector(*m.data[i]);
+    for (i = 0; i < dim; i++)
+      {
+        data[i] = new IVector(*m.data[i]);
+      }
   }
 
   IMatrix::IMatrix(Image img)
@@ -91,32 +114,49 @@ namespace ice
     dimv = img->xsize;
 
     if (dim > 0)
-      data = (IVector**)malloc(dim * sizeof(IVector*));
+      {
+        data = (IVector**)malloc(dim * sizeof(IVector*));
+      }
     else
-      data = nullptr;
+      {
+        data = nullptr;
+      }
 
     for (int i = 0; i < dim; i++)
-      data[i] = new IVector(dimv);
+      {
+        data[i] = new IVector(dimv);
+      }
 
     for (int x = 0; x < dimv; x++)
       for (int y = 0; y < dim; y++)
-        (*data[y])[x] = GetVal(img, x, y);
+        {
+          (*data[y])[x] = GetVal(img, x, y);
+        }
   }
 #undef FNAME
   IMatrix::~IMatrix()
   {
     int i;
 
-    for (i = 0; i < dim; i++) delete data[i];
+    for (i = 0; i < dim; i++)
+      {
+        delete data[i];
+      }
 
-    if (data != nullptr) free(data);
+    if (data != nullptr)
+      {
+        free(data);
+      }
   }
 
   int IMatrix::Append(const IVector& v)
   {
     IVector** ndata;
 
-    if (dimv != v.Size()) vERR("Append", "Wrong dimension", WRONG_PARAM, WRONG_PARAM);
+    if (dimv != v.Size())
+      {
+        vERR("Append", "Wrong dimension", WRONG_PARAM, WRONG_PARAM);
+      }
 
     ndata = (IVector**)realloc(data, (dim + 1) * sizeof(IVector*));
 
@@ -133,7 +173,10 @@ namespace ice
 
   int IMatrix::Set(int val)
   {
-    for (int i = 0; i < dim; i++) data[i]->Set(val);
+    for (int i = 0; i < dim; i++)
+      {
+        data[i]->Set(val);
+      }
 
     return OK;
   }
@@ -142,26 +185,47 @@ namespace ice
   {
     int i;
 
-    if (&m == this) return *this;
+    if (&m == this)
+      {
+        return *this;
+      }
 
-    for (i = 0; i < dim; i++) delete data[i];
+    for (i = 0; i < dim; i++)
+      {
+        delete data[i];
+      }
 
-    if (data != nullptr) free(data);
+    if (data != nullptr)
+      {
+        free(data);
+      }
 
     dim = m.dim;
     dimv = m.dimv;
 
-    if (dim > 0) data = (IVector**)malloc(dim * sizeof(IVector*));
-    else data = nullptr;
+    if (dim > 0)
+      {
+        data = (IVector**)malloc(dim * sizeof(IVector*));
+      }
+    else
+      {
+        data = nullptr;
+      }
 
-    for (i = 0; i < dim; i++) data[i] = new IVector(*m.data[i]);
+    for (i = 0; i < dim; i++)
+      {
+        data[i] = new IVector(*m.data[i]);
+      }
 
     return *this;
   }
 
   IVector& IMatrix::operator[](int i) const
   {
-    if ((i < 0) || (i >= dim)) vERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+    if ((i < 0) || (i >= dim))
+      {
+        vERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+      }
 
     return *data[i];
   }
@@ -178,11 +242,17 @@ namespace ice
     if (
       (i1 < 0) || (i1 > i2 + 1) || (i2 >= dim) ||
       (j1 < 0) || (j1 > j2 + 1) || (j2 >= dimv)
-    ) vERR("operator()", "Wrong index", WRONG_PARAM, *this);
+    )
+      {
+        vERR("operator()", "Wrong index", WRONG_PARAM, *this);
+      }
 
     IMatrix tm(i2 - i1 + 1, j2 - j1 + 1);
 
-    for (i = i1; i <= i2; i++) *tm.data[i - i1] = (*data[i])(j1, j2);
+    for (i = i1; i <= i2; i++)
+      {
+        *tm.data[i - i1] = (*data[i])(j1, j2);
+      }
 
     return tm;
   }
@@ -206,7 +276,9 @@ namespace ice
     IVector* h;
 
     if ((i1 < 0) || (i1 >= dim) || (i2 < 0) || (i2 >= dim))
-      vERR("ExchangeRow()", "Wrong index", WRONG_PARAM, ERROR);
+      {
+        vERR("ExchangeRow()", "Wrong index", WRONG_PARAM, ERROR);
+      }
 
     h = data[i1];
     data[i1] = data[i2];
@@ -220,7 +292,9 @@ namespace ice
     int j;
 
     if ((i1 < 0) || (i1 >= dimv) || (i2 < 0) || (i2 >= dimv))
-      vERR("ExchangeRow()", "Wrong index", WRONG_PARAM, ERROR);
+      {
+        vERR("ExchangeRow()", "Wrong index", WRONG_PARAM, ERROR);
+      }
 
     for (j = 0; j < dim; j++)
       {
@@ -246,11 +320,16 @@ namespace ice
     int i;
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
-      vERR("operator+", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        vERR("operator+", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     IMatrix res(m1.rows(), m1.cols());
 
-    for (i = 0; i < m1.rows(); i++) *res.data[i] = *m1.data[i] + *m2.data[i];
+    for (i = 0; i < m1.rows(); i++)
+      {
+        *res.data[i] = *m1.data[i] + *m2.data[i];
+      }
 
     return res;
   }
@@ -260,11 +339,16 @@ namespace ice
     int i;
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
-      vERR("operator+", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        vERR("operator+", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     IMatrix res(m1.rows(), m1.cols());
 
-    for (i = 0; i < m1.rows(); i++) *res.data[i] = *m1.data[i] - *m2.data[i];
+    for (i = 0; i < m1.rows(); i++)
+      {
+        *res.data[i] = *m1.data[i] - *m2.data[i];
+      }
 
     return res;
   }
@@ -275,7 +359,9 @@ namespace ice
     IMatrix res(m1.rows(), m1.cols());
 
     for (i = 0; i < m1.rows(); i++)
-      *res.data[i] = -*m1.data[i];
+      {
+        *res.data[i] = -*m1.data[i];
+      }
 
     return res;
   }
@@ -285,7 +371,10 @@ namespace ice
     int i;
     IMatrix res(m.rows(), m.cols());
 
-    for (i = 0; i < m.rows(); i++) *res.data[i] = f** m.data[i];
+    for (i = 0; i < m.rows(); i++)
+      {
+        *res.data[i] = f** m.data[i];
+      }
 
     return res;
   }
@@ -295,7 +384,10 @@ namespace ice
     int i;
     IMatrix res(m.rows(), m.cols());
 
-    for (i = 0; i < m.rows(); i++) *res.data[i] = f** m.data[i];
+    for (i = 0; i < m.rows(); i++)
+      {
+        *res.data[i] = f** m.data[i];
+      }
 
     return res;
   }
@@ -307,7 +399,9 @@ namespace ice
     int sum;
 
     if (m1.cols() != m2.rows())
-      vERR("operator*", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        vERR("operator*", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     IMatrix res(m1.rows(), m2.cols());
 
@@ -316,7 +410,10 @@ namespace ice
         {
           sum = 0;
 
-          for (k = 0; k < m1.cols(); k++) sum += m1[i][k] * m2[k][j];
+          for (k = 0; k < m1.cols(); k++)
+            {
+              sum += m1[i][k] * m2[k][j];
+            }
 
           res[i][j] = sum;
         }
@@ -338,7 +435,9 @@ namespace ice
     int sum;
 
     if (m1.cols() != v.Size())
-      vERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+      {
+        vERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+      }
 
     IVector res(m1.rows());
 
@@ -346,7 +445,10 @@ namespace ice
       {
         sum = 0;
 
-        for (j = 0; j < v.Size(); j++) sum += m1[i][j] * v[j];
+        for (j = 0; j < v.Size(); j++)
+          {
+            sum += m1[i][j] * v[j];
+          }
 
         res[i] = sum;
       }
@@ -360,15 +462,23 @@ namespace ice
     int i, j;
 
     if (m1.rows() != m2.rows())
-      vERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        vERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     IMatrix res(m1.rows(), m1.cols() + m2.cols());
 
     for (i = 0; i < m1.rows(); i++)
       {
-        for (j = 0; j < m1.cols(); j++) res[i][j] = m1[i][j];
+        for (j = 0; j < m1.cols(); j++)
+          {
+            res[i][j] = m1[i][j];
+          }
 
-        for (j = 0; j < m2.cols(); j++) res[i][j + m1.cols()] = m2[i][j];
+        for (j = 0; j < m2.cols(); j++)
+          {
+            res[i][j + m1.cols()] = m2[i][j];
+          }
       }
 
     return res;
@@ -380,15 +490,23 @@ namespace ice
     int i, j;
 
     if (m1.cols() != m2.cols())
-      vERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        vERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     IMatrix res(m1.rows() + m2.rows(), m1.cols());
 
     for (i = 0; i < m1.cols(); i++)
       {
-        for (j = 0; j < m1.rows(); j++) res[j][i] = m1[j][i];
+        for (j = 0; j < m1.rows(); j++)
+          {
+            res[j][i] = m1[j][i];
+          }
 
-        for (j = 0; j < m2.rows(); j++) res[j + m1.rows()][i] = m2[j][i];
+        for (j = 0; j < m2.rows(); j++)
+          {
+            res[j + m1.rows()][i] = m2[j][i];
+          }
       }
 
     return res;
@@ -400,13 +518,18 @@ namespace ice
     int i, j;
 
     if (m1.rows() != v2.Size())
-      vERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        vERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     IMatrix res(m1.rows(), m1.cols() + 1);
 
     for (i = 0; i < m1.rows(); i++)
       {
-        for (j = 0; j < m1.cols(); j++) res[i][j] = m1[i][j];
+        for (j = 0; j < m1.cols(); j++)
+          {
+            res[i][j] = m1[i][j];
+          }
 
         res[i][m1.cols()] = v2[i];
       }
@@ -420,13 +543,18 @@ namespace ice
     int i, j;
 
     if (m1.cols() != v2.Size())
-      vERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        vERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     IMatrix res(m1.rows() + 1, m1.cols());
 
     for (i = 0; i < m1.cols(); i++)
       {
-        for (j = 0; j < m1.rows(); j++) res[j][i] = m1[j][i];
+        for (j = 0; j < m1.rows(); j++)
+          {
+            res[j][i] = m1[j][i];
+          }
 
         res[m1.rows()][i] = v2[i];
       }
@@ -440,7 +568,9 @@ namespace ice
     int i, j;
 
     if (v1.Size() != m2.rows())
-      vERR("operator||", "Format doesn't match", WRONG_PARAM, m2);
+      {
+        vERR("operator||", "Format doesn't match", WRONG_PARAM, m2);
+      }
 
     IMatrix res(m2.rows(), m2.cols() + 1);
 
@@ -448,7 +578,10 @@ namespace ice
       {
         res[i][0] = v1[i];
 
-        for (j = 0; j < m2.cols(); j++) res[i][j + 1] = m2[i][j];
+        for (j = 0; j < m2.cols(); j++)
+          {
+            res[i][j + 1] = m2[i][j];
+          }
       }
 
     return res;
@@ -460,7 +593,9 @@ namespace ice
     int i, j;
 
     if (v1.Size() != m2.cols())
-      vERR("operator||", "Format doesn't match", WRONG_PARAM, m2);
+      {
+        vERR("operator||", "Format doesn't match", WRONG_PARAM, m2);
+      }
 
     IMatrix res(m2.rows() + 1, m2.cols());
 
@@ -468,7 +603,10 @@ namespace ice
       {
         res[0][i] = v1[i];
 
-        for (j = 0; j < m2.rows(); j++) res[j + 1][i] = m2[j][i];
+        for (j = 0; j < m2.rows(); j++)
+          {
+            res[j + 1][i] = m2[j][i];
+          }
       }
 
     return res;
@@ -480,7 +618,9 @@ namespace ice
     IMatrix res(v1.Size(), 2);
 
     if (v1.Size() != v2.Size())
-      vERR("operator||", "Format doesn't match", WRONG_PARAM, res);
+      {
+        vERR("operator||", "Format doesn't match", WRONG_PARAM, res);
+      }
 
     for (i = 0; i < v2.Size(); i++)
       {
@@ -498,7 +638,9 @@ namespace ice
     IMatrix res(2, v1.Size());
 
     if (v1.Size() != v2.Size())
-      vERR("operator||", "Format doesn't match", WRONG_PARAM, res);
+      {
+        vERR("operator||", "Format doesn't match", WRONG_PARAM, res);
+      }
 
     for (i = 0; i < v1.Size(); i++)
       {
@@ -526,9 +668,15 @@ namespace ice
 
   int Determinant(IMatrix m)
   {
-    if (m.cols() != m.rows()) vERR("Determinant()", M_MATRIXFORMAT, WRONG_PARAM, 0);
+    if (m.cols() != m.rows())
+      {
+        vERR("Determinant()", M_MATRIXFORMAT, WRONG_PARAM, 0);
+      }
 
-    if (m.rows() == 1) return m[0][0];
+    if (m.rows() == 1)
+      {
+        return m[0][0];
+      }
 
     int det = 0;
     int sign = 1;
@@ -555,9 +703,15 @@ namespace ice
 
     delete data[n];
 
-    for (i = n + 1; i < dim; i++) data[i - 1] = data[i];
+    for (i = n + 1; i < dim; i++)
+      {
+        data[i - 1] = data[i];
+      }
 
-    if (dim > 1) data = (IVector**)realloc(data, (dim - 1) * sizeof(IVector*));
+    if (dim > 1)
+      {
+        data = (IVector**)realloc(data, (dim - 1) * sizeof(IVector*));
+      }
     else
       {
         free(data);
@@ -579,9 +733,15 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    if (n2 < n1) std::swap(n1, n2);
+    if (n2 < n1)
+      {
+        std::swap(n1, n2);
+      }
 
-    for (i = n2; i >= n1; i--) DeleteRow(i);
+    for (i = n2; i >= n1; i--)
+      {
+        DeleteRow(i);
+      }
 
     return OK;
   }
@@ -594,7 +754,10 @@ namespace ice
 
     for (i = 0; i < dim; i++)
       for (j = 0; j < dimv; j++)
-        if ((*data[0])[0] > max) max = (*data[0])[0];
+        if ((*data[0])[0] > max)
+          {
+            max = (*data[0])[0];
+          }
 
     return max;
   }

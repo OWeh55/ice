@@ -90,10 +90,14 @@ namespace ice
       int yh = yp - y0;
 
       if (yh < 0)
-        return false;
+        {
+          return false;
+        }
 
       if (yh >= (int)sl.size())
-        return false;
+        {
+          return false;
+        }
 
       return sl[yh].inside(xp);
     }
@@ -103,10 +107,14 @@ namespace ice
       int yh = yp - y0;
 
       if (yh < 0)
-        return false;
+        {
+          return false;
+        }
 
       if (yh >= (int)sl.size())
-        return false;
+        {
+          return false;
+        }
 
       return true;
     }
@@ -162,7 +170,9 @@ namespace ice
     {
       int area = 0;
       for (int i = 0; i < (int)sl.size(); ++i)
-        area += sl[i].getArea();
+        {
+          area += sl[i].getArea();
+        }
       return area;
     }
 

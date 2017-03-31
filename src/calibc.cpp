@@ -113,7 +113,7 @@ namespace ice
       Camera cam(camp, disttyp);
       int i, j;
 
-      for (i = 0, j = 0; j < points; j++) // für jeden Funktionswert
+      for (i = 0, j = 0; j < points; j++)   // für jeden Funktionswert
         {
           double us, vs;
           cam.Transform(xyz.at(j).at(0), xyz.at(j).at(1), xyz.at(j).at(2), us, vs);

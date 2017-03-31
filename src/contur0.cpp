@@ -88,9 +88,13 @@ namespace ice
     };
 
     if (!hole)
-      return otab[fr1.Int()][fr2.Int()];
+      {
+        return otab[fr1.Int()][fr2.Int()];
+      }
     else
-      return htab[fr1.Int()][fr2.Int()];
+      {
+        return htab[fr1.Int()][fr2.Int()];
+      }
   }
 
 #define FNAME "ConturSegmentlist"
@@ -151,7 +155,10 @@ namespace ice
 
                 for (i = 0; i < yanz; i++)
                   {
-                    if (slist[i].xlist != nullptr) free(slist[i].xlist);
+                    if (slist[i].xlist != nullptr)
+                      {
+                        free(slist[i].xlist);
+                      }
                   }
 
                 free(slist);
@@ -207,7 +214,10 @@ namespace ice
 
     for (i = 0; i < yanz; i++)
       {
-        if (slist[i].xlist != nullptr) free(slist[i].xlist);
+        if (slist[i].xlist != nullptr)
+          {
+            free(slist[i].xlist);
+          }
       }
 
     free(slist);
@@ -220,20 +230,32 @@ namespace ice
     int i, index;
     index = 0;
 
-    while (slist[index].y != y) index++;
+    while (slist[index].y != y)
+      {
+        index++;
+      }
 
     y = index;
     tmp = slist[y].xlist;
     slist[y].xlist = (int*) calloc(sizeof(int), slist[y].count + 1);
 
-    if (slist[y].xlist == nullptr) return NO_MEM;
+    if (slist[y].xlist == nullptr)
+      {
+        return NO_MEM;
+      }
 
-    for (i = 0; i < slist[y].count; i++) *(slist[y].xlist + i) = *(tmp + i);
+    for (i = 0; i < slist[y].count; i++)
+      {
+        *(slist[y].xlist + i) = *(tmp + i);
+      }
 
     *(slist[y].xlist + slist[y].count) = x;
     slist[y].count++;
 
-    if (tmp != nullptr) free(tmp);
+    if (tmp != nullptr)
+      {
+        free(tmp);
+      }
 
     return OK;
   }

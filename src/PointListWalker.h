@@ -118,7 +118,9 @@ namespace ice
     {
       idx = idx % (int)pl.size();
       if (idx < 0)
-        idx += (int)pl.size();
+        {
+          idx += (int)pl.size();
+        }
       return idx;
     }
 

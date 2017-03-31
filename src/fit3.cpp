@@ -216,7 +216,9 @@ namespace ice
 
             for (unsigned i = 1; i < 6; i++)
               for (unsigned int j = 0; j < i; j++)
-                cov[i][j] = cov[j][i];
+                {
+                  cov[i][j] = cov[j][i];
+                }
 
             MoveMatrix((double*)cov, 6, 6, (double*)tvec);
 
@@ -246,7 +248,10 @@ namespace ice
 
             step--;
 
-            if (step >= 0) mse = fl_new_weights_ellipse(pl, wv, par);
+            if (step >= 0)
+              {
+                mse = fl_new_weights_ellipse(pl, wv, par);
+              }
           }
       }
 
@@ -262,7 +267,9 @@ namespace ice
             SetMatrix((double*)cov_2, 5, 5, 0.0);
 
             for (unsigned int i = 0; i < 5; ++i)
-              re_2[i] = 0.0;
+              {
+                re_2[i] = 0.0;
+              }
 
             for (unsigned int i = 0; i < pl.size(); i++)
               {
@@ -303,16 +310,22 @@ namespace ice
 
             for (unsigned int i = 1; i < 5; i++)
               for (unsigned int j = 0; j < i; j++)
-                cov_2[i][j] = cov_2[j][i];
+                {
+                  cov_2[i][j] = cov_2[j][i];
+                }
 
             for (unsigned int i = 0; i < 5; ++i)
-              re_2[i] = -re_2[i];
+              {
+                re_2[i] = -re_2[i];
+              }
 
             cov_2a = NewMatrix(MAT_DOUBLE, 5, 5);
 
             for (unsigned int i = 0; i < 5; ++i)
               for (unsigned int j = 0; j < 5; ++j)
-                cov_2a->data[i][j] = cov_2[i][j];
+                {
+                  cov_2a->data[i][j] = cov_2[i][j];
+                }
 
             OffMessage();
             code = EquationSys(cov_2a, re_2, loesung);
@@ -354,7 +367,10 @@ namespace ice
 
             step--;
 
-            if (step >= 0) mse = fl_new_weights_ellipse(pl, wv, par);
+            if (step >= 0)
+              {
+                mse = fl_new_weights_ellipse(pl, wv, par);
+              }
           }
       }
     // denormalize parameters

@@ -47,7 +47,9 @@ namespace ice
       }
 
     if (wname.empty())
-      wname = img.getTitle();
+      {
+        wname = img.getTitle();
+      }
 
     switch (mode)
       {

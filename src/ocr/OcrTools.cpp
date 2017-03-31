@@ -100,7 +100,9 @@ int ice::get_quantil_border(const Image& pic, const Contur& c,
         {
           x_hilf = hist_x.Rel(i - int (x_min));
           if (x_hilf == 0.0)
-            x_hilf += 0.5;
+            {
+              x_hilf += 0.5;
+            }
           if (x_hilf < x_seg)
             {
               x_seg = x_hilf;

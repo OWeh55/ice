@@ -110,7 +110,9 @@ namespace ice
     std::vector<double> diff(n);
 
     for (int i = 0 ; i < n ; i++)
-      diff[i] = x[i] - y[i];
+      {
+        diff[i] = x[i] - y[i];
+      }
 
     double dist = 0.0;
 
@@ -155,20 +157,26 @@ namespace ice
               case D_EUCLID:
 
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  {
+                    d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  }
 
                 d = sqrt(d);
                 break;
               case D_SQUARE:
 
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  {
+                    d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  }
 
                 break;
               case D_CITYBLOCK:
 
                 for (int k = 0; k < dim; k++)
-                  d += fabs(am.at(k) - feat2.at(j).at(k));
+                  {
+                    d += fabs(am.at(k) - feat2.at(j).at(k));
+                  }
               }
 
             dist.at(i).at(j) = d;

@@ -71,13 +71,17 @@ namespace ice
       scale_z = zscale;
       seq.clear();
       for (int i = 0; i < zsize; i++)
-        seq.push_back(NewImg(xsize, ysize, maxval));
+        {
+          seq.push_back(NewImg(xsize, ysize, maxval));
+        }
     }
 
     virtual void create(const Image3d<TImage>& src)
     {
       if (src.isValid())
-        create(src.xsize, src.ysize, src.zsize, src.maxval, src.scale_x, src.scale_y, src.scale_z);
+        {
+          create(src.xsize, src.ysize, src.zsize, src.maxval, src.scale_x, src.scale_y, src.scale_z);
+        }
     }
 #define FNAME "Image3d::create"
     virtual void create(const std::string& filemask,
@@ -185,17 +189,29 @@ namespace ice
     ValueType getPixel(int x, int y, int z) const
     {
       if (x < 0)
-        Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+        {
+          Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+        }
       else if (x >= xsize)
-        Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+        {
+          Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+        }
       else if (y < 0)
-        Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+        {
+          Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+        }
       else if (y >= ysize)
-        Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+        {
+          Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+        }
       else if (z < 0)
-        Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        {
+          Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        }
       else if (z >= zsize)
-        Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        {
+          Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        }
       else
         {
           return seq[z].getPixelUnchecked(x, y);
@@ -213,19 +229,33 @@ namespace ice
     void setPixel(int x, int y, int z, ValueType val) const
     {
       if (x < 0)
-        Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+        {
+          Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+        }
       else if (x >= xsize)
-        Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+        {
+          Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+        }
       else if (y < 0)
-        Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+        {
+          Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+        }
       else if (y >= ysize)
-        Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+        {
+          Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+        }
       else if (z < 0)
-        Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        {
+          Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        }
       else if (z >= zsize)
-        Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        {
+          Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        }
       else
-        seq[z].setPixelUnchecked(x, y, val);
+        {
+          seq[z].setPixelUnchecked(x, y, val);
+        }
     }
 #undef FNAME
 
@@ -244,14 +274,18 @@ namespace ice
     TImage& operator[](int i)
     {
       if (i < 0 || i >= (int)seq.size())
-        throw "z index out of range";
+        {
+          throw "z index out of range";
+        }
       return seq[i];
     }
 
     const TImage& operator[](int i) const
     {
       if (i < 0 || i >= (int)seq.size())
-        throw "z index out of range";
+        {
+          throw "z index out of range";
+        }
       return seq[i];
     }
 
@@ -276,7 +310,9 @@ namespace ice
     int match(const Image3d<TImage>& img2, const Image3d<TImage>& img3) const
     {
       if (match(img2) != OK)
-        return WRONG_PARAM;
+        {
+          return WRONG_PARAM;
+        }
       return match(img3);
     }
 #undef FNAME
@@ -325,13 +361,21 @@ namespace ice
       z /= scale_z;
 
       if (z < -0.5)
-        Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        {
+          Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        }
       else if (z > zsize)
-        Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        {
+          Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        }
       else if (z < 0)
-        GetInterpolVal(seq[0], x, y);
+        {
+          GetInterpolVal(seq[0], x, y);
+        }
       if (z > zsize - 1)
-        return GetInterpolVal(seq.back(), x, y);
+        {
+          return GetInterpolVal(seq.back(), x, y);
+        }
 
       int zi = (int)z;
       double zr = z - zi;
@@ -339,7 +383,9 @@ namespace ice
       double v1 = GetInterpolVal(seq[zi], x, y);
       double v2 = v1;
       if (zi + 1 < (int)seq.size())
-        v2 = GetInterpolVal(seq[zi + 1], x, y);
+        {
+          v2 = GetInterpolVal(seq[zi + 1], x, y);
+        }
       return v1 * (1 - zr) + v2 * zr;
     }
 #undef FNAME
@@ -362,7 +408,9 @@ namespace ice
     {
       int rc = 0;
       for (int i = 0; i < (int)seq.size() && rc == 0; i++)
-        rc = seq[i].set(val);
+        {
+          rc = seq[i].set(val);
+        }
       return rc;
     }
 

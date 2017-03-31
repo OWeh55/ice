@@ -75,7 +75,9 @@ namespace ice
     double l = 0;
 
     for (int i = 0; i < 3; i++)
-      l += v[i] * v[i];
+      {
+        l += v[i] * v[i];
+      }
 
     return sqrt(l);
   }
@@ -291,7 +293,9 @@ namespace ice
     dptr = h;
 
     for (i = 0; i < dim; i++)
-      printf("%f   ", *dptr++);
+      {
+        printf("%f   ", *dptr++);
+      }
 
     printf("\n\n");
     return OK;
@@ -315,13 +319,18 @@ namespace ice
       {
         dptr = (double*)malloc(dim * sizeof(double));
 
-        for (i = 0; i < dim; i++) *(dptr + i) = v1[i];
+        for (i = 0; i < dim; i++)
+          {
+            *(dptr + i) = v1[i];
+          }
 
         return dptr;
       }
 
     for (i = 0; i < dim; i++)
-      v2[i] = v1[i];
+      {
+        v2[i] = v1[i];
+      }
 
     return v2;
   }
@@ -342,7 +351,10 @@ namespace ice
 
     l = 0;
 
-    for (i = 0; i < dim; i++) l += v[i] * v[i];
+    for (i = 0; i < dim; i++)
+      {
+        l += v[i] * v[i];
+      }
 
     l = sqrt(l);
     return l;
@@ -366,12 +378,18 @@ namespace ice
       {
         dptr = (double*)malloc(dim * sizeof(double));
 
-        for (i = 0; i < dim; i++) *(dptr + i) = v1[i] + v2[i];
+        for (i = 0; i < dim; i++)
+          {
+            *(dptr + i) = v1[i] + v2[i];
+          }
 
         return dptr;
       }
 
-    for (i = 0; i < dim; i++) v3[i] = v1[i] + v2[i];
+    for (i = 0; i < dim; i++)
+      {
+        v3[i] = v1[i] + v2[i];
+      }
 
     return v3;
   }
@@ -394,12 +412,18 @@ namespace ice
       {
         dptr = (double*)malloc(dim * sizeof(double));
 
-        for (i = 0; i < dim; i++) *(dptr + i) = v1[i] - v2[i];
+        for (i = 0; i < dim; i++)
+          {
+            *(dptr + i) = v1[i] - v2[i];
+          }
 
         return dptr;
       }
 
-    for (i = 0; i < dim; i++) v3[i] = v1[i] - v2[i];
+    for (i = 0; i < dim; i++)
+      {
+        v3[i] = v1[i] - v2[i];
+      }
 
     return v3;
   }
@@ -433,7 +457,9 @@ namespace ice
       }
 
     for (i = 0; i < dim; i++)
-      dptr[i] = v1[i] / l;
+      {
+        dptr[i] = v1[i] / l;
+      }
 
     return dptr;
   }
@@ -458,7 +484,9 @@ namespace ice
       }
 
     for (int i = 0; i < dim; i++)
-      dptr[i] = v1[i] * fac;
+      {
+        dptr[i] = v1[i] * fac;
+      }
 
     return dptr;
   }
@@ -477,7 +505,9 @@ namespace ice
     double scalar = 0;
 
     for (int i = 0; i < dim; i++)
-      scalar += v1[i] * v2[i];
+      {
+        scalar += v1[i] * v2[i];
+      }
 
     return scalar;
   }
@@ -553,7 +583,9 @@ namespace ice
       }
 
     for (int i = 0; i < dim; i++)
-      ivec[i] = (int)dvec[i];
+      {
+        ivec[i] = (int)dvec[i];
+      }
 
     return OK;
   }
@@ -581,7 +613,9 @@ namespace ice
       }
 
     for (i = 0; i < dim; i++)
-      dvec[i] = (double)ivec[i];
+      {
+        dvec[i] = (double)ivec[i];
+      }
 
     return OK;
   }

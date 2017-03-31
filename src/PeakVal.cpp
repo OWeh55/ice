@@ -78,11 +78,20 @@ namespace ice
           if (!IsImg(mi) || GetVal(mi, x, y) == 0)
             {
               int g = GetVal(img, x, y);
-              if (ming > g) ming = g;
+              if (ming > g)
+                {
+                  ming = g;
+                }
 
-              if (maxg < g) maxg = g;
+              if (maxg < g)
+                {
+                  maxg = g;
+                }
 
-              if (maxabs < abs(g - graynull)) maxabs = abs(g - graynull);
+              if (maxabs < abs(g - graynull))
+                {
+                  maxabs = abs(g - graynull);
+                }
 
             }
         }
@@ -115,9 +124,12 @@ namespace ice
 
     PeakList pl = ImgPeakList(img, mi, 10, 0, zykl, (int)(noise + 0.5), IPL_STANDARD, graynull, mode);
 
-    if (pl == NULL) return DBL_MAX;
+    if (pl == NULL)
+      {
+        return DBL_MAX;
+      }
 
-    if (pl->grw < 0) // Keine Peaks gefunden
+    if (pl->grw < 0)   // Keine Peaks gefunden
       {
         FreePeakList(pl);
         x0 = -1;

@@ -73,7 +73,9 @@ namespace ice
                 if (Intersect(Point(m[i]), Point(m[i1]),
                               Point(m[j]), Point(m[j1]),
                               dummypoint))
-                  return false;
+                  {
+                    return false;
+                  }
               }
           }
       }
@@ -91,7 +93,10 @@ namespace ice
     PointList pl;
     IF_FAILED(pl = Matrix2PointList(m))
     {
-      if (pl != NULL) FreePointList(pl);
+      if (pl != NULL)
+        {
+          FreePointList(pl);
+        }
 
       Message(FNAME, M_0, ERROR);
       return false;
@@ -217,12 +222,18 @@ namespace ice
           {
           case DPP_MIN:
 
-            if (pdist < dist) dist = pdist;
+            if (pdist < dist)
+              {
+                dist = pdist;
+              }
 
             break;
           case DPP_MAX:
 
-            if (pdist > dist) dist = pdist;
+            if (pdist > dist)
+              {
+                dist = pdist;
+              }
 
             break;
           case DPP_MEAN:
@@ -234,7 +245,10 @@ namespace ice
           }
       }
 
-    if (mode == DPP_MEAN) dist /= p1.rows();
+    if (mode == DPP_MEAN)
+      {
+        dist /= p1.rows();
+      }
 
     return dist;
   }
@@ -250,7 +264,10 @@ namespace ice
       return 0.0;
     }
 
-    if (mode == DPP_DIR) return dist1;
+    if (mode == DPP_DIR)
+      {
+        return dist1;
+      }
 
     double dist2;
     IF_FAILED(dist2 = DistancePolygonPolygonDir(p2, p1, pmode))
@@ -263,13 +280,25 @@ namespace ice
       {
       case DPP_MIN:
 
-        if (dist1 < dist2) return dist1;
-        else return dist2;
+        if (dist1 < dist2)
+          {
+            return dist1;
+          }
+        else
+          {
+            return dist2;
+          }
 
       case DPP_MAX:
 
-        if (dist1 > dist2) return dist1;
-        else return dist2;
+        if (dist1 > dist2)
+          {
+            return dist1;
+          }
+        else
+          {
+            return dist2;
+          }
 
       case DPP_MEAN:
         return 0.5 * (dist1 + dist2);
@@ -301,7 +330,10 @@ namespace ice
 
     for (int i = 0, j = 1; i < pl.rows(); i++, j++)
       {
-        if (j >= pl.rows()) j = 0;
+        if (j >= pl.rows())
+          {
+            j = 0;
+          }
 
         int x1 = RoundInt(pl[i][0]);
         int y1 = RoundInt(pl[i][1]);
@@ -313,7 +345,10 @@ namespace ice
           {
             int mcolor = color;
 
-            if (mcolor < 0) mcolor = val;
+            if (mcolor < 0)
+              {
+                mcolor = val;
+              }
 
             RETURN_ERROR_IF_FAILED(Marker(marker, x1, y1, mcolor, size, img));
           }
@@ -402,7 +437,10 @@ namespace ice
       double dist = maxdistedge(i, i + 1, maxi1[i]);
       maxdist1[i] = dist;
 
-      if (dist > maxdist) maxdist = dist;
+      if (dist > maxdist)
+        {
+          maxdist = dist;
+        }
     }
 
     void calcdist2(int i)
@@ -432,7 +470,9 @@ namespace ice
 
       for (unsigned int i = 0; i < idx.size(); i++)
         if (maxdist1[i] > maxdist)
-          maxdist = maxdist1[i];
+          {
+            maxdist = maxdist1[i];
+          }
     }
 
     void insertcorner(int pos, int baseindex)
@@ -498,7 +538,9 @@ namespace ice
         case all:
 
           for (int i = 0; i < basenr; i++)
-            idx.push_back(i);
+            {
+              idx.push_back(i);
+            }
 
           break;
         case two:
@@ -592,20 +634,29 @@ namespace ice
       }
 
     // already reduced enough
-    if (apn == n) return pl;
+    if (apn == n)
+      {
+        return pl;
+      }
 
     if (mode == 2)
       {
         reduced_polym rpl(pl, reduced_polym::two);
 
         while (rpl.size() < n)
-          rpl.split();
+          {
+            rpl.split();
+          }
 
         while (rpl.size() < n * 5 / 3 && rpl.size() < apn)
-          rpl.split();
+          {
+            rpl.split();
+          }
 
         while (rpl.size() > n)
-          rpl.merge();
+          {
+            rpl.merge();
+          }
 
         rpl.getPolygon(result);
       }
@@ -613,7 +664,7 @@ namespace ice
       {
         reduced_polym rpl(pl, reduced_polym::all);
 
-        while (rpl.size() > n) // reduce to wished number of edges
+        while (rpl.size() > n)   // reduce to wished number of edges
           {
             rpl.merge();
           }
@@ -672,13 +723,15 @@ namespace ice
       {
         reduced_polym rpl(pl, reduced_polym::all);
 
-        while (rpl.size() > 3 && rpl.precision() < prec) // reduce to given precision
+        while (rpl.size() > 3 && rpl.precision() < prec)   // reduce to given precision
           {
             rpl.merge();
           }
 
         if (rpl.precision() > prec)
-          rpl.split(); // undo last step
+          {
+            rpl.split();  // undo last step
+          }
 
         rpl.getPolygon(result);
       }
@@ -773,7 +826,9 @@ namespace ice
             int idx = cutpoints[i];
 
             while (idx < next)
-              idx += nOriginalPoints;
+              {
+                idx += nOriginalPoints;
+              }
 
             next = idx + 1; // every edge must have at least 2 corresponding points
           }
@@ -781,7 +836,9 @@ namespace ice
         if (next > cutpoints[0] + nOriginalPoints)
           {
             if (ct == 0)
-              Message(FNAME, M_WRONG_START, WRONG_PARAM);
+              {
+                Message(FNAME, M_WRONG_START, WRONG_PARAM);
+              }
 
             return res;
           }
@@ -795,25 +852,32 @@ namespace ice
 
             // fit lines to the contur segments
 
-            for (int j = 0; j < nPolyPoint; j++) // every edge
+            for (int j = 0; j < nPolyPoint; j++)   // every edge
               {
                 int j1 = (j + 1) % nPolyPoint;
                 Matrix pl1(0, 2);
                 int c1 = cutpoints[j];
                 int c2 = cutpoints[j1];
 
-                if (c2 < c1) c2 += nOriginalPoints;
+                if (c2 < c1)
+                  {
+                    c2 += nOriginalPoints;
+                  }
 
-                for (int i = c1; i <= c2; i++) // points of that segment
+                for (int i = c1; i <= c2; i++)   // points of that segment
                   {
                     int in = i % nOriginalPoints;
                     pl1.Append(Vector(cl[in][0], cl[in][1]));
                   }
                 // cout << pl1.rows() << endl;
                 if (step < 0)
-                  FitLineLinOpt(pl1, edge[j][0], edge[j][1]);
+                  {
+                    FitLineLinOpt(pl1, edge[j][0], edge[j][1]);
+                  }
                 else
-                  FitLine(pl1, edge[j][0], edge[j][1], step);
+                  {
+                    FitLine(pl1, edge[j][0], edge[j][1], step);
+                  }
               }
 
             // calculate new corners as intersection of "edges"
@@ -823,7 +887,10 @@ namespace ice
                 double p[2];
                 int j1 = j - 1;
 
-                if (j1 < 0) j1 = nPolyPoint - 1;
+                if (j1 < 0)
+                  {
+                    j1 = nPolyPoint - 1;
+                  }
 
                 phi1 = edge[j][1];
                 p1 = edge[j][0];
@@ -891,7 +958,10 @@ namespace ice
           {
             int idx = cutpoints[i];
 
-            while (idx < next) idx += cnr;
+            while (idx < next)
+              {
+                idx += cnr;
+              }
 
             next = idx + 2; // every edge must have at least 2 corresponding contur points
           }
@@ -899,7 +969,9 @@ namespace ice
         if (next > cutpoints[0] + cnr)
           {
             if (ct == 0)
-              Message(FNAME, M_WRONG_START, WRONG_PARAM);
+              {
+                Message(FNAME, M_WRONG_START, WRONG_PARAM);
+              }
 
             return res;
           }
@@ -912,25 +984,32 @@ namespace ice
           {
             // fit lines to the contur segments
 
-            for (int j = 0; j < pnr; j++) // every edge
+            for (int j = 0; j < pnr; j++)   // every edge
               {
                 int j1 = (j + 1) % pnr;
                 Matrix pl1(0, 2);
                 int c1 = cutpoints[j];
                 int c2 = cutpoints[j1];
 
-                if (c2 < c1) c2 += cnr;
+                if (c2 < c1)
+                  {
+                    c2 += cnr;
+                  }
 
-                for (int i = c1; i < c2; i++) // points of that segment
+                for (int i = c1; i < c2; i++)   // points of that segment
                   {
                     int in = i % cnr;
                     pl1.Append(Vector(cl[in][0], cl[in][1]));
                   }
 
                 if (step < 0)
-                  FitLineLinOpt(pl1, edge[j][0], edge[j][1]);
+                  {
+                    FitLineLinOpt(pl1, edge[j][0], edge[j][1]);
+                  }
                 else
-                  FitLine(pl1, edge[j][0], edge[j][1], step);
+                  {
+                    FitLine(pl1, edge[j][0], edge[j][1], step);
+                  }
               }
 
             // calculate new corners as intersection of "edges"
@@ -940,7 +1019,10 @@ namespace ice
                 double p[2];
                 int j1 = j - 1;
 
-                if (j1 < 0) j1 = pnr - 1;
+                if (j1 < 0)
+                  {
+                    j1 = pnr - 1;
+                  }
 
                 phi1 = edge[j][1];
                 p1 = edge[j][0];

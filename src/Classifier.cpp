@@ -87,7 +87,9 @@ namespace ice
   {
     std::vector<double> v(feat.size());
     for (int i = 0; i < (int)feat.size(); i++)
-      v[i] = feat[i];
+      {
+        v[i] = feat[i];
+      }
     return Train(cl, v);
   }
 
@@ -107,7 +109,9 @@ namespace ice
       }
 
     for (int i = 0; i < m.rows(); i++)
-      Train((int)Round(m[i][nFeatures]), m[i](0, nFeatures - 1));
+      {
+        Train((int)Round(m[i][nFeatures]), m[i](0, nFeatures - 1));
+      }
 
     return OK;
   }
@@ -115,7 +119,9 @@ namespace ice
   int Classifier::Train(const std::vector<ClassSample>& sampleVector)
   {
     for (unsigned int i = 0; i < sampleVector.size(); i++)
-      Train(sampleVector[i]);
+      {
+        Train(sampleVector[i]);
+      }
 
     return OK;
   }
@@ -136,7 +142,9 @@ namespace ice
       }
 
     for (int i = 0; i < m.rows(); i++)
-      Train(classnr[i], m[i]);
+      {
+        Train(classnr[i], m[i]);
+      }
 
     return OK;
   }
@@ -154,7 +162,9 @@ namespace ice
     bool allTrained = true;
     for (int i = 0; i < nClasses && allTrained; i++)
       if (classTrained[i] == 0)
-        allTrained = false;
+        {
+          allTrained = false;
+        }
 
     if (!allTrained)
       {
@@ -213,12 +223,16 @@ namespace ice
     prob.resize(nClasses);
     prob[0] = -1;
     int classNr = _classify(feat, prob);
-    if (prob[0] < 0) // Classifier did not set probabilities
+    if (prob[0] < 0)   // Classifier did not set probabilities
       {
         for (int i = 0; i < nClasses; ++i)
-          prob[i] = 0;
+          {
+            prob[i] = 0;
+          }
         if (classNr >= 0)
-          prob[classNr] = 1.0;
+          {
+            prob[classNr] = 1.0;
+          }
       }
     return classNr;
   }
@@ -227,7 +241,9 @@ namespace ice
   {
     std::vector<double> v(feat.size());
     for (unsigned int i = 0; i < feat.size(); i++)
-      v[i] = feat[i];
+      {
+        v[i] = feat[i];
+      }
     return Classify(v);
   }
 
@@ -340,7 +356,9 @@ namespace ice
     for (unsigned int i = 0; i < sl.size(); ++i)
       {
         if (sl[i].classNr == Classify(sl[i].features))
-          cc++;
+          {
+            cc++;
+          }
       }
 
     return ((double)cc) / ((double)sl.size());
@@ -365,7 +383,9 @@ namespace ice
     for (int i = 0; i < m.rows(); i++)
       {
         if (RoundInt(m[i][m.cols()]) == Classify(m[i](0, nFeatures - 1)))
-          cc++;
+          {
+            cc++;
+          }
       }
 
     return ((double)cc) / ((double)m.rows());
@@ -391,7 +411,9 @@ namespace ice
     for (int i = 0; i < m.rows(); i++)
       {
         if (clnr[i] == Classify(m[i]))
-          cc++;
+          {
+            cc++;
+          }
       }
 
     return ((double)cc) / ((double)m.rows());
@@ -426,17 +448,22 @@ namespace ice
         anz[cls] += 1;
         int cli = Classify(m[i](0, nFeatures - 1));
 
-        if (cli >= 0) // ignore rejections
+        if (cli >= 0)   // ignore rejections
           {
             r[cls][cli] += 1.0;
 
-            if (cli == cls) cc++;
+            if (cli == cls)
+              {
+                cc++;
+              }
           }
       }
 
     for (int i = 0; i < nFeatures; i++)
       for (int j = 0; j < nFeatures; j++)
-        r[i][j] = r[i][j] / anz[i];
+        {
+          r[i][j] = r[i][j] / anz[i];
+        }
 
     return ((double)cc) / ((double)m.rows());
   }

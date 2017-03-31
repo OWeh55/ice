@@ -57,7 +57,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 12;
     int gmax2 = dest->maxval * norm;
@@ -121,7 +123,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 12;
     int gmax2 = dest->maxval * norm;
@@ -191,7 +195,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 12;
     int gmax2 = dest->maxval * norm;
@@ -255,7 +261,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(dest);
+      {
+        tmp.copy(dest);
+      }
 
     int gmax1 = src->maxval * 12;
     int gmax2 = dest->maxval * norm;
@@ -326,7 +334,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 16;
     int gmax2 = dest->maxval * norm;
@@ -392,7 +402,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
     int gmax1 = src->maxval * 16;
     int gmax2 = dest->maxval * norm;

@@ -99,7 +99,9 @@ namespace ice
 
     //rel. Häuf. in Array schreiben
     for (int y = 0; y < len; y++)
-      hi[y] = h.getRelative(y);
+      {
+        hi[y] = h.getRelative(y);
+      }
 
     if (mode == GV_QUANTILE)
       {

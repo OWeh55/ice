@@ -51,7 +51,9 @@ namespace ice
     par = Matrix(nClasses, nFeatures + 2);
 
     for (int i = 0; i < nClasses; i++)
-      par[i][nFeatures] = 0.0;
+      {
+        par[i][nFeatures] = 0.0;
+      }
   }
 #undef FNAME
 #define FNAME "Train"
@@ -175,7 +177,9 @@ namespace ice
         double sum = 0;
 
         for (int j = 0; j < nFeatures; j++)
-          sum = sum + par[i][j] * par[i][j];
+          {
+            sum = sum + par[i][j] * par[i][j];
+          }
 
         par[i][nFeatures + 1] = -sum / 2.0;
       }

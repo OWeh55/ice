@@ -85,7 +85,10 @@ namespace ice
         return NULL;
       }
 
-    for (i = 0; i < nbr; i++) fi->entry[i] = 0;
+    for (i = 0; i < nbr; i++)
+      {
+        fi->entry[i] = 0;
+      }
 
     SetOk();
     return fi;
@@ -139,9 +142,15 @@ namespace ice
     /* Bestimmung der maximalen und minimalen Einträge */
     for (i = 0; i < fi->nbr; i++)
       {
-        if (fi->entry[i] < min) min = fi->entry[i];
+        if (fi->entry[i] < min)
+          {
+            min = fi->entry[i];
+          }
 
-        if (fi->entry[i] > max) max = fi->entry[i];
+        if (fi->entry[i] > max)
+          {
+            max = fi->entry[i];
+          }
       }
 
     diff = max - min;
@@ -160,8 +169,14 @@ namespace ice
          l * CHARX + 2 * GAPX + fi->nbr + LAST, 2 * CHARY + 3 * GAPY + LAST + sizey,
          255, DEFAULT, img);
 
-    if (l1 <= l2) Text(smax, GAPX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
-    else Text(smax, GAPX + (l1 - l2)*CHARX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
+    if (l1 <= l2)
+      {
+        Text(smax, GAPX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
+      }
+    else
+      {
+        Text(smax, GAPX + (l1 - l2)*CHARX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
+      }
 
     if (l1 < l2) Text(smin, GAPX + (l2 - l1)*CHARX,
                         2 * CHARY + 3 * GAPY + LAST + sizey - CHARY / 2, 255, 0, img);
@@ -198,9 +213,15 @@ namespace ice
 #define FNAME "FreeFuncImage1D"
   int FreeFuncImage1D(FuncImage1D fi)
   {
-    if (fi->entry != NULL) free(fi->entry);
+    if (fi->entry != NULL)
+      {
+        free(fi->entry);
+      }
 
-    if (fi != NULL) free(fi);
+    if (fi != NULL)
+      {
+        free(fi);
+      }
 
     return OK;
   }

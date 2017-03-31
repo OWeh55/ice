@@ -93,8 +93,14 @@ namespace ice
         if (r != g || g != b)
           {
             double min = r;
-            if (g < min) min = g;
-            if (b < min) min = b;
+            if (g < min)
+              {
+                min = g;
+              }
+            if (b < min)
+              {
+                min = b;
+              }
             s = 1.0 - min / i;
 
             if (s > 0.0)
@@ -226,18 +232,26 @@ namespace ice
   static double fxyz(double cn)
   {
     if (cn > eps)
-      return cbrt(cn);
+      {
+        return cbrt(cn);
+      }
     else
-      return (kappa * cn + 16) / 116 ;
+      {
+        return (kappa * cn + 16) / 116 ;
+      }
   }
 
   static double fxyzr(double cn)
   {
     double cn3 = cn * cn * cn;
     if (cn3 > eps)
-      return cn3;
+      {
+        return cn3;
+      }
     else
-      return (116 * cn - 16) / kappa;
+      {
+        return (116 * cn - 16) / kappa;
+      }
   }
 
   void XyzToLab(double x, double y, double z, double& l, double& a, double& b)

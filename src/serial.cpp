@@ -80,7 +80,9 @@ namespace ice
     int i;
 
     for (i = 0; i < PORTNUMBER; i++)
-      Port[i].open = false;
+      {
+        Port[i].open = false;
+      }
 
     initialized = true;
   }
@@ -98,10 +100,15 @@ namespace ice
 
     Initialize;
 
-    if ((port < 0) || (port >= PORTNUMBER)) return srlWRONGPARAMETER;
+    if ((port < 0) || (port >= PORTNUMBER))
+      {
+        return srlWRONGPARAMETER;
+      }
 
-    if (Port[port].open) // already open ?
-      srlClose(port);
+    if (Port[port].open)   // already open ?
+      {
+        srlClose(port);
+      }
 
     sprintf(devname, "/dev/ttyS%d", port);
 
@@ -112,7 +119,10 @@ namespace ice
 
     res = tcgetattr(fd, &pmode);
 
-    if (res != 0) return srlSYSERROR;
+    if (res != 0)
+      {
+        return srlSYSERROR;
+      }
 
     cfmakeraw(&pmode);
 
@@ -243,11 +253,17 @@ namespace ice
 
     res = tcflush(fd, TCIOFLUSH);
 
-    if (res != 0) return srlSYSERROR;
+    if (res != 0)
+      {
+        return srlSYSERROR;
+      }
 
     res = tcsetattr(fd, TCSANOW, &pmode);
 
-    if (res != 0) return srlSYSERROR;
+    if (res != 0)
+      {
+        return srlSYSERROR;
+      }
 
     Port[port].open = true;
     Port[port].nextchar = -1;
@@ -256,13 +272,22 @@ namespace ice
 
   int srlWrite(int port, int byte)
   {
-    if ((port < 0) || (port >= PORTNUMBER)) return srlWRONGPARAMETER;
+    if ((port < 0) || (port >= PORTNUMBER))
+      {
+        return srlWRONGPARAMETER;
+      }
 
     Initialize;
 
-    if (!Port[port].open) return srlNOTOPEN;
+    if (!Port[port].open)
+      {
+        return srlNOTOPEN;
+      }
 
-    if (write(Port[port].fd, &byte, 1) != 1) return srlSYSERROR;
+    if (write(Port[port].fd, &byte, 1) != 1)
+      {
+        return srlSYSERROR;
+      }
 
     return srlOK;
   }
@@ -275,7 +300,10 @@ namespace ice
 
     i = strlen(s);
 
-    if (i > STRINGLENGTH) return srlSTRINGTOOLONG;
+    if (i > STRINGLENGTH)
+      {
+        return srlSTRINGTOOLONG;
+      }
 
     strcpy(h, s);
 
@@ -300,15 +328,24 @@ namespace ice
 
     Initialize;
 
-    if ((port < 0) || (port >= PORTNUMBER)) return srlWRONGPARAMETER;
+    if ((port < 0) || (port >= PORTNUMBER))
+      {
+        return srlWRONGPARAMETER;
+      }
 
-    if (!Port[port].open) return srlNOTOPEN;
+    if (!Port[port].open)
+      {
+        return srlNOTOPEN;
+      }
 
     for (i = 0; i < strlen(h); i++)
       {
         code = srlWrite(port, h[i]);
 
-        if (code < 0) return code;
+        if (code < 0)
+          {
+            return code;
+          }
       }
 
     return srlOK;
@@ -326,9 +363,15 @@ namespace ice
 
     Initialize;
 
-    if ((port < 0) || (port >= PORTNUMBER)) return srlWRONGPARAMETER;
+    if ((port < 0) || (port >= PORTNUMBER))
+      {
+        return srlWRONGPARAMETER;
+      }
 
-    if (!Port[port].open) return srlNOTOPEN;
+    if (!Port[port].open)
+      {
+        return srlNOTOPEN;
+      }
 
     if (Port[port].nextchar >= 0)
       {
@@ -371,9 +414,15 @@ namespace ice
           }
         while ((character == srlNODATA) && (time < timeout));
 
-        if (character == srlNODATA) return srlNODATA;
+        if (character == srlNODATA)
+          {
+            return srlNODATA;
+          }
 
-        if (character < 0) return character;
+        if (character < 0)
+          {
+            return character;
+          }
 
         if ((character != '\x0d') && (character != '\x0a'))
           {
@@ -381,7 +430,9 @@ namespace ice
             s[i] = 0;
           }
         else
-          ready = true;
+          {
+            ready = true;
+          }
       }
 
     return srlOK;
@@ -394,7 +445,9 @@ namespace ice
     rc = srlReadString(port, buffer, 3000, timeout);
 
     if (rc == srlOK)
-      s = buffer;
+      {
+        s = buffer;
+      }
 
     return rc;
   }
@@ -403,9 +456,15 @@ namespace ice
   {
     Initialize;
 
-    if ((port < 0) || (port >= PORTNUMBER)) return srlWRONGPARAMETER;
+    if ((port < 0) || (port >= PORTNUMBER))
+      {
+        return srlWRONGPARAMETER;
+      }
 
-    if (!Port[port].open) return srlNOTOPEN;
+    if (!Port[port].open)
+      {
+        return srlNOTOPEN;
+      }
 
     Port[port].nextchar = byte;
     return srlOK;
@@ -415,9 +474,15 @@ namespace ice
   {
     Initialize;
 
-    if ((port < 0) || (port >= PORTNUMBER)) return srlWRONGPARAMETER;
+    if ((port < 0) || (port >= PORTNUMBER))
+      {
+        return srlWRONGPARAMETER;
+      }
 
-    if (!Port[port].open) return srlOK; /* ignore here */
+    if (!Port[port].open)
+      {
+        return srlOK;  /* ignore here */
+      }
 
     Port[port].open = false;
 

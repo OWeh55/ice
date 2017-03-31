@@ -183,7 +183,10 @@ namespace ice
 
   int FreeSegmentList(Segment sl)
   {
-    while (sl->prev != nullptr) sl = sl->prev;
+    while (sl->prev != nullptr)
+      {
+        sl = sl->prev;
+      }
 
     while (sl->next != nullptr)
       {
@@ -197,29 +200,47 @@ namespace ice
   /************************************************/
   Segment AddSegment(Segment segl, Segment seg)
   {
-    if (segl == nullptr) return (seg);
+    if (segl == nullptr)
+      {
+        return (seg);
+      }
 
-    while (segl->next != nullptr) segl = segl->next;
+    while (segl->next != nullptr)
+      {
+        segl = segl->next;
+      }
 
     segl->next = seg;
 
-    if (seg != nullptr) seg->prev = segl;
+    if (seg != nullptr)
+      {
+        seg->prev = segl;
+      }
 
     return (seg);
   }
   /************************************************/
   Segment FirstSegment(Segment seg)
   {
-    if (seg == nullptr) return (nullptr);
+    if (seg == nullptr)
+      {
+        return (nullptr);
+      }
 
-    while (seg->prev != nullptr) seg = seg->prev;
+    while (seg->prev != nullptr)
+      {
+        seg = seg->prev;
+      }
 
     return (seg);
   }
   /************************************************/
   Segment NextSegment(Segment s)
   {
-    if (s == nullptr) return (nullptr);
+    if (s == nullptr)
+      {
+        return (nullptr);
+      }
 
     return (s->next);
   }
@@ -245,7 +266,9 @@ namespace ice
     m.Append(Vector(pl->xptr[ad1], pl->yptr[ad1], pl->wptr[ad1]));
 
     for (int i = ad1 + 1; i != ad2; i = (i + 1) % pl->lng)
-      m.Append(Vector(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      {
+        m.Append(Vector(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      }
 
     return OK;
   }
@@ -272,7 +295,9 @@ namespace ice
     vpv.push_back(PointValue(pl->xptr[ad1], pl->yptr[ad1], pl->wptr[ad1]));
 
     for (int i = ad1 + 1; i != ad2; i = (i + 1) % pl->lng)
-      vpv.push_back(PointValue(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      {
+        vpv.push_back(PointValue(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      }
 
     return OK;
   }
@@ -291,10 +316,14 @@ namespace ice
 
     if (m.cols() > 2) // Gewicht vorhanden
       for (int i = 0; i < m.rows(); i++)
-        PutPoint(pl, i, m[i][0], m[i][1], m[i][2]);
+        {
+          PutPoint(pl, i, m[i][0], m[i][1], m[i][2]);
+        }
     else
       for (int i = 0; i < m.rows(); i++)
-        PutPoint(pl, i, m[i][0], m[i][1], 1.0);
+        {
+          PutPoint(pl, i, m[i][0], m[i][1], 1.0);
+        }
 
     return pl;
   }

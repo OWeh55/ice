@@ -46,7 +46,9 @@ namespace ice
     FitInit();
 
     for (i = 0; i < samples; i++)
-      FitVal(m[i][0], m[i][1], m[i][2]);
+      {
+        FitVal(m[i][0], m[i][1], m[i][2]);
+      }
 
     FitFinish();
     return OK;
@@ -169,7 +171,10 @@ namespace ice
         Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
       }
 
-    for (i = 0; i < 6; i++) co[i] = v[i];
+    for (i = 0; i < 6; i++)
+      {
+        co[i] = v[i];
+      }
   }
 #undef FNAME
 

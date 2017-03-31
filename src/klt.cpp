@@ -81,7 +81,9 @@ namespace ice
 
     for (int i = 0; i < nFeatures; ++i)
       for (int j = 0; j < nFeatures; ++j)
-        klt[j][i] = eigen2[i][j];
+        {
+          klt[j][i] = eigen2[i][j];
+        }
 
     return klt;
   }

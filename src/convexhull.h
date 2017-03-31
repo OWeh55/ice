@@ -57,7 +57,9 @@ namespace ice
                 has_changed = true;
               }
             else
-              i++;
+              {
+                i++;
+              }
           }
       }
     while (has_changed);
@@ -74,12 +76,18 @@ namespace ice
         if (p1.x == p2.x)
           {
             if (upper ? p1.y > p2.y : p1.y < p2.y)
-              pl.erase(pl.begin() + i + 1);
+              {
+                pl.erase(pl.begin() + i + 1);
+              }
             else
-              pl.erase(pl.begin() + i);
+              {
+                pl.erase(pl.begin() + i);
+              }
           }
         else
-          i++;
+          {
+            i++;
+          }
       }
   }
 
@@ -100,7 +108,9 @@ namespace ice
 
     std::vector<const T*> upper(pl.size());  // pointlist for upper Limit of convex hull
     for (unsigned int i = 0; i < pl.size(); i++)
-      upper[i] = &pl[i];
+      {
+        upper[i] = &pl[i];
+      }
     sort(upper.begin(), upper.end(), orderX<T>);
     std::vector<const T*> lower = upper;
 
@@ -113,16 +123,24 @@ namespace ice
     cpl.clear();
 
     if (lower[0] != upper[0])
-      cpl.push_back(*lower[0]);
+      {
+        cpl.push_back(*lower[0]);
+      }
 
     for (unsigned int i = 1; i < lower.size(); i++)
-      cpl.push_back(*lower[i]);
+      {
+        cpl.push_back(*lower[i]);
+      }
 
     if (lower.back() != upper.back())
-      cpl.push_back(*upper.back());
+      {
+        cpl.push_back(*upper.back());
+      }
 
     for (int i = upper.size() - 2; i >= 0; i--)
-      cpl.push_back(*upper[i]);
+      {
+        cpl.push_back(*upper[i]);
+      }
 
     return OK;
   }

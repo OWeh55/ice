@@ -129,7 +129,10 @@ namespace ice
     for (i = 0; i < m; ++i)
       for (j = 0; j < n; ++j)
         {
-          if (matrix[i][j] != 0.0) nz++;
+          if (matrix[i][j] != 0.0)
+            {
+              nz++;
+            }
         }
 
     ia = new int[nz + m];
@@ -143,12 +146,16 @@ namespace ice
       }
 
     for (i = 0; i < n + m + 1; ++i)
-      ka[i] = 0;
+      {
+        ka[i] = 0;
+      }
 
     b = new double[m];
 
     for (i = 0; i < m; ++i)
-      b[i] = 0.0;
+      {
+        b[i] = 0.0;
+      }
 
     c = new double[n + m];
     x = new double[n + m];
@@ -169,12 +176,16 @@ namespace ice
     // Füllen Zielfunktion
 
     for (i = 0; i < n; ++i)
-      c[i] = -cost_function[i];
+      {
+        c[i] = -cost_function[i];
+      }
 
     // Füllen Rechte Seite
 
     for (i = 0; i < m; ++i)
-      b[i] = r_side[i];
+      {
+        b[i] = r_side[i];
+      }
 
     // Füllen der Matrixdaten
 
@@ -186,7 +197,10 @@ namespace ice
 
         for (i = 0; i < m; ++i)
           {
-            if (matrix[i][j - 1] != 0) anz++;
+            if (matrix[i][j - 1] != 0)
+              {
+                anz++;
+              }
           }
 
         ka[j] = ka[j - 1] + anz;
@@ -229,34 +243,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < nz ; ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();
@@ -268,7 +292,9 @@ namespace ice
     double* gew = new double[m];
 
     for (int i = 0; i < m; i++)
-      gew[i] = 1.0;
+      {
+        gew[i] = 1.0;
+      }
 
     code = simplex_method_modified(
              m, /* number of constraints */
@@ -290,7 +316,9 @@ namespace ice
 
 
     for (i = 0; i < n; ++i)
-      solution[i] = x[i];
+      {
+        solution[i] = x[i];
+      }
 
     costs = zf;
 

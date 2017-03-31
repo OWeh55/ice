@@ -62,8 +62,14 @@ namespace ice
     head[20] = width / 256;
     head[21] = width % 256;
 
-    if (img->maxval < 256) head[23] = 8;
-    else if (img->maxval < 256 * 256) head[23] = 16;
+    if (img->maxval < 256)
+      {
+        head[23] = 8;
+      }
+    else if (img->maxval < 256 * 256)
+      {
+        head[23] = 16;
+      }
     else
       {
         Message(FNAME, M_HIGHRANGE, WRONG_PARAM);
@@ -131,9 +137,15 @@ namespace ice
 
     int maxval = imgr->maxval;
 
-    if (imgg->maxval > maxval) maxval = imgg->maxval;
+    if (imgg->maxval > maxval)
+      {
+        maxval = imgg->maxval;
+      }
 
-    if (imgb->maxval > maxval) maxval = imgb->maxval;
+    if (imgb->maxval > maxval)
+      {
+        maxval = imgb->maxval;
+      }
 
     FILE* ofp = fopen(filename.c_str(), FWMODUS);
 
@@ -142,8 +154,14 @@ namespace ice
     head[20] = width / 256;
     head[21] = width % 256;
 
-    if (maxval < 256) head[23] = 8;
-    else if (maxval < 256 * 256) head[23] = 16;
+    if (maxval < 256)
+      {
+        head[23] = 8;
+      }
+    else if (maxval < 256 * 256)
+      {
+        head[23] = 16;
+      }
     else
       {
         Message(FNAME, M_HIGHRANGE, WRONG_PARAM);
@@ -254,43 +272,82 @@ namespace ice
 
   static bool read_header(FILE* fd, int& width, int& height, int& bits, int& ch)
   {
-    if (psd_readc(fd) != '8') return false; // 4 char=signature
+    if (psd_readc(fd) != '8')
+      {
+        return false;  // 4 char=signature
+      }
 
-    if (psd_readc(fd) != 'B') return false;
+    if (psd_readc(fd) != 'B')
+      {
+        return false;
+      }
 
-    if (psd_readc(fd) != 'P') return false;
+    if (psd_readc(fd) != 'P')
+      {
+        return false;
+      }
 
-    if (psd_readc(fd) != 'S') return false;
+    if (psd_readc(fd) != 'S')
+      {
+        return false;
+      }
 
-    if (psd_reads(fd) != 1) return false; // version==1
+    if (psd_reads(fd) != 1)
+      {
+        return false;  // version==1
+      }
 
-    for (int i = 0; i < 6; i++) psd_readc(fd); //ignore reserved
+    for (int i = 0; i < 6; i++)
+      {
+        psd_readc(fd);  //ignore reserved
+      }
 
     ch = psd_reads(fd); // channels
 
-    if ((ch != 1) && (ch != 3)) return false; // one or three channels
+    if ((ch != 1) && (ch != 3))
+      {
+        return false;  // one or three channels
+      }
 
     height = psd_read(fd);
     width = psd_read(fd);
     bits = psd_reads(fd);
 
-    if ((bits != 16) && (bits != 8)) return false;
+    if ((bits != 16) && (bits != 8))
+      {
+        return false;
+      }
 
-    if (psd_reads(fd) != ch) return false; // mode==channel for mode 1, 3
+    if (psd_reads(fd) != ch)
+      {
+        return false;  // mode==channel for mode 1, 3
+      }
 
     int skip = psd_read(fd); // color mode data
 
-    for (int i = 0; i < skip; i++) psd_readc(fd);
+    for (int i = 0; i < skip; i++)
+      {
+        psd_readc(fd);
+      }
 
     skip = psd_read(fd); // image resources
 
-    for (int i = 0; i < skip; i++) psd_readc(fd);
+    for (int i = 0; i < skip; i++)
+      {
+        psd_readc(fd);
+      }
 
     skip = psd_read(fd); // layer/mask info
 
-    for (int i = 0; i < skip; i++) psd_readc(fd);
+    for (int i = 0; i < skip; i++)
+      {
+        psd_readc(fd);
+      }
 
-    if (psd_reads(fd) != 0) return false; // !no compression
+    if (psd_reads(fd) != 0)
+      {
+        return false;  // !no compression
+      }
 
     return true;
   }
@@ -316,8 +373,14 @@ namespace ice
         return WRONG_FILE;
       }
 
-    if (bits == 8) maxval = 255; // only 8 or 16 bit supported
-    else maxval = 256 * 256 - 1;
+    if (bits == 8)
+      {
+        maxval = 255;  // only 8 or 16 bit supported
+      }
+    else
+      {
+        maxval = 256 * 256 - 1;
+      }
 
     fclose(fd);
     return OK;
@@ -370,7 +433,9 @@ namespace ice
     ib.data = pic;
 
     if (!IsImg(img))
-      img = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        img = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, img, flag);
   }
@@ -422,11 +487,17 @@ namespace ice
     ib.data = pic;
 
     if (!IsImg(imgr))
-      imgr = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgr = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(imgg))
-      imgg = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgg = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(imgb))
-      imgb = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgb = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, imgr, imgg, imgb, flag);
   }

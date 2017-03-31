@@ -107,7 +107,10 @@ namespace ice
 
     if (data != nullptr)
       {
-        for (int i = 0; i < int(rows); i++) delete data[i];
+        for (int i = 0; i < int(rows); i++)
+          {
+            delete data[i];
+          }
 
         free(data);
       }
@@ -271,13 +274,22 @@ namespace ice
 
   bool operator==(const QuatMatrix& qm1, const QuatMatrix& qm2)
   {
-    if (qm1.rows != qm2.rows) return false;
+    if (qm1.rows != qm2.rows)
+      {
+        return false;
+      }
 
-    if (qm2.columns != qm2.columns) return false;
+    if (qm2.columns != qm2.columns)
+      {
+        return false;
+      }
 
     for (int i = 0; i < int(qm1.rows); i++)
       {
-        if (*qm1.data[i] != *qm2.data[i])return false;
+        if (*qm1.data[i] != *qm2.data[i])
+          {
+            return false;
+          }
 
       }
 
@@ -297,7 +309,10 @@ namespace ice
       {
         os << *qm.data[i];
 
-        if (i < int(qm.rows) - 1) os << ',' ;
+        if (i < int(qm.rows) - 1)
+          {
+            os << ',' ;
+          }
 
         os << endl ;
       }

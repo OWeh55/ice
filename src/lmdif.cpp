@@ -266,7 +266,9 @@ namespace ice
     if ((n <= 0) || (funcdim < n) || (ldfjac < funcdim) || (ftol < 0.0)
         || (xtol < 0.0) || (gtol < 0.0) || (maxiter <= 0)
         || (factor <= 0.0))
-      goto L300;
+      {
+        goto L300;
+      }
 
     if (mode == 2)
       {
@@ -274,7 +276,9 @@ namespace ice
         for (j = 0; j < n; j++)
           {
             if (diag[j] <= 0.0)
-              goto L300;
+              {
+                goto L300;
+              }
           }
       }
 
@@ -285,7 +289,9 @@ namespace ice
     iflag = fcn(funcdim, n, x, fvec);
 
     if (iflag < 0)
-      goto L300;
+      {
+        goto L300;
+      }
 
     fnorm = enorm(funcdim, fvec);
     /*
@@ -306,7 +312,9 @@ L30:
     fdjac2(fcn, funcdim, n, x, fvec, fjac, ldfjac, &iflag, epsfcn);
 
     if (iflag < 0)
-      goto L300;
+      {
+        goto L300;
+      }
 
     /*
      *   if requested, call fcn to enable printing of iterates.
@@ -318,7 +326,9 @@ L30:
             iflag = fcn(funcdim, n, x, fvec);
 
             if (iflag < 0)
-              goto L300;
+              {
+                goto L300;
+              }
           }
       }
 
@@ -340,7 +350,9 @@ L30:
                 diag[j] = wa2[j];
 
                 if (wa2[j] == 0.0)
-                  diag[j] = 1.0;
+                  {
+                    diag[j] = 1.0;
+                  }
               }
           }
 
@@ -349,13 +361,17 @@ L30:
          *   and initialize the step bound delta.
          */
         for (j = 0; j < n; j++)
-          wa3[j] = diag[j] * x[j];
+          {
+            wa3[j] = diag[j] * x[j];
+          }
 
         xnorm = enorm(n, wa3);
         delta = factor * xnorm;
 
         if (delta == 0.0)
-          delta = factor;
+          {
+            delta = factor;
+          }
       }
 
     /*
@@ -363,7 +379,9 @@ L30:
      *   qtf.
      */
     for (i = 0; i < funcdim; i++)
-      wa4[i] = fvec[i];
+      {
+        wa4[i] = fvec[i];
+      }
 
     jj = 0;
 
@@ -432,10 +450,14 @@ L30:
      *   test for convergence of the gradient norm.
      */
     if (gnorm <= gtol)
-      *info = 4;
+      {
+        *info = 4;
+      }
 
     if (*info != 0)
-      goto L300;
+      {
+        goto L300;
+      }
 
     /*
      *   rescale if necessary.
@@ -443,7 +465,9 @@ L30:
     if (mode != 2)
       {
         for (j = 0; j < n; j++)
-          diag[j] = Max(diag[j], wa2[j]);
+          {
+            diag[j] = Max(diag[j], wa2[j]);
+          }
       }
 
     /*
@@ -471,7 +495,9 @@ L200:
      *      on the first iteration, adjust the initial step bound.
      */
     if (*iter == 1)
-      delta = Min(delta, pnorm);
+      {
+        delta = Min(delta, pnorm);
+      }
 
     /*
      *      evaluate the function at x + p and calculate its norm.
@@ -479,7 +505,9 @@ L200:
     iflag = fcn(funcdim, n, wa2, wa4);
 
     if (iflag < 0)
-      goto L300;
+      {
+        goto L300;
+      }
 
     fnorm1 = enorm(funcdim, wa4);
     /*
@@ -526,7 +554,9 @@ L200:
     ratio = 0.0;
 
     if (prered != 0.0)
-      ratio = actred / prered;
+      {
+        ratio = actred / prered;
+      }
 
     /*
      *      update the step bound.
@@ -534,13 +564,19 @@ L200:
     if (ratio <= p25)
       {
         if (actred >= 0.0)
-          temp = p5;
+          {
+            temp = p5;
+          }
         else
-          temp = p5 * dirder / (dirder + p5 * actred);
+          {
+            temp = p5 * dirder / (dirder + p5 * actred);
+          }
 
         if (((p1 * fnorm1) >= fnorm)
             || (temp < p1))
-          temp = p1;
+          {
+            temp = p1;
+          }
 
         delta = temp * Min(delta, pnorm / p1);
         par = par / temp;
@@ -569,7 +605,9 @@ L200:
           }
 
         for (i = 0; i < funcdim; i++)
-          fvec[i] = wa4[i];
+          {
+            fvec[i] = wa4[i];
+          }
 
         xnorm = enorm(n, wa2);
         fnorm = fnorm1;
@@ -584,45 +622,65 @@ L200:
     if ((fabs(actred) <= ftol)
         && (prered <= ftol)
         && (p5 * ratio <= 1.0))
-      *info = 1;
+      {
+        *info = 1;
+      }
 
     if (delta <= xtol * xnorm)
-      *info = 2;
+      {
+        *info = 2;
+      }
 
     if ((fabs(actred) <= ftol)
         && (prered <= ftol)
         && (p5 * ratio <= 1.0)
         && (*info == 2))
-      *info = 3;
+      {
+        *info = 3;
+      }
 
     if (*info != 0)
-      goto L300;
+      {
+        goto L300;
+      }
 
     /*
      *      tests for termination and stringent tolerances.
      */
     if (cycles >= maxiter)
-      *info = 5;
+      {
+        *info = 5;
+      }
 
     if ((fabs(actred) <= MACHEP)
         && (prered <= MACHEP)
         && (p5 * ratio <= 1.0))
-      *info = 6;
+      {
+        *info = 6;
+      }
 
     if (delta <= MACHEP * xnorm)
-      *info = 7;
+      {
+        *info = 7;
+      }
 
     if (gnorm <= MACHEP)
-      *info = 8;
+      {
+        *info = 8;
+      }
 
     if (*info != 0)
-      goto L300;
+      {
+        goto L300;
+      }
 
     /*
      *      end of the inner loop. repeat if iteration unsuccessful.
      */
     if (ratio < p0001)
-      goto L200;
+      {
+        goto L200;
+      }
 
     /*
      *   end of the outer loop.
@@ -635,12 +693,16 @@ L300:
      *     termination, either normal or user imposed.
      */
     if (iflag < 0)
-      *info = iflag;
+      {
+        *info = iflag;
+      }
 
     iflag = 0;
 
     if (nprint > 0)
-      iflag = fcn(funcdim, n, x, fvec);
+      {
+        iflag = fcn(funcdim, n, x, fvec);
+      }
 
     delete [] wa1;
     delete [] wa2;
@@ -772,10 +834,14 @@ L300:
         wa1[j] = qtb[j];
 
         if ((r[jj] == 0.0) && (nsing == n))
-          nsing = j;
+          {
+            nsing = j;
+          }
 
         if (nsing < n)
-          wa1[j] = 0.0;
+          {
+            wa1[j] = 0.0;
+          }
 
         jj += ldr + 1; /* [j+ldr*j] */
       }
@@ -816,7 +882,9 @@ L300:
     iter = 0;
 
     for (j = 0; j < n; j++)
-      wa2[j] = diag[j] * x[j];
+      {
+        wa2[j] = diag[j] * x[j];
+      }
 
     dxnorm = enorm(n, wa2);
     fp = dxnorm - delta;
@@ -892,7 +960,9 @@ L300:
     paru = gnorm / delta;
 
     if (paru == 0.0)
-      paru = DWARF / Min(delta, p1);
+      {
+        paru = DWARF / Min(delta, p1);
+      }
 
     /*
      *     if the input par lies outside of the interval (parl,paru),
@@ -902,7 +972,9 @@ L300:
     *par = Min(*par, paru);
 
     if (*par == 0.0)
-      *par = gnorm / dxnorm;
+      {
+        *par = gnorm / dxnorm;
+      }
 
     /*
      *     beginning of an iteration.
@@ -914,17 +986,23 @@ L150:
      *   evaluate the function at the current value of par.
      */
     if (*par == 0.0)
-      *par = Max(DWARF, p001 * paru);
+      {
+        *par = Max(DWARF, p001 * paru);
+      }
 
     temp = sqrt(*par);
 
     for (j = 0; j < n; j++)
-      wa1[j] = temp * diag[j];
+      {
+        wa1[j] = temp * diag[j];
+      }
 
     qrsolv(n, r, ldr, ipvt, wa1, qtb, x, sdiag);
 
     for (j = 0; j < n; j++)
-      wa2[j] = diag[j] * x[j];
+      {
+        wa2[j] = diag[j] * x[j];
+      }
 
     dxnorm = enorm(n, wa2);
     temp = fp;
@@ -938,7 +1016,9 @@ L150:
     if ((fabs(fp) <= p1 * delta)
         || ((parl == 0.0) && (fp <= temp) && (temp < 0.0))
         || (iter == 10))
-      goto L220;
+      {
+        goto L220;
+      }
 
     /*
      *   compute the newton correction.
@@ -978,10 +1058,14 @@ L150:
      *   depending on the sign of the function, update parl or paru.
      */
     if (fp > 0.0)
-      parl = Max(parl, *par);
+      {
+        parl = Max(parl, *par);
+      }
 
     if (fp < 0.0)
-      paru = Min(paru, *par);
+      {
+        paru = Min(paru, *par);
+      }
 
     /*
      *   compute an improved estimate for par.
@@ -998,7 +1082,9 @@ L220:
      *     termination.
      */
     if (iter == 0)
-      *par = 0.0;
+      {
+        *par = 0.0;
+      }
 
     delete [] wa1;
     delete [] wa2;
@@ -1088,7 +1174,9 @@ L220:
         wa[j] = rdiag[j];
 
         if (pivot != 0)
-          ipvt[j] = j;
+          {
+            ipvt[j] = j;
+          }
 
         ij += rows; /* m*j */
       }
@@ -1110,7 +1198,9 @@ L220:
             for (k = j; k < cols; k++)
               {
                 if (rdiag[k] > rdiag[kmax])
-                  kmax = k;
+                  {
+                    kmax = k;
+                  }
               }
 
             if (kmax != j)
@@ -1146,7 +1236,9 @@ L220:
         if (ajnorm != 0.0)
           {
             if (a[jj] < 0.0)
-              ajnorm = -ajnorm;
+              {
+                ajnorm = -ajnorm;
+              }
 
             ij = jj;
 
@@ -1326,10 +1418,14 @@ L220:
         l = ipvt[j];
 
         if (diag[l] == 0.0)
-          goto L90;
+          {
+            goto L90;
+          }
 
         for (k = j; k < n; k++)
-          sdiag[k] = 0.0;
+          {
+            sdiag[k] = 0.0;
+          }
 
         sdiag[j] = diag[l];
         /*
@@ -1346,7 +1442,9 @@ L220:
              *      appropriate element in the current row of d.
              */
             if (sdiag[k] == 0.0)
-              continue;
+              {
+                continue;
+              }
 
             kk = k + ldr * k;
 
@@ -1409,14 +1507,20 @@ L90:
     for (j = 0; j < n; j++)
       {
         if ((sdiag[j] == 0.0) && (nsing == n))
-          nsing = j;
+          {
+            nsing = j;
+          }
 
         if (nsing < n)
-          wa[j] = 0.0;
+          {
+            wa[j] = 0.0;
+          }
       }
 
     if (nsing < 1)
-      goto L150;
+      {
+        goto L150;
+      }
 
     for (k = 0; k < nsing; k++)
       {
@@ -1564,9 +1668,13 @@ L150:
     if (s2 != 0.0)
       {
         if (s2 >= x3max)
-          temp = s2 * (1.0 + (x3max / s2) * (x3max * s3));
+          {
+            temp = s2 * (1.0 + (x3max / s2) * (x3max * s3));
+          }
         else
-          temp = x3max * ((s2 / x3max) + (x3max * s3));
+          {
+            temp = x3max * ((s2 / x3max) + (x3max * s3));
+          }
 
         ans = sqrt(temp);
       }
@@ -1677,7 +1785,9 @@ L150:
         delta_xj = eps * fabs(temp);
 
         if (delta_xj == 0.0)
-          delta_xj = eps;
+          {
+            delta_xj = eps;
+          }
 
         x[j] = temp + delta_xj;
 

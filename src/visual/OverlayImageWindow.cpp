@@ -45,7 +45,9 @@ namespace ice
     // overlay image match each other. If they don't, we can't create
     // the window and throw an exception.
     if (!(BaseImage->xsize == OverlayImage->xsize && BaseImage->ysize == OverlayImage->ysize))
-      return;
+      {
+        return;
+      }
 
     addImage(BaseImagep);
 
@@ -72,7 +74,9 @@ namespace ice
   {
     int RetVal = BaseColorTable.setColor(Entry, RedValue, GreenValue, BlueValue);
     if (RetVal != ERROR)
-      Refresh();
+      {
+        Refresh();
+      }
     return RetVal;
   }
 
@@ -80,7 +84,9 @@ namespace ice
   {
     int RetVal = BaseColorTable.setLinear(First, Last);
     if (RetVal != ERROR)
-      Refresh();
+      {
+        Refresh();
+      }
     return RetVal;
   }
 
@@ -88,17 +94,24 @@ namespace ice
   {
     int RetVal = OverlayColorTable.setColor(Entry, RedValue, GreenValue, BlueValue);
     if (RetVal != ERROR)
-      Refresh();
+      {
+        Refresh();
+      }
     return RetVal;
   }
 
   void OverlayImageWindow::PutPixel()
   {
-    if (!BaseImage) return;
+    if (!BaseImage)
+      {
+        return;
+      }
     unsigned int OverlayValue = OverlayImage->getP(PaintImageX, PaintImageY);
     unsigned char r, g, b;
     if (OverlayValue != 0)
-      OverlayColorTable.getColor(OverlayValue, r, g, b);
+      {
+        OverlayColorTable.getColor(OverlayValue, r, g, b);
+      }
     else
       {
         BaseColorTable.getColor(BaseImage->getP(PaintImageX, PaintImageY), r, g, b);

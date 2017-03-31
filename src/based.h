@@ -66,7 +66,9 @@ namespace ice
       {
         for (int y = 0; y < im.ysize; y++)
           for (int x = 0; x < im.xsize; x++)
-            res.setPixelUnchecked(x, y, im.getPixelUnchecked(x, y));
+            {
+              res.setPixelUnchecked(x, y, im.getPixelUnchecked(x, y));
+            }
       }
 
     return res;
@@ -88,7 +90,9 @@ namespace ice
       {
         for (int y = 0; y < img->ysize; y++)
           for (int x = 0; x < img->xsize; x++)
-            res.setPixelUnchecked(x, y, img.getPixelUnchecked(x, y));
+            {
+              res.setPixelUnchecked(x, y, img.getPixelUnchecked(x, y));
+            }
       }
 
     return res;

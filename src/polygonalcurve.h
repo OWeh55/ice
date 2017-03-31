@@ -103,12 +103,18 @@ namespace ice
 
     virtual double getArea() const
     {
-      if (!closed) return 0;
+      if (!closed)
+        {
+          return 0;
+        }
       double area2 = 0.0;
       for (int i = 0; i < (int)pl.size(); i++)
         {
           int i1 = i + 1;
-          if (i1 > (int)pl.size()) i1 = 0;
+          if (i1 > (int)pl.size())
+            {
+              i1 = 0;
+            }
           area2 += (pl[i].x - pl[i1].x) * (pl[i].y + pl[i1].y);
         }
       return fabs(area2 * 0.5);

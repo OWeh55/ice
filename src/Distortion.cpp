@@ -45,10 +45,15 @@ namespace ice
     string s;
     is >> s ;
 
-    if (s != name + ":") return false;
+    if (s != name + ":")
+      {
+        return false;
+      }
 
     if (is >> val)
-      return true;
+      {
+        return true;
+      }
 
     return false;
   }
@@ -83,7 +88,9 @@ namespace ice
   int Distortion::Distort(vector<Point>& pl) const
   {
     for (unsigned int i = 0; i < pl.size(); i++)
-      pl[i] = Distort(pl[i]);
+      {
+        pl[i] = Distort(pl[i]);
+      }
     return OK;
   }
 
@@ -158,9 +165,13 @@ namespace ice
           if (source.inside(xoi, yoi))
             {
               if (mode == DEFAULT)
-                PutVal(dest, xd, yd, GetVal(source, xoi, yoi));
+                {
+                  PutVal(dest, xd, yd, GetVal(source, xoi, yoi));
+                }
               else
-                PutVal(dest, xd, yd, RoundInt(GetInterpolVal(source, xo, yo)));
+                {
+                  PutVal(dest, xd, yd, RoundInt(GetInterpolVal(source, xo, yo)));
+                }
             }
         }
 
@@ -197,7 +208,9 @@ namespace ice
       // erster teilvektor für Verzeichnung
       Vector paravec(dipara);
       for (int i = 0; i < dipara; i++)
-        paravec[i] = para[pidx++];
+        {
+          paravec[i] = para[pidx++];
+        }
 
       di.Set(paravec);
 
@@ -260,7 +273,9 @@ namespace ice
 
     // no distortion
     for (int i = 2; i < diparams; i++)
-      dipara[i] = 0.0;
+      {
+        dipara[i] = 0.0;
+      }
 
     Set(dipara);
 
@@ -269,7 +284,9 @@ namespace ice
 
     // distortion
     for (int i = 0; i < diparams; i++)
-      parvec[k++] = dipara[i];
+      {
+        parvec[k++] = dipara[i];
+      }
 
     Matrix tm = tr.Tmatrix();
     //  cout << tm << endl;
@@ -286,7 +303,9 @@ namespace ice
     vector<double*> op;
 
     for (unsigned int i = 0; i < parvec.size(); i++)
-      op.push_back(&parvec[i]);
+      {
+        op.push_back(&parvec[i]);
+      }
 
     int inumber;
 
@@ -303,7 +322,9 @@ namespace ice
         k = 0;
 
         for (int i = 0; i < diparams; i++)
-          dipara[i] = parvec[k++];
+          {
+            dipara[i] = parvec[k++];
+          }
 
         center.x = dipara[0];
         center.y = dipara[1];
@@ -347,7 +368,9 @@ namespace ice
 
       nrpoint = 0;
       for (int i = 0; i < nrlist; i++)
-        nrpoint += marker[i].size();
+        {
+          nrpoint += marker[i].size();
+        }
 
       nr_distortion_parameter = di.MakeVector().size();
     }
@@ -361,7 +384,9 @@ namespace ice
       int parameterIndex = 0;
 
       for (int k = 0; k < nr_distortion_parameter; k++)
-        distortionParameter[k] = para[parameterIndex++];
+        {
+          distortionParameter[k] = para[parameterIndex++];
+        }
 
       di.Set(distortionParameter);
 
@@ -445,7 +470,9 @@ namespace ice
 
     // no distortion
     for (int i = 2; i < nr_distortion_parameter; i++)
-      distortion_parameters[i] = 0.0;
+      {
+        distortion_parameters[i] = 0.0;
+      }
 
     Set(distortion_parameters);
 
@@ -454,7 +481,9 @@ namespace ice
 
     // distortion
     for (int i = 0; i < nr_distortion_parameter; i++)
-      parameterVector[k++] = distortion_parameters[i];
+      {
+        parameterVector[k++] = distortion_parameters[i];
+      }
 
     // homographies
     for (int listnr = 0; listnr < nrlist; listnr++)
@@ -476,7 +505,9 @@ namespace ice
     vector<double*> op;
 
     for (unsigned int i = 0; i < parameterVector.size(); i++)
-      op.push_back(&parameterVector[i]);
+      {
+        op.push_back(&parameterVector[i]);
+      }
 
     int inumber;
 
@@ -496,7 +527,9 @@ namespace ice
         k = 0;
 
         for (int i = 0; i < nr_distortion_parameter; i++)
-          distortion_parameters[i] = parameterVector[k++];
+          {
+            distortion_parameters[i] = parameterVector[k++];
+          }
 
         Set(distortion_parameters);
       }
@@ -510,11 +543,15 @@ namespace ice
   {
     vector<Point> mpl(marker.rows());
     for (int i = 0; i < marker.rows(); i++)
-      mpl[i] = Point(marker[i][0], marker[i][1]);
+      {
+        mpl[i] = Point(marker[i][0], marker[i][1]);
+      }
 
     vector<Point> opl(orig.rows());
     for (int i = 0; i < orig.rows(); i++)
-      opl[i] = Point(orig[i][0], orig[i][1]);
+      {
+        opl[i] = Point(orig[i][0], orig[i][1]);
+      }
 
     Point center(mx, my);
     RETURN_ERROR_IF_FAILED(Calc(mpl, opl, tr, center));
@@ -546,11 +583,15 @@ namespace ice
   {
     vector<Point> mpl(marker.rows());
     for (int i = 0; i < marker.rows(); i++)
-      mpl[i] = Point(marker[i][0], marker[i][1]);
+      {
+        mpl[i] = Point(marker[i][0], marker[i][1]);
+      }
 
     vector<Point> opl(orig.rows());
     for (int i = 0; i < orig.rows(); i++)
-      opl[i] = Point(orig[i][0], orig[i][1]);
+      {
+        opl[i] = Point(orig[i][0], orig[i][1]);
+      }
 
     RETURN_ERROR_IF_FAILED(Calc(mpl, opl, tr));
     return OK;
@@ -566,11 +607,15 @@ namespace ice
   {
     vector<Point> mpl(marker.rows());
     for (int i = 0; i < marker.rows(); i++)
-      mpl[i] = Point(marker[i][0], marker[i][1]);
+      {
+        mpl[i] = Point(marker[i][0], marker[i][1]);
+      }
 
     vector<Point> opl(orig.rows());
     for (int i = 0; i < orig.rows(); i++)
-      opl[i] = Point(orig[i][0], orig[i][1]);
+      {
+        opl[i] = Point(orig[i][0], orig[i][1]);
+      }
 
     RETURN_ERROR_IF_FAILED(Calc(mpl, opl));
     return OK;

@@ -43,7 +43,10 @@ namespace ice
   {
     string hs = Split(config, ",", false);
 
-    if (hs != "file") return false;
+    if (hs != "file")
+      {
+        return false;
+      }
 
     Split(config, ",");
 
@@ -52,17 +55,29 @@ namespace ice
     DD(ch)->filename = Split(config, ",");
 
     if (config != "")
-      Channel[ch].xsize = atol(Split(config, ",").c_str());
+      {
+        Channel[ch].xsize = atol(Split(config, ",").c_str());
+      }
     else
-      Channel[ch].xsize = -1; // unknown
+      {
+        Channel[ch].xsize = -1;  // unknown
+      }
     if (config != "")
-      Channel[ch].ysize = atol(Split(config, ",").c_str());
+      {
+        Channel[ch].ysize = atol(Split(config, ",").c_str());
+      }
     else
-      Channel[ch].ysize = -1; // unknown
+      {
+        Channel[ch].ysize = -1;  // unknown
+      }
     if (config != "")
-      Channel[ch].maxval = atol(Split(config, ",").c_str());
+      {
+        Channel[ch].maxval = atol(Split(config, ",").c_str());
+      }
     else
-      Channel[ch].maxval = -1; // unknown
+      {
+        Channel[ch].maxval = -1;  // unknown
+      }
 
     Channel[ch].wxi = -1;
     Channel[ch].flags = SC_SCAN | SC_RGB;

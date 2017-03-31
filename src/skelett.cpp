@@ -36,13 +36,19 @@ namespace ice
 
     /* diese erste Bedingung weicht von Zhang/Suen ab*/
     if ((white < 3) || (white > 6))
-      return false;
+      {
+        return false;
+      }
 
     if ((bitmask & 0x15) == 0x15)
-      return false;
+      {
+        return false;
+      }
 
     if (((bitmask & 0x54) == 0x54))
-      return false;
+      {
+        return false;
+      }
 
     int transitions = 0;
 
@@ -71,13 +77,19 @@ namespace ice
 
     /* diese erste Bedingung weicht von Zhang/Suen ab*/
     if ((white < 3) || (white > 6))
-      return false;
+      {
+        return false;
+      }
 
     if ((bitmask & 0x51) == 0x51)
-      return false;
+      {
+        return false;
+      }
 
     if (((bitmask & 0x45) == 0x45))
-      return false;
+      {
+        return false;
+      }
 
     int transitions = 0;
 
@@ -97,21 +109,45 @@ namespace ice
     int p = 0;
 
     /* Nachbarn ermitteln -> bitmaske */
-    if (GetValUnchecked(img, x, y - 1))   p |= 0x101;
+    if (GetValUnchecked(img, x, y - 1))
+      {
+        p |= 0x101;
+      }
 
-    if (GetValUnchecked(img, x + 1, y - 1)) p |= 0x02;
+    if (GetValUnchecked(img, x + 1, y - 1))
+      {
+        p |= 0x02;
+      }
 
-    if (GetValUnchecked(img, x + 1, y))   p |= 0x04;
+    if (GetValUnchecked(img, x + 1, y))
+      {
+        p |= 0x04;
+      }
 
-    if (GetValUnchecked(img, x + 1, y + 1)) p |= 0x08;
+    if (GetValUnchecked(img, x + 1, y + 1))
+      {
+        p |= 0x08;
+      }
 
-    if (GetValUnchecked(img, x, y + 1))   p |= 0x10;
+    if (GetValUnchecked(img, x, y + 1))
+      {
+        p |= 0x10;
+      }
 
-    if (GetValUnchecked(img, x - 1, y + 1)) p |= 0x20;
+    if (GetValUnchecked(img, x - 1, y + 1))
+      {
+        p |= 0x20;
+      }
 
-    if (GetValUnchecked(img, x - 1, y))   p |= 0x40;
+    if (GetValUnchecked(img, x - 1, y))
+      {
+        p |= 0x40;
+      }
 
-    if (GetValUnchecked(img, x - 1, y - 1)) p |= 0x80;
+    if (GetValUnchecked(img, x - 1, y - 1))
+      {
+        p |= 0x80;
+      }
 
     return p;
   }
@@ -121,21 +157,45 @@ namespace ice
     int p = 0;
 
     /* Nachbarn ermitteln -> bitmaske */
-    if (tdata[y - 1][x])   p |= 0x101;
+    if (tdata[y - 1][x])
+      {
+        p |= 0x101;
+      }
 
-    if (tdata[y - 1][x + 1])   p |= 0x02;
+    if (tdata[y - 1][x + 1])
+      {
+        p |= 0x02;
+      }
 
-    if (tdata[y][x + 1])   p |= 0x04;
+    if (tdata[y][x + 1])
+      {
+        p |= 0x04;
+      }
 
-    if (tdata[y + 1][x + 1])   p |= 0x08;
+    if (tdata[y + 1][x + 1])
+      {
+        p |= 0x08;
+      }
 
-    if (tdata[y + 1][x])   p |= 0x10;
+    if (tdata[y + 1][x])
+      {
+        p |= 0x10;
+      }
 
-    if (tdata[y + 1][x - 1])   p |= 0x20;
+    if (tdata[y + 1][x - 1])
+      {
+        p |= 0x20;
+      }
 
-    if (tdata[y][x - 1])   p |= 0x40;
+    if (tdata[y][x - 1])
+      {
+        p |= 0x40;
+      }
 
-    if (tdata[y - 1][x - 1])   p |= 0x80;
+    if (tdata[y - 1][x - 1])
+      {
+        p |= 0x80;
+      }
 
     return p;
   }
@@ -223,7 +283,7 @@ namespace ice
                 }
             }
       }
-    while (changes > 0); // Ende erst, falls keine Aenderung mehr
+    while (changes > 0);   // Ende erst, falls keine Aenderung mehr
 
     return 0;
   }
@@ -308,7 +368,7 @@ namespace ice
                 }
             }
       }
-    while (changes > 0); // Ende erst, falls keine Aenderung mehr
+    while (changes > 0);   // Ende erst, falls keine Aenderung mehr
 
 
     for (int y = 0; y < dimy; y++)

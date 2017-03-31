@@ -156,13 +156,19 @@ namespace ice
     // Anisotropie (fy/fx)
     para.Append(1.0);
 
-    if (mode & PANO_ANISOTROP) opara.Append(i);
+    if (mode & PANO_ANISOTROP)
+      {
+        opara.Append(i);
+      }
 
     i++;
     // Scherung
     para.Append(0.0);
 
-    if (mode & PANO_SHEARING) opara.Append(i);
+    if (mode & PANO_SHEARING)
+      {
+        opara.Append(i);
+      }
 
     i++;
     // Hauptpunkt (xh, yh)

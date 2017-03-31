@@ -248,11 +248,17 @@ namespace ice
 
   bool operator== (const QuatVector& qv1, const QuatVector& qv2)
   {
-    if (qv2.dimension != qv1.dimension) return false;
+    if (qv2.dimension != qv1.dimension)
+      {
+        return false;
+      }
 
     for (int i = 0; i < int(qv1.dimension); i++)
       {
-        if (qv1[i] != qv2[i]) return false;
+        if (qv1[i] != qv2[i])
+          {
+            return false;
+          }
       }
 
     return true;

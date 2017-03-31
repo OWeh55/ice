@@ -62,7 +62,9 @@ namespace ice
     void reset()
     {
       for (int i = 0; i < size; i++)
-        data[i] = 0;
+        {
+          data[i] = 0;
+        }
 
       min = size - 1;
       max = 0;
@@ -80,11 +82,15 @@ namespace ice
       if (oldValue == 0)
         {
           // was empty
-          if (i < min) // new min?
-            min = i;
+          if (i < min)   // new min?
+            {
+              min = i;
+            }
 
-          if (i > max) // new max?
-            max = i;
+          if (i > max)   // new max?
+            {
+              max = i;
+            }
         }
     }
 
@@ -94,18 +100,22 @@ namespace ice
       if (newValue == 0)
         {
           // now empty
-          if (i == min) // if i was min
+          if (i == min)   // if i was min
             {
               // find new min
               while (min < size - 1 && data[min] == 0)
-                min++;
+                {
+                  min++;
+                }
             }
 
-          if (i == max) // if i was max
+          if (i == max)   // if i was max
             {
               // find new max
               while (max > 0 && data[max] == 0)
-                max--;
+                {
+                  max--;
+                }
             }
         }
     }
@@ -125,7 +135,9 @@ namespace ice
     int** tmp = new int* [dx];
 
     for (int x = 0; x < dx; x++)
-      tmp[x] = new int[dy];
+      {
+        tmp[x] = new int[dy];
+      }
 
     return tmp;
   }
@@ -133,7 +145,9 @@ namespace ice
   void deletetemp(int** tmp, int dx, int dy)
   {
     for (int x = 0; x < dx; x++)
-      delete [] tmp[x];
+      {
+        delete [] tmp[x];
+      }
 
     delete [] tmp;
   }
@@ -169,7 +183,7 @@ namespace ice
     int** tmp = newtemp(dx, dy);
 
     // horizontal filtering
-    for (int y = 0; y < dy; y++) // all rows
+    for (int y = 0; y < dy; y++)   // all rows
       {
         int ypn1 = y;
         mh.reset();
@@ -229,7 +243,7 @@ namespace ice
       }
 
     // vertical filtering
-    for (int x = 0; x < dx; x++) // all columns
+    for (int x = 0; x < dx; x++)   // all columns
       {
         int xpn2 = x;
 
@@ -311,7 +325,9 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
 
     if (imgs.maxval < MHISTSIZE)
-      return DilateImgO(imgs, sx, sy, destinationImage);
+      {
+        return DilateImgO(imgs, sx, sy, destinationImage);
+      }
 
     need_temp = (destinationImage == imgs);
 
@@ -326,20 +342,26 @@ namespace ice
       {
         // linker Rand auf 0
         for (x = 0; x < sx1; ++x)
-          PutVal(destinationImage, x, y, 0);
+          {
+            PutVal(destinationImage, x, y, 0);
+          }
         // normale Werte
         for (x = sx1; x < dx - sx1; x++)
           {
             val = 0;
 
             for (xx = x - sx1; xx <= x + sx1; xx++)
-              val = max(val, GetVal(imgs, xx, y));
+              {
+                val = max(val, GetVal(imgs, xx, y));
+              }
 
             PutVal(destinationImage, x, y, val);
           }
         // rechter Rand auf 0
         for (x = dx - sx1; x < dx; ++x)
-          PutVal(destinationImage, x, y, 0);
+          {
+            PutVal(destinationImage, x, y, 0);
+          }
       }
 
     // filter cols
@@ -348,27 +370,37 @@ namespace ice
     for (x = 0; x < dx; x++)
       {
         for (y = 0; y < sy1; y++)
-          linebuffer[y] = 0;
+          {
+            linebuffer[y] = 0;
+          }
 
         for (y = sy1; y < dy - sy1; y++)
           {
             val = 0;
 
             for (yy = -sy1; yy <= sy1; yy++)
-              val = max(val, GetVal(destinationImage, x, y + yy));
+              {
+                val = max(val, GetVal(destinationImage, x, y + yy));
+              }
 
             linebuffer[y] = val;
           }
 
         for (y = dy - sy1; y < dy; y++)
-          linebuffer[y] = 0;
+          {
+            linebuffer[y] = 0;
+          }
 
         for (y = 0; y < dy; y++)
-          PutVal(destinationImage, x, y, linebuffer[y]);
+          {
+            PutVal(destinationImage, x, y, linebuffer[y]);
+          }
       }
 
     if (need_temp)
-      FreeImg(imgs);
+      {
+        FreeImg(imgs);
+      }
 
     delete [] linebuffer;
     return OK;
@@ -386,7 +418,9 @@ namespace ice
     int dx, dy;
 
     if (mask == NULL)
-      return DilateImg(imgs, nbhx, nbhy, destinationImage);
+      {
+        return DilateImg(imgs, nbhx, nbhy, destinationImage);
+      }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
       {
@@ -410,16 +444,28 @@ namespace ice
     for (int y = 0; y < dy ; y++)
       {
         int y1 = y - ny2;
-        if (y1 < 0) y1 = 0;
+        if (y1 < 0)
+          {
+            y1 = 0;
+          }
         int y2 = y + ny2;
-        if (y2 >= dy) y2 = dy - 1;
+        if (y2 >= dy)
+          {
+            y2 = dy - 1;
+          }
 
         for (int x = 0; x < dx; x++)
           {
             int x1 = x - nx2;
-            if (x1 < 0) x1 = 0;
+            if (x1 < 0)
+              {
+                x1 = 0;
+              }
             int x2 = x + nx2;
-            if (x2 >= dx) x2 = dx - 1;
+            if (x2 >= dx)
+              {
+                x2 = dx - 1;
+              }
             int val = 0;
             for (int yy = y1 ; yy <= y2; yy++)
               {
@@ -431,7 +477,10 @@ namespace ice
                       {
                         int aval = GetValUnchecked(imgs, xx, yy);
 
-                        if (aval > val) val = aval;
+                        if (aval > val)
+                          {
+                            val = aval;
+                          }
                       }
                   }
               }
@@ -439,7 +488,10 @@ namespace ice
           }
       }
 
-    if (needs_temp) FreeImg(imgh);
+    if (needs_temp)
+      {
+        FreeImg(imgh);
+      }
 
     return OK;
   }
@@ -463,7 +515,9 @@ namespace ice
     int dx, dy;
 
     if (mask == NULL)
-      return DilateImg(imgs, nbhx, nbhy, destinationImage);
+      {
+        return DilateImg(imgs, nbhx, nbhy, destinationImage);
+      }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
       {
@@ -487,16 +541,28 @@ namespace ice
     for (int y = 0; y < dy ; y++)
       {
         int y1 = y - ny2;
-        if (y1 < 0) y1 = 0;
+        if (y1 < 0)
+          {
+            y1 = 0;
+          }
         int y2 = y + ny2;
-        if (y2 >= dy) y2 = dy - 1;
+        if (y2 >= dy)
+          {
+            y2 = dy - 1;
+          }
 
         for (int x = 0; x < dx; x++)
           {
             int x1 = x - nx2;
-            if (x1 < 0) x1 = 0;
+            if (x1 < 0)
+              {
+                x1 = 0;
+              }
             int x2 = x + nx2;
-            if (x2 >= dx) x2 = dx - 1;
+            if (x2 >= dx)
+              {
+                x2 = dx - 1;
+              }
             int val = imgs->maxval;
             for (int yy = y1 ; yy <= y2; yy++)
               {
@@ -508,7 +574,10 @@ namespace ice
                       {
                         int aval = GetValUnchecked(imgs, xx, yy);
 
-                        if (aval < val) val = aval;
+                        if (aval < val)
+                          {
+                            val = aval;
+                          }
                       }
                   }
               }
@@ -516,7 +585,10 @@ namespace ice
           }
       }
 
-    if (needs_temp) FreeImg(imgh);
+    if (needs_temp)
+      {
+        FreeImg(imgh);
+      }
 
     return OK;
   }
@@ -540,7 +612,9 @@ namespace ice
     int i = 0;
     for (int y = 0; y < ny; y++)
       for (int x = 0; x < nx; x++)
-        imask[i++] = mask[y][x];
+        {
+          imask[i++] = mask[y][x];
+        }
     int rc = DilateImg(sourceImage, nx, ny, imask, destinationImage);
     delete [] imask;
     return rc;
@@ -562,7 +636,9 @@ namespace ice
     int i = 0;
     for (int y = 0; y < ny; y++)
       for (int x = 0; x < nx; x++)
-        imask[i++] = mask[y][x];
+        {
+          imask[i++] = mask[y][x];
+        }
     int rc = ErodeImg(sourceImage, nx, ny, imask, destinationImage);
     delete [] imask;
     return rc;
@@ -614,7 +690,7 @@ namespace ice
     int** tmp = newtemp(dx, dy);
 
     // horizontal filtering
-    for (y = 0; y < dy; y++) // all rows
+    for (y = 0; y < dy; y++)   // all rows
       {
         int ypn1 = y;
 
@@ -674,7 +750,7 @@ namespace ice
       }
 
     // vertical filtering
-    for (x = 0; x < dx; x++) // all columns
+    for (x = 0; x < dx; x++)   // all columns
       {
         int xpn2 = x;
         mh.reset();
@@ -752,7 +828,9 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
 
     if (imgs.maxval < MHISTSIZE)
-      return ErodeImgO(imgs, sx, sy, destinationImage);
+      {
+        return ErodeImgO(imgs, sx, sy, destinationImage);
+      }
 
     need_temp = (destinationImage == imgs);
 
@@ -766,18 +844,24 @@ namespace ice
     for (y = 0; y < dy; y++)
       {
         for (x = 0; x < sx1; ++x)
-          PutVal(destinationImage, x, y, 0);
+          {
+            PutVal(destinationImage, x, y, 0);
+          }
         for (x = sx1; x < dx - sx1; x++)
           {
             val = imgs.maxval;
 
             for (xx = -sx1; xx <= sx1; xx++)
-              val = min(val, GetVal(imgs, x + xx, y));
+              {
+                val = min(val, GetVal(imgs, x + xx, y));
+              }
 
             PutVal(destinationImage, x, y, val);
           }
         for (x = dx - sx1; x < dx; ++x)
-          PutVal(destinationImage, x, y, 0);
+          {
+            PutVal(destinationImage, x, y, 0);
+          }
       }
 
     // filter cols
@@ -786,26 +870,37 @@ namespace ice
     for (x = 0; x < dx; x++)
       {
         for (y = 0; y < sy1; y++)
-          buffer[y] = 0;
+          {
+            buffer[y] = 0;
+          }
 
         for (y = sy1; y < dy - sy1; y++)
           {
             val = imgs.maxval;
 
             for (yy = -sy1; yy <= sy1; yy++)
-              val = min(val, GetVal(destinationImage, x, y + yy));
+              {
+                val = min(val, GetVal(destinationImage, x, y + yy));
+              }
 
             buffer[y] = val;
           }
 
         for (y = dy - sy1; y < dy; y++)
-          buffer[y] = 0;
+          {
+            buffer[y] = 0;
+          }
 
         for (y = 0; y < dy; y++)
-          PutVal(destinationImage, x, y, buffer[y]);
+          {
+            PutVal(destinationImage, x, y, buffer[y]);
+          }
       }
 
-    if (need_temp) FreeImg(imgs);
+    if (need_temp)
+      {
+        FreeImg(imgs);
+      }
 
     delete [] buffer;
     return OK;
@@ -814,20 +909,29 @@ namespace ice
 
   int ErodeImg(const Image& img1, const Image& img2, int nx, int ny)
   {
-    if (ny < 0) ny = nx;
+    if (ny < 0)
+      {
+        ny = nx;
+      }
     return ErodeImg(img1, nx, ny, img2);
   }
 
   int DilateImg(const Image& img1, const Image& img2, int nx, int ny)
   {
-    if (ny < 0) ny = nx;
+    if (ny < 0)
+      {
+        ny = nx;
+      }
     return DilateImg(img1, nx, ny, img2);
   }
 
 #define FNAME "OpeningImg"
   int OpeningImg(const Image& img1, const Image& img2, int nx, int ny)
   {
-    if (ny < 0) ny = nx;
+    if (ny < 0)
+      {
+        ny = nx;
+      }
     RETURN_ERROR_IF_FAILED(ErodeImg(img1, nx, ny, img2));
     RETURN_ERROR_IF_FAILED(DilateImg(img2, nx, ny, img2));
     return OK;
@@ -836,7 +940,10 @@ namespace ice
 #define FNAME "ClosingImg"
   int ClosingImg(const Image& img1, const Image& img2, int nx, int ny)
   {
-    if (ny < 0) ny = nx;
+    if (ny < 0)
+      {
+        ny = nx;
+      }
     RETURN_ERROR_IF_FAILED(DilateImg(img1, nx, ny, img2));
     RETURN_ERROR_IF_FAILED(ErodeImg(img2, nx, ny, img2));
     return OK;
@@ -876,7 +983,7 @@ namespace ice
     MinMaxHistogram mh(maxval);
 
     // horizontal filtering
-    for (y = 0; y < dy; y++) // all rows
+    for (y = 0; y < dy; y++)   // all rows
       {
         int ypn1 = y;
         mh.reset();
@@ -939,7 +1046,7 @@ namespace ice
       }
 
     // vertical filtering
-    for (x = 0; x < dx; x++) // alle columns (min)
+    for (x = 0; x < dx; x++)   // alle columns (min)
       {
         int xpn2 = x;
         mh.reset();
@@ -987,7 +1094,7 @@ namespace ice
 
       }
 
-    for (x = 0; x < dx; x++) // all columns (max)
+    for (x = 0; x < dx; x++)   // all columns (max)
       {
         int xpn3 = x;
         mh.reset();
@@ -1058,7 +1165,7 @@ namespace ice
     MinMaxHistogram mh(maxval);
 
     // horizontal filtering
-    for (y = 0; y < dy; y++) // all rows
+    for (y = 0; y < dy; y++)   // all rows
       {
         int ypn1 = y;
 
@@ -1122,7 +1229,7 @@ namespace ice
       }
 
     // vertical filtering
-    for (x = 0; x < dx; x++) // alle columns (min)
+    for (x = 0; x < dx; x++)   // alle columns (min)
       {
         int xpn2 = x;
         mh.reset();
@@ -1170,7 +1277,7 @@ namespace ice
 
       }
 
-    for (x = 0; x < dx; x++) // all columns (max)
+    for (x = 0; x < dx; x++)   // all columns (max)
       {
         int xpn3 = x;
         mh.reset();
@@ -1262,7 +1369,9 @@ namespace ice
     int ptyp = pn1->ImageType();
 
     if ((pn2->ImageType() != ptyp) || (pn3->ImageType() != ptyp))
-      ptyp = 0; // "mixed type" == undefined
+      {
+        ptyp = 0;  // "mixed type" == undefined
+      }
 
     switch (ptyp)
       {

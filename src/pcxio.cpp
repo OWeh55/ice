@@ -133,7 +133,10 @@ namespace ice
               {
                 fclose(fd);
 
-                if (newimg) FreeImg(img);
+                if (newimg)
+                  {
+                    FreeImg(img);
+                  }
 
                 free(PCXLine);
                 Message(FNAME, M_WRONG_FILE, WRONG_FILE);
@@ -149,7 +152,10 @@ namespace ice
                   {
                     fclose(fd);
 
-                    if (newimg) FreeImg(img);
+                    if (newimg)
+                      {
+                        FreeImg(img);
+                      }
 
                     free(PCXLine);
                     Message(FNAME, M_WRONG_FILE, WRONG_FILE);
@@ -164,7 +170,10 @@ namespace ice
                       {
                         fclose(fd);
 
-                        if (newimg) FreeImg(img);
+                        if (newimg)
+                          {
+                            FreeImg(img);
+                          }
 
                         free(PCXLine);
                         Message(FNAME, M_WRONG_FILE, WRONG_FILE);
@@ -172,7 +181,10 @@ namespace ice
                       }
                   }
               }
-            else PCXLine[i++] = Ch;
+            else
+              {
+                PCXLine[i++] = Ch;
+              }
           }
 
         /* Transport der unkomprimierten Zeile "PCXLine" in das Bild "img" */
@@ -262,7 +274,9 @@ namespace ice
 
     /* Schreiben der Farbpalette*/
     for (i = 0; i < 48; i++)
-      Header.ColorMap[i] = 0;
+      {
+        Header.ColorMap[i] = 0;
+      }
 
     if (MaxVal < 16)
       for (i = 0; i < (MaxVal + 1); i++)
@@ -277,9 +291,15 @@ namespace ice
     /* Bytes pro Zeile (unkomprimiert)*/
     Header.BytesPerLine = img->xsize / PixelPerByte;
 
-    if ((Header.BytesPerLine % PixelPerByte) > 0) Header.BytesPerLine++;
+    if ((Header.BytesPerLine % PixelPerByte) > 0)
+      {
+        Header.BytesPerLine++;
+      }
 
-    if (Header.BytesPerLine % 2 == 1) Header.BytesPerLine++;
+    if (Header.BytesPerLine % 2 == 1)
+      {
+        Header.BytesPerLine++;
+      }
 
     /* Interpretation der Farbpalette */
     Header.PaletteInfo = 1;
@@ -296,7 +316,10 @@ namespace ice
     for (j = 0; j < img->ysize; j++)
       {
         /* Ruecksetzen von PCX-Line */
-        for (i = 0; i < Header.BytesPerLine; i++) PCXLine[i] = 0;
+        for (i = 0; i < Header.BytesPerLine; i++)
+          {
+            PCXLine[i] = 0;
+          }
 
         /* Generierung der unkomprimierten PCX-Zeile */
         ii = 0;
@@ -321,7 +344,9 @@ namespace ice
                 ii = i + 1;
 
                 while ((Count < 0x3f) && (ii < Header.BytesPerLine) && (PCXLine[ii++] == PCXLine[i]))
-                  Count = ii - i;
+                  {
+                    Count = ii - i;
+                  }
               }
 
             if (Count > 1 || ((PCXLine[i] & 0xc0) == 0xc0))
@@ -339,7 +364,9 @@ namespace ice
                     fwrite(&PCXLine[i], 1, 1, fd);
                   }
                 else
-                  fwrite(&PCXLine[i], 1, 1, fd);
+                  {
+                    fwrite(&PCXLine[i], 1, 1, fd);
+                  }
               }
 
             i += Count;
@@ -384,7 +411,10 @@ namespace ice
     maxval = 0;
     nr = 0;
 
-    if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL) return FILE_NOT_FOUND;
+    if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL)
+      {
+        return FILE_NOT_FOUND;
+      }
 
     fread((unsigned char*)&Header, 128, 1, fd);
 

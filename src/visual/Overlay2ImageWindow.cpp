@@ -39,7 +39,10 @@ namespace ice
 
   void Overlay2ImageWindow::PutPixel()
   {
-    if (!BaseImage) return;
+    if (!BaseImage)
+      {
+        return;
+      }
     unsigned int OverlayValue = OverlayImage->getP(PaintImageX, PaintImageY);
     unsigned char ro, go, bo;
     unsigned char rb, gb, bb;
@@ -52,7 +55,9 @@ namespace ice
         bb = (bb * transparenz + itransparenz * bo) >> 8;
       }
     else
-      BaseColorTable.getColor(BaseImage->getP(PaintImageX, PaintImageY), rb, gb, bb);
+      {
+        BaseColorTable.getColor(BaseImage->getP(PaintImageX, PaintImageY), rb, gb, bb);
+      }
 
     *(PixelArrayPtr++) = rb;
     *(PixelArrayPtr++) = gb;

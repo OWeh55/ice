@@ -159,8 +159,13 @@ namespace ice
     // frequency negative to that of index i
     // frequenzy 0 is at index size/2
     if ((size % 2) != 0)
-      return size - 1 - i;
-    if (i == 0) return 0;
+      {
+        return size - 1 - i;
+      }
+    if (i == 0)
+      {
+        return 0;
+      }
     return size - i;
   }
 

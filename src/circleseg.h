@@ -41,7 +41,10 @@ namespace ice
     void normalize();
     bool phi_inside(double phi) const
     {
-      if (phi < phi1) phi += 2 * M_PI;
+      if (phi < phi1)
+        {
+          phi += 2 * M_PI;
+        }
 
       return (phi <= phi2);
     }

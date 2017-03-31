@@ -105,7 +105,10 @@ namespace ice
         /* now draw all lines beginning from p ending at pp2 that was
          * given on in SelLine() above
          */
-        for (p1 = p, p2 = p + 2; p2 <= pp2; p1 += 2, p2 += 2) Line(p1[0], p1[1], p2[0], p2[1], 1, 0, img);
+        for (p1 = p, p2 = p + 2; p2 <= pp2; p1 += 2, p2 += 2)
+          {
+            Line(p1[0], p1[1], p2[0], p2[1], 1, 0, img);
+          }
         i++;
 
         /* now let pp1 be the latest point and have pp2 point to the next point's adress */
@@ -129,7 +132,9 @@ namespace ice
 
     /* dont let it run to pp2, because SelLine() returns nothing right */
     for (p1 = p, p2 = p + 2; p2 <= pp1; p1 += 2, p2 += 2)
-      Line(p1[0], p1[1], p2[0], p2[1], 0, 0, img);
+      {
+        Line(p1[0], p1[1], p2[0], p2[1], 0, 0, img);
+      }
 
     pl = NewPointList(i);
     pp1 = p;
@@ -154,7 +159,7 @@ namespace ice
     /* let pp1 (and therefore p) point to the first point */
     p = SelPoint(img, rc);
 
-    if (rc < 0) // Abbruch
+    if (rc < 0)   // Abbruch
       {
         return pl;
       }
@@ -171,7 +176,9 @@ namespace ice
          */
         pp.push_back(p2);
         for (unsigned int i = 1; i < pp.size(); i++)
-          Line(pp[i - 1], pp[i], 1, img);
+          {
+            Line(pp[i - 1], pp[i], 1, img);
+          }
 
         p = p2;
       } // while SelLine
@@ -179,7 +186,9 @@ namespace ice
     pl.Reset(pp[0]);
 
     for (unsigned int i = 1; i < pp.size(); i++)
-      pl.Add(pp[i]);
+      {
+        pl.Add(pp[i]);
+      }
 
     return pl;
   }

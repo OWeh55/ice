@@ -140,7 +140,10 @@ namespace ice
                   return WRONG_PARAM;
                 }
 
-              if (c > max) max = c;
+              if (c > max)
+                {
+                  max = c;
+                }
             }
 
 
@@ -225,7 +228,10 @@ namespace ice
 
     for (int i = 0; i < m; i++)
       {
-        if (s[i].mate != nullptr) anz_pairs++;
+        if (s[i].mate != nullptr)
+          {
+            anz_pairs++;
+          }
       }
 
     reference_pairs = IMatrix(anz_pairs, 2); // Anlegen der Referenzpaare-Matrix
@@ -252,7 +258,10 @@ namespace ice
     free(t);
     free(e);
 
-    if (Min(m, n) < anz_pairs) return 1;
+    if (Min(m, n) < anz_pairs)
+      {
+        return 1;
+      }
 
     return 0;
   }
@@ -278,17 +287,29 @@ namespace ice
 
     s = (TVertexLeft*)malloc(m * sizeof(TVertexLeft));
 
-    if (s == nullptr) return 1;
+    if (s == nullptr)
+      {
+        return 1;
+      }
 
     t = (TVertexRight*)malloc(n * sizeof(TVertexRight));
 
-    if (t == nullptr) return 1;
+    if (t == nullptr)
+      {
+        return 1;
+      }
 
     e = (TEdge*)malloc(k * sizeof(TEdge));
 
-    if (e == nullptr) return 1;
+    if (e == nullptr)
+      {
+        return 1;
+      }
 
-    for (i = 0; i < m; ++i) s[i].head = nullptr;
+    for (i = 0; i < m; ++i)
+      {
+        s[i].head = nullptr;
+      }
 
     w = 0;
     kk = 0;
@@ -305,7 +326,10 @@ namespace ice
         s[a].head = e + i;
         e[i].weight = v;
 
-        if (v > w) w = v;
+        if (v > w)
+          {
+            w = v;
+          }
 
         kk = kk + 3;
       }
@@ -334,13 +358,25 @@ namespace ice
 
 #define INSERT(x, y) { st[sp].v = x; st[sp].lr = y; ++sp; }
 
-    for (i = 0; i < m; ++i) s[i].mate = nullptr;
+    for (i = 0; i < m; ++i)
+      {
+        s[i].mate = nullptr;
+      }
 
-    for (j = 0; j < n; ++j) t[j].mate = nullptr;
+    for (j = 0; j < n; ++j)
+      {
+        t[j].mate = nullptr;
+      }
 
-    for (i = 0; i < m; ++i) s[i].u = w;
+    for (i = 0; i < m; ++i)
+      {
+        s[i].u = w;
+      }
 
-    for (j = 0; j < n; ++j) t[j].v = 0;
+    for (j = 0; j < n; ++j)
+      {
+        t[j].v = 0;
+      }
 
     st = (struct SStack*)malloc((m + n) * sizeof(struct SStack));
 
@@ -355,7 +391,10 @@ Label_A:
             s[i].f = True;
             INSERT(&s[i], SStack::Left);
           }
-        else s[i].f = False;
+        else
+          {
+            s[i].f = False;
+          }
       }
 
     for (j = 0; j < n; ++j)
@@ -443,16 +482,31 @@ Label_B:
     z = + INFTY;
 
     for (j = 0; j < n; ++j)
-      if (t[j].f == False && t[j].pi < z) z = t[j].pi;
+      if (t[j].f == False && t[j].pi < z)
+        {
+          z = t[j].pi;
+        }
 
     d2 = z;
 
-    if (d1 <= d2) z = d1;
-    else z = d2;
+    if (d1 <= d2)
+      {
+        z = d1;
+      }
+    else
+      {
+        z = d2;
+      }
 
-    for (i = 0; i < m; ++i) if (s[i].f == True) s[i].u -= z;
+    for (i = 0; i < m; ++i) if (s[i].f == True)
+        {
+          s[i].u -= z;
+        }
 
-    for (j = 0; j < n; ++j) if (t[j].f == True) t[j].v += z;
+    for (j = 0; j < n; ++j) if (t[j].f == True)
+        {
+          t[j].v += z;
+        }
 
     if (d1 <= d2)
       {

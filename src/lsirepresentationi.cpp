@@ -110,8 +110,14 @@ namespace ice
     summ = 0;
 
     for (int i = 0; i < dimx * dimy; i++)
-      if (mask[i] > 0) sump += mask[i];
-      else summ += mask[i];
+      if (mask[i] > 0)
+        {
+          sump += mask[i];
+        }
+      else
+        {
+          summ += mask[i];
+        }
 
     sump /= norm;
     summ /= norm;
@@ -159,7 +165,9 @@ namespace ice
     mask = new int[dimx * dimy];
 
     for (int i = 0; i < dimx * dimy; i++)
-      mask[i] = r.mask[i];
+      {
+        mask[i] = r.mask[i];
+      }
   }
 
   void LsiRepresentationI::reflectMask()
@@ -202,8 +210,14 @@ namespace ice
       {
         int v = mask[i];
 
-        if (v > 0) sump += v;
-        else summ -= v;
+        if (v > 0)
+          {
+            sump += v;
+          }
+        else
+          {
+            summ -= v;
+          }
       }
 
     double sumc = Max(sump, summ);

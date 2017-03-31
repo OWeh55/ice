@@ -52,7 +52,9 @@ namespace ice
     for (i = 0; i < rang; i++)
       {
         for (j = 0; j < rang; j++)
-          printf("%9.2e", *(dpa + (rang * i) + j));
+          {
+            printf("%9.2e", *(dpa + (rang * i) + j));
+          }
 
         printf("* %9.2e\n", *(ph++));
       };
@@ -80,10 +82,14 @@ namespace ice
       }
 
     if (b != NULL)
-      memcpy(hb, b, size);
+      {
+        memcpy(hb, b, size);
+      }
     else
       for (i = 0; i < row; i++)
-        hb[i] = 0;
+        {
+          hb[i] = 0;
+        }
 
     /* Test des Verschiebungsvektors */
     pd = &x[0];
@@ -93,10 +99,14 @@ namespace ice
         sum = 0;
 
         for (j = 0; j < col; j++)
-          sum += A[i * col + j] * pd[j];
+          {
+            sum += A[i * col + j] * pd[j];
+          }
 
         if (fabs(sum - hb[i]) > eps)
-          return ERROR;
+          {
+            return ERROR;
+          }
       }
 
     for (k = 0; k < col - rang; k++)
@@ -108,10 +118,14 @@ namespace ice
             sum = 0;
 
             for (j = 0; j < col; j++)
-              sum += A[i * col + j] * pd[j];
+              {
+                sum += A[i * col + j] * pd[j];
+              }
 
             if (fabs(sum - hb[i]) > eps)
-              return ERROR;
+              {
+                return ERROR;
+              }
           }
       }
 
@@ -262,7 +276,10 @@ namespace ice
                 return NUM_INSTABILITY;
               }
 
-            if (fabs(dpa[rang * colh + col] / (*dpa)) < epsinst) ret = NUM_INSTABILITY;
+            if (fabs(dpa[rang * colh + col] / (*dpa)) < epsinst)
+              {
+                ret = NUM_INSTABILITY;
+              }
 
             if (fabs(dpa[rang * colh + col]) > epsnull)
               {
@@ -273,7 +290,9 @@ namespace ice
                     fh = dpa[rang * i + col] / maxa;
 
                     for (j = col + 1; j < rang; j++)
-                      dpa[rang * i + j] -= dpa[rang * colh + j] * fh;
+                      {
+                        dpa[rang * i + j] -= dpa[rang * colh + j] * fh;
+                      }
 
                     dpb[i] -= dpb[colh] * fh;
                     i++;
@@ -310,11 +329,16 @@ namespace ice
             ret = VARIOUS_SOLUTION;
             maxb = 0;
 
-            for (i = 0; i < rang; i++) if (fabs(dpb[i]) > maxb) maxb = fabs(dpb[i]);
+            for (i = 0; i < rang; i++) if (fabs(dpb[i]) > maxb)
+                {
+                  maxb = fabs(dpb[i]);
+                }
 
             for (i = 0; i < offs; i++)
               if (!(fabs(dpb[rang - 1 - i] / maxb) < epsinst))
-                ret = NO_SOLUTION;
+                {
+                  ret = NO_SOLUTION;
+                }
           }
 
         free(dpb);
@@ -409,15 +433,21 @@ namespace ice
       }
 
     if (b != NULL)
-      memcpy(hb, b, size);
+      {
+        memcpy(hb, b, size);
+      }
     else
       for (i = 0; i < row; i++)
-        hb[i] = 0;
+        {
+          hb[i] = 0;
+        }
 
     /*** Initialisierung des Loesungsvektors */
     for (i = 0; i < row; i++)
       for (j = 0; j < col; j++)
-        x[i * col + j] = 0;
+        {
+          x[i * col + j] = 0;
+        }
 
     /*** Initialisierung des Permutationsspeichers */
     size = col * sizeof(double);
@@ -430,7 +460,9 @@ namespace ice
       }
 
     for (i = 0; i < col; i++)
-      hperm[i] = i;
+      {
+        hperm[i] = i;
+      }
 
     /*** Transformation von (A,b) in Trapezform
        Modifikation des Permutationsvektors */
@@ -479,7 +511,9 @@ namespace ice
                 }
 
             if (cont2 == 1)
-              cont1 = 0;
+              {
+                cont1 = 0;
+              }
             else
               {
                 /* Vertauschen der colmem'ten und i'ten Spalte */
@@ -548,7 +582,9 @@ namespace ice
                   }
 
                 if (b != NULL)
-                  hb[ii] -= hb[i] * h1;
+                  {
+                    hb[ii] -= hb[i] * h1;
+                  }
               }
 
             rang++;
@@ -563,32 +599,42 @@ namespace ice
     *prang = rang;
 
     if (rang < dim)
-      *pdet = 0;
+      {
+        *pdet = 0;
+      }
     else
       {
         *pdet = 1;
 
         for (i = 0; i < dim; i++)
-          *pdet *= hA[i * col + i];
+          {
+            *pdet *= hA[i * col + i];
+          }
       }
 
     if (b != NULL)
       for (i = rang; i < row; i++)
         if (fabs(b[i]) > eps)
-          return NO_SOLUTION;
+          {
+            return NO_SOLUTION;
+          }
 
     /* Berechnung des Verschiebungsvektors zur Loesungvielfalt */
     if (rang > 0)
       for (i = col - 1; i >= 0; i--)
         {
           if (i >= rang)
-            x[i] = 0;
+            {
+              x[i] = 0;
+            }
           else
             {
               h1 = hb[i];
 
               for (j = i + 1; j < col; j++)
-                h1 -= hA[i * col + j] * x[j];
+                {
+                  h1 -= hA[i * col + j] * x[j];
+                }
 
               x[i] = h1 / hA[i * col + i];
               /*
@@ -609,15 +655,21 @@ namespace ice
           for (j = col - 1; j >= 0; j--)
             if (j >= rang)
               if (j == col - 1 - i)
-                x[(i + 1)*col + j] = 1;
+                {
+                  x[(i + 1)*col + j] = 1;
+                }
               else
-                x[(i + 1)*col + j] = 0;
+                {
+                  x[(i + 1)*col + j] = 0;
+                }
             else
               {
                 h1 = hb[j];
 
                 for (k = j + 1; k < col; k++)
-                  h1 -= hA[j * col + k] * x[(i + 1) * col + k];
+                  {
+                    h1 -= hA[j * col + k] * x[(i + 1) * col + k];
+                  }
 
                 x[(i + 1)*col + j] = h1 / hA[j * col + j];
               }
@@ -662,10 +714,14 @@ namespace ice
 
     if (rang > 0)
       if (rang < dim)
-        OrthoMatrix(&x[col], dim - rang, col, &x[col]);
+        {
+          OrthoMatrix(&x[col], dim - rang, col, &x[col]);
+        }
 
     if (rang < dim)
-      return NO_UNIQUE_SOLUTION;
+      {
+        return NO_UNIQUE_SOLUTION;
+      }
 
     return OK;
   }
@@ -688,7 +744,10 @@ namespace ice
     double det;
     det = a[0] * a[3] - a[1] * a[2];
 
-    if (fabs(det) < eps) return NUM_INSTABILITY;
+    if (fabs(det) < eps)
+      {
+        return NUM_INSTABILITY;
+      }
 
     *xptr = (b[0] * a[3] - b[1] * a[1]) / det;
     *yptr = (a[0] * b[1] - a[2] * b[0]) / det;
@@ -713,7 +772,10 @@ namespace ice
           a[1] * (a[3] * a[8] - a[5] * a[6]) +
           a[2] * (a[3] * a[7] - a[4] * a[6]);
 
-    if (fabs(det) < eps) return NUM_INSTABILITY;
+    if (fabs(det) < eps)
+      {
+        return NUM_INSTABILITY;
+      }
 
     x[0] = (b[0] * (a[4] * a[8] - a[5] * a[7]) -
             a[1] * (b[1] * a[8] - a[5] * b[2]) +
@@ -774,20 +836,26 @@ namespace ice
         dptr = a;
 
         for (i = 0; i < dim * dim; i++)
-          printf("%d: %g\n", i, *dptr++);
+          {
+            printf("%d: %g\n", i, *dptr++);
+          }
 
         getchar();
 #endif
 
         for (i = 0; i < dim; i++)
-          b[i] = -f[i](hstart);
+          {
+            b[i] = -f[i](hstart);
+          }
 
 #if defined DEBUG
         printf("b:\n");
         dptr = b;
 
         for (i = 0; i < dim; i++)
-          printf("%d: %g\n", i, *dptr++);
+          {
+            printf("%d: %g\n", i, *dptr++);
+          }
 
         getchar();
 #endif
@@ -818,7 +886,9 @@ namespace ice
         dptr = x;
 
         for (i = 0; i < dim; i++)
-          printf("%d: %g\n", i, *dptr++);
+          {
+            printf("%d: %g\n", i, *dptr++);
+          }
 
         getchar();
 #endif
@@ -826,7 +896,9 @@ namespace ice
         heps = 0;
 
         for (i = 0; i < dim; i++)
-          heps += Sqr(f[i](hstart));
+          {
+            heps += Sqr(f[i](hstart));
+          }
 
         heps /= (double)dim;
 #if defined DEBUG
@@ -929,7 +1001,7 @@ namespace ice
     double* m2, *v2, *mp;
     double w;
 
-    if ((m2 = (double*)malloc(col * col * sizeof(double))) == NULL)  /*Speicher fr Normalengleichungen*/
+    if ((m2 = (double*)malloc(col * col * sizeof(double))) == NULL)   /*Speicher fr Normalengleichungen*/
       {
         Message(FNAME, M_NO_MEM, NO_MEM);
         return (NO_MEM);
@@ -962,7 +1034,10 @@ namespace ice
       {
         w = 0;
 
-        for (j = 0; j < col; j++) w += *mp++ * x[j];
+        for (j = 0; j < col; j++)
+          {
+            w += *mp++ * x[j];
+          }
 
         w -= v1[i];
         *mse += w * w;

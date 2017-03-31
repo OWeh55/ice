@@ -50,7 +50,9 @@ namespace ice
                      int MaxValue, const std::string& title)
   {
     if (img != nullptr)
-      freeimg();
+      {
+        freeimg();
+      }
 
     xsize = SizeX;
     ysize = SizeY;
@@ -95,7 +97,9 @@ namespace ice
   void Image::copy(const Image& src)
   {
     if (xsize != src.xsize || ysize != src.ysize || maxval != src.maxval)
-      create(src);
+      {
+        create(src);
+      }
     copyData(src);
   }
 #undef FNAME
@@ -114,7 +118,9 @@ namespace ice
     Image result;
     result.create(src, title);
     if (copy)
-      result.copyData(src);
+      {
+        result.copyData(src);
+      }
     return result;
   }
 #undef FNAME
@@ -166,7 +172,9 @@ namespace ice
   int Image::match(const Image& img2, const Image& img3) const
   {
     if (match(img2) != OK)
-      return WRONG_PARAM;
+      {
+        return WRONG_PARAM;
+      }
     return match(img3);
   }
 #undef FNAME
@@ -196,8 +204,10 @@ namespace ice
     result.create(Img, title); // create with given size..
     // result.setTitle(title); // rename to given name
 
-    if (ShallCopyContents) // copy content if neccesary
-      result.copyData(Img);
+    if (ShallCopyContents)   // copy content if neccesary
+      {
+        result.copyData(Img);
+      }
 
     return result;
   }
@@ -240,7 +250,9 @@ namespace ice
   int Image::read(const std::string& filename)
   {
     if (isValid())
-      return ReadImg(filename, *this).isValid();
+      {
+        return ReadImg(filename, *this).isValid();
+      }
     else
       {
         *this = ReadImg(filename);
@@ -253,7 +265,9 @@ namespace ice
     // if x and y are too far outside the image border, we simply return zero
     // check before conversion to int to avoid overflow
     if (x < -0.5 || y < -0.5 || x > xsize || y > ysize)
-      return 0;
+      {
+        return 0;
+      }
 
     // Determine the local neighborhood of point(x, y), that means the 4 pixel positions
     //(xi, yi),(xi + 1, yi),(xi + 1, yi + 1), and(xi, yi + 1), that enclose(x, y)
@@ -265,9 +279,15 @@ namespace ice
     int yi1 = yi + 1;
 
     // check if the local neighborhood is still inside the image
-    if ((xi >= xsize) || (yi >= ysize)) return 0;
+    if ((xi >= xsize) || (yi >= ysize))
+      {
+        return 0;
+      }
 
-    if ((xi1 == xsize) || (yi1 == ysize)) return getPixelUnchecked(xi, yi); // rechter/unterer Rand
+    if ((xi1 == xsize) || (yi1 == ysize))
+      {
+        return getPixelUnchecked(xi, yi);  // rechter/unterer Rand
+      }
 
     double dx  = x - (double) xi;
     double dx1 = 1.0 - dx;
@@ -305,7 +325,7 @@ namespace ice
         return false;
       }
 
-    if ((xi1 == xsize) || (yi1 == ysize)) // rechter/unterer Rand
+    if ((xi1 == xsize) || (yi1 == ysize))   // rechter/unterer Rand
       {
         val = getPixelUnchecked(xi, yi);
         return true;

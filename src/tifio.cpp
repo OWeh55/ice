@@ -55,7 +55,9 @@ namespace ice
         TIFFGetField(MyTiff, TIFFTAG_IMAGELENGTH, &Height);
 
         if (!img.isValid())
-          img.create(Width, Height, 255);
+          {
+            img.create(Width, Height, 255);
+          }
 
         uint32* Buffer = new uint32[Width * Height];
 
@@ -63,9 +65,15 @@ namespace ice
 
         TIFFClose(MyTiff);
         int xs = img.xsize;
-        if (Width < xs) xs = Width;
+        if (Width < xs)
+          {
+            xs = Width;
+          }
         int ys = img.ysize;
-        if (Height < ys) ys = Height;
+        if (Height < ys)
+          {
+            ys = Height;
+          }
 
         for (int y = 0; y < ys; ++y)
           for (int x = 0; x < xs; ++x)
@@ -98,13 +106,19 @@ namespace ice
         TIFFGetField(MyTiff, TIFFTAG_IMAGELENGTH, &Height);
 
         if (!imgr.isValid())
-          imgr.create(Width, Height, 255);
+          {
+            imgr.create(Width, Height, 255);
+          }
 
         if (!imgg.isValid())
-          imgg.create(Width, Height, 255);
+          {
+            imgg.create(Width, Height, 255);
+          }
 
         if (!imgb.isValid())
-          imgb.create(Width, Height, 255);
+          {
+            imgb.create(Width, Height, 255);
+          }
 
         int ys;
         int xs;
@@ -117,8 +131,14 @@ namespace ice
 
         TIFFClose(MyTiff);
 
-        if (Width < xs) xs = Width;
-        if (Height < ys) ys = Height;
+        if (Width < xs)
+          {
+            xs = Width;
+          }
+        if (Height < ys)
+          {
+            ys = Height;
+          }
 
         for (int y = 0; y < ys; ++y)
           for (int x = 0; x < xs; ++x)
@@ -213,7 +233,9 @@ namespace ice
     int idx = 0;
     for (int y = 0; y < img.ysize; y++)
       for (int x = 0; x < img.xsize; x++)
-        buffer[idx++] = img.getPixel(x, y) * 255 / img.maxval;
+        {
+          buffer[idx++] = img.getPixel(x, y) * 255 / img.maxval;
+        }
 
     // Write the information to the file
     TIFFWriteEncodedStrip(image, 0, buffer, img.xsize * img.ysize);

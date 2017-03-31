@@ -146,9 +146,13 @@ namespace ice
     ds2.create(xs, ys, 0, 1);
 
     if (! id.isValid())
-      rc.create(xs, ys, 0, 1);
+      {
+        rc.create(xs, ys, 0, 1);
+      }
     else
-      rc = id;
+      {
+        rc = id;
+      }
 
     ImageD ddi;
     ddi.create(xs, ys, 0, 1);
@@ -219,7 +223,9 @@ namespace ice
         if (factor != 1.0)
           for (int y = 0; y < dd.ysize; ++y)
             for (int x = 0; x < dd.xsize; ++x)
-              PutValD(dd, x, y, factor * GetValD(dd, x, y));
+              {
+                PutValD(dd, x, y, factor * GetValD(dd, x, y));
+              }
 
         ConvImgDImg(dd, id, NORMALIZED, SIGNED);
       }
@@ -358,7 +364,9 @@ namespace ice
         if (factor != 1.0)
           for (int y = 0; y < dd.ysize; ++y)
             for (int x = 0; x < dd.xsize; ++x)
-              PutValD(dd, x, y, factor * GetValD(dd, x, y));
+              {
+                PutValD(dd, x, y, factor * GetValD(dd, x, y));
+              }
 
         ConvImgDImg(dd, id, NORMALIZED, SIGNED);
       }
@@ -387,7 +395,9 @@ namespace ice
     ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
 
     if (! dd.isValid())
-      ImageD dd = NewImgD(xs, ys);
+      {
+        ImageD dd = NewImgD(xs, ys);
+      }
     else
       {
         if (xs != dd.xsize || ys != dd.ysize)

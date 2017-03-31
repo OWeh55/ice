@@ -146,7 +146,9 @@ namespace ice
             Message(FNAME, M_NO_MEM, NO_MEM);
 
             if (ib.can_delete)
-              free(ib.data);
+              {
+                free(ib.data);
+              }
 
             return Image();
           }
@@ -156,7 +158,10 @@ namespace ice
 
     if (flags & IB_SCALE)
       {
-        while ((xsb / scal > xs) || (ysb / scal > ys)) scal++;
+        while ((xsb / scal > xs) || (ysb / scal > ys))
+          {
+            scal++;
+          }
       }
 
     xm = Min(xs, xsb / scal);
@@ -172,15 +177,23 @@ namespace ice
               {
                 unsigned int val = valueFunction(hptr);
                 if (val > (unsigned int)ib.maxval)
-                  val -= ib.maxval + 1;
+                  {
+                    val -= ib.maxval + 1;
+                  }
 
                 if (ib.intensity)
                   {
                     val = ib.maxval - val;
                   }
 
-                if (norm) PutVal(himg, x, y, MulDiv(val, img->maxval, ib.maxval));
-                else PutVal(himg, x, y, val);
+                if (norm)
+                  {
+                    PutVal(himg, x, y, MulDiv(val, img->maxval, ib.maxval));
+                  }
+                else
+                  {
+                    PutVal(himg, x, y, val);
+                  }
 
                 hptr = hptr + scal * ib.valuesize;
               }
@@ -264,7 +277,10 @@ namespace ice
           }
       }
 
-    if (ib.can_delete) free(ib.data);
+    if (ib.can_delete)
+      {
+        free(ib.data);
+      }
 
     return himg;
   }
@@ -327,7 +343,10 @@ namespace ice
         // kein RGB-Bild
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
 
-        if (ib.can_delete) free(ib.data);
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
 
         return WRONG_FILE;
       }
@@ -378,7 +397,10 @@ namespace ice
       {
         Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
 
-        if (ib.can_delete) free(ib.data);
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
 
         return WRONG_PARAM;
       }
@@ -387,7 +409,10 @@ namespace ice
 
     if (flags & IB_SCALE)
       {
-        while ((xsb / scal > xs) || (ysb / scal > ys)) scal++;
+        while ((xsb / scal > xs) || (ysb / scal > ys))
+          {
+            scal++;
+          }
       }
 
     xm = Min(xs, xsb / scal);
@@ -398,7 +423,10 @@ namespace ice
         // kein RGB-Bild
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
 
-        if (ib.can_delete) free(ib.data);
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
 
         return WRONG_FILE;
       }
@@ -432,7 +460,10 @@ namespace ice
               default:
                 Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
-                if (ib.can_delete) free(ib.data);
+                if (ib.can_delete)
+                  {
+                    free(ib.data);
+                  }
 
                 return WRONG_PARAM;
               }
@@ -478,7 +509,10 @@ namespace ice
                   default:
                     Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
-                    if (ib.can_delete) free(ib.data);
+                    if (ib.can_delete)
+                      {
+                        free(ib.data);
+                      }
 
                     return WRONG_PARAM;
                   }
@@ -486,7 +520,10 @@ namespace ice
           }
       }
 
-    if (ib.can_delete) free(ib.data);
+    if (ib.can_delete)
+      {
+        free(ib.data);
+      }
 
     return OK;
   }
@@ -530,9 +567,13 @@ namespace ice
     for (int i = 0; i < height; i++)
       {
         if (intensity)
-          getlinei(dst[i], width, src, factor, offset);
+          {
+            getlinei(dst[i], width, src, factor, offset);
+          }
         else
-          getline(dst[i], width, src, factor, offset);
+          {
+            getline(dst[i], width, src, factor, offset);
+          }
 
         src += lineoffset;
       }
@@ -562,7 +603,10 @@ namespace ice
     int width = img->xsize;
     int height = img->ysize;
 
-    if (lineoffset == 0) lineoffset = width * factor;
+    if (lineoffset == 0)
+      {
+        lineoffset = width * factor;
+      }
 
     switch (pt)
       {
@@ -680,9 +724,14 @@ namespace ice
     int factor = 3;
 
     if (packmode == IB_RGB32 || packmode == IB_BGR32)
-      factor = 4;
+      {
+        factor = 4;
+      }
 
-    if (lineoffset == 0) lineoffset = width * factor;
+    if (lineoffset == 0)
+      {
+        lineoffset = width * factor;
+      }
 
     int rc = ERROR;
 
@@ -760,7 +809,9 @@ namespace ice
 
         for (int y = 0; y < img->ysize; y++)
           for (int x = 0; x < img->xsize; x++)
-            *(bptr++) = img.getPixel(x, y);
+            {
+              *(bptr++) = img.getPixel(x, y);
+            }
       }
     else
       {
@@ -768,7 +819,9 @@ namespace ice
 
         for (int y = 0; y < img->ysize; y++)
           for (int x = 0; x < img->xsize; x++)
-            *(bptr++) = img.getPixel(x, y);
+            {
+              *(bptr++) = img.getPixel(x, y);
+            }
       }
 
     return OK;
@@ -882,9 +935,13 @@ namespace ice
     for (int i = 0; i < height; i++)
       {
         if (intensity)
-          storelinei(src[i], width, dst, factor, offset);
+          {
+            storelinei(src[i], width, dst, factor, offset);
+          }
         else
-          storeline(src[i], width, dst, factor, offset);
+          {
+            storeline(src[i], width, dst, factor, offset);
+          }
 
         dst += lineoffset;
       }
@@ -912,7 +969,10 @@ namespace ice
     int width = img->xsize;
     int height = img->ysize;
 
-    if (lineoffset == 0) lineoffset = width;
+    if (lineoffset == 0)
+      {
+        lineoffset = width;
+      }
 
     size = 0;
 
@@ -1049,9 +1109,14 @@ namespace ice
     int factor = 3;
 
     if (packmode == IB_RGB32 || packmode == IB_BGR32)
-      factor = 4;
+      {
+        factor = 4;
+      }
 
-    if (lineoffset == 0) lineoffset = width * factor;
+    if (lineoffset == 0)
+      {
+        lineoffset = width * factor;
+      }
 
     size = 0;
 

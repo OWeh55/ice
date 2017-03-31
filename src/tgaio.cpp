@@ -97,19 +97,19 @@ namespace ice
 
     fseek(fd, 18 + identlen, SEEK_SET);
 
-    if (typ != 2) /* nur RGB und keine Kompression */
+    if (typ != 2)   /* nur RGB und keine Kompression */
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
-    if (interleave != 0) /*nur ohne Interleave */
+    if (interleave != 0)   /*nur ohne Interleave */
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
-    if (colormaplen != 0) /*nur ohne Farbtabelle*/
+    if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
@@ -139,11 +139,20 @@ namespace ice
     ib.data = (unsigned char*)malloc(ib.linelength * ib.height);
     ib.intensity = true;
 
-    if (!IsImg(r)) r = NewImg(ib.width, ib.height, ib.maxval);
+    if (!IsImg(r))
+      {
+        r = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
-    if (!IsImg(g)) g = NewImg(ib.width, ib.height, ib.maxval);
+    if (!IsImg(g))
+      {
+        g = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
-    if (!IsImg(b)) b = NewImg(ib.width, ib.height, ib.maxval);
+    if (!IsImg(b))
+      {
+        b = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     if (!IsImg(r) || !IsImg(g) || !IsImg(b))
       {
@@ -199,11 +208,17 @@ namespace ice
     fclose(fd);
 
     if (!IsImg(r))
-      r = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        r = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(g))
-      g = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        g = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(b))
-      b = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        b = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, r, g, b, flag);
   }
@@ -266,19 +281,19 @@ namespace ice
 
     fseek(fd, 18 + identlen, SEEK_SET);
 
-    if (typ != 2) /* nur RGB und keine Kompression */
+    if (typ != 2)   /* nur RGB und keine Kompression */
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return Image();
       }
 
-    if (interleave != 0) /*nur ohne Interleave */
+    if (interleave != 0)   /*nur ohne Interleave */
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return Image();
       }
 
-    if (colormaplen != 0) /*nur ohne Farbtabelle*/
+    if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return Image();
@@ -356,7 +371,9 @@ namespace ice
     fclose(fd);
 
     if (!IsImg(img))
-      img = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        img = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, img, flag);
   }
@@ -380,8 +397,14 @@ namespace ice
 
     identlen = WriteImgFileComment.length();
 
-    if (identlen > 0) tga_bwrite(fd, identlen + 1);
-    else tga_bwrite(fd, 0);
+    if (identlen > 0)
+      {
+        tga_bwrite(fd, identlen + 1);
+      }
+    else
+      {
+        tga_bwrite(fd, 0);
+      }
 
     tga_bwrite(fd, 0);
     tga_swrite(fd, 2);
@@ -401,7 +424,10 @@ namespace ice
 
     if (identlen > 0)
       {
-        for (i = 0; i < identlen; i++) tga_bwrite(fd, WriteImgFileComment[i]);
+        for (i = 0; i < identlen; i++)
+          {
+            tga_bwrite(fd, WriteImgFileComment[i]);
+          }
 
         tga_bwrite(fd, 0);
       }
@@ -450,7 +476,10 @@ namespace ice
   /*******************************************************************/
   static  int tga_swrite(FILE* fd, ushort s)
   {
-    if (!tga_bwrite(fd, (uchar)(s & 0xff))) return false;
+    if (!tga_bwrite(fd, (uchar)(s & 0xff)))
+      {
+        return false;
+      }
 
     return tga_bwrite(fd, (uchar)((s >> 8) & 0xff));
   }
@@ -500,19 +529,19 @@ namespace ice
     dir = attr & 0x20;
     interleave = attr & 0xc0;
 
-    if (typ != 2) /* nur RGB und keine Kompression */
+    if (typ != 2)   /* nur RGB und keine Kompression */
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
-    if (interleave != 0) /*nur ohne Interleave */
+    if (interleave != 0)   /*nur ohne Interleave */
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;
       }
 
-    if (colormaplen != 0) /*nur ohne Farbtabelle*/
+    if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
         Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
         return WRONG_FILE;

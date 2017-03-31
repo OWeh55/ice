@@ -18,7 +18,10 @@ namespace ice
 
 
     // determine real degree of polygon
-    while (para[i] == 0.0 && i >= 0) i--;
+    while (para[i] == 0.0 && i >= 0)
+      {
+        i--;
+      }
 
     // reorder of coefficients
     while (i >= 0)
@@ -63,14 +66,18 @@ namespace ice
             b[1] = a[1] + r * b[0];
 
             for (unsigned int j = 2; j <= n; j++)
-              b[j] = a[j] + r * b[j - 1] + s * b[j - 2];
+              {
+                b[j] = a[j] + r * b[j - 1] + s * b[j - 2];
+              }
 
             c[0] = 0.0;
             c[1] = b[0];
             c[2] = b[1] + r * c[1];
 
             for (unsigned int j = 3; j <= n; j++)
-              c[j] = b[j - 1] + r * c[j - 1] + s * c[j - 2];
+              {
+                c[j] = b[j - 1] + r * c[j - 1] + s * c[j - 2];
+              }
 
             double denom = c[n - 1] * c[n - 1] - c[n] * c[n - 2];
 
@@ -107,8 +114,10 @@ namespace ice
             }
         }
 
-        for (unsigned int j = 1; j <= n - 1; j++) // for next stage's iteration
-          a[j - 1] = b[j - 1];
+        for (unsigned int j = 1; j <= n - 1; j++)   // for next stage's iteration
+          {
+            a[j - 1] = b[j - 1];
+          }
 
         n -= 2;
         iterate -= 2;

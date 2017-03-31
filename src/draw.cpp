@@ -97,7 +97,10 @@ namespace ice
   {
     int mode = DEFAULT;
 
-    if (fval == -1) mode = NOFILL;
+    if (fval == -1)
+      {
+        mode = NOFILL;
+      }
 
     double par[7];
     par[0] = es.getPos().x;
@@ -150,14 +153,18 @@ namespace ice
         mye = (img->xsize - 1 - p.x) / dp.x;
 
         if (!ls.limitMys(mya, mye))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
 
         ou = true;
       }
     else
       {
         if ((p.x < 0) || (p.x >= img->xsize))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
       }
 
     // test oberer und unterer Rand
@@ -168,13 +175,21 @@ namespace ice
         my2 = (img->ysize - 1 - p.y) / dp.y;
 
         if (!ls.limitMys(my1, my2))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
 
         if (ou)
           {
-            if (my1 > mya) mya = my1;
+            if (my1 > mya)
+              {
+                mya = my1;
+              }
 
-            if (my2 < mye) mye = my2;
+            if (my2 < mye)
+              {
+                mye = my2;
+              }
           }
         else
           {
@@ -185,7 +200,9 @@ namespace ice
     else
       {
         if ((p.y < 0) || (p.y >= img->ysize))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
       }
 
     Point p1 = ls.RelPoint(mya);
@@ -211,13 +228,17 @@ namespace ice
         for (p.y = 0; p.y < img->ysize; p.y++)
           for (p.x = 0; p.x < img->xsize; p.x++)
             if (poly.Inside(p))
-              PutVal(img, p, fval);
+              {
+                PutVal(img, p, fval);
+              }
       }
 
     unsigned int last = poly.size() - 1;
 
     if (poly.isClosed())
-      last = poly.size();
+      {
+        last = poly.size();
+      }
 
     if (val >= 0)
       {

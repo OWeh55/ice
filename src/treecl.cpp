@@ -70,7 +70,9 @@ namespace ice
           }
       }
     else
-      createLeaf(ctree, sl, nClasses);
+      {
+        createLeaf(ctree, sl, nClasses);
+      }
   }
 
 
@@ -99,7 +101,9 @@ namespace ice
       }
 
     if (nLeft == 0 || nRight == 0)
-      return std::numeric_limits<int>::max();
+      {
+        return std::numeric_limits<int>::max();
+      }
 
     double entropyLeft = 0;
     for (auto& d : counterLeft)
@@ -138,7 +142,9 @@ namespace ice
     int nc = 0;
     for (int i = 0; i < nClasses; ++i)
       if (nElements[i] > 0)
-        ++nc;
+        {
+          ++nc;
+        }
 
     assert(nc > 0);
 
@@ -168,7 +174,9 @@ namespace ice
             max = i;
           }
         else if (nElements[i] > nElements[max2])
-          max2 = i;
+          {
+            max2 = i;
+          }
       }
 
     std::vector<double> v1 = classFeatureSum[max] * (1.0 / nElements[max]);
@@ -177,8 +185,10 @@ namespace ice
     std::vector<double> dv = v2 - v1;
     double norm = length(dv);
 
-    if (norm < 1e-10) // !!!! besseren Wert finden
-      return false;
+    if (norm < 1e-10)   // !!!! besseren Wert finden
+      {
+        return false;
+      }
 
     weights = dv * (1 / norm);
 
@@ -199,10 +209,14 @@ namespace ice
     std::vector<int> classCount(nClasses, 0);
     int nSamples = sl.size();
     for (int i = 0; i < nSamples; ++i)
-      classCount[sl[i].classNr]++;
+      {
+        classCount[sl[i].classNr]++;
+      }
 
     for (int i = 0; i < nClasses; ++i)
-      tree->value[i] = classCount[i] * 1.0 / nSamples;
+      {
+        tree->value[i] = classCount[i] * 1.0 / nSamples;
+      }
   }
 
 }

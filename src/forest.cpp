@@ -35,15 +35,19 @@ namespace ice
 
     for (int i = 0; i < size; i++)
       {
-        if (sarray[i] == rootval) // Wurzel
+        if (sarray[i] == rootval)   // Wurzel
           {
             if (ignoreZeroLengthTrees)
               {
-                if (carray[i] != 0)  // ignore isolated points
-                  ntree++;
+                if (carray[i] != 0)   // ignore isolated points
+                  {
+                    ntree++;
+                  }
               }
             else
-              ntree++;
+              {
+                ntree++;
+              }
           }
       }
     return ntree;
@@ -54,7 +58,9 @@ namespace ice
     int res = getRefCount(i); // number of childs
 
     if (!isRoot(i))           // + father, if not root
-      res++;
+      {
+        res++;
+      }
 
     return res;
   }
@@ -73,10 +79,14 @@ namespace ice
 
     // decrease number of references for old father
     if (oldfather != rootval)
-      carray[oldfather]--;
+      {
+        carray[oldfather]--;
+      }
     // increase number of references for new father
     if (newfather != rootval)
-      carray[newfather]++;
+      {
+        carray[newfather]++;
+      }
 
     // now set the link
     sarray[x] = newfather;

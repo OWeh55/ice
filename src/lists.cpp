@@ -114,7 +114,10 @@ namespace ice
         c.Add(x, y);
       }
 
-    if (close) c.Add(x0, y0);
+    if (close)
+      {
+        c.Add(x0, y0);
+      }
 
     return c;
   }
@@ -137,7 +140,10 @@ namespace ice
         c.Add(x, y);
       }
 
-    if (close) c.Add(x0, y0);
+    if (close)
+      {
+        c.Add(x0, y0);
+      }
 
     return c;
   }

@@ -154,7 +154,10 @@ namespace ice
 
     int blocksize = 32; // kleinste Blockgröße
 
-    while (blocksize * 2 <= bs) blocksize = blocksize + blocksize;
+    while (blocksize * 2 <= bs)
+      {
+        blocksize = blocksize + blocksize;
+      }
 
     int count = 0;
 
@@ -199,9 +202,13 @@ namespace ice
             if (pl1.rows() > 4)
               {
                 if (count < 3)
-                  trd = MatchPointlists(pl1, pl2); // erste iterationen nur affin
+                  {
+                    trd = MatchPointlists(pl1, pl2);  // erste iterationen nur affin
+                  }
                 else
-                  trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE); // ..dann projektiv zulassen
+                  {
+                    trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);  // ..dann projektiv zulassen
+                  }
 
                 tr = tr * trd;
               }

@@ -33,9 +33,15 @@ namespace ice
   double* sortarray;
   int plsort_Compare(const void* i1, const void* i2)
   {
-    if (sortarray[*((const int*)i1)] < sortarray[*((const int*)i2)])return -1;
+    if (sortarray[*((const int*)i1)] < sortarray[*((const int*)i2)])
+      {
+        return -1;
+      }
 
-    if (sortarray[*((const int*)i1)] > sortarray[*((const int*)i2)])return  1;
+    if (sortarray[*((const int*)i1)] > sortarray[*((const int*)i2)])
+      {
+        return  1;
+      }
 
     return 0;
   }
@@ -71,7 +77,10 @@ namespace ice
         return NULL;
       }
 
-    for (i = 0; i < pl->lng; i++) ix[i] = i;
+    for (i = 0; i < pl->lng; i++)
+      {
+        ix[i] = i;
+      }
 
     /*Indexfeld sortieren*/
     qsort(ix, pl->lng, sizeof(int), plsort_Compare);
@@ -89,12 +98,16 @@ namespace ice
     if (mode >= 0)
       {
         for (i = 0; i < pl->lng; i++)
-          PutPoint(pls, i, pl->xptr[ix[i]], pl->yptr[ix[i]], pl->wptr[ix[i]]);
+          {
+            PutPoint(pls, i, pl->xptr[ix[i]], pl->yptr[ix[i]], pl->wptr[ix[i]]);
+          }
       }
     else
       {
         for (i = 0, j = pl->lng - 1; i < pl->lng; i++, j--)
-          PutPoint(pls, j, pl->xptr[ix[i]], pl->yptr[ix[i]], pl->wptr[ix[i]]);
+          {
+            PutPoint(pls, j, pl->xptr[ix[i]], pl->yptr[ix[i]], pl->wptr[ix[i]]);
+          }
       }
 
     free(ix);
@@ -109,27 +122,45 @@ namespace ice
 
   int sortmat_Compare_d(const void* i1, const void* i2)
   {
-    if (sortdata_d[*((const int*)i1)][sortcol] < sortdata_d[*((const int*)i2)][sortcol]) return -1;
+    if (sortdata_d[*((const int*)i1)][sortcol] < sortdata_d[*((const int*)i2)][sortcol])
+      {
+        return -1;
+      }
 
-    if (sortdata_d[*((const int*)i1)][sortcol] > sortdata_d[*((const int*)i2)][sortcol]) return  1;
+    if (sortdata_d[*((const int*)i1)][sortcol] > sortdata_d[*((const int*)i2)][sortcol])
+      {
+        return  1;
+      }
 
     return 0;
   }
 
   int sortmat_Compare_i(const void* i1, const void* i2)
   {
-    if (sortdata_i[*((const int*)i1)][sortcol] < sortdata_i[*((const int*)i2)][sortcol]) return -1;
+    if (sortdata_i[*((const int*)i1)][sortcol] < sortdata_i[*((const int*)i2)][sortcol])
+      {
+        return -1;
+      }
 
-    if (sortdata_i[*((const int*)i1)][sortcol] > sortdata_i[*((const int*)i2)][sortcol]) return  1;
+    if (sortdata_i[*((const int*)i1)][sortcol] > sortdata_i[*((const int*)i2)][sortcol])
+      {
+        return  1;
+      }
 
     return 0;
   }
 
   int sortmat_Compare_c(const void* i1, const void* i2)
   {
-    if (sortdata_c[*((const int*)i1)][sortcol] < sortdata_c[*((const int*)i2)][sortcol]) return -1;
+    if (sortdata_c[*((const int*)i1)][sortcol] < sortdata_c[*((const int*)i2)][sortcol])
+      {
+        return -1;
+      }
 
-    if (sortdata_c[*((const int*)i1)][sortcol] > sortdata_c[*((const int*)i2)][sortcol]) return  1;
+    if (sortdata_c[*((const int*)i1)][sortcol] > sortdata_c[*((const int*)i2)][sortcol])
+      {
+        return  1;
+      }
 
     return 0;
   }
@@ -162,7 +193,10 @@ namespace ice
         return NULL;
       }
 
-    for (i = 0; i < mat->rsize; i++) ix[i] = i;
+    for (i = 0; i < mat->rsize; i++)
+      {
+        ix[i] = i;
+      }
 
     /*Zielmatrix anlegen*/
     mats = NewMatrix(mat->type, mat->rsize, mat->csize);
@@ -183,10 +217,16 @@ namespace ice
 
         if (mode >= 0)
           for (i = 0; i < mat->rsize; i++)
-            for (j = 0; j < mat->csize; j++) mats->data[i][j] = mat->data[ix[i]][j];
+            for (j = 0; j < mat->csize; j++)
+              {
+                mats->data[i][j] = mat->data[ix[i]][j];
+              }
         else
           for (i = 0, k = mat->rsize - 1; i < mat->rsize; i++, k--)
-            for (j = 0; j < mat->csize; j++) mats->data[k][j] = mat->data[ix[i]][j];
+            for (j = 0; j < mat->csize; j++)
+              {
+                mats->data[k][j] = mat->data[ix[i]][j];
+              }
 
         break;
 
@@ -196,10 +236,16 @@ namespace ice
 
         if (mode >= 0)
           for (i = 0; i < mat->rsize; i++)
-            for (j = 0; j < mat->csize; j++) mats->datai[i][j] = mat->datai[ix[i]][j];
+            for (j = 0; j < mat->csize; j++)
+              {
+                mats->datai[i][j] = mat->datai[ix[i]][j];
+              }
         else
           for (i = 0, k = mat->rsize - 1; i < mat->rsize; i++, k--)
-            for (j = 0; j < mat->csize; j++) mats->datai[k][j] = mat->datai[ix[i]][j];
+            for (j = 0; j < mat->csize; j++)
+              {
+                mats->datai[k][j] = mat->datai[ix[i]][j];
+              }
 
         break;
 
@@ -209,10 +255,16 @@ namespace ice
 
         if (mode >= 0)
           for (i = 0; i < mat->rsize; i++)
-            for (j = 0; j < mat->csize; j++) mats->datac[i][j] = mat->datac[ix[i]][j];
+            for (j = 0; j < mat->csize; j++)
+              {
+                mats->datac[i][j] = mat->datac[ix[i]][j];
+              }
         else
           for (i = 0, k = mat->rsize - 1; i < mat->rsize; i++, k--)
-            for (j = 0; j < mat->csize; j++) mats->datac[k][j] = mat->datac[ix[i]][j];
+            for (j = 0; j < mat->csize; j++)
+              {
+                mats->datac[k][j] = mat->datac[ix[i]][j];
+              }
 
         break;
       }

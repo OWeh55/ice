@@ -61,7 +61,10 @@ namespace ice
     /* Abstand der Stuetzstellen */
     diff = pl1->lng / cnt;
 
-    if (diff == 0) diff = 1;
+    if (diff == 0)
+      {
+        diff = 1;
+      }
 
     /* affine Transformation */
     if (tr[2][0] == 0 && tr[2][1] == 0)
@@ -77,13 +80,19 @@ namespace ice
             /* jeweils naechstliegenden Punkt suchen */
             for (i = 0, dmin = 1e32, j = 1; i < pl2->lng; i++, j++)
               {
-                if (j == pl2->lng) j = 0;
+                if (j == pl2->lng)
+                  {
+                    j = 0;
+                  }
 
                 pc2[0] = pl2->xptr[j];
                 pc2[1] = pl2->yptr[j];
                 d = ClosestPointLineSeg(pm, pc1, pc2, pf);
 
-                if (d < dmin) dmin = d;
+                if (d < dmin)
+                  {
+                    dmin = d;
+                  }
 
                 pc1[0] = pc2[0];
                 pc1[1] = pc2[1];
@@ -107,13 +116,19 @@ namespace ice
             /* jeweils naechstliegenden Punkt suchen */
             for (i = 0, dmin = DBL_MAX, j = 1; i < pl2->lng; i++, j++)
               {
-                if (j == pl2->lng) j = 0;
+                if (j == pl2->lng)
+                  {
+                    j = 0;
+                  }
 
                 pc2[0] = pl2->xptr[j];
                 pc2[1] = pl2->yptr[j];
                 d = ClosestPointLineSeg(pm, pc1, pc2, pf);
 
-                if (d < dmin) dmin = d;
+                if (d < dmin)
+                  {
+                    dmin = d;
+                  }
 
                 pc1[0] = pc2[0];
                 pc1[1] = pc2[1];
@@ -163,10 +178,14 @@ namespace ice
 
     /* optimale Methode auswaehlen */
     for (i = 6, s1 = 0; i < 10; i++)
-      s1 += mx[i] * mx[i];
+      {
+        s1 += mx[i] * mx[i];
+      }
 
     for (i = 10, s2 = 0; i < 15; i++)
-      s2 += mx[i] * mx[i];
+      {
+        s2 += mx[i] * mx[i];
+      }
 
     s1 /= 4;
     s2 /= 5;
@@ -197,7 +216,9 @@ namespace ice
     /* alle verbleibenden Moeglichkeiten testen */
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trx[0][i][j] = tr2[i][j];
+        {
+          trx[0][i][j] = tr2[i][j];
+        }
 
     /*Drehungen um 90 Grad*/
     for (i = 0, j = 1; j < 4; i++, j++)
@@ -250,7 +271,9 @@ namespace ice
     /* Rueckgabe der Transformation mit minimalem Abstand */
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        tr[i][j] = tra[imin][i][j];
+        {
+          tr[i][j] = tra[imin][i][j];
+        }
 
     return smin;
   }
@@ -564,7 +587,9 @@ namespace ice
         RotateMoments(mtrop, cos(phi_korr), sin(phi_korr), mtrop);
       }
     else
-      phi_korr = 0.0;
+      {
+        phi_korr = 0.0;
+      }
 
 
     /************************************************************************/
@@ -770,7 +795,9 @@ namespace ice
     // *********************************************************************
 
     for (int i = 0; i < 15; i++)
-      mrot[i] = mtrans[i] = mtrop[i];
+      {
+        mrot[i] = mtrans[i] = mtrop[i];
+      }
 
     double min = +1.0e+10;
     double min_h, phi_opt = 0.0;
@@ -783,7 +810,9 @@ namespace ice
         min_h = 0.0;
 
         for (int i = 0; i < 15; i++)
-          min_h = min_h + (mrot[i] - m_can[i]) * (mrot[i] - m_can[i]);
+          {
+            min_h = min_h + (mrot[i] - m_can[i]) * (mrot[i] - m_can[i]);
+          }
 
         if (min_h < min)
           {
@@ -1179,7 +1208,9 @@ namespace ice
 
     for (int i = 0; i < 3; i++)
       for (int j = 0; j < 3; j++)
-        tr_hin[i][j] = tr[i][j];
+        {
+          tr_hin[i][j] = tr[i][j];
+        }
 
     InvertTrans(tr);
 
@@ -1197,7 +1228,9 @@ namespace ice
       }
 
     for (int i = 0; i < 15; i++)
-      corners[j++] = maf[i];
+      {
+        corners[j++] = maf[i];
+      }
 
 
     int rc = LMDif(corners, 2 * n, LM_polygon, 15, inumber, 10000);
@@ -1350,7 +1383,9 @@ namespace ice
     // *********************************************************************
 
     for (int i = 0; i < 15; i++)
-      mrot[i] = mtrans[i] = mtrop[i];
+      {
+        mrot[i] = mtrans[i] = mtrop[i];
+      }
 
     double min = +1.0e+10;
     double min_h, phi_opt = 0.0;
@@ -1363,7 +1398,9 @@ namespace ice
         min_h = 0.0;
 
         for (int i = 0; i < 15; i++)
-          min_h = min_h + (mrot[i] - m_can[i]) * (mrot[i] - m_can[i]);
+          {
+            min_h = min_h + (mrot[i] - m_can[i]) * (mrot[i] - m_can[i]);
+          }
 
         if (min_h < min)
           {

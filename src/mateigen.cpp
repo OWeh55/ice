@@ -103,7 +103,9 @@ namespace ice
     for (ip = 0; ip < n; ip++)
       {
         for (iq = 0; iq < n; iq++)
-          v[ip][iq] = 0.0;
+          {
+            v[ip][iq] = 0.0;
+          }
 
         v[ip][ip] = 1.0;
       }
@@ -123,7 +125,9 @@ namespace ice
         for (ip = 0; ip < n - 1; ip++)
           {
             for (iq = ip + 1; iq < n; iq++)
-              sm += fabs(a[ip][iq]);
+              {
+                sm += fabs(a[ip][iq]);
+              }
           }
 
         if (sm == 0.0)
@@ -136,9 +140,13 @@ namespace ice
           }
 
         if (i < 4)
-          tresh = 0.2 * sm / (n * n);
+          {
+            tresh = 0.2 * sm / (n * n);
+          }
         else
-          tresh = 0.0;
+          {
+            tresh = 0.0;
+          }
 
         for (ip = 0; ip < n - 1; ip++)
           {
@@ -148,20 +156,26 @@ namespace ice
 
                 if (i > 4 && fabs(d[ip]) + g == fabs(d[ip])
                     && fabs(d[iq]) + g == fabs(d[iq]))
-                  a[ip][iq] = 0.0;
+                  {
+                    a[ip][iq] = 0.0;
+                  }
                 else if (fabs(a[ip][iq]) > tresh)
                   {
                     h = d[iq] - d[ip];
 
                     if (fabs(h) + g == fabs(h))
-                      t = (a[ip][iq]) / h;
+                      {
+                        t = (a[ip][iq]) / h;
+                      }
                     else
                       {
                         theta = 0.5 * h / (a[ip][iq]);
                         t = 1.0 / (fabs(theta) + sqrt(1.0 + theta * theta));
 
                         if (theta < 0.0)
-                          t = -t;
+                          {
+                            t = -t;
+                          }
                       }
 
                     c = 1.0 / sqrt(1 + t * t);
@@ -227,7 +241,10 @@ namespace ice
         p = d[k = i];
 
         for (j = i + 1; j < n; j++)
-          if (fabs(d[j]) >= fabs(p)) p = d[k = j];
+          if (fabs(d[j]) >= fabs(p))
+            {
+              p = d[k = j];
+            }
 
         if (k != i)
           {
@@ -349,7 +366,10 @@ namespace ice
       }
 
     for (i = 1; i < n; i++)
-      for (j = 0; j < n; j++)(*W)->data[i][j] = 0.0;
+      for (j = 0; j < n; j++)
+        {
+          (*W)->data[i][j] = 0.0;
+        }
 
     /* Matrix V */
     if (*V == nullptr)
@@ -397,7 +417,9 @@ namespace ice
         if (i < m)
           {
             for (k = i; k < m; k++)
-              scale += fabs(a[k][i]);
+              {
+                scale += fabs(a[k][i]);
+              }
 
             if (scale)
               {
@@ -417,17 +439,23 @@ namespace ice
                     for (j = l; j < n; j++)
                       {
                         for (s1 = 0.0, k = i; k < m; k++)
-                          s1 += a[k][i] * a[k][j];
+                          {
+                            s1 += a[k][i] * a[k][j];
+                          }
 
                         f = s1 / h;
 
                         for (k = i; k < m; k++)
-                          a[k][j] += f * a[k][i];
+                          {
+                            a[k][j] += f * a[k][i];
+                          }
                       }
                   }
 
                 for (k = i; k < m; k++)
-                  a[k][i] *= scale;
+                  {
+                    a[k][i] *= scale;
+                  }
               }
           }
 
@@ -437,7 +465,9 @@ namespace ice
         if (i < m && i != n - 1)
           {
             for (k = l; k < n; k++)
-              scale += fabs(a[i][k]);
+              {
+                scale += fabs(a[i][k]);
+              }
 
             if (scale)
               {
@@ -453,22 +483,30 @@ namespace ice
                 a[i][l] = f - g;
 
                 for (k = l; k < n; k++)
-                  rv1[k] = a[i][k] / h;
+                  {
+                    rv1[k] = a[i][k] / h;
+                  }
 
                 if (i != m - 1)
                   {
                     for (j = l; j < m; j++)
                       {
                         for (s1 = 0.0, k = l; k < n; k++)
-                          s1 += a[j][k] * a[i][k];
+                          {
+                            s1 += a[j][k] * a[i][k];
+                          }
 
                         for (k = l; k < n; k++)
-                          a[j][k] += s1 * rv1[k];
+                          {
+                            a[j][k] += s1 * rv1[k];
+                          }
                       }
                   }
 
                 for (k = l; k < n; k++)
-                  a[i][k] *= scale;
+                  {
+                    a[i][k] *= scale;
+                  }
               }
           }
 
@@ -482,20 +520,28 @@ namespace ice
             if (g)
               {
                 for (j = l; j < n; j++)
-                  v[j][i] = (a[i][j] / a[i][l]) / g;
+                  {
+                    v[j][i] = (a[i][j] / a[i][l]) / g;
+                  }
 
                 for (j = l; j < n; j++)
                   {
                     for (s1 = 0.0, k = l; k < n; k++)
-                      s1 += a[i][k] * v[k][j];
+                      {
+                        s1 += a[i][k] * v[k][j];
+                      }
 
                     for (k = l; k < n; k++)
-                      v[k][j] += s1 * v[k][i];
+                      {
+                        v[k][j] += s1 * v[k][i];
+                      }
                   }
               }
 
             for (j = l; j < n; j++)
-              v[i][j] = v[j][i] = 0.0;
+              {
+                v[i][j] = v[j][i] = 0.0;
+              }
           }
 
         v[i][i] = 1.0;
@@ -510,7 +556,9 @@ namespace ice
 
         if (i < n - 1)
           for (j = l; j < n; j++)
-            a[i][j] = 0.0;
+            {
+              a[i][j] = 0.0;
+            }
 
         if (g)
           {
@@ -521,22 +569,30 @@ namespace ice
                 for (j = l; j < n; j++)
                   {
                     for (s1 = 0.0, k = l; k < m; k++)
-                      s1 += a[k][i] * a[k][j];
+                      {
+                        s1 += a[k][i] * a[k][j];
+                      }
 
                     f = (s1 / a[i][i]) * g;
 
                     for (k = i; k < m; k++)
-                      a[k][j] += f * a[k][i];
+                      {
+                        a[k][j] += f * a[k][i];
+                      }
                   }
               }
 
             for (j = i; j < m; j++)
-              a[j][i] *= g;
+              {
+                a[j][i] *= g;
+              }
           }
         else
           {
             for (j = i; j < m; j++)
-              a[j][i] = 0.0;
+              {
+                a[j][i] = 0.0;
+              }
           }
 
         ++a[i][i];
@@ -559,7 +615,9 @@ namespace ice
                   }
 
                 if (fabs(w[nm]) + anorm == anorm)
-                  break;
+                  {
+                    break;
+                  }
               }
 
             if (flag)
@@ -600,7 +658,9 @@ namespace ice
                     w[k] = -z;
 
                     for (j = 0; j < n; j++)
-                      v[j][k] = (-v[j][k]);
+                      {
+                        v[j][k] = (-v[j][k]);
+                      }
                   }
 
                 break;

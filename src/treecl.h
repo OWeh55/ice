@@ -92,7 +92,9 @@ namespace ice
     {
       double prod = 0;
       for (unsigned int i = 0; i < features.size(); ++i)
-        prod += weights[i] * features[i];
+        {
+          prod += weights[i] * features[i];
+        }
       prod += weights.back();
       return prod;
     }
@@ -125,11 +127,15 @@ namespace ice
       else if (ctree->type == CTNode::tFork)
         {
           if (xProd(ctree->value, feat) < 0)
-            return find(ctree->left, feat);
+            {
+              return find(ctree->left, feat);
+            }
           else
-            return find(ctree->right, feat);
+            {
+              return find(ctree->right, feat);
+            }
         }
-      else // ctree->type == tLeaf
+      else     // ctree->type == tLeaf
         {
           return ctree->value;
         }
@@ -144,7 +150,9 @@ namespace ice
     static int getNNode(const CTNode* tree)
     {
       if (tree->type != CTNode::tFork)
-        return 1;
+        {
+          return 1;
+        }
       return getNNode(tree->left) + getNNode(tree->right) + 1;
     }
 
@@ -156,7 +164,9 @@ namespace ice
     static int getNLeafs(const CTNode* tree)
     {
       if (tree->type != CTNode::tFork)
-        return 1;
+        {
+          return 1;
+        }
       return getNLeafs(tree->left) + getNLeafs(tree->right);
     }
 
@@ -168,13 +178,19 @@ namespace ice
     static int getMaxDepth(const CTNode* tree)
     {
       if (tree->type != CTNode::tFork)
-        return 0;
+        {
+          return 0;
+        }
       int mdl = getMaxDepth(tree->left);
       int mdr = getMaxDepth(tree->right);
       if (mdl > mdr)
-        return mdl + 1;
+        {
+          return mdl + 1;
+        }
       else
-        return mdr + 1;
+        {
+          return mdr + 1;
+        }
     }
 
     int getMaxDepth() const
@@ -185,7 +201,9 @@ namespace ice
     int getDepthSum(CTNode* tree, int depth) const
     {
       if (tree->type != CTNode::tFork)
-        return depth;
+        {
+          return depth;
+        }
       return getDepthSum(tree->left, depth + 1) + getDepthSum(tree->right, depth + 1);
     }
 
@@ -199,7 +217,9 @@ namespace ice
       if (tree != nullptr)
         {
           for (int i = 0; i < depth; ++i)
-            std::cout << "*";
+            {
+              std::cout << "*";
+            }
           std::cout << " ";
           if (tree->type == CTNode::tFork)
             {

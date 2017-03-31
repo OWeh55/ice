@@ -92,8 +92,14 @@ namespace ice
     }
     node* connected_node()
     {
-      if (dir) return ep->node1;
-      else return ep->node2;
+      if (dir)
+        {
+          return ep->node1;
+        }
+      else
+        {
+          return ep->node2;
+        }
     }
     edgerefp next;
 

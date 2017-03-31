@@ -145,7 +145,9 @@ namespace ice
     if ((src.redImage() == dest.redImage()) &&
         (src.greenImage() == dest.greenImage()) &&
         (src.blueImage() == dest.blueImage()))
-      return OK;
+      {
+        return OK;
+      }
 
     if (!src.isValid() || !dest.isValid())
       {

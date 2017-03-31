@@ -61,16 +61,22 @@ namespace ice
       }
 
     if (n > 0)
-      data = new Vector* [n];
+      {
+        data = new Vector* [n];
+      }
 
     for (int i = 0; i < n; i++)
-      data[i] = new Vector(m);
+      {
+        data[i] = new Vector(m);
+      }
 
     if (init == 1)
       {
         // initialize as unity matrix
         for (int i = 0; i < m && i < n; i++)
-          (*data[i])[i] = 1.0;
+          {
+            (*data[i])[i] = 1.0;
+          }
       }
   }
 
@@ -83,35 +89,49 @@ namespace ice
       }
 
     if (n > 0)
-      data = new Vector* [n];
+      {
+        data = new Vector* [n];
+      }
 
     for (int i = 0; i < n; i++)
-      data[i] = new Vector(m);
+      {
+        data[i] = new Vector(m);
+      }
 
     double* iptr = init;
 
     for (int i = 0; i < n; i++)
       for (int k = 0; k < m; k++)
-        (*data[i])[k] = *iptr++;
+        {
+          (*data[i])[k] = *iptr++;
+        }
 
   }
 
   Matrix::Matrix(const Matrix& m): nRows(m.nRows), nColumns(m.nColumns), data(nullptr)
   {
     if (nRows > 0)
-      data = new Vector* [nRows];
+      {
+        data = new Vector* [nRows];
+      }
 
     for (int i = 0; i < nRows; i++)
-      data[i] = new Vector(*m.data[i]);
+      {
+        data[i] = new Vector(*m.data[i]);
+      }
   }
 
   Matrix::Matrix(const IMatrix& m): nRows(m.rows()), nColumns(m.cols()), data(nullptr)
   {
     if (nRows > 0)
-      data = new Vector*[nRows];
+      {
+        data = new Vector*[nRows];
+      }
 
     for (int i = 0; i < nRows; i++)
-      data[i] = new Vector(m[i]);
+      {
+        data[i] = new Vector(m[i]);
+      }
   }
 
   Matrix::Matrix(const Image& img, int mode, int sign): nRows(0), nColumns(0), data(nullptr)
@@ -126,21 +146,33 @@ namespace ice
     nColumns = img->xsize;
 
     if (nRows > 0)
-      data = new Vector* [nRows];
+      {
+        data = new Vector* [nRows];
+      }
 
     for (int i = 0; i < nRows; i++)
-      data[i] = new Vector(nColumns);
+      {
+        data[i] = new Vector(nColumns);
+      }
 
     int goff = 0;
     double factor = 1;
 
-    if (sign == SIGNED) goff = (img->maxval + 1) / 2;
+    if (sign == SIGNED)
+      {
+        goff = (img->maxval + 1) / 2;
+      }
 
-    if (mode == NORMALIZED) factor = 4.0 / (img->maxval + 1);
+    if (mode == NORMALIZED)
+      {
+        factor = 4.0 / (img->maxval + 1);
+      }
 
     for (int i = 0; i < nColumns; i++)
       for (int j = 0; j < nRows; j++)
-        (*data[j])[i] = (double)(GetVal(img, i, j) - goff) * factor;
+        {
+          (*data[j])[i] = (double)(GetVal(img, i, j) - goff) * factor;
+        }
   }
 
   Matrix::Matrix(ImageD imgd): nRows(0), nColumns(0), data(nullptr)
@@ -154,14 +186,21 @@ namespace ice
     nRows = imgd.ysize;
     nColumns = imgd.xsize;
 
-    if (nRows > 0) data = new Vector* [nRows];
+    if (nRows > 0)
+      {
+        data = new Vector* [nRows];
+      }
 
     for (int i = 0; i < nRows; i++)
-      data[i] = new Vector(nColumns);
+      {
+        data[i] = new Vector(nColumns);
+      }
 
     for (int i = 0; i < nColumns; i++)
       for (int j = 0; j < nRows; j++)
-        (*data[j])[i] = GetValD(imgd, i, j);
+        {
+          (*data[j])[i] = GetValD(imgd, i, j);
+        }
   }
 
   Matrix::Matrix(const std::vector<Point>& pl): nRows(0), nColumns(0), data(nullptr)
@@ -170,10 +209,14 @@ namespace ice
     nColumns = 2;
 
     if (nRows > 0)
-      data = new Vector* [nRows];
+      {
+        data = new Vector* [nRows];
+      }
 
     for (int i = 0; i < nRows; i++)
-      data[i] = new Vector(nColumns);
+      {
+        data[i] = new Vector(nColumns);
+      }
 
     for (int j = 0; j < nRows; j++)
       {
@@ -188,10 +231,14 @@ namespace ice
     nColumns = vv[0].size();
 
     if (nRows > 0)
-      data = new Vector* [nRows];
+      {
+        data = new Vector* [nRows];
+      }
 
     for (int i = 0; i < nRows; i++)
-      data[i] = new Vector(nColumns);
+      {
+        data[i] = new Vector(nColumns);
+      }
 
     for (int i = 0; i < nRows; i++)
       for (int j = 0; j < nColumns; j++)
@@ -213,10 +260,14 @@ namespace ice
     nColumns = 3;
 
     if (nRows > 0)
-      data = new Vector* [nRows];
+      {
+        data = new Vector* [nRows];
+      }
 
     for (int i = 0; i < nRows; i++)
-      data[i] = new Vector(nColumns);
+      {
+        data[i] = new Vector(nColumns);
+      }
 
     for (int j = 0; j < nRows; j++)
       {
@@ -233,7 +284,9 @@ namespace ice
     if (data != nullptr)
       {
         for (int i = 0; i < nRows; i++)
-          delete data[i];
+          {
+            delete data[i];
+          }
 
         delete [] data;
       }
@@ -246,14 +299,18 @@ namespace ice
     int nc = Min(c, nColumns);
     for (int r = 0; r < nr; ++r)
       for (int c = 0; c < nc; ++c)
-        newmat[r][c] = (*this)[r][c];
+        {
+          newmat[r][c] = (*this)[r][c];
+        }
     swap(newmat);
   }
 
   void Matrix::Set(double val)
   {
     for (int i = 0; i < nRows; i++)
-      data[i]->Set(val);
+      {
+        data[i]->Set(val);
+      }
   }
 
   const Matrix& Matrix::operator=(Matrix m)
@@ -285,10 +342,16 @@ namespace ice
           {
             dest << g[i][j];
 
-            if (j < g.cols() - 1) dest << ',';
+            if (j < g.cols() - 1)
+              {
+                dest << ',';
+              }
           }
 
-        if (i < g.rows() - 1) dest << ',';
+        if (i < g.rows() - 1)
+          {
+            dest << ',';
+          }
 
         dest << endl;
       }
@@ -307,14 +370,20 @@ namespace ice
 
   const Vector& Matrix::operator[](int i) const
   {
-    if ((i < 0) || (i >= nRows)) ERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+    if ((i < 0) || (i >= nRows))
+      {
+        ERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+      }
 
     return *data[i];
   }
 
   Vector& Matrix::operator[](int i)
   {
-    if ((i < 0) || (i >= nRows)) ERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+    if ((i < 0) || (i >= nRows))
+      {
+        ERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+      }
 
     return *data[i];
   }
@@ -326,11 +395,17 @@ namespace ice
     if (
       (i1 < 0) || (i1 > i2 + 1) || (i2 >= nRows) ||
       (j1 < 0) || (j1 > j2 + 1) || (j2 >= nColumns)
-    ) ERR("operator()", "Wrong index", WRONG_PARAM, *this);
+    )
+      {
+        ERR("operator()", "Wrong index", WRONG_PARAM, *this);
+      }
 
     Matrix tm(i2 - i1 + 1, j2 - j1 + 1);
 
-    for (i = i1; i <= i2; i++) *(tm.data[i - i1]) = (*data[i])(j1, j2);
+    for (i = i1; i <= i2; i++)
+      {
+        *(tm.data[i - i1]) = (*data[i])(j1, j2);
+      }
 
     return tm;
   }
@@ -340,7 +415,9 @@ namespace ice
     Vector* h;
 
     if ((i1 < 0) || (i1 >= nRows) || (i2 < 0) || (i2 >= nRows))
-      ERR0("ExchangeRow()", "Wrong index", WRONG_PARAM);
+      {
+        ERR0("ExchangeRow()", "Wrong index", WRONG_PARAM);
+      }
 
     h = data[i1];
     data[i1] = data[i2];
@@ -353,7 +430,9 @@ namespace ice
     int j;
 
     if ((i1 < 0) || (i1 >= nColumns) || (i2 < 0) || (i2 >= nColumns))
-      ERR0("ExchangeCol()", "Wrong index", WRONG_PARAM);
+      {
+        ERR0("ExchangeCol()", "Wrong index", WRONG_PARAM);
+      }
 
     for (j = 0; j < nRows; j++)
       {
@@ -371,13 +450,18 @@ namespace ice
     int i, j;
     dptr = new double[nRows * nColumns];
 
-    if (dptr == nullptr) ERR("Matrix::Norm", M_NO_MEM, NO_MEM, 0.0);
+    if (dptr == nullptr)
+      {
+        ERR("Matrix::Norm", M_NO_MEM, NO_MEM, 0.0);
+      }
 
     hptr = dptr;
 
     for (i = 0; i < nRows; i++)
       for (j = 0; j < nColumns; j++)
-        *(hptr++) = (*data[i])[j];
+        {
+          *(hptr++) = (*data[i])[j];
+        }
 
     IF_FAILED(NormMatrix(dptr, nRows, nColumns, mode, &norm))
     {
@@ -397,7 +481,10 @@ namespace ice
 
     for (i = 0; i < nRows; i++)
       for (j = 0; j < nColumns; j++)
-        if ((*data[i])[j] > max) max = (*data[i])[j];
+        if ((*data[i])[j] > max)
+          {
+            max = (*data[i])[j];
+          }
 
     return max;
   }
@@ -412,7 +499,9 @@ namespace ice
 
         for (size_t i = 1 ; i < (size_t)nRows  ; i++)
           if ((*data[i])[j] < minval)
-            minval = (*data[i])[j];
+            {
+              minval = (*data[i])[j];
+            }
 
         x[j] = minval;
       }
@@ -428,7 +517,9 @@ namespace ice
 
         for (size_t j = 1 ; j < (size_t)nColumns ; j++)
           if ((*data[i])[j] < minval)
-            minval = (*data[i])[j];
+            {
+              minval = (*data[i])[j];
+            }
 
         x[i] = minval;
       }
@@ -443,7 +534,9 @@ namespace ice
         double rowsum = 0.0;
 
         for (size_t j = 0 ; j < (size_t)nColumns ; j++)
-          rowsum += (*data[i])[j];
+          {
+            rowsum += (*data[i])[j];
+          }
 
         sum[i] = rowsum;
       }
@@ -458,7 +551,9 @@ namespace ice
         double colsum = 0.0;
 
         for (size_t i = 0 ; i < (size_t)nRows ; i++)
-          colsum += (*data[i])[j];
+          {
+            colsum += (*data[i])[j];
+          }
 
         sum[j] = colsum;
       }
@@ -471,11 +566,15 @@ namespace ice
         double sum = 0.0;
 
         for (size_t i = 0 ; i < (size_t)nRows ; i++)
-          sum += (*data[i])[j];
+          {
+            sum += (*data[i])[j];
+          }
 
         if (fabs(sum) > 1e-20)
           for (size_t i = 0 ; i < (size_t)nRows ; i++)
-            (*data[i])[j] /= sum;
+            {
+              (*data[i])[j] /= sum;
+            }
       }
   }
 
@@ -486,11 +585,15 @@ namespace ice
         double sum = 0.0;
 
         for (size_t j = 0 ; j < (size_t)nColumns ; j++)
-          sum += (*data[i])[j];
+          {
+            sum += (*data[i])[j];
+          }
 
         if (fabs(sum) > 1e-20)
           for (size_t j = 0 ; j < (size_t)nColumns ; j++)
-            (*data[i])[j] /= sum;
+            {
+              (*data[i])[j] /= sum;
+            }
       }
   }
 
@@ -500,10 +603,14 @@ namespace ice
     Matrix res(m1.rows(), m1.cols());
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
-      ERR("operator+", "Format doesn't match", WRONG_PARAM, res);
+      {
+        ERR("operator+", "Format doesn't match", WRONG_PARAM, res);
+      }
 
     for (i = 0; i < m1.rows(); i++)
-      *res.data[i] = *m1.data[i] + *m2.data[i];
+      {
+        *res.data[i] = *m1.data[i] + *m2.data[i];
+      }
 
     return res;
   }
@@ -514,10 +621,14 @@ namespace ice
     Matrix res(m1.rows(), m1.cols());
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
-      ERR("operator+", "Format doesn't match", WRONG_PARAM, res);
+      {
+        ERR("operator+", "Format doesn't match", WRONG_PARAM, res);
+      }
 
     for (i = 0; i < m1.rows(); i++)
-      *res.data[i] = *m1.data[i] - *m2.data[i];
+      {
+        *res.data[i] = *m1.data[i] - *m2.data[i];
+      }
 
     return res;
   }
@@ -528,7 +639,9 @@ namespace ice
     Matrix res(m1.rows(), m1.cols());
 
     for (i = 0; i < m1.rows(); i++)
-      *res.data[i] = -*m1.data[i];
+      {
+        *res.data[i] = -*m1.data[i];
+      }
 
     return res;
   }
@@ -540,7 +653,9 @@ namespace ice
     Matrix res(m.rows(), m.cols());
 
     for (i = 0; i < m.rows(); i++)
-      *res.data[i] = f** m.data[i];
+      {
+        *res.data[i] = f** m.data[i];
+      }
 
     return res;
   }
@@ -551,7 +666,9 @@ namespace ice
     Matrix res(m.rows(), m.cols());
 
     for (i = 0; i < m.rows(); i++)
-      *res.data[i] = f** m.data[i];
+      {
+        *res.data[i] = f** m.data[i];
+      }
 
     return res;
   }
@@ -563,7 +680,9 @@ namespace ice
     double sum;
 
     if (m1.cols() != m2.rows())
-      ERR("operator*", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        ERR("operator*", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     Matrix res(m1.rows(), m2.cols());
 
@@ -572,7 +691,10 @@ namespace ice
         {
           sum = 0;
 
-          for (k = 0; k < m1.cols(); k++) sum += m1.at(i).at(k) * m2.at(k).at(j);
+          for (k = 0; k < m1.cols(); k++)
+            {
+              sum += m1.at(i).at(k) * m2.at(k).at(j);
+            }
 
           res[i][j] = sum;
         }
@@ -628,7 +750,9 @@ namespace ice
     Matrix res(cols(), m2.cols());
 
     if (rows() != m2.rows())
-      ERR(FNAME, M_MATRIXFORMAT, WRONG_PARAM, res);
+      {
+        ERR(FNAME, M_MATRIXFORMAT, WRONG_PARAM, res);
+      }
 
 #if 0
     double sum;
@@ -639,7 +763,9 @@ namespace ice
           sum = 0;
 
           for (k = 0; k < rows(); k++)
-            sum += (*data[k]).at(i) * m2.at(k).at(j);
+            {
+              sum += (*data[k]).at(i) * m2.at(k).at(j);
+            }
 
           res[i][j] = sum;
         }
@@ -665,14 +791,18 @@ namespace ice
     Vector res(cols());
 
     if (rows() != v.Size())
-      ERR(FNAME, M_MATRIXFORMAT, WRONG_PARAM, res);
+      {
+        ERR(FNAME, M_MATRIXFORMAT, WRONG_PARAM, res);
+      }
 
     for (i = 0; i < cols(); i++)
       {
         sum = 0;
 
         for (j = 0; j < rows(); j++)
-          sum += (*data[j]).at(i) * v[j];
+          {
+            sum += (*data[j]).at(i) * v[j];
+          }
 
         res[i] = sum;
       }
@@ -690,7 +820,9 @@ namespace ice
     double sum;
 
     if (m.rows() != v.Size())
-      ERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+      {
+        ERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+      }
 
     Vector res(m.cols());
 
@@ -698,7 +830,10 @@ namespace ice
       {
         sum = 0;
 
-        for (j = 0; j < v.Size(); j++) sum += m[j][i] * v[j];
+        for (j = 0; j < v.Size(); j++)
+          {
+            sum += m[j][i] * v[j];
+          }
 
         res[i] = sum;
       }
@@ -714,7 +849,9 @@ namespace ice
     double sum;
 
     if (m.cols() != v.Size())
-      ERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+      {
+        ERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+      }
 
     Vector res(m.rows());
 
@@ -722,7 +859,10 @@ namespace ice
       {
         sum = 0;
 
-        for (j = 0; j < v.Size(); j++) sum += m[i][j] * v[j];
+        for (j = 0; j < v.Size(); j++)
+          {
+            sum += m[i][j] * v[j];
+          }
 
         res[i] = sum;
       }
@@ -736,15 +876,23 @@ namespace ice
     int i, j;
 
     if (m1.rows() != m2.rows())
-      ERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        ERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     Matrix res(m1.rows(), m1.cols() + m2.cols());
 
     for (i = 0; i < m1.rows(); i++)
       {
-        for (j = 0; j < m1.cols(); j++) res[i][j] = m1[i][j];
+        for (j = 0; j < m1.cols(); j++)
+          {
+            res[i][j] = m1[i][j];
+          }
 
-        for (j = 0; j < m2.cols(); j++) res[i][j + m1.cols()] = m2[i][j];
+        for (j = 0; j < m2.cols(); j++)
+          {
+            res[i][j + m1.cols()] = m2[i][j];
+          }
       }
 
     return res;
@@ -756,15 +904,23 @@ namespace ice
     int i, j;
 
     if (m1.cols() != m2.cols())
-      ERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        ERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     Matrix res(m1.rows() + m2.rows(), m1.cols());
 
     for (i = 0; i < m1.cols(); i++)
       {
-        for (j = 0; j < m1.rows(); j++) res[j][i] = m1[j][i];
+        for (j = 0; j < m1.rows(); j++)
+          {
+            res[j][i] = m1[j][i];
+          }
 
-        for (j = 0; j < m2.rows(); j++) res[j + m1.rows()][i] = m2[j][i];
+        for (j = 0; j < m2.rows(); j++)
+          {
+            res[j + m1.rows()][i] = m2[j][i];
+          }
       }
 
     return res;
@@ -776,13 +932,18 @@ namespace ice
     int i, j;
 
     if (m1.rows() != v2.Size())
-      ERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        ERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     Matrix res(m1.rows(), m1.cols() + 1);
 
     for (i = 0; i < m1.rows(); i++)
       {
-        for (j = 0; j < m1.cols(); j++) res[i][j] = m1[i][j];
+        for (j = 0; j < m1.cols(); j++)
+          {
+            res[i][j] = m1[i][j];
+          }
 
         res[i][m1.cols()] = v2[i];
       }
@@ -796,13 +957,18 @@ namespace ice
     int i, j;
 
     if (m1.cols() != v2.Size())
-      ERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      {
+        ERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+      }
 
     Matrix res(m1.rows() + 1, m1.cols());
 
     for (i = 0; i < m1.cols(); i++)
       {
-        for (j = 0; j < m1.rows(); j++) res[j][i] = m1[j][i];
+        for (j = 0; j < m1.rows(); j++)
+          {
+            res[j][i] = m1[j][i];
+          }
 
         res[m1.rows()][i] = v2[i];
       }
@@ -815,7 +981,9 @@ namespace ice
     Vector** ndata;
 
     if (nColumns != v.Size())
-      ERR("Append", "Wrong nRowsension", WRONG_PARAM, WRONG_PARAM);
+      {
+        ERR("Append", "Wrong nRowsension", WRONG_PARAM, WRONG_PARAM);
+      }
 
     ndata = (Vector**)realloc(data, (nRows + 1) * sizeof(Vector*));
 
@@ -836,7 +1004,9 @@ namespace ice
     int i, j;
 
     if (v1.Size() != m2.rows())
-      ERR("operator||", "Format doesn't match", WRONG_PARAM, m2);
+      {
+        ERR("operator||", "Format doesn't match", WRONG_PARAM, m2);
+      }
 
     Matrix res(m2.rows(), m2.cols() + 1);
 
@@ -844,7 +1014,10 @@ namespace ice
       {
         res[i][0] = v1[i];
 
-        for (j = 0; j < m2.cols(); j++) res[i][j + 1] = m2[i][j];
+        for (j = 0; j < m2.cols(); j++)
+          {
+            res[i][j + 1] = m2[i][j];
+          }
       }
 
     return res;
@@ -856,7 +1029,9 @@ namespace ice
     int i, j;
 
     if (v1.Size() != m2.cols())
-      ERR("operator&&", "Format doesn't match", WRONG_PARAM, m2);
+      {
+        ERR("operator&&", "Format doesn't match", WRONG_PARAM, m2);
+      }
 
     Matrix res(m2.rows() + 1, m2.cols());
 
@@ -864,7 +1039,10 @@ namespace ice
       {
         res[0][i] = v1[i];
 
-        for (j = 0; j < m2.rows(); j++) res[j + 1][i] = m2[j][i];
+        for (j = 0; j < m2.rows(); j++)
+          {
+            res[j + 1][i] = m2[j][i];
+          }
       }
 
     return res;
@@ -877,7 +1055,9 @@ namespace ice
     Matrix res(v1.Size(), 2);
 
     if (v1.Size() != v2.Size())
-      ERR("operator||", "Format doesn't match", WRONG_PARAM, res);
+      {
+        ERR("operator||", "Format doesn't match", WRONG_PARAM, res);
+      }
 
     for (i = 0; i < v2.Size(); i++)
       {
@@ -895,7 +1075,9 @@ namespace ice
     Matrix res(2, v1.Size());
 
     if (v1.Size() != v2.Size())
-      ERR("operator&&", "Format doesn't match", WRONG_PARAM, res);
+      {
+        ERR("operator&&", "Format doesn't match", WRONG_PARAM, res);
+      }
 
     for (i = 0; i < v1.Size(); i++)
       {
@@ -946,9 +1128,13 @@ namespace ice
     sortcolumn = colnr;
 
     if (asc)
-      qsort(data, nRows, sizeof(Vector*), compar);
+      {
+        qsort(data, nRows, sizeof(Vector*), compar);
+      }
     else
-      qsort(data, nRows, sizeof(Vector*), comparinverse);
+      {
+        qsort(data, nRows, sizeof(Vector*), comparinverse);
+      }
 
     return OK;
   }
@@ -965,7 +1151,9 @@ namespace ice
 
     for (int i = 0 ; i < nRows ; i++)
       for (int j = 0 ; j < nColumns ; j++)
-        (*data[i])[j] += (*m.data[i])[j];
+        {
+          (*data[i])[j] += (*m.data[i])[j];
+        }
 
     return OK;
   }
@@ -1023,7 +1211,10 @@ namespace ice
       {
         os << " " << *m.data[i];
 
-        if (i < m.nRows - 1) os << FILE_SEP ;
+        if (i < m.nRows - 1)
+          {
+            os << FILE_SEP ;
+          }
 
         os << endl ;
       }
@@ -1150,9 +1341,14 @@ namespace ice
       }
 
     if (n2 < n1)
-      std::swap(n1, n2);
+      {
+        std::swap(n1, n2);
+      }
 
-    for (i = n2; i >= n1; i--) DeleteCol(i);
+    for (i = n2; i >= n1; i--)
+      {
+        DeleteCol(i);
+      }
 
     return OK;
   }
@@ -1169,12 +1365,16 @@ namespace ice
     delete data[n];
 
     for (int i = n + 1; i < nRows; i++)
-      data[i - 1] = data[i];
+      {
+        data[i - 1] = data[i];
+      }
 
     Vector** ndata;
 
     if (nRows > 1)
-      ndata = (Vector**)realloc(data, (nRows - 1) * sizeof(Vector*));
+      {
+        ndata = (Vector**)realloc(data, (nRows - 1) * sizeof(Vector*));
+      }
     else
       {
         ndata = nullptr;
@@ -1195,10 +1395,14 @@ namespace ice
       }
 
     if (n2 < n1)
-      std::swap(n1, n2);
+      {
+        std::swap(n1, n2);
+      }
 
     for (int i = n2; i >= n1; i--)
-      DeleteRow(i);
+      {
+        DeleteRow(i);
+      }
 
     return OK;
   }
@@ -1228,9 +1432,15 @@ namespace ice
         for (int y = 0; y < sy; y++)
           for (int x = 0; x < sx; x++)
             {
-              if (m[y][x] > maxv) maxv = m[y][x];
+              if (m[y][x] > maxv)
+                {
+                  maxv = m[y][x];
+                }
 
-              if (m[y][x] < minv) minv = m[y][x];
+              if (m[y][x] < minv)
+                {
+                  minv = m[y][x];
+                }
             }
       }
 

@@ -66,15 +66,24 @@ namespace ice
           {
             if (step2 < 0)
               {
-                if (dist2 <= -step2) PutVal(dist, x + x0, y + y0, dist->maxval);
+                if (dist2 <= -step2)
+                  {
+                    PutVal(dist, x + x0, y + y0, dist->maxval);
+                  }
               }
             else
               {
-                if (dist2 > step2) PutVal(dist, x + x0, y + y0, dist->maxval);
+                if (dist2 > step2)
+                  {
+                    PutVal(dist, x + x0, y + y0, dist->maxval);
+                  }
               }
           }
 
-        if (IsImg(dir)) PutVal(dir, x, y, freeman.Int());
+        if (IsImg(dir))
+          {
+            PutVal(dir, x, y, freeman.Int());
+          }
       }
   }
 
@@ -132,9 +141,15 @@ namespace ice
 
     int step2 = RoundInt(step * step);
 
-    if (step < 0) step2 = -step2;
+    if (step < 0)
+      {
+        step2 = -step2;
+      }
 
-    if (pegl == -1) pegl = (orig->maxval + 1) / 2;
+    if (pegl == -1)
+      {
+        pegl = (orig->maxval + 1) / 2;
+      }
 
     if ((pegl < 0) || (pegl > orig->maxval))
       {
@@ -188,7 +203,7 @@ namespace ice
         io = 1;
         iu = 0;
       }
-    else /*mode==2*/
+    else     /*mode==2*/
       {
         io = 0;
         iu = 1;
@@ -198,15 +213,22 @@ namespace ice
       for (int x = 0; x < xs; ++x)
         {
           if (orig.getPixel(x, y) >= pegl)
-            ibin.setPixelUnchecked(x, y, io);
+            {
+              ibin.setPixelUnchecked(x, y, io);
+            }
           else
-            ibin.setPixelUnchecked(x, y, iu);
+            {
+              ibin.setPixelUnchecked(x, y, iu);
+            }
         }
 
     SetImg(inr, 0);
     SetImg(dist, 0);
 
-    if (IsImg(dir)) SetImg(dir, 8);
+    if (IsImg(dir))
+      {
+        SetImg(dir, 8);
+      }
 
     if (step < 0)
       {
@@ -214,7 +236,9 @@ namespace ice
           for (int x = 0; x < xs; ++x)
             {
               if (ibin.getPixel(x, y) == 0)
-                dist.setPixel(x, y, dist->maxval);
+                {
+                  dist.setPixel(x, y, dist->maxval);
+                }
             }
       }
 
@@ -313,12 +337,12 @@ namespace ice
 
             tdir = Freeman(0);
 
-            for (int dircount = 0; dircount < 4; dircount++) // 4 Richtungen
+            for (int dircount = 0; dircount < 4; dircount++)   // 4 Richtungen
               {
                 tdir.move(x, y, xt, yt); // nachbarpunkt bestimmen
 
                 if ((xt >= 0) && (xt < xs) && (yt >= 0) && (yt < ys)) // Wenn innerhalb...
-                  if (GetVal(inr, xt, yt) == 0) // ..und distanz noch nicht bestimmt
+                  if (GetVal(inr, xt, yt) == 0)   // ..und distanz noch nicht bestimmt
                     {
                       // alle nachbarn abfragen
                       mindist2 = (adist + 10) * (adist + 10); // ist immer größer
@@ -329,7 +353,7 @@ namespace ice
                         {
                           Freeman(ndir).move(xt, yt, xn, yn);
 
-                          if ((xn >= 0) && (xn < xs) && (yn >= 0) && (yn < ys)) // Wenn innerhalb...
+                          if ((xn >= 0) && (xn < xs) && (yn >= 0) && (yn < ys))   // Wenn innerhalb...
                             {
                               ir = GetVal(inr, xn, yn);
 
@@ -351,7 +375,7 @@ namespace ice
 
                       mindist = RoundInt(sqrt((double)mindist2));
 
-                      if (mindist == adist) // abstand nicht vergrößert
+                      if (mindist == adist)   // abstand nicht vergrößert
                         {
                           Neuerpunkt(aplist, xt, yt,
                                      inr, minindex,

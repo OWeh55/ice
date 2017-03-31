@@ -84,9 +84,15 @@ namespace ice
         return WRONG_WINDOW;
       }
 
-    if ((wxi - 1) == x) x++; /* an verkleinertes Suchfenster anpassen*/
+    if ((wxi - 1) == x)
+      {
+        x++;  /* an verkleinertes Suchfenster anpassen*/
+      }
 
-    if ((wyi - 1) == y) y++;
+    if ((wyi - 1) == y)
+      {
+        y++;
+      }
 
     if ((wxa + 1) == x)
       {
@@ -95,7 +101,10 @@ namespace ice
             y++;
             x = wxi;
           }
-        else return NOT_FOUND;
+        else
+          {
+            return NOT_FOUND;
+          }
       }
 
     if ((wya + 1) == y)
@@ -105,7 +114,10 @@ namespace ice
             x++;
             y = wyi;
           }
-        else return NOT_FOUND;
+        else
+          {
+            return NOT_FOUND;
+          }
       }
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
@@ -123,12 +135,15 @@ namespace ice
 
     if (direct == HORZ)
       {
-        do /*Bild durchmustern ab Startpunkt*/
+        do   /*Bild durchmustern ab Startpunkt*/
           {
             /*nächste Zeile*/
 
             /* check bounds */
-            if (x > wxa || y > wya || xl > wxa || yo > wya || yu > wya) break;
+            if (x > wxa || y > wya || xl > wxa || yo > wya || yu > wya)
+              {
+                break;
+              }
 
             v1 = GetVal(imgv, xl, yo) + GetVal(imgv, x, yo);
             v3 = GetVal(imgv, xl, yu) + GetVal(imgv, x, yu);
@@ -139,7 +154,10 @@ namespace ice
               {
 
                 /* check bounds */
-                if (xr > wxa || yo > wya || yu > wya || y > wya) break;
+                if (xr > wxa || yo > wya || yu > wya || y > wya)
+                  {
+                    break;
+                  }
 
                 v1 += GetVal(imgv, xr, yo);
                 v3 += GetVal(imgv, xr, yu);
@@ -152,14 +170,17 @@ namespace ice
 
                     if ((grd1 = h * h + v * v) > pgl)
                       {
-                        do /*lokales maximum in zeile suchen*/
+                        do   /*lokales maximum in zeile suchen*/
                           {
                             grd2 = grd1;
                             ps[0] = x;
                             ps[1] = y;
 
                             /* check bounds */
-                            if (xl > wxa || yo > wya || yu > wya) break;
+                            if (xl > wxa || yo > wya || yu > wya)
+                              {
+                                break;
+                              }
 
                             v1 -= GetVal(imgv, xl, yo);
                             v3 -= GetVal(imgv, xl, yu);
@@ -169,7 +190,10 @@ namespace ice
                             xl++;
                             xr++;
 
-                            if (x > wxa || xr > wxa || y > wya || yu > wya || yo > wya) break;
+                            if (x > wxa || xr > wxa || y > wya || yu > wya || yo > wya)
+                              {
+                                break;
+                              }
 
                             v1 += GetVal(imgv, xr, yo);
                             v3 += GetVal(imgv, xr, yu);
@@ -188,12 +212,18 @@ namespace ice
                               s += GetVal(imgo, xf, yf);
                             }
 
-                        if (s == 0) return OK;
+                        if (s == 0)
+                          {
+                            return OK;
+                          }
                       }
                   }
 
                 /* check bounds */
-                if (xl > wxa || yo > wya || yu > wya) break;
+                if (xl > wxa || yo > wya || yu > wya)
+                  {
+                    break;
+                  }
 
                 v1 -= GetVal(imgv, xl, yo);
                 v3 -= GetVal(imgv, xl, yu);
@@ -251,7 +281,10 @@ namespace ice
                             yo++;
                             yu++;
 
-                            if (y > wya) break;
+                            if (y > wya)
+                              {
+                                break;
+                              }
 
                             h1 += GetVal(imgv, xl, yu);
                             h3 += GetVal(imgv, xr, yu);
@@ -270,7 +303,10 @@ namespace ice
                               s += GetVal(imgo, xf, yf);
                             }
 
-                        if (s == 0) return OK;
+                        if (s == 0)
+                          {
+                            return OK;
+                          }
                       }
                   }
 
@@ -307,22 +343,46 @@ namespace ice
 
     if (h == 0)
       {
-        if (v < 0) *dir = 6;
-        else *dir = 2;
+        if (v < 0)
+          {
+            *dir = 6;
+          }
+        else
+          {
+            *dir = 2;
+          }
 
         return grad;
       }
 
     val = abs(10000 * v / h);
 
-    if (val < 4142) *dir = 0;
-    else if (val < 24142) *dir = 1;
-    else *dir = 2;
+    if (val < 4142)
+      {
+        *dir = 0;
+      }
+    else if (val < 24142)
+      {
+        *dir = 1;
+      }
+    else
+      {
+        *dir = 2;
+      }
 
     if (h < 0)
-      if (v < 0) *dir += 4;
-      else *dir = 4 - *dir;
-    else if ((v < 0) && (*dir > 0)) *dir = 8 - *dir;
+      if (v < 0)
+        {
+          *dir += 4;
+        }
+      else
+        {
+          *dir = 4 - *dir;
+        }
+    else if ((v < 0) && (*dir > 0))
+      {
+        *dir = 8 - *dir;
+      }
 
     return grad;
   }
@@ -339,22 +399,40 @@ namespace ice
     yu = y + 1;
 
     if (IsImg(imgo))
-      if (GetVal(imgo, x, y) > 0) return -2;
+      if (GetVal(imgo, x, y) > 0)
+        {
+          return -2;
+        }
 
-    if (xl < 0) return -3;
+    if (xl < 0)
+      {
+        return -3;
+      }
 
-    if (xr >= imgv->xsize) return -3;
+    if (xr >= imgv->xsize)
+      {
+        return -3;
+      }
 
-    if (yo < 0) return -3;
+    if (yo < 0)
+      {
+        return -3;
+      }
 
-    if (yu >= imgv->ysize) return -3;
+    if (yu >= imgv->ysize)
+      {
+        return -3;
+      }
 
     h1 = GetVal(imgv, xl, yo) + GetVal(imgv, xl, y) + GetVal(imgv, xl, yu);
     h3 = GetVal(imgv, xr, yo) + GetVal(imgv, xr, y) + GetVal(imgv, xr, yu);
     v1 = GetVal(imgv, xr, yo) + GetVal(imgv, x, yo) + GetVal(imgv, xl, yo);
     v3 = GetVal(imgv, xr, yu) + GetVal(imgv, x, yu) + GetVal(imgv, xl, yu);
 
-    if (Gradient(v3 - v1, h3 - h1, &gdir) < thr) return -1;
+    if (Gradient(v3 - v1, h3 - h1, &gdir) < thr)
+      {
+        return -1;
+      }
 
     return gdir;
   }
@@ -369,15 +447,30 @@ namespace ice
     yu = y + 1;
 
     if (IsImg(imgo))
-      if (GetVal(imgo, x, y) > 0) return -1;
+      if (GetVal(imgo, x, y) > 0)
+        {
+          return -1;
+        }
 
-    if (xl < 0) return -2;
+    if (xl < 0)
+      {
+        return -2;
+      }
 
-    if (xr >= imgv->xsize) return -3;
+    if (xr >= imgv->xsize)
+      {
+        return -3;
+      }
 
-    if (yo < 0) return -4;
+    if (yo < 0)
+      {
+        return -4;
+      }
 
-    if (yu >= imgv->ysize) return -5;
+    if (yu >= imgv->ysize)
+      {
+        return -5;
+      }
 
     h1 = GetVal(imgv, xl, yo) + GetVal(imgv, xl, y) + GetVal(imgv, xl, yu);
     h3 = GetVal(imgv, xr, yo) + GetVal(imgv, xr, y) + GetVal(imgv, xr, yu);
@@ -441,7 +534,10 @@ namespace ice
         return Contur();
       }
 
-    if (maxgap < 1) maxgap = 1;
+    if (maxgap < 1)
+      {
+        maxgap = 1;
+      }
 
     pgl *= 6;
     pgl *= pgl;
@@ -483,12 +579,24 @@ namespace ice
               }
           }
 
-        if (maxgrad < 0) break;
+        if (maxgrad < 0)
+          {
+            break;
+          }
 
-        if (maxgrad < pgl) gap++;       /* kurze Lücken überspringen*/
-        else gap = 0;                  /* Lücke zuende*/
+        if (maxgrad < pgl)
+          {
+            gap++;  /* kurze Lücken überspringen*/
+          }
+        else
+          {
+            gap = 0;  /* Lücke zuende*/
+          }
 
-        if (gap >= maxgap) break;       /* Lücke zu groß*/
+        if (gap >= maxgap)
+          {
+            break;  /* Lücke zu groß*/
+          }
 
         Freeman(maxdir).move(xx, yy);
         meangrad += maxgrad;           /* Kantenstärke aktualisieren */
@@ -525,12 +633,24 @@ namespace ice
               }
           }
 
-        if (maxgrad < 0) break;
+        if (maxgrad < 0)
+          {
+            break;
+          }
 
-        if (maxgrad < pgl) gap++;      /* kurze Lücken überspringen*/
-        else gap = 0;                  /* Lücke zuende*/
+        if (maxgrad < pgl)
+          {
+            gap++;  /* kurze Lücken überspringen*/
+          }
+        else
+          {
+            gap = 0;  /* Lücke zuende*/
+          }
 
-        if (gap >= maxgap) break;      /* Lücke zu groß*/
+        if (gap >= maxgap)
+          {
+            break;  /* Lücke zu groß*/
+          }
 
         Freeman(maxdir).move(xx, yy);  /* nächster Konturpunkt*/
         meangrad += maxgrad;           /* Kantenstärke aktualisieren*/
@@ -588,68 +708,116 @@ namespace ice
     vo += val;
     vl += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x++;
     val = GetVal(img, x, y);
     vo += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x++;
     val = GetVal(img, x, y);
     vo += val;
     vr += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     y++;
     val = GetVal(img, x, y);
     vr += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     y++;
     val = GetVal(img, x, y);
     vr += val;
     vu += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x--;
     val = GetVal(img, x, y);
     vu += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x--;
     val = GetVal(img, x, y);
     vu += val;
     vl += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     y--;
     val = GetVal(img, x, y);
     vl += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     Gradient(vu - vo, vr - vl, &dir);
     Freeman(dir).move(s[0], s[1], x1, y1);
@@ -657,9 +825,13 @@ namespace ice
     thr = (GetVal(img, x1, y1) + GetVal(img, x2, y2)) / 2;
 
     if (thr > start)
-      return start;
+      {
+        return start;
+      }
     else
-      return thr;
+      {
+        return thr;
+      }
   }
   /************************************************/
   int grd(const Image& img, int x, int y)
@@ -716,7 +888,7 @@ namespace ice
 
     do
       {
-        if ((g >= pgl) && (((dir - c.DirCode(index)) & 7) < 3)) /*Schwelle überschritten*/
+        if ((g >= pgl) && (((dir - c.DirCode(index)) & 7) < 3))   /*Schwelle überschritten*/
           {
             do                          /*lokales Maximum suchen*/
               {
@@ -737,7 +909,10 @@ namespace ice
                 c.getPoint(1, x, y);
                 g = GradVal(imgv, imgo, x, y, &dir);
 
-                if (g > g1) return NOT_FOUND;
+                if (g > g1)
+                  {
+                    return NOT_FOUND;
+                  }
               }
 
             h = 0;
@@ -754,7 +929,9 @@ namespace ice
               }
 
             if (h == 0)
-              return OK;
+              {
+                return OK;
+              }
           }
 
         index++;                            /*nächsten Konturpunkt*/
@@ -788,7 +965,7 @@ namespace ice
 
     do
       {
-        if ((g >= pgl) && (((dir - c.DirCode(i)) & 7) < 3)) /*Schwelle überschritten*/
+        if ((g >= pgl) && (((dir - c.DirCode(i)) & 7) < 3))   /*Schwelle überschritten*/
           {
             do                          /*lokales Maximum suchen*/
               {
@@ -926,7 +1103,10 @@ namespace ice
             dir = dir + 1;
             dir.move(xx, yy, xf, yf);
 
-            if (cl == -4) break;         /* Abbruch, Kontur offen lassen */
+            if (cl == -4)
+              {
+                break;  /* Abbruch, Kontur offen lassen */
+              }
           }
       }
     while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys && dir == startdir) && cl != -4);

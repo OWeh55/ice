@@ -123,9 +123,15 @@ namespace ice
     {
       // begrenzt das my der Parameterdarstellung auf einen dem Typ
       // entsprechenden Bereich
-      if ((my < 0.0) && (type & begin_l)) my = 0.0;
+      if ((my < 0.0) && (type & begin_l))
+        {
+          my = 0.0;
+        }
 
-      if ((my > 1.0) && (type & end_l)) my = 1.0;
+      if ((my > 1.0) && (type & end_l))
+        {
+          my = 1.0;
+        }
 
       return my;
     }
@@ -141,18 +147,28 @@ namespace ice
 
       if (type & begin_l)
         {
-          if (my2 < 0.0) return false;
+          if (my2 < 0.0)
+            {
+              return false;
+            }
 
           if (my1 < 0.0)
-            my1 = 0.0;
+            {
+              my1 = 0.0;
+            }
         }
 
       if (type & end_l)
         {
-          if (my1 > 1.0) return false;
+          if (my1 > 1.0)
+            {
+              return false;
+            }
 
           if (my2 > 1.0)
-            my2 = 1.0;
+            {
+              my2 = 1.0;
+            }
         }
 
       return true;

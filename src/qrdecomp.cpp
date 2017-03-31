@@ -26,12 +26,14 @@ namespace ice
     c = Vector(dim);
     d = Vector(dim);
 
-    for (k = 0; k < dim - 1; k++) // all but last column
+    for (k = 0; k < dim - 1; k++)   // all but last column
       {
         scale = 0.0;
 
         for (i = k; i < dim; i++)
-          scale = Max(scale, fabs(a[i][k]));
+          {
+            scale = Max(scale, fabs(a[i][k]));
+          }
 
         if (scale == 0.0)
           {
@@ -51,7 +53,10 @@ namespace ice
 
             sigma = fabs(sqrt(sum));
 
-            if (a[k][k] < 0) sigma = -sigma;
+            if (a[k][k] < 0)
+              {
+                sigma = -sigma;
+              }
 
             a[k][k] += sigma;
             c[k] = sigma * a[k][k];
@@ -62,11 +67,16 @@ namespace ice
                 sum = 0.0;
 
                 for (i = k; i < dim; i++)
-                  sum += a[i][k] * a[i][j];
+                  {
+                    sum += a[i][k] * a[i][j];
+                  }
 
                 tau = sum / c[k];
 
-                for (i = k; i < dim; i++) a[i][j] -= tau * a[i][k];
+                for (i = k; i < dim; i++)
+                  {
+                    a[i][j] -= tau * a[i][k];
+                  }
               }
           }
       }
@@ -100,28 +110,52 @@ namespace ice
       {
         double cn;
 
-        if (c[i] != 0.0) cn = 1 / c[i];
-        else cn = 0.0;
+        if (c[i] != 0.0)
+          {
+            cn = 1 / c[i];
+          }
+        else
+          {
+            cn = 0.0;
+          }
 
-        for (j = 0; j < i; j++) Ui[j] = 0.0;
+        for (j = 0; j < i; j++)
+          {
+            Ui[j] = 0.0;
+          }
 
-        for (j = i; j < dim; j++) Ui[j] = R[j][i];
+        for (j = i; j < dim; j++)
+          {
+            Ui[j] = R[j][i];
+          }
 
         for (j = 0; j < dim; j++)
           for (k = 0; k < dim; k++)
             {
               Qi[j][k] = -cn * Ui[j] * Ui[k];
 
-              if (k == j) Qi[j][k] += 1.0;
+              if (k == j)
+                {
+                  Qi[j][k] += 1.0;
+                }
             }
 
-        if (i == 0) Q = Qi;
-        else Q = Q * Qi;
+        if (i == 0)
+          {
+            Q = Qi;
+          }
+        else
+          {
+            Q = Q * Qi;
+          }
       }
 
 // Obere Dreiecksmatrix R
     for (i = 0; i < dim; i++)
-      for (j = i + 1; j < dim; j++) R[j][i] = 0.0;
+      for (j = i + 1; j < dim; j++)
+        {
+          R[j][i] = 0.0;
+        }
 
     for (i = 0; i < dim; i++)
       {

@@ -58,7 +58,9 @@ namespace ice
     sum = h.sum;
 
     for (i = 0; i < nClasses + 2; i++)
-      klasse[i] = h.klasse[i];
+      {
+        klasse[i] = h.klasse[i];
+      }
   }
 
   Hist::Hist(int number, double diff, double minval):
@@ -101,7 +103,10 @@ namespace ice
         return NO_MEM;
       }
 
-    for (i = 0; i < nClasses + 2; i++) klasse[i] = 0;
+    for (i = 0; i < nClasses + 2; i++)
+      {
+        klasse[i] = 0;
+      }
 
     lowerLimit = minval;
     classwidth = diff;
@@ -125,15 +130,27 @@ namespace ice
 
     kl = (int)floor((val - lowerLimit) / classwidth) + 1;
 
-    if (kl < 0) kl = 0;
+    if (kl < 0)
+      {
+        kl = 0;
+      }
 
-    if (kl > nClasses) kl = nClasses + 1;
+    if (kl > nClasses)
+      {
+        kl = nClasses + 1;
+      }
 
     klasse[kl] += count;
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
     sum += count;
     return OK;
@@ -145,7 +162,10 @@ namespace ice
   {
     int i;
 
-    if (this == &h) return *this;
+    if (this == &h)
+      {
+        return *this;
+      }
 
     Reset(h.nClasses, h.classwidth, h.lowerLimit); // reisInitialization as in h
     min = h.min;
@@ -153,7 +173,9 @@ namespace ice
     sum = h.sum;
 
     for (i = 0; i < nClasses + 2; i++)
-      klasse[i] = h.klasse[i];
+      {
+        klasse[i] = h.klasse[i];
+      }
 
     return *this;
   }
@@ -418,7 +440,10 @@ namespace ice
     Line(_GETX(8), _GETY(10), _GETX(12), _GETY(10), grw, 0, b);
 
     for (i = 0, maxn = 0; i < nClasses + 1; i++)
-      if (klasse[i] > maxn) maxn = klasse[i];
+      if (klasse[i] > maxn)
+        {
+          maxn = klasse[i];
+        }
 
     rxa = _GETX(9);
     rya = _GETY(7);
@@ -426,7 +451,9 @@ namespace ice
     rx = _GETX(11);
 
     for (; rxa <= rx; rxa++)
-      Line(_GETX(10), ry, rxa, rya, grw, 0, b);
+      {
+        Line(_GETX(10), ry, rxa, rya, grw, 0, b);
+      }
 
     rxa = _GETX(96);
     rya = _GETY(88);
@@ -434,7 +461,9 @@ namespace ice
     rx = _GETX(90);
 
     for (; rya <= ry; rya++)
-      Line(rx, rya, rxa, _GETY(90), grw, 0, b);
+      {
+        Line(rx, rya, rxa, _GETY(90), grw, 0, b);
+      }
 
     txtsize = dx / 600;
 
@@ -443,13 +472,20 @@ namespace ice
         sprintf(zahlstr, "%d", maxn);
         Text(zahlstr, _GETX(0), _GETY(8), grw, txtsize, b);
 
-        if (classwidth * nClasses < 0.1) fmt = "%9.3e";
+        if (classwidth * nClasses < 0.1)
+          {
+            fmt = "%9.3e";
+          }
         else
           {
             if ((fabs(lowerLimit) > 1000) || (fabs(lowerLimit + classwidth * nClasses) > 1000))
-              fmt = "%9.3e";
+              {
+                fmt = "%9.3e";
+              }
             else
-              fmt = "%7.3f";
+              {
+                fmt = "%7.3f";
+              }
           }
 
         sprintf(zahlstr, fmt.c_str(), lowerLimit);
@@ -463,7 +499,10 @@ namespace ice
         rx = _GETX(i * 75.0 / nClasses + 10);
         ry = _GETY(90.0 - klasse[i] * 80.0 / maxn);
 
-        for (; rxa <= rx; rxa++) Line(rxa, _GETY(90), rxa, ry, grw, 0, b);
+        for (; rxa <= rx; rxa++)
+          {
+            Line(rxa, _GETY(90), rxa, ry, grw, 0, b);
+          }
       }
 
     return OK;

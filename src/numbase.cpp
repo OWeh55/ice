@@ -52,7 +52,9 @@ namespace ice
     int res = d % div;
 
     if (res < 0)
-      res += div;
+      {
+        res += div;
+      }
 
     return res;
   }
@@ -74,7 +76,9 @@ namespace ice
     double result = fmod(v, adiv);
 
     if (result < 0)
-      result += adiv;
+      {
+        result += adiv;
+      }
 
     return result;
   }
@@ -84,28 +88,46 @@ namespace ice
   double CubRoot(double val)
   {
     if (val == 0.0)
-      return 0.0;
+      {
+        return 0.0;
+      }
 
     if (val < 0)
-      return -exp(log(-val) / 3.0);
+      {
+        return -exp(log(-val) / 3.0);
+      }
     else
-      return exp(log(val) / 3.0);
+      {
+        return exp(log(val) / 3.0);
+      }
   }
 
   /*******************************************************************/
   /*** Vorzeichen eines "int"-Wertes ***/
   int Sign(int val)
   {
-    if (val < 0) return -1;
-    if (val > 0) return 1;
+    if (val < 0)
+      {
+        return -1;
+      }
+    if (val > 0)
+      {
+        return 1;
+      }
     return 0;
   }
 
   /*** Vorzeichen eines "double"-Wertes ***/
   int Sign(double val)
   {
-    if (val < 0.0) return -1;
-    if (val > 0.0) return 1;
+    if (val < 0.0)
+      {
+        return -1;
+      }
+    if (val > 0.0)
+      {
+        return 1;
+      }
     return 0;
   }
 
@@ -113,8 +135,14 @@ namespace ice
   /*** double-Vorzeichen eines "double"-Wertes ***/
   double SignD(double val)
   {
-    if (val < 0.0) return -1.0;
-    if (val > 0.0) return 1.0;
+    if (val < 0.0)
+      {
+        return -1.0;
+      }
+    if (val > 0.0)
+      {
+        return 1.0;
+      }
     return 0.0;
   }
 
@@ -163,7 +191,9 @@ namespace ice
     double val = 0;
 
     for (int i = 0; i < n * 2; i++)
-      val += RandomD(sigma);
+      {
+        val += RandomD(sigma);
+      }
 
     val = (val - n * sigma);
     return val;
@@ -183,7 +213,9 @@ namespace ice
     double det = a1 * b2 - a2 * b1;
 
     if (det == 0)
-      return false;
+      {
+        return false;
+      }
 
     x1 = (i1 * b2 - i2 * b1) / det;
     x2 = (a1 * i2 - a2 * i1) / det;

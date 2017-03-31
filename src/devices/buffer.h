@@ -38,14 +38,16 @@ namespace ice
 
     void destroy()
     {
-      if (owner) // only if owner
+      if (owner)   // only if owner
         {
-          if (mapped)  // unmap or delete
+          if (mapped)   // unmap or delete
             {
               munmap(start, length);
             }
           else
-            delete [] start;
+            {
+              delete [] start;
+            }
         }
     }
 

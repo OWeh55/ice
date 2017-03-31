@@ -232,7 +232,9 @@ namespace ice
     const Image& operator = (const Image& i)
     {
       if (&i == this)
-        return *this;
+        {
+          return *this;
+        }
 
       freeimg();
       xsize = i.xsize;
@@ -448,7 +450,9 @@ namespace ice
       if ((unsigned int)p.x < (unsigned int)xsize)
         if ((unsigned int)p.y < (unsigned int)ysize)
           if ((unsigned int)value <= (unsigned int)maxval)
-            img->setP(p.x, p.y, value);
+            {
+              img->setP(p.x, p.y, value);
+            }
     }
 
     void setPixelClipped(int x, int y, int value) const
@@ -456,7 +460,9 @@ namespace ice
       if ((unsigned int)x < (unsigned int)xsize)
         if ((unsigned int)y < (unsigned int)ysize)
           if ((unsigned int)value <= (unsigned int)maxval)
-            img->setP(x, y, value);
+            {
+              img->setP(x, y, value);
+            }
     }
     //@}
 #undef FNAME
@@ -483,11 +489,17 @@ namespace ice
         }
 
       if (val <= 0)
-        img->setP(x, y, 0);
+        {
+          img->setP(x, y, 0);
+        }
       else if (val >= maxval)
-        img->setP(x, y, maxval);
+        {
+          img->setP(x, y, maxval);
+        }
       else
-        img->setP(x, y, val);
+        {
+          img->setP(x, y, val);
+        }
     }
 
     void setPixelLimited(IPoint p, int val) const
@@ -505,11 +517,17 @@ namespace ice
         }
 
       if (val <= 0)
-        img->setP(p.x, p.y, 0);
+        {
+          img->setP(p.x, p.y, 0);
+        }
       else if (val >= maxval)
-        img->setP(p.x, p.y, maxval);
+        {
+          img->setP(p.x, p.y, maxval);
+        }
       else
-        img->setP(p.x, p.y, val);
+        {
+          img->setP(p.x, p.y, val);
+        }
     }
     //@}
 #undef FNAME
@@ -644,10 +662,22 @@ namespace ice
      */
     bool inside(const Point& p) const
     {
-      if (p.x < -0.5) return false;
-      if (p.y < -0.5) return false;
-      if (p.x >= xsize - 0.5) return false;
-      if (p.y >= ysize - 0.5) return false;
+      if (p.x < -0.5)
+        {
+          return false;
+        }
+      if (p.y < -0.5)
+        {
+          return false;
+        }
+      if (p.x >= xsize - 0.5)
+        {
+          return false;
+        }
+      if (p.y >= ysize - 0.5)
+        {
+          return false;
+        }
       return true;
     }
 

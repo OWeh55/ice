@@ -40,7 +40,9 @@ namespace ice
 
     for (int j = 0; j < res.rows(); j++)
       for (int k = 0; k < res.cols(); k++)
-        res[j][k] = v[i++];
+        {
+          res[j][k] = v[i++];
+        }
 
     return res;
   }

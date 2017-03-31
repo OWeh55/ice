@@ -74,9 +74,15 @@ namespace ice
   /************************************************/
   void pfit_DeleteCorner(pfit_Corner* cr)
   {
-    if (cr->prev != nullptr) cr->prev->next = cr->next;
+    if (cr->prev != nullptr)
+      {
+        cr->prev->next = cr->next;
+      }
 
-    if (cr->next != nullptr) cr->next->prev = cr->prev;
+    if (cr->next != nullptr)
+      {
+        cr->next->prev = cr->prev;
+      }
 
     free(cr);
     return;
@@ -86,9 +92,15 @@ namespace ice
   {
     pfit_Corner* crf;
 
-    if (crl == nullptr) return;
+    if (crl == nullptr)
+      {
+        return;
+      }
 
-    while (crl->next != nullptr) crl = crl->next;
+    while (crl->next != nullptr)
+      {
+        crl = crl->next;
+      }
 
     while (crl != nullptr)
       {
@@ -123,9 +135,15 @@ namespace ice
   {
     int x, y;
 
-    if (crl == nullptr) return;
+    if (crl == nullptr)
+      {
+        return;
+      }
 
-    while (crl->prev != nullptr) crl = crl->prev;
+    while (crl->prev != nullptr)
+      {
+        crl = crl->prev;
+      }
 
     while (crl != nullptr)
       {
@@ -142,7 +160,10 @@ namespace ice
   {
     int adn, flg;
 
-    while (crl->prev != nullptr) crl = crl->prev;
+    while (crl->prev != nullptr)
+      {
+        crl = crl->prev;
+      }
 
     while (crl != nullptr)
       {
@@ -155,7 +176,10 @@ namespace ice
                 crl->adr += adn / 2;
                 pfit_DeleteCorner(crl->next);
               }
-            else flg = false;
+            else
+              {
+                flg = false;
+              }
           }
 
         crl = crl->next;
@@ -180,22 +204,40 @@ namespace ice
         /*letzter Eckpunkt*/
         cre = crl;
 
-        while (cre->next != nullptr) cre = cre->next;
+        while (cre->next != nullptr)
+          {
+            cre = cre->next;
+          }
       }
 
     /*erster Eckpunkt*/
     cr2 = crl;
 
-    while (cr2->prev != nullptr) cr2 = cr2->prev;
+    while (cr2->prev != nullptr)
+      {
+        cr2 = cr2->prev;
+      }
 
-    if (cr2->next == nullptr)return (cr2);
+    if (cr2->next == nullptr)
+      {
+        return (cr2);
+      }
 
-    if (!closed) cr2 = cr2->next;
+    if (!closed)
+      {
+        cr2 = cr2->next;
+      }
 
     while (cr2->next != nullptr)
       {
-        if (cr2->prev == nullptr) cr1 = cre;
-        else cr1 = cr2->prev;
+        if (cr2->prev == nullptr)
+          {
+            cr1 = cre;
+          }
+        else
+          {
+            cr1 = cr2->prev;
+          }
 
         cr3 = cr2->next;
         a1 = cr1->adr;
@@ -204,8 +246,13 @@ namespace ice
         d = sqrt(Sqr(x[a3] - x[a1]) + Sqr(y[a3] - y[a1]));
 
         if (d > 0.5)
-          d = fabs((x[a2] - x[a1]) * (y[a3] - y[a2]) - (x[a3] - x[a2]) * (y[a2] - y[a1])) / 2 / d;
-        else d = dmax + 1;
+          {
+            d = fabs((x[a2] - x[a1]) * (y[a3] - y[a2]) - (x[a3] - x[a2]) * (y[a2] - y[a1])) / 2 / d;
+          }
+        else
+          {
+            d = dmax + 1;
+          }
 
         if (d < dmax)
           {
@@ -233,14 +280,20 @@ namespace ice
                 d1 = fabs(par[0] - cc * p1[0] - ss * p1[1]);
                 d2 = fabs(par[0] - cc * p2[0] - ss * p2[1]);
 
-                if (d1 < dist && d2 < dist) pfit_DeleteCorner(cr2);
+                if (d1 < dist && d2 < dist)
+                  {
+                    pfit_DeleteCorner(cr2);
+                  }
               }
           }
 
         cr2 = cr3;
       }
 
-    while (cr2->prev != nullptr) cr2 = cr2->prev;
+    while (cr2->prev != nullptr)
+      {
+        cr2 = cr2->prev;
+      }
 
     return (cr2);
   }
@@ -253,14 +306,23 @@ namespace ice
     int i, a1, a2, admax = 0;
     double d, dmax = 0;
 
-    if ((cr1 == nullptr) || (cr2 == nullptr)) return (ERROR);
+    if ((cr1 == nullptr) || (cr2 == nullptr))
+      {
+        return (ERROR);
+      }
 
     a1 = cr1->adr;
     a2 = cr2->adr;
 
-    if (a1 == a2) return (ERROR);
+    if (a1 == a2)
+      {
+        return (ERROR);
+      }
 
-    if ((a2 - a1) < mlng) return (OK);
+    if ((a2 - a1) < mlng)
+      {
+        return (OK);
+      }
 
     p1[0] = (double)pl->xptr[a1];
     p1[1] = (double)pl->yptr[a1];
@@ -289,9 +351,15 @@ namespace ice
           {
             pfit_InsertCorner(cr3, cr1);
 
-            if (pfit_Split(pl, cr1, cr3, mdist, mlng) != OK) return (ERROR);
+            if (pfit_Split(pl, cr1, cr3, mdist, mlng) != OK)
+              {
+                return (ERROR);
+              }
 
-            if (pfit_Split(pl, cr3, cr2, mdist, mlng) != OK) return (ERROR);
+            if (pfit_Split(pl, cr3, cr2, mdist, mlng) != OK)
+              {
+                return (ERROR);
+              }
 
             return (OK);
           }
@@ -305,7 +373,10 @@ namespace ice
     Segment segn;
     int rc;
 
-    if (seg == nullptr) return (ERROR);
+    if (seg == nullptr)
+      {
+        return (ERROR);
+      }
 
     segn = (Segment)malloc(sizeof(struct Segment_));
     OffMessage();
@@ -322,7 +393,10 @@ namespace ice
     segn->next = seg->next;
     seg->next = segn;
 
-    if (segn->next != nullptr) segn->next->prev = segn;
+    if (segn->next != nullptr)
+      {
+        segn->next->prev = segn;
+      }
 
     segn->typ = 1;
     segn->p0[0] = p1[0];
@@ -374,14 +448,20 @@ namespace ice
     PointList pl;
     int a;
 
-    if (crl == nullptr) return (nullptr);
+    if (crl == nullptr)
+      {
+        return (nullptr);
+      }
 
     segl = nullptr;
     seg = nullptr;
     pl = crl->pl;
 
     /*zum Listenanfang*/
-    while (crl->prev != nullptr) crl = crl->prev;
+    while (crl->prev != nullptr)
+      {
+        crl = crl->prev;
+      }
 
     a0 = crl->adr;
 
@@ -413,7 +493,10 @@ namespace ice
 
     seg1 = seg2 = FirstSegment(segl);
 
-    if (seg1 == nullptr) return (nullptr);
+    if (seg1 == nullptr)
+      {
+        return (nullptr);
+      }
 
     if (closed)
       {
@@ -493,9 +576,15 @@ namespace ice
         cr3 = pfit_NewCorner(pl, admax);
         pfit_InsertCorner(cr3, cr1);
 
-        if (pfit_Split(pl, cr1, cr3, mdist, mlng) != OK) return (nullptr);
+        if (pfit_Split(pl, cr1, cr3, mdist, mlng) != OK)
+          {
+            return (nullptr);
+          }
 
-        if (pfit_Split(pl, cr3, cr2, mdist, mlng) != OK) return (nullptr);
+        if (pfit_Split(pl, cr3, cr2, mdist, mlng) != OK)
+          {
+            return (nullptr);
+          }
 
         pfit_DeleteCorner(cr2);   /*identisch mit cr1*/
       }
@@ -559,7 +648,10 @@ namespace ice
         return nullptr;
       }
 
-    if (!closed) i++;
+    if (!closed)
+      {
+        i++;
+      }
 
     plf = NewPointList(i);
     seg = segl;
@@ -573,7 +665,10 @@ namespace ice
         seg = seg->next;
       }
 
-    if (!closed) PutPoint(plf, i, seg1->p1[0], seg1->p1[1], 1.0);
+    if (!closed)
+      {
+        PutPoint(plf, i, seg1->p1[0], seg1->p1[1], 1.0);
+      }
 
     FreeSegmentList(segl);
     return (plf);

@@ -80,7 +80,9 @@ namespace ice
   int Region::trimY()
   {
     if (sl.size() == 0)
-      return OK;
+      {
+        return OK;
+      }
 
     while ((sl.size() > 0) && (sl[0].empty()))
       {
@@ -116,7 +118,9 @@ namespace ice
       {
         int axa = i->getMax();
         if (xa < axa)
-          xa = axa;
+          {
+            xa = axa;
+          }
       }
     return xa;
   }
@@ -130,7 +134,9 @@ namespace ice
       {
         int axi = i->getMin();
         if (xi < axi)
-          xi = axi;
+          {
+            xi = axi;
+          }
       }
     return xi;
   }
@@ -196,15 +202,21 @@ namespace ice
     int yh = y - y0;
 
     if (yh < 0)
-      return;
+      {
+        return;
+      }
 
     if (yh >= (int)sl.size())
-      return;
+      {
+        return;
+      }
 
     sl[yh].del(x);
 
     if (sl[yh].empty())
-      trimY();
+      {
+        trimY();
+      }
   }
 
   void Region::del(const Region& r)
@@ -212,7 +224,9 @@ namespace ice
     for (int y = r.y0; y < r.y0 + (int)r.sl.size(); y++)
       {
         if (inside(y))
-          sl[y - y0].del(r.sl[y - r.y0]);
+          {
+            sl[y - y0].del(r.sl[y - r.y0]);
+          }
       }
 
     trimY();
@@ -225,7 +239,9 @@ namespace ice
         int yh = y - y0;
 
         if ((yh >= 0) && (yh < (int)sl.size()))
-          sl[yh].del(x1, x2);
+          {
+            sl[yh].del(x1, x2);
+          }
       }
 
     trimY();
@@ -243,7 +259,10 @@ namespace ice
                 sl[y].intersect(r.sl[y + y0 - r.y0]);
               }
           }
-        else sl[y].clear();
+        else
+          {
+            sl[y].clear();
+          }
       }
     trimY();
   }
@@ -252,7 +271,9 @@ namespace ice
   int Region::calcMoments(Moments& m) const
   {
     for (int y = 0; y < (int)sl.size(); y++)
-      sl[y].calcMoments(m, y + y0);
+      {
+        sl[y].calcMoments(m, y + y0);
+      }
 
     return OK;
   }
@@ -266,10 +287,15 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    if (val == -1) return OK;
+    if (val == -1)
+      {
+        return OK;
+      }
 
     for (int y = 0; y < (int)sl.size(); y++)
-      sl[y].draw(y + y0, img, val);
+      {
+        sl[y].draw(y + y0, img, val);
+      }
 
     return OK;
   }
@@ -280,20 +306,26 @@ namespace ice
     getPoints(points);
     Point sum(0, 0);
     for (int i = 0; i < (int)points.size(); i++)
-      sum += points[i];
+      {
+        sum += points[i];
+      }
     return 1.0 / points.size() * sum;
   }
 
   void Region::getPoints(vector<IPoint>& points) const
   {
     for (int y = 0; y < (int)sl.size(); y++)
-      sl[y].getPoints(points, y + y0);
+      {
+        sl[y].getPoints(points, y + y0);
+      }
   }
 
   void Region::getSegments(vector<RowSegment>& esl) const
   {
     for (int y = 0; y < (int)sl.size(); y++)
-      sl[y].getSegments(esl, y + y0);
+      {
+        sl[y].getSegments(esl, y + y0);
+      }
   }
 
   std::ostream& operator<<(std::ostream& out, const Region& s)

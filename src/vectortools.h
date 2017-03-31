@@ -34,7 +34,9 @@ namespace ice
   T medianValue(std::vector<T> v) // call by value = copy !!
   {
     if (v.size() < 3)
-      return v[0]; // everything is median
+      {
+        return v[0];  // everything is median
+      }
     sort(v.begin(), v.end());
     return v[v.size() / 2];
   }
@@ -45,7 +47,10 @@ namespace ice
     T min = v[0];
     for (auto d : v)
       {
-        if (d < min) min = d;
+        if (d < min)
+          {
+            min = d;
+          }
       }
 
     return min;
@@ -57,7 +62,10 @@ namespace ice
     double max = v[0];
     for (auto d : v)
       {
-        if (d > max) max = d;
+        if (d > max)
+          {
+            max = d;
+          }
       }
 
     return max;

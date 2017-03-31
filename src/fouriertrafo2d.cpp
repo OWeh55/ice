@@ -45,10 +45,14 @@ namespace ice
   void FourierTrafo2D::transformIfNeeded() throw(std::logic_error)
   {
     if (state >= sDone)
-      return;
+      {
+        return;
+      }
 
     if (state != sInput)
-      throw logic_error("no input specified");
+      {
+        throw logic_error("no input specified");
+      }
 
     FourierTrafo trRow(cols, forward, centered);
     for (int y = 0; y < rows; ++y)
@@ -91,7 +95,9 @@ namespace ice
 
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
-        real[y][x] = v[y][x] * factor;
+        {
+          real[y][x] = v[y][x] * factor;
+        }
 
     imag.set(0);
     state = sInput;
@@ -120,7 +126,9 @@ namespace ice
     int v0 = (sign == SIGNED) ? (v.maxval + 1) / 2 : 0;
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
-        real[y][x] = (v.getPixel(x, y) - v0) * factor;
+        {
+          real[y][x] = (v.getPixel(x, y) - v0) * factor;
+        }
     imag.set(0);
     state = sInput;
   }
@@ -147,7 +155,9 @@ namespace ice
 
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
-        real[y][x] = v.getPixel(x, y);
+        {
+          real[y][x] = v.getPixel(x, y);
+        }
 
     imag.set(0);
     state = sInput;
@@ -172,7 +182,9 @@ namespace ice
 
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
-        real[y][x] = v[y][x];
+        {
+          real[y][x] = v[y][x];
+        }
 
     imag.set(0);
     state = sInput;
@@ -193,7 +205,7 @@ namespace ice
 
   void FourierTrafo2D::checkParameter(int nRows, int nCols)
   {
-    if (state < sPara) // not set
+    if (state < sPara)   // not set
       {
         setParameter(nRows, nCols);
       }

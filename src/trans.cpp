@@ -212,7 +212,9 @@ namespace ice
         has_temp = true;
       }
     else
-      imgs = imgss;
+      {
+        imgs = imgss;
+      }
 
     for (i = 0; i < 3; i++)
       {
@@ -239,26 +241,38 @@ namespace ice
     nx = (double*)malloc(sx * sizeof(double));
     ny = (double*)malloc(sy * sizeof(double));
 
-    for (i = 0; i < sx; i++) /*look-up-tables f. Zeilen bzw Spalten*/
-      nx[i] = (double)i / (double)(sx - i);
+    for (i = 0; i < sx; i++)   /*look-up-tables f. Zeilen bzw Spalten*/
+      {
+        nx[i] = (double)i / (double)(sx - i);
+      }
 
     for (i = 0; i < sy; i++)
-      ny[i] = (double)i / (double)(sy - i);
+      {
+        ny[i] = (double)i / (double)(sy - i);
+      }
 
     mx1 = (pf2[2][0][0] - pf2[1][0][0]) / (pf2[1][0][0] - pf2[0][0][0]);
     my1 = (pf2[0][2][1] - pf2[0][1][1]) / (pf2[0][1][1] - pf2[0][0][1]);
 
     for (i = 0; i < 3; i++)
-      my2[i] = sqrt((Sqr(pf1[i][1][0] - pf1[i][0][0]) + Sqr(pf1[i][1][1] - pf1[i][0][1])) / (Sqr(pf1[i][2][0] - pf1[i][1][0]) + Sqr(pf1[i][2][1] - pf1[i][1][1])));
+      {
+        my2[i] = sqrt((Sqr(pf1[i][1][0] - pf1[i][0][0]) + Sqr(pf1[i][1][1] - pf1[i][0][1])) / (Sqr(pf1[i][2][0] - pf1[i][1][0]) + Sqr(pf1[i][2][1] - pf1[i][1][1])));
+      }
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 2; j++)
-        p[i][j] = pf1[i][0][j];          /*Bezugspunkte erste Zeile*/
+        {
+          p[i][j] = pf1[i][0][j];  /*Bezugspunkte erste Zeile*/
+        }
 
     if (mode == 0)
-      TrLine(imgs, imgd, 0, p, nx, mx1);
+      {
+        TrLine(imgs, imgd, 0, p, nx, mx1);
+      }
     else
-      TrLineI(imgs, imgd, 0, p, nx, mx1);
+      {
+        TrLineI(imgs, imgd, 0, p, nx, mx1);
+      }
 
     for (y = 1; y < sy; y++)
       {
@@ -270,24 +284,37 @@ namespace ice
           }
 
         if (mode == 0)
-          TrLine(imgs, imgd, y, p, nx, mx1);
+          {
+            TrLine(imgs, imgd, y, p, nx, mx1);
+          }
         else
-          TrLineI(imgs, imgd, y, p, nx, mx1);
+          {
+            TrLineI(imgs, imgd, y, p, nx, mx1);
+          }
       }
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 2; j++)
-        p[i][j] = pf1[i][2][j];          /*Bezugspunkte letzte Zeile*/
+        {
+          p[i][j] = pf1[i][2][j];  /*Bezugspunkte letzte Zeile*/
+        }
 
     if (mode == 0)
-      TrLine(imgs, imgd, sy, p, nx, mx1);
+      {
+        TrLine(imgs, imgd, sy, p, nx, mx1);
+      }
     else
-      TrLineI(imgs, imgd, sy, p, nx, mx1);
+      {
+        TrLineI(imgs, imgd, sy, p, nx, mx1);
+      }
 
     free(nx);
     free(ny);
 
-    if (has_temp) FreeImg(imgs);
+    if (has_temp)
+      {
+        FreeImg(imgs);
+      }
 
     return OK;
   }
@@ -383,7 +410,10 @@ namespace ice
     const double eps = 1e-30;
     double fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
-    if (fac < eps) return ERROR;
+    if (fac < eps)
+      {
+        return ERROR;
+      }
 
     ScaleMatrix((double*)Trans, 3, 3, 1 / sqrt(fac), (double*)Trans);
     return OK;
@@ -458,7 +488,9 @@ namespace ice
         has_temp = true;
       }
     else
-      imgs = imgss;
+      {
+        imgs = imgss;
+      }
 
     //      for (y=0;y<3;y++)
     //        {
@@ -483,7 +515,7 @@ namespace ice
     nxy = new double[imgd.ysize];
     nyy = new double[imgd.ysize];
 
-    for (x = 0; x < sx; x++) //look-up-tables f. Zeilen bzw Spalten
+    for (x = 0; x < sx; x++)   //look-up-tables f. Zeilen bzw Spalten
       {
         nxx[x] = tm[0][0] * x;
         nyx[x] = tm[1][0] * x;
@@ -537,7 +569,10 @@ namespace ice
     delete [] nxy;
     delete [] nyy;
 
-    if (has_temp) FreeImg(imgs);
+    if (has_temp)
+      {
+        FreeImg(imgs);
+      }
 
     return OK;
   }

@@ -119,7 +119,9 @@ namespace ice
     int points = pl->lng;
 
     for (int i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     for (int i = 0; i < pl->lng; i++)
       {
@@ -135,7 +137,10 @@ namespace ice
 
     CorrectMoments(m);
 
-    if (fabs(m[i00]) < EPSILON) return ERROR;
+    if (fabs(m[i00]) < EPSILON)
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -148,7 +153,9 @@ namespace ice
     int points = pl.size();
 
     for (int i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     for (int i = 0; i < points; i++)
       {
@@ -159,7 +166,9 @@ namespace ice
     CorrectMoments(m);
 
     if (fabs(m[i00]) < EPSILON)
-      return ERROR;
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -171,7 +180,9 @@ namespace ice
     int points = pl.rows();
 
     for (int i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     for (int i = 0; i < pl.rows(); i++)
       {
@@ -187,7 +198,10 @@ namespace ice
 
     CorrectMoments(m);
 
-    if (fabs(m[i00]) < EPSILON) return ERROR;
+    if (fabs(m[i00]) < EPSILON)
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -211,7 +225,9 @@ namespace ice
       }
 
     for (i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     a3 = a2 + 1;
 
@@ -220,11 +236,20 @@ namespace ice
 
     do
       {
-        if (i == pl->lng) i = 0;
+        if (i == pl->lng)
+          {
+            i = 0;
+          }
 
-        if (j == a3) j = a1;
+        if (j == a3)
+          {
+            j = a1;
+          }
 
-        if (j == pl->lng) j = 0;
+        if (j == pl->lng)
+          {
+            j = 0;
+          }
 
         x1 = pl->xptr[i];
         y1 = pl->yptr[i];
@@ -238,7 +263,10 @@ namespace ice
 
     CorrectMoments(m);
 
-    if (fabs(m[i00]) < 1e-20) return ERROR;
+    if (fabs(m[i00]) < 1e-20)
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -249,15 +277,22 @@ namespace ice
   void CopyMoments(const double ms[15], double md[15])
   {
     for (unsigned int i = 0; i < 15; i++)
-      md[i] = ms[i];
+      {
+        md[i] = ms[i];
+      }
   }
 
   int PosSign(const double ms[15], double md[15])
   {
     if (ms[i00] < 0)
-      for (unsigned int i = 0; i < 15; i++) md[i] = -ms[i];
+      for (unsigned int i = 0; i < 15; i++)
+        {
+          md[i] = -ms[i];
+        }
     else
-      CopyMoments(ms, md);
+      {
+        CopyMoments(ms, md);
+      }
 
     return OK;
   }
@@ -265,7 +300,10 @@ namespace ice
   int PosSign(double ms[15])
   {
     if (ms[i00] < 0)
-      for (unsigned int i = 0; i < 15; i++) ms[i] = -ms[i];
+      for (unsigned int i = 0; i < 15; i++)
+        {
+          ms[i] = -ms[i];
+        }
 
     return OK;
   }
@@ -470,7 +508,9 @@ namespace ice
     double mx[15];
 
     for (int i = 0; i < 15; i++)
-      mx[i] = m1[i];
+      {
+        mx[i] = m1[i];
+      }
 
     m2[i00] = mx[i00];
     m2[1]   = c * mx[1] - s * mx[2];
@@ -913,9 +953,15 @@ namespace ice
         k = 0;
         l = 3;
 
-        if (sol[0].real() == sol[1].real()) k = 1;
+        if (sol[0].real() == sol[1].real())
+          {
+            k = 1;
+          }
 
-        if (sol[1].real() == sol[2].real()) l = 2;
+        if (sol[1].real() == sol[2].real())
+          {
+            l = 2;
+          }
       }
 
     //Normallagen für alle unterschiedlichen reellen Lösungen berechnen
@@ -1181,23 +1227,31 @@ namespace ice
 
     double fak = 1.0 / m[0] * alpha;
 
-    for (int i = 1; i < 3; i++) // Momente 1. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 1; i < 3; i++)   // Momente 1. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     fak *= alpha;
 
-    for (int i = 3; i < 6; i++) // Momente 2. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 3; i < 6; i++)   // Momente 2. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     fak *= alpha;
 
-    for (int i = 6; i < 10; i++) // Momente 3. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 6; i < 10; i++)   // Momente 3. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     fak *= alpha;
 
-    for (int i = 10; i < 15; i++) // Momente 4. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 10; i < 15; i++)   // Momente 4. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     return OK;
   }
@@ -1244,12 +1298,16 @@ namespace ice
     s3 = 0.0;
 
     for (int i = 6; i < 10; i++)
-      s3 += mx[i] * mx[i]; // Summe 3. Mom.
+      {
+        s3 += mx[i] * mx[i];  // Summe 3. Mom.
+      }
 
     s4 = 0.0;
 
     for (int i = 10; i < 15; i++)
-      s4 += mx[i] * mx[i]; // Summe 4. Mom.
+      {
+        s4 += mx[i] * mx[i];  // Summe 4. Mom.
+      }
 
     s3 /= 4;
     s4 /= 5;
@@ -1286,7 +1344,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trx[0][i][j] = tr2[i][j];
+        {
+          trx[0][i][j] = tr2[i][j];
+        }
 
     // Drehungen um 90 Grad
     for (i = 0, j = 1; j < 4; i++, j++)
@@ -1330,7 +1390,9 @@ namespace ice
         double fehlersumme = 0.0;
 
         for (j = i1; j < i2; j++)
-          fehlersumme += Sqr(mn1[j] - m2[j]);
+          {
+            fehlersumme += Sqr(mn1[j] - m2[j]);
+          }
 
         if (fehlersumme < smin)
           {
@@ -1342,7 +1404,9 @@ namespace ice
     // Rückgabe der Transformation mit minimalem Abstand
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        tr[i][j] = tra[imin][i][j];
+        {
+          tr[i][j] = tra[imin][i][j];
+        }
 
     return smin;
   }
@@ -1363,7 +1427,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        m[i][j] = oldtr[i][j];
+        {
+          m[i][j] = oldtr[i][j];
+        }
 
     tr = Trafo(m);
     return ret;

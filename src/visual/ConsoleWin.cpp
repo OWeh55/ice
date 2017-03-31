@@ -198,9 +198,13 @@ namespace ice
   void iceConsoleWin::OnGetChar(wxEvent& event)
   {
     if (!KeyBuffer.isEmpty())
-      WakeUpUserThread();
+      {
+        WakeUpUserThread();
+      }
     else
-      ShallProcessKeyEvents = true;
+      {
+        ShallProcessKeyEvents = true;
+      }
   }
 #endif
 
@@ -231,7 +235,9 @@ namespace ice
             LastCursorPos = CurrContent.CursorPos;
           }
         else
-          DC.SetTextForeground(GlobalColorTable[CurrContent[CurrContent.CursorPos].Attribs.BgColor]);
+          {
+            DC.SetTextForeground(GlobalColorTable[CurrContent[CurrContent.CursorPos].Attribs.BgColor]);
+          }
 
         DC.DrawText(wxString(wxT('_')), // the text to draw
                     LastCursorPos.x * CharWidth + border, // the position
@@ -322,7 +328,10 @@ namespace ice
 #else
           wxChar c[7];// up to 6 characters if UTF8 is used
           int bytes = wctomb((char*)c, CurrContent.characters[y][x].Char);
-          if (bytes > 0) c[bytes] = 0;
+          if (bytes > 0)
+            {
+              c[bytes] = 0;
+            }
 #endif
           dc.DrawText(wxString(c),                    // the text to draw
                       x * CharWidth + border, y * CharHeight + border); // the position
@@ -345,7 +354,9 @@ namespace ice
           {
             for (int y = 0; y < SCREEN_YS - 1; y++)
               for (int x = 0; x < SCREEN_XS; x++)
-                CurrContent.characters[y][x] = CurrContent.characters[y + 1][x];
+                {
+                  CurrContent.characters[y][x] = CurrContent.characters[y + 1][x];
+                }
 
             // clear the last (newly appeared) line
             for (int x = 0; x < SCREEN_XS; x++)
@@ -490,7 +501,9 @@ namespace ice
   {
     // if the content stack is empty then simply ignore this command
     if (ContentStack.empty())
-      return;
+      {
+        return;
+      }
 
     CurrContent = ContentStack.top();
 
@@ -524,7 +537,9 @@ namespace ice
 
     // if the text should be displayed highlighted, choose brighter colors
     if (CurrContent.TextAttributes.getHighlight() == TextAttribs::Highlighted)
-      CurrContent.AttribsCompressed.FgColor += 8;
+      {
+        CurrContent.AttribsCompressed.FgColor += 8;
+      }
   }
 
   void iceConsoleWin::SetAttribute(int FgColor, int BgColor, int Inv, int High)
@@ -587,11 +602,23 @@ namespace ice
         break;
       }
 
-    if (Inv == 1) TA.setInvert(TextAttribs::Inverted);
-    else if (Inv == 0) TA.setInvert(TextAttribs::NotInverted);
+    if (Inv == 1)
+      {
+        TA.setInvert(TextAttribs::Inverted);
+      }
+    else if (Inv == 0)
+      {
+        TA.setInvert(TextAttribs::NotInverted);
+      }
 
-    if (High == 1) TA.setHighlight(TextAttribs::Highlighted);
-    else if (High == 0) TA.setHighlight(TextAttribs::NotHighlighted);
+    if (High == 1)
+      {
+        TA.setHighlight(TextAttribs::Highlighted);
+      }
+    else if (High == 0)
+      {
+        TA.setHighlight(TextAttribs::NotHighlighted);
+      }
 
     SetTextAttributes(TA);
   }
@@ -611,7 +638,10 @@ namespace ice
 
   int iceConsoleWin::InsertWChar(wchar_t c)
   {
-    if (!isOpen) Open();
+    if (!isOpen)
+      {
+        Open();
+      }
 
     // Basically we only have to insert the character into our buffer,
     // but we also have to deal with an awefull lot of escape sequences.
@@ -654,7 +684,9 @@ namespace ice
         // we go to the next multiple of 8 in the current line but at least 1 character.
         ScrolledLines = PutChar(' ');
         while (CurrContent.CursorPos.x % 8 != 1)
-          ScrolledLines += PutChar(' ');
+          {
+            ScrolledLines += PutChar(' ');
+          }
         break;
 
       case '\b': // a.k.a. backspace(BS)
@@ -686,10 +718,12 @@ namespace ice
     cs[1] = 0;
     rc = mbrtowc(&wc, cs, 1, &ps);
 
-    if (rc == (size_t) - 2) // incomplete multibytesequence
-      return 0;
+    if (rc == (size_t) - 2)   // incomplete multibytesequence
+      {
+        return 0;
+      }
 
-    if (rc == (size_t) - 1) // illegal sequence
+    if (rc == (size_t) - 1)   // illegal sequence
       {
         cs[0] = 0;
         mbrtowc(&wc, cs, 1, &ps); // reset machine (is this correct ?)
@@ -709,7 +743,10 @@ namespace ice
     int ScrolledLines = InsertChar(c, needRefresh);
 
     // Since we changed the contents of the console window we have to repaint.
-    if (needRefresh) Refresh();
+    if (needRefresh)
+      {
+        Refresh();
+      }
 
     return ScrolledLines;
   }
@@ -753,7 +790,10 @@ namespace ice
   {
     //    SetFocus();
     // open Alphanumerical terminal if neccessary
-    if (!isOpen) Open();
+    if (!isOpen)
+      {
+        Open();
+      }
 
     // wait while keyboard buffer is empty
     WaitWhileKeybufferEmpty();
@@ -763,7 +803,10 @@ namespace ice
 
   int iceConsoleWin::GetKey()
   {
-    if (!isOpen) Open();
+    if (!isOpen)
+      {
+        Open();
+      }
     if (KeyBuffer.isEmpty())
       {
 #ifdef WIN32
@@ -780,7 +823,10 @@ namespace ice
   {
     SetFocus();
     // open Alphanumerical terminal if neccessary
-    if (!isOpen) Open();
+    if (!isOpen)
+      {
+        Open();
+      }
 
     // wait while keyboard buffer is empty
     WaitWhileKeybufferEmpty();
@@ -790,7 +836,10 @@ namespace ice
 
   int iceConsoleWin::GetKeyW()
   {
-    if (!isOpen) Open();
+    if (!isOpen)
+      {
+        Open();
+      }
     if (KeyBuffer.isEmpty())
       {
 #ifdef WIN32
@@ -844,7 +893,9 @@ namespace ice
         for (iceCursor Cursor = FirstCursorPos;
              Cursor < LastCursorPos;
              Cursor++)
-          CurrContent[Cursor].Char = ' ';
+          {
+            CurrContent[Cursor].Char = ' ';
+          }
 
         SetCursorPos(FirstCursorPos);
         Print(ibuffer.substr(0, ipos));
@@ -861,7 +912,10 @@ namespace ice
           case WXK_ESCAPE:
           case WXK_DOWN:
           case WXK_UP:
-            if (!control) break; // do nothing if control = false
+            if (!control)
+              {
+                break;  // do nothing if control = false
+              }
           // in case control is true -> abort
 
           case WXK_RETURN:
@@ -895,19 +949,28 @@ namespace ice
 
           case WXK_LEFT:
           {
-            if (ipos > 0) ipos--;
+            if (ipos > 0)
+              {
+                ipos--;
+              }
           }
           break;
 
           case WXK_RIGHT:
           {
-            if (ipos < ibuffer.length()) ipos++;
+            if (ipos < ibuffer.length())
+              {
+                ipos++;
+              }
           }
           break;
 
-          case WXK_BACK: // the backspace key
+          case WXK_BACK:   // the backspace key
           {
-            if (ipos == 0) break;
+            if (ipos == 0)
+              {
+                break;
+              }
             ipos--;
             ibuffer.erase(ibuffer.begin() + ipos);
           }

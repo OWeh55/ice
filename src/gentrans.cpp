@@ -53,7 +53,10 @@ namespace ice
     const double eps = 1e-30;
     double fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
-    if (fac < eps) return ERROR;
+    if (fac < eps)
+      {
+        return ERROR;
+      }
 
     ScaleMatrix((double*)Trans, 3, 3, 1 / sqrt(fac), (double*)Trans);
     return OK;
@@ -396,7 +399,10 @@ namespace ice
         return (ERROR);
       }
 
-    if (A == NULL || ih == NULL) return (ERROR);
+    if (A == NULL || ih == NULL)
+      {
+        return (ERROR);
+      }
 
     for (i = 0; i < pl1->lng; i++)
       {

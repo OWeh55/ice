@@ -67,7 +67,9 @@ namespace ice
     {
       // initialisation - every element is root of it´s own tree
       for (unsigned int i = 0; i < sarray.size(); i++)
-        sarray[i] = i;
+        {
+          sarray[i] = i;
+        }
     }
 
   }; // class DisjointSets

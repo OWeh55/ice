@@ -95,20 +95,28 @@ namespace ice
   VideoFile::~VideoFile()
   {
     if (reader)
-      delete reader;
+      {
+        delete reader;
+      }
     if (writer)
-      delete writer;
+      {
+        delete writer;
+      }
   }
 
   int VideoFile::close()
   {
     if (reader)
-      delete reader;
+      {
+        delete reader;
+      }
 
     reader = nullptr;
 
     if (writer)
-      delete writer;
+      {
+        delete writer;
+      }
 
     writer = nullptr;
     return true;
@@ -243,7 +251,9 @@ namespace ice
     RETURN_IF_FAILED(ok = reader->read(r, g, b), false);
 
     if (!ok)
-      return false;
+      {
+        return false;
+      }
 
     IPoint ip;
     for (ip.y = 0; ip.y < img->ysize; ip.y++)
@@ -285,7 +295,9 @@ namespace ice
     RETURN_IF_FAILED(ok = reader->read(imgr, imgg, imgb), false);
 
     if (!ok)
-      return false;
+      {
+        return false;
+      }
 
     return true;
   }
@@ -302,7 +314,9 @@ namespace ice
     RETURN_IF_FAILED(ok = reader -> read(), false);
 
     if (!ok)
-      return false;
+      {
+        return false;
+      }
 
     return true;
   }
@@ -312,9 +326,13 @@ namespace ice
   void VideoFile::getPara(int& xsize, int& ysize, int& maxval, int& fpsp) const
   {
     if (reader)
-      reader->getPara(xsize, ysize, maxval, fpsp);
+      {
+        reader->getPara(xsize, ysize, maxval, fpsp);
+      }
     else if (writer)
-      writer->getPara(xsize, ysize, maxval, fpsp);
+      {
+        writer->getPara(xsize, ysize, maxval, fpsp);
+      }
     else
       {
         Message(FNAME, M_NOT_OPEN, WRONG_STATE);
@@ -374,9 +392,13 @@ namespace ice
   int VideoFile::FrameNumber() const
   {
     if (writer)
-      return writer->FrameNumber();
+      {
+        return writer->FrameNumber();
+      }
     else if (reader)
-      return reader->FrameNumber();
+      {
+        return reader->FrameNumber();
+      }
 
     return -1; // "gentle" error - not open
   }

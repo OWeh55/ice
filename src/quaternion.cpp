@@ -37,9 +37,15 @@ namespace ice
 
   int sign(double x)
   {
-    if (x < 0.0)return -1;
+    if (x < 0.0)
+      {
+        return -1;
+      }
 
-    if (x > 0.0)return 1;
+    if (x > 0.0)
+      {
+        return 1;
+      }
 
     return 0;
   }
@@ -119,7 +125,10 @@ namespace ice
           {
             return atan(sqrt(i * i + j * j + k * k) / real);
           }
-        else return atan(sqrt(i * i + j * j + k * k) / real) + M_PI;
+        else
+          {
+            return atan(sqrt(i * i + j * j + k * k) / real) + M_PI;
+          }
       }
     else
       {
@@ -184,8 +193,14 @@ namespace ice
       }
     else
       {
-        if (x < 0) delta = -M_PI_4;
-        else delta = M_PI_4;
+        if (x < 0)
+          {
+            delta = -M_PI_4;
+          }
+        else
+          {
+            delta = M_PI_4;
+          }
       }
 
     if (delta == M_PI_4 || delta == -M_PI_4)
@@ -232,7 +247,10 @@ namespace ice
 
   bool Quaternion :: isUnitQuaternion()
   {
-    if (getSquareNorm() == 1)return true;
+    if (getSquareNorm() == 1)
+      {
+        return true;
+      }
 
     return false;
   }
@@ -392,11 +410,20 @@ namespace ice
     const char* str2 = "+";
     const char* str3 = "+";
 
-    if (x.i < 0)str1 = "";
+    if (x.i < 0)
+      {
+        str1 = "";
+      }
 
-    if (x.j < 0)str2 = "";
+    if (x.j < 0)
+      {
+        str2 = "";
+      }
 
-    if (x.k < 0)str3 = "";
+    if (x.k < 0)
+      {
+        str3 = "";
+      }
 
     return ost << x.real << str1 << x.i << "i" << str2 << x.j << "j" << str3 << x.k << "k";
   }
@@ -425,7 +452,10 @@ namespace ice
 
   double Quaternion :: myatan2(double x, double y)
   {
-    if (y > 0)return atan(x / y);
+    if (y > 0)
+      {
+        return atan(x / y);
+      }
 
     if (y == 0)
       {
@@ -433,12 +463,21 @@ namespace ice
           {
             return M_PI;
           }
-        else return -M_PI;
+        else
+          {
+            return -M_PI;
+          }
       }
 
-    if (y < 0 && x < 0)return atan(x / y) - M_PI;
+    if (y < 0 && x < 0)
+      {
+        return atan(x / y) - M_PI;
+      }
 
-    if (y < 0 && x >= 0)return atan(x / y) + M_PI;
+    if (y < 0 && x >= 0)
+      {
+        return atan(x / y) + M_PI;
+      }
 
     return 0;
   }

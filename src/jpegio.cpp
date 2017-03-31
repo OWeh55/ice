@@ -351,8 +351,14 @@ namespace ice
     ysize = cinfo.image_height;
     maxval = (1 << BITS_IN_JSAMPLE) - 1;
 
-    if (cinfo.num_components == 1) nr = 1;
-    else nr = 3;
+    if (cinfo.num_components == 1)
+      {
+        nr = 1;
+      }
+    else
+      {
+        nr = 3;
+      }
 
     fclose(infile);
     jpeg_destroy_decompress(&cinfo);
@@ -392,7 +398,10 @@ namespace ice
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
 
-        if (ib.data != nullptr) free(ib.data);
+        if (ib.data != nullptr)
+          {
+            free(ib.data);
+          }
 
         Message(FNAME, M_WRONG_FILE, WRONG_FILE);
         return WRONG_FILE;
@@ -410,8 +419,14 @@ namespace ice
 
     ib.planes = cinfo.num_components;
 
-    if (ib.maxval > 255) ib.valuesize = sizeof(int);
-    else ib.valuesize = 1;
+    if (ib.maxval > 255)
+      {
+        ib.valuesize = sizeof(int);
+      }
+    else
+      {
+        ib.valuesize = 1;
+      }
 
     ib.byteorder = IB_LSB_FIRST;
     ib.linelength = ib.planes * ib.width * ib.valuesize;
@@ -433,11 +448,17 @@ namespace ice
     jpeg_destroy_decompress(&cinfo);
 
     if (!IsImg(imgr))
-      imgr = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgr = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(imgg))
-      imgb = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgb = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(imgb))
-      imgb = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgb = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     IF_FAILED(Buffer2Image(ib, imgr, imgg, imgb, flag))
     {
@@ -477,7 +498,10 @@ namespace ice
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
 
-        if (ib.data != nullptr) free(ib.data);
+        if (ib.data != nullptr)
+          {
+            free(ib.data);
+          }
 
         Message(FNAME, M_WRONG_FILE, WRONG_FILE);
         return Image();
@@ -497,9 +521,13 @@ namespace ice
     ib.planes = 1;
 
     if (ib.maxval > 255)
-      ib.valuesize = sizeof(int);
+      {
+        ib.valuesize = sizeof(int);
+      }
     else
-      ib.valuesize = 1;
+      {
+        ib.valuesize = 1;
+      }
 
     ib.byteorder = IB_LSB_FIRST;
     ib.linelength = ib.planes * ib.width * ib.valuesize;
@@ -522,7 +550,9 @@ namespace ice
     jpeg_destroy_decompress(&cinfo);
 
     if (!IsImg(img))
-      img = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        img = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     IF_FAILED(img = Buffer2Image(ib, img, flag))
     {

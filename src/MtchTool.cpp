@@ -66,9 +66,15 @@ namespace ice
             {
               g = GetValD(imgd, x, y);
 
-              if (gmax < g) gmax = g;
+              if (gmax < g)
+                {
+                  gmax = g;
+                }
 
-              if (gmin > g) gmin = g;
+              if (gmin > g)
+                {
+                  gmin = g;
+                }
             }
         }
 
@@ -81,7 +87,7 @@ namespace ice
             }
         }
 
-    if (x0 == -1 || y0 == -1) // Mittelwert bestimmen
+    if (x0 == -1 || y0 == -1)   // Mittelwert bestimmen
       {
         x0 = 0;
         y0 = 0;
@@ -143,13 +149,25 @@ namespace ice
           if (GetVal(imgo, x, y))
             {
               double f = Gauss2D(x, y, x0, y0, sx, sy, sxy);
-              if (max < f) max = f;
-              if (min > f) min = f;
+              if (max < f)
+                {
+                  max = f;
+                }
+              if (min > f)
+                {
+                  min = f;
+                }
             }
         }
 
-    if (max > min) a = (gmax - gmin) / (max - min);
-    else a = 1;
+    if (max > min)
+      {
+        a = (gmax - gmin) / (max - min);
+      }
+    else
+      {
+        a = 1;
+      }
 
     b = -min * a;
   }
@@ -275,7 +293,10 @@ namespace ice
       {
         p = h.Rel(i);
 
-        if (p > 0) entropy -= p * log(p) / l2;
+        if (p > 0)
+          {
+            entropy -= p * log(p) / l2;
+          }
       }
 
     return entropy;
@@ -308,7 +329,10 @@ namespace ice
         {
           g = Min(Max((int)(GetValD(img, i, j) * 255), 0), 255);
 
-          if (hist[g] == 0) maxentro++;
+          if (hist[g] == 0)
+            {
+              maxentro++;
+            }
 
           hist[g]++;
         }
@@ -320,7 +344,10 @@ namespace ice
       {
         hist[i] = (double)hist[i] / anz;
 
-        if (hist[i] > 0) entropy -= (double)hist[i] * log((double)hist[i]) / l2;
+        if (hist[i] > 0)
+          {
+            entropy -= (double)hist[i] * log((double)hist[i]) / l2;
+          }
       }
 
     maxentro = (log(Max(maxentro - 1.0, 1.0)) / log(2.0));
@@ -379,7 +406,10 @@ namespace ice
             }
         }
 
-        if (x0 == -1) break; // Kein Startpunkt mehr gefunden
+        if (x0 == -1)
+          {
+            break;  // Kein Startpunkt mehr gefunden
+          }
 
         // Startrichtung suchen
         for (d = 0; d < 8; d += 2)
@@ -431,12 +461,21 @@ namespace ice
                   }
               }
 
-            if (!flag) break;
+            if (!flag)
+              {
+                break;
+              }
 
             dir = d % 8;
 
-            if (pl->lng == 1) dir0 = dir;
-            else if (xs == x0 && ys == y0 && dir == dir0) break;
+            if (pl->lng == 1)
+              {
+                dir0 = dir;
+              }
+            else if (xs == x0 && ys == y0 && dir == dir0)
+              {
+                break;
+              }
 
             dir = (dir + 6) % 8;
 
@@ -453,7 +492,9 @@ namespace ice
           }
 
         for (int pln = 0; pln < pl->lng; pln++)
-          PutPoint(plnrm, (pl->lng - 1 - pln), pl->xptr[pln], pl->yptr[pln], 1);
+          {
+            PutPoint(plnrm, (pl->lng - 1 - pln), pl->xptr[pln], pl->yptr[pln], 1);
+          }
 
         FreePointList(pl);
 

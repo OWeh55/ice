@@ -66,12 +66,16 @@ namespace ice
         for (y = 0; y < ys; ++y)
           {
             for (x = 0; x < xs; ++x)
-              fr[x] = GetValD(src, (x + xsh) % xs, y);
+              {
+                fr[x] = GetValD(src, (x + xsh) % xs, y);
+              }
 
             HartleyD(fr, xs, fr);
 
             for (x = 0; x < xs; ++x)
-              PutValD(res, (x + xsh) % xs, y, fr[x]);
+              {
+                PutValD(res, (x + xsh) % xs, y, fr[x]);
+              }
           }
 
         delete [] fr;
@@ -79,7 +83,9 @@ namespace ice
     else
       for (y = 0; y < ys; ++y)
         for (x = 0; x < xs; ++x)
-          PutValD(res, x, y, GetValD(src, x, y));
+          {
+            PutValD(res, x, y, GetValD(src, x, y));
+          }
 
     if ((mode == XY) || (mode == Y_ONLY))
       {
@@ -94,12 +100,16 @@ namespace ice
         for (x = 0; x < xs; ++x)
           {
             for (y = 0; y < ys; ++y)
-              fr[y] = GetValD(res, x, (y + ysh) % ys);
+              {
+                fr[y] = GetValD(res, x, (y + ysh) % ys);
+              }
 
             HartleyD(fr, ys, fr);
 
             for (y = 0; y < ys; ++y)
-              PutValD(res, x, (y + ysh) % ys, fr[y]);
+              {
+                PutValD(res, x, (y + ysh) % ys, fr[y]);
+              }
           }
 
         delete [] fr;

@@ -176,7 +176,9 @@ namespace ice
               sum *= sres;
 
               if (sum > radonimg->maxval)
-                sum = radonimg->maxval;
+                {
+                  sum = radonimg->maxval;
+                }
 
               PutVal(radonimg, x, y, RoundInt(sum));
             }
@@ -192,7 +194,9 @@ namespace ice
                    radonimg->xsize, radonimg->ysize);
 
     if (fmax < 0)
-      fmax = radonimg->xsize;
+      {
+        fmax = radonimg->xsize;
+      }
 
     ImageD akku = NewImgD(resimg->xsize, resimg->ysize);
     SetImgD(akku, 0.0);
@@ -204,7 +208,9 @@ namespace ice
         Vector zeile(radonimg->xsize);
 
         for (int i = 0; i < radonimg->xsize; i++)
-          zeile[i] = GetVal(radonimg, i, yr);
+          {
+            zeile[i] = GetVal(radonimg, i, yr);
+          }
 
         //#pragma omp critical
         {
@@ -215,12 +221,19 @@ namespace ice
             {
               double f = zeile.size() - i;
 
-              if (i < f) f = i;
+              if (i < f)
+                {
+                  f = i;
+                }
 
               if (f <= fmax)
-                zeile[i] = zeile[i] * f;
+                {
+                  zeile[i] = zeile[i] * f;
+                }
               else
-                zeile[i] = 0.0;
+                {
+                  zeile[i] = 0.0;
+                }
             }
 
           //      cout << endl;

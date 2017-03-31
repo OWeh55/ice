@@ -54,14 +54,18 @@ namespace ice
     {
       shift = 0;
       while ((imgp->maxval >> shift) > 255)
-        shift++;
+        {
+          shift++;
+        }
     }
 #else
     ImageStructInt(ImageBase* imgp): img(imgp)
     {
       shift = 0;
       while ((imgp->maxval >> shift) > 255)
-        shift++;
+        {
+          shift++;
+        }
     }
 #endif
     virtual ~ImageStructInt() {};

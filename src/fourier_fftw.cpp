@@ -75,9 +75,15 @@ namespace ice
     if ((n != fftw_size) || (forward != isforward))
       {
         // altes array freigeben
-        if (in != NULL) fftw_free(in);
+        if (in != NULL)
+          {
+            fftw_free(in);
+          }
 
-        if (out != NULL) fftw_free(out);
+        if (out != NULL)
+          {
+            fftw_free(out);
+          }
 
         // plan freigeben
         fftw_destroy_plan(fftw_p);
@@ -135,8 +141,14 @@ namespace ice
     if ((dim != fftw_size) || (forward != isforward))
       {
         // altes array freigeben
-        if (in != NULL) fftw_free(in);
-        if (out != NULL) fftw_free(out);
+        if (in != NULL)
+          {
+            fftw_free(in);
+          }
+        if (out != NULL)
+          {
+            fftw_free(out);
+          }
 
         // plan freigeben
         fftw_destroy_plan(fftw_p);
@@ -193,8 +205,14 @@ namespace ice
     if ((dim != fftw_size) || (forward != isforward))
       {
         // altes array freigeben
-        if (in != NULL) fftw_free(in);
-        if (out != NULL) fftw_free(out);
+        if (in != NULL)
+          {
+            fftw_free(in);
+          }
+        if (out != NULL)
+          {
+            fftw_free(out);
+          }
 
         // plan freigeben
         fftw_destroy_plan(fftw_p);

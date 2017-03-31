@@ -37,7 +37,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trm[i][j] = tr[i][j];
+        {
+          trm[i][j] = tr[i][j];
+        }
 
     return Trafo(trm);
   }
@@ -94,7 +96,9 @@ namespace ice
     RETURN_IF_FAILED(FitEquilateraltriangleMoments(m.oldMoments(), p, guetemass), triangle);
 
     for (int i = 0; i < 3; i++)
-      triangle.Append(Vector(p[i][0], p[i][1]));
+      {
+        triangle.Append(Vector(p[i][0], p[i][1]));
+      }
 
     return triangle;
   }
@@ -112,7 +116,9 @@ namespace ice
     RETURN_IF_FAILED(FitIsoscelestriangleMoments(m.oldMoments(), p, guetemass), triangle);
 
     for (int i = 0; i < 3; i++)
-      triangle.Append(Vector(p[i][0], p[i][1]));
+      {
+        triangle.Append(Vector(p[i][0], p[i][1]));
+      }
 
     return triangle;
   }

@@ -104,7 +104,9 @@ namespace ice
           {
             for (int y = 0; y < ys; y++)
               for (int x = 0; x < xs; x++)
-                PutValUnchecked(DestinationImage, x, y, GetValUnchecked(SourceImage, x, y));
+                {
+                  PutValUnchecked(DestinationImage, x, y, GetValUnchecked(SourceImage, x, y));
+                }
           }
         else
           {
@@ -145,22 +147,30 @@ namespace ice
     // oberer Rand
     for (int j = 0; j < sy; j++)
       for (int i = 0; i < p->xsize; i++)
-        PutValUnchecked(p, i, j, val);
+        {
+          PutValUnchecked(p, i, j, val);
+        }
 
     // linker/rechter Rand
     for (int i = sy; i < p->ysize - sy; i++)
       {
         for (int j = 0; j < sx; j++)
-          PutValUnchecked(p, j, i, val);
+          {
+            PutValUnchecked(p, j, i, val);
+          }
 
         for (int j = p->xsize - sx; j < p->xsize; j++)
-          PutValUnchecked(p, j, i, val);
+          {
+            PutValUnchecked(p, j, i, val);
+          }
       }
 
     // unterer Rand
     for (int j = p->ysize - sy; j < p->ysize; j++)
       for (int i = 0; i < p->xsize; i++)
-        PutValUnchecked(p, i, j, val);
+        {
+          PutValUnchecked(p, i, j, val);
+        }
 
   }
 
@@ -175,7 +185,9 @@ namespace ice
   void setborder(const Image& p, int val)
   {
     for (int i = 0; i < p->xsize; i++)
-      PutValUnchecked(p, i, 0, val);
+      {
+        PutValUnchecked(p, i, 0, val);
+      }
 
     for (int i = 1; i < p->ysize - 1; i++)
       {
@@ -184,7 +196,9 @@ namespace ice
       }
 
     for (int i = 0; i < p->xsize; i++)
-      PutValUnchecked(p, i, p->ysize - 1, val);
+      {
+        PutValUnchecked(p, i, p->ysize - 1, val);
+      }
   }
 
 

@@ -146,14 +146,18 @@ namespace ice
               {
               case D_EUCLID:
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(feat1[i][k] - feat2[j][k]);
+                  {
+                    d += Sqr(feat1[i][k] - feat2[j][k]);
+                  }
 
                 d = sqrt(d);
                 break;
 
               case D_SQUARE:
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(feat1[i][k] - feat2[j][k]);
+                  {
+                    d += Sqr(feat1[i][k] - feat2[j][k]);
+                  }
 
 
                 break;
@@ -161,7 +165,9 @@ namespace ice
               case D_CITYBLOCK:
 
                 for (int k = 0; k < dim; k++)
-                  d += fabs(feat1[i][k] - feat2[j][k]);
+                  {
+                    d += fabs(feat1[i][k] - feat2[j][k]);
+                  }
                 break;
               }
 

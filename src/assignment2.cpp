@@ -44,9 +44,15 @@ namespace ice
     // special (optimized) modulo
     // works only, if b>0
     // and a  within [-b..2b)
-    if (a < 0) return a + b;
+    if (a < 0)
+      {
+        return a + b;
+      }
 
-    if (a >= b) return a - b;
+    if (a >= b)
+      {
+        return a - b;
+      }
 
     return a;
   }
@@ -83,7 +89,10 @@ namespace ice
 
         if (dir[x] == NULL)
           {
-            for (i = 0; i < x; i++) delete [] dir[i];
+            for (i = 0; i < x; i++)
+              {
+                delete [] dir[i];
+              }
 
             delete [] dir;
             delete [] min1;
@@ -120,7 +129,7 @@ namespace ice
     min1[ystart] = abstand[0][ystart];
     dir[0][ystart] = 0;
 
-    for (y = 1; y < ny; y++) // first column: only one direction possible
+    for (y = 1; y < ny; y++)   // first column: only one direction possible
       {
         y2 = MyMod(y + ystart, ny);
         y1 = MyMod(y2 - 1, ny);
@@ -128,7 +137,7 @@ namespace ice
         dir[0][y2] = 2;
       }
 
-    for (x = 1; x < nx; x++) // all columns
+    for (x = 1; x < nx; x++)   // all columns
       {
         x1 = x - 1;
         // only one direction for first row
@@ -137,7 +146,7 @@ namespace ice
         min2[y1] = min1[y1] + abstand[x1][y1] + abstand[x][y1];
         dir[x][y1] = 0;
 
-        for (y = 1; y < ny; y++) // all other rows
+        for (y = 1; y < ny; y++)   // all other rows
           {
             // y1, y2 already set
             v1 = min1[y1] + abstand[x1][y1]; // upper left
@@ -177,7 +186,10 @@ namespace ice
             y2 = MyMod(y2 + 1, ny);
           }
 
-        for (ct = 0; ct < ny; ct++) min1[ct] = min2[ct];
+        for (ct = 0; ct < ny; ct++)
+          {
+            min1[ct] = min2[ct];
+          }
       }
 
     x1 = nx - 1;
@@ -242,7 +254,10 @@ namespace ice
     delete [] min1;
     delete [] min2;
 
-    for (x = 0; x < nx; x++) delete [] dir[x];
+    for (x = 0; x < nx; x++)
+      {
+        delete [] dir[x];
+      }
 
     delete [] dir;
     return OK;
@@ -275,7 +290,7 @@ namespace ice
     min1[ystart] = abstand[0][ystart];
     dir[0][ystart] = 0;
 
-    for (y = 1; y < ny; y++) // first column: only one direction possible
+    for (y = 1; y < ny; y++)   // first column: only one direction possible
       {
         y2 = MyMod(ystart - y, ny);
         y1 = MyMod(y2 + 1, ny);
@@ -283,7 +298,7 @@ namespace ice
         dir[0][y2] = 6;
       }
 
-    for (x = 1; x < nx; x++) // all columns
+    for (x = 1; x < nx; x++)   // all columns
       {
         x1 = x - 1;
         // only one direction for first row
@@ -292,7 +307,7 @@ namespace ice
         min2[y1] = min1[y1] + abstand[x1][y1] + abstand[x][y1];
         dir[x][y1] = 0;
 
-        for (y = 1; y < ny; y++) // all other rows
+        for (y = 1; y < ny; y++)   // all other rows
           {
             // y1, y2 already set
             v1 = min1[y1] + abstand[x1][y1]; // lower left
@@ -332,7 +347,10 @@ namespace ice
             y2 = MyMod(y2 - 1, ny);
           }
 
-        for (ct = 0; ct < ny; ct++) min1[ct] = min2[ct];
+        for (ct = 0; ct < ny; ct++)
+          {
+            min1[ct] = min2[ct];
+          }
       }
 
     x1 = nx - 1;
@@ -397,7 +415,10 @@ namespace ice
     delete [] min1;
     delete [] min2;
 
-    for (x = 0; x < nx; x++) delete [] dir[x];
+    for (x = 0; x < nx; x++)
+      {
+        delete [] dir[x];
+      }
 
     delete [] dir;
 
@@ -446,7 +467,7 @@ namespace ice
         return NO_MEM;
       }
 
-    for (int y = 0; y < ny; y++) // first row, all columns
+    for (int y = 0; y < ny; y++)   // first row, all columns
       {
         min1[y] = abstand[0][y];
       }
@@ -462,10 +483,10 @@ namespace ice
         dy2 = -2;
       }
 
-    for (int x = 1; x < nx; x++) // all columns
+    for (int x = 1; x < nx; x++)   // all columns
       {
         // erster Schritt min1 -> min2
-        for (int y = 0; y < ny; y++) // all rows
+        for (int y = 0; y < ny; y++)   // all rows
           {
             // erster Versuch: 45°
             int y1 = MyMod(y + dy1, ny);
@@ -499,7 +520,7 @@ namespace ice
         // zweiter Schritt min2 -> min1
         if (x < nx)
           {
-            for (int y = 0; y < ny; y++) // all rows
+            for (int y = 0; y < ny; y++)   // all rows
               {
                 // erster Versuch: 45°
                 int y1 = MyMod(y + dy1, ny);
@@ -533,7 +554,9 @@ namespace ice
     if (minarray == 1)
       {
         for (int i = 0; i < ny; i++)
-          min2[i] = min1[i];
+          {
+            min2[i] = min1[i];
+          }
       }
 
     double minimum = min2[0];
@@ -562,7 +585,9 @@ namespace ice
     delete [] min2;
 
     for (int x = 0; x < nx; x++)
-      delete [] dir[x];
+      {
+        delete [] dir[x];
+      }
 
     delete [] dir;
 
@@ -640,7 +665,10 @@ namespace ice
         RETURN_ERROR_IF_FAILED(CheapestWayUpDown(distance, -1, ref2));
         cost2 = ReferenceCosts(distance, ref2);
 
-        if (cost2 < cost1) ref = ref2;
+        if (cost2 < cost1)
+          {
+            ref = ref2;
+          }
       }
 
     return OK;

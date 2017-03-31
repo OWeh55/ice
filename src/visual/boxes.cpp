@@ -61,27 +61,41 @@ namespace ice
       {
         SetAlphaCursor(x1, y1);
         PutChar(R_LO);
-        for (x = x1 + 1; x < x2; x++) PutChar(R_OU);
+        for (x = x1 + 1; x < x2; x++)
+          {
+            PutChar(R_OU);
+          }
         PutChar(R_RO);
         for (y = y1 + 1; y < y2; y++)
           {
             SetAlphaCursor(x1, y);
             PutChar(R_LR);
-            for (x = x1 + 1; x < x2; x++) PutChar(' ');
+            for (x = x1 + 1; x < x2; x++)
+              {
+                PutChar(' ');
+              }
             PutChar(R_LR);
           }
         SetAlphaCursor(x1, y2);
         PutChar(R_LU);
-        for (x = x1 + 1; x < x2; x++) PutChar(R_OU);
-        if ((x2 < xm) || (y2 < ym)) /* avoid rolling */
-          PutChar(R_RU);
+        for (x = x1 + 1; x < x2; x++)
+          {
+            PutChar(R_OU);
+          }
+        if ((x2 < xm) || (y2 < ym))   /* avoid rolling */
+          {
+            PutChar(R_RU);
+          }
       }
     else
       {
         for (y = y1; y <= y2; y++)
           {
             SetAlphaCursor(x1, y);
-            for (x = x1; x <= x2; x++) PutChar(' ');
+            for (x = x1; x <= x2; x++)
+              {
+                PutChar(' ');
+              }
           }
       }
     return OK;
@@ -165,15 +179,27 @@ namespace ice
           {
             s[i] = '\0';
             ss[ys] = s + i + 1;
-            if (xa > xs) xs = xa;
+            if (xa > xs)
+              {
+                xs = xa;
+              }
             xa = 0;
             ys++;
           }
-        else xa++;
+        else
+          {
+            xa++;
+          }
         i++;
       }
-    if (xa > xs) xs = xa;
-    if ((rc = SetBox(xs, ys, where)) != OK) return rc;
+    if (xa > xs)
+      {
+        xs = xa;
+      }
+    if ((rc = SetBox(xs, ys, where)) != OK)
+      {
+        return rc;
+      }
     GetAlphaCursor(&xa, &ya);
     for (i = 0; i < ys; i++)
       {
@@ -197,7 +223,10 @@ namespace ice
       {
         if (ps[c] == '\n')
           {
-            if (ss[i].length() > xs) xs = ss[i].length(); // maximale Breite aktualisieren
+            if (ss[i].length() > xs)
+              {
+                xs = ss[i].length();  // maximale Breite aktualisieren
+              }
             ys++;             // Höhe = Zeilenzahl aktualisieren
             i++;
             ss.push_back("");
@@ -209,9 +238,15 @@ namespace ice
       }
 
     // letztes Wort extra behandeln
-    if (ss[i].length() > xs) xs = ss[i].length(); // maximale Breite aktualisieren
+    if (ss[i].length() > xs)
+      {
+        xs = ss[i].length();  // maximale Breite aktualisieren
+      }
 
-    if ((rc = SetBox(xs, ys, where)) != OK) return rc;
+    if ((rc = SetBox(xs, ys, where)) != OK)
+      {
+        return rc;
+      }
 
     GetAlphaCursor(&xa, &ya);
     for (unsigned int i = 0; i < ys; i++)
@@ -241,7 +276,9 @@ namespace ice
     SetAttribute(C_WHITE, C_GREEN, 0, 1);
     MessageBox(s, B_CENTER);
     do
-      a = tolower(GetChar());
+      {
+        a = tolower(GetChar());
+      }
     while ((a != yn[0]) && (a != yn[1]));
     PopAlpha();
     return (a == yn[0]);
@@ -264,7 +301,9 @@ namespace ice
     SetAttribute(C_WHITE, C_GREEN, 0, 1);
     MessageBox(s, B_CENTER);
     do
-      a = toupper(GetChar());
+      {
+        a = toupper(GetChar());
+      }
     while ((a != yn[0]) && (a != yn[1]));
     PopAlpha();
     return (a == yn[0]);

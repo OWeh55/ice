@@ -53,7 +53,10 @@ namespace ice
             // split w/o delimiter = split all
             hs = s;
 
-            if (del) s = "";
+            if (del)
+              {
+                s = "";
+              }
           }
         else
           {
@@ -65,7 +68,10 @@ namespace ice
       {
         hs = s.substr(0, pos);
 
-        if (del) s.erase(0, pos + 1);
+        if (del)
+          {
+            s.erase(0, pos + 1);
+          }
       }
 
     return hs;
@@ -77,7 +83,7 @@ namespace ice
     // split path and basename
     string::size_type  pos = s.find_last_of('/');
 
-    if (pos == string::npos) /* no path */
+    if (pos == string::npos)   /* no path */
       {
         path = "";
         basename = s;
@@ -97,7 +103,9 @@ namespace ice
     string::size_type pos = basename.find_last_of('.');
 
     if (pos == string::npos)
-      ext = "";
+      {
+        ext = "";
+      }
     else
       {
         ext = basename.substr(pos + 1);
@@ -129,7 +137,9 @@ namespace ice
     string::size_type i;
 
     for (i = 0; i < s.length(); i++)
-      hs += tolower(s[i]);
+      {
+        hs += tolower(s[i]);
+      }
 
     return hs;
   }
@@ -140,7 +150,9 @@ namespace ice
     string::size_type i;
 
     for (i = 0; i < s.length(); i++)
-      hs += toupper(s[i]);
+      {
+        hs += toupper(s[i]);
+      }
 
     return hs;
   }
@@ -150,9 +162,15 @@ namespace ice
     string::size_type i1 = 0;
     string::size_type i2 = s.size() - 1;
 
-    while ((i1 <= i2) && (s[i1] == ' ')) i1++;
+    while ((i1 <= i2) && (s[i1] == ' '))
+      {
+        i1++;
+      }
 
-    while ((i2 >= i1) && (s[i2] == ' ')) i2--;
+    while ((i2 >= i1) && (s[i2] == ' '))
+      {
+        i2--;
+      }
 
     return s.substr(i1, i2 - i1 + 1);
   }

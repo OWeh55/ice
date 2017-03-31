@@ -180,7 +180,10 @@ namespace ice
     s2 = sin(phi2);
     det = c1 * s2 - s1 * c2;
 
-    if (fabs(det) < 1e-32) return (PARALLEL);
+    if (fabs(det) < 1e-32)
+      {
+        return (PARALLEL);
+      }
 
     ip[0] = (p1 * s2 - p2 * s1) / det;
     ip[1] = (p2 * c1 - p1 * c2) / det;
@@ -238,7 +241,9 @@ namespace ice
     int last = pl.rows() - 1;
 
     for (i = 0; i < last - 1; i++)
-      area += (pl[i][0] - pl[i + 1][0]) * (pl[i][1] + pl[i + 1][1]);
+      {
+        area += (pl[i][0] - pl[i + 1][0]) * (pl[i][1] + pl[i + 1][1]);
+      }
 
     area += (pl[last][0] - pl[0][0]) *
             (pl[last][1] + pl[0][1]);
@@ -280,7 +285,7 @@ namespace ice
     getchar();
 #endif
 
-    if (fabs(A33) < EPSILON) /* Parabel*/
+    if (fabs(A33) < EPSILON)   /* Parabel*/
       {
         if (a < 0)
           {
@@ -300,7 +305,7 @@ namespace ice
         printf("fabs(2*b*sqrt(b)-e*sqrt(a) %g\n", fabs(2 * b * sqrt(b) - e * sqrt(a)));
 #endif
 
-        if (fabs(2 * b * sqrt(b) - e * sqrt(a)) < EPSILON) /* Parabelachse parallel zur y-Achse */
+        if (fabs(2 * b * sqrt(b) - e * sqrt(a)) < EPSILON)   /* Parabelachse parallel zur y-Achse */
           {
 #ifdef DEBUG
             printf("parallel y-Achse\n");
@@ -309,14 +314,18 @@ namespace ice
             xm = (sqrt(a) * c - sqrt(b) * d) / (sqrt(b) * e - 2 * sqrt(a) * a);
 
             if (fabs(b) < EPSILON)
-              ym = -(a * xm * xm + c * xm + f) / (d + e * xm);
+              {
+                ym = -(a * xm * xm + c * xm + f) / (d + e * xm);
+              }
             else
-              ym = (e * xm + d) / (-2 * b);
+              {
+                ym = (e * xm + d) / (-2 * b);
+              }
 
             goto label;
           }
 
-        if (fabs(sqrt(b)*e - 2 * a * sqrt(a)) < EPSILON) /* Parabelachse parallel zur x-Achse */
+        if (fabs(sqrt(b)*e - 2 * a * sqrt(a)) < EPSILON)   /* Parabelachse parallel zur x-Achse */
           {
 #ifdef DEBUG
             printf("parallel x-Achse\n");
@@ -325,8 +334,14 @@ namespace ice
 #endif
             ym = (sqrt(a) * c - sqrt(b) * d) / (2 * sqrt(b) * b - sqrt(a) * e);
 
-            if (fabs(a) < EPSILON) xm = -(b * ym * ym + d * ym + f) / (c + e * ym);
-            else xm = (c + e * ym) / (-2 * a);
+            if (fabs(a) < EPSILON)
+              {
+                xm = -(b * ym * ym + d * ym + f) / (c + e * ym);
+              }
+            else
+              {
+                xm = (c + e * ym) / (-2 * a);
+              }
 
             goto label;
           }
@@ -340,9 +355,13 @@ namespace ice
         Bh = (sqrt(a) * c - sqrt(b) * d) / (2 * b * sqrt(b) - e * sqrt(a));
 
         if (fabs(a + b * Ah * Ah + e * Ah) < EPSILON)
-          xm = (-b * Bh * Bh - d * Bh - f) / (2 * b * Ah * Bh + c + d * Ah + e * Bh);
+          {
+            xm = (-b * Bh * Bh - d * Bh - f) / (2 * b * Ah * Bh + c + d * Ah + e * Bh);
+          }
         else
-          xm = (2 * b * Ah * Bh + c + d * Ah + e * Bh) / (-2 * (a + b * Ah * Ah + e * Ah));
+          {
+            xm = (2 * b * Ah * Bh + c + d * Ah + e * Bh) / (-2 * (a + b * Ah * Ah + e * Ah));
+          }
 
         ym = Ah * xm + Bh;
 label:
@@ -388,12 +407,15 @@ label:
 
         feat[3] = fmod(phi, 2 * M_PI);
 
-        if (phi < 0) feat[3] += 2 * M_PI;
+        if (phi < 0)
+          {
+            feat[3] += 2 * M_PI;
+          }
 
         *type = PARABEL;
         return OK;
       }
-    else /* Ellipse/Hyperbel */
+    else     /* Ellipse/Hyperbel */
       {
         feat[0] = xm = (e * d / 4 - c * b / 2) / A33;
         feat[1] = ym = (c * e / 4 - a * d / 2) / A33;
@@ -406,8 +428,14 @@ label:
 
         hf = a * xm * xm + b * ym * ym + c * xm + d * ym + e * xm * ym + f;
 
-        if (fabs(e) < EPSILON && fabs(a - b) < EPSILON) phi = 0;
-        else phi = atan2(e, a - b) / 2;
+        if (fabs(e) < EPSILON && fabs(a - b) < EPSILON)
+          {
+            phi = 0;
+          }
+        else
+          {
+            phi = atan2(e, a - b) / 2;
+          }
 
 #ifdef DEBUG
         printf("phi %f cos(phi) %f\n", phi, cos(phi));
@@ -421,7 +449,7 @@ label:
         getchar();
 #endif
 
-        if (SignD(ha * hb) < 0) /* Hyperbel */
+        if (SignD(ha * hb) < 0)   /* Hyperbel */
           {
 #ifdef DEBUG
             printf("Hyperbel\n");
@@ -440,20 +468,27 @@ label:
                 feat[2] = 1 / sqrt(ha);
                 feat[3] = 1 / sqrt(-hb);
 
-                if (phi < 0) feat[2] += M_PI;
+                if (phi < 0)
+                  {
+                    feat[2] += M_PI;
+                  }
               }
 
             feat[4] = phi;
 
             if (phi > M_PI)
-              feat[4] -= M_PI;
+              {
+                feat[4] -= M_PI;
+              }
 
             if (phi < 0)
-              feat[4] += M_PI;
+              {
+                feat[4] += M_PI;
+              }
 
             return OK;
           }
-        else /* Ellipse */
+        else     /* Ellipse */
           {
             if (ha < 0)
               {
@@ -468,7 +503,7 @@ label:
 #endif
                 *type = ELLIPSE;
 
-                if (ha > hb) /* Vertauschen der Achsen */
+                if (ha > hb)   /* Vertauschen der Achsen */
                   {
                     phi += M_PI / 2;
                     feat[2] = 1 / sqrt(hb);
@@ -487,10 +522,14 @@ label:
                 feat[4] = phi;
 
                 if (phi > M_PI)
-                  feat[4] -= M_PI;
+                  {
+                    feat[4] -= M_PI;
+                  }
 
                 if (phi < 0)
-                  feat[4] += M_PI;
+                  {
+                    feat[4] += M_PI;
+                  }
 
                 return OK;
               }
@@ -699,7 +738,9 @@ label:
     e = x * x / (A * A) + y * y / (B * B);
 
     if (e == 1.0)
-      return (0.0);
+      {
+        return (0.0);
+      }
 
     // *******************************************************
     const double eps = 1.0e-5;
@@ -772,7 +813,7 @@ label:
                     sinpsi_opt = 0.0;
                     min_dist = sqrt((A + x) * (A + x));
                   }
-                else // if (x<=xs && x>=-xs)
+                else     // if (x<=xs && x>=-xs)
                   {
                     cospsi_opt = (A * x) / (A * A - B * B);
                     sinpsi_opt = sqrt(1.0 - cospsi_opt * cospsi_opt);

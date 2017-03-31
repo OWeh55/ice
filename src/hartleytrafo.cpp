@@ -94,8 +94,14 @@ namespace ice
 
         for (i = 0; i < n2; i++)
           {
-            if (i == 0) hn = 0;
-            else hn = n2 - i;
+            if (i == 0)
+              {
+                hn = 0;
+              }
+            else
+              {
+                hn = n2 - i;
+              }
 
             // reconstruction of FFT of even and odd part
             // from combined fft

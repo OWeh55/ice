@@ -51,11 +51,15 @@ namespace ice
       {
         //Eckpunkte
         if (x == plw[i][0] && y == plw[i][1])
-          return true;
+          {
+            return true;
+          }
 
         //Punkte auf waagerechten Abschnitten
         if (y == plw[i][1] && y == plw[i + 1][1] && ((x >= plw[i][0] && x <= plw[i + 1][0]) || (x <= plw[i][0] && x >= plw[i + 1][0])))
-          return true;
+          {
+            return true;
+          }
 
         if ((plw[i][1] <= y && plw[i + 1][1] > y) || (plw[i][1] > y && plw[i + 1][1] <= y))
           {
@@ -64,15 +68,23 @@ namespace ice
 
             //Punkt auf Kante
             if (h1 == h2)
-              return true;
+              {
+                return true;
+              }
 
             if (plw[i + 1][1] - plw[i][1] > 0)
               {
-                if (h1 < h2) cr_nr++;
+                if (h1 < h2)
+                  {
+                    cr_nr++;
+                  }
               }
             else
               {
-                if (h1 > h2) cr_nr++;
+                if (h1 > h2)
+                  {
+                    cr_nr++;
+                  }
               }
           }
       }
@@ -164,7 +176,9 @@ namespace ice
       }
 
     if (!c.isValid())
-      c.Reset();
+      {
+        c.Reset();
+      }
 
     //erst Startpunkt und dessen Nachbarn hinzufuegen, damit last und
     //prelast definiert, danach "aeusseren Bogen" zum naechsten Punkt schlagen
@@ -189,12 +203,16 @@ namespace ice
         freeman--;
 
         if (freeman == -1)
-          freeman = 7;
+          {
+            freeman = 7;
+          }
 
         Freeman(freeman).move(lastaddx, lastaddy, x, y);
 
         if (!pointInside(x, y, pl))
-          leftobj = true;
+          {
+            leftobj = true;
+          }
       }
 
     while (leftobj)
@@ -202,12 +220,16 @@ namespace ice
         freeman--;
 
         if (freeman == -1)
-          freeman = 7;
+          {
+            freeman = 7;
+          }
 
         Freeman(freeman).move(lastaddx, lastaddy, x, y);
 
         if (pointInside(x, y, pl))
-          leftobj = false;
+          {
+            leftobj = false;
+          }
       }
 
     c.Add(x, y);
@@ -226,11 +248,17 @@ namespace ice
           {
             freeman--;
 
-            if (freeman == -1) freeman = 7;
+            if (freeman == -1)
+              {
+                freeman = 7;
+              }
 
             Freeman(freeman).move(lastaddx, lastaddy, x, y);
 
-            if (pointInside(x, y, pl)) leftobj = false;
+            if (pointInside(x, y, pl))
+              {
+                leftobj = false;
+              }
           }
 
         c.Add(x, y);
@@ -239,7 +267,9 @@ namespace ice
       }
 
     if (c.isHole())
-      c.InvDir();
+      {
+        c.InvDir();
+      }
 
     return OK;
   }

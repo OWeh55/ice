@@ -41,7 +41,9 @@ namespace ice
     for (i = 0; i < row; i++)
       {
         for (j = 0; j < col; j++)
-          Printf("%f   ", *dptr++);
+          {
+            Printf("%f   ", *dptr++);
+          }
         Printf("\n");
       }
     Printf("\n\n");

@@ -117,10 +117,22 @@ namespace ice
     void Apply(const TextAttribs& neu)
     {
       int val;
-      if ((val = neu.getForeground()) > 0) setForeground(val);
-      if ((val = neu.getBackground()) > 0) setBackground(val);
-      if ((val = neu.getHighlight()) > 0) setHighlight(val);
-      if ((val = neu.getInvert()) > 0) setInvert(val);
+      if ((val = neu.getForeground()) > 0)
+        {
+          setForeground(val);
+        }
+      if ((val = neu.getBackground()) > 0)
+        {
+          setBackground(val);
+        }
+      if ((val = neu.getHighlight()) > 0)
+        {
+          setHighlight(val);
+        }
+      if ((val = neu.getInvert()) > 0)
+        {
+          setInvert(val);
+        }
     }
 
     operator int() const

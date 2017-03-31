@@ -75,7 +75,9 @@ namespace ice
     int refreshtime = wxGetApp().RefreshTime();
 
     if (refreshtime != 0 && refreshtime < 10)
-      refreshtime = 10; // not more than 100 Hz
+      {
+        refreshtime = 10;  // not more than 100 Hz
+      }
 
     if (refreshtime != 0)    // DEBUG: refreshtime==0 -> no Timer
       {
@@ -157,9 +159,13 @@ namespace ice
     GreyImageWindow* imageWindow;
 
     if (id.img1 != NULL)
-      imageWindow = new GreyImageWindow(id.img1, id.title);
+      {
+        imageWindow = new GreyImageWindow(id.img1, id.title);
+      }
     else
-      imageWindow = new GreyImageWindow(id.imgd, id.title);
+      {
+        imageWindow = new GreyImageWindow(id.imgd, id.title);
+      }
     WindowList.push_back(imageWindow);
     imageWindow->Show(true);
     id.v = imageWindow;
@@ -255,7 +261,9 @@ namespace ice
     for (std::list<ImageWindow*>::iterator it = WindowList.begin();
          it != WindowList.end();
          it++)
-      (*it)->SetGreyColor(Entry, RedValue, GreenValue, BlueValue);
+      {
+        (*it)->SetGreyColor(Entry, RedValue, GreenValue, BlueValue);
+      }
     return OK;
   }
 
@@ -267,7 +275,9 @@ namespace ice
     for (std::list<ImageWindow*>::iterator it = WindowList.begin();
          it != WindowList.end();
          it++)
-      (*it)->SetGreyLUT(First, Last);
+      {
+        (*it)->SetGreyLUT(First, Last);
+      }
     return OK;
   }
 
@@ -282,7 +292,9 @@ namespace ice
     for (std::list<ImageWindow*>::iterator it = WindowList.begin();
          it != WindowList.end();
          it++)
-      (*it)->SetOverlayColor(Entry, RedValue, GreenValue, BlueValue);
+      {
+        (*it)->SetOverlayColor(Entry, RedValue, GreenValue, BlueValue);
+      }
     return OK;
   }
 
@@ -320,8 +332,14 @@ namespace ice
     ImageData id;
     id.img1 = Img;
     id.title = name;
-    if (id.title.empty()) id.title = Img->getTitle();
-    if (id.title.empty()) id.title = ICEGRAFICNAME;
+    if (id.title.empty())
+      {
+        id.title = Img->getTitle();
+      }
+    if (id.title.empty())
+      {
+        id.title = ICEGRAFICNAME;
+      }
 
     switch (Mode)
       {
@@ -391,7 +409,10 @@ namespace ice
     id.imgd = Img;
     id.title = name;
     //    if (id.title.empty()) id.title = Img->getTitle();
-    if (id.title.empty()) id.title = ICEGRAFICNAME;
+    if (id.title.empty())
+      {
+        id.title = ICEGRAFICNAME;
+      }
 
     switch (Mode)
       {
@@ -438,10 +459,19 @@ namespace ice
     id.img2 = Image2;
 
     ImageBase* himg = Image1;
-    if (himg == NULL) himg = Image2;
+    if (himg == NULL)
+      {
+        himg = Image2;
+      }
     id.title = name;
-    if (id.title.empty()) id.title = himg->getTitle();
-    if (id.title.empty()) id.title = ICEGRAFICNAME;
+    if (id.title.empty())
+      {
+        id.title = himg->getTitle();
+      }
+    if (id.title.empty())
+      {
+        id.title = ICEGRAFICNAME;
+      }
 
     switch (Mode)
       {
@@ -449,7 +479,10 @@ namespace ice
       {
         // if no base image is provided we redirect the request to the
         // "one image" Show()
-        if (Image1 == NULL) return Show(Mode, Image2, name);
+        if (Image1 == NULL)
+          {
+            return Show(Mode, Image2, name);
+          }
 
         // Check if the images match in size.
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize)
@@ -477,9 +510,18 @@ namespace ice
             Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
             return NULL;
           }
-        if (Mode == OVERLAY1) id.param = 64;
-        else if (Mode == OVERLAY2) id.param = 128;
-        else id.param = 192;
+        if (Mode == OVERLAY1)
+          {
+            id.param = 64;
+          }
+        else if (Mode == OVERLAY2)
+          {
+            id.param = 128;
+          }
+        else
+          {
+            id.param = 192;
+          }
         // Windows MUST be created in main thread
         wxCommandEvent Event(CREATE_OVERLAY2_WIN);
         Event.SetClientData(&id);
@@ -507,8 +549,14 @@ namespace ice
     id.img2 = Image2;
     id.img3 = Image3;
     id.title = name;
-    if (id.title.empty()) id.title = Image1->getTitle();
-    if (id.title.empty()) id.title = ICEGRAFICNAME;
+    if (id.title.empty())
+      {
+        id.title = Image1->getTitle();
+      }
+    if (id.title.empty())
+      {
+        id.title = ICEGRAFICNAME;
+      }
 
     switch (Mode)
       {
@@ -556,8 +604,14 @@ namespace ice
     id.img5 = Image5;
     id.img6 = Image6;
     id.title = name;
-    if (id.title.empty()) id.title = Image1->getTitle() + " - " + Image4->getTitle();
-    if (id.title.empty()) id.title = ICEGRAFICNAME;
+    if (id.title.empty())
+      {
+        id.title = Image1->getTitle() + " - " + Image4->getTitle();
+      }
+    if (id.title.empty())
+      {
+        id.title = ICEGRAFICNAME;
+      }
 
     switch (Mode)
       {

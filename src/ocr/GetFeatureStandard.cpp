@@ -47,7 +47,9 @@ int GetFeatureStandard::get_feature(const Image& pic,
     {
       if (get_quantil_border(pic, c, threshold, win, 0, 0,
                              x_position) != 0)
-        return 0;
+        {
+          return 0;
+        }
     }
 
   Image temp = NewImg(win.Width(), win.Height(), 255);
@@ -69,7 +71,9 @@ int GetFeatureStandard::get_feature(const Image& pic,
     }
 
   if (temp->xsize > 1 && temp->ysize > 5)
-    normalizeSeg(temp, normalized, gitter1, gitter2);
+    {
+      normalizeSeg(temp, normalized, gitter1, gitter2);
+    }
   double breite = (double) normalized->xsize;
   double hoehe = (double) normalized->ysize;
   int k = 0;

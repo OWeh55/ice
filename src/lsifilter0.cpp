@@ -138,7 +138,9 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                {
+                  tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                }
 
             dest.setPixelUnchecked(x + offset_dest_x, y + offset_dest_y, limited(offset + tmpVal / norm, dmax));
           }
@@ -181,7 +183,9 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += mask[j * nx + i] * PixelSource[y + j][x + i];
+                {
+                  tmpVal += mask[j * nx + i] * PixelSource[y + j][x + i];
+                }
 
             PixelDestination[y + ny2][x + nx2] = limited(RoundInt(tmpVal), dmax);
           }
@@ -211,7 +215,9 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                {
+                  tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                }
 
             dest.setPixelUnchecked(x + nx2, y + ny2, RoundInt(tmpVal));
           }
@@ -229,7 +235,9 @@ namespace ice
     Image tmp = src;
 
     if (src == dest)
-      tmp = NewImg(src, true);
+      {
+        tmp = NewImg(src, true);
+      }
 
     switch ((src->ImageType() << 4) + dest->ImageType())
       {
@@ -266,7 +274,9 @@ namespace ice
     Image tmp = src;
 
     if (src == dest)
-      tmp = NewImg(src, true);
+      {
+        tmp = NewImg(src, true);
+      }
 
     switch ((src->ImageType() << 4) + dest->ImageType())
       {
@@ -393,7 +403,9 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                {
+                  tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                }
 
             PutValD(dest, x + offset_dest_x, y + offset_dest_y, tmpVal / norm);
           }
@@ -434,7 +446,9 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += mask[j * nx + i] * PixelSource[y + j][x + i];
+                {
+                  tmpVal += mask[j * nx + i] * PixelSource[y + j][x + i];
+                }
 
             PutValD(dest, x + nx2, y + ny2, tmpVal);
           }
@@ -460,7 +474,9 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                {
+                  tmpVal += mask[j * nx + i] * src.getPixelUnchecked(x + i, y + j);
+                }
 
             PutValD(dest, x + nx2, y + ny2, tmpVal);
           }
@@ -508,7 +524,9 @@ namespace ice
     // since we will write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if src == dest
     if (src == dest)
-      tmp = NewImgD(src, true);
+      {
+        tmp = NewImgD(src, true);
+      }
 
     int offset_dest_x = nx / 2;
     int offset_dest_y = ny / 2;
@@ -525,14 +543,18 @@ namespace ice
 
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
-                tmpVal += mask[j * nx + i] * GetValD(tmp, x + i, y + j);
+                {
+                  tmpVal += mask[j * nx + i] * GetValD(tmp, x + i, y + j);
+                }
 
             PutValD(dest, x + offset_dest_x, y + offset_dest_y, tmpVal / norm);
           }
       }
 
     if (src == dest)
-      FreeImgD(tmp);
+      {
+        FreeImgD(tmp);
+      }
 
     return OK;
   }
@@ -545,7 +567,9 @@ namespace ice
     // since we will write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if src == dest
     if (src == dest)
-      tmp = NewImgD(src, true);
+      {
+        tmp = NewImgD(src, true);
+      }
 
     int offset_dest_x = nx / 2;
     int offset_dest_y = ny / 2;
@@ -571,7 +595,9 @@ namespace ice
       }
 
     if (src == dest)
-      FreeImgD(tmp);
+      {
+        FreeImgD(tmp);
+      }
 
     return OK;
   }

@@ -24,7 +24,7 @@ namespace ice
 
     maxind = i1;
 
-    for (int i = i1 + 1; i < i2; i++) // alle zwischenpunkte
+    for (int i = i1 + 1; i < i2; i++)   // alle zwischenpunkte
       {
         double d = edge.Distance(base[i]);
 
@@ -57,7 +57,10 @@ namespace ice
         double dist = maxdistedge(i, i + 1, maxi1[i]);
         maxdist1[i] = dist;
 
-        if (dist > maxdist) maxdist = dist;
+        if (dist > maxdist)
+          {
+            maxdist = dist;
+          }
       }
   }
 
@@ -104,7 +107,9 @@ namespace ice
 
     for (unsigned int i = 0; i < maxdist1.size(); i++)
       if (maxdist1[i] > maxdist)
-        maxdist = maxdist1[i];
+        {
+          maxdist = maxdist1[i];
+        }
   }
 
   /**
@@ -115,9 +120,13 @@ namespace ice
     // inserts new corner _after_ pos
     int ipos = pos + 1;
     if (ipos >= (int)idx.size())
-      idx.push_back(baseindex);
+      {
+        idx.push_back(baseindex);
+      }
     else
-      idx.insert(idx.begin() + ipos, baseindex);
+      {
+        idx.insert(idx.begin() + ipos, baseindex);
+      }
 
     if (ipos >= (int) maxdist1.size())
       {
@@ -131,9 +140,13 @@ namespace ice
       }
 
     if (ipos >= (int)maxdist2.size())
-      maxdist2.push_back(0.0);
+      {
+        maxdist2.push_back(0.0);
+      }
     else
-      maxdist2.insert(maxdist2.begin() + ipos, 0);
+      {
+        maxdist2.insert(maxdist2.begin() + ipos, 0);
+      }
 
     updatedist1(pos);
     updatedist1(pos + 1);
@@ -162,9 +175,13 @@ namespace ice
     maxi1.erase(maxi1.begin() + pos);
 
     if (pos < (int)maxdist2.size())
-      maxdist2.erase(maxdist2.begin() + pos);
+      {
+        maxdist2.erase(maxdist2.begin() + pos);
+      }
     else
-      maxdist2.pop_back();
+      {
+        maxdist2.pop_back();
+      }
 
     updatedist1(pos - 1);
 
@@ -188,7 +205,9 @@ namespace ice
       case all:
 
         for (int i = 0; i < nbasepoint; i++)
-          idx.push_back(i);
+          {
+            idx.push_back(i);
+          }
 
         break;
       case two:
@@ -265,7 +284,9 @@ namespace ice
     int i2 = idx[reducednormal(ii2)];
 
     if (i2 < i1)
-      i2 += base.size();
+      {
+        i2 += base.size();
+      }
     /*
     if (idx.size()<8)
       {
@@ -280,7 +301,7 @@ namespace ice
 
     maxind = i1;
 
-    for (int i = i1 + 1; i < i2; i++) // alle zwischenpunkte
+    for (int i = i1 + 1; i < i2; i++)   // alle zwischenpunkte
       {
         int in = basenormal(i);
         double d = edge.Distance(base[in]);
@@ -314,7 +335,9 @@ namespace ice
     // std::cout << "distance: " << dist << std::endl;
     maxdist1[i] = dist;
     if (dist > maxdist)
-      maxdist = dist;
+      {
+        maxdist = dist;
+      }
   }
 
   void reduced_poly_cyclic::updatedist2(int i)
@@ -418,7 +441,9 @@ namespace ice
       {
       case all:
         for (int i = 0; i < nbasepoint; i++)
-          idx.push_back(i);
+          {
+            idx.push_back(i);
+          }
 
         break;
 

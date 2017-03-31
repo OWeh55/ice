@@ -113,7 +113,9 @@ namespace ice
     Pixelarray = new ValueType[xsize * ysize];
 
     for (int y = 0; y < ysize; y++)
-      Pixel[y] = &Pixelarray[y * xsize];
+      {
+        Pixel[y] = &Pixelarray[y * xsize];
+      }
 
     can_delete = true;
   }
@@ -139,7 +141,9 @@ namespace ice
     can_delete = false;
 
     for (int y = 0; y < ysize; y++)
-      Pixel[y] = img->PixelAddress(w.p1.x, w.p1.y + y);
+      {
+        Pixel[y] = img->PixelAddress(w.p1.x, w.p1.y + y);
+      }
   }
 
   template<typename ValueType>
@@ -148,7 +152,9 @@ namespace ice
     destroy();
 
     if (can_delete)
-      delete [] Pixelarray;
+      {
+        delete [] Pixelarray;
+      }
 
     delete [] Pixel;
   }
@@ -210,7 +216,9 @@ namespace ice
     // now we can copy the Pixels line per line
 
     for (int y = 0; y < ysize; y++)
-      memcpy(Pixel[y], ((iceImage<ValueType>*)source)->Pixel[y], sizeof(ValueType)*xsize);
+      {
+        memcpy(Pixel[y], ((iceImage<ValueType>*)source)->Pixel[y], sizeof(ValueType)*xsize);
+      }
 
 #ifdef CONTROLLED_REFRESH
     needRefresh();
@@ -225,7 +233,9 @@ namespace ice
         ValueType* pptr = Pixel[y];
 
         for (int x = 0; x < xsize; x++)
-          *(pptr++) = val;
+          {
+            *(pptr++) = val;
+          }
       }
 
 #ifdef CONTROLLED_REFRESH

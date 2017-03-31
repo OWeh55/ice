@@ -33,7 +33,9 @@ namespace ice
 
     // upper border (with title)
     if (title.length() < width - 1 && title.length() > 0)
-      title = " " + title + " ";
+      {
+        title = " " + title + " ";
+      }
 
     unsigned int right = width / 2;
     unsigned int left = width - right;
@@ -49,26 +51,37 @@ namespace ice
 
     SetAlphaCursor(x1, y1);
     PutChar(R_LO); // upper left corner
-    for (unsigned int n = 0; n < left; n++) // upper border (left)
-      PutChar(R_OU); // upper right corner
-    for (unsigned int n = 0; n < tlen; n++) // upper border (left)
-      PutChar(title[n]); // title
-    for (unsigned int n = 0; n < right; n++) // upper border (right)
-      PutChar(R_OU); // upper right corner
+    for (unsigned int n = 0; n < left; n++)   // upper border (left)
+      {
+        PutChar(R_OU);  // upper right corner
+      }
+    for (unsigned int n = 0; n < tlen; n++)   // upper border (left)
+      {
+        PutChar(title[n]);  // title
+      }
+    for (unsigned int n = 0; n < right; n++)   // upper border (right)
+      {
+        PutChar(R_OU);  // upper right corner
+      }
     PutChar(R_RO);
 
     for (int y = y1 + 1; y < y2; y++)
       {
         SetAlphaCursor(x1, y);
         PutChar(R_LR); // left border
-        for (unsigned int n = 0; n < width; n++) Printf(" "); // space
+        for (unsigned int n = 0; n < width; n++)
+          {
+            Printf(" ");  // space
+          }
         PutChar(R_LR); // right border
       }
 
     SetAlphaCursor(x1, y2);
     PutChar(R_LU);
     for (unsigned int n = 0; n < width; n++)
-      PutChar(R_OU);
+      {
+        PutChar(R_OU);
+      }
     PutChar(R_RU);
   }
 
@@ -87,18 +100,26 @@ namespace ice
             i++;
           }
         else if (c == '#')
-          i++; // ignore attribute
+          {
+            i++;  // ignore attribute
+          }
         else
           {
             if (first == 0)
               if (c != '.')
-                first = c;
+                {
+                  first = c;
+                }
           }
       }
     if (selection != 0)
-      return selection;
+      {
+        return selection;
+      }
     if (first != 0)
-      return first;
+      {
+        return first;
+      }
     return ' ';
   }
 
@@ -226,9 +247,13 @@ namespace ice
   {
     SetAlphaCursor(x, y);
     if (current == selected)
-      PutChar('*'); //  mark selected
+      {
+        PutChar('*');  //  mark selected
+      }
     else
-      PutChar(' ');
+      {
+        PutChar(' ');
+      }
 
     printstring(items[current], dx);
   }
@@ -239,7 +264,10 @@ namespace ice
   {
     vector<string> Men = zz; // internal (not constant) menu list
 
-    if (zz.empty()) return ERROR;
+    if (zz.empty())
+      {
+        return ERROR;
+      }
 
     /* convert strings with keys */
     for (vector<string>::iterator a = Men.begin(); a != Men.end(); a++)
@@ -252,13 +280,28 @@ namespace ice
 
     TextAttribs old_attr = GetTextAttributes();
 
-    if (restore) PushAlpha();
+    if (restore)
+      {
+        PushAlpha();
+      }
 
     // defaultwerte box
-    if (x1 < 0) x1 = 2;
-    if (y1 < 0) y1 = 2;
-    if (x2 < 0) x2 = 30;
-    if (y2 < 0) y2 = 23;
+    if (x1 < 0)
+      {
+        x1 = 2;
+      }
+    if (y1 < 0)
+      {
+        y1 = 2;
+      }
+    if (x2 < 0)
+      {
+        x2 = 30;
+      }
+    if (y2 < 0)
+      {
+        y2 = 23;
+      }
 
     frame(x1, y1, x2, y2, title);
     SetAttribute(-1, -1, -1, 0); // Intensität normal
@@ -278,7 +321,7 @@ namespace ice
 
         int current_item = first_item;
         // Menu darstellen
-        while ((y < y2) && (current_item < (int)Men.size())) // till end of list or end of screen
+        while ((y < y2) && (current_item < (int)Men.size()))   // till end of list or end of screen
           {
             printitem(Men, current_item, selected_item, x, y, dx);
             y++;
@@ -333,22 +376,41 @@ namespace ice
           break;
           }
         // limit range of selection
-        if (selected_item < 0) selected_item = 0;
-        if (selected_item >= (int)Men.size()) selected_item = Men.size() - 1;
+        if (selected_item < 0)
+          {
+            selected_item = 0;
+          }
+        if (selected_item >= (int)Men.size())
+          {
+            selected_item = Men.size() - 1;
+          }
 
         //
-        if (selected_item < first_item) first_item = selected_item;
-        if (selected_item > last_item) first_item += (selected_item - last_item);
+        if (selected_item < first_item)
+          {
+            first_item = selected_item;
+          }
+        if (selected_item > last_item)
+          {
+            first_item += (selected_item - last_item);
+          }
 
       }
 
     SetTextAttributes(old_attr);
-    if (restore) PopAlpha();
+    if (restore)
+      {
+        PopAlpha();
+      }
 
     if (done)
-      return selected_item;
+      {
+        return selected_item;
+      }
     else
-      return ERROR;
+      {
+        return ERROR;
+      }
   }
 
   int Menu(const vector<string>& zz, const vector<int>& id,
@@ -361,7 +423,10 @@ namespace ice
         return WRONG_PARAM;
       }
     int sel = Menu(zz, x1, y1, x2, y2, restore, title);
-    if (sel >= 0) sel = id[sel];
+    if (sel >= 0)
+      {
+        sel = id[sel];
+      }
     return sel;
   }
 
@@ -375,7 +440,10 @@ namespace ice
         return WRONG_PARAM;
       }
     int sel = Menu(zz, x1, y1, x2, y2, restore, title);
-    if (sel >= 0) sel = id[sel];
+    if (sel >= 0)
+      {
+        sel = id[sel];
+      }
     return sel;
   }
 #undef FNAME
@@ -392,7 +460,10 @@ namespace ice
     if (!men.empty())
       {
         i = Menu(men, x1, y1, x2, y2, restore, title);
-        if (i < 0) return "";
+        if (i < 0)
+          {
+            return "";
+          }
         return men[i];
       }
     return "";
@@ -407,19 +478,23 @@ namespace ice
     SplitFilename(mask, path, mask);
     // cout << path << " - " << mask << endl;
     if (path.empty())
-      path = ".";
+      {
+        path = ".";
+      }
     bool cont = true;
     bool ok = false;
     while (cont)
       {
         vector<string> dir;
         int dirnr = 0;
-        if (mode & DIR_SELPATH) // directory list is needed to change directory
+        if (mode & DIR_SELPATH)   // directory list is needed to change directory
           {
             dir.push_back("..");
             Directory(dir, path, "*", DIR_DIR);
             for (unsigned int i = 0; i < dir.size(); i++)
-              dir[i] = "[~" + dir[i] + "]";
+              {
+                dir[i] = "[~" + dir[i] + "]";
+              }
 
             dirnr = dir.size();
           }
@@ -429,23 +504,31 @@ namespace ice
               {
                 Directory(dir, path, mask, DIR_DIR);
                 for (unsigned int i = dirnr; i < dir.size(); i++)
-                  dir[i] = "~" + dir[i];
+                  {
+                    dir[i] = "~" + dir[i];
+                  }
               }
           }
         if (mode & DIR_FILE)
           {
             Directory(dir, path, mask, DIR_FILE);
             for (unsigned int i = dirnr; i < dir.size(); i++)
-              dir[i] = "~" + dir[i];
+              {
+                dir[i] = "~" + dir[i];
+              }
           }
 
         if (dir.empty())
-          cont = false;
+          {
+            cont = false;
+          }
 
         string mtitle = title + " (" + path + ")";
         int i = Menu(dir, x1, y1, x2, y2, true, mtitle);
         if (i < 0)
-          cont = false;
+          {
+            cont = false;
+          }
         else
           {
             if (i < dirnr)

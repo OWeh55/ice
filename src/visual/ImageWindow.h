@@ -114,7 +114,9 @@ namespace ice
     virtual ~ImageWindow()
     {
       for (unsigned int i = 0; i < imgs.size(); ++i)
-        delete imgs[i];
+        {
+          delete imgs[i];
+        }
     };
     virtual bool Create(unsigned int SizeX, unsigned int SizeY);
 
@@ -279,7 +281,9 @@ namespace ice
       for (unsigned int i = 0; i < imgs.size(); i++)
         {
           if (imgs[i]->CheckTimeStamp())
-            rc = true;
+            {
+              rc = true;
+            }
         }
       return rc;
     }
@@ -331,18 +335,26 @@ namespace ice
   inline int ImageWindow::getVirtualSizeX() const
   {
     if (ZoomFactor > 0)
-      return SizeX * ZoomFactor + 2 * border;
+      {
+        return SizeX * ZoomFactor + 2 * border;
+      }
     if (ZoomFactor < 0)
-      return SizeX / -ZoomFactor + 2 * border;
+      {
+        return SizeX / -ZoomFactor + 2 * border;
+      }
     return 0;
   }
 
   inline int ImageWindow::getVirtualSizeY() const
   {
     if (ZoomFactor > 0)
-      return SizeY * ZoomFactor + 2 * border;
+      {
+        return SizeY * ZoomFactor + 2 * border;
+      }
     if (ZoomFactor < 0)
-      return SizeY / -ZoomFactor + 2 * border;
+      {
+        return SizeY / -ZoomFactor + 2 * border;
+      }
     return 0;
   }
 }

@@ -89,7 +89,10 @@ namespace ice
     rc = RegOpenKeyExA(HKEY_CURRENT_USER,
                        REG_PATH_2_CHANNEL_DEFS,
                        0, KEY_READ, &hkey);
-    if (rc != ERROR_SUCCESS) return FALSE;
+    if (rc != ERROR_SUCCESS)
+      {
+        return FALSE;
+      }
     rc = RegQueryValueExA(hkey,
                           key,
                           NULL,
@@ -97,13 +100,16 @@ namespace ice
                           (byte*)retstr,
                           &DataSize);
     RegCloseKey(hkey);
-    if (rc != ERROR_SUCCESS || Type != REG_SZ || retstr[0] == 0)  return NULL;
+    if (rc != ERROR_SUCCESS || Type != REG_SZ || retstr[0] == 0)
+      {
+        return NULL;
+      }
     return retstr;
   }
 
   int SetChannelRegistryStr(int channel, char* str)
   {
-    if (str == NULL) // Eintrag löschen
+    if (str == NULL)   // Eintrag löschen
       {
 
         HKEY   hkey;  // handle of open key
@@ -116,7 +122,10 @@ namespace ice
                            REG_PATH_2_CHANNEL_DEFS,
                            0, KEY_ALL_ACCESS, &hkey);
 
-        if (rc != ERROR_SUCCESS) return FALSE;
+        if (rc != ERROR_SUCCESS)
+          {
+            return FALSE;
+          }
 
         char nullstr[3] = {0};
         rc = RegSetValueExA(hkey,
@@ -127,7 +136,10 @@ namespace ice
                             1);
 
         RegCloseKey(hkey);
-        if (rc != ERROR_SUCCESS)  return FALSE;
+        if (rc != ERROR_SUCCESS)
+          {
+            return FALSE;
+          }
       }
     else
       {
@@ -141,13 +153,19 @@ namespace ice
                            REG_PATH_2_CHANNEL_DEFS,
                            &hkey);
 
-        if (rc != ERROR_SUCCESS) return FALSE;
+        if (rc != ERROR_SUCCESS)
+          {
+            return FALSE;
+          }
         RegCloseKey(hkey);
         rc = RegOpenKeyExA(HKEY_CURRENT_USER,
                            REG_PATH_2_CHANNEL_DEFS,
                            0, KEY_WRITE, &hkey);
 
-        if (rc != ERROR_SUCCESS) return FALSE;
+        if (rc != ERROR_SUCCESS)
+          {
+            return FALSE;
+          }
 
         rc = RegSetValueExA(hkey,
                             key,
@@ -157,7 +175,10 @@ namespace ice
                             DataSize);
         RegCloseKey(hkey);
 
-        if (rc != ERROR_SUCCESS)  return FALSE;
+        if (rc != ERROR_SUCCESS)
+          {
+            return FALSE;
+          }
       }
     return true;
   }
@@ -181,7 +202,10 @@ namespace ice
 #define FNAME "ScanInit"
   int ScanInit()
   {
-    if (is_init) return OK;
+    if (is_init)
+      {
+        return OK;
+      }
     int i = 0, ifunc, found;
     string hs;
     string type;
@@ -203,7 +227,10 @@ namespace ice
                   found = true;
                   break;
                 }
-              else ifunc++;
+              else
+                {
+                  ifunc++;
+                }
 
             /* ignore unknown definitions
                if (!found) {
@@ -212,14 +239,20 @@ namespace ice
                }
             */
             if (found)
-              channelnum++;
+              {
+                channelnum++;
+              }
             else
-              cout << "Ignoring scan channel definition " << es << endl;
+              {
+                cout << "Ignoring scan channel definition " << es << endl;
+              }
           }
         i++;
       }
     while (i < MAXSCANCHANNEL)
-      Channel[i++].flags = 0;
+      {
+        Channel[i++].flags = 0;
+      }
     is_init = TRUE;
     return OK;
   }
@@ -308,7 +341,9 @@ namespace ice
       }
 
     if ((Channel[ch].flags & SC_DIALOG) != 0)
-      return (*(Channel[ch].dialog))(ch);
+      {
+        return (*(Channel[ch].dialog))(ch);
+      }
     return OK;
   }
 #undef FNAME
@@ -330,7 +365,9 @@ namespace ice
       }
 
     if ((Channel[ch].flags & SC_PREVIEW) != 0)
-      return (*(Channel[ch].preview))(ch, on);
+      {
+        return (*(Channel[ch].preview))(ch, on);
+      }
     else
       {
         Message(FNAME, M_NO_PREVIEW, ERROR);
@@ -434,7 +471,10 @@ namespace ice
           }
         Buffer2Image(ib, pi, IB_SCALE);
         if (interactive)
-          if (GetKey() == 13) interactive = FALSE;
+          if (GetKey() == 13)
+            {
+              interactive = FALSE;
+            }
       }
     while (interactive);
     return OK;
@@ -479,7 +519,10 @@ namespace ice
           }
         else
           {
-            if (!IsImg(pr)) interactive = FALSE; // interactive nicht ohne sichtbares Bild
+            if (!IsImg(pr))
+              {
+                interactive = FALSE;  // interactive nicht ohne sichtbares Bild
+              }
           }
       }
 
@@ -492,7 +535,10 @@ namespace ice
           }
         Buffer2Image(ib, pr, pg, pb, IB_SCALE);
         if (interactive)
-          if (GetKey() == 13) interactive = FALSE;
+          if (GetKey() == 13)
+            {
+              interactive = FALSE;
+            }
       }
     while (interactive);
     return OK;
@@ -517,7 +563,9 @@ namespace ice
       }
 
     if ((Channel[ch].flags & SC_GLOBALDRIVER) != 0)
-      return (*(Channel[ch].setdriverextdata))(ch, datanr, val, issubchannel);
+      {
+        return (*(Channel[ch].setdriverextdata))(ch, datanr, val, issubchannel);
+      }
 
     return OK;
   }
@@ -540,7 +588,9 @@ namespace ice
       }
 
     if ((Channel[ch].flags & SC_EXTDATA) != 0)
-      return (*(Channel[ch].getdriverextdata))(ch, datanr, val, issubchannel, desc);
+      {
+        return (*(Channel[ch].getdriverextdata))(ch, datanr, val, issubchannel, desc);
+      }
 
     Message(FNAME, "No global driver", ERROR);
     return ERROR;

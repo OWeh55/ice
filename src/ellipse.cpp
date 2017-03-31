@@ -174,13 +174,17 @@ namespace ice
     phi2 = FMod(phi2, 2 * M_PI);
 
     if (phi2 < phi1)
-      phi2 += 2 * M_PI;
+      {
+        phi2 += 2 * M_PI;
+      }
 
     phi1a = FMod(phi1 + phi, 2 * M_PI);
     phi2a = FMod(phi2 + phi, 2 * M_PI);
 
     if (phi2a < phi1a)
-      phi2a += 2 * M_PI;
+      {
+        phi2a += 2 * M_PI;
+      }
 
     cc = cos(phi);
     ss = sin(phi);
@@ -253,7 +257,10 @@ namespace ice
 
     double fi = atan2(yr, xr);
 
-    if (fi < phi1a) fi += 2 * M_PI;
+    if (fi < phi1a)
+      {
+        fi += 2 * M_PI;
+      }
 
     if (fi > phi2a)
       {

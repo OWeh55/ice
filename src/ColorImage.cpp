@@ -50,7 +50,9 @@ namespace ice
     title = newtitle;
 
     if (title.empty())
-      title = src.title;
+      {
+        title = src.title;
+      }
     makeValid();
   }
 
@@ -70,9 +72,13 @@ namespace ice
         makeValid();
 
         if (!title.empty())
-          this->title = title;
+          {
+            this->title = title;
+          }
         else
-          this->title = rot->getTitle() + "/" + gruen->getTitle() + "/" + blau->getTitle();
+          {
+            this->title = rot->getTitle() + "/" + gruen->getTitle() + "/" + blau->getTitle();
+          }
       }
   }
 #undef FNAME
@@ -87,7 +93,9 @@ namespace ice
     maxval = maxValue;
     title = title_p;
     if (!title.empty())
-      title += " - ";
+      {
+        title += " - ";
+      }
     RETURN_VOID_IF_FAILED(red.create(xsize, ysize, maxval, title + "red"));
     RETURN_VOID_IF_FAILED(green.create(xsize, ysize, maxval, title + "green"));
     RETURN_VOID_IF_FAILED(blue.create(xsize, ysize, maxval, title + "blue"));
@@ -136,7 +144,9 @@ namespace ice
     ColorImage result;
     result.create(src, title);
     if (copy)
-      result.copy(src);
+      {
+        result.copy(src);
+      }
     return result;
   }
 
@@ -145,14 +155,18 @@ namespace ice
     ColorImage result;
     result.create(src, title);
     if (copy)
-      result.copy(src);
+      {
+        result.copy(src);
+      }
     return result;
   }
 
   bool ColorImage::makeValid()
   {
     if (!red.isValid())
-      return false;
+      {
+        return false;
+      }
     xsize = red.xsize;
     ysize = red.ysize;
     maxval = red.maxval;
@@ -163,11 +177,15 @@ namespace ice
   {
     //    std::cout << "isValid" << std::endl;
     if (!(red.isValid() && green.isValid() && blue.isValid()))
-      return false;
+      {
+        return false;
+      }
 
     //    std::cout << "isValid2" << std::endl;
     if (red == green || green == blue || red == blue)
-      return false;
+      {
+        return false;
+      }
 
     //    std::cout << "isValid (ne)" << std::endl;
     //    std::cout << xsize << " " << ysize << " " << maxval << std::endl;

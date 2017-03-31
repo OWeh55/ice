@@ -76,9 +76,15 @@ namespace ice
       {
         ind = pl[0][ap][0] - x1;
 
-        if (pl[0][ap][1] > maxy[ind]) maxy[ind] = pl[0][ap][1];
+        if (pl[0][ap][1] > maxy[ind])
+          {
+            maxy[ind] = pl[0][ap][1];
+          }
 
-        if (pl[0][ap][1] < miny[ind]) miny[ind] = pl[0][ap][1];
+        if (pl[0][ap][1] < miny[ind])
+          {
+            miny[ind] = pl[0][ap][1];
+          }
       }
 
     pl[0] = IMatrix(xlen, 2);
@@ -106,8 +112,13 @@ namespace ice
             dy2 = pl[i1][ind][1] - pl[i1][ind + 1][1];
 
             if (dx1 * dy2 - dy1 * dx2 < 0)
-              pl[i2].Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
-            else ready = false;
+              {
+                pl[i2].Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
+              }
+            else
+              {
+                ready = false;
+              }
           }
 
         pl[i2].Append(IVector(pl[i1][pl[i1].rows() - 1][0],
@@ -131,13 +142,17 @@ namespace ice
         result = Contur(x1, maxy[0]);
 
         for (ind = 0; ind < pl[i1].rows(); ind++)
-          result.Add(pl[i1][ind][0], pl[i1][ind][1]);
+          {
+            result.Add(pl[i1][ind][0], pl[i1][ind][1]);
+          }
 
       }
     else if (mode == CC_EXACT)
       {
         for (ind = 0; ind < pl[i1].rows(); ind++)
-          poly.Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
+          {
+            poly.Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
+          }
       }
 
 
@@ -163,8 +178,13 @@ namespace ice
             dy2 = pl[i1][ind][1] - pl[i1][ind + 1][1];
 
             if (dx1 * dy2 - dy1 * dx2 < 0)
-              pl[i2].Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
-            else ready = false;
+              {
+                pl[i2].Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
+              }
+            else
+              {
+                ready = false;
+              }
           }
 
         pl[i2].Append(IVector(pl[i1][pl[i1].rows() - 1][0],
@@ -186,21 +206,31 @@ namespace ice
     if (mode == CC_FAST)
       {
         for (ind = 0; ind < pl[i1].rows(); ind++)
-          result.Add(pl[i1][ind][0], pl[i1][ind][1]);
+          {
+            result.Add(pl[i1][ind][0], pl[i1][ind][1]);
+          }
 
         result.Add(x1, maxy[0]); // Contur schliessen
       }
     else if (mode == CC_EXACT)
       {
         for (ind = 0; ind < pl[i1].rows(); ind++)
-          poly.Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
+          {
+            poly.Append(IVector(pl[i1][ind][0], pl[i1][ind][1]));
+          }
 
         conturFromPolygon(poly, result);
       }
 
-    if (result.isHole() && !c.isHole()) result.InvDir();
+    if (result.isHole() && !c.isHole())
+      {
+        result.InvDir();
+      }
 
-    if (!result.isHole() && c.isHole()) result.InvDir();
+    if (!result.isHole() && c.isHole())
+      {
+        result.InvDir();
+      }
 
     return result;
   }

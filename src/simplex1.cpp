@@ -247,7 +247,10 @@ namespace ice
 
         col_out = pick_neg(m, x_B);
 
-        if (col_out == -1) break; /* ready for Phase II */
+        if (col_out == -1)
+          {
+            break;  /* ready for Phase II */
+          }
 
         /*************************************************************
          *                          -1  T                             *
@@ -319,12 +322,18 @@ namespace ice
          *************************************************************/
 
         /* this is inefficient - it should be fixed */
-        for (k = 0; k < ndx_B; k++) if (idx_B[k] == col_out) break;
+        for (k = 0; k < ndx_B; k++) if (idx_B[k] == col_out)
+            {
+              break;
+            }
 
         t = x_B[col_out] / dx_B[k];
 
         /* this is inefficient - it should be fixed */
-        for (k = 0; k < ndy_N; k++) if (idy_N[k] == col_in) break;
+        for (k = 0; k < ndy_N; k++) if (idy_N[k] == col_in)
+            {
+              break;
+            }
 
         s = y_N[col_in] / dy_N[k];
 
@@ -415,7 +424,10 @@ namespace ice
                dy_N, idy_N, &ndy_N);   /* use sparse vector dy_N */
     /* temporarily */
 
-    for (j = 0; j < n; j++) y_N[j] = -c[nonbasics[j]];
+    for (j = 0; j < n; j++)
+      {
+        y_N[j] = -c[nonbasics[j]];
+      }
 
     for (k = 0; k < ndy_N; k++)
       {
@@ -446,7 +458,10 @@ namespace ice
 
         col_in = pick_neg(n, y_N);
 
-        if (col_in == -1) break;  /* optimal */
+        if (col_in == -1)
+          {
+            break;  /* optimal */
+          }
 
         /*************************************************************
          *                        -1                                  *
@@ -518,13 +533,19 @@ namespace ice
 
         /* this is inefficient - it should be fixed */
         for (k = 0; k < ndx_B; k++)
-          if (idx_B[k] == col_out) break;
+          if (idx_B[k] == col_out)
+            {
+              break;
+            }
 
         t    =    x_B[col_out] / dx_B[k];
 
         /* this is inefficient - it should be fixed */
         for (k = 0; k < ndy_N; k++)
-          if (idy_N[k] == col_in) break;
+          if (idy_N[k] == col_in)
+            {
+              break;
+            }
 
         s    =    y_N[col_in] / dy_N[k];
 
@@ -593,19 +614,34 @@ namespace ice
      ****************************************************************/
     *zf = primal_obj;
 
-    for (j = 0; j < N; j++) x[j] = 0.0;
+    for (j = 0; j < N; j++)
+      {
+        x[j] = 0.0;
+      }
 
-    for (i = 0; i < m; i++) x[basics[i]] = x_B[i];
+    for (i = 0; i < m; i++)
+      {
+        x[basics[i]] = x_B[i];
+      }
 
-    for (j = 0; j < N; j++) y[j] = 0.0;
+    for (j = 0; j < N; j++)
+      {
+        y[j] = 0.0;
+      }
 
-    for (i = 0; i < n; i++) y[nonbasics[i]] = y_N[i];
+    for (i = 0; i < n; i++)
+      {
+        y[nonbasics[i]] = y_N[i];
+      }
 
     /****************************************************************
      *  Split out slack variables and shift dual variables.
      ****************************************************************/
 
-    for (j = 0; j < n; j++) z[j] = y[j];
+    for (j = 0; j < n; j++)
+      {
+        z[j] = y[j];
+      }
 
     for (i = 0; i < m; i++)
       {
@@ -644,7 +680,9 @@ namespace ice
     printf("SOLUTION:\n\n");
 
     for (i = 0; i < m; i++)
-      printf("  X[%d] = %lf\n", basics[i], high(X[i]));
+      {
+        printf("  X[%d] = %lf\n", basics[i], high(X[i]));
+      }
   }
 #endif
 
@@ -669,9 +707,15 @@ namespace ice
     extern int* Nt_times_y_link;
     extern int  Nt_times_y_currtag;
 
-    if (Nt_times_y_a    == NULL) MALLOC(Nt_times_y_a,  n,   double);
+    if (Nt_times_y_a    == NULL)
+      {
+        MALLOC(Nt_times_y_a,  n,   double);
+      }
 
-    if (Nt_times_y_tag  == NULL) CALLOC(Nt_times_y_tag, n,   int);
+    if (Nt_times_y_tag  == NULL)
+      {
+        CALLOC(Nt_times_y_tag, n,   int);
+      }
 
     if (Nt_times_y_link == NULL)
       {
@@ -940,7 +984,10 @@ namespace ice
 
         col_out = pick_neg(m, x_B);
 
-        if (col_out == -1) break; /* ready for Phase II */
+        if (col_out == -1)
+          {
+            break;  /* ready for Phase II */
+          }
 
         /*************************************************************
          *                          -1  T                             *
@@ -1012,12 +1059,18 @@ namespace ice
          *************************************************************/
 
         /* this is inefficient - it should be fixed */
-        for (k = 0; k < ndx_B; k++) if (idx_B[k] == col_out) break;
+        for (k = 0; k < ndx_B; k++) if (idx_B[k] == col_out)
+            {
+              break;
+            }
 
         t = x_B[col_out] / dx_B[k];
 
         /* this is inefficient - it should be fixed */
-        for (k = 0; k < ndy_N; k++) if (idy_N[k] == col_in) break;
+        for (k = 0; k < ndy_N; k++) if (idy_N[k] == col_in)
+            {
+              break;
+            }
 
         s = y_N[col_in] / dy_N[k];
 
@@ -1108,7 +1161,10 @@ namespace ice
                dy_N, idy_N, &ndy_N);   /* use sparse vector dy_N */
     /* temporarily */
 
-    for (j = 0; j < n; j++) y_N[j] = -c[nonbasics[j]];
+    for (j = 0; j < n; j++)
+      {
+        y_N[j] = -c[nonbasics[j]];
+      }
 
     for (k = 0; k < ndy_N; k++)
       {
@@ -1139,7 +1195,10 @@ namespace ice
 
         col_in = pick_neg(n, y_N);
 
-        if (col_in == -1) break;  /* optimal */
+        if (col_in == -1)
+          {
+            break;  /* optimal */
+          }
 
         /*************************************************************
          *                        -1                                  *
@@ -1210,12 +1269,18 @@ namespace ice
          *************************************************************/
 
         /* this is inefficient - it should be fixed */
-        for (k = 0; k < ndx_B; k++) if (idx_B[k] == col_out) break;
+        for (k = 0; k < ndx_B; k++) if (idx_B[k] == col_out)
+            {
+              break;
+            }
 
         t    =    x_B[col_out] / dx_B[k];
 
         /* this is inefficient - it should be fixed */
-        for (k = 0; k < ndy_N; k++) if (idy_N[k] == col_in) break;
+        for (k = 0; k < ndy_N; k++) if (idy_N[k] == col_in)
+            {
+              break;
+            }
 
         s    =    y_N[col_in] / dy_N[k];
 
@@ -1277,19 +1342,34 @@ namespace ice
      ****************************************************************/
     *zf = primal_obj;
 
-    for (j = 0; j < N; j++) x[j] = 0.0;
+    for (j = 0; j < N; j++)
+      {
+        x[j] = 0.0;
+      }
 
-    for (i = 0; i < m; i++) x[basics[i]] = x_B[i];
+    for (i = 0; i < m; i++)
+      {
+        x[basics[i]] = x_B[i];
+      }
 
-    for (j = 0; j < N; j++) y[j] = 0.0;
+    for (j = 0; j < N; j++)
+      {
+        y[j] = 0.0;
+      }
 
-    for (i = 0; i < n; i++) y[nonbasics[i]] = y_N[i];
+    for (i = 0; i < n; i++)
+      {
+        y[nonbasics[i]] = y_N[i];
+      }
 
     /****************************************************************
      *  Split out slack variables and shift dual variables.
      ****************************************************************/
 
-    for (j = 0; j < n; j++) z[j] = y[j];
+    for (j = 0; j < n; j++)
+      {
+        z[j] = y[j];
+      }
 
     for (i = 0; i < m; i++)
       {

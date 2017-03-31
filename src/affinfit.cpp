@@ -242,7 +242,10 @@ namespace ice
           {
             hilfe = norm_moments[i] - moments_aff[i];
 
-            if (i == 0) hilfe = hilfe / 10.0;
+            if (i == 0)
+              {
+                hilfe = hilfe / 10.0;
+              }
 
             sum += hilfe * hilfe;
           }
@@ -289,13 +292,17 @@ namespace ice
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        M1->data[i][j] = atr[i][j];
+        {
+          M1->data[i][j] = atr[i][j];
+        }
 
     InvertMat(M1, M2);
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        atr_inv[i][j] = M2->data[i][j];
+        {
+          atr_inv[i][j] = M2->data[i][j];
+        }
 
     TransPoint(p1, atr_inv, seg_par1);
     TransPoint(p2, atr_inv, seg_par2);
@@ -579,13 +586,17 @@ namespace ice
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        M1->data[i][j] = ctr[i][j];
+        {
+          M1->data[i][j] = ctr[i][j];
+        }
 
     InvertMat(M1, M2);
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        ctr_inv[i][j] = M2->data[i][j];
+        {
+          ctr_inv[i][j] = M2->data[i][j];
+        }
 
     TransPoint(p1, ctr_inv, seg_par1);
     TransPoint(p2, ctr_inv, seg_par2);
@@ -861,7 +872,10 @@ namespace ice
         tan2phi = 2 * moment_t[4] / (moment_t[3] - moment_t[5]);
         phi1 = atan(tan2phi) / 2.0;
 
-        if (phi1 < 0.0) phi1 += M_PI / 2.0;
+        if (phi1 < 0.0)
+          {
+            phi1 += M_PI / 2.0;
+          }
 
         wert1 = moment_t[3] * cos(phi1) * cos(phi1);
         wert1 += 2.0 * moment_t[4] * cos(phi1) * sin(phi1);
@@ -950,11 +964,17 @@ namespace ice
     tan_phi = tan(phi_3);
     NewtonRaphson(moment, tan_phi, 1.0e-10, f3, f3_strich, root_tan);
 
-    if (root_tan < 0) root_tan = -root_tan;
+    if (root_tan < 0)
+      {
+        root_tan = -root_tan;
+      }
 
     h = atan(root_tan);
 
-    if (fabs((h - phi_3) / M_PI * 180.0) < 1.0) phi_3 = h;
+    if (fabs((h - phi_3) / M_PI * 180.0) < 1.0)
+      {
+        phi_3 = h;
+      }
 
     return 0;
   }
@@ -986,11 +1006,17 @@ namespace ice
     tan_phi = tan(phi_4);
     NewtonRaphson(moment, tan_phi, 1.0e-10, f4, f4_strich, root_tan);
 
-    if (root_tan < 0) root_tan = -root_tan;
+    if (root_tan < 0)
+      {
+        root_tan = -root_tan;
+      }
 
     h = atan(root_tan);
 
-    if (fabs((h - phi_4) / M_PI * 180.0) < 0.5) phi_4 = h;
+    if (fabs((h - phi_4) / M_PI * 180.0) < 0.5)
+      {
+        phi_4 = h;
+      }
 
 
     return 0;

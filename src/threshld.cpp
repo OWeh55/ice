@@ -68,7 +68,9 @@ namespace ice
         ct = hist.Count(i);
 
         if (ct > 0)
-          nn++;
+          {
+            nn++;
+          }
 
         c2 += ct;
         m2 += ct * i;
@@ -86,7 +88,10 @@ namespace ice
         discmax = 0.0;
 
         int i = 1;
-        while (hist.Count(i) == 0) i++;
+        while (hist.Count(i) == 0)
+          {
+            i++;
+          }
 
         hist.ClassValue(i, valmin, valmax);
         return (valmax + valmin) / 2.0;
@@ -105,9 +110,13 @@ namespace ice
             if (ct > 0)
               {
                 if (i1 < 0)
-                  i1 = i;
+                  {
+                    i1 = i;
+                  }
                 else
-                  i2 = i;
+                  {
+                    i2 = i;
+                  }
               }
           }
 
@@ -187,7 +196,9 @@ namespace ice
         double ct = hist.getCount(i);
 
         if (ct > 0)
-          nn++;
+          {
+            nn++;
+          }
 
         c2 += ct;
         m2 += ct * i;
@@ -206,7 +217,9 @@ namespace ice
         int i = 0;
 
         while (hist.getCount(i) == 0)
-          i++;
+          {
+            i++;
+          }
 
         return i;
       }
@@ -216,12 +229,16 @@ namespace ice
         // two histogram classes -> two classes after binarization
         int i = 0;
         while (hist.getCount(i) == 0)
-          i++;
+          {
+            i++;
+          }
         int i1 = i;
         double c1 = hist.getCount(i1);
         i++;
         while (hist.getCount(i) == 0)
-          i++;
+          {
+            i++;
+          }
         int i2 = i;
         double c2 = hist.getCount(i2);
         double ct = c1 + c2;
@@ -336,7 +353,9 @@ namespace ice
           {
             double t = value[i];
             if (t < threshold)
-              max1 = t;
+              {
+                max1 = t;
+              }
           }
         threshold = (threshold + max1) / 2;
       }
@@ -400,7 +419,9 @@ namespace ice
           {
             int t = value[i];
             if (t < threshold)
-              max1 = t;
+              {
+                max1 = t;
+              }
           }
         threshold = (threshold + max1 + 1) / 2;
       }
@@ -422,10 +443,14 @@ namespace ice
     ya = img->ysize - 1;
 
     if ((xa - xi) < 20 * part)
-      part = 1;
+      {
+        part = 1;
+      }
 
     if ((ya - yi) < 20 * part)
-      part = 1;
+      {
+        part = 1;
+      }
 
     Histogram hist(img, part);
 
@@ -456,7 +481,10 @@ namespace ice
     yi = 1;
     ya = img->ysize - 2;
 
-    if ((xi >= xa) || (yi >= ya)) return (-1);
+    if ((xi >= xa) || (yi >= ya))
+      {
+        return (-1);
+      }
 
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;
@@ -504,7 +532,10 @@ namespace ice
     yi = 2;
     ya = img->ysize - 3;
 
-    if ((xi >= xa) || (yi >= ya)) return (-1);
+    if ((xi >= xa) || (yi >= ya))
+      {
+        return (-1);
+      }
 
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;

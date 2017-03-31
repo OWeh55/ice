@@ -71,9 +71,18 @@ namespace ice
 
     ~PointHeapPeakDetect()
     {
-      if (xptr != nullptr) free(xptr);
-      if (yptr != nullptr) free(yptr);
-      if (wptr != nullptr) free(wptr);
+      if (xptr != nullptr)
+        {
+          free(xptr);
+        }
+      if (yptr != nullptr)
+        {
+          free(yptr);
+        }
+      if (wptr != nullptr)
+        {
+          free(wptr);
+        }
     }
 
     int insert(int x, int y, int val)
@@ -84,9 +93,13 @@ namespace ice
           int* ptr;
 
           if (xptr != nullptr)
-            ptr = (int*)realloc(xptr, reslng * sizeof(int) + 100 * sizeof(int));
+            {
+              ptr = (int*)realloc(xptr, reslng * sizeof(int) + 100 * sizeof(int));
+            }
           else
-            ptr = (int*)malloc(100 * sizeof(int));
+            {
+              ptr = (int*)malloc(100 * sizeof(int));
+            }
 
           if (ptr == nullptr)
             {
@@ -96,12 +109,19 @@ namespace ice
 
           xptr = ptr;
 
-          if (mode == SORT_X) vptr = xptr;
+          if (mode == SORT_X)
+            {
+              vptr = xptr;
+            }
 
           if (yptr != nullptr)
-            ptr = (int*)realloc(yptr, reslng * sizeof(int) + 100 * sizeof(int));
+            {
+              ptr = (int*)realloc(yptr, reslng * sizeof(int) + 100 * sizeof(int));
+            }
           else
-            ptr = (int*)malloc(100 * sizeof(int));
+            {
+              ptr = (int*)malloc(100 * sizeof(int));
+            }
 
           if (ptr == nullptr)
             {
@@ -111,12 +131,19 @@ namespace ice
 
           yptr = ptr;
 
-          if (mode == SORT_Y) vptr = yptr;
+          if (mode == SORT_Y)
+            {
+              vptr = yptr;
+            }
 
           if (wptr != nullptr)
-            ptr = (int*)realloc(wptr, reslng * sizeof(int) + 100 * sizeof(int));
+            {
+              ptr = (int*)realloc(wptr, reslng * sizeof(int) + 100 * sizeof(int));
+            }
           else
-            ptr = (int*)malloc(100 * sizeof(int));
+            {
+              ptr = (int*)malloc(100 * sizeof(int));
+            }
 
           if (ptr == nullptr)
             {
@@ -126,7 +153,10 @@ namespace ice
 
           wptr = ptr;
 
-          if (mode == SORT_VAL) vptr = wptr;
+          if (mode == SORT_VAL)
+            {
+              vptr = wptr;
+            }
 
           reslng += 100;
         }
@@ -143,7 +173,10 @@ namespace ice
 
     int getMaximum(int& x, int& y, int& val) const
     {
-      if (lng == 0) return ERROR;
+      if (lng == 0)
+        {
+          return ERROR;
+        }
 
       x  = xptr[0];
       y  = yptr[0];
@@ -170,7 +203,10 @@ namespace ice
 
     void upsort()
     {
-      if (lng < 2) return;
+      if (lng < 2)
+        {
+          return;
+        }
 
       int pos_child = lng - 1, pos_parent = (lng - 2) / 2, x, y, w;
 
@@ -192,7 +228,10 @@ namespace ice
 
     void downsort()
     {
-      if (lng < 2) return;
+      if (lng < 2)
+        {
+          return;
+        }
 
       int pos_child1 = 1, pos_child2 = 2, pos_next, pos_parent = 0, x, y, w;
 
@@ -200,13 +239,22 @@ namespace ice
         {
           if (pos_child2 == lng)
             {
-              if (vptr[pos_child1] <= vptr[pos_parent]) break;
-              else pos_next = pos_child1;
+              if (vptr[pos_child1] <= vptr[pos_parent])
+                {
+                  break;
+                }
+              else
+                {
+                  pos_next = pos_child1;
+                }
             }
           else
             {
               if (vptr[pos_child1] <= vptr[pos_parent] &&
-                  vptr[pos_child2] <= vptr[pos_parent]) break;
+                  vptr[pos_child2] <= vptr[pos_parent])
+                {
+                  break;
+                }
 
               pos_next = (vptr[pos_child1] > vptr[pos_child2]) ? pos_child1 : pos_child2;
             }
@@ -302,8 +350,14 @@ namespace ice
         sy /= volume;
         sy = sqrt(sy);
 
-        if (sx * sy != 0) sxy /= volume * sx * sy;
-        else sxy = 0;
+        if (sx * sy != 0)
+          {
+            sxy /= volume * sx * sy;
+          }
+        else
+          {
+            sxy = 0;
+          }
       }
     else
       {
@@ -346,7 +400,10 @@ namespace ice
 
     if (!GetVal(mask2, xp, yp))
       {
-        if (ms != nullptr) RemovePointFromMaxSearch(ms, xp, GetVal(orig, xp, yp));
+        if (ms != nullptr)
+          {
+            RemovePointFromMaxSearch(ms, xp, GetVal(orig, xp, yp));
+          }
 
         PutVal(mask2, xp, yp, 1);
       }
@@ -383,22 +440,43 @@ namespace ice
 
                             if (!GetVal(mask2, xx, yy))
                               {
-                                if (ms != nullptr) RemovePointFromMaxSearch(ms, xx, gg);
+                                if (ms != nullptr)
+                                  {
+                                    RemovePointFromMaxSearch(ms, xx, gg);
+                                  }
 
                                 PutVal(mask2, xx, yy, 1);
                               }
 
-                            if (wxi > xx) wxi = xx;
+                            if (wxi > xx)
+                              {
+                                wxi = xx;
+                              }
 
-                            if (wyi > yy) wyi = yy;
+                            if (wyi > yy)
+                              {
+                                wyi = yy;
+                              }
 
-                            if (wxa < xx) wxa = xx;
+                            if (wxa < xx)
+                              {
+                                wxa = xx;
+                              }
 
-                            if (wya < yy) wya = yy;
+                            if (wya < yy)
+                              {
+                                wya = yy;
+                              }
 
-                            if (gg < xmin) xmin = gg;
+                            if (gg < xmin)
+                              {
+                                xmin = gg;
+                              }
                           }
-                        else flag = true;
+                        else
+                          {
+                            flag = true;
+                          }
                       }
                   }
               }
@@ -425,7 +503,7 @@ namespace ice
               }
           }
       }
-    else   // ---- zyklisches Bildmodell --------------------------------------
+    else     // ---- zyklisches Bildmodell --------------------------------------
       {
 
         while (heap.getMaximum(x, y, g) == OK)
@@ -455,22 +533,43 @@ namespace ice
 
                         if (!GetVal(mask2, xx, yy))
                           {
-                            if (ms != nullptr) RemovePointFromMaxSearch(ms, xx, gg);
+                            if (ms != nullptr)
+                              {
+                                RemovePointFromMaxSearch(ms, xx, gg);
+                              }
 
                             PutVal(mask2, xx, yy, 1);
                           }
 
-                        if (wxi > xx) wxi = xx;
+                        if (wxi > xx)
+                          {
+                            wxi = xx;
+                          }
 
-                        if (wyi > yy) wyi = yy;
+                        if (wyi > yy)
+                          {
+                            wyi = yy;
+                          }
 
-                        if (wxa < xx) wxa = xx;
+                        if (wxa < xx)
+                          {
+                            wxa = xx;
+                          }
 
-                        if (wya < yy) wya = yy;
+                        if (wya < yy)
+                          {
+                            wya = yy;
+                          }
 
-                        if (gg < xmin) xmin = gg;
+                        if (gg < xmin)
+                          {
+                            xmin = gg;
+                          }
                       }
-                    else flag = true;
+                    else
+                      {
+                        flag = true;
+                      }
                   }
               }
 
@@ -526,7 +625,10 @@ namespace ice
                       {
                         if ((gg = GetVal(orig, x, y)) <= gn && gg != gp)
                           {
-                            if (heap.insert(x, y, min(gg, g)) != OK) return false;
+                            if (heap.insert(x, y, min(gg, g)) != OK)
+                              {
+                                return false;
+                              }
 
                             PutVal(mask, x, y, 0);
                           }
@@ -535,7 +637,7 @@ namespace ice
               }
           }
       }
-    else   // ---- zyklisches Bildmodell --------------------------------------
+    else     // ---- zyklisches Bildmodell --------------------------------------
       {
 
         while (heap.getMaximum(x, y, g) == OK)
@@ -553,7 +655,10 @@ namespace ice
                   {
                     if ((gg = GetVal(orig, x, y)) <= gn && gg != gp)
                       {
-                        if (heap.insert(x, y, min(gg, g)) != OK) return false;
+                        if (heap.insert(x, y, min(gg, g)) != OK)
+                          {
+                            return false;
+                          }
 
                         PutVal(mask, x, y, 0);
                       }
@@ -580,7 +685,10 @@ namespace ice
       {
         DPointList pl = NewDPointList();
 
-        if (pl == nullptr) return false;
+        if (pl == nullptr)
+          {
+            return false;
+          }
 
         DAddPoint(pl, xp, yp, 0);
 
@@ -605,14 +713,23 @@ namespace ice
 
         for (x = wxi; x <= wxa; x++)
           for (y = wyi; y <= wya; y++)
-            if (GetVal(mask, x, y) == 2) PutVal(mask, x, y, 1);
-            else PutVal(mask, x, y, 0);
+            if (GetVal(mask, x, y) == 2)
+              {
+                PutVal(mask, x, y, 1);
+              }
+            else
+              {
+                PutVal(mask, x, y, 0);
+              }
       }
     else
       {
         DPointList pl = NewDPointList();
 
-        if (pl == nullptr) return false;
+        if (pl == nullptr)
+          {
+            return false;
+          }
 
         DAddPoint(pl, xp, yp, 0);
 
@@ -637,8 +754,14 @@ namespace ice
 
         for (x = wxi; x <= wxa; x++)
           for (y = wyi; y <= wya; y++)
-            if (GetVal(mask, x, y) == 2) PutVal(mask, x, y, 1);
-            else PutVal(mask, x, y, 0);
+            if (GetVal(mask, x, y) == 2)
+              {
+                PutVal(mask, x, y, 1);
+              }
+            else
+              {
+                PutVal(mask, x, y, 0);
+              }
 
       }
 
@@ -654,11 +777,17 @@ namespace ice
 
     DPointList pl_temp = NewDPointList();
 
-    if (pl_temp == nullptr) return false;
+    if (pl_temp == nullptr)
+      {
+        return false;
+      }
 
     DPointList pl_all = NewDPointList();
 
-    if (pl_all == nullptr) return false;
+    if (pl_all == nullptr)
+      {
+        return false;
+      }
 
     DAddPoint(pl_temp, (int)Round(xp), (int)Round(yp), 0);
 
@@ -740,7 +869,9 @@ namespace ice
       {
 
         for (int i = 0; i < pl_all->lng; i++)
-          PutVal(img2, pl_all->xptr[i], pl_all->yptr[i], 0);
+          {
+            PutVal(img2, pl_all->xptr[i], pl_all->yptr[i], 0);
+          }
 
         xp = sumx;
         yp = sumy;
@@ -762,12 +893,18 @@ namespace ice
 
     int ixp, iyp;
 
-    if (!GetMaximum(ms, img, mask2, ixp, iyp, gp)) return false;
+    if (!GetMaximum(ms, img, mask2, ixp, iyp, gp))
+      {
+        return false;
+      }
 
     xp = ixp;
     yp = iyp;
 
-    if (!CorrectPeakPos(img, 0, xp, yp, mask3)) return false;
+    if (!CorrectPeakPos(img, 0, xp, yp, mask3))
+      {
+        return false;
+      }
 
     if (IsImg(mask1) && IsImg(mask2))
       {
@@ -786,14 +923,20 @@ namespace ice
                       int wxi, int wyi, int wxa, int wya)
   {
 
-    if (anz == 0) return false;
+    if (anz == 0)
+      {
+        return false;
+      }
 
     int x, y, w, count = 0;
 
     if (src != dest)
       {
         for (x = wxi; x <= wxa; x++)
-          for (y = wyi; y <= wya; y++) PutVal(dest, x, y, GetVal(src, x, y) ? 1 : 0);
+          for (y = wyi; y <= wya; y++)
+            {
+              PutVal(dest, x, y, GetVal(src, x, y) ? 1 : 0);
+            }
       }
 
     PointHeapPeakDetect heap(SORT_VAL);
@@ -818,16 +961,25 @@ namespace ice
               if ((step == 0 && g1 > 0) || (step > 2) || (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 == 7))
                 {
 
-                  if (heap.insert(x, y, GetVal(img, x, y)) != OK) return false;
+                  if (heap.insert(x, y, GetVal(img, x, y)) != OK)
+                    {
+                      return false;
+                    }
 
                   count++;
                 }
             }
         }
 
-    if (count <= anz) return false;
+    if (count <= anz)
+      {
+        return false;
+      }
 
-    for (int pn = 0; pn < anz; pn++) heap.delMaximum();
+    for (int pn = 0; pn < anz; pn++)
+      {
+        heap.delMaximum();
+      }
 
     while (heap.getMaximum(x, y, w) == OK)
       {
@@ -849,7 +1001,10 @@ namespace ice
 
     DPointList pl = NewDPointList();
 
-    if (pl == nullptr) return false;
+    if (pl == nullptr)
+      {
+        return false;
+      }
 
     if (!DAddPoint(pl, x, y, 1))
       {
@@ -945,15 +1100,21 @@ namespace ice
 
         *pmx = fmod(*pmx, mask->xsize);
 
-        if (*pmx < 0) *pmx += mask->xsize;
+        if (*pmx < 0)
+          {
+            *pmx += mask->xsize;
+          }
 
         *pmy = fmod(*pmy, mask->ysize);
 
-        if (*pmy < 0) *pmy += mask->ysize;
+        if (*pmy < 0)
+          {
+            *pmy += mask->ysize;
+          }
 
         int imx = (int)Round(*pmx), imy = (int)Round(*pmy);
 
-        if (GetVal(mask, imx, imy) != 2) // Mittelwert liegt nicht auf Plateau
+        if (GetVal(mask, imx, imy) != 2)   // Mittelwert liegt nicht auf Plateau
           {
             // Bestimmt naechsten Punkt des Plateaus
             double mindist = DBL_MAX;
@@ -975,7 +1136,10 @@ namespace ice
           }
       }
 
-    for (int i = 0; i < pl->lng; i++) PutVal(mask, pl->xptr[i], pl->yptr[i], 0);
+    for (int i = 0; i < pl->lng; i++)
+      {
+        PutVal(mask, pl->xptr[i], pl->yptr[i], 0);
+      }
 
     FreePointList(pl);
 
@@ -1016,7 +1180,9 @@ namespace ice
                   }
 
                 if (isMax)
-                  mask1.setPixel(ww, 1);
+                  {
+                    mask1.setPixel(ww, 1);
+                  }
               }
           }
       }
@@ -1042,7 +1208,9 @@ namespace ice
                   }
 
                 if (isMax)
-                  mask1.setPixel(ww, 1);
+                  {
+                    mask1.setPixel(ww, 1);
+                  }
               }
           }
       }
@@ -1072,7 +1240,9 @@ namespace ice
                   }
 
                 if (!flag)
-                  DelObjectFromPoint(mask1, ww.x, ww.y, nullptr, nullptr, true);
+                  {
+                    DelObjectFromPoint(mask1, ww.x, ww.y, nullptr, nullptr, true);
+                  }
               }
           }
       }
@@ -1101,7 +1271,10 @@ namespace ice
                     }
                 }
 
-              if (!flag) DelObjectFromPoint(mask1, x, y, nullptr, nullptr, false);
+              if (!flag)
+                {
+                  DelObjectFromPoint(mask1, x, y, nullptr, nullptr, false);
+                }
             }
         }
       }
@@ -1120,7 +1293,9 @@ namespace ice
       }
 
     for (ii = 0; ii <= img->maxval; ii++)
-      index[ii] = nullptr;
+      {
+        index[ii] = nullptr;
+      }
 
     int x, y;
     wloop(mask1, x, y)
@@ -1148,11 +1323,14 @@ namespace ice
               pl->next = nullptr;
               pl->prev = nullptr;
 
-              for (ii = 0; ii <= grw; ii++) index[ii] = pl;
+              for (ii = 0; ii <= grw; ii++)
+                {
+                  index[ii] = pl;
+                }
             }
           else
             {
-              if (index[grw] == nullptr) // am Anfang einketten
+              if (index[grw] == nullptr)   // am Anfang einketten
                 {
                   next = pl;
                   pl = plseg;
@@ -1161,8 +1339,14 @@ namespace ice
                   next->prev = pl;
 
                   for (ii = grw; ii >= 0; ii--)
-                    if (index[ii] != nullptr) break;
-                    else index[ii] = pl;
+                    if (index[ii] != nullptr)
+                      {
+                        break;
+                      }
+                    else
+                      {
+                        index[ii] = pl;
+                      }
                 }
               else
                 {
@@ -1172,11 +1356,20 @@ namespace ice
                   plseg->next = next;
                   prev->next = plseg;
 
-                  if (next) next->prev = plseg;
+                  if (next)
+                    {
+                      next->prev = plseg;
+                    }
 
                   for (ii = grw; ii >= 0; ii--)
-                    if (index[ii] != prev) break;
-                    else index[ii] = plseg;
+                    if (index[ii] != prev)
+                      {
+                        break;
+                      }
+                    else
+                      {
+                        index[ii] = plseg;
+                      }
                 }
             }
         }
@@ -1217,14 +1410,19 @@ namespace ice
       {
         PeakList pl = FindAllPeaks(img, global_mark, zykl);
 
-        if (pl == nullptr) return nullptr;
+        if (pl == nullptr)
+          {
+            return nullptr;
+          }
 
         if (maxanz > 0)
           {
             PeakList ptr = pl;
 
             for (int i = 0; ptr != nullptr && i < maxanz; i++)
-              ptr = ptr->next;
+              {
+                ptr = ptr->next;
+              }
 
             if (ptr)
               {
@@ -1312,7 +1510,10 @@ namespace ice
               flag2 = true;
               g = GetVal(img, x, y);
 
-              if (g1 == -1) g1 = g;
+              if (g1 == -1)
+                {
+                  g1 = g;
+                }
               else if (g1 != g)
                 {
                   flag = true;
@@ -1349,29 +1550,38 @@ namespace ice
         PointHeapPeakDetect heap_frame(SORT_VAL);
 
         if (!FindPeak(img, mask1, mask2, mask3,
-                      xp, yp, gp, zykl, wxi, wyi, wxa, wya, count, noise, xmin, heap_frame)) break;
+                      xp, yp, gp, zykl, wxi, wyi, wxa, wya, count, noise, xmin, heap_frame))
+          {
+            break;
+          }
 
         num++;
 
-        if (gp < mingrw) break; // Aktuelles Maximum unterschreitet vorgeg. Mindestgrauwert
+        if (gp < mingrw)
+          {
+            break;  // Aktuelles Maximum unterschreitet vorgeg. Mindestgrauwert
+          }
 
         // Peak in Liste aufnehmen
 
         plseg = NewPeakList();
 
-        if (plseg == nullptr) // Speichermangel (Fehler wurde in NewPeakList gemeldet)
+        if (plseg == nullptr)   // Speichermangel (Fehler wurde in NewPeakList gemeldet)
           {
-            if (pl) FreePeakList(pl);
+            if (pl)
+              {
+                FreePeakList(pl);
+              }
 
             FreeMaxSearch(ms);
             return nullptr;
           }
 
-        if (pl == nullptr) // erstes Element der Liste
+        if (pl == nullptr)   // erstes Element der Liste
           {
             pl = plseg;
           }
-        else   // an bisherige Liste anhängen
+        else     // an bisherige Liste anhängen
           {
             pl->next = plseg;
             plseg->prev = pl;
@@ -1394,14 +1604,19 @@ namespace ice
                 int rc = OptimizeMaskImg(img, mask1, mask3, ma, wxi, wyi, wxa, wya);
 
                 while (rc)
-                  rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
+                  {
+                    rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
+                  }
 
                 IF_FAILED(c = BinObj2ConturList(maxanz ? mask3 : mask1,
                                                 RoundInt(xp), RoundInt(yp)))
                 {
                   Message(FNAME, M_0, ERROR);
 
-                  if (pl) FreePeakList(pl);
+                  if (pl)
+                    {
+                      FreePeakList(pl);
+                    }
 
                   FreeMaxSearch(ms);
                   return nullptr;
@@ -1411,7 +1626,10 @@ namespace ice
                 if (maxanz)
                   {
                     for (x = wxi; x <= wxa; x++)
-                      for (y = wyi; y <= wya; y++) PutVal(mask3, x, y, 0);
+                      for (y = wyi; y <= wya; y++)
+                        {
+                          PutVal(mask3, x, y, 0);
+                        }
                   }
               }
 
@@ -1439,14 +1657,19 @@ namespace ice
                     int rc = OptimizeMaskImg(img, mask1, mask3, ma, wxi, wyi, wxa, wya);
 
                     while (rc)
-                      rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
+                      {
+                        rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
+                      }
 
                     IF_FAILED((c = BinObj2ConturList(maxanz ? mask3 : mask1,
                                                      RoundInt(xp), RoundInt(yp))))
                     {
                       Message(FNAME, M_0, ERROR);
 
-                      if (pl) FreePeakList(pl);
+                      if (pl)
+                        {
+                          FreePeakList(pl);
+                        }
 
                       FreeMaxSearch(ms);
                       return nullptr;
@@ -1457,7 +1680,9 @@ namespace ice
                       {
                         for (x = wxi; x <= wxa; x++)
                           for (y = wyi; y <= wya; y++)
-                            PutVal(mask3, x, y, 0);
+                            {
+                              PutVal(mask3, x, y, 0);
+                            }
                       }
                   }
               }
@@ -1475,12 +1700,17 @@ namespace ice
           {
             for (x = wxi; x <= wxa; x++)
               for (y = wyi; y <= wya; y++)
-                PutVal(mask1, x, y, 0);
+                {
+                  PutVal(mask1, x, y, 0);
+                }
           }
 
         peakanz++;
 
-        if (peakanz == maxanz) break; // Die vorgeg. max. Anzahl von Peaks ist erreicht
+        if (peakanz == maxanz)
+          {
+            break;  // Die vorgeg. max. Anzahl von Peaks ist erreicht
+          }
 
       }
     while (1);   // Schleife wird nur durch break's verlassen
@@ -1504,7 +1734,10 @@ namespace ice
           }
       }
 
-    while (pl->prev != nullptr) pl = pl->prev; // Zeiger auf Listenanfang setzen
+    while (pl->prev != nullptr)
+      {
+        pl = pl->prev;  // Zeiger auf Listenanfang setzen
+      }
 
     return pl;
   }
@@ -1525,7 +1758,10 @@ namespace ice
         return;
       }
 
-    while ((ptr->prev) != nullptr) ptr = ptr->prev;
+    while ((ptr->prev) != nullptr)
+      {
+        ptr = ptr->prev;
+      }
 
     do
       {
@@ -1577,7 +1813,9 @@ namespace ice
                  heap_frame, c_frame, xmin, noise);
 
     if (flag == IPL_MINCONTUR && count != (img->xsize * img->ysize))
-      ResizePeakArea(img, mask1, zykl, g, noise, heap_frame);
+      {
+        ResizePeakArea(img, mask1, zykl, g, noise, heap_frame);
+      }
 
     int rc;
 

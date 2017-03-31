@@ -153,7 +153,7 @@ namespace ice
                         pUnderground = test2;
                         res.Add((adir + dir2).Int());
                       }
-                    else /* obj == isunknown */
+                    else     /* obj == isunknown */
                       {
                         // uu XX
                         // uu XX
@@ -204,7 +204,7 @@ namespace ice
         return res;
       }
 
-    if (Go(start, startdir, true, of, res)) // if true -> open contur
+    if (Go(start, startdir, true, of, res))   // if true -> open contur
       {
         // from start in inverse direction
         Contur h;

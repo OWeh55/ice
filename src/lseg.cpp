@@ -41,7 +41,7 @@ namespace ice
       gi = GetValUnchecked(minimg, x, y);
       ga = GetValUnchecked(maximg, x, y);
 
-      if (ga - gi < level) // genügend Unterschiede in der Umgebung ?
+      if (ga - gi < level)   // genügend Unterschiede in der Umgebung ?
         {
           PutVal(oimg, x, y, LSunknown); // nein: "undefiniert"
         }
@@ -78,7 +78,7 @@ namespace ice
       gi = dpi[y][x];
       ga = dpa[y][x];
 
-      if (ga - gi < level) // genügend Unterschiede in der Umgebung ?
+      if (ga - gi < level)   // genügend Unterschiede in der Umgebung ?
         {
           dpo[y][x] = LSunknown; // nein: "undefiniert"
         }
@@ -104,7 +104,10 @@ namespace ice
   int LocalSeg(Image source, Image oimg, int neighb, int level)
   {
     // Lokale Segmentierung
-    if (source == oimg) return LocalSeg(oimg, neighb, level);
+    if (source == oimg)
+      {
+        return LocalSeg(oimg, neighb, level);
+      }
 
     if ((!IsImg(source)) || (!IsImg(oimg)))
       {
@@ -136,8 +139,10 @@ namespace ice
 
     MinMaxImg(source, neighb, neighb, minimg, maximg); // max and min in neighborhood
 
-    if (oimg->ImageType() != 1) // für Zielebild sehr seltene Ausnahme, deshalb Verzicht auf Optimierung
-      lsegcore_std(source, minimg, maximg, oimg, level);
+    if (oimg->ImageType() != 1)   // für Zielebild sehr seltene Ausnahme, deshalb Verzicht auf Optimierung
+      {
+        lsegcore_std(source, minimg, maximg, oimg, level);
+      }
     else
 
       {
@@ -166,7 +171,10 @@ namespace ice
   int LocalSeg(Image source, Image oimg, int neighb, int level, int level2)
   {
     // Lokale Segmentierung
-    if (source == oimg) return LocalSeg(oimg, neighb, level, level2);
+    if (source == oimg)
+      {
+        return LocalSeg(oimg, neighb, level, level2);
+      }
 
     if ((!IsImg(source)) || (!IsImg(oimg)))
       {
@@ -208,7 +216,7 @@ namespace ice
       ga = GetValUnchecked(maximg, x, y);
       int dg = ga - gi;
 
-      if (dg < level2) // genügend Unterschiede in der Umgebung ?
+      if (dg < level2)   // genügend Unterschiede in der Umgebung ?
         {
           PutVal(oimg, x, y, LSunknown); // nein: "undefiniert"
         }

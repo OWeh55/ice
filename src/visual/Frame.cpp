@@ -46,14 +46,18 @@ bool iceFrame::SetChildWindow(wxWindow& ChildWindowP)
 {
   // if we already host one window, there is something wrong
   if (this->ChildWindow != NULL)
-    return false;
+    {
+      return false;
+    }
 
   ChildWindow = &ChildWindowP;
 
   // if we have the focus, we pass it on to the child window
 
   if (FindFocus() == this)
-    ChildWindow->SetFocus();
+    {
+      ChildWindow->SetFocus();
+    }
   return true;
 }
 
@@ -69,7 +73,9 @@ bool iceFrame::AddMenuItem(const std::string& menu,
   unsigned int menupos = 0;
   wxMenu* m;
   while (menupos < menuname.size() && menuname[menupos] != menu)
-    menupos++;
+    {
+      menupos++;
+    }
   if (menupos >= menuname.size())
     {
       wxString wxmenu = wxString(menu.c_str(), wxConvLibc);
@@ -79,7 +85,9 @@ bool iceFrame::AddMenuItem(const std::string& menu,
       MenuBar->Append(m, wxmenu);
     }
   else
-    m = Menu[menupos];
+    {
+      m = Menu[menupos];
+    }
 
   wxString wxitem = wxString(item.c_str(), wxConvLibc);
   long id = wxNewId();
@@ -99,7 +107,9 @@ void iceFrame::OnClose(wxCloseEvent& Event)
       Iconize(true);
     }
   else
-    Destroy();
+    {
+      Destroy();
+    }
 }
 
 void iceFrame::OnUserItem(wxCommandEvent& event)

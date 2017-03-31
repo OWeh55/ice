@@ -171,7 +171,10 @@ namespace ice
             yc++;
           }
 
-        if (calc_function(img, imgh, func, parray, xs, ys, val) == EXIST) ast++;
+        if (calc_function(img, imgh, func, parray, xs, ys, val) == EXIST)
+          {
+            ast++;
+          }
       }
 
     if (ast == 0)
@@ -220,29 +223,61 @@ namespace ice
                 /*Testen aller Nachbarn in 4er Umgebung*/
                 result = 0;
                 if (decision(func, parray, x, y + 1, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
                 if (decision(func, parray, x, y - 1, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
                 if (decision(func, parray, x + 1, y, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
                 if (decision(func, parray, x - 1, y, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
 
-                if (GetVal(imgh, x - 1, y - 1) > 0) continue;
+                if (GetVal(imgh, x - 1, y - 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x - 1, y) > 0)   continue;
+                if (GetVal(imgh, x - 1, y) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x - 1, y + 1) > 0) continue;
+                if (GetVal(imgh, x - 1, y + 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x, y + 1) > 0)   continue;
+                if (GetVal(imgh, x, y + 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x, y - 1) > 0)   continue;
+                if (GetVal(imgh, x, y - 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x + 1, y - 1) > 0) continue;
+                if (GetVal(imgh, x + 1, y - 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x + 1, y) > 0)   continue;
+                if (GetVal(imgh, x + 1, y) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x + 1, y + 1) > 0) continue;
+                if (GetVal(imgh, x + 1, y + 1) > 0)
+                  {
+                    continue;
+                  }
 
                 /*
                        printf("result: %d\n",result);
@@ -336,9 +371,13 @@ namespace ice
 
     if (decision(func, parray, xx, yy, dx, dy) == 1)
       /* Nebenrichtung gltig */
-      dirneu = Direction + 7;          /* neue Hauptrichtung festlegen */
+      {
+        dirneu = Direction + 7;  /* neue Hauptrichtung festlegen */
+      }
     else
-      dirneu = Direction = Direction + 1; /* alte Hauptrichtung wieder herstellen */
+      {
+        dirneu = Direction = Direction + 1;  /* alte Hauptrichtung wieder herstellen */
+      }
 
     /* Startrichtung gefunden und merken */
     Freeman startdir = Direction;
@@ -456,7 +495,9 @@ namespace ice
             dirneu = Direction - 1; /* neue zu untersuchende Hauptrichtung */
           }
         else
-          Direction = dirneu;    /* zurck zur Hauptrichtung */
+          {
+            Direction = dirneu;  /* zurck zur Hauptrichtung */
+          }
 
         /*
           printf("h3::: xx %d yy %d Direction %d, dirneu %d\n",xx,yy,Direction,dirneu);
@@ -467,9 +508,13 @@ namespace ice
     while (!(xx == xs && yy == ys && Direction == startdir));
 
     if (exist == 1)
-      return EXIST;
+      {
+        return EXIST;
+      }
     else
-      return NO_EXIST;
+      {
+        return NO_EXIST;
+      }
   }
 #undef FNAME
 }

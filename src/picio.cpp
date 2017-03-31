@@ -67,31 +67,70 @@ namespace ice
           {
             ext = lowercase(Split(filename, ":"));
 
-            if (ext == "tif") type = TIF;
+            if (ext == "tif")
+              {
+                type = TIF;
+              }
 
-            if (ext == "tiff") type = TIF;
+            if (ext == "tiff")
+              {
+                type = TIF;
+              }
 
-            if (ext == "jpg") type = JPEG;
+            if (ext == "jpg")
+              {
+                type = JPEG;
+              }
 
-            if (ext == "jpeg") type = JPEG;
+            if (ext == "jpeg")
+              {
+                type = JPEG;
+              }
 
-            if (ext == "gif") type = UNSUPPORTED_TYP;
+            if (ext == "gif")
+              {
+                type = UNSUPPORTED_TYP;
+              }
 
-            if (ext == "pcx") type = PCX;
+            if (ext == "pcx")
+              {
+                type = PCX;
+              }
 
-            if (ext == "tga") type = TGA;
+            if (ext == "tga")
+              {
+                type = TGA;
+              }
 
-            if (ext == "bmp") type = BMP;
+            if (ext == "bmp")
+              {
+                type = BMP;
+              }
 
-            if (ext == "pgm") type = PBM;
+            if (ext == "pgm")
+              {
+                type = PBM;
+              }
 
-            if (ext == "ppm") type = PBM;
+            if (ext == "ppm")
+              {
+                type = PBM;
+              }
 
-            if (ext == "pbm") type = PBM;
+            if (ext == "pbm")
+              {
+                type = PBM;
+              }
 
-            if (ext == "pnm") type = PBM;
+            if (ext == "pnm")
+              {
+                type = PBM;
+              }
 
-            if (ext == "psd") type = PSD;
+            if (ext == "psd")
+              {
+                type = PSD;
+              }
 
             return type;
           }
@@ -103,29 +142,65 @@ namespace ice
       {
         ext = lowercase(filename.substr(pos + 1));
 
-        if (ext == "tif") type = TIF;
+        if (ext == "tif")
+          {
+            type = TIF;
+          }
 
-        if (ext == "tiff") type = TIF;
+        if (ext == "tiff")
+          {
+            type = TIF;
+          }
 
-        if (ext == "jpg") type = JPEG;
+        if (ext == "jpg")
+          {
+            type = JPEG;
+          }
 
-        if (ext == "jpeg") type = JPEG;
+        if (ext == "jpeg")
+          {
+            type = JPEG;
+          }
 
-        if (ext == "gif") type = UNSUPPORTED_TYP;
+        if (ext == "gif")
+          {
+            type = UNSUPPORTED_TYP;
+          }
 
-        if (ext == "pcx") type = PCX;
+        if (ext == "pcx")
+          {
+            type = PCX;
+          }
 
-        if (ext == "tga") type = TGA;
+        if (ext == "tga")
+          {
+            type = TGA;
+          }
 
-        if (ext == "bmp") type = BMP;
+        if (ext == "bmp")
+          {
+            type = BMP;
+          }
 
-        if (ext == "pgm") type = PBM;
+        if (ext == "pgm")
+          {
+            type = PBM;
+          }
 
-        if (ext == "pnm") type = PBM;
+        if (ext == "pnm")
+          {
+            type = PBM;
+          }
 
-        if (ext == "ppm") type = PBM;
+        if (ext == "ppm")
+          {
+            type = PBM;
+          }
 
-        if (ext == "psd") type = PSD;
+        if (ext == "psd")
+          {
+            type = PSD;
+          }
 
         return type;
       }
@@ -197,15 +272,23 @@ namespace ice
     int gs = img->maxval + 1;
     xs = img->xsize;
 
-    if (w < xs) xs = w;
+    if (w < xs)
+      {
+        xs = w;
+      }
 
     ys = img->ysize;
 
-    if (h < ys) ys = h;
+    if (h < ys)
+      {
+        ys = h;
+      }
 
     for (x = 0; x < xs; x++)
       for (y = 0; y < ys; y++)
-        PutVal(img, x, y, bmp[y * w + x]*gs / 256);
+        {
+          PutVal(img, x, y, bmp[y * w + x]*gs / 256);
+        }
   }
 
   void bmp16img(unsigned short* bmp, int w, int h, Image& img)
@@ -215,15 +298,23 @@ namespace ice
     int gs = img->maxval + 1;
     xs = img->xsize;
 
-    if (w < xs) xs = w;
+    if (w < xs)
+      {
+        xs = w;
+      }
 
     ys = img->ysize;
 
-    if (h < ys) ys = h;
+    if (h < ys)
+      {
+        ys = h;
+      }
 
     for (x = 0; x < xs; x++)
       for (y = 0; y < ys; y++)
-        PutVal(img, x, y, bmp[y * w + x]*gs / 256 / 256);
+        {
+          PutVal(img, x, y, bmp[y * w + x]*gs / 256 / 256);
+        }
   }
 
   string ReadImgFileComment = "";
@@ -332,7 +423,10 @@ namespace ice
 
     WriteImgFileComment = "";
 
-    if (rc == WRONG_FILE) Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    if (rc == WRONG_FILE)
+      {
+        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+      }
 
     return rc;
   }
@@ -371,7 +465,10 @@ namespace ice
 
     WriteImgFileComment = "";
 
-    if (rc == WRONG_FILE) Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    if (rc == WRONG_FILE)
+      {
+        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+      }
 
     return rc;
   }

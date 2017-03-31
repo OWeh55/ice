@@ -48,7 +48,9 @@ namespace ice
   void Accumulator::init()
   {
     for (auto& c : data)
-      c = 0.0;
+      {
+        c = 0.0;
+      }
     xMax = 0;
     maxFrequency = 0;
     nValues = 0;
@@ -56,13 +58,17 @@ namespace ice
     // weight greater 1.0
     weightOfSingleEntry = 1.0;
     for (int i = 1; i < dn; i++)
-      weightOfSingleEntry += 2.0 / (i + 1);
+      {
+        weightOfSingleEntry += 2.0 / (i + 1);
+      }
   }
 
   void Accumulator::clear()
   {
     if (nBins < 0)
-      throw logic_error("Accumulator::clear - not initialized");
+      {
+        throw logic_error("Accumulator::clear - not initialized");
+      }
     init();
   }
 
@@ -70,16 +76,22 @@ namespace ice
   void Accumulator::set(int n, double minp, double maxp, bool modp, int dnp)
   {
     if (n < 1)
-      throw logic_error("Accumulator::set - wrong number of bins");
+      {
+        throw logic_error("Accumulator::set - wrong number of bins");
+      }
     data.resize(n);
     nBins = n;
     min = minp;
     if (minp >= maxp)
-      throw logic_error("Accumulator::set - wrong range min..max");
+      {
+        throw logic_error("Accumulator::set - wrong range min..max");
+      }
     dif = maxp - minp;
     mod = modp;
     if (dn < 0)
-      throw logic_error("Accumulator::set - wrong dn");
+      {
+        throw logic_error("Accumulator::set - wrong dn");
+      }
     dn = dnp;
     init();
   }
@@ -92,12 +104,16 @@ namespace ice
   void Accumulator::add(double xd)
   {
     if (nBins < 0)
-      throw logic_error("Accumulator::add - not initialized");
+      {
+        throw logic_error("Accumulator::add - not initialized");
+      }
 
     int x = RoundInt((xd - min) / dif * nBins);
 
     if (mod)
-      x %= nBins;
+      {
+        x %= nBins;
+      }
 
     // neighborhoud
     for (int dx = -dn; dx <= dn; dx++)
@@ -106,7 +122,9 @@ namespace ice
         int x1 = x + dx;
 
         if (mod)
-          x1 %= nBins;
+          {
+            x1 %= nBins;
+          }
 
         inc(x1, 1.0 / dist);
       }
@@ -115,7 +133,9 @@ namespace ice
   void Accumulator::getMax(double& x, double& val) const
   {
     if (nBins < 0 || maxFrequency == 0.0)
-      throw logic_error("Accumulator::getMax - not initialized");
+      {
+        throw logic_error("Accumulator::getMax - not initialized");
+      }
 
     x = ((double)xMax + 0.5) / ((double)nBins) * dif + min; // center of bin
     val = maxFrequency / weightOfSingleEntry;

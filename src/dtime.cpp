@@ -82,13 +82,19 @@ namespace ice
       {
         time = (double)mtimes.tms_cutime;
 
-        if (!user) time += (double)mtimes.tms_cstime;
+        if (!user)
+          {
+            time += (double)mtimes.tms_cstime;
+          }
       }
     else
       {
         time = (double)mtimes.tms_utime;
 
-        if (!user) time += (double)mtimes.tms_stime;
+        if (!user)
+          {
+            time += (double)mtimes.tms_stime;
+          }
       }
 
     time /= (double)sysconf(_SC_CLK_TCK);

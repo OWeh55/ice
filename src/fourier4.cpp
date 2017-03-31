@@ -113,7 +113,10 @@ namespace ice
             i = GetValD(im, xn, yn);
             p = sqrt((r * r + i * i) / 2) + beta2;
 
-            if (p != 0) p = r / p;
+            if (p != 0)
+              {
+                p = r / p;
+              }
 
             PutValD(h, x, y, p);
           }
@@ -121,7 +124,9 @@ namespace ice
 
     for (int y = 0; y < h.ysize; ++y)
       for (int x = 0; x < h.xsize; ++x)
-        PutValD(nrm, x, y, GetValD(h, x, y));
+        {
+          PutValD(nrm, x, y, GetValD(h, x, y));
+        }
     FreeImgD(h);
     return OK;
   }

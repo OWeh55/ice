@@ -131,7 +131,9 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp = Image::createImage(dest, true);
+      {
+        tmp = Image::createImage(dest, true);
+      }
 
     return lsiimgcyc(src, dest, nx, ny, mask, offset);
   }

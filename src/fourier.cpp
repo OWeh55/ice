@@ -87,14 +87,20 @@ namespace ice
       }
 
     if (ms.rows() != 2)
-      md = !ms;
+      {
+        md = !ms;
+      }
     else
-      md = ms;
+      {
+        md = ms;
+      }
 
     RETURN_ERROR_IF_FAILED(Fourier(md[0], md[1], option));
 
     if (ms.rows() != 2)
-      md = !md;
+      {
+        md = !md;
+      }
 
     return OK;
   }

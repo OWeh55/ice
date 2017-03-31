@@ -60,7 +60,9 @@ namespace ice
                 rot.real = 1;
               }
             else
-              rot.real = -1;
+              {
+                rot.real = -1;
+              }
 
           }
         else
@@ -100,7 +102,9 @@ namespace ice
                 rot.real = 1;
               }
             else
-              rot.real = -1;
+              {
+                rot.real = -1;
+              }
 
             rot.i = 0;
             rot.j = 0;
@@ -144,7 +148,9 @@ namespace ice
                 rot.real = 1;
               }
             else
-              rot.real = -1;
+              {
+                rot.real = -1;
+              }
 
             rot.i = 0;
             rot.j = 0;

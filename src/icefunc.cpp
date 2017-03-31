@@ -67,8 +67,14 @@ namespace ice
     for (yy = yi; yy <= ya; yy++)
       for (xx = xi; xx <= xa; xx++)
         {
-          if (!mask[index] || xx > img->xsize || yy > img->ysize || xx < 0 || yy < 0) mask[index] = -1;
-          else if ((mask[index] = GetVal(img, xx, yy)) && (abs(xx - x) < 2) && (abs(yy - y) < 2)) count++;
+          if (!mask[index] || xx > img->xsize || yy > img->ysize || xx < 0 || yy < 0)
+            {
+              mask[index] = -1;
+            }
+          else if ((mask[index] = GetVal(img, xx, yy)) && (abs(xx - x) < 2) && (abs(yy - y) < 2))
+            {
+              count++;
+            }
 
           index++;
         }
@@ -83,21 +89,45 @@ namespace ice
   {
     int count = 0;
 
-    if (p2 > 0 && p1 == 0) count = 1;
+    if (p2 > 0 && p1 == 0)
+      {
+        count = 1;
+      }
 
-    if (p3 > 0 && p2 == 0) count++;
+    if (p3 > 0 && p2 == 0)
+      {
+        count++;
+      }
 
-    if (p4 > 0 && p3 == 0) count++;
+    if (p4 > 0 && p3 == 0)
+      {
+        count++;
+      }
 
-    if (p5 > 0 && p4 == 0) count++;
+    if (p5 > 0 && p4 == 0)
+      {
+        count++;
+      }
 
-    if (p6 > 0 && p5 == 0) count++;
+    if (p6 > 0 && p5 == 0)
+      {
+        count++;
+      }
 
-    if (p7 > 0 && p6 == 0) count++;
+    if (p7 > 0 && p6 == 0)
+      {
+        count++;
+      }
 
-    if (p8 > 0 && p7 == 0) count++;
+    if (p8 > 0 && p7 == 0)
+      {
+        count++;
+      }
 
-    if (p1 > 0 && p8 == 0) count++;
+    if (p1 > 0 && p8 == 0)
+      {
+        count++;
+      }
 
     return count;
   }
@@ -134,8 +164,14 @@ namespace ice
 
     wloop(img1, x, y)
     {
-      if (GetVal(img1, x, y) > 0) PutVal(imgd, x, y, 1);
-      else PutVal(imgd, x, y, 0);
+      if (GetVal(img1, x, y) > 0)
+        {
+          PutVal(imgd, x, y, 1);
+        }
+      else
+        {
+          PutVal(imgd, x, y, 0);
+        }
     }
 
     do
@@ -180,7 +216,10 @@ namespace ice
             {
               for (int i = 0; i < 5; i++)
                 for (int j = 0; j < 5; j++)
-                  if (m[i][j] == -1) m[i][j] = 0;
+                  if (m[i][j] == -1)
+                    {
+                      m[i][j] = 0;
+                    }
 
               if (Trans(m[0][0], m[0][1], m[0][2], m[1][0], m[1][3], m[1][2], m[1][1], m[0][3]) == 2 &&
                   (!m[0][0] || !m[1][3] || (m[0][1] && m[1][0]) || (m[0][3] && m[1][2])) &&
@@ -191,7 +230,9 @@ namespace ice
                    (m[0][1] && m[1][0]) ||
                    (m[1][0] && m[1][2]) ||
                    (m[1][2] && m[0][3])))
-                val = 0;
+                {
+                  val = 0;
+                }
             }
 
           PutVal(imgs, x, y, val);
@@ -327,7 +368,10 @@ namespace ice
 
     int* vec = NULL, *vecl = NULL, mem = 0, thr, flag = mode3 > HORZ_VERT;
 
-    if (mode3 > HORZ_VERT) mode3 -= HORZ_VERT;
+    if (mode3 > HORZ_VERT)
+      {
+        mode3 -= HORZ_VERT;
+      }
 
     if (diff < 0)
       {
@@ -362,14 +406,16 @@ namespace ice
             max = min = GetVal(img, 0, y);
 
             if (diff < 0)
-              memset(vec, 0, mem);
+              {
+                memset(vec, 0, mem);
+              }
 
             for (x = 1; x < img->xsize; x++)
               {
 
                 val = GetVal(img, x, y);
 
-                if (lookfor != -1) // suche maxima
+                if (lookfor != -1)   // suche maxima
                   {
 
                     if (val > max)
@@ -395,14 +441,26 @@ namespace ice
 
                             for (l = pos - 1; l >= 0; l--)
                               {
-                                if (abs(max - GetVal(img, l, y)) <= d) pos = l;
-                                else break;
+                                if (abs(max - GetVal(img, l, y)) <= d)
+                                  {
+                                    pos = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
 
                             for (l = posl + 1; l < img->xsize; l++)
                               {
-                                if (abs(max - GetVal(img, l, y)) <= d) posl = l;
-                                else break;
+                                if (abs(max - GetVal(img, l, y)) <= d)
+                                  {
+                                    posl = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
                           }
 
@@ -424,7 +482,9 @@ namespace ice
                               case ALL_EXTREMA   :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, l, y, 1);
+                                  {
+                                    PutVal(imgd, l, y, 1);
+                                  }
 
                                 break;
                               }
@@ -467,14 +527,26 @@ namespace ice
 
                             for (l = pos - 1; l >= 0; l--)
                               {
-                                if (abs(min - GetVal(img, l, y)) <= d) pos = l;
-                                else break;
+                                if (abs(min - GetVal(img, l, y)) <= d)
+                                  {
+                                    pos = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
 
                             for (l = posl + 1; l < img->xsize; l++)
                               {
-                                if (abs(min - GetVal(img, l, y)) <= d) posl = l;
-                                else break;
+                                if (abs(min - GetVal(img, l, y)) <= d)
+                                  {
+                                    posl = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
                           }
 
@@ -496,7 +568,9 @@ namespace ice
                               case ALL_EXTREMA   :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, l, y, 1);
+                                  {
+                                    PutVal(imgd, l, y, 1);
+                                  }
 
                                 break;
                               }
@@ -545,8 +619,14 @@ namespace ice
                                 thr = (int)(val - (val - max) * fabs(diff));
 
                                 for (l = x - 1; l >= 0; l--)
-                                  if (GetVal(img, l, y) <= thr) break;
-                                  else pos = l;
+                                  if (GetVal(img, l, y) <= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      pos = l;
+                                    }
 
                               }
                             else
@@ -555,8 +635,14 @@ namespace ice
                                 thr = (int)(val + (max - val) * fabs(diff));
 
                                 for (l = x - 1; l >= 0; l--)
-                                  if (GetVal(img, l, y) >= thr) break;
-                                  else pos = l;
+                                  if (GetVal(img, l, y) >= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      pos = l;
+                                    }
                               }
                           }
 
@@ -578,8 +664,14 @@ namespace ice
                                 thr = (int)(val - (val - max) * fabs(diff));
 
                                 for (l = x + 1; l < img->xsize; l++)
-                                  if (GetVal(img, l, y) <= thr) break;
-                                  else posl = l;
+                                  if (GetVal(img, l, y) <= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      posl = l;
+                                    }
 
                               }
                             else
@@ -588,8 +680,14 @@ namespace ice
                                 thr = (int)(val + (max - val) * fabs(diff));
 
                                 for (l = x + 1; l < img->xsize; l++)
-                                  if (GetVal(img, l, y) >= thr) break;
-                                  else posl = l;
+                                  if (GetVal(img, l, y) >= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      posl = l;
+                                    }
                               }
                           }
 
@@ -610,7 +708,9 @@ namespace ice
                               case ALL_EXTREMA   :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, l, y, 1);
+                                  {
+                                    PutVal(imgd, l, y, 1);
+                                  }
 
                                 break;
                               }
@@ -632,7 +732,9 @@ namespace ice
                               case ALL_EXTREMA   :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, l, y, 1);
+                                  {
+                                    PutVal(imgd, l, y, 1);
+                                  }
 
                                 break;
                               }
@@ -655,14 +757,16 @@ namespace ice
             max = min = GetVal(img, x, 0);
 
             if (diff < 0)
-              memset(vec, 0, mem);
+              {
+                memset(vec, 0, mem);
+              }
 
             for (y = 1; y < img->ysize; y++)
               {
 
                 val = GetVal(img, x, y);
 
-                if (lookfor == 1) // suche maxima
+                if (lookfor == 1)   // suche maxima
                   {
 
                     if (val > max)
@@ -687,14 +791,26 @@ namespace ice
 
                             for (l = pos - 1; l >= 0; l--)
                               {
-                                if (abs(max - GetVal(img, x, l)) <= d) pos = l;
-                                else break;
+                                if (abs(max - GetVal(img, x, l)) <= d)
+                                  {
+                                    pos = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
 
                             for (l = posl + 1; l < img->ysize; l++)
                               {
-                                if (abs(max - GetVal(img, x, l)) <= d) posl = l;
-                                else break;
+                                if (abs(max - GetVal(img, x, l)) <= d)
+                                  {
+                                    posl = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
                           }
 
@@ -716,7 +832,9 @@ namespace ice
                               case ALL_EXTREMA   :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, x, l, 1);
+                                  {
+                                    PutVal(imgd, x, l, 1);
+                                  }
 
                                 break;
                               }
@@ -758,14 +876,26 @@ namespace ice
 
                             for (l = pos - 1; l >= 0; l--)
                               {
-                                if (abs(min - GetVal(img, x, l)) <= d) pos = l;
-                                else break;
+                                if (abs(min - GetVal(img, x, l)) <= d)
+                                  {
+                                    pos = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
 
                             for (l = posl + 1; l < img->ysize; l++)
                               {
-                                if (abs(min - GetVal(img, x, l)) <= d) posl = l;
-                                else break;
+                                if (abs(min - GetVal(img, x, l)) <= d)
+                                  {
+                                    posl = l;
+                                  }
+                                else
+                                  {
+                                    break;
+                                  }
                               }
                           }
 
@@ -787,7 +917,9 @@ namespace ice
                               case ALL_EXTREMA :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, x, l, 1);
+                                  {
+                                    PutVal(imgd, x, l, 1);
+                                  }
 
                                 break;
                               }
@@ -839,8 +971,14 @@ namespace ice
                                 thr = (int)(val - (val - max) * fabs(diff));
 
                                 for (l = y - 1; l >= 0; l--)
-                                  if (GetVal(img, x, l) <= thr) break;
-                                  else pos = l;
+                                  if (GetVal(img, x, l) <= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      pos = l;
+                                    }
 
                               }
                             else
@@ -849,8 +987,14 @@ namespace ice
                                 thr = (int)(val + (max - val) * fabs(diff));
 
                                 for (l = y - 1; l >= 0; l--)
-                                  if (GetVal(img, x, l) >= thr) break;
-                                  else pos = l;
+                                  if (GetVal(img, x, l) >= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      pos = l;
+                                    }
                               }
                           }
 
@@ -872,8 +1016,14 @@ namespace ice
                                 thr = (int)(val - (val - max) * fabs(diff));
 
                                 for (l = y + 1; l < img->ysize; l++)
-                                  if (GetVal(img, x, l) <= thr) break;
-                                  else posl = l;
+                                  if (GetVal(img, x, l) <= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      posl = l;
+                                    }
 
                               }
                             else
@@ -882,8 +1032,14 @@ namespace ice
                                 thr = (int)(val + (max - val) * fabs(diff));
 
                                 for (l = y + 1; l < img->ysize; l++)
-                                  if (GetVal(img, x, l) >= thr) break;
-                                  else posl = l;
+                                  if (GetVal(img, x, l) >= thr)
+                                    {
+                                      break;
+                                    }
+                                  else
+                                    {
+                                      posl = l;
+                                    }
                               }
                           }
 
@@ -904,7 +1060,9 @@ namespace ice
                               case ALL_EXTREMA   :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, x, l, 1);
+                                  {
+                                    PutVal(imgd, x, l, 1);
+                                  }
 
                                 break;
                               }
@@ -926,7 +1084,9 @@ namespace ice
                               case ALL_EXTREMA   :
 
                                 for (l = pos; l <= posl; l++)
-                                  PutVal(imgd, x, l, 1);
+                                  {
+                                    PutVal(imgd, x, l, 1);
+                                  }
 
                                 break;
                               }
@@ -1062,9 +1222,15 @@ namespace ice
         {
           val = GetVal(img, xx, yy);
 
-          if (val > maxi) maxi = val;
+          if (val > maxi)
+            {
+              maxi = val;
+            }
 
-          if (val < mini) mini = val;
+          if (val < mini)
+            {
+              mini = val;
+            }
         }
   }
 
@@ -1086,9 +1252,13 @@ namespace ice
           int max = maxImage.getPixel(x, y);
           int mean = (max + min) / 2;
           if (img.getPixel(x, y) < mean)
-            imgd.setPixel(x, y, min);
+            {
+              imgd.setPixel(x, y, min);
+            }
           else
-            imgd.setPixel(x, y, max);
+            {
+              imgd.setPixel(x, y, max);
+            }
         }
 
     return OK;

@@ -69,7 +69,10 @@ namespace ice
           {
             Message(FNAME, M_NO_MEM, NO_MEM);
 
-            for (aa = 0; aa < a; aa++) delete [](ms->hists[aa]);
+            for (aa = 0; aa < a; aa++)
+              {
+                delete [](ms->hists[aa]);
+              }
 
             delete [](ms->hists);
             delete ms;
@@ -90,7 +93,10 @@ namespace ice
       {
         Message(FNAME, M_NO_MEM, NO_MEM);
 
-        for (aa = 0; aa < ms->areaanz; aa++) delete [](ms->hists[aa]);
+        for (aa = 0; aa < ms->areaanz; aa++)
+          {
+            delete [](ms->hists[aa]);
+          }
 
         delete [](ms->hists);
         delete ms;
@@ -123,7 +129,7 @@ namespace ice
 
         for (x = 0; x < ms->areaanz; x++)
           {
-            if (ms->hists[x][g].hfkt > 0) // in der Spalte x kommt der Grauwert g vor
+            if (ms->hists[x][g].hfkt > 0)   // in der Spalte x kommt der Grauwert g vor
               {
                 ms->hists[x][g].prev_area = prev;
                 prev->next_area = &(ms->hists[x][g]);
@@ -150,7 +156,9 @@ namespace ice
     delete [](ms->allhist);
 
     for (int a = 0; a < ms->areaanz; a++)
-      delete [](ms->hists[a]);
+      {
+        delete [](ms->hists[a]);
+      }
 
     delete [](ms->hists);
     delete ms;
@@ -172,7 +180,10 @@ namespace ice
       {
         ms->lastgrw--;
 
-        if (ms->lastgrw < 0) return false;
+        if (ms->lastgrw < 0)
+          {
+            return false;
+          }
       }
 
     x = ms->allhist[(grw = ms->lastgrw)].next_area->area_num;
@@ -180,7 +191,10 @@ namespace ice
     for (y = 0; y < img->ysize; y++)
       {
         if (GetVal(img, x, y) == grw &&
-            (!IsImg(imgo) || GetVal(imgo, x, y) == 0)) return true;
+            (!IsImg(imgo) || GetVal(imgo, x, y) == 0))
+          {
+            return true;
+          }
       }
 
 //!!! Fehler, dieser punkt sollte wohl nicht erreicht werden, wird aber

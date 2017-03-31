@@ -84,7 +84,9 @@ namespace ice
       {
         double b3sign = 1.0;
         if (fabs(b3) > eps)
-          b3sign = SignD(b3);
+          {
+            b3sign = SignD(b3);
+          }
 
         double r = sqrt(fabs(b2 / 3.0)) * b3sign;
         double x = b3 / 2.0 / r / r / r;
@@ -206,18 +208,26 @@ namespace ice
     double mm = ((p2 / 3.0 + y) * (p2 / 3.0 + y) / 4.0) - p0;
 
     if (fabs(mm) < 0.0001)
-      mm = Max(mm, 0.0);
+      {
+        mm = Max(mm, 0.0);
+      }
 
     if (mm < 0.0)
-      return false;
+      {
+        return false;
+      }
 
     double nn = p3 * p3 / 16.0 + y / 4.0 - p2 / 6.0;
 
     if (fabs(nn) < 0.0001)
-      nn = Max(nn, 0.0);
+      {
+        nn = Max(nn, 0.0);
+      }
 
     if (nn < 0.0)
-      return false;
+      {
+        return false;
+      }
 
     double mn = (p2 / 3.0 + y) * p3 / 8.0 - p1 / 4.0;
 
@@ -225,7 +235,9 @@ namespace ice
     double n = sqrt(nn);
 
     if (mn < 0.0)
-      n = -n;
+      {
+        n = -n;
+      }
 
     a1 = p3 / 2.0 + 2.0 * n;
     b1 = p3 / 2.0 - 2.0 * n;

@@ -60,13 +60,17 @@ namespace ice
     //    printf("%s\n",msg.c_str());
     string message;
 
-    if (msg != "") // normale Meldung
+    if (msg != "")   // normale Meldung
       {
         /* don't use error message from previous level */
         if (code != OK)
-          ErrorCode = 1 - code;
+          {
+            ErrorCode = 1 - code;
+          }
         else
-          ErrorCode = OK;
+          {
+            ErrorCode = OK;
+          }
 
         e_msg = msg;
       }
@@ -77,7 +81,7 @@ namespace ice
 
     message = loc + " - " + e_msg; // Meldung zusammensetzen
 
-    if (e_message <= 0) // Soll Anzeige erfolgen
+    if (e_message <= 0)   // Soll Anzeige erfolgen
       {
         cerr << "Error: " << message << endl;
       }
@@ -119,12 +123,18 @@ namespace ice
 
   void OnMessage()
   {
-    if (e_message > 0) e_message--;
+    if (e_message > 0)
+      {
+        e_message--;
+      }
   }
 
   int GetError()
   {
-    if (ErrorCode == OK) return OK;
+    if (ErrorCode == OK)
+      {
+        return OK;
+      }
 
     return 1 - ErrorCode;
   }
@@ -141,6 +151,9 @@ namespace ice
 
   void OffMessage()
   {
-    if (e_message >= 0) e_message++;
+    if (e_message >= 0)
+      {
+        e_message++;
+      }
   }
 }

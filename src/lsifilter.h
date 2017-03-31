@@ -200,42 +200,54 @@ namespace ice
             }
         }
       else
-        rep = nullptr;
+        {
+          rep = nullptr;
+        }
     }
 
     explicit LSIFilter(const Matrix& m, bool convolution = false): typ(it_double)
     {
       rep = new LsiRepresentationD(m);
       if (convolution)
-        rep->reflectMask();
+        {
+          rep->reflectMask();
+        }
     }
 
     LSIFilter(const IMatrix& m, int norm, bool convolution = false): typ(it_int)
     {
       rep = new LsiRepresentationI(m, norm);
       if (convolution)
-        rep->reflectMask();
+        {
+          rep->reflectMask();
+        }
     }
 
     explicit LSIFilter(const matrix<double>& m, bool convolution = false): typ(it_double)
     {
       rep = new LsiRepresentationD(m);
       if (convolution)
-        rep->reflectMask();
+        {
+          rep->reflectMask();
+        }
     }
 
     LSIFilter(const matrix<int>& m, int norm, bool convolution = false): typ(it_int)
     {
       rep = new LsiRepresentationI(m, norm);
       if (convolution)
-        rep->reflectMask();
+        {
+          rep->reflectMask();
+        }
     }
 
     LSIFilter(int* m, int sizex, int sizey, int norm, bool convolution = false): typ(it_int)
     {
       rep = new LsiRepresentationI(m, sizex, sizey, norm);
       if (convolution)
-        rep->reflectMask();
+        {
+          rep->reflectMask();
+        }
     }
 
     ~LSIFilter()

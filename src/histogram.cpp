@@ -56,7 +56,9 @@ namespace ice
   {
     for (int y = 0; y < b->ysize; y += diff)
       for (int x = 0; x < b->xsize; x += diff)
-        addValueUnchecked(b.getPixel(x, y));
+        {
+          addValueUnchecked(b.getPixel(x, y));
+        }
   }
 
   template<class T>
@@ -66,7 +68,9 @@ namespace ice
 
     for (int y = 0; y < b->ysize; y += diff)
       for (int x = 0; x < b->xsize; x += diff)
-        addValueUnchecked(bp[y][x]);
+        {
+          addValueUnchecked(bp[y][x]);
+        }
   }
 
   Histogram::Histogram(const Image& b, int diff): isInit(false), nclasses(0), sum(0)
@@ -124,7 +128,9 @@ namespace ice
   int Histogram::operator [](int n) const
   {
     if ((unsigned int)n >= (unsigned int)nclasses)
-      return 0;
+      {
+        return 0;
+      }
     return classes[n];
   }
 
@@ -145,7 +151,9 @@ namespace ice
     classes.resize(nclasses);
 
     for (i = 0; i < nclasses; i++)
-      classes[i] = 0;
+      {
+        classes[i] = 0;
+      }
 
     sum = 0;
     isInit = true;
@@ -206,7 +214,9 @@ namespace ice
       }
 
     for (int i = 0; i < nclasses; i++)
-      v[i] = classes[i];
+      {
+        v[i] = classes[i];
+      }
 
     return v;
   }
@@ -222,7 +232,9 @@ namespace ice
     v.resize(nclasses);
 
     for (int i = 0; i < nclasses; i++)
-      v[i] = classes[i];
+      {
+        v[i] = classes[i];
+      }
   }
 
 #undef FNAME
@@ -267,7 +279,9 @@ namespace ice
       }
 
     for (int i = 0; i < nclasses; i++)
-      res[i] = (double)classes[i] / (double)sum;
+      {
+        res[i] = (double)classes[i] / (double)sum;
+      }
 
     return res;
   }
@@ -289,7 +303,9 @@ namespace ice
     v.resize(nclasses);
 
     for (int i = 0; i < nclasses; i++)
-      v[i] = (double)classes[i] / (double)sum;
+      {
+        v[i] = (double)classes[i] / (double)sum;
+      }
 
   }
 #undef FNAME
@@ -311,12 +327,18 @@ namespace ice
 
     int i = 0;
 
-    while (classes[i] == 0) i++;
+    while (classes[i] == 0)
+      {
+        i++;
+      }
 
     minv = i;
     i = nclasses - 1;
 
-    while (classes[i] == 0) i--;
+    while (classes[i] == 0)
+      {
+        i--;
+      }
 
     maxv = i;
 
@@ -348,12 +370,16 @@ namespace ice
     int ct = 0;
 
     for (minv = 0; ct <= qabs && minv < nclasses; minv++)
-      ct += classes[minv];
+      {
+        ct += classes[minv];
+      }
 
     ct = 0;
 
     for (maxv = nclasses - 1; ct <= qabs && maxv > 0; maxv--)
-      ct += classes[maxv];
+      {
+        ct += classes[maxv];
+      }
 
     return OK;
   }
@@ -474,7 +500,9 @@ namespace ice
     int maxn = 0;
     for (int i = 0; i < nclasses; i++)
       if (classes[i] > maxn)
-        maxn = classes[i];
+        {
+          maxn = classes[i];
+        }
 
     rxa = _GETX(9);
     rya = _GETY(7);
@@ -482,7 +510,9 @@ namespace ice
     rx = _GETX(11);
 
     for (; rxa <= rx; rxa++)
-      Line(_GETX(10), ry, rxa, rya, grw, 0, b);
+      {
+        Line(_GETX(10), ry, rxa, rya, grw, 0, b);
+      }
 
     rxa = _GETX(96);
     rya = _GETY(88);
@@ -490,12 +520,16 @@ namespace ice
     rx = _GETX(90);
 
     for (; rya <= ry; rya++)
-      Line(rx, rya, rxa, _GETY(90), grw, 0, b);
+      {
+        Line(rx, rya, rxa, _GETY(90), grw, 0, b);
+      }
 
     txtsize = dx / 600;
 
     if (txtsize < 1)
-      txtsize = 1;
+      {
+        txtsize = 1;
+      }
 
     if (dx >= 100 && txtsize <= 5)
       {
@@ -511,7 +545,10 @@ namespace ice
         rx = _GETX(i * 75.0 / nclasses + 10);
         ry = _GETY(90.0 - classes[i] * 80.0 / maxn);
 
-        for (; rxa <= rx; rxa++) Line(rxa, _GETY(90), rxa, ry, grw, 0, b);
+        for (; rxa <= rx; rxa++)
+          {
+            Line(rxa, _GETY(90), rxa, ry, grw, 0, b);
+          }
       }
 
     return OK;

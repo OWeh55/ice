@@ -35,11 +35,17 @@ namespace ice
       {
         c = fgetc(fd);
         if (c == EOF)
-          throw runtime_error("PbmReader - EOF reading Number");
+          {
+            throw runtime_error("PbmReader - EOF reading Number");
+          }
         if (c == '#')
-          isComment = true;
+          {
+            isComment = true;
+          }
         else if (isComment && c == 0x0a)
-          isComment = false;
+          {
+            isComment = false;
+          }
       }
     while (isComment || isspace(c));
 
@@ -75,9 +81,13 @@ namespace ice
     if (c != 'P')
       {
         if (c == EOF)
-          throw runtime_error("PbmReader - Empty pbm file");
+          {
+            throw runtime_error("PbmReader - Empty pbm file");
+          }
         else
-          throw runtime_error("PbmReader - No pbm file");
+          {
+            throw runtime_error("PbmReader - No pbm file");
+          }
       }
 
     c = fgetc(fd.fd);
@@ -102,20 +112,28 @@ namespace ice
     unsigned int maxuval = readNumber(fd.fd);
 
     if (maxuval > INT_MAX)
-      maxValue = INT_MAX;     // ice limit for max. value
+      {
+        maxValue = INT_MAX;  // ice limit for max. value
+      }
     else
-      maxValue = maxuval;
+      {
+        maxValue = maxuval;
+      }
   }
 
   void PbmReader::open(const string& fn)
   {
     if (isOpen)
-      throw logic_error("PbmReader - Already opened");
+      {
+        throw logic_error("PbmReader - Already opened");
+      }
 
     fd = exopen(fn, FRMODUS);
 
     if (fd.fd == nullptr)
-      throw runtime_error("PbmReader - Cannot open file " + fn);
+      {
+        throw runtime_error("PbmReader - Cannot open file " + fn);
+      }
 
     readInfo();
 
@@ -133,7 +151,9 @@ namespace ice
   void PbmReader::getInfo(int& xs, int& ys, int& mv, int& ch) const
   {
     if (!isOpen)
-      throw logic_error("PbmReader - Not opened");
+      {
+        throw logic_error("PbmReader - Not opened");
+      }
     xs = xSize;
     ys = ySize;
     mv = maxValue;
@@ -143,17 +163,25 @@ namespace ice
   void PbmReader::readBuffer()
   {
     if (!isOpen)
-      throw logic_error("PbmReader - Not opened");
-    if (ib.data == nullptr) // if already read - ignore
+      {
+        throw logic_error("PbmReader - Not opened");
+      }
+    if (ib.data == nullptr)   // if already read - ignore
       {
         int valsize;
 
         if (maxValue >= (1 << 16))
-          valsize = 4;
+          {
+            valsize = 4;
+          }
         else if (maxValue >= (1 << 8))
-          valsize = 2;
+          {
+            valsize = 2;
+          }
         else
-          valsize = 1;
+          {
+            valsize = 1;
+          }
 
         int pixelsize = valsize * nChannels;
 
@@ -173,7 +201,9 @@ namespace ice
         ib.intensity = true;
         int nReadValues = fread(ib.data, pixelsize, ib.width * ib.height, fd.fd);
         if (nReadValues !=  ib.width * ib.height)
-          throw runtime_error("PbmReader - Error reading pbm file data");
+          {
+            throw runtime_error("PbmReader - Error reading pbm file data");
+          }
       }
   }
 

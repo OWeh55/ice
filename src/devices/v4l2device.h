@@ -48,9 +48,13 @@ namespace ice
       void printFrameRate() const
       {
         if (framerate.numerator == 1)
-          std::cout << framerate.denominator;
+          {
+            std::cout << framerate.denominator;
+          }
         else
-          std::cout << framerate.denominator << "/" << framerate.numerator;
+          {
+            std::cout << framerate.denominator << "/" << framerate.numerator;
+          }
       }
 
       std::string modeString() const

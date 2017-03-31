@@ -43,11 +43,17 @@ namespace ice
     int x, y, mv, ch;
     rd.getInfo(x, y, mv, ch);
     if (!IsImg(r))
-      r = NewImg(x, y, mv);
+      {
+        r = NewImg(x, y, mv);
+      }
     if (!IsImg(g))
-      g = NewImg(x, y, mv);
+      {
+        g = NewImg(x, y, mv);
+      }
     if (!IsImg(b))
-      b = NewImg(x, y, mv);
+      {
+        b = NewImg(x, y, mv);
+      }
     rd.getImage(r, g, b, flag);
     return OK;
   }
@@ -58,7 +64,9 @@ namespace ice
     int x, y, mv, ch;
     rd.getInfo(x, y, mv, ch);
     if (!IsImg(img))
-      img = NewImg(x, y, mv);
+      {
+        img = NewImg(x, y, mv);
+      }
     rd.getImage(img, flag);
     return img;
   }

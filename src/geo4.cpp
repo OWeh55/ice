@@ -34,21 +34,35 @@ namespace ice
     Image himg = simg;
 
     if (simg == dimg)
-      himg = NewImg(simg, true);
+      {
+        himg = NewImg(simg, true);
+      }
 
     for (int y = 0; y < sy; y++)
       {
         int yo = y - dy;
 
-        if (yo < 0) yo += sy;
-        else yo = yo % sy;
+        if (yo < 0)
+          {
+            yo += sy;
+          }
+        else
+          {
+            yo = yo % sy;
+          }
 
         for (int x = 0; x < sx; x++)
           {
             int xo = x - dx;
 
-            if (xo < 0) xo += sx;
-            else xo = xo % sx;
+            if (xo < 0)
+              {
+                xo += sx;
+              }
+            else
+              {
+                xo = xo % sx;
+              }
 
             PutVal(dimg, x, y, GetVal(himg, xo, yo));
           }

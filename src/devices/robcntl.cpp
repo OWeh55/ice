@@ -61,14 +61,20 @@ namespace ice
       }
     while (toupper(answer[1]) != toupper(cmd[0]));
 
-    if (ok) return OK;
+    if (ok)
+      {
+        return OK;
+      }
     return ERROR;
   }
 #undef FNAME
   /*****************************************************/
   int RobOpen(void)
   {
-    if (srlOpen(ROB_DEVICE, 8, 0, 1, 9600, srlFLOWHARD) != srlOK) return -1;
+    if (srlOpen(ROB_DEVICE, 8, 0, 1, 9600, srlFLOWHARD) != srlOK)
+      {
+        return -1;
+      }
     if (RobInit() != OK)
       {
         srlClose(ROB_DEVICE);
@@ -169,7 +175,10 @@ namespace ice
         if (mode2 == 1)
           {
             sprintf(cmd, "a\n");
-            if (RobSendCommand(cmd) != OK) return ERROR;
+            if (RobSendCommand(cmd) != OK)
+              {
+                return ERROR;
+              }
           }
         sprintf(cmd, "Move %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", \
                 par[0], par[1], par[2], par[3], par[4], par[5]);
@@ -186,7 +195,10 @@ namespace ice
                     par[0], par[1], par[2], par[3], par[4], par[5]);
           }
       }
-    if ((rc = RobSendCommand(cmd)) != ERROR) return rc;
+    if ((rc = RobSendCommand(cmd)) != ERROR)
+      {
+        return rc;
+      }
     sscanf(answer, "%*s%d", &code);
     return code;
   }
@@ -201,7 +213,10 @@ namespace ice
     else
       sprintf(cmd, "Straight %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", \
               par[0], par[1], par[2], par[3], par[4], par[5]);
-    if ((rc = RobSendCommand(cmd)) != ERROR) return rc;
+    if ((rc = RobSendCommand(cmd)) != ERROR)
+      {
+        return rc;
+      }
     sscanf(answer, "%*s%d", &code);
     return code;
   }
@@ -224,8 +239,14 @@ namespace ice
   int RobWaitStop(int fine)
   {
     char cmd[20];
-    if (fine) sprintf(cmd, "Waitstop\n");
-    else sprintf(cmd, "Break\n");
+    if (fine)
+      {
+        sprintf(cmd, "Waitstop\n");
+      }
+    else
+      {
+        sprintf(cmd, "Break\n");
+      }
     return RobSendCommand(cmd);
   }
 
@@ -236,7 +257,10 @@ namespace ice
   /*****************************************************/
   int RobCP(int on)
   {
-    if (on) return RobSendCommand("CPON\n");
+    if (on)
+      {
+        return RobSendCommand("CPON\n");
+      }
     return RobSendCommand("CPOFF\n");
   }
   /*****************************************************/
@@ -247,14 +271,23 @@ namespace ice
     if (mode == 0)
       {
         sprintf(cmd, "Position\n");
-        if (RobSendCommand(cmd) != OK) return ERROR;
+        if (RobSendCommand(cmd) != OK)
+          {
+            return ERROR;
+          }
       }
     else
       {
         sprintf(cmd, "a\n");
-        if (RobSendCommand(cmd) != OK) return ERROR;
+        if (RobSendCommand(cmd) != OK)
+          {
+            return ERROR;
+          }
         sprintf(cmd, "p\n");
-        if (RobSendCommand(cmd) != OK) return ERROR;
+        if (RobSendCommand(cmd) != OK)
+          {
+            return ERROR;
+          }
       }
     cout << answer << endl;
     if (sscanf(answer, "%*c%*c%le%le%le%le%le%le", &par[0], &par[1], &par[2], \
@@ -271,7 +304,10 @@ namespace ice
   {
     int i;
     double epar[6], rpar[6];
-    if (RobGetPos(rpar) != OK) return ERROR;
+    if (RobGetPos(rpar) != OK)
+      {
+        return ERROR;
+      }
     for (i = 0; i < 3; i++)                  /* X/Y/Z/y/p/r  -->  y/p/r/X/Y/Z */
       {
         epar[i] = Arcus(rpar[i + 3]);

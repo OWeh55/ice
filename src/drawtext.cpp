@@ -285,7 +285,9 @@ namespace ice
         for (int xi = x; xi < x + size; xi++)
           {
             if (xi > 0 && xi < img->xsize)
-              PutVal(img, xi, yi, val);
+              {
+                PutVal(img, xi, yi, val);
+              }
           }
   }
 
@@ -300,7 +302,9 @@ namespace ice
         for (int k = 0; k < 8; k++)
           {
             if (textcode[c][j] & mask)
-              drawDot(DotX, y + j * size, size, val, img);
+              {
+                drawDot(DotX, y + j * size, size, val, img);
+              }
 
             DotX += size;
             mask = mask >> 1;
@@ -348,9 +352,13 @@ namespace ice
     else
       {
         if (size_exp >= 0)
-          DotSize = hfeld[size_exp];
+          {
+            DotSize = hfeld[size_exp];
+          }
         else
-          DotSize = -size_exp;
+          {
+            DotSize = -size_exp;
+          }
       }
 
     int SignSize = 8 * DotSize;
@@ -374,7 +382,9 @@ namespace ice
           }
 
         if (SignY0 + SignSize >= img->ysize)
-          return OK;
+          {
+            return OK;
+          }
       }
 
     return OK;

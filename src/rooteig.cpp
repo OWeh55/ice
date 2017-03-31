@@ -84,12 +84,18 @@ namespace ice
         // Berechnung des nächsten Anfangsvektors
         while (flag == 0 && i2 < dim)
           {
-            for (i3 = 0; i3 < dim; i3++) x0[i3] = 0;
+            for (i3 = 0; i3 < dim; i3++)
+              {
+                x0[i3] = 0;
+              }
 
             x0[i2] = 1;
             MulMatrix((double*)am, x0, dim, dim, 1, xt);
 
-            if ((l = LengthVecRn(xt, dim)) > eps1) flag++;
+            if ((l = LengthVecRn(xt, dim)) > eps1)
+              {
+                flag++;
+              }
 
             i2++;
           }
@@ -126,7 +132,9 @@ namespace ice
                 rayl = 0;
 
                 for (i3 = 0; i3 < dim; i3++)
-                  rayl += h1[i3] * xh[i3];
+                  {
+                    rayl += h1[i3] * xh[i3];
+                  }
 
                 ScaleVecRn(xh, dim, rayl, h2);
                 SubVecRn(h1, h2, dim, h3);
@@ -197,7 +205,9 @@ namespace ice
         /* Generierung der naechsten Iterationsmatrix */
         for (i2 = 0; i2 < dim; i2++)
           for (i3 = 0; i3 < dim; i3++)
-            *(am + i2 * dim + i3) -= eval[i1] * xt[i2] * xt[i3];
+            {
+              *(am + i2 * dim + i3) -= eval[i1] * xt[i2] * xt[i3];
+            }
 
 #if DEBUG
         PrintMatrix("Naechste Iterationsmatrix", am, dim, dim);
@@ -255,7 +265,9 @@ namespace ice
         MoveMatrix(a, dim, dim, ah);
 
         for (j = 0; j < dim; j++)
-          ah[j * dim + j] -= eval[i];
+          {
+            ah[j * dim + j] -= eval[i];
+          }
 
         MulMatrix
         ((double*)ah, (double*)evec + i * dim, dim, dim, 1, (double*)tvec + i * dim);

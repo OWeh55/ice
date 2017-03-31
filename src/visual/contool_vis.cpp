@@ -87,7 +87,9 @@ namespace ice
       }
 
     if ((mstat & M_RIGHT_DOWN) != 0)
-      return c;  // aborted
+      {
+        return c;  // aborted
+      }
 
     lastPoint = newPoint;
 

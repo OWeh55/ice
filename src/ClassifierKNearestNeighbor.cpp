@@ -60,7 +60,9 @@ namespace ice
   bool ClassifierKNN::_finish()
   {
     if (norm)
-      doNormalization(normalizeScaling);
+      {
+        doNormalization(normalizeScaling);
+      }
     tree.create(samples);
     samples.clear();
     return true;
@@ -75,7 +77,9 @@ namespace ice
   {
     vector<double> nf(feat);
     if (norm)
-      normalize(nf);
+      {
+        normalize(nf);
+      }
 
     vector<double> distances;
     vector<const ClassSample*> neighbors;
@@ -106,7 +110,9 @@ namespace ice
           {
             max = probs[i];
             if (max > rejection_threshold)
-              maxClass = i;
+              {
+                maxClass = i;
+              }
           }
       }
 

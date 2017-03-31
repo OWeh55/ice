@@ -92,7 +92,9 @@ namespace ice
     N = 0;
 
     for (i = a1; i <= a2; i = i + step)
-      N++;
+      {
+        N++;
+      }
 
     plist = NewPointList(N);
     k = 0;
@@ -120,12 +122,16 @@ namespace ice
       }
 
     for (i = 0; i < n + N + 3 + 1; ++i)
-      ka[i] = 0;
+      {
+        ka[i] = 0;
+      }
 
     b = new double[m];
 
     for (i = 0; i < m; ++i)
-      b[i] = 0.0;
+      {
+        b[i] = 0.0;
+      }
 
     c = new double[n + N + 3];
     x = new double[n + N + 3];
@@ -159,10 +165,14 @@ namespace ice
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 6; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 6; i < n; ++i)
-      c[i] = -gew[i - 6];
+      {
+        c[i] = -gew[i - 6];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -183,10 +193,14 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 7; ++i)
-      ka[i] = i * NN;
+      {
+        ka[i] = i * NN;
+      }
 
     for (i = 7; i < 7 + N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // *************************
     // Speziell: Füllen von ia
@@ -217,7 +231,9 @@ namespace ice
     // Speziell: Füllen von a
 
     for (i = 0; i < N; ++i)
-      a[i] = plist->xptr[i];
+      {
+        a[i] = plist->xptr[i];
+      }
 
     a[NN - 1] = -1.0;
     a[NN - 2] = 1.0;
@@ -293,34 +309,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < nz ; ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();
@@ -482,7 +508,9 @@ namespace ice
     PointList ppl = NewPointList(nPoints);
 
     for (int i = 0; i < nPoints; i++)
-      PutPoint(ppl, i, pl[i].x, pl[i].y, 1.0);
+      {
+        PutPoint(ppl, i, pl[i].x, pl[i].y, 1.0);
+      }
 
     double par[2];
 
@@ -569,7 +597,9 @@ namespace ice
     N = 0;
 
     for (i = a1; i <= a2; i = i + step)
-      N++;
+      {
+        N++;
+      }
 
     plist = NewPointList(N);
     k = 0;
@@ -597,12 +627,16 @@ namespace ice
       }
 
     for (i = 0; i < n + N + 3 + 1; ++i)
-      ka[i] = 0;
+      {
+        ka[i] = 0;
+      }
 
     b = new double[m];
 
     for (i = 0; i < m; ++i)
-      b[i] = 0.0;
+      {
+        b[i] = 0.0;
+      }
 
     c = new double[n + N + 3];
     x = new double[n + N + 3];
@@ -636,10 +670,14 @@ namespace ice
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 8; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 8; i < n; ++i)
-      c[i] = -gew[i - 8];
+      {
+        c[i] = -gew[i - 8];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -660,13 +698,19 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 3; ++i)
-      ka[i] = i * NN;
+      {
+        ka[i] = i * NN;
+      }
 
     for (i = 3; i < 9; ++i)
-      ka[i] = ka[i - 1] + (N + 1);
+      {
+        ka[i] = ka[i - 1] + (N + 1);
+      }
 
     for (i = 9; i < 9 + N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // *************************
     // Speziell: Füllen von ia
@@ -710,7 +754,9 @@ namespace ice
     // Speziell: Füllen von a
 
     for (i = 0; i < N; ++i)
-      a[i] = (plist->xptr[i]) * (plist->xptr[i]) + (plist->yptr[i]) * (plist->yptr[i]);
+      {
+        a[i] = (plist->xptr[i]) * (plist->xptr[i]) + (plist->yptr[i]) * (plist->yptr[i]);
+      }
 
     a[NN - 1] = -1.0;
     a[NN - 2] = 1.0;
@@ -804,34 +850,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < nz ; ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();
@@ -976,7 +1032,9 @@ namespace ice
     N = 0;
 
     for (i = a1; i <= a2; i = i + step)
-      N++;
+      {
+        N++;
+      }
 
     plist = NewPointList(N);
     k = 0;
@@ -1004,12 +1062,16 @@ namespace ice
       }
 
     for (i = 0; i < n + N + 3 + 1; ++i)
-      ka[i] = 0;
+      {
+        ka[i] = 0;
+      }
 
     b = new double[m];
 
     for (i = 0; i < m; ++i)
-      b[i] = 0.0;
+      {
+        b[i] = 0.0;
+      }
 
     c = new double[n + N + 3];
     x = new double[n + N + 3];
@@ -1043,10 +1105,14 @@ namespace ice
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 12; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 12; i < n; ++i)
-      c[i] = -gew[i - 12];
+      {
+        c[i] = -gew[i - 12];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -1067,13 +1133,19 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 5; ++i)
-      ka[i] = i * NN;
+      {
+        ka[i] = i * NN;
+      }
 
     for (i = 5; i < 13; ++i)
-      ka[i] = ka[i - 1] + (N + 1);
+      {
+        ka[i] = ka[i - 1] + (N + 1);
+      }
 
     for (i = 13; i < 13 + N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // *************************
     // Speziell: Füllen von ia
@@ -1117,7 +1189,9 @@ namespace ice
     // Speziell: Füllen von a
 
     for (i = 0; i < N; ++i)
-      a[i] = (plist->xptr[i]) * (plist->xptr[i]);
+      {
+        a[i] = (plist->xptr[i]) * (plist->xptr[i]);
+      }
 
     a[NN - 1] = -1.0;
     a[NN - 2] = 1.0;
@@ -1254,34 +1328,44 @@ namespace ice
     Printf("Zielfunktion \n");
 
     for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
+      {
+        Printf("%f  ", c[i]);
+      }
 
     GetChar();
     Printf("\n Rechte Seite \n");
 
     for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
+      {
+        Printf("%f  ", b[i]);
+      }
 
     GetChar();
     Printf("Matrix: \n\n");
     Printf("Indexarray ka\n");
 
     for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
+      {
+        Printf("%d  ", ka[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Indexarray ia\n");
 
     for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
+      {
+        Printf("%d  ", ia[i]);
+      }
 
     Printf("\n");
     GetChar();
     Printf("Datenfeld a\n");
 
     for (i = 0; i < nz ; ++i)
-      Printf("%f  ", a[i]);
+      {
+        Printf("%f  ", a[i]);
+      }
 
     Printf("\n");
     GetChar();
@@ -1341,7 +1425,10 @@ namespace ice
 
     FeatureQuadrFunc(koef, par, &type);
 
-    if (type != ELLIPSE) code = 10;
+    if (type != ELLIPSE)
+      {
+        code = 10;
+      }
 
     delete [] ia;
     delete [] ka;

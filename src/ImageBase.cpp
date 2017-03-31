@@ -46,12 +46,16 @@ namespace ice
   {
 #ifdef CONTROLLED_REFRESH
     if (parent == nullptr)
-      tsp = &timestamp;
+      {
+        tsp = &timestamp;
+      }
     else
       {
         // get root of child tree
         while (par->parent != nullptr)
-          par = par->parent;
+          {
+            par = par->parent;
+          }
 
         tsp = & (par->timestamp);
       }
@@ -73,7 +77,9 @@ namespace ice
 
     for (int y = 0; y < ysize; y++)
       for (int x = 0; x < xsize; x++)
-        setP(x, y, grayvalue);
+        {
+          setP(x, y, grayvalue);
+        }
 
 #ifdef CONTROLLED_REFRESH
     needRefresh();

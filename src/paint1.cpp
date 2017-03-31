@@ -84,9 +84,15 @@ namespace ice
 
     h = size / 2;
 
-    if ((mode == 2) && (size < 6)) mode = 4;
+    if ((mode == 2) && (size < 6))
+      {
+        mode = 4;
+      }
 
-    if ((mode == 3) && (size < 6)) mode = 5;
+    if ((mode == 3) && (size < 6))
+      {
+        mode = 5;
+      }
 
     par[0] = x;
     par[1] = y;
@@ -117,7 +123,9 @@ namespace ice
       case 5: /* volles achsparalleles Quadrat */
 
         for (i = y - h; i < y + h; i++)
-          Line(x - h, i, x + h, i, val, DEFAULT, img);
+          {
+            Line(x - h, i, x + h, i, val, DEFAULT, img);
+          }
 
         break;
       case 6: /* leeres schraeges Quadrat */
@@ -177,7 +185,10 @@ namespace ice
 
     OffMessage();
 
-    if (mode == DEFAULT) FillRegion(c, val2, img);
+    if (mode == DEFAULT)
+      {
+        FillRegion(c, val2, img);
+      }
 
     SetOk();
     MarkContur(c, val1, img);
@@ -261,9 +272,15 @@ namespace ice
           z1u = pow(xs, c) + pow(ys, c) - 1.0;
           z1o = pow(xs1, c) + pow(ys1, c) - 1.0;
 
-          if (z1u <= 0 && z1o >= 0) PutVal(pic, i, j, val);
+          if (z1u <= 0 && z1o >= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
 
-          if (z1u >= 0 && z1o <= 0) PutVal(pic, i, j, val);
+          if (z1u >= 0 && z1o <= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
         }
 
     for (i = 0; i < dimx; ++i)
@@ -280,9 +297,15 @@ namespace ice
           z1u = pow(xs, c) + pow(ys, c) - 1.0;
           z1o = pow(xs1, c) + pow(ys1, c) - 1.0;
 
-          if (z1u <= 0 && z1o >= 0) PutVal(pic, i, j, val);
+          if (z1u <= 0 && z1o >= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
 
-          if (z1u >= 0 && z1o <= 0) PutVal(pic, i, j, val);
+          if (z1u >= 0 && z1o <= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
         }
 
     return 0;

@@ -85,7 +85,9 @@ namespace ice
   int TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2)
   {
     if (&m1 == &m2)
-      return TransformList(tr, m2);
+      {
+        return TransformList(tr, m2);
+      }
 
     if (tr.dimSource > m1.cols())
       {

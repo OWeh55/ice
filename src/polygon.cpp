@@ -31,7 +31,10 @@ namespace ice
   {
     int points = pl.size();
 
-    if (points < 4) return true;
+    if (points < 4)
+      {
+        return true;
+      }
 
     LineSeg e1;
 
@@ -46,7 +49,9 @@ namespace ice
             Edge(j, e2);
 
             if (e1.Intersection(e2))
-              return false;
+              {
+                return false;
+              }
           }
       }
 
@@ -110,13 +115,25 @@ namespace ice
       {
       case DPP_MIN:
 
-        if (dist1 < dist2) return dist1;
-        else return dist2;
+        if (dist1 < dist2)
+          {
+            return dist1;
+          }
+        else
+          {
+            return dist2;
+          }
 
       case DPP_MAX:
 
-        if (dist1 > dist2) return dist1;
-        else return dist2;
+        if (dist1 > dist2)
+          {
+            return dist1;
+          }
+        else
+          {
+            return dist2;
+          }
 
       case DPP_MEAN:
         return 0.5 * (dist1 + dist2);
@@ -138,12 +155,18 @@ namespace ice
           {
           case DPP_MIN:
 
-            if (pdist < dist) dist = pdist;
+            if (pdist < dist)
+              {
+                dist = pdist;
+              }
 
             break;
           case DPP_MAX:
 
-            if (pdist > dist) dist = pdist;
+            if (pdist > dist)
+              {
+                dist = pdist;
+              }
 
             break;
           case DPP_MEAN:
@@ -155,7 +178,10 @@ namespace ice
           }
       }
 
-    if (pmode == DPP_MEAN) dist /= p.pl.size();
+    if (pmode == DPP_MEAN)
+      {
+        dist /= p.pl.size();
+      }
 
     return dist;
   }
@@ -193,7 +219,9 @@ namespace ice
     p.Reset(npl[0]);
 
     for (unsigned int i = 1; i < npl.size(); i++)
-      p.Add(npl[i]);
+      {
+        p.Add(npl[i]);
+      }
   }
 
 #undef FNAME

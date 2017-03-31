@@ -142,7 +142,10 @@ namespace ice
     // must be called, before trafo tr is used
     // all methods, that change parameters, must
     // set c_val to false!
-    if (c_val) return;
+    if (c_val)
+      {
+        return;
+      }
 
     // Trafo zusammensetzen
     tr = Trafo(3, 3);
@@ -199,7 +202,9 @@ namespace ice
       }
 
     if ((what == all) || (what == internal))
-      res.Append(dist->MakeVector());
+      {
+        res.Append(dist->MakeVector());
+      }
 
     return res;
   }
@@ -371,7 +376,10 @@ namespace ice
     Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)
     Vector a(3);
 
-    for (i = 0; i < 3; i++) a[i] = T[i][3];
+    for (i = 0; i < 3; i++)
+      {
+        a[i] = T[i][3];
+      }
 
     RETURN_IF_FAILED(A = -Inverse(A), Line3d());
     Vector c1 = A * a;   // Projektionszentrum

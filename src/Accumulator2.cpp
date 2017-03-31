@@ -31,7 +31,9 @@ namespace ice
   void Accumulator2::init() // (re-) initialisation, used by constructor and clear
   {
     if (nBins1 < 0 || nBins2 < 0)
-      throw logic_error("Accumulator2::init - not initialized");
+      {
+        throw logic_error("Accumulator2::init - not initialized");
+      }
 
     data.resize(nBins1, nBins2);
     data.set(0);
@@ -72,7 +74,9 @@ namespace ice
   void Accumulator2::clear()
   {
     if (nBins1 < 0 || nBins2 < 0)
-      throw logic_error("Accumulator2::init - not initialized");
+      {
+        throw logic_error("Accumulator2::init - not initialized");
+      }
 
     init();
   }
@@ -103,7 +107,9 @@ namespace ice
         throw logic_error("Accumulator2::setDim - wrong dn");
       }
     if (nBins1 >= 0 && nBins2 >= 0)
-      init();
+      {
+        init();
+      }
   }
 #undef FNAME
 
@@ -118,17 +124,23 @@ namespace ice
   void Accumulator2::add(double xd, double yd)
   {
     if (nBins1 < 0 || nBins2 < 0)
-      throw logic_error("Accumulator2::add - not initialized");
+      {
+        throw logic_error("Accumulator2::add - not initialized");
+      }
 
     int x = RoundInt((xd - min1) / dif1 * nBins1);
 
     if (mod1)
-      x = x % nBins1;
+      {
+        x = x % nBins1;
+      }
 
     int y = RoundInt((yd - min2) / dif2 * nBins2);
 
     if (mod2)
-      y = y % nBins2;
+      {
+        y = y % nBins2;
+      }
 
     // neighborhoud
     for (int dy = -dn2; dy <= dn2; dy++)
@@ -137,7 +149,9 @@ namespace ice
 
         int y1 = y + dy;
         if (mod2)
-          y1 %= nBins2;
+          {
+            y1 %= nBins2;
+          }
 
         for (int dx = -dn1; dx <= dn1; dx++)
           {
@@ -146,7 +160,9 @@ namespace ice
 
             int x1 = x + dx;
             if (mod1)
-              x1 %= nBins1;
+              {
+                x1 %= nBins1;
+              }
 
             inc(x1, y1, 1.0 / dist);
           }
@@ -161,7 +177,9 @@ namespace ice
   void Accumulator2::add(const Vector& v)
   {
     if (v.size() != 2)
-      throw logic_error("Accumulator2::add - wrong vector size");
+      {
+        throw logic_error("Accumulator2::add - wrong vector size");
+      }
 
     add(v[0], v[1]);
   }
@@ -169,7 +187,9 @@ namespace ice
   void Accumulator2::getMax(double& x, double& y, double& val) const
   {
     if (nBins1 < 0 || nBins2 < 0 || maxFrequency == 0.0)
-      throw logic_error("Accumulator2::getMax - not initialized");
+      {
+        throw logic_error("Accumulator2::getMax - not initialized");
+      }
 
     x = (double)(xMax + 0.5) / nBins1 * dif1 + min1;
     y = (double)(yMax + 0.5) / nBins2 * dif2 + min2;

@@ -77,8 +77,14 @@ namespace ice
 
     bool operator<(const ColorValue& b2) const
     {
-      if (red != b2.red) return red < b2.red;
-      if (green != b2.green) return green < b2.green;
+      if (red != b2.red)
+        {
+          return red < b2.red;
+        }
+      if (green != b2.green)
+        {
+          return green < b2.green;
+        }
       return blue < b2.blue;
     }
 
@@ -196,19 +202,31 @@ namespace ice
     {
       ColorValue result = *this;
       if (result.red < 0)
-        result.red = 0;
+        {
+          result.red = 0;
+        }
       if (result.red > mv)
-        result.red = mv;
+        {
+          result.red = mv;
+        }
 
       if (result.green < 0)
-        result.green = 0;
+        {
+          result.green = 0;
+        }
       if (result.green > mv)
-        result.green = mv;
+        {
+          result.green = mv;
+        }
 
       if (result.blue < 0)
-        result.blue = 0;
+        {
+          result.blue = 0;
+        }
       if (result.blue > mv)
-        result.blue = mv;
+        {
+          result.blue = mv;
+        }
 
       return result;
     }

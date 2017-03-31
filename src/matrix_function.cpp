@@ -63,13 +63,18 @@ namespace ice
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = m1[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = m1[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m2[i] = m1[i];
+      {
+        m2[i] = m1[i];
+      }
 
     return m2;
   }
@@ -86,7 +91,10 @@ namespace ice
         return NULL;
       }
 
-    if (m == NULL) m = (double*)malloc(row * col * sizeof(double));
+    if (m == NULL)
+      {
+        m = (double*)malloc(row * col * sizeof(double));
+      }
 
     switch (option)
       {
@@ -94,13 +102,22 @@ namespace ice
 
         for (j = 0; j < row; j++)
           for (i = 0; i < col; i++)
-            if (i == j) *(m + (j * col) + i) = 1;
-            else *(m + (i * col) + j) = 0;
+            if (i == j)
+              {
+                *(m + (j * col) + i) = 1;
+              }
+            else
+              {
+                *(m + (i * col) + j) = 0;
+              }
 
         return m;
       case ZERO:
 
-        for (i = 0; i < row * col; i++) *(m + i) = 0;
+        for (i = 0; i < row * col; i++)
+          {
+            *(m + i) = 0;
+          }
 
         return m;
       default:
@@ -126,13 +143,18 @@ namespace ice
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = val;
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = val;
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m1[i] = val;
+      {
+        m1[i] = val;
+      }
 
     return m1;
   }
@@ -160,13 +182,18 @@ namespace ice
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = fac * m1[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = fac * m1[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m2[i] = fac * m1[i];
+      {
+        m2[i] = fac * m1[i];
+      }
 
     return m2;
   }
@@ -194,13 +221,18 @@ namespace ice
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = m1[i] + m2[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = m1[i] + m2[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m3[i] = m1[i] + m2[i];
+      {
+        m3[i] = m1[i] + m2[i];
+      }
 
     return m3;
   }
@@ -228,13 +260,18 @@ namespace ice
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = m1[i] - m2[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = m1[i] - m2[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m3[i] = m1[i] - m2[i];
+      {
+        m3[i] = m1[i] - m2[i];
+      }
 
     return m3;
   }
@@ -264,7 +301,9 @@ namespace ice
 
         for (i = 0; i < row; i++)
           for (j = 0; j < col; j++)
-            mptr[j * row + i] = m1[i * col + j];
+            {
+              mptr[j * row + i] = m1[i * col + j];
+            }
 
         return mptr;
       }
@@ -279,7 +318,9 @@ namespace ice
 
     for (i = 0; i < row; i++)
       for (j = 0; j < col; j++)
-        mh[j * row + i] = m1[i * col + j];
+        {
+          mh[j * row + i] = m1[i * col + j];
+        }
 
     MoveMatrix((double*)mh, col, row, (double*)m2);
     free(mh);
@@ -316,7 +357,9 @@ namespace ice
                 mptr[i * col2 + j] = 0;
 
                 for (k = 0; k < col1; k++)
-                  mptr[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+                  {
+                    mptr[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+                  }
               }
           }
 
@@ -338,7 +381,9 @@ namespace ice
             mh[i * col2 + j] = 0;
 
             for (k = 0; k < col1; k++)
-              mh[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+              {
+                mh[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+              }
           }
       }
 
@@ -369,8 +414,14 @@ namespace ice
         return NULL;
       }
 
-    if (m2 == NULL) mptr = (double*)malloc(row * col * sizeof(double));
-    else mptr = m2;
+    if (m2 == NULL)
+      {
+        mptr = (double*)malloc(row * col * sizeof(double));
+      }
+    else
+      {
+        mptr = m2;
+      }
 
     size_a = dim * dim * sizeof(double);
     // Anforderung des dynamischen Speichers
@@ -380,7 +431,10 @@ namespace ice
       {
         Message(FNAME, M_NO_MEM, NO_MEM);
 
-        if (m2 == NULL) free(mptr);
+        if (m2 == NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -391,7 +445,10 @@ namespace ice
       {
         free(dpa);
 
-        if (m2 == NULL) free(mptr);
+        if (m2 == NULL)
+          {
+            free(mptr);
+          }
 
         Message(FNAME, M_NO_MEM, NO_MEM);
         return NULL;
@@ -401,7 +458,10 @@ namespace ice
     memcpy(dpa, m1, size_a);
 
     // füllen der "Einheitsmatrix " und normalisieren dpa
-    for (i = 0; i < dim * dim; i++) dpc[i] = 0;
+    for (i = 0; i < dim * dim; i++)
+      {
+        dpc[i] = 0;
+      }
 
 #if 0
 
@@ -409,19 +469,28 @@ namespace ice
       {
         fh = 0;
 
-        for (j = 0; j < dim; j++) fh += fabs(dpa[dim * i + j]);
+        for (j = 0; j < dim; j++)
+          {
+            fh += fabs(dpa[dim * i + j]);
+          }
 
         fh /= dim;
         fh = sqrt(fh);
 
-        for (j = 0; j < dim; j++) dpa[dim * i + j] /= fh;
+        for (j = 0; j < dim; j++)
+          {
+            dpa[dim * i + j] /= fh;
+          }
 
         dpc[i * dim + i] = 1 / fh;
       }
 
 #else
 
-    for (i = 0; i < dim; i++) dpc[i * dim + i] = 1;
+    for (i = 0; i < dim; i++)
+      {
+        dpc[i * dim + i] = 1;
+      }
 
 #endif
 
@@ -474,7 +543,10 @@ namespace ice
           }
 
         // setzen der spalte "col" zu 0 ab zeile "colh+1"
-        if (fabs(dpa[dim * colh + col] / (*dpa)) < epsinst) ret = NUM_INSTABILITY;
+        if (fabs(dpa[dim * colh + col] / (*dpa)) < epsinst)
+          {
+            ret = NUM_INSTABILITY;
+          }
 
         if (fabs(dpa[dim * colh + col]) > epsnull)
           {
@@ -486,15 +558,22 @@ namespace ice
                 dpa[dim * i + col] = 0;
 
                 for (j = col + 1; j < dim; j++)
-                  dpa[dim * i + j] -= dpa[dim * colh + j] * fh;
+                  {
+                    dpa[dim * i + j] -= dpa[dim * colh + j] * fh;
+                  }
 
-                for (k = 0; k < dim; k++) dpc[dim * i + k] -= dpc[colh * dim + k] * fh;
+                for (k = 0; k < dim; k++)
+                  {
+                    dpc[dim * i + k] -= dpc[colh * dim + k] * fh;
+                  }
 
                 i++;
               }
           }
         else
-          offs = 1;
+          {
+            offs = 1;
+          }
 
         col++;
       };
@@ -524,7 +603,10 @@ namespace ice
         free(dpa);
         free(dpc);
 
-        if (m2 == NULL) free(mptr);
+        if (m2 == NULL)
+          {
+            free(mptr);
+          }
 
         Message(FNAME, M_NO_INVERSE, NO_SOLUTION);
         return NULL;
@@ -535,7 +617,10 @@ namespace ice
 
     if (ret == NUM_INSTABILITY)
       {
-        if (m2 == NULL) free(mptr);
+        if (m2 == NULL)
+          {
+            free(mptr);
+          }
 
         Message(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
         return NULL;
@@ -564,13 +649,19 @@ namespace ice
         return NULL;
       }
 
-    if (m2 == NULL) mptr = (double*)malloc(row * col * sizeof(double));
+    if (m2 == NULL)
+      {
+        mptr = (double*)malloc(row * col * sizeof(double));
+      }
 
     if (row < 1 || col < 1)
       {
         Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -579,7 +670,10 @@ namespace ice
       {
         Message(FNAME, M_VEC_DEPEND, WRONG_PARAM);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -590,7 +684,10 @@ namespace ice
       {
         Message(FNAME, M_VEC_DEPEND, WRONG_PARAM);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -603,7 +700,10 @@ namespace ice
       {
         Message(FNAME, M_NO_MEM, NO_MEM);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -619,7 +719,10 @@ namespace ice
         Message(FNAME, M_NO_MEM, NO_MEM);
         free(hx);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -632,7 +735,10 @@ namespace ice
         free(hx);
         free(hb1);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -644,7 +750,9 @@ namespace ice
       {
         /* Löschen des Hilfsvektors */
         for (i = 0; i < row; i++)
-          hb2[i] = 0;
+          {
+            hb2[i] = 0;
+          }
 
         for (i = 0; i < k; i++)
           {
@@ -695,13 +803,22 @@ namespace ice
     i = 1;
     CrossProdVec(n, unit[0], v);
 
-    if (LengthVec(v) > eps) MoveVec(unit[0], ah[i++]);
+    if (LengthVec(v) > eps)
+      {
+        MoveVec(unit[0], ah[i++]);
+      }
 
     CrossProdVec(n, unit[1], v);
 
-    if (LengthVec(v) > eps)  MoveVec(unit[1], ah[i++]);
+    if (LengthVec(v) > eps)
+      {
+        MoveVec(unit[1], ah[i++]);
+      }
 
-    if (i < 3) MoveVec(unit[2], ah[2]);
+    if (i < 3)
+      {
+        MoveVec(unit[2], ah[2]);
+      }
 
     OrthoMatrix((double*)ah, 3, 3, (double*)m);
     return OK;
@@ -815,7 +932,9 @@ namespace ice
                 }
 
             if (cont2 == 1)
-              cont1 = 0;
+              {
+                cont1 = 0;
+              }
             else
               {
                 /* Vertauschen der colmem'ten und i'ten Spalte */
@@ -881,13 +1000,17 @@ namespace ice
     *rank = rang;
 
     if (rang < dim)
-      *det = 0;
+      {
+        *det = 0;
+      }
     else
       {
         *det = 1;
 
         for (i = 0; i < dim; i++)
-          *det *= hA[i * col + i];
+          {
+            *det *= hA[i * col + i];
+          }
       }
 
     *det *= (double)flag;
@@ -935,7 +1058,9 @@ namespace ice
 
         for (i = 0; i < row; i++)
           for (j = 0; j < col; j++)
-            val += Sqr(*(m + i * col + j));
+            {
+              val += Sqr(*(m + i * col + j));
+            }
 
         *norm = sqrt(val);
         return OK;
@@ -946,9 +1071,15 @@ namespace ice
           {
             val = 0;
 
-            for (j = 0; j < col; j++) val += m[i * col + j];
+            for (j = 0; j < col; j++)
+              {
+                val += m[i * col + j];
+              }
 
-            if (val > *norm) *norm = val;
+            if (val > *norm)
+              {
+                *norm = val;
+              }
           }
 
         return OK;
@@ -959,9 +1090,15 @@ namespace ice
           {
             val = 0;
 
-            for (j = 0; j < row; j++) val += m[j * col + i];
+            for (j = 0; j < row; j++)
+              {
+                val += m[j * col + i];
+              }
 
-            if (val > *norm) *norm = val;
+            if (val > *norm)
+              {
+                *norm = val;
+              }
           }
 
         return OK;
@@ -1105,20 +1242,31 @@ namespace ice
               *(ha + jj * col + i) = 0;
 
               for (ii = i + 1; ii < col; ii++)
-                *(ha + jj * col + ii) -= *(ha + i * col + ii) * d1;
+                {
+                  *(ha + jj * col + ii) -= *(ha + i * col + ii) * d1;
+                }
             }
       }
 
     *rank = r;
 
-    if (r < col) *det = 0;
+    if (r < col)
+      {
+        *det = 0;
+      }
     else
       {
         *det = *ha;
 
-        for (i = 1; i < r; i++) *det *= *(ha + i * col + i);
+        for (i = 1; i < r; i++)
+          {
+            *det *= *(ha + i * col + i);
+          }
 
-        if (perm % 2 == 1) *det = -*det;
+        if (perm % 2 == 1)
+          {
+            *det = -*det;
+          }
       }
 
     OnMessage();
@@ -1146,7 +1294,9 @@ namespace ice
 
     if (row1 != row2)
       for (i = 0; i < col; i++)
-        std::swap(*(m + row1 * col + i), *(m + row2 * col + i));
+        {
+          std::swap(*(m + row1 * col + i), *(m + row2 * col + i));
+        }
 
     return m;
   }
@@ -1171,7 +1321,9 @@ namespace ice
 
     if (col1 != col2)
       for (i = 0; i < row; i++)
-        std::swap(*(m + i * col + col1), *(m + i * col + col2));
+        {
+          std::swap(*(m + i * col + col1), *(m + i * col + col2));
+        }
 
     return m;
   }
@@ -1199,7 +1351,9 @@ namespace ice
 
     for (i = 0; i < row; i++)
       for (j = 0; j < col; j++)
-        val = Max(val, fabs(m[i * col + j]));
+        {
+          val = Max(val, fabs(m[i * col + j]));
+        }
 
     if (val < *eps)
       {
@@ -1235,9 +1389,13 @@ namespace ice
     for (i = 0; i < dim; i++)
       for (j = 0; j < dim; j++)
         if (i == j)
-          val = Max(val, fabs(m[i * dim + j] - 1));
+          {
+            val = Max(val, fabs(m[i * dim + j] - 1));
+          }
         else
-          val = Max(val, fabs(m[i * dim + j]));
+          {
+            val = Max(val, fabs(m[i * dim + j]));
+          }
 
     if (val < *eps)
       {
@@ -1276,8 +1434,14 @@ namespace ice
     free(m1);
     free(m2);
 
-    if (flag == true) return true;
-    else return false;
+    if (flag == true)
+      {
+        return true;
+      }
+    else
+      {
+        return false;
+      }
   }
 #undef FNAME
 //------------------------------------------------
@@ -1304,7 +1468,9 @@ namespace ice
     for (i = 0; i < dim; i++)
       for (j = 0; j < dim; j++)
         if (i != j)
-          val = Max(val, fabs(m[i * dim + j]));
+          {
+            val = Max(val, fabs(m[i * dim + j]));
+          }
 
     if (val < *eps)
       {
@@ -1340,7 +1506,9 @@ namespace ice
     for (i = 0; i < dim; i++)
       for (j = i + 1; j < dim; j++)
         if (i != j)
-          val = Max(val, fabs(m[i * dim + j] - m[j * dim + i]));
+          {
+            val = Max(val, fabs(m[i * dim + j] - m[j * dim + i]));
+          }
 
     if (val < *eps)
       {
@@ -1376,7 +1544,9 @@ namespace ice
     for (i = 0; i < dim; i++)
       for (j = i + 1; j < dim; j++)
         if (i != j)
-          val = Max(val, fabs(m[i * dim + j] + m[j * dim + i]));
+          {
+            val = Max(val, fabs(m[i * dim + j] + m[j * dim + i]));
+          }
 
     if (val < *eps)
       {
