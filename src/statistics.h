@@ -180,8 +180,8 @@ namespace ice
     friend double Weight(const Statistics& st);
     friend Matrix Covariance(const Statistics& st);
     friend Matrix Correlation(const Statistics& st);
-    friend int Write(const Statistics& st, const std::string& fn);
-    friend int Read(Statistics& st, const std::string& fn);
+    friend void Write(const Statistics& st, const std::string& fn);
+    friend void Read(Statistics& st, const std::string& fn);
 
     friend std::ostream& operator<<(std::ostream&, const Statistics&);
     friend std::istream& operator>>(std::istream&, Statistics&);

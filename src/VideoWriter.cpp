@@ -109,7 +109,7 @@ namespace ice
     fd = exopen(cmdline, FWMODUS);
     if (fd.fd == nullptr)
       {
-        throw IceException("VideoWriter::init",M_FILE_OPEN);
+        throw IceException("VideoWriter::init", M_FILE_OPEN);
       }
     return true;
   }
@@ -117,24 +117,25 @@ namespace ice
 #define FNAME "VideoWriter::write"
   bool VideoWriter::write(const Image& ir, const Image& ig, const Image& ib)
   {
-    try {
-      int xa, ya;
-      MatchImg(ir, ig, ib, xa, ya);
+    try
+      {
+        int xa, ya;
+        MatchImg(ir, ig, ib, xa, ya);
 
-      if (xsize == 0)   // image size already set ?
-	{
-	  setPara(xa, ya, 255, 0 , 0);
-	}
+        if (xsize == 0)   // image size already set ?
+          {
+            setPara(xa, ya, 255, 0 , 0);
+          }
 
-      if (framenr == 0)   // first frame
-	{
-	  init();
-	}
+        if (framenr == 0)   // first frame
+          {
+            init();
+          }
 
-      WritePBMImg(ir, ig, ib, fd);
+        WritePBMImg(ir, ig, ib, fd);
 
-      framenr++;
-    }
+        framenr++;
+      }
     RETHROW;
     return true;
   }

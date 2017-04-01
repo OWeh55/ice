@@ -31,8 +31,8 @@
 #include <string.h>
 #include <vector>
 
+#include "defs.h"
 #include "IceException.h"
-#include "macro.h"
 #include "numbase.h"
 #include "matdef.h"
 #include "statistics.h"
@@ -292,92 +292,88 @@ namespace ice
 #define FNAME "Statistics::getCorrelation"
   matrix<double> Statistics::getCorrelation() const
   {
-    matrix<double> res(dim, dim);
 
     if (sweight == 0.0)
       {
         throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
+      }
+    try
+      {
+        matrix<double> res = getCovariance();
+
+        for (int i = 0; i < dim; i++)
+          {
+            if (res[i][i] < 1e-32)
+              {
+                throw IceException(FNAME, M_ZERO_VARIANZ, ERROR);
+              }
+          }
+
+        for (int i = 0; i < dim; i++)
+          for (int j = i + 1; j < dim; j++)
+            {
+              res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
+              res[j][i] = res[i][j];
+            }
+
+        for (int i = 0; i < dim; i++)
+          {
+            res[i][i] = 1.0;
+          }
+
         return res;
       }
-
-    IF_FAILED(res = getCovariance())
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return res;
-    }
-
-    for (int i = 0; i < dim; i++)
-      {
-        if (res[i][i] < 1e-32)
-          {
-            throw IceException(FNAME, M_ZERO_VARIANZ, ERROR);
-            return res;
-          }
-      }
-
-    for (int i = 0; i < dim; i++)
-      for (int j = i + 1; j < dim; j++)
-        {
-          res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
-          res[j][i] = res[i][j];
-        }
-
-    for (int i = 0; i < dim; i++)
-      {
-        res[i][i] = 1.0;
-      }
-
-    return res;
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Correlation"
   Matrix Correlation(const Statistics& st)
   {
-    Matrix res(st.dim, st.dim);
-
     if (st.sweight == 0.0)
+      throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
+
+    try
       {
-        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
+        Matrix res = Covariance(st);
+
+        for (int i = 0; i < st.dim; i++)
+          {
+            if (res[i][i] < 1e-32)
+              {
+                throw IceException(FNAME, M_ZERO_VARIANZ);
+              }
+          }
+
+        for (int i = 0; i < st.dim; i++)
+          for (int j = i + 1; j < st.dim; j++)
+            {
+              res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
+              res[j][i] = res[i][j];
+            }
+
+        for (int i = 0; i < st.dim; i++)
+          {
+            res[i][i] = 1.0;
+          }
+
         return res;
       }
-
-    IF_FAILED(res = Covariance(st))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return res;
-    }
-
-    for (int i = 0; i < st.dim; i++)
-      {
-        if (res[i][i] < 1e-32)
-          {
-            throw IceException(FNAME, M_ZERO_VARIANZ, ERROR);
-            return res;
-          }
-      }
-
-    for (int i = 0; i < st.dim; i++)
-      for (int j = i + 1; j < st.dim; j++)
-        {
-          res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
-          res[j][i] = res[i][j];
-        }
-
-    for (int i = 0; i < st.dim; i++)
-      {
-        res[i][i] = 1.0;
-      }
-
-    return res;
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Write(Statistics)"
-  int Write(const Statistics& st, const std::string& fn)
+  void Write(const Statistics& st, const std::string& fn)
   {
-    std::ofstream out(fn.c_str());
-    RETURN_ERROR_IF_FAILED(out << st);
-    out.close();
-    return OK;
+    try
+      {
+        std::ofstream out(fn.c_str());
+        out << st;
+        out.close();
+      }
+    catch (std::exception& ex)
+      {
+        throw IceException(FNAME, ex.what());
+      }
   }
 #undef FNAME
 #define FNAME "operator << (Statistics)"
@@ -400,12 +396,15 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "Read(Statistics)"
-  int Read(Statistics& st, const std::string& fn)
+  void Read(Statistics& st, const std::string& fn)
   {
-    std::ifstream inp(fn.c_str());
-    RETURN_ERROR_IF_FAILED(inp >> st);
-    inp.close();
-    return OK;
+    try
+      {
+        std::ifstream inp(fn.c_str());
+        inp >> st;
+        inp.close();
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "operator >> (Statistics)"
@@ -416,9 +415,8 @@ namespace ice
 
     if ((c != ',') && (c != '#'))
       {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
         inp.clear(std::ios::badbit);
-        return inp;
+        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
       }
 
     inp >> st.sweight;

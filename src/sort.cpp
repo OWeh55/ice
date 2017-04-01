@@ -21,8 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "macro.h"
+#include "defs.h"
 #include "IceException.h"
+
 #include "fit.h"
 #include "matdef.h"
 #include "sort.h"
@@ -65,7 +66,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
 
     /*Indexfeld anlegen*/
@@ -74,7 +74,6 @@ namespace ice
     if (ix == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     for (i = 0; i < pl->lng; i++)
@@ -91,7 +90,6 @@ namespace ice
       {
         free(ix);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     /*Punkte in Reihenfolge übertragen*/

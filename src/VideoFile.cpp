@@ -241,44 +241,45 @@ namespace ice
       {
         throw IceException(FNAME, M_NOT_OPEN);
       }
-    try {
-      Image r = NewImg(img->xsize, img->ysize, img->maxval);
-      Image g = NewImg(img->xsize, img->ysize, img->maxval);
-      Image b = NewImg(img->xsize, img->ysize, img->maxval);
-      
-    bool ok = reader->read(r, g, b);
-    if (!ok)
+    try
       {
-        return false;
-      }
+        Image r = NewImg(img->xsize, img->ysize, img->maxval);
+        Image g = NewImg(img->xsize, img->ysize, img->maxval);
+        Image b = NewImg(img->xsize, img->ysize, img->maxval);
 
-    IPoint ip;
-    for (ip.y = 0; ip.y < img->ysize; ip.y++)
-      for (ip.x = 0; ip.x < img->xsize; ip.x++)
-        {
-          int rv = GetVal(r, ip);
-          int gv = GetVal(g, ip);
-          int bv = GetVal(b, ip);
+        bool ok = reader->read(r, g, b);
+        if (!ok)
+          {
+            return false;
+          }
 
-          switch (ch)
+        IPoint ip;
+        for (ip.y = 0; ip.y < img->ysize; ip.y++)
+          for (ip.x = 0; ip.x < img->xsize; ip.x++)
             {
-            case 0:
-              PutVal(img, ip, rv);
-              break;
-            case 1:
-              PutVal(img, ip, gv);
-              break;
-            case 2:
-              PutVal(img, ip, bv);
-              break;
-            case 3:
-              PutVal(img, ip, GRAYVALUE(rv, gv, bv));
-              break;
-            }
-        }
+              int rv = GetVal(r, ip);
+              int gv = GetVal(g, ip);
+              int bv = GetVal(b, ip);
 
-    return true;
-    }
+              switch (ch)
+                {
+                case 0:
+                  PutVal(img, ip, rv);
+                  break;
+                case 1:
+                  PutVal(img, ip, gv);
+                  break;
+                case 2:
+                  PutVal(img, ip, bv);
+                  break;
+                case 3:
+                  PutVal(img, ip, GRAYVALUE(rv, gv, bv));
+                  break;
+                }
+            }
+
+        return true;
+      }
     RETHROW;
   }
 
@@ -286,19 +287,21 @@ namespace ice
   {
     if (!reader)
       throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-    try {
-      return reader->read(imgr, imgg, imgb);
-    }
+    try
+      {
+        return reader->read(imgr, imgg, imgb);
+      }
     RETHROW;
   }
 
   bool VideoFile::read()
   {
     if (!reader)
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-    try {
-      return reader -> read();
-    }
+      throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
+    try
+      {
+        return reader -> read();
+      }
     RETHROW;
   }
 #undef FNAME
@@ -343,7 +346,7 @@ namespace ice
   {
     if (!writer)
       throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-    
+
     try
       {
         return writer->write(ir, ig, ib);
