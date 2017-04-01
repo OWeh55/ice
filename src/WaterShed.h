@@ -87,7 +87,7 @@ namespace ice
 // WST1 - klassischer Flutungsansatz und WST2 - Markeransatz
 
   enum wstmode { classic, marker};
-  int WST(Image& i, Image& WSImg, int mode = classic);
+  void WST(Image& i, Image& WSImg, int mode = classic);
 
 //int WST1(Image i, Image &o);
 //int WST2(Image i, Image &o);

@@ -39,8 +39,8 @@ namespace ice
   * */
   int get_quantil_border(const Image& pic, int threshold, Window& win);
 
-  /** Binarisiert das Eingabebild*/
-  int binImg(Image& img);
+  /** Binarisiert das Eingabebild */
+  void binImgAdaptive(Image& img);
 
   /** liefert ein für Kennzeichen normiertes Bild zurück */
   int normalizeSeg(const Image& segImgInput, Image normedSeg,

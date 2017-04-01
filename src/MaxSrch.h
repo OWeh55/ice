@@ -23,7 +23,6 @@
 
 #include "IceException.h"
 #include "defs.h"
-#include "macro.h"
 
 #include "base.h"
 

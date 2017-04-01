@@ -44,4 +44,6 @@ namespace ice
     int code = 0;
   };
 }
+
+#define RETHROW catch (IceException &ex) { throw IceException(ex,FNAME); }
 #endif

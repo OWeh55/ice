@@ -22,7 +22,7 @@
 #define _CONVEXHULL_H
 
 #include <vector>
-#include "macro.h"
+#include "IceException.h"
 #include "defs.h"
 
 namespace ice
@@ -92,18 +92,15 @@ namespace ice
   }
 
   template<typename T>
-  int ConvexHull(std::vector<T> pl, std::vector<T>& cpl)
+  void ConvexHull(std::vector<T> pl, std::vector<T>& cpl)
   {
     if (pl.size() == 0)
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     if (pl.size() <= 3)
       {
         cpl = pl;
-        return OK;
+        return;
       }
 
     std::vector<const T*> upper(pl.size());  // pointlist for upper Limit of convex hull
@@ -141,8 +138,6 @@ namespace ice
       {
         cpl.push_back(*upper[i]);
       }
-
-    return OK;
   }
 #undef FNAME
 }

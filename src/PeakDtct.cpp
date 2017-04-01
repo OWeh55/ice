@@ -1248,35 +1248,35 @@ namespace ice
       }
     else
       {
-        int x, y;
-        wloop(mask1, x, y)
-        {
-          if (GetVal(mask1, x, y))
+        for (int y = 0; y < mask1.ysize; y++)
+          for (int x = 0; x < mask1.xsize; x++)
             {
-              int grw = GetVal(img, x, y), flag = true;
-
-              for (int r = 0; r < 8; r++)
+              if (GetVal(mask1, x, y))
                 {
-                  int xx = x + dx[r];
-                  int yy = y + dy[r];
+                  int grw = GetVal(img, x, y), flag = true;
 
-                  if (xx >= 0 && yy >= 0 && xx < img->xsize && yy < img->ysize)
+                  for (int r = 0; r < 8; r++)
                     {
-                      if (!GetVal(mask1, xx, yy) && (!IsImg(mask) || !GetVal(mask, xx, yy))
-                          && GetVal(img, xx, yy) == grw)
+                      int xx = x + dx[r];
+                      int yy = y + dy[r];
+
+                      if (xx >= 0 && yy >= 0 && xx < img->xsize && yy < img->ysize)
                         {
-                          flag = false;
-                          break;
+                          if (!GetVal(mask1, xx, yy) && (!IsImg(mask) || !GetVal(mask, xx, yy))
+                              && GetVal(img, xx, yy) == grw)
+                            {
+                              flag = false;
+                              break;
+                            }
                         }
                     }
-                }
 
-              if (!flag)
-                {
-                  DelObjectFromPoint(mask1, x, y, nullptr, nullptr, false);
+                  if (!flag)
+                    {
+                      DelObjectFromPoint(mask1, x, y, nullptr, nullptr, false);
+                    }
                 }
             }
-        }
       }
 
     // Plateaus zählen und Peakliste aufbauen
@@ -1297,83 +1297,83 @@ namespace ice
         index[ii] = nullptr;
       }
 
-    int x, y;
-    wloop(mask1, x, y)
-    {
-      if (GetVal(mask1, x, y))
+    for (int y = 0; y < mask1.ysize; y++)
+      for (int x = 0; x < mask1.xsize; x++)
         {
-          plseg = NewPeakList();
-
-          if (plseg == nullptr)
+          if (GetVal(mask1, x, y))
             {
-              FreePeakList(pl);
-              FreeImg(mask1);
-              delete []index;
-              return nullptr;
-            }
+              plseg = NewPeakList();
 
-          DelObjectFromPoint(mask1, x, y, &(plseg->x), &(plseg->y), zykl);
-
-          int grw = GetVal(img, (int)Round(plseg->x), (int)Round(plseg->y));
-          plseg->grw = grw;
-
-          if (pl == nullptr)
-            {
-              pl = plseg;
-              pl->next = nullptr;
-              pl->prev = nullptr;
-
-              for (ii = 0; ii <= grw; ii++)
+              if (plseg == nullptr)
                 {
-                  index[ii] = pl;
+                  FreePeakList(pl);
+                  FreeImg(mask1);
+                  delete []index;
+                  return nullptr;
                 }
-            }
-          else
-            {
-              if (index[grw] == nullptr)   // am Anfang einketten
-                {
-                  next = pl;
-                  pl = plseg;
-                  pl->prev = nullptr;
-                  pl->next = next;
-                  next->prev = pl;
 
-                  for (ii = grw; ii >= 0; ii--)
-                    if (index[ii] != nullptr)
-                      {
-                        break;
-                      }
-                    else
-                      {
-                        index[ii] = pl;
-                      }
+              DelObjectFromPoint(mask1, x, y, &(plseg->x), &(plseg->y), zykl);
+
+              int grw = GetVal(img, (int)Round(plseg->x), (int)Round(plseg->y));
+              plseg->grw = grw;
+
+              if (pl == nullptr)
+                {
+                  pl = plseg;
+                  pl->next = nullptr;
+                  pl->prev = nullptr;
+
+                  for (ii = 0; ii <= grw; ii++)
+                    {
+                      index[ii] = pl;
+                    }
                 }
               else
                 {
-                  prev = index[grw];
-                  next = index[grw]->next;
-                  plseg->prev = prev;
-                  plseg->next = next;
-                  prev->next = plseg;
-
-                  if (next)
+                  if (index[grw] == nullptr)   // am Anfang einketten
                     {
-                      next->prev = plseg;
-                    }
+                      next = pl;
+                      pl = plseg;
+                      pl->prev = nullptr;
+                      pl->next = next;
+                      next->prev = pl;
 
-                  for (ii = grw; ii >= 0; ii--)
-                    if (index[ii] != prev)
-                      {
-                        break;
-                      }
-                    else
-                      {
-                        index[ii] = plseg;
-                      }
+                      for (ii = grw; ii >= 0; ii--)
+                        if (index[ii] != nullptr)
+                          {
+                            break;
+                          }
+                        else
+                          {
+                            index[ii] = pl;
+                          }
+                    }
+                  else
+                    {
+                      prev = index[grw];
+                      next = index[grw]->next;
+                      plseg->prev = prev;
+                      plseg->next = next;
+                      prev->next = plseg;
+
+                      if (next)
+                        {
+                          next->prev = plseg;
+                        }
+
+                      for (ii = grw; ii >= 0; ii--)
+                        if (index[ii] != prev)
+                          {
+                            break;
+                          }
+                        else
+                          {
+                            index[ii] = plseg;
+                          }
+                    }
                 }
             }
         }
-    }
 
     delete []index;
     FreeImg(mask1);
@@ -1451,25 +1451,13 @@ namespace ice
 
     if (use_masks)
       {
-
-        RETURN_NULL_IF_FAILED(mask1 = NewImg(img->xsize, img->ysize, 2));
+        mask1.create(img->xsize, img->ysize, 2);
         ClearImg(mask1);
-        IF_FAILED(mask2 = NewImg(img->xsize, img->ysize, 1))
-        {
-          FreeImg(mask1);
-          throw IceException(FNAME, M_0, ERROR);
-          return nullptr;
-        }
+        mask2.create(img->xsize, img->ysize, 1);
         ClearImg(mask2);
       }
 
-    IF_FAILED(mask3 = NewImg(img->xsize, img->ysize, 1))
-    {
-      FreeImg(mask1);
-      FreeImg(mask2);
-      throw IceException(FNAME, M_0, NO_MEM);
-      return nullptr;
-    }
+    mask3.create(img->xsize, img->ysize, 1);
     ClearImg(mask3);
 
     int wxi, wyi, wxa, wya;
@@ -1482,12 +1470,10 @@ namespace ice
         return nullptr;
       }
 
-    int x, y;
-
     if (IsImg(global_mark))
       {
-        for (x = 0; x < img->xsize; x++)
-          for (y = 0; y < img->ysize; y++)
+        for (int x = 0; x < img->xsize; x++)
+          for (int y = 0; y < img->ysize; y++)
             {
               if (GetVal(global_mark, x, y) != 0)
                 {
@@ -1502,8 +1488,8 @@ namespace ice
 
     int g1 = -1, g, flag = false, flag2 = false;
 
-    for (x = 0; x < img->xsize; x++)
-      for (y = 0; y < img->ysize; y++)
+    for (int x = 0; x < img->xsize; x++)
+      for (int y = 0; y < img->ysize; y++)
         {
           if (!IsImg(mask2) || GetVal(mask2, x, y) == 0)
             {
@@ -1608,25 +1594,28 @@ namespace ice
                     rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
                   }
 
-                IF_FAILED(c = BinObj2ConturList(maxanz ? mask3 : mask1,
-                                                RoundInt(xp), RoundInt(yp)))
-                {
-                  throw IceException(FNAME, M_0, ERROR);
+                try
+                  {
+                    c = BinObj2ConturList(maxanz ? mask3 : mask1,
+                                          RoundInt(xp), RoundInt(yp));
+                  }
+                catch (IceException& ex)
+                  {
 
-                  if (pl)
-                    {
-                      FreePeakList(pl);
-                    }
+                    if (pl)
+                      {
+                        FreePeakList(pl);
+                      }
 
-                  FreeMaxSearch(ms);
-                  return nullptr;
-                }
+                    FreeMaxSearch(ms);
+                    throw IceException(ex, FNAME);
+                  }
                 pl->contur_max = c;
 
                 if (maxanz)
                   {
-                    for (x = wxi; x <= wxa; x++)
-                      for (y = wyi; y <= wya; y++)
+                    for (int x = wxi; x <= wxa; x++)
+                      for (int y = wyi; y <= wya; y++)
                         {
                           PutVal(mask3, x, y, 0);
                         }
@@ -1661,25 +1650,27 @@ namespace ice
                         rc = OptimizeMaskImg(img, mask3, mask3, ma, wxi, wyi, wxa, wya);
                       }
 
-                    IF_FAILED((c = BinObj2ConturList(maxanz ? mask3 : mask1,
-                                                     RoundInt(xp), RoundInt(yp))))
-                    {
-                      throw IceException(FNAME, M_0, ERROR);
+                    try
+                      {
+                        c = BinObj2ConturList(maxanz ? mask3 : mask1,
+                                              RoundInt(xp), RoundInt(yp));
+                      }
+                    catch (IceException& ex)
+                      {
+                        if (pl)
+                          {
+                            FreePeakList(pl);
+                          }
 
-                      if (pl)
-                        {
-                          FreePeakList(pl);
-                        }
-
-                      FreeMaxSearch(ms);
-                      return nullptr;
-                    }
+                        FreeMaxSearch(ms);
+                        throw IceException(ex, FNAME);
+                      }
                     pl->contur = c;
 
                     if (maxanz)
                       {
-                        for (x = wxi; x <= wxa; x++)
-                          for (y = wyi; y <= wya; y++)
+                        for (int x = wxi; x <= wxa; x++)
+                          for (int y = wyi; y <= wya; y++)
                             {
                               PutVal(mask3, x, y, 0);
                             }
@@ -1698,8 +1689,8 @@ namespace ice
 
         if (IsImg(mask1))
           {
-            for (x = wxi; x <= wxa; x++)
-              for (y = wyi; y <= wya; y++)
+            for (int x = wxi; x <= wxa; x++)
+              for (int y = wyi; y <= wya; y++)
                 {
                   PutVal(mask1, x, y, 0);
                 }
@@ -1826,14 +1817,11 @@ namespace ice
       }
     while (rc);
 
-    IF_FAILED((c = BinObj2ConturList(mask1, x, y)))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      FreeImg(mask1);
-      return c;
-    }
-
-    FreeImg(mask1);
+    try
+      {
+        c = BinObj2ConturList(mask1, x, y);
+      }
+    RETHROW;
 
     return c;
   }

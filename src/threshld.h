@@ -31,7 +31,6 @@
 
 #include "defs.h"
 #include "IceException.h"
-#include "macro.h"
 
 #include "hist.h"
 #include "histogram.h"
