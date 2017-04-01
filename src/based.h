@@ -23,7 +23,6 @@
 
 #include "ImageF.h"
 #include "base.h"
-#include "macro.h"
 
 namespace ice
 {

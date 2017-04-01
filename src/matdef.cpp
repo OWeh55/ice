@@ -29,6 +29,7 @@
 
 #include "IceException.h"
 #include "macro.h"
+#include "defs.h"
 #include "matdef.h"
 
 namespace ice

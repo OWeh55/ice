@@ -18,10 +18,12 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "macro.h"
 #include "fit.h"
-#include "fit_pointlist.h"
 #include "analygeo.h"
 #include "vectorarrayfunctions.h"
+
+#include "fit_pointlist.h"
 
 namespace ice
 {

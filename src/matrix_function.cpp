@@ -26,6 +26,7 @@
 
 #include "IceException.h"
 #include "defs.h"
+#include "macro.h"
 
 #include "vectorarrayfunctions.h"
 #include "numbase.h"

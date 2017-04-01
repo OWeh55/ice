@@ -24,6 +24,7 @@
 
 #include "IceException.h"
 #include "macro.h"
+#include "defs.h"
 #include "matdef.h"
 /*****************************************************************************
 Fuer eine Matrix a[0..n][0..n] wird durch Vertauschen der Zeilen in eine

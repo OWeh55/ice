@@ -371,7 +371,6 @@ namespace ice
   int pfit_InsertSeg(Segment seg, double p1[2], double p2[2])
   {
     Segment segn;
-    int rc;
 
     if (seg == nullptr)
       {

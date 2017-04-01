@@ -49,9 +49,11 @@
 #include <float.h>
 #include <math.h>
 
-#include "fit.h"
 #include "IceException.h"
 #include "defs.h"
+#include "macro.h"
+
+#include "fit.h"
 #include "numbase.h"
 #include "analygeo.h"
 #include "contools.h"

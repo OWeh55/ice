@@ -18,6 +18,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "macro.h"
 #include "fitfn.h"
 #include "shading.h"
 

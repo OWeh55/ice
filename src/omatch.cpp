@@ -24,6 +24,7 @@
 
 #include "defs.h"
 #include "IceException.h"
+#include "macro.h"
 #include "vectordistance.h"
 #include "numbase.h"
 #include "analygeo.h"

@@ -27,6 +27,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include "macro.h"
 #include "util.h"
 
 #include "ColorSpace.h"

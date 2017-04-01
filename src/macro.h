@@ -18,17 +18,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/*****************************************************************************/
-/* Macro.h                                                                   */
-/* Funktion: Hilfsmakros                                                     */
-/*****************************************************************************/
-
-#ifndef _MACRO_H  /* verhindern mehrfacher Verarbeitung in einem */
-#define _MACRO_H  /* Programm */
+/*
+* macro.h
+* macro for error handling, obsolete
+*/
+#ifndef _MACRO_H // include guard
+#define _MACRO_H
 
 #include "IceException.h"
-#include "numbase.h"
-#include "defs.h"
 
 namespace ice
 {
@@ -40,6 +37,7 @@ namespace ice
   for (x = 0; x < (Img).xsize; x++)
 
 // Fehlerbehandlung in Prozeduren
+// these macros should be removed!!
 #define IF_FAILED(action) try { action; } catch(IceException ex)
 
 #define RETURN_ERROR_IF_FAILED(action) try { action; } catch(IceException &ex) { throw IceException(ex, FNAME); }
