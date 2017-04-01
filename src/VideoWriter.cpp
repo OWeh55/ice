@@ -22,10 +22,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include <stdexcept>
 
 #include "defs.h"
-#include "macro.h"
+#include "IceException.h"
+
 #include "pbmio.h"
 
 #include "VideoWriter.h"
@@ -109,7 +109,7 @@ namespace ice
     fd = exopen(cmdline, FWMODUS);
     if (fd.fd == nullptr)
       {
-        throw runtime_error("VideoWriter - Cannot open file");
+        throw IceException("VideoWriter::init",M_FILE_OPEN);
       }
     return true;
   }
@@ -117,22 +117,25 @@ namespace ice
 #define FNAME "VideoWriter::write"
   bool VideoWriter::write(const Image& ir, const Image& ig, const Image& ib)
   {
-    int xa, ya;
-    RETURN_IF_FAILED(MatchImg(ir, ig, ib, xa, ya), false);
+    try {
+      int xa, ya;
+      MatchImg(ir, ig, ib, xa, ya);
 
-    if (xsize == 0)   // image size already set ?
-      {
-        setPara(xa, ya, 255, 0 , 0);
-      }
+      if (xsize == 0)   // image size already set ?
+	{
+	  setPara(xa, ya, 255, 0 , 0);
+	}
 
-    if (framenr == 0)   // first frame
-      {
-        init();
-      }
+      if (framenr == 0)   // first frame
+	{
+	  init();
+	}
 
-    WritePBMImg(ir, ig, ib, fd);
+      WritePBMImg(ir, ig, ib, fd);
 
-    framenr++;
+      framenr++;
+    }
+    RETHROW;
     return true;
   }
 #undef FNAME

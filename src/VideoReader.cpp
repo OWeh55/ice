@@ -23,7 +23,7 @@
 #include <iostream>
 
 #include "defs.h"
-#include "macro.h"
+#include "IceException.h"
 
 #include "VideoReader.h"
 

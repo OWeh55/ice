@@ -25,7 +25,7 @@
 #include <iostream>
 
 #include "defs.h"
-#include "macro.h"
+#include "IceException.h"
 
 #include "strtool.h"
 
@@ -239,17 +239,14 @@ namespace ice
   {
     if (!reader)
       {
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
+        throw IceException(FNAME, M_NOT_OPEN);
       }
-
-    Image r = NewImg(img->xsize, img->ysize, img->maxval);
-    Image g = NewImg(img->xsize, img->ysize, img->maxval);
-    Image b = NewImg(img->xsize, img->ysize, img->maxval);
-
-    bool ok = false;
-    RETURN_IF_FAILED(ok = reader->read(r, g, b), false);
-
+    try {
+      Image r = NewImg(img->xsize, img->ysize, img->maxval);
+      Image g = NewImg(img->xsize, img->ysize, img->maxval);
+      Image b = NewImg(img->xsize, img->ysize, img->maxval);
+      
+    bool ok = reader->read(r, g, b);
     if (!ok)
       {
         return false;
@@ -281,44 +278,28 @@ namespace ice
         }
 
     return true;
+    }
+    RETHROW;
   }
 
   bool VideoFile::read(const Image& imgr, const Image& imgg, const Image& imgb)
   {
     if (!reader)
-      {
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
-      }
-
-    bool ok = false;
-    RETURN_IF_FAILED(ok = reader->read(imgr, imgg, imgb), false);
-
-    if (!ok)
-      {
-        return false;
-      }
-
-    return true;
+      throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
+    try {
+      return reader->read(imgr, imgg, imgb);
+    }
+    RETHROW;
   }
 
   bool VideoFile::read()
   {
     if (!reader)
-      {
         throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
-      }
-
-    bool ok = false;
-    RETURN_IF_FAILED(ok = reader -> read(), false);
-
-    if (!ok)
-      {
-        return false;
-      }
-
-    return true;
+    try {
+      return reader -> read();
+    }
+    RETHROW;
   }
 #undef FNAME
 
@@ -361,11 +342,8 @@ namespace ice
   bool VideoFile::write(const Image& ir, const Image& ig, const Image& ib)
   {
     if (!writer)
-      {
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
-      }
-
+      throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
+    
     try
       {
         return writer->write(ir, ig, ib);
