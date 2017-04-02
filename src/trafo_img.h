@@ -26,7 +26,7 @@
 
 namespace ice
 {
-  int Transform(const Trafo&, const Image& simg, const Image& dimg, int mode, const Image& mark, int val);
-  int Transform(const Trafo&, const Image& simg, const Image& dimg, int mode = DEFAULT);
+  void Transform(const Trafo&, const Image& simg, const Image& dimg, int mode, const Image& mark, int val);
+  void Transform(const Trafo&, const Image& simg, const Image& dimg, int mode = DEFAULT);
 }
 #endif
