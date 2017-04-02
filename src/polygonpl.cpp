@@ -81,7 +81,7 @@ namespace ice
   /***interne Funktionen*********************************/
   /******************************************************/
 
-// Hilfsfunktion für InsidePolygon
+// Hilfsfunktion für insidePolygon
   bool handleOneEdge(double xp, double yp,
                      double x1, double y1, double x2, double y2,
                      int& lastdir, int& c)
@@ -590,8 +590,8 @@ namespace ice
   }
 #undef FNAME
   /******************************************************/
-#define FNAME "IsPolygon"
-  bool IsPolygon(PointList pl)
+#define FNAME "isPolygon"
+  bool isPolygon(PointList pl)
   {
     /* Es wird getestet, ob sich die Kanten eines Polygons schneiden */
     p_clip cl;

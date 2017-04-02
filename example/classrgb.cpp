@@ -238,15 +238,16 @@ int main(int argc, char* argv[])
   if (readtags)
     {
       ReadImg(basename(filename) + "_tags.bmp", m1);
-      wloop(m1, x, y)
-      {
-        int clnr = GetVal(m1, x, y) - 1;
+      WindowWalker w(m1);
+      for (w.init(); !w.ready(); w.next())
+        {
+          int clnr = m1.getPixel(w) - 1;
 
-        if (clnr >= 0)
-          {
-            if (clnr >= classes) classes = clnr + 1;
-          }
-      }
+          if (clnr >= 0)
+            {
+              if (clnr >= classes) classes = clnr + 1;
+            }
+        }
     }
 
   vector<Image> probs(classes); // Bewertungen der Klassen
@@ -358,10 +359,11 @@ int main(int argc, char* argv[])
 
       // Testschleife für Laufzeit Featureermittlung
       ta = TimeD(TM_PROCESS);
-      wloop(m1, x, y)
-      {
-        getFeatures(r, g, b, x, y, feat);
-      }
+      for (int y = 0; y < m1.ysize; y++)
+        for (int x = 0; x < m1.xsize; x++)
+          {
+            getFeatures(r, g, b, x, y, feat);
+          }
 
       tf = TimeD(TM_PROCESS) - ta;
 
@@ -369,28 +371,29 @@ int main(int argc, char* argv[])
     }
 
   ta = TimeD(TM_PROCESS);
-  wloop(m1, x, y)
-  {
-    getFeatures(r, g, b, x, y, feat);
-#if 0
-    if (softclassify >= 0)
+  for (int y = 0; y < m1.ysize; y++)
+    for (int x = 0; x < m1.xsize; x++)
       {
-        Vector v(classes * 2);
-        int cs = cl.SoftClassify(feat, v, softclassify) + 1;
-        PutVal(m1, x, y, cs);
-
-        //  cout << v << endl;
-        for (int i = 0; i < classes; i++)
+        getFeatures(r, g, b, x, y, feat);
+#if 0
+        if (softclassify >= 0)
           {
-            PutVal(probs[(int)v[i * 2]], x, y, (int)(v[i * 2 + 1] * 255));
+            Vector v(classes * 2);
+            int cs = cl.SoftClassify(feat, v, softclassify) + 1;
+            PutVal(m1, x, y, cs);
+
+            //  cout << v << endl;
+            for (int i = 0; i < classes; i++)
+              {
+                PutVal(probs[(int)v[i * 2]], x, y, (int)(v[i * 2 + 1] * 255));
+              }
+          }
+        else
+#endif
+          {
+            PutVal(m1, x, y, cl.Classify(feat) + 1);
           }
       }
-    else
-#endif
-      {
-        PutVal(m1, x, y, cl.Classify(feat) + 1);
-      }
-  }
   double tc = TimeD(TM_PROCESS) - ta;
 
   Printf("Klassifikation beendet.\n");
@@ -423,11 +426,12 @@ int main(int argc, char* argv[])
       clx.read("testclassifier");
 
       ta = TimeD(TM_PROCESS);
-      wloop(m1, x, y)
-      {
-        getFeatures(r, g, b, x, y, feat);
-        PutVal(m2, x, y, clx.Classify(feat) + 1);
-      }
+      for (int y = 0; y < m1.ysize; y++)
+        for (int x = 0; x < m1.xsize; x++)
+          {
+            getFeatures(r, g, b, x, y, feat);
+            PutVal(m2, x, y, clx.Classify(feat) + 1);
+          }
       tc = TimeD(TM_PROCESS) - ta;
 
       Printf("Klassifikation dauert %g s\n", tc);

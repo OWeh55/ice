@@ -55,14 +55,15 @@ int main(int argc, char* argv[])
 
   grw = ReadImg("test_gray.jpg");
 
-  wloop(grw, x, y)
-  {
-    int h = GetVal(grw, x, y) * 4 / 7;
+  for (int y = 0; y < grw.ysize; y++)
+    for (int x = 0; x < grw.xsize; x++)
+      {
+        int h = GetVal(grw, x, y) * 4 / 7;
 
-    if (((x / raster) & 1) ^ ((y / raster) & 1)) h = h + grw->maxval / 3;
+        if (((x / raster) & 1) ^ ((y / raster) & 1)) h = h + grw->maxval / 3;
 
-    PutVal(grw, x, y, h);
-  }
+        PutVal(grw, x, y, h);
+      }
 
   mrk = NewImg(grw->xsize, grw->ysize, 4);
   SetImg(mrk, 0);

@@ -1,7 +1,9 @@
 #include <fstream>
-#include <image.h>
 #include <float.h>
 #include <lmdif.h>
+
+#include <macro.h>
+#include <image.h>
 
 #define SSIZE 256
 #define SS2 (SSIZE/2)

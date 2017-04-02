@@ -183,11 +183,11 @@ int main(int argc, char* argv[])
 
   if (display) dstid.Update(dsti);
 
-  int x, y;
-  wloop(tests, x, y)
-  {
-    PutVal(tests, x, y, Random(255));
-  }
+  for (int y = 0; y < tests.ysize; y++)
+    for (int x = 0; x < tests.xsize; x++)
+      {
+        PutVal(tests, x, y, Random(255));
+      }
   //  Text("Unser ICE",25,222,255,2,tests);
   SmearImg(tests);
 

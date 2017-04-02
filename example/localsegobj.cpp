@@ -42,8 +42,6 @@ void search_and_mark(const Image& m1, Image& imgo, of suche, of folge)
 
 int main(int argc, char* argv[])
 {
-  int x, y;
-
   Image i1;
 
   if (argc > 1)
@@ -56,10 +54,11 @@ int main(int argc, char* argv[])
       // artificial image
       i1 = NewImg(XS, YS, 255);
 
-      wloop(i1, x, y)
-      {
-        PutVal(i1, x, y, 255 - (y / 4));
-      }
+      for (int y = 0; y < i1.ysize; y++)
+        for (int x = 0; x < i1.xsize; x++)
+          {
+            PutVal(i1, x, y, 255 - (y / 4));
+          }
 
       for (unsigned int i = 0; i < 230; i++)
         {

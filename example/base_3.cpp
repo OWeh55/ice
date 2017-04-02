@@ -20,8 +20,7 @@ Image n_image(int sx, int sy);
 int main(int argc, char* argv[])
 {
   Image p[pzahl], m[pzahl], r, g, b;
-  int x, y, z;
-  int code;
+  int z;
 
   ClearAlpha();
   SetAlphaCursor(10, 5);
@@ -41,15 +40,20 @@ int main(int argc, char* argv[])
   Show(OFF, p[last]);
   Show(OVERLAY, p[last], m[last]);
   Delay(TIME);
-  wloop(m[last], x, y) PutVal(m[last], x, y, (GetVal(m[last], x, y) / FAK / 8) & 3);
+  for (int y = 0; y < m[last].ysize; y++)
+    for (int x = 0; x < m[last].xsize; x++)
+      PutVal(m[last], x, y, (GetVal(m[last], x, y) / FAK / 8) & 3);
   Delay(TIME);
-  wloop(p[last], x, y)
-  PutVal(p[last], x, y, p[last]->maxval - GetVal(p[last], x, y));
+  for (int y = 0; y < p[last].ysize; y++)
+    for (int x = 0; x < p[last].xsize; x++)
+      PutVal(p[last], x, y, p[last]->maxval - GetVal(p[last], x, y));
   Delay(TIME);
   FreeImg(p[4]);
   p[4] = NewImg(p[3]);
   InvertImg(p[3], p[4]);
-  wloop(p[4], x, y) PutVal(p[4], x, y, (GetVal(p[4], x, y) / 7) & 3);
+  for (int y = 0; y < p[4].ysize; y++)
+    for (int x = 0; x < p[4].xsize; x++)
+      PutVal(p[4], x, y, (GetVal(p[4], x, y) / 7) & 3);
   Show(OVERLAY, p[4]);
   Delay(TIME);
   r = NewImg(256, 256, 255);
@@ -58,12 +62,13 @@ int main(int argc, char* argv[])
 
   Show(_RGB, r, b, g);
 
-  wloop(r, x, y)
-  {
-    PutVal(b, x, y, Min(255, Max(x, 255 - y)));
-    PutVal(g, x, y, Min(255, Max(x, y)));
-    PutVal(r, x, y, Min(255, Max(255 - x, y)));
-  }
+  for (int y = 0; y < r.ysize; y++)
+    for (int x = 0; x < r.xsize; x++)
+      {
+        PutVal(b, x, y, Min(255, Max(x, 255 - y)));
+        PutVal(g, x, y, Min(255, Max(x, y)));
+        PutVal(r, x, y, Min(255, Max(255 - x, y)));
+      }
   Delay(TIME);
   Display(OFF);
   Delay(TIME);

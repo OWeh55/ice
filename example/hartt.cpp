@@ -18,10 +18,12 @@ void ShowLog(ImageD d, Image i)
 void ShowDiff(ImageD d1, ImageD d2, Image i)
 {
   int x, y;
-  ImageD diff = NewImgD(d1.xsize, d1.ysize);
-  wloop(diff, x, y) PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
+  ImageD diff;
+  diff.create(d1.xsize, d1.ysize);
+  for (int y = 0; y < diff.ysize; y++)
+    for (int x = 0; x < diff.xsize; x++)
+      PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
   ShowImg(diff, i);
-  FreeImgD(diff);
 }
 
 void PrintRange(string p, ImageD d)
@@ -34,8 +36,9 @@ void PrintDiffRange(string p, ImageD d1, ImageD d2)
 {
   int x, y;
   ImageD diff = NewImgD(d1.xsize, d1.ysize);
-  wloop(diff, x, y)
-  PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
+  for (int y = 0; y < diff.ysize; y++)
+    for (int x = 0; x < diff.xsize; x++)
+      PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
   UpdateLimitImgD(diff);
   Printf((p + ": %g .. %g\n").c_str(), diff.minval, diff.maxval);
   FreeImgD(diff);

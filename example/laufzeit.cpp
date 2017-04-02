@@ -29,10 +29,11 @@ int main(int argc, char* argv[])
   Show(ON, img1);
   GetChar();
   t1 = TimeD();
-  wloop(img1, i, j)
-  {
-    PutVal(img1, i, j, 255);
-  }
+  for (int y = 0; y < img1.ysize; y++)
+    for (int x = 0; x < img1.xsize; x++)
+      {
+        PutVal(img1, i, j, 255);
+      }
   t2 = TimeD();
   time1 = t2 - t1;
   Alpha(ON);

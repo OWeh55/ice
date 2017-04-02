@@ -86,7 +86,7 @@ namespace ice
 
   /******************************************************/
 #define FNAME "InsidePolygon"
-  bool InsidePolygon(const Matrix& m, const Point& p)
+  bool insidePolygon(const Matrix& m, const Point& p)
   {
     RETURN_IF_FAILED(CheckPolygon(m), false);
     int res = false;
@@ -103,7 +103,7 @@ namespace ice
     double pp[2];
     pp[0] = p.x;
     pp[1] = p.y;
-    IF_FAILED(res = InsidePolygon(pp, pl))
+    IF_FAILED(res = insidePolygon(pp, pl))
     {
       FreePointList(pl);
       throw IceException(FNAME, M_0, ERROR);

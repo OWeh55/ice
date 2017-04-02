@@ -23,15 +23,15 @@ int main(int argc, char* argv[])
 
   GetChar();                    /* Zeicheneingabe in Text- oder Bildfenster abwarten */
   Printf("Binarisierung mit Schwellwert %d\n", thr);
-  wloop(img, x, y)              /* Schleife über alle Bildpunkte */
-  {
-    val = GetVal(img, x, y);    /* Grauwert lesen */
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        val = GetVal(img, x, y);    /* Grauwert lesen */
 
-    if (val < thr) PutVal(img, x, y, 0);
-    else PutVal(img, x, y, img->maxval);
-  }
+        if (val < thr) PutVal(img, x, y, 0);
+        else PutVal(img, x, y, img->maxval);
+      }
   GetChar();
   FreeImg(img);                 /* Freigabe des Bildes */
-  Display(OFF);                 /* Deaktivieren der Grafik */
   return 0;
 }
