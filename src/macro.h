@@ -32,9 +32,11 @@ namespace ice
 // Let x and y go through every point inside the active area of Img, where Img
 // could be of type Image or ImageD
 
-#define wloop(Img, x, y) \
-  for (y = 0; y < (Img).ysize; y++) \
-  for (x = 0; x < (Img).xsize; x++)
+/*
+#define wloop(Img, x, y)	    \
+  for (y = 0; y < (Img).ysize; y++)		\
+    for (x = 0; x < (Img).xsize; x++)
+*/
 
 // Fehlerbehandlung in Prozeduren
 // these macros should be removed!!

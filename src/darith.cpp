@@ -623,7 +623,7 @@ namespace ice
                double r1, double r2, int sym)
   {
     Image himgd;
-    int x, y, hx, hy;
+    int hx, hy;
     double xs, ys;
     int dsx, dsy;
     int x0, y0;
@@ -666,7 +666,8 @@ namespace ice
 
     rfac = (r2 - r1) / dsy;
 
-    wloop(himgd, x, y)
+	for (int y=0;y<himgd.ysize;y++)
+	  for (int x=0;x<himgd.xsize;x++)
     {
       fi = (x) * M_PI * 2 / sym / dsx;
       r = (y) * rfac + r1;

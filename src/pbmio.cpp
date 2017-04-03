@@ -148,7 +148,8 @@ namespace ice
 
     if (maxval < 256)
       {
-        wloop(img, x, y)
+    for (int y=0;y<img.ysize;y++)
+      for (int x=0;x<img.xsize;x++)
         {
           ib = maxval - GetVal(img, x, y);
           fputc(ib, fd);
@@ -156,7 +157,8 @@ namespace ice
       }
     else
       {
-        wloop(img, x, y)
+    for (int y=0;y<img.ysize;y++)
+      for (int x=0;x<img.xsize;x++)
         {
           iw = maxval - GetVal(img, x, y);
           fputc(iw >> 8, fd);

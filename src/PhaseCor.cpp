@@ -104,7 +104,8 @@ namespace ice
 
     int x, y;
     double gmaxabs = 0, gmin = DBL_MAX, gmax = -DBL_MAX, g;
-    wloop(img, x, y)
+	for (int y=0;y<img.ysize;y++)
+	  for (int x=0;x<img.xsize;x++)
     {
       if (fabs(g = GetValD(imgd, x, y)) > gmaxabs)
         {
@@ -129,8 +130,9 @@ namespace ice
           {
             if (gmax != gmin)
               {
-                wloop(img, x, y)
-                PutVal(img, x, y, int((GetValD(imgd, x, y) - gmin) * ((img->maxval - 1) / 2) / (gmax - gmin)) + (img->maxval + 1) / 2);
+		for (int y=0;y<img.ysize;y++)
+		  for (int x=0;x<img.xsize;x++)
+		    PutVal(img, x, y, int((GetValD(imgd, x, y) - gmin) * ((img->maxval - 1) / 2) / (gmax - gmin)) + (img->maxval + 1) / 2);
               }
             else
               {
@@ -140,16 +142,15 @@ namespace ice
         else
           {
             gmaxabs += gmaxabs;
-            wloop(img, x, y)
-            PutVal(img, x, y, int(GetValD(imgd, x, y) / gmaxabs * (img->maxval - 1) / 2) + (img->maxval + 1) / 2);
+	    for (int y=0;y<img.ysize;y++)
+	      for (int x=0;x<img.xsize;x++)
+		PutVal(img, x, y, int(GetValD(imgd, x, y) / gmaxabs * (img->maxval - 1) / 2) + (img->maxval + 1) / 2);
           }
       }
     else
       {
         SetImg(img, (img->maxval + 1) / 2);
       }
-
-    FreeImgD(imgd);
 
     return OK;
   }

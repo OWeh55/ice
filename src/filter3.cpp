@@ -744,7 +744,6 @@ namespace ice
                   int scalef, bool use_gauss_filter)
   {
     int dx, dy;
-    int  x,  y;
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
 
@@ -752,7 +751,8 @@ namespace ice
                              dy + 2 * boundary_y,
                              imgs->maxval);
 
-    wloop(imgs_wide, x, y)
+    for (int y=0;y<imgs_wide.ysize;y++)
+      for (int x=0;x<imgs_wide.xsize;x++)
     {
       int xo = x - boundary_x;
       int yo = y - boundary_y;
@@ -836,7 +836,8 @@ namespace ice
         Image box1 = smearimgs[key1];
         Image box2 = smearimgs[key2];
 
-        wloop(imgd, x, y)
+	for (int x=0;x<imgd.xsize;x++)
+	  for (int y=0;y<imgd.ysize;y++)
         {
           int xn = x + boundary_x;
           int yn = y + boundary_y;

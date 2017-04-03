@@ -367,7 +367,6 @@ namespace ice
 #define FNAME "RenormImg"
   int RenormImg(const Image& p, const Image& dest)
   {
-    int x, y;
     int ax, ay, av;
     int nx, ny, nv;
 
@@ -385,7 +384,8 @@ namespace ice
     ay = p->ysize;
     av = p->maxval;
 
-    wloop(dest, x, y)
+    for (int y=0;y<dest.ysize;y++)
+      for (int x=0;x<dest.xsize;x++)
     {
       int xo = MulDiv(x, ax, nx);
       int yo = MulDiv(y, ay, ny);
@@ -400,14 +400,14 @@ namespace ice
 #define FNAME "InvertImg"
   static int InvertImg_core_std(const Image& pn1, const Image& pn2)
   {
-    int x, y;
     int gmax1 = pn1->maxval; /*maximaler wert*/
     int gmax2 = pn2->maxval;  /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt inverses Bild erzeugen */
     if (gmax1 == gmax2)   /* keine Normierung noetig */
       {
-        wloop(pn1, x, y)
+    for (int y=0;y<pn1.ysize;y++)
+      for (int x=0;x<pn1.xsize;x++)
         {
           int go = GetValUnchecked(pn1, x, y);
           PutValUnchecked(pn2, x, y, gmax1 - go);
@@ -415,7 +415,8 @@ namespace ice
       }
     else
       {
-        wloop(pn1, x, y)
+    for (int y=0;y<pn1.ysize;y++)
+      for (int x=0;x<pn1.xsize;x++)
         {
           int go = GetValUnchecked(pn1, x, y);
           PutValUnchecked(pn2, x, y, MulDiv(gmax1 - go, gmax2, gmax1));
@@ -434,7 +435,8 @@ namespace ice
     T** dp1 = (T**)pn1->getDataPtr();
     T** dp2 = (T**)pn2->getDataPtr();
 
-    wloop(pn1, x, y)
+    for (int y=0;y<pn1.ysize;y++)
+      for (int x=0;x<pn1.xsize;x++)
     {
       dp2[y][x] = gmax - dp1[y][x];
     }
@@ -500,8 +502,8 @@ namespace ice
     const SrcType** Pixels = (const SrcType**)src->getDataPtr();
     DestType** Pixeld = (DestType**)dest->getDataPtr();
 
-    for (int y = 0; y < src->ysize; y++)
-      for (int x = 0; x < src->xsize; x++)
+    for (int y = 0; y < src.ysize; y++)
+      for (int x = 0; x < src.xsize; x++)
         {
           if (Pixels[y][x] < (unsigned int)bin)
             {

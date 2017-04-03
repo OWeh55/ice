@@ -32,10 +32,10 @@ namespace ice
                     Image& oimg,
                     int level)
   {
-    int x, y;
     int g, gi, ga;
 
-    wloop(source, x, y)
+    for (int y=0;y<source.ysize;y++)
+      for (int x=0;x<source.xsize;x++)
     {
       g = GetValUnchecked(source, x, y);
       gi = GetValUnchecked(minimg, x, y);
@@ -72,7 +72,8 @@ namespace ice
     const T** dpi = (const T**) minimg->getDataPtr();
     const T** dpa = (const T**) maximg->getDataPtr();
     PixelType1** dpo = (PixelType1**) oimg->getDataPtr();
-    wloop(source, x, y)
+	for (int y=0;y<source.ysize;y++)
+	  for (int x=0;x<source.xsize;x++)
     {
       g = dps[y][x];
       gi = dpi[y][x];
@@ -206,10 +207,10 @@ namespace ice
 
     MinMaxImg(source, neighb, neighb, minimg, maximg); // max and min in neighborhood
 
-    int x, y;
     int g, gi, ga;
 
-    wloop(source, x, y)
+    for (int y=0;y<source.ysize;y++)
+      for (int x=0;x<source.xsize;x++)
     {
       g = GetValUnchecked(source, x, y);
       gi = GetValUnchecked(minimg, x, y);

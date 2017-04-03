@@ -966,7 +966,8 @@ namespace ice
     int ming = 255;
     int maxg = 0;
     int scale;
-    wloop(img1, x, y)
+    for (int y=0;y<img1.ysize;y++)
+      for (int x=0;x<img1.xsize;x++)
     {
       g = GetVal(img1, x, y);
       ming = min(ming, g);
@@ -977,7 +978,8 @@ namespace ice
 
     if (scale > 0)
       {
-        wloop(img1, x, y)
+	for (int y=0;y<img1.ysize;y++)
+	  for (int x=0;x<img1.xsize;x++)
         {
           g = GetVal(img1, x, y);
           g = (g - ming) * 255 / scale;

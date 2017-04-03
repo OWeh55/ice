@@ -902,7 +902,8 @@ ende:
         return WRONG_PARAM;
       }
 
-    wloop(CopiedSourceImg, xw, yw)
+    for (int y=0;y<CopiedSourceImg.ysize;y++)
+      for (int x=0;x<CopiedSourceImg.xsize;x++)
     {
       // Pixel (=Region) noch nicht bearbeitet
       if (GetVal(CopiedLabImg, xw, yw) != 0)
@@ -986,7 +987,8 @@ ende:
     int n;
 
     FIFOList PQ;
-    wloop(Original, x, y)
+    for (int y=0;y<WSImg.ysize;y++)
+      for (int x=0;x<WSImg.xsize;x++)
     {
 
       if (GetVal(WSImg, x, y) == 0)

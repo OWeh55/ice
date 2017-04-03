@@ -248,21 +248,19 @@ namespace ice
 
     if (mode == CF_CUT)
       {
-
-        int x, y;
-        wloop(dest, x, y)
-        PutVal(dest, x, y, GetVal(img, x + dx, y + dy));
+	for (int y=0;y<dest.ysize;y++)
+	  for (int x=0;x<dest.xsize;x++)
+	    PutVal(dest, x, y, GetVal(img, x + dx, y + dy));
       }
     else if (mode == CF_SET)
       {
-        int x, y;
-        wloop(dest, x, y)
-        PutVal(dest, x, y, GetVal(img, x - dest->xsize / 2 + img->xsize / 2, y - dest->ysize / 2 + img->ysize / 2));
+	for (int y=0;y<dest.ysize;y++)
+	  for (int x=0;x<dest.xsize;x++)
+	    PutVal(dest, x, y, GetVal(img, x - dest->xsize / 2 + img->xsize / 2, y - dest->ysize / 2 + img->ysize / 2));
       }
     else
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return OK;
@@ -392,7 +390,8 @@ namespace ice
       {
 
         int x, y, xs, ys, d, x0 = -1, y0 = -1, dir0 = 0, dir = 0, flag;
-        wloop(img, x, y)
+	for (int y=0;y<img.ysize;y++)
+	  for (int x=0;x<img.xsize;x++)
         {
           if (GetVal(img, x, y) && !GetVal(mark, x, y) &&
               (!img.getPixelClipped(x - 1, y) ||
@@ -426,7 +425,6 @@ namespace ice
         if (pl == NULL)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return ConturList();
           }
 
         x = x0;
@@ -486,9 +484,8 @@ namespace ice
 
         if (plnrm == NULL)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
             FreePointList(pl);
-            return ConturList();
+            throw IceException(FNAME, M_NO_MEM, NO_MEM);
           }
 
         for (int pln = 0; pln < pl->lng; pln++)

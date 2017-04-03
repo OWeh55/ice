@@ -162,7 +162,8 @@ namespace ice
 
     imgs = img2;
 
-    wloop(img1, x, y)
+	for (int y=0;y<img1.ysize;y++)
+	  for (int x=0;x<img1.xsize;x++)
     {
       if (GetVal(img1, x, y) > 0)
         {
@@ -204,7 +205,8 @@ namespace ice
       }
     while (changed);
 
-    wloop(imgs, x, y)
+	for (int y=0;y<imgs.ysize;y++)
+	  for (int x=0;x<imgs.xsize;x++)
     {
       memset(m, 1, 25 * sizeof(int));
 
@@ -267,7 +269,6 @@ namespace ice
     if (!IsImg(img) || (typ != RI_90GRAD && typ != RI_180GRAD && typ != RI_270GRAD))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
       }
 
     int val, xx, yy, x, y;
@@ -281,7 +282,6 @@ namespace ice
         if (!IsImg(img2))
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return false;
           }
 
         if (typ == RI_270GRAD)
