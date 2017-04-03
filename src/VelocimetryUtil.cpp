@@ -966,25 +966,25 @@ namespace ice
     int ming = 255;
     int maxg = 0;
     int scale;
-    for (int y=0;y<img1.ysize;y++)
-      for (int x=0;x<img1.xsize;x++)
-    {
-      g = GetVal(img1, x, y);
-      ming = min(ming, g);
-      maxg = max(maxg, g);
-    }
+    for (int y = 0; y < img1.ysize; y++)
+      for (int x = 0; x < img1.xsize; x++)
+        {
+          g = GetVal(img1, x, y);
+          ming = min(ming, g);
+          maxg = max(maxg, g);
+        }
     printf("%d %d\n", ming, maxg);
     scale = maxg - ming;
 
     if (scale > 0)
       {
-	for (int y=0;y<img1.ysize;y++)
-	  for (int x=0;x<img1.xsize;x++)
-        {
-          g = GetVal(img1, x, y);
-          g = (g - ming) * 255 / scale;
-          PutVal(img2, x, y, g);
-        }
+        for (int y = 0; y < img1.ysize; y++)
+          for (int x = 0; x < img1.xsize; x++)
+            {
+              g = GetVal(img1, x, y);
+              g = (g - ming) * 255 / scale;
+              PutVal(img2, x, y, g);
+            }
       }
 
     return img2;

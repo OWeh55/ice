@@ -148,22 +148,22 @@ namespace ice
 
     if (maxval < 256)
       {
-    for (int y=0;y<img.ysize;y++)
-      for (int x=0;x<img.xsize;x++)
-        {
-          ib = maxval - GetVal(img, x, y);
-          fputc(ib, fd);
-        }
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            {
+              ib = maxval - GetVal(img, x, y);
+              fputc(ib, fd);
+            }
       }
     else
       {
-    for (int y=0;y<img.ysize;y++)
-      for (int x=0;x<img.xsize;x++)
-        {
-          iw = maxval - GetVal(img, x, y);
-          fputc(iw >> 8, fd);
-          fputc(iw & 0xff, fd);
-        }
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            {
+              iw = maxval - GetVal(img, x, y);
+              fputc(iw >> 8, fd);
+              fputc(iw & 0xff, fd);
+            }
       }
 
     fclose(fd);

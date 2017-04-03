@@ -666,27 +666,27 @@ namespace ice
 
     rfac = (r2 - r1) / dsy;
 
-	for (int y=0;y<himgd.ysize;y++)
-	  for (int x=0;x<himgd.xsize;x++)
-    {
-      fi = (x) * M_PI * 2 / sym / dsx;
-      r = (y) * rfac + r1;
-      ConvPolarCartes(r, fi, p);
-      xs = p[0] + x0;
-      ys = p[1] + y0;
+    for (int y = 0; y < himgd.ysize; y++)
+      for (int x = 0; x < himgd.xsize; x++)
+        {
+          fi = (x) * M_PI * 2 / sym / dsx;
+          r = (y) * rfac + r1;
+          ConvPolarCartes(r, fi, p);
+          xs = p[0] + x0;
+          ys = p[1] + y0;
 
-      if (
-        (xs >= 0) && (xs < imgs->xsize) &&
-        (ys >= 0) && (ys < imgs->ysize)
-      )
-        {
-          PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
+          if (
+            (xs >= 0) && (xs < imgs->xsize) &&
+            (ys >= 0) && (ys < imgs->ysize)
+          )
+            {
+              PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
+            }
+          else
+            {
+              PutVal(himgd, x, y, 0);
+            }
         }
-      else
-        {
-          PutVal(himgd, x, y, 0);
-        }
-    }
     return OK;
   }
 #undef FNAME

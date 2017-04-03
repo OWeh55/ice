@@ -384,13 +384,13 @@ namespace ice
     ay = p->ysize;
     av = p->maxval;
 
-    for (int y=0;y<dest.ysize;y++)
-      for (int x=0;x<dest.xsize;x++)
-    {
-      int xo = MulDiv(x, ax, nx);
-      int yo = MulDiv(y, ay, ny);
-      PutVal(dest, x, y, MulDiv(GetVal(p, xo, yo), nv, av));
-    }
+    for (int y = 0; y < dest.ysize; y++)
+      for (int x = 0; x < dest.xsize; x++)
+        {
+          int xo = MulDiv(x, ax, nx);
+          int yo = MulDiv(y, ay, ny);
+          PutVal(dest, x, y, MulDiv(GetVal(p, xo, yo), nv, av));
+        }
     return OK;
   }
 #undef FNAME
@@ -406,21 +406,21 @@ namespace ice
     /* jetzt inverses Bild erzeugen */
     if (gmax1 == gmax2)   /* keine Normierung noetig */
       {
-    for (int y=0;y<pn1.ysize;y++)
-      for (int x=0;x<pn1.xsize;x++)
-        {
-          int go = GetValUnchecked(pn1, x, y);
-          PutValUnchecked(pn2, x, y, gmax1 - go);
-        }
+        for (int y = 0; y < pn1.ysize; y++)
+          for (int x = 0; x < pn1.xsize; x++)
+            {
+              int go = GetValUnchecked(pn1, x, y);
+              PutValUnchecked(pn2, x, y, gmax1 - go);
+            }
       }
     else
       {
-    for (int y=0;y<pn1.ysize;y++)
-      for (int x=0;x<pn1.xsize;x++)
-        {
-          int go = GetValUnchecked(pn1, x, y);
-          PutValUnchecked(pn2, x, y, MulDiv(gmax1 - go, gmax2, gmax1));
-        }
+        for (int y = 0; y < pn1.ysize; y++)
+          for (int x = 0; x < pn1.xsize; x++)
+            {
+              int go = GetValUnchecked(pn1, x, y);
+              PutValUnchecked(pn2, x, y, MulDiv(gmax1 - go, gmax2, gmax1));
+            }
       }
 
     return OK;
@@ -429,17 +429,16 @@ namespace ice
   template<class T>
   int InvertImg_core(const Image& pn1, const Image& pn2)
   {
-    int x, y;
     int gmax = pn1->maxval; /*maximaler wert*/
 
     T** dp1 = (T**)pn1->getDataPtr();
     T** dp2 = (T**)pn2->getDataPtr();
 
-    for (int y=0;y<pn1.ysize;y++)
-      for (int x=0;x<pn1.xsize;x++)
-    {
-      dp2[y][x] = gmax - dp1[y][x];
-    }
+    for (int y = 0; y < pn1.ysize; y++)
+      for (int x = 0; x < pn1.xsize; x++)
+        {
+          dp2[y][x] = gmax - dp1[y][x];
+        }
 #ifdef CONTROLLED_REFRESH
     pn2->needRefresh();
 #endif

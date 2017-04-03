@@ -248,15 +248,15 @@ namespace ice
 
     if (mode == CF_CUT)
       {
-	for (int y=0;y<dest.ysize;y++)
-	  for (int x=0;x<dest.xsize;x++)
-	    PutVal(dest, x, y, GetVal(img, x + dx, y + dy));
+        for (int y = 0; y < dest.ysize; y++)
+          for (int x = 0; x < dest.xsize; x++)
+            PutVal(dest, x, y, GetVal(img, x + dx, y + dy));
       }
     else if (mode == CF_SET)
       {
-	for (int y=0;y<dest.ysize;y++)
-	  for (int x=0;x<dest.xsize;x++)
-	    PutVal(dest, x, y, GetVal(img, x - dest->xsize / 2 + img->xsize / 2, y - dest->ysize / 2 + img->ysize / 2));
+        for (int y = 0; y < dest.ysize; y++)
+          for (int x = 0; x < dest.xsize; x++)
+            PutVal(dest, x, y, GetVal(img, x - dest->xsize / 2 + img->xsize / 2, y - dest->ysize / 2 + img->ysize / 2));
       }
     else
       {
@@ -390,20 +390,20 @@ namespace ice
       {
 
         int x, y, xs, ys, d, x0 = -1, y0 = -1, dir0 = 0, dir = 0, flag;
-	for (int y=0;y<img.ysize;y++)
-	  for (int x=0;x<img.xsize;x++)
-        {
-          if (GetVal(img, x, y) && !GetVal(mark, x, y) &&
-              (!img.getPixelClipped(x - 1, y) ||
-               !img.getPixelClipped(x  , y - 1) ||
-               !img.getPixelClipped(x  , y + 1) ||
-               !img.getPixelClipped(x + 1, y)))
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
             {
-              x0 = x;
-              y0 = y;
-              x = y = 10000;
+              if (GetVal(img, x, y) && !GetVal(mark, x, y) &&
+                  (!img.getPixelClipped(x - 1, y) ||
+                   !img.getPixelClipped(x  , y - 1) ||
+                   !img.getPixelClipped(x  , y + 1) ||
+                   !img.getPixelClipped(x + 1, y)))
+                {
+                  x0 = x;
+                  y0 = y;
+                  x = y = 10000;
+                }
             }
-        }
 
         if (x0 == -1)
           {

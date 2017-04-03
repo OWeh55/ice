@@ -42,13 +42,11 @@ using namespace std;
 
 namespace ice
 {
-
   /**********************************************************************
 
         Interne Funktionen fuer Thinning
 
   ***********************************************************************/
-
 
 //////////////////////////////////////////////////////////////////////////
 // Lesen der dx x dy -Umgebung des Punktes (x,y) im Bild img.
@@ -162,18 +160,18 @@ namespace ice
 
     imgs = img2;
 
-	for (int y=0;y<img1.ysize;y++)
-	  for (int x=0;x<img1.xsize;x++)
-    {
-      if (GetVal(img1, x, y) > 0)
+    for (int y = 0; y < img1.ysize; y++)
+      for (int x = 0; x < img1.xsize; x++)
         {
-          PutVal(imgd, x, y, 1);
+          if (GetVal(img1, x, y) > 0)
+            {
+              PutVal(imgd, x, y, 1);
+            }
+          else
+            {
+              PutVal(imgd, x, y, 0);
+            }
         }
-      else
-        {
-          PutVal(imgd, x, y, 0);
-        }
-    }
 
     do
       {
@@ -205,41 +203,41 @@ namespace ice
       }
     while (changed);
 
-	for (int y=0;y<imgs.ysize;y++)
-	  for (int x=0;x<imgs.xsize;x++)
-    {
-      memset(m, 1, 25 * sizeof(int));
-
-      if (GetVal(imgs, x, y) > 0)
+    for (int y = 0; y < imgs.ysize; y++)
+      for (int x = 0; x < imgs.xsize; x++)
         {
-          int val = imgs->maxval;
+          memset(m, 1, 25 * sizeof(int));
 
-          if ((neighbors = GetEnviron(imgs, x, y, 3, 3, &m[0][0])) > 1)
+          if (GetVal(imgs, x, y) > 0)
             {
-              for (int i = 0; i < 5; i++)
-                for (int j = 0; j < 5; j++)
-                  if (m[i][j] == -1)
-                    {
-                      m[i][j] = 0;
-                    }
+              int val = imgs->maxval;
 
-              if (Trans(m[0][0], m[0][1], m[0][2], m[1][0], m[1][3], m[1][2], m[1][1], m[0][3]) == 2 &&
-                  (!m[0][0] || !m[1][3] || (m[0][1] && m[1][0]) || (m[0][3] && m[1][2])) &&
-                  (!m[0][2] || !m[1][1] || (m[1][0] && m[1][2]) || (m[0][1] && m[0][3])) &&
-                  (!m[0][1] || !m[1][2]) &&
-                  (!m[1][0] || !m[0][3]) &&
-                  ((m[0][1] && m[0][3]) ||
-                   (m[0][1] && m[1][0]) ||
-                   (m[1][0] && m[1][2]) ||
-                   (m[1][2] && m[0][3])))
+              if ((neighbors = GetEnviron(imgs, x, y, 3, 3, &m[0][0])) > 1)
                 {
-                  val = 0;
-                }
-            }
+                  for (int i = 0; i < 5; i++)
+                    for (int j = 0; j < 5; j++)
+                      if (m[i][j] == -1)
+                        {
+                          m[i][j] = 0;
+                        }
 
-          PutVal(imgs, x, y, val);
+                  if (Trans(m[0][0], m[0][1], m[0][2], m[1][0], m[1][3], m[1][2], m[1][1], m[0][3]) == 2 &&
+                      (!m[0][0] || !m[1][3] || (m[0][1] && m[1][0]) || (m[0][3] && m[1][2])) &&
+                      (!m[0][2] || !m[1][1] || (m[1][0] && m[1][2]) || (m[0][1] && m[0][3])) &&
+                      (!m[0][1] || !m[1][2]) &&
+                      (!m[1][0] || !m[0][3]) &&
+                      ((m[0][1] && m[0][3]) ||
+                       (m[0][1] && m[1][0]) ||
+                       (m[1][0] && m[1][2]) ||
+                       (m[1][2] && m[0][3])))
+                    {
+                      val = 0;
+                    }
+                }
+
+              PutVal(imgs, x, y, val);
+            }
         }
-    }
 
     FreeImg(imgd);
     return OK;

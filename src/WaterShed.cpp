@@ -564,9 +564,6 @@ ende:
           }
       }
 
-//    Image ret2=NewImg(xmax,ymax,curlab+1);
-//    wloop(ret2,x,y) PutVal(ret2,x,y,GetValM(m1,x,y));
-
 // 1. von Level 0 bis Level GRWMax
     for (j = 1; j <= max; j++)
       {
@@ -969,147 +966,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   }
 #undef FNAME
 
-// Werte im Bild i, die kleiner als tresh sind, in Bild o auf 0 setzen
-// #define FNAME "prune"
-//   int prune(Image i, Image o, int tresh)
-//   {
-//     int x,y;
-//     RETURN_ERROR_IF_FAILED(MatchImg(i,o));
-//     wloop(i,x,y)
-//       {
-//  if (GetVal(i,x,y)<tresh) PutVal(o,x,y,0);
-//       }
-//     return OK;
-//   }
-// #undef FNAME
-
-// Minima aus Bild i in Bild o auferlegen
-// #define FNAME "imposeMinima"
-//   int imposeMinima(Image i, Image o)
-//   {
-//     int x,y;
-//     RETURN_ERROR_IF_FAILED(MatchImg(i,o));
-//     wloop(i,x,y)
-//       {
-//  if (GetVal(i,x,y)==0) PutVal(o,x,y,0);
-//  else PutVal(o,x,y,GetVal(o,x,y)+1);     // Punkte, die keine Minima sind, um eins erhoehen
-//       }
-//     return OK;
-//   }
-// #undef FNAME
-
-// Bild in wird in nach unten vollstaendiges (Lower Complete) Bild transformiert
-// #define FNAME "LowerComplete"
-//   int LowerCompleteImg(Image in, Image &lcImg)
-//   {
-
-//     int x,y, gr;
-
-//     int xsize=in->xsize;
-//     int ysize=in->ysize;
-
-//     Image mark;              // Markierungsbild
-//     int **lc;
-//     // lower complete Array, maximaler Pixelwert kann sehr gross werden
-//     // und ist vor der Transformation schwer abzuschaetzen
-
-//     lc= (int **) malloc(sizeof(int*)*ysize); // Initialisierung des LC-Arrays
-//     for (int j = 0; j < ysize; j++) {
-//       lc[j] = (int *) malloc(sizeof(int) * xsize);
-//       if (lc[j] == NULL) {
-//  Message(FNAME,M_NO_MEM,NO_MEM);
-//  return NO_MEM;
-//       }
-//     }
-
-//     if (in==NULL || lcImg==NULL){            // Eingabebild NULL?
-//       Message(FNAME,M_WRONG_PARAM,WRONG_PARAM);
-//       return WRONG_PARAM;
-//     }
-
-//     setM(lc,x,y,xsize,ysize,INIT);   // initialisieren des LC-Arrays mittels "setM"-Makro, INIT=-1
-
-//     mark=NewImg(in); SetImg(mark,1); // Markierungsbild initialisieren
-
-//     int dist=0;              // aktuelle Distanz auf 0 setzen
-//     FIFOList Q;              // Punktliste
-
-//     int xn,yn;             // Koordinaten der Nachbarpixel
-
-//     bool hasLowerNeighbor=false;
-
-//     wloop(in,x,y) {
-
-//       hasLowerNeighbor=false;
-//       ForAll8Nbrs(in,x,y,xn,yn, {    // hat Punkt Nachbar mit geringerem Grauwert?
-//  if (GetVal(in,xn,yn)<GetVal(in,x,y)) { hasLowerNeighbor=true; goto found;  }
-//       });
-//     found:
-//       if(hasLowerNeighbor) {
-//  struct STPoint temp={x,y,GetVal(in,x,y)};
-//  Q.push_back(temp);
-//  PutVal(mark,x,y,0);
-//  PutValM(lc,x,y,0);    // wenn mark=0 und lc=0, dann ist lc=INIT
-//       }
-//     }
-
-//     dist=1;
-
-//     struct STPoint temp={-1,-1,0};   // Trennelement fuer Punkte verschiedener Distanzen in der Punktliste
-//     struct STPoint t={-1,-1,0};
-//     Q.push_back(temp);
-
-//     if (!Q.empty())
-//       do {
-//  temp=Q.front();
-//  Q.pop_front();
-//  x=temp.x; y=temp.y; gr=temp.grw;
-
-//  if ((x==-1))        // wenn aktueller Punkt, Trennelement ist, Distanz erhoehen
-//    if (Q.empty()) { goto ende;}    // wenn letztes Element, Schleife verlassen
-//    else {
-//      dist++;       // Distanz erhoehen
-//      Q.push_back(temp);  // wenn x=-1 und y=-1 : temp als Trennelement wieder hinten anfuegen
-
-//    }
-//  else {
-//    PutValM(lc,x,y,dist);     // Distanz zum Plataueeintrittin lc eintragen
-
-//    ForAll8Nbrs(in,x,y,xn,yn, {   // Nachbarpixel ist Plateaupixel und von gleichem Plateau
-//      if (GetVal(in,xn,yn)== GetVal(in,x,y) && (GetVal(mark,xn,yn)==1)) {
-//        struct STPoint temp2=t;
-//        temp2.x=xn; temp2.y=yn; temp2.grw=GetVal(in,xn,yn);
-//        Q.push_back(temp2);
-//        PutVal(mark,xn,yn,0); // Punkt als bearbeitet markieren
-//        PutValM(lc,xn,yn,0);
-//      }
-//    });
-//  }
-//       }
-//       while (!Q.empty());
-
-//   ende:
-//     wloop(in,x,y) {
-//       // Addieren des neuen Plateauwertes mit dem neuen Inputwert
-//       if (GetValM(lc,x,y)!=0 && GetVal(mark,x,y)!=0)
-//  PutValM(lc,x,y,(dist*GetVal(in,x,y)+GetValM(lc,x,y)-1));
-
-//       else   // Multiplikation des Inputwertes mit dem maximalen Distanzwert
-//  PutValM(lc,x,y,(dist*GetVal(in,x,y)));
-//     }
-//     int max=0;
-//     wloop(in,x,y)  // maximalen Wert bestimmen
-//       if (GetValM(lc,x,y)>max) max=GetValM(lc,x,y);
-//     // neues Rueckgabebild mit max+2 Grauwerten anlegen
-//     lcImg=NewImg(in->xsize,in->ysize,max+2);
-//     wloop(lcImg,x,y) { // LC-Array in Ruegabebild speichern
-//       PutVal(lcImg,x,y,GetValM(lc,x,y));
-//     }
-
-//     return OK;
-//   }
-// #undef FNAME
-
 // Anzahl der Nachbarregionen bestimmen
   int NbRegions(const Image& i, int x, int y)
   {
@@ -1330,37 +1186,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     for (int y = 0; y < WSImg.ysize; y++)
       for (int x = 0; x < WSImg.xsize; x++)
         PutVal(GrwImg, x, y, regGrw[GetVal(WSImg, x, y)]);  // neue Grauwerte in Ausgabebild eintragen
-
-    return OK;
-  }
-#undef FNAME
-
-  /*************************************************/
-
-#define FNAME "Rahmen"
-  int rahmen(Image& i, int color)
-  {
-
-    int l;
-
-    if (!IsImg(i))
-      {
-        // Eingabebild gueltig
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
-    for (l = 0; l < i->xsize; l++)
-      {
-        PutVal(i, l, 0, color);
-        PutVal(i, l, i->ysize - 1, color);
-      }
-
-    for (l = 0; l < i->ysize; l++)
-      {
-        PutVal(i, 0, l, color);
-        PutVal(i, i->xsize - 1, l, color);
-      }
 
     return OK;
   }

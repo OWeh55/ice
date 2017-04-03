@@ -751,35 +751,35 @@ namespace ice
                              dy + 2 * boundary_y,
                              imgs->maxval);
 
-    for (int y=0;y<imgs_wide.ysize;y++)
-      for (int x=0;x<imgs_wide.xsize;x++)
-    {
-      int xo = x - boundary_x;
-      int yo = y - boundary_y;
-
-      if (xo < 0)
+    for (int y = 0; y < imgs_wide.ysize; y++)
+      for (int x = 0; x < imgs_wide.xsize; x++)
         {
-          xo = 0;
-        }
+          int xo = x - boundary_x;
+          int yo = y - boundary_y;
 
-      if (yo < 0)
-        {
-          yo = 0;
-        }
+          if (xo < 0)
+            {
+              xo = 0;
+            }
 
-      if (xo >= dx)
-        {
-          xo = dx - 1;
-        }
+          if (yo < 0)
+            {
+              yo = 0;
+            }
 
-      if (yo >= dy)
-        {
-          yo = dy - 1;
-        }
+          if (xo >= dx)
+            {
+              xo = dx - 1;
+            }
 
-      PutValUnchecked(imgs_wide, x, y,
-                      GetValUnchecked(imgs, xo, yo));
-    }
+          if (yo >= dy)
+            {
+              yo = dy - 1;
+            }
+
+          PutValUnchecked(imgs_wide, x, y,
+                          GetValUnchecked(imgs, xo, yo));
+        }
 
     std::map<int, Image> smearimgs;
 
@@ -836,39 +836,39 @@ namespace ice
         Image box1 = smearimgs[key1];
         Image box2 = smearimgs[key2];
 
-	for (int x=0;x<imgd.xsize;x++)
-	  for (int y=0;y<imgd.ysize;y++)
-        {
-          int xn = x + boundary_x;
-          int yn = y + boundary_y;
-          long int box1v = GetValUnchecked(box1, xn, yn);
-          long int box2v = GetValUnchecked(box2, xn, yn);
-          long int diff = box1v - box2v;
-          long int v = imgs->maxval;
-
-          if (diff > 0)
+        for (int x = 0; x < imgd.xsize; x++)
+          for (int y = 0; y < imgd.ysize; y++)
             {
-              int current_val = GetValUnchecked(imgd, x, y);
+              int xn = x + boundary_x;
+              int yn = y + boundary_y;
+              long int box1v = GetValUnchecked(box1, xn, yn);
+              long int box2v = GetValUnchecked(box2, xn, yn);
+              long int diff = box1v - box2v;
+              long int v = imgs->maxval;
 
-              if (scalef != 0.0)
+              if (diff > 0)
                 {
-                  long int box1_s = box1v + scalef;
-                  v    = (diff * (box1_s + imgs->maxval)) / (diff + box1_s);
+                  int current_val = GetValUnchecked(imgd, x, y);
 
-                  if (v > current_val)
+                  if (scalef != 0.0)
                     {
-                      PutValUnchecked(imgd, x, y, v);
+                      long int box1_s = box1v + scalef;
+                      v    = (diff * (box1_s + imgs->maxval)) / (diff + box1_s);
+
+                      if (v > current_val)
+                        {
+                          PutValUnchecked(imgd, x, y, v);
+                        }
                     }
-                }
-              else
-                {
-                  if (diff > current_val)
+                  else
                     {
-                      PutValUnchecked(imgd, x, y, diff);
+                      if (diff > current_val)
+                        {
+                          PutValUnchecked(imgd, x, y, diff);
+                        }
                     }
                 }
             }
-        }
       }
 
     return 0;

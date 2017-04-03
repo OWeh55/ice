@@ -902,38 +902,38 @@ ende:
         return WRONG_PARAM;
       }
 
-    for (int y=0;y<CopiedSourceImg.ysize;y++)
-      for (int x=0;x<CopiedSourceImg.xsize;x++)
-    {
-      // Pixel (=Region) noch nicht bearbeitet
-      if (GetVal(CopiedLabImg, xw, yw) != 0)
+    for (int y = 0; y < CopiedSourceImg.ysize; y++)
+      for (int x = 0; x < CopiedSourceImg.xsize; x++)
         {
-          // Pixel ist keine Wasserscheide
-          if (GetVal(WorkingImg, xw, yw) == 0)
+          // Pixel (=Region) noch nicht bearbeitet
+          if (GetVal(CopiedLabImg, xw, yw) != 0)
             {
-              // neue Region einfuegen
-              regions.push_back(new RegionNode());
-              // alle Punkte berechnen, die in der Region liegen
-              CompRegion4(CopiedSourceImg, CopiedLabImg, WorkingImg, xw, yw, RegNodeCount);
-              // Regionenknoten etikettieren
-              regions[RegNodeCount]->SetLabel(RegNodeCount + 1);
-              // durchschnittlichen Grauwert und Grauwertvarianz der Punkte der Regione berechnen
-              regions[RegNodeCount]->CompGRWMW();
-              regions[RegNodeCount]->CompGRWVAR();
-              // Wasserscheidenpixel einzeichnen
-              regions[RegNodeCount]->drawWSHDPixel(WorkingImg, 0);
-              // Regionenzaehler erhoehen
-              RegNodeCount++;
+              // Pixel ist keine Wasserscheide
+              if (GetVal(WorkingImg, xw, yw) == 0)
+                {
+                  // neue Region einfuegen
+                  regions.push_back(new RegionNode());
+                  // alle Punkte berechnen, die in der Region liegen
+                  CompRegion4(CopiedSourceImg, CopiedLabImg, WorkingImg, xw, yw, RegNodeCount);
+                  // Regionenknoten etikettieren
+                  regions[RegNodeCount]->SetLabel(RegNodeCount + 1);
+                  // durchschnittlichen Grauwert und Grauwertvarianz der Punkte der Regione berechnen
+                  regions[RegNodeCount]->CompGRWMW();
+                  regions[RegNodeCount]->CompGRWVAR();
+                  // Wasserscheidenpixel einzeichnen
+                  regions[RegNodeCount]->drawWSHDPixel(WorkingImg, 0);
+                  // Regionenzaehler erhoehen
+                  RegNodeCount++;
+                }
+            }
+          else        // Pixel ist Wasserscheide
+            {
+              struct STPoint temp = {xw, yw, 0};
+              // zu Wasserscheidenpixeln hinzufuegen
+              WShedPixels.push_back(temp);
+
             }
         }
-      else        // Pixel ist Wasserscheide
-        {
-          struct STPoint temp = {xw, yw, 0};
-          // zu Wasserscheidenpixeln hinzufuegen
-          WShedPixels.push_back(temp);
-
-        }
-    }
 
     SetImg(WorkingImg, WorkingImg->maxval);
 
@@ -987,56 +987,56 @@ ende:
     int n;
 
     FIFOList PQ;
-    for (int y=0;y<WSImg.ysize;y++)
-      for (int x=0;x<WSImg.xsize;x++)
-    {
-
-      if (GetVal(WSImg, x, y) == 0)
-        {
-          PutVal(mark, x, y, 1);
-        }
-      else if (GetVal(mark, x, y) == 0)
+    for (int y = 0; y < WSImg.ysize; y++)
+      for (int x = 0; x < WSImg.xsize; x++)
         {
 
-          PQ.clear();
-
-          struct STPoint p = {x, y, 0};
-          grwsum = GetVal(Original, x, y);
-
-          PQ.push_back(p);
-
-          if (!PQ.empty())
+          if (GetVal(WSImg, x, y) == 0)
             {
-              for (n = 0; n < int(PQ.size()); n++)
-                {
-                  p = PQ[n];
-                  xkoor = p.x;
-                  ykoor = p.y;
+              PutVal(mark, x, y, 1);
+            }
+          else if (GetVal(mark, x, y) == 0)
+            {
 
-                  ForAll4Nbrs(Original, xkoor, ykoor, xn, yn,
-                  {
-                    if (GetVal(mark, xn, yn) == 0 && GetVal(WSImg, xn, yn) != 0)
+              PQ.clear();
+
+              struct STPoint p = {x, y, 0};
+              grwsum = GetVal(Original, x, y);
+
+              PQ.push_back(p);
+
+              if (!PQ.empty())
+                {
+                  for (n = 0; n < int(PQ.size()); n++)
+                    {
+                      p = PQ[n];
+                      xkoor = p.x;
+                      ykoor = p.y;
+
+                      ForAll4Nbrs(Original, xkoor, ykoor, xn, yn,
                       {
-                        PutVal(mark, xn, yn, 1);
-                        grwsum += GetVal(Original, xn, yn);
-                        struct STPoint p2 = p;
-                        p2.x = xn;
-                        p2.y = yn;
-                        p2.grw = 0;
-                        PQ.push_back(p2);
-                      }
-                  };)
-                }
+                        if (GetVal(mark, xn, yn) == 0 && GetVal(WSImg, xn, yn) != 0)
+                          {
+                            PutVal(mark, xn, yn, 1);
+                            grwsum += GetVal(Original, xn, yn);
+                            struct STPoint p2 = p;
+                            p2.x = xn;
+                            p2.y = yn;
+                            p2.grw = 0;
+                            PQ.push_back(p2);
+                          }
+                      };)
+                    }
 
-              grw = grwsum / n;
+                  grw = grwsum / n;
 
-              for (n = 0; n < int(PQ.size()); n++)
-                {
-                  PutVal(GrwImg, PQ[n].x, PQ[n].y, grw);
-                }
-            } // ! empty
+                  for (n = 0; n < int(PQ.size()); n++)
+                    {
+                      PutVal(GrwImg, PQ[n].x, PQ[n].y, grw);
+                    }
+                } // ! empty
+            }
         }
-    }
     return OK;
   }
 #undef FNAME
