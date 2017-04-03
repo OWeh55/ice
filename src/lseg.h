@@ -43,10 +43,10 @@ namespace ice
   };
 
 
-  int LocalSeg(Image source, Image oimg, int neighb = 7, int level = 15);
-  int LocalSeg(Image source, Image oimg, int neighb, int level, int level2);
-  int LocalSeg(Image source, int neighb = 7, int level = 15);
-  int LocalSeg(Image source, int neighb, int level, int level2);
+  void LocalSeg(const Image& source, const Image& oimg, int neighb = 7, int level = 15);
+  void LocalSeg(const Image& source, const Image& oimg, int neighb, int level, int level2);
+  void LocalSeg(const Image& source, int neighb = 7, int level = 15);
+  void LocalSeg(const Image& source, int neighb, int level, int level2);
 
   object_rc LocalSegObj(const Image& i, int x, int y, int thr_dummy);
   object_rc LocalSegObjInv(const Image& i, int x, int y, int thr_dummy);
