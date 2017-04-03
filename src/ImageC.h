@@ -689,9 +689,8 @@ namespace ice
       return inside(window.p1) && inside(window.p2);
     }
 
-    /*
-     * set
-     * set all pixels to the given value
+    /**
+     * set all pixels to the given value.
      */
     int set(int val) const
     {
@@ -699,21 +698,22 @@ namespace ice
     }
 
     /**
-     * read image from file
+     * read image from file.
      */
     int read(const std::string& filename);
 
     /**
-     * write image to file
+     * write image to file.
      */
     int write(const std::string& filename) const;
 
     //@{
     /**
-     * does the sizes of the images match?.
+     * make sure, the sizes of the images match.
+     * throws an exception if sizes do not match
      */
-    int match(const Image& img2) const;
-    int match(const Image& img2, const Image& img3) const;
+    void match(const Image& img2) const;
+    void match(const Image& img2, const Image& img3) const;
     //@}
 
   protected:
@@ -790,6 +790,6 @@ namespace ice
    * Release the data of img.
    * After this img is invalid.
    */
-  int FreeImg(Image& img);
+  void FreeImg(Image& img);
 }
 #endif // #ifndef __IMAGEC_H

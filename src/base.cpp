@@ -238,4 +238,41 @@ namespace ice
     return OK;
   }
 #undef FNAME
+#define FNAME "matchImg"
+  void matchImg(const Image& i1, const Image& i2, int& xs, int& ys)
+  {
+    try
+      {
+        i1.match(i2);
+
+        xs = i1->xsize;
+        ys = i1->ysize;
+      }
+    RETHROW;
+  }
+
+  void matchImg(const Image& i1, const Image& i2, const Image& i3, int& xs, int& ys)
+  {
+    try
+      {
+        i1.match(i2);
+        i1.match(i3);
+        xs = i1->xsize;
+        ys = i1->ysize;
+      }
+    RETHROW;
+  }
+
+  void matchImg(const Image& i1, const Image& i2)
+  {
+    int xs, ys;
+    matchImg(i1, i2, xs, ys);
+  }
+
+  void matchImg(const Image& i1, const Image& i2, const Image& i3)
+  {
+    int xs, ys;
+    matchImg(i1, i2, i3, xs, ys);
+  }
+#undef FNAME
 }

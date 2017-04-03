@@ -51,15 +51,26 @@ namespace ice
   }
 
   // These functions check if 2 or 3 images match == the sizes of the images
-  // are equal. Versions with parameters SizeX and SizeY return
+  // are equal. Versions with parameters sizeX and sizeY return
   // the windowsize
   // if the images don't match, an error is forced
   int MatchImg(const Image& p1,
                const Image& p2,
-               const Image& p3, int& SizeX, int& SizeY);
-  int MatchImg(const Image& p1, const Image& p2, int& SizeX, int& SizeY);
+               const Image& p3, int& sizeX, int& sizeY);
+  int MatchImg(const Image& p1, const Image& p2, int& sizeX, int& sizeY);
   int MatchImg(const Image& p1, const Image& p2, const Image& p3);
   int MatchImg(const Image& p1, const Image& p2);
+
+  // These functions check if 2 or 3 images match == the sizes of the images
+  // are equal. Versions with parameters sizeX and sizeY return
+  // the size
+  // if the images don't match, an exception is thrown
+  void matchImg(const Image& p1,
+                const Image& p2,
+                const Image& p3, int& sizeX, int& sizeY);
+  void matchImg(const Image& p1, const Image& p2, int& sizeX, int& sizeY);
+  void matchImg(const Image& p1, const Image& p2, const Image& p3);
+  void matchImg(const Image& p1, const Image& p2);
 
   // Interpretes the image Img as a continous grey value function.
   // Returns the grey value at location (x, y). This value is

@@ -152,30 +152,19 @@ namespace ice
 #undef FNAME
 
 #define FNAME "Image::match"
-  int Image::match(const Image& img2) const
+  void Image::match(const Image& img2) const
   {
     if (!isValid() || !img2.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
 
     if ((xsize != img2->xsize) || (ysize != img2->ysize))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
-    return OK;
+      throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
   }
 
-  int Image::match(const Image& img2, const Image& img3) const
+  void Image::match(const Image& img2, const Image& img3) const
   {
-    if (match(img2) != OK)
-      {
-        return WRONG_PARAM;
-      }
-    return match(img3);
+    match(img2);
+    match(img3);
   }
 #undef FNAME
 #define FNAME "NewImg"
@@ -228,16 +217,12 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "FreeImg"
-  int FreeImg(Image& Img)
+  void FreeImg(Image& img)
   {
-    if (!IsImg(Img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if (!IsImg(img))
+      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
 
-    Img.destroy();
-    return OK;
+    img.destroy();
   }
 #undef FNAME
 #define FNAME "Image::write"
@@ -259,7 +244,7 @@ namespace ice
         return isValid();
       }
   }
-
+#undef FNAME
   double Image::getPixelInterpol(double x, double y) const
   {
     // if x and y are too far outside the image border, we simply return zero
