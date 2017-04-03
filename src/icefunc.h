@@ -38,6 +38,9 @@
 
 namespace ice
 {
+
+  void RotateImg(Image& img, short typ);
+
   /*********************************************************************
 
       Skeleton
@@ -62,6 +65,7 @@ namespace ice
 
   **********************************************************************/
 
+
 #define FIRST_EXTREMA 1
 #define MID_EXTREMA   2
 #define LAST_EXTREMA  3
@@ -69,11 +73,11 @@ namespace ice
 #define NO_EXTREMA    0
 #define HORZ_VERT     (HORZ+VERT+1)
 
-  int Skeleton(Image img,
-               int mode, int mode2, int mode3,
-               int thresh, double diff, Image imgd);
+  void Skeleton(const Image& img,
+                int mode, int mode2, int mode3,
+                int thresh, double diff, const Image& imgd);
 
-  int SkeletonImg(const Image& pic, const Image& skelett, int lvl);
+  void SkeletonImg(const Image& pic, const Image& skelett, int lvl);
 
 
   /**********************************************************************
@@ -82,7 +86,7 @@ namespace ice
 
   ***********************************************************************/
 
-  int Thinning(Image img1, Image img2);
+  void Thinning(const Image& img1, const Image& img2);
 
 
   /**********************************************************************
@@ -91,6 +95,8 @@ namespace ice
 
   ***********************************************************************/
 
-  int RelaxImg(const Image& img, const Image& imgd, int n = 3);
+  void RelaxImg(const Image& img, const Image& imgd, int n = 3);
+
+
 }
 #endif

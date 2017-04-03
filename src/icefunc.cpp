@@ -29,7 +29,6 @@
 
 #include "defs.h"
 #include "IceException.h"
-#include "macro.h"
 #include "conturfunctions.h"
 #include "histogram.h"
 #include "arith.h"
@@ -142,105 +141,100 @@ namespace ice
 
 #define FNAME "Thinning"
 
-  int Thinning(Image img1, Image img2)
+  void Thinning(const Image& img1, const Image& img2)
   {
-    Image imgs, imgd;
-    int x, y, changed, neighbors, m[5][5];
-    int dx, dy;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, dx, dy));
-
-    imgd = NewImg(img1->xsize, img1->ysize, 1);
-
-    if (!IsImg(imgd))
+    try
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
-      }
+        Image imgs, imgd;
+        int x, y, changed, neighbors, m[5][5];
+        int dx, dy;
 
-    imgs = img2;
+        MatchImg(img1, img2, dx, dy);
 
-    for (int y = 0; y < img1.ysize; y++)
-      for (int x = 0; x < img1.xsize; x++)
-        {
-          if (GetVal(img1, x, y) > 0)
+        imgd = NewImg(img1->xsize, img1->ysize, 1);
+
+        imgs = img2;
+
+        for (int y = 0; y < img1.ysize; y++)
+          for (int x = 0; x < img1.xsize; x++)
             {
-              PutVal(imgd, x, y, 1);
+              if (GetVal(img1, x, y) > 0)
+                {
+                  PutVal(imgd, x, y, 1);
+                }
+              else
+                {
+                  PutVal(imgd, x, y, 0);
+                }
             }
-          else
-            {
-              PutVal(imgd, x, y, 0);
-            }
-        }
 
-    do
-      {
-        CopyImg(imgd, imgs);
-        changed = 0;
+        do
+          {
+            CopyImg(imgd, imgs);
+            changed = 0;
 
-        for (x = 2; x < imgd->xsize - 2; x++)
-          for (y = 2; y < imgd->ysize - 2; y++)
-            if (GetVal(imgs, x, y))
-              {
-                memset(m, 1, 25 * sizeof(int));
-                neighbors = GetEnviron(imgs, x, y, 5, 5, &m[0][0]);
-
-                if ((2 <= neighbors) && (neighbors <= 6))
+            for (x = 2; x < imgd->xsize - 2; x++)
+              for (y = 2; y < imgd->ysize - 2; y++)
+                if (GetVal(imgs, x, y))
                   {
-                    if (Trans(m[1][2], m[1][1], m[2][1], m[3][1], m[3][2], m[3][3], m[2][3], m[1][3]) == 1)
+                    memset(m, 1, 25 * sizeof(int));
+                    neighbors = GetEnviron(imgs, x, y, 5, 5, &m[0][0]);
+
+                    if ((2 <= neighbors) && (neighbors <= 6))
                       {
-                        if ((!m[1][2]) || (!m[2][1]) || (!m[2][3]) || (Trans(m[0][2], m[0][1], m[1][1], m[2][1], m[2][2], m[2][3], m[1][3], m[0][3])) != 1)
+                        if (Trans(m[1][2], m[1][1], m[2][1], m[3][1], m[3][2], m[3][3], m[2][3], m[1][3]) == 1)
                           {
-                            if ((!m[1][2]) || (!m[2][1]) || (!m[3][2]) || (Trans(m[1][1], m[1][0], m[2][0], m[3][0], m[3][1], m[3][2], m[2][2], m[1][2])) != 1)
+                            if ((!m[1][2]) || (!m[2][1]) || (!m[2][3]) || (Trans(m[0][2], m[0][1], m[1][1], m[2][1], m[2][2], m[2][3], m[1][3], m[0][3])) != 1)
                               {
-                                PutVal(imgd, x, y, 0);
-                                changed = 1;
+                                if ((!m[1][2]) || (!m[2][1]) || (!m[3][2]) || (Trans(m[1][1], m[1][0], m[2][0], m[3][0], m[3][1], m[3][2], m[2][2], m[1][2])) != 1)
+                                  {
+                                    PutVal(imgd, x, y, 0);
+                                    changed = 1;
+                                  }
                               }
                           }
                       }
                   }
-              }
-      }
-    while (changed);
+          }
+        while (changed);
 
-    for (int y = 0; y < imgs.ysize; y++)
-      for (int x = 0; x < imgs.xsize; x++)
-        {
-          memset(m, 1, 25 * sizeof(int));
-
-          if (GetVal(imgs, x, y) > 0)
+        for (int y = 0; y < imgs.ysize; y++)
+          for (int x = 0; x < imgs.xsize; x++)
             {
-              int val = imgs->maxval;
+              memset(m, 1, 25 * sizeof(int));
 
-              if ((neighbors = GetEnviron(imgs, x, y, 3, 3, &m[0][0])) > 1)
+              if (GetVal(imgs, x, y) > 0)
                 {
-                  for (int i = 0; i < 5; i++)
-                    for (int j = 0; j < 5; j++)
-                      if (m[i][j] == -1)
-                        {
-                          m[i][j] = 0;
-                        }
+                  int val = imgs->maxval;
 
-                  if (Trans(m[0][0], m[0][1], m[0][2], m[1][0], m[1][3], m[1][2], m[1][1], m[0][3]) == 2 &&
-                      (!m[0][0] || !m[1][3] || (m[0][1] && m[1][0]) || (m[0][3] && m[1][2])) &&
-                      (!m[0][2] || !m[1][1] || (m[1][0] && m[1][2]) || (m[0][1] && m[0][3])) &&
-                      (!m[0][1] || !m[1][2]) &&
-                      (!m[1][0] || !m[0][3]) &&
-                      ((m[0][1] && m[0][3]) ||
-                       (m[0][1] && m[1][0]) ||
-                       (m[1][0] && m[1][2]) ||
-                       (m[1][2] && m[0][3])))
+                  if ((neighbors = GetEnviron(imgs, x, y, 3, 3, &m[0][0])) > 1)
                     {
-                      val = 0;
+                      for (int i = 0; i < 5; i++)
+                        for (int j = 0; j < 5; j++)
+                          if (m[i][j] == -1)
+                            {
+                              m[i][j] = 0;
+                            }
+
+                      if (Trans(m[0][0], m[0][1], m[0][2], m[1][0], m[1][3], m[1][2], m[1][1], m[0][3]) == 2 &&
+                          (!m[0][0] || !m[1][3] || (m[0][1] && m[1][0]) || (m[0][3] && m[1][2])) &&
+                          (!m[0][2] || !m[1][1] || (m[1][0] && m[1][2]) || (m[0][1] && m[0][3])) &&
+                          (!m[0][1] || !m[1][2]) &&
+                          (!m[1][0] || !m[0][3]) &&
+                          ((m[0][1] && m[0][3]) ||
+                           (m[0][1] && m[1][0]) ||
+                           (m[1][0] && m[1][2]) ||
+                           (m[1][2] && m[0][3])))
+                        {
+                          val = 0;
+                        }
                     }
+
+                  PutVal(imgs, x, y, val);
                 }
-
-              PutVal(imgs, x, y, val);
             }
-        }
-
-    FreeImg(imgd);
-    return OK;
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -262,52 +256,55 @@ namespace ice
 
 #define FNAME "RotateImg"
 
-  int RotateImg(Image& img, short typ)
+  void RotateImg(Image& img, short typ)
   {
     if (!IsImg(img) || (typ != RI_90GRAD && typ != RI_180GRAD && typ != RI_270GRAD))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
-    int val, xx, yy, x, y;
-
-    Image img2;
-
-    if (typ != RI_180GRAD)
+    try
       {
-        img2 = NewImg(img->ysize, img->xsize, img->maxval);
 
-        if (!IsImg(img2))
+        int val, xx, yy, x, y;
+
+        Image img2;
+
+        if (typ != RI_180GRAD)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            img2 = NewImg(img->ysize, img->xsize, img->maxval);
+
+            if (!IsImg(img2))
+              {
+                throw IceException(FNAME, M_NO_MEM, NO_MEM);
+              }
+
+            if (typ == RI_270GRAD)
+              {
+                for (int y = 0; y < img.ysize; y++)
+                  for (int x = 0; x < img.xsize; x++)
+                    PutVal(img2, img->ysize - y - 1, x, GetVal(img, x, y));
+              }
+            else
+              for (int y = 0; y < img.ysize; y++)
+                for (int x = 0; x < img.xsize; x++)
+                  PutVal(img2, y, img->xsize - x - 1, GetVal(img, x, y));
+            img = img2;
           }
-
-        if (typ == RI_270GRAD)
-          wloop(img, x, y)
-          PutVal(img2, img->ysize - y - 1, x, GetVal(img, x, y));
         else
-          wloop(img, x, y)
-          PutVal(img2, y, img->xsize - x - 1, GetVal(img, x, y));
+          {
+            int yend = (img->ysize % 2 == 0) ? img->ysize / 2 : (img->ysize + 1) / 2;
 
-        FreeImg(img);
-        img = img2;
-
+            for (y = 0; y < yend; y++)
+              for (x = 0; x < img->xsize; x++)
+                {
+                  val = GetVal(img, x, y);
+                  PutVal(img, x, y, GetVal(img, (xx = img->xsize - x - 1), (yy = img->ysize - y - 1)));
+                  PutVal(img, xx, yy, val);
+                }
+          }
       }
-    else
-      {
-
-        int yend = (img->ysize % 2 == 0) ? img->ysize / 2 : (img->ysize + 1) / 2;
-
-        for (y = 0; y < yend; y++)
-          for (x = 0; x < img->xsize; x++)
-            {
-              val = GetVal(img, x, y);
-              PutVal(img, x, y, GetVal(img, (xx = img->xsize - x - 1), (yy = img->ysize - y - 1)));
-              PutVal(img, xx, yy, val);
-            }
-      }
-
-    return true;
+    RETHROW;
   }
 
 #undef FNAME
@@ -338,9 +335,9 @@ namespace ice
 
 #define FNAME "Skeleton"
 
-  int Skeleton(Image img,
-               int mode, int mode2, int mode3,
-               int thresh, double diff, Image imgd)
+  void Skeleton(const Image& img,
+                int mode, int mode2, int mode3,
+                int thresh, double diff, const Image& imgd)
   {
     // Parameter pruefen
     if (!IsImg(img) ||
@@ -351,7 +348,6 @@ namespace ice
         (mode == NO_EXTREMA && mode2 == NO_EXTREMA))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // Initalisierung
@@ -359,7 +355,6 @@ namespace ice
     if (!IsImg(imgd) || imgd->maxval != 1 || imgd->xsize != img->xsize || imgd->ysize != img->ysize)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     ClearImg(imgd);
@@ -373,21 +368,8 @@ namespace ice
 
     if (diff < 0)
       {
-
         vec = (int*)malloc(mem = max(img->xsize, img->ysize) * sizeof(int));
-
-        if (!vec)
-          {
-            return ERROR;
-          }
-
         vecl = (int*)malloc(mem);
-
-        if (!vecl)
-          {
-            free(vec);
-            return ERROR;
-          }
       }
 
     int lookfor, pos = 0, posl = 0, max = 0, min = INT_MAX, val, l = 0, y, x;
@@ -1113,7 +1095,6 @@ namespace ice
         if (!IsImg(temp))
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
           }
 
         temp2 = NewImg(temp);
@@ -1122,30 +1103,19 @@ namespace ice
           {
             FreeImg(temp);
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
           }
 
-        if (!RotateImg(temp, RI_180GRAD))
-          {
-            FreeImg(temp);
-            return ERROR;
-          }
+        RotateImg(temp, RI_180GRAD);
 
         Skeleton(temp, (mode == FIRST_EXTREMA) ? LAST_EXTREMA : (mode == LAST_EXTREMA) ? FIRST_EXTREMA : mode, (mode2 == FIRST_EXTREMA) ? LAST_EXTREMA : (mode2 == LAST_EXTREMA) ? FIRST_EXTREMA : mode2, HORZ_VERT + mode3, thresh, diff, temp2);
 
         FreeImg(temp);
 
-        if (!RotateImg(temp2, RI_180GRAD))
-          {
-            FreeImg(temp2);
-            return ERROR;
-          }
+        RotateImg(temp2, RI_180GRAD);
 
         MaxImg(imgd, temp2, imgd);
         FreeImg(temp2);
       }
-
-    return OK;
   }
 
 #undef FNAME
@@ -1157,39 +1127,42 @@ namespace ice
   ***********************************************************************/
 
 #define FNAME "HistogramEqual"
-  int HistogramEqual(const Image& img, Image& imgd)
+  void HistogramEqual(const Image& img, Image& imgd)
   {
-    int dx, dy;
-    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
-
-    Histogram h(img);
-
-    vector<int> histx(img->maxval + 1);
-
-    double maxval = double(imgd->maxval) / img->xsize / img->ysize;
-    int sum = 0;
-
-    for (int i = 0; i <= img->maxval; i++)
+    try
       {
-        sum += h.getCount(i);
-        histx[i] = RoundInt(sum * maxval);
+
+        int dx, dy;
+        MatchImg(img, imgd, dx, dy);
+
+        Histogram h(img);
+
+        vector<int> histx(img->maxval + 1);
+
+        double maxval = double(imgd->maxval) / img->xsize / img->ysize;
+        int sum = 0;
+
+        for (int i = 0; i <= img->maxval; i++)
+          {
+            sum += h.getCount(i);
+            histx[i] = RoundInt(sum * maxval);
+          }
+
+        IPoint p;
+        for (p.y = 0; p.y < imgd->ysize; p.y++)
+          for (p.x = 0; p.x < imgd->xsize; p.x++)
+            {
+              PutVal(imgd, p, histx[GetVal(img, p)]);
+            }
+
       }
-
-    IPoint p;
-    for (p.y = 0; p.y < imgd->ysize; p.y++)
-      for (p.x = 0; p.x < imgd->xsize; p.x++)
-        {
-          PutVal(imgd, p, histx[GetVal(img, p)]);
-        }
-
-    return OK;
+    RETHROW;
   }
 
-  int HistogramEqual(Image& imgd)
+  void HistogramEqual(Image& imgd)
   {
-    return HistogramEqual(imgd, imgd);
+    HistogramEqual(imgd, imgd);
   }
-
 #undef FNAME
 
 
@@ -1204,21 +1177,20 @@ namespace ice
 // Bestimmt minimalen/maximalen Grauwert in der se x se - Umgebung des
 // Bildpunktes (x,y) im Bild img.
 
-  void EnvColors(Image img, int x, int y, int se, int& mini, int& maxi)
+  void EnvColors(const Image& img,
+                 int x, int y, int se, int& mini, int& maxi)
   {
-    int val, xi, yi, xa, ya;
-
-    xi = max(x - se, 0);
-    yi = max(y - se, 0);
-    xa = min(x + se, img->xsize - 1);
-    ya = min(y + se, img->ysize - 1);
+    int xi = max(x - se, 0);
+    int yi = max(y - se, 0);
+    int xa = min(x + se, img->xsize - 1);
+    int ya = min(y + se, img->ysize - 1);
     maxi = 0;
     mini = img->maxval;
 
     for (int xx = xi; xx <= xa; xx++)
       for (int yy = yi; yy <= ya; yy++)
         {
-          val = GetVal(img, xx, yy);
+          int val = GetVal(img, xx, yy);
 
           if (val > maxi)
             {
@@ -1233,33 +1205,32 @@ namespace ice
   }
 
 #define FNAME "RelaxImg"
-  int RelaxImg(const Image& img, const Image& imgd, int n)
+  void RelaxImg(const Image& img, const Image& imgd, int n)
   {
-    int dx, dy;
-    RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
-    Image maxImage;
-    maxImage.create(img);
-    Image minImage;
-    minImage.create(img);
-    MinMaxImg(img, n, n, minImage, maxImage);
+    try
+      {
+        int dx, dy;
+        MatchImg(img, imgd, dx, dy);
+        Image maxImage;
+        maxImage.create(img);
+        Image minImage;
+        minImage.create(img);
+        MinMaxImg(img, n, n, minImage, maxImage);
 
-    for (int y = 0; y < dy; y++)
-      for (int x = 0; x < dx; x++)
-        {
-          int min = minImage.getPixel(x, y);
-          int max = maxImage.getPixel(x, y);
-          int mean = (max + min) / 2;
-          if (img.getPixel(x, y) < mean)
+        for (int y = 0; y < dy; y++)
+          for (int x = 0; x < dx; x++)
             {
-              imgd.setPixel(x, y, min);
+              int min = minImage.getPixel(x, y);
+              int max = maxImage.getPixel(x, y);
+              int mean = (max + min) / 2;
+              if (img.getPixel(x, y) <= mean)
+                imgd.setPixel(x, y, min);
+              else
+                imgd.setPixel(x, y, max);
             }
-          else
-            {
-              imgd.setPixel(x, y, max);
-            }
-        }
 
-    return OK;
+      }
+    RETHROW;
   }
 
 #undef FNAME

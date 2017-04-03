@@ -24,7 +24,6 @@
 #include <limits.h>
 
 #include "contlist.h"
-#include "macro.h"
 
 #include "MtchTool.h"
 #include "DPList.h"
@@ -34,7 +33,6 @@ namespace ice
 {
   /*****************************************************************************/
   /*****************************************************************************/
-
   double Gauss2D(double x, double y, double xm, double ym,
                  double s1, double s2, double s12)
   {
@@ -204,25 +202,26 @@ namespace ice
 
     if (smear)
       {
-        int x, y;
-        wloop(re, x, y)
-        {
-          double g1 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
-          double g2 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, y)));
-          double g3 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
-          double g4 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
-          double g5 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, y)));
-          double g6 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
-          double g7 = sqrt(Sqr(GetValD(re, x, (y - 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y - 1 + re->ysize) % re->ysize)));
-          double g8 = sqrt(Sqr(GetValD(re, x, y)) +    Sqr(GetValD(im, x, y)));
-          double g9 = sqrt(Sqr(GetValD(re, x, (y + 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y + 1 + re->ysize) % re->ysize)));
-          PutValD(dest, x, y, (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 + g9 + g9) / 10);
-        }
+        for (int y = 0; y < re.ysize; y++)
+          for (int x = 0; x < re.xsize; x++)
+            {
+              double g1 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
+              double g2 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, y)));
+              double g3 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
+              double g4 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
+              double g5 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, y)));
+              double g6 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
+              double g7 = sqrt(Sqr(GetValD(re, x, (y - 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y - 1 + re->ysize) % re->ysize)));
+              double g8 = sqrt(Sqr(GetValD(re, x, y)) +    Sqr(GetValD(im, x, y)));
+              double g9 = sqrt(Sqr(GetValD(re, x, (y + 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y + 1 + re->ysize) % re->ysize)));
+              PutValD(dest, x, y, (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 + g9 + g9) / 10);
+            }
       }
     else
       {
-        int x, y;
-        wloop(re, x, y) PutValD(dest, x, y, sqrt(Sqr(GetValD(re, x, y)) + Sqr(GetValD(im, x, y))));
+        for (int y = 0; y < re.ysize; y++)
+          for (int x = 0; x < re.xsize; x++)
+            PutValD(dest, x, y, sqrt(Sqr(GetValD(re, x, y)) + Sqr(GetValD(im, x, y))));
       }
 
     return dest;
