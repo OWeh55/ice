@@ -24,10 +24,10 @@
 
 FREE(Nt_times_y_a);
 FREE(Nt_times_y_tag);
+
 if (Nt_times_y_link != NULL)
-  {
-    Nt_times_y_link--;
-  }
+  Nt_times_y_link--;
+
 FREE(Nt_times_y_link);
 // ********************
 
@@ -43,10 +43,10 @@ FREE(bsolve_tag);
 // *********************
 FREE(Gauss_Eta_a);
 FREE(Gauss_Eta_tag);
+
 if (Gauss_Eta_link != NULL)
-  {
-    Gauss_Eta_link--;
-  }
+  Gauss_Eta_link--;
+
 FREE(Gauss_Eta_link);
 // ********************
 FREE(Gauss_Eta_T_a);
