@@ -78,14 +78,15 @@ namespace ice
     Matrix m = d1v || (-1 * d2v);
     Vector res;
 
-    try {
-      res = SolveLinEqu(m, p2v - p1v);
-    }
-    catch (IceException&ex)
-    {
-      // parallele Geraden
-      return Distance(l1.P1(), l2);
-    }
+    try
+      {
+        res = SolveLinEqu(m, p2v - p1v);
+      }
+    catch (IceException& ex)
+      {
+        // parallele Geraden
+        return Distance(l1.P1(), l2);
+      }
     return (res[0] * d1v + p1v - res[1] * d2v - p2v).Length();
   }
 
@@ -99,16 +100,17 @@ namespace ice
     Vector3d d2v(l2.DP());
     Matrix m = d1v || (-d2v) ;
 
-    try {
-      res = SolveLinEqu(m, p2v - p1v);
-    }
-    catch (IceException&ex)
-    {
-      dist = 1e99;
-      res = Vector(0.0, 0.0);
-      // parallele Geraden
-      return PARALLEL;
-    }
+    try
+      {
+        res = SolveLinEqu(m, p2v - p1v);
+      }
+    catch (IceException& ex)
+      {
+        dist = 1e99;
+        res = Vector(0.0, 0.0);
+        // parallele Geraden
+        return PARALLEL;
+      }
 
     Vector p1(res[0]*d1v + p1v);
     Vector p2(res[1]*d2v + p2v);

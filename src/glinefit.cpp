@@ -106,13 +106,14 @@ namespace ice
           }
       }
 
-    try {
-      FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma);
-    }
-    catch (IceException &ex)
+    try
       {
-	FreePointList(pl);
-	throw IceException(ex, FNAME);
+        FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma);
+      }
+    catch (IceException& ex)
+      {
+        FreePointList(pl);
+        throw IceException(ex, FNAME);
       }
 
     *p = par[0];
@@ -214,13 +215,14 @@ namespace ice
           }
       }
 
-    try {
-      FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma);
-    }
-    catch (IceException &ex)
+    try
       {
-	FreePointList(pl);
-	throw IceException(ex,FNAME);
+        FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma);
+      }
+    catch (IceException& ex)
+      {
+        FreePointList(pl);
+        throw IceException(ex, FNAME);
       }
     *p = par[0];
     *phi = par[1];

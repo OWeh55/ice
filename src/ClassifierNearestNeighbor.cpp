@@ -41,9 +41,10 @@ namespace ice
     ClassifierNormal(classes, dimension),
     nNeighbors(nNeighbors), norm(norm)
   {
-    try {
-      Init(classes, dimension, nNeighbors, norm);
-    }
+    try
+      {
+        Init(classes, dimension, nNeighbors, norm);
+      }
     RETHROW;
   }
 #undef FNAME

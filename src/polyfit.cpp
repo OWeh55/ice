@@ -379,14 +379,15 @@ namespace ice
 
     segn = (Segment)malloc(sizeof(struct Segment_));
 
-    try {
-      ConvPointHesse(p1, p2, &segn->par[0], &segn->par[1]);
-    }
-    catch (IceException&ex)
-    {
-      free(segn);
-      throw ex;
-    }
+    try
+      {
+        ConvPointHesse(p1, p2, &segn->par[0], &segn->par[1]);
+      }
+    catch (IceException& ex)
+      {
+        free(segn);
+        throw ex;
+      }
 
     segn->prev = seg;
     segn->next = seg->next;

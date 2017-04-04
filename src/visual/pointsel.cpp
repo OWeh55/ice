@@ -67,11 +67,12 @@ namespace ice
 #define FNAME "SelVector"
   IVector SelVector(int mode, const Image& img, int& rc)
   {
-    try {
-    int point[2];
-    rc = SelPoint(mode, img, point);
-    return IVector(point[0], point[1]);
-    }
+    try
+      {
+        int point[2];
+        rc = SelPoint(mode, img, point);
+        return IVector(point[0], point[1]);
+      }
     RETHROW;
   }
 

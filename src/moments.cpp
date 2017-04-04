@@ -487,21 +487,23 @@ namespace ice
 
   Moments Moments::NormalizeScaling(double& alpha) const
   {
-    try {
-    double momres[15];
-    NormalizeMomentsArea(mom, momres, alpha);
-    return Moments(momres);
-    }
+    try
+      {
+        double momres[15];
+        NormalizeMomentsArea(mom, momres, alpha);
+        return Moments(momres);
+      }
     RETHROW;
   }
 
   Moments Moments::NormalizeScaling(double& alpha, double& beta) const
   {
-    try {
-    double momres[15];
-    NormalizeMomentsScaling(mom, momres, alpha, beta);
-    return Moments(momres);
-    }
+    try
+      {
+        double momres[15];
+        NormalizeMomentsScaling(mom, momres, alpha, beta);
+        return Moments(momres);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -514,23 +516,25 @@ namespace ice
 
   Moments Moments::NormalizeRotation(double& phi) const
   {
-    try {
-    double momres[15];
-    double c, s;
-    NormalizeMomentsRotation(mom, momres, c, s);
-    phi = atan2(s, c);
-    return Moments(momres);
-    }
+    try
+      {
+        double momres[15];
+        double c, s;
+        NormalizeMomentsRotation(mom, momres, c, s);
+        phi = atan2(s, c);
+        return Moments(momres);
+      }
     RETHROW;
   }
 
   Moments Moments::NormalizeRotation(double& c, double& s) const
   {
-    try {
-    double momres[15];
-    NormalizeMomentsRotation(mom, momres, c, s);
-    return Moments(momres);
-    }
+    try
+      {
+        double momres[15];
+        NormalizeMomentsRotation(mom, momres, c, s);
+        return Moments(momres);
+      }
     RETHROW;
   }
 #undef FNAME

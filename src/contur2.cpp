@@ -484,189 +484,190 @@ namespace ice
                         int pgl, int maxgap,
                         int ps[2], int lng, double& meangrad)
   {
-    try {
-    int wxi, wyi, wxa, wya;
-    int i;
-    int gap;
-    Contur c;
-    int startdir;
-    int xx, yy, xs, ys;
-    int xf, yf;
-    int dir, aktdir, nextdir, grdir, maxdir, maxgrad;
-    int val;
-    xs = ps[0];
-    ys = ps[1];
-    nextdir = 0;
-    maxdir = 0;
-
-    if (!IsImg(imgv))
+    try
       {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+        int wxi, wyi, wxa, wya;
+        int i;
+        int gap;
+        Contur c;
+        int startdir;
+        int xx, yy, xs, ys;
+        int xf, yf;
+        int dir, aktdir, nextdir, grdir, maxdir, maxgrad;
+        int val;
+        xs = ps[0];
+        ys = ps[1];
+        nextdir = 0;
+        maxdir = 0;
 
-    if (!IsImg(imgo))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
-
-    MatchImg(imgv, imgo);
-
-    wxi = 0;
-    wyi = 0;
-    wxa = imgv->xsize - 1;
-    wya = imgv->ysize - 1;
-
-    if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-
-    if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
-      throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-
-    if (maxgap < 1)
-      {
-        maxgap = 1;
-      }
-
-    pgl *= 6;
-    pgl *= pgl;
-
-    if ((val = GradVal(imgv, imgo, xs, ys, &startdir)) < pgl)
-      throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-
-    gap = 0;
-    PutVal(imgo, xs, ys, 1);
-    c.SetStart(xs, ys); // set startpoint of Contur
-    xx = xs;
-    yy = ys;   // begin of contur following
-    aktdir = startdir; // save start direction
-    meangrad = val;    // strength of edges
-
-    do                 // start seraching backwards
-      {
-        maxgrad = 0;
-
-        for (dir = (aktdir + 1) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
+        if (!IsImg(imgv))
           {
-            Freeman(dir).move(xx, yy, xf, yf);
-            val = GradVal(imgv, imgo, xf, yf, &grdir);
+            throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+          }
 
-            if (val < 0)
+        if (!IsImg(imgo))
+          {
+            throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+          }
+
+        MatchImg(imgv, imgo);
+
+        wxi = 0;
+        wyi = 0;
+        wxa = imgv->xsize - 1;
+        wya = imgv->ysize - 1;
+
+        if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
+          throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+
+        if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
+          throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+
+        if (maxgap < 1)
+          {
+            maxgap = 1;
+          }
+
+        pgl *= 6;
+        pgl *= pgl;
+
+        if ((val = GradVal(imgv, imgo, xs, ys, &startdir)) < pgl)
+          throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+
+        gap = 0;
+        PutVal(imgo, xs, ys, 1);
+        c.SetStart(xs, ys); // set startpoint of Contur
+        xx = xs;
+        yy = ys;   // begin of contur following
+        aktdir = startdir; // save start direction
+        meangrad = val;    // strength of edges
+
+        do                 // start seraching backwards
+          {
+            maxgrad = 0;
+
+            for (dir = (aktdir + 1) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
               {
-                maxgrad = val;
+                Freeman(dir).move(xx, yy, xf, yf);
+                val = GradVal(imgv, imgo, xf, yf, &grdir);
+
+                if (val < 0)
+                  {
+                    maxgrad = val;
+                    break;
+                  }
+
+                if (val > maxgrad)
+                  {
+                    maxgrad = val;   /* maximalen Gradientenbetrag für 3 Richtungen*/
+                    maxdir = dir;
+                    nextdir = grdir;
+                  }
+              }
+
+            if (maxgrad < 0)
+              {
                 break;
               }
 
-            if (val > maxgrad)
+            if (maxgrad < pgl)
               {
-                maxgrad = val;   /* maximalen Gradientenbetrag für 3 Richtungen*/
-                maxdir = dir;
-                nextdir = grdir;
+                gap++;  /* kurze Lücken überspringen*/
               }
-          }
-
-        if (maxgrad < 0)
-          {
-            break;
-          }
-
-        if (maxgrad < pgl)
-          {
-            gap++;  /* kurze Lücken überspringen*/
-          }
-        else
-          {
-            gap = 0;  /* Lücke zuende*/
-          }
-
-        if (gap >= maxgap)
-          {
-            break;  /* Lücke zu groß*/
-          }
-
-        Freeman(maxdir).move(xx, yy);
-        meangrad += maxgrad;           /* Kantenstärke aktualisieren */
-        PutVal(imgo, xx, yy, 1);
-        c.Add(maxdir);
-        aktdir = nextdir;              /* nächste Suchrichtung*/
-      }
-    while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
-
-    c.InvDir();
-
-    aktdir = startdir;            // restore start direction
-
-    do                            // search forward
-      {
-        maxgrad = 0;
-
-        for (dir = (aktdir + 5) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
-          {
-            Freeman(dir).move(xx, yy, xf, yf);
-            val = GradVal(imgv, imgo, xf, yf, &grdir);
-
-            if (val < 0)
+            else
               {
-                maxgrad = val;
+                gap = 0;  /* Lücke zuende*/
+              }
+
+            if (gap >= maxgap)
+              {
+                break;  /* Lücke zu groß*/
+              }
+
+            Freeman(maxdir).move(xx, yy);
+            meangrad += maxgrad;           /* Kantenstärke aktualisieren */
+            PutVal(imgo, xx, yy, 1);
+            c.Add(maxdir);
+            aktdir = nextdir;              /* nächste Suchrichtung*/
+          }
+        while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
+
+        c.InvDir();
+
+        aktdir = startdir;            // restore start direction
+
+        do                            // search forward
+          {
+            maxgrad = 0;
+
+            for (dir = (aktdir + 5) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
+              {
+                Freeman(dir).move(xx, yy, xf, yf);
+                val = GradVal(imgv, imgo, xf, yf, &grdir);
+
+                if (val < 0)
+                  {
+                    maxgrad = val;
+                    break;
+                  }
+
+                if (val >= maxgrad)
+                  {
+                    maxgrad = val;     /* maximalen Gradientenbetrag für 3 Richtungen*/
+                    maxdir = dir;
+                    nextdir = grdir;
+                  }
+              }
+
+            if (maxgrad < 0)
+              {
                 break;
               }
 
-            if (val >= maxgrad)
+            if (maxgrad < pgl)
               {
-                maxgrad = val;     /* maximalen Gradientenbetrag für 3 Richtungen*/
-                maxdir = dir;
-                nextdir = grdir;
+                gap++;  /* kurze Lücken überspringen*/
+              }
+            else
+              {
+                gap = 0;  /* Lücke zuende*/
+              }
+
+            if (gap >= maxgap)
+              {
+                break;  /* Lücke zu groß*/
+              }
+
+            Freeman(maxdir).move(xx, yy);  /* nächster Konturpunkt*/
+            meangrad += maxgrad;           /* Kantenstärke aktualisieren*/
+            PutVal(imgo, xx, yy, 1);
+            c.Add(maxdir);
+            aktdir = nextdir;              /* nächste Suchrichtung*/
+          }
+        while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
+
+        if (c.Number() == 0)
+          {
+            PutVal(imgo, xs, ys, 0);
+            return Contur();
+          }
+
+        for (dir = 0; dir < 8; dir++)
+          {
+            Freeman(dir).move(xx, yy, xf, yf);
+
+            if ((xf == c.StartX()) && (yf == c.StartY()))
+              {
+                c.Add(dir);
+                meangrad += GradVal(imgv, imgo, xx, yy, &grdir);
+                break;
               }
           }
 
-        if (maxgrad < 0)
-          {
-            break;
-          }
-
-        if (maxgrad < pgl)
-          {
-            gap++;  /* kurze Lücken überspringen*/
-          }
-        else
-          {
-            gap = 0;  /* Lücke zuende*/
-          }
-
-        if (gap >= maxgap)
-          {
-            break;  /* Lücke zu groß*/
-          }
-
-        Freeman(maxdir).move(xx, yy);  /* nächster Konturpunkt*/
-        meangrad += maxgrad;           /* Kantenstärke aktualisieren*/
-        PutVal(imgo, xx, yy, 1);
-        c.Add(maxdir);
-        aktdir = nextdir;              /* nächste Suchrichtung*/
+        meangrad = sqrt(meangrad / (c.Number() + 1)) / 6;
+        MarkContur(c, 0, imgo);
+        return c;
       }
-    while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
-
-    if (c.Number() == 0)
-      {
-        PutVal(imgo, xs, ys, 0);
-        return Contur();
-      }
-
-    for (dir = 0; dir < 8; dir++)
-      {
-        Freeman(dir).move(xx, yy, xf, yf);
-
-        if ((xf == c.StartX()) && (yf == c.StartY()))
-          {
-            c.Add(dir);
-            meangrad += GradVal(imgv, imgo, xx, yy, &grdir);
-            break;
-          }
-      }
-
-    meangrad = sqrt(meangrad / (c.Number() + 1)) / 6;
-    MarkContur(c, 0, imgo);
-    return c;
-    }
     RETHROW;
   }
 

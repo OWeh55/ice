@@ -483,14 +483,15 @@ namespace ice
     PointList pl = Matrix2PointList(m);
     double par[2];
 
-    try {
-      FitLineLinOpt(pl, 0, m.rows() - 1, 1, par, limit);
-    }
-    catch (IceException &ex)
-    {
-      FreePointList(pl);
-      throw IceException(ex,FNAME);
-    }
+    try
+      {
+        FitLineLinOpt(pl, 0, m.rows() - 1, 1, par, limit);
+      }
+    catch (IceException& ex)
+      {
+        FreePointList(pl);
+        throw IceException(ex, FNAME);
+      }
 
     p = par[0];
     phi = par[1];
@@ -517,14 +518,15 @@ namespace ice
 
     double par[2];
 
-    try { 
-      FitLineLinOpt(ppl, 0, pl.size() - 1, step, par, limit);
-    }
-    catch (IceException&ex)
-    {
-      FreePointList(ppl);
-      throw IceException(ex,FNAME);
-    }
+    try
+      {
+        FitLineLinOpt(ppl, 0, pl.size() - 1, step, par, limit);
+      }
+    catch (IceException& ex)
+      {
+        FreePointList(ppl);
+        throw IceException(ex, FNAME);
+      }
     LineSeg res(par[0], par[1]);
     FreePointList(ppl);
     return res;

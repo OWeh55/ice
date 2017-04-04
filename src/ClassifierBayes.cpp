@@ -46,9 +46,10 @@ namespace ice
     Classifier(classes, dimension), rejection(rejectionp), diagonal(_diagonal),
     apm(apmp)
   {
-    try {
-      Init(classes, dimension);
-    }
+    try
+      {
+        Init(classes, dimension);
+      }
     RETHROW;
   }
 
@@ -56,10 +57,11 @@ namespace ice
                                    const vector<double>& app, bool rejection):
     Classifier(nClasses, dim), rejection(rejection), apm(APM_CONSTRUCTOR)
   {
-    try {
-    p_k = app;
-    Init(nClasses, dim);
-    }
+    try
+      {
+        p_k = app;
+        Init(nClasses, dim);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -193,13 +195,14 @@ namespace ice
         double det = 0.0;
         bool ok = true;
 
-        try {
-	  det = CholeskyDeterminant(sigma_k);
-	}
-	catch (IceException&ex)
-        {
-          ok = false;
-        }
+        try
+          {
+            det = CholeskyDeterminant(sigma_k);
+          }
+        catch (IceException& ex)
+          {
+            ok = false;
+          }
 
         while (!ok || (fabs(det) < epsilonNumerics))
           {
@@ -209,13 +212,14 @@ namespace ice
               }
 
             ok = true;
-            try {
-	      det = CholeskyDeterminant(sigma_k);
-	    }
-	      catch (IceException&ex)
-            {
-              ok = false;
-            }
+            try
+              {
+                det = CholeskyDeterminant(sigma_k);
+              }
+            catch (IceException& ex)
+              {
+                ok = false;
+              }
           }
 
         Matrix Inverse = CholeskyInverse(sigma_k);

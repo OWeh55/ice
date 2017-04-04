@@ -40,24 +40,25 @@ namespace ice
 #define FNAME "Transform"
   Contur Transform(const Trafo& tr, const Contur& c)
   {
-    try {
+    try
+      {
 
-      Contur res;
+        Contur res;
 
-      if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-	{
-	  throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-	}
+        if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
+          {
+            throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+          }
 
-      IMatrix m = ConturPointlist(c);
+        IMatrix m = ConturPointlist(c);
 
-      for (int i = 0; i < m.rows(); i++)
-	{
-	  TransformAndRound(tr, m[i][0], m[i][1]);
-	}
-    
-      return PointlistContur(m, true);
-    }
+        for (int i = 0; i < m.rows(); i++)
+          {
+            TransformAndRound(tr, m[i][0], m[i][1]);
+          }
+
+        return PointlistContur(m, true);
+      }
     RETHROW;
   }
 #undef FNAME

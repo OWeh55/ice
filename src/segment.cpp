@@ -2634,14 +2634,15 @@ namespace ice
                   {
                     bool ok = true;
                     // berechne Kreissegment und maximalen Abstand
-                    try {
-		      sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
-		    }
-		    catch (IceException&ex)
-                    {
-                      ok = false;
-                      break;  // Kreissegment konnte nicht berechnet werden
-                    }
+                    try
+                      {
+                        sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
+                      }
+                    catch (IceException& ex)
+                      {
+                        ok = false;
+                        break;  // Kreissegment konnte nicht berechnet werden
+                      }
 
                     // (bei Fehler wird das Liniensegment genommen [besser als Abbruch?!])
 

@@ -142,32 +142,33 @@ namespace ice
 #define FNAME "GaussFit::calc"
   void GaussFit::Finish()
   {
-    try {
-    // "dreiecksmatrix" zu richtigen Matrix vervollständigen
-    for (int i = 1; i < dim; i++)
-      for (int j = 0; j < i; j++)
-        {
-          sum[i][j] = sum[j][i];
-        }
-
-    para = SolveLinEqu(Matrix(sum), Vector(gsum));
-
-    // calculate variance
-    var = gsquare;
-
-    for (int i = 0; i < dim; i++)
-      for (int j = 0; j < dim; j++)
-        {
-          var += sum[i][j] * para[i] * para[j];
-        }
-
-    for (int i = 0; i < dim; i++)
+    try
       {
-        var -= 2 * gsum[i] * para[i];
-      }
+        // "dreiecksmatrix" zu richtigen Matrix vervollständigen
+        for (int i = 1; i < dim; i++)
+          for (int j = 0; j < i; j++)
+            {
+              sum[i][j] = sum[j][i];
+            }
 
-    finished = true;
-    }
+        para = SolveLinEqu(Matrix(sum), Vector(gsum));
+
+        // calculate variance
+        var = gsquare;
+
+        for (int i = 0; i < dim; i++)
+          for (int j = 0; j < dim; j++)
+            {
+              var += sum[i][j] * para[i] * para[j];
+            }
+
+        for (int i = 0; i < dim; i++)
+          {
+            var -= 2 * gsum[i] * para[i];
+          }
+
+        finished = true;
+      }
     RETHROW;
   }
 #undef FNAME

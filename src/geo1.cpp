@@ -437,31 +437,32 @@ namespace ice
   Trafo MatchPointlists(const PointList& pl1, const PointList& pl2, int mode)
 // compatibility function with struct Pointlists
   {
-    try {
-
-      if ((pl1 == NULL) || (pl2 == NULL))
-      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-    
-      int pnumber = pl1->lng;
-    
-    if (pl2->lng != pnumber)
-      throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-    
-    Matrix p1(pnumber, 2);
-    Matrix p2(pnumber, 2);
-    Vector w(pnumber);
-
-    for (int i = 0; i < pnumber; i++)
+    try
       {
-        p1[i][0] = pl1->xptr[i];
-        p1[i][1] = pl1->yptr[i];
-        p2[i][0] = pl2->xptr[i];
-        p2[i][1] = pl2->yptr[i];
-        w[i] = pl2->wptr[i];
-      }
 
-    return MatchPointlists(p1, p2, mode, w);
-    }
+        if ((pl1 == NULL) || (pl2 == NULL))
+          throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
+
+        int pnumber = pl1->lng;
+
+        if (pl2->lng != pnumber)
+          throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+
+        Matrix p1(pnumber, 2);
+        Matrix p2(pnumber, 2);
+        Vector w(pnumber);
+
+        for (int i = 0; i < pnumber; i++)
+          {
+            p1[i][0] = pl1->xptr[i];
+            p1[i][1] = pl1->yptr[i];
+            p2[i][0] = pl2->xptr[i];
+            p2[i][1] = pl2->yptr[i];
+            w[i] = pl2->wptr[i];
+          }
+
+        return MatchPointlists(p1, p2, mode, w);
+      }
     RETHROW;
   }
 
@@ -496,51 +497,52 @@ namespace ice
                               int mode, const Vector& weights, double limit)
   {
     // wrapper function to use old style MatchPointlistsLinOpt with classes
-    try {
-    int nPoints;
-    int dim1 = p1.cols();
-    int dim2 = p2.cols();
-    PointList pl1, pl2;
-    double tr[3][3];
-    //    int rc;
-    Matrix tmatrix(3, 3);
-    Trafo res(2, 2);
-
-    nPoints = p1.rows();
-
-    if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
+    try
       {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return res;
+        int nPoints;
+        int dim1 = p1.cols();
+        int dim2 = p2.cols();
+        PointList pl1, pl2;
+        double tr[3][3];
+        //    int rc;
+        Matrix tmatrix(3, 3);
+        Trafo res(2, 2);
+
+        nPoints = p1.rows();
+
+        if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
+          {
+            throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+            return res;
+          }
+
+        nPoints = p1.rows();
+
+        if ((dim2 != 2) || (dim1 != 2))   // for linear opt. only 2 dimensions
+          {
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          }
+
+        // construct pointlist
+        pl1 = NewPointList(nPoints);
+        pl2 = NewPointList(nPoints);
+
+        for (int i = 0; i < nPoints; i++)
+          {
+            PutPoint(pl1, i, p1[i][0], p1[i][1], weights[i]);
+            PutPoint(pl2, i, p2[i][0], p2[i][1], weights[i]);
+          }
+
+        MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
+
+        for (int i = 0; i < 3; i++)
+          for (int j = 0; j < 3; j++)
+            {
+              tmatrix[i][j] = tr[i][j];
+            }
+
+        return tmatrix;
       }
-
-    nPoints = p1.rows();
-
-    if ((dim2 != 2) || (dim1 != 2))   // for linear opt. only 2 dimensions
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
-
-    // construct pointlist
-    pl1 = NewPointList(nPoints);
-    pl2 = NewPointList(nPoints);
-
-    for (int i = 0; i < nPoints; i++)
-      {
-        PutPoint(pl1, i, p1[i][0], p1[i][1], weights[i]);
-        PutPoint(pl2, i, p2[i][0], p2[i][1], weights[i]);
-      }
-
-    MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
-
-    for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 3; j++)
-        {
-          tmatrix[i][j] = tr[i][j];
-        }
-
-    return tmatrix;
-    }
     RETHROW;
   }
 
