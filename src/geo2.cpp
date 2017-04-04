@@ -40,44 +40,32 @@ namespace ice
 #define FNAME "Transform"
   Contur Transform(const Trafo& tr, const Contur& c)
   {
-    //double hf, x, y, xt, yt;
-    int i;
+    try {
 
-    Contur res;
+      Contur res;
 
-    if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
-      }
+      if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
+	{
+	  throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+	}
 
-    IMatrix m;
-    IF_FAILED(m = ConturPointlist(c))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return res;
+      IMatrix m = ConturPointlist(c);
+
+      for (int i = 0; i < m.rows(); i++)
+	{
+	  TransformAndRound(tr, m[i][0], m[i][1]);
+	}
+    
+      return PointlistContur(m, true);
     }
-
-    for (i = 0; i < m.rows(); i++)
-      {
-        TransformAndRound(tr, m[i][0], m[i][1]);
-        /*
-        x=m[i][0]; y=m[i][1];
-        hf=x*tr.m[2][0]+y*tr.m[2][1]+tr.m[2][2];
-        xt=(x*tr.m[0][0]+y*tr.m[0][1]+tr.m[0][2])/hf;
-        yt=(x*tr.m[1][0]+y*tr.m[1][1]+tr.m[1][2])/hf;
-        m[i][0]=RoundInt(xt); m[i][1]=RoundInt(yt);
-        */
-      }
-
-    return PointlistContur(m, true);
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "TransformList"
   void TransformList(const Trafo& tr, Matrix& m)
   {
     Matrix temp;
-    RETURN_ERROR_IF_FAILED(TransformList(tr, m, temp));
+    TransformList(tr, m, temp);
     m = temp;
   }
 

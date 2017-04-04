@@ -449,11 +449,7 @@ namespace ice
   Moments Moments::NormalizeXShearing(double& beta) const
   {
     double momres[15];
-    IF_FAILED(NormalizeMomentsXShearing(mom, momres, beta))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsXShearing(mom, momres, beta);
     return Moments(momres);
   }
 #undef FNAME
@@ -467,11 +463,7 @@ namespace ice
   Moments Moments::NormalizeYShearing(double& beta) const
   {
     double momres[15];
-    IF_FAILED(NormalizeMomentsYShearing(mom, momres, beta))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsYShearing(mom, momres, beta);
     return Moments(momres);
   }
 #undef FNAME
@@ -495,28 +487,22 @@ namespace ice
 
   Moments Moments::NormalizeScaling(double& alpha) const
   {
-    //  std::cout << "***************1"<<std::endl;
+    try {
     double momres[15];
-    IF_FAILED(NormalizeMomentsArea(mom, momres, alpha))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsArea(mom, momres, alpha);
     return Moments(momres);
+    }
+    RETHROW;
   }
 
   Moments Moments::NormalizeScaling(double& alpha, double& beta) const
   {
-    // std::cout << "***************2"<<std::endl;
-//    for (int i=0;i<15;i++)
-//      std::cout << i << ": " << mom[i] << std::endl;
+    try {
     double momres[15];
-    IF_FAILED(NormalizeMomentsScaling(mom, momres, alpha, beta))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsScaling(mom, momres, alpha, beta);
     return Moments(momres);
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::NormalizeRotation"
@@ -528,26 +514,24 @@ namespace ice
 
   Moments Moments::NormalizeRotation(double& phi) const
   {
+    try {
     double momres[15];
     double c, s;
-    IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsRotation(mom, momres, c, s);
     phi = atan2(s, c);
     return Moments(momres);
+    }
+    RETHROW;
   }
 
   Moments Moments::NormalizeRotation(double& c, double& s) const
   {
+    try {
     double momres[15];
-    IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsRotation(mom, momres, c, s);
     return Moments(momres);
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::Normalize"

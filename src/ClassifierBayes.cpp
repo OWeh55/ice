@@ -46,23 +46,21 @@ namespace ice
     Classifier(classes, dimension), rejection(rejectionp), diagonal(_diagonal),
     apm(apmp)
   {
-    IF_FAILED(Init(classes, dimension))
-    {
-      // if initialisation fails
-      throw IceException(FNAME, M_0, ERROR);
+    try {
+      Init(classes, dimension);
     }
+    RETHROW;
   }
 
   ClassifierBayes::ClassifierBayes(int nClasses, int dim,
                                    const vector<double>& app, bool rejection):
     Classifier(nClasses, dim), rejection(rejection), apm(APM_CONSTRUCTOR)
   {
+    try {
     p_k = app;
-    IF_FAILED(Init(nClasses, dim))
-    {
-      // if initialisation fails
-      throw IceException(FNAME, M_0, ERROR);
+    Init(nClasses, dim);
     }
+    RETHROW;
   }
 #undef FNAME
 
@@ -195,7 +193,10 @@ namespace ice
         double det = 0.0;
         bool ok = true;
 
-        IF_FAILED(det = CholeskyDeterminant(sigma_k))
+        try {
+	  det = CholeskyDeterminant(sigma_k);
+	}
+	catch (IceException&ex)
         {
           ok = false;
         }
@@ -208,7 +209,10 @@ namespace ice
               }
 
             ok = true;
-            IF_FAILED(det = CholeskyDeterminant(sigma_k))
+            try {
+	      det = CholeskyDeterminant(sigma_k);
+	    }
+	      catch (IceException&ex)
             {
               ok = false;
             }

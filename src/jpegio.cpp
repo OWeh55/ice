@@ -460,11 +460,7 @@ namespace ice
         imgb = NewImg(ib.width, ib.height, ib.maxval);
       }
 
-    IF_FAILED(Buffer2Image(ib, imgr, imgg, imgb, flag))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    };
+    Buffer2Image(ib, imgr, imgg, imgb, flag);
     return OK;
   }
 
@@ -554,11 +550,7 @@ namespace ice
         img = NewImg(ib.width, ib.height, ib.maxval);
       }
 
-    IF_FAILED(img = Buffer2Image(ib, img, flag))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Image();
-    };
+    img = Buffer2Image(ib, img, flag);
     return img;
   }
 

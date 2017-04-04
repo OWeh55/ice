@@ -319,14 +319,17 @@ namespace ice
               }
 
             bool ok = true;
-            IF_FAILED(ew = input[i][j].getEigenwinkel())
-            {
-              red = 255;
-              green = 255;
-              blue = 255;
-              ok = false;
-            }
-
+            try {
+	      ew = input[i][j].getEigenwinkel();
+	    }
+            catch (IceException &ex)
+	      {
+		red = 255;
+		green = 255;
+		blue = 255;
+		ok = false;
+	      }
+	    
             if (ok)
               {
                 if (ew < (2 * M_PI / 3))
@@ -422,7 +425,10 @@ namespace ice
               }
 
             bool ok = true;
-            IF_FAILED(mu = input[i][j].getEigenachse())
+            try {
+	      mu = input[i][j].getEigenachse();
+	    }
+	    catch (IceException &ex)
             {
               red = maxcolor;
               green = maxcolor;
@@ -516,7 +522,10 @@ namespace ice
 
 
             bool ok = true;
-            IF_FAILED(phases = input[i][j].getPhases())
+            try {
+	      phases = input[i][j].getPhases();
+	    }
+	    catch (IceException &ex)
             {
               a = alpha->maxval;
               b = beta->maxval;

@@ -379,10 +379,13 @@ namespace ice
 
     segn = (Segment)malloc(sizeof(struct Segment_));
 
-    IF_FAILED(ConvPointHesse(p1, p2, &segn->par[0], &segn->par[1]))
+    try {
+      ConvPointHesse(p1, p2, &segn->par[0], &segn->par[1]);
+    }
+    catch (IceException&ex)
     {
       free(segn);
-      return (ERROR);
+      throw ex;
     }
 
     segn->prev = seg;
@@ -548,7 +551,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return (nullptr);
       }
 
     cr1 = pfit_NewCorner(pl, 0);

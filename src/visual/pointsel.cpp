@@ -67,13 +67,12 @@ namespace ice
 #define FNAME "SelVector"
   IVector SelVector(int mode, const Image& img, int& rc)
   {
+    try {
     int point[2];
-    IF_FAILED(rc = SelPoint(mode, img, point))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return IVector();
-    }
+    rc = SelPoint(mode, img, point);
     return IVector(point[0], point[1]);
+    }
+    RETHROW;
   }
 
   IVector SelVector(int mode, const Image& img)
@@ -98,11 +97,7 @@ namespace ice
   IPoint SelPoint(int mode, const Image& img, int& rc)
   {
     int point[2];
-    IF_FAILED(rc = SelPoint(mode, img, point))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return IPoint(point[0], point[1]);
-    }
+    rc = SelPoint(mode, img, point);
     return IPoint(point[0], point[1]);
   }
 

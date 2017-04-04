@@ -484,6 +484,7 @@ namespace ice
                         int pgl, int maxgap,
                         int ps[2], int lng, double& meangrad)
   {
+    try {
     int wxi, wyi, wxa, wya;
     int i;
     int gap;
@@ -501,20 +502,14 @@ namespace ice
     if (!IsImg(imgv))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return Contur();
       }
 
     if (!IsImg(imgo))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return Contur();
       }
 
-    IF_FAILED(MatchImg(imgv, imgo))
-    {
-      throw IceException(FNAME, M_0, WRONG_PARAM);
-      return Contur();
-    }
+    MatchImg(imgv, imgo);
 
     wxi = 0;
     wyi = 0;
@@ -522,17 +517,10 @@ namespace ice
     wya = imgv->ysize - 1;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-      {
-
         throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return Contur();
-      }
 
     if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return Contur();
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
 
     if (maxgap < 1)
       {
@@ -543,10 +531,7 @@ namespace ice
     pgl *= pgl;
 
     if ((val = GradVal(imgv, imgo, xs, ys, &startdir)) < pgl)
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return Contur();
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
 
     gap = 0;
     PutVal(imgo, xs, ys, 1);
@@ -681,6 +666,8 @@ namespace ice
     meangrad = sqrt(meangrad / (c.Number() + 1)) / 6;
     MarkContur(c, 0, imgo);
     return c;
+    }
+    RETHROW;
   }
 
   Contur CalcGradContur(const Image& imgv, Image& imgo,

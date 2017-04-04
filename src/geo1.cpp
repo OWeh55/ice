@@ -437,28 +437,21 @@ namespace ice
   Trafo MatchPointlists(const PointList& pl1, const PointList& pl2, int mode)
 // compatibility function with struct Pointlists
   {
-    Trafo res;
-    int i, pnumber;
+    try {
 
-    if ((pl1 == NULL) || (pl2 == NULL))
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return res;
-      }
-
-    pnumber = pl1->lng;
-
+      if ((pl1 == NULL) || (pl2 == NULL))
+      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
+    
+      int pnumber = pl1->lng;
+    
     if (pl2->lng != pnumber)
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return res;
-      }
-
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+    
     Matrix p1(pnumber, 2);
     Matrix p2(pnumber, 2);
     Vector w(pnumber);
 
-    for (i = 0; i < pnumber; i++)
+    for (int i = 0; i < pnumber; i++)
       {
         p1[i][0] = pl1->xptr[i];
         p1[i][1] = pl1->yptr[i];
@@ -467,12 +460,9 @@ namespace ice
         w[i] = pl2->wptr[i];
       }
 
-    IF_FAILED(res = MatchPointlists(p1, p2, mode, w))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return res;
+    return MatchPointlists(p1, p2, mode, w);
     }
-    return res;
+    RETHROW;
   }
 
   Trafo MatchPointlists(const vector<Point>& pl1, const vector<Point>& pl2,
@@ -506,15 +496,13 @@ namespace ice
                               int mode, const Vector& weights, double limit)
   {
     // wrapper function to use old style MatchPointlistsLinOpt with classes
-
+    try {
     int nPoints;
     int dim1 = p1.cols();
     int dim2 = p2.cols();
     PointList pl1, pl2;
     double tr[3][3];
     //    int rc;
-    int i, j;
-
     Matrix tmatrix(3, 3);
     Trafo res(2, 2);
 
@@ -531,52 +519,41 @@ namespace ice
     if ((dim2 != 2) || (dim1 != 2))   // for linear opt. only 2 dimensions
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
       }
 
     // construct pointlist
     pl1 = NewPointList(nPoints);
     pl2 = NewPointList(nPoints);
 
-    for (i = 0; i < nPoints; i++)
+    for (int i = 0; i < nPoints; i++)
       {
         PutPoint(pl1, i, p1[i][0], p1[i][1], weights[i]);
         PutPoint(pl2, i, p2[i][0], p2[i][1], weights[i]);
       }
 
-    IF_FAILED(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return res;
-    }
+    MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
 
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
         {
           tmatrix[i][j] = tr[i][j];
         }
 
     return tmatrix;
+    }
+    RETHROW;
   }
 
   Trafo MatchPointlistsLinOpt(const Matrix& p1, const Matrix& p2,
                               int mode)
   {
     Vector weights(p1.rows());
-    int i;
-    Trafo res;
-
-    for (i = 0; i < p1.rows(); i++)
+    for (int i = 0; i < p1.rows(); i++)
       {
         weights[i] = 1.0;
       }
 
-    IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return res;
-    }
-    return res;
+    return MatchPointlistsLinOpt(p1, p2, mode, weights);
   }
 
   Trafo MatchPointlistsLinOpt(const std::vector<Point>& p1, const std::vector<Point>& p2,
@@ -584,18 +561,12 @@ namespace ice
   {
     std::vector<double> weights(p1.size());
 
-    Trafo res;
     for (int i = 0; i < (int)p1.size(); i++)
       {
         weights[i] = 1.0;
       }
 
-    IF_FAILED(res = MatchPointlistsLinOpt(p1, p2, mode, weights))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return res;
-    }
-    return res;
+    return MatchPointlistsLinOpt(p1, p2, mode, weights);
   }
 
   Trafo MatchPointlistsLinOpt(const std::vector<Point>& p1, const std::vector<Point>& p2,
@@ -627,11 +598,7 @@ namespace ice
         // cout << p1[i].x << "," << p1[i].y << " - " <<p2[i].x << "," << p2[i].y <<endl;
       }
 
-    IF_FAILED(MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return tmatrix;
-    }
+    MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
 
 #if 0
     for (int i = 0; i < 3; i++)

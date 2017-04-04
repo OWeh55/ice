@@ -227,12 +227,15 @@ namespace ice
           Mat[j * dim + i] = mat[j][i];
         }
 
-    IF_FAILED(InvertMatrix(Mat, dim, Mat))
-    {
-      delete [] Mat;
-      return false;
+    try {
+      InvertMatrix(Mat, dim, Mat);
     }
-
+    catch (IceException&ex)
+      {
+	delete [] Mat;
+	return false;
+      }
+    
     delete [] Mat;
     return true;
   }

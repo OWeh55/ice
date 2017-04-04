@@ -87,7 +87,6 @@ namespace ice
       {
         FreePointList(pl);
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return (-1);
       }
 
     thr = (int)(mean / (double)pl->lng + 0.5);
@@ -107,11 +106,14 @@ namespace ice
           }
       }
 
-    IF_FAILED(FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma))
-    {
-      FreePointList(pl);
-      throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+    try {
+      FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma);
     }
+    catch (IceException &ex)
+      {
+	FreePointList(pl);
+	throw IceException(ex, FNAME);
+      }
 
     *p = par[0];
     *phi = par[1];
@@ -120,6 +122,7 @@ namespace ice
   }
 #undef FNAME
   /*************************************************************************/
+#define FNAME "FitGradLine"
   double FitGradLine(Image img, double lp[2][2], int dist, double* p, double* phi)
   {
     int cp[4][2];
@@ -211,14 +214,18 @@ namespace ice
           }
       }
 
-    IF_FAILED(FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma))
-    {
-      return (-1);
+    try {
+      FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma);
     }
-
+    catch (IceException &ex)
+      {
+	FreePointList(pl);
+	throw IceException(ex,FNAME);
+      }
     *p = par[0];
     *phi = par[1];
     FreePointList(pl);
-    return (mean / cnt);
+    return mean / cnt;
   }
+#undef FNAME
 }

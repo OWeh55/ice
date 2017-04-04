@@ -215,13 +215,7 @@ namespace ice
                   int mode)
   {
     Image himg = NewImg(img2);
-    IF_FAILED(DetectTrafo(img1, img2, himg, tr, beta, ct, mode))
-    {
-      FreeImg(himg);
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-    return OK;
+    return DetectTrafo(img1, img2, himg, tr, beta, ct, mode);
   }
 
 #undef FNAME

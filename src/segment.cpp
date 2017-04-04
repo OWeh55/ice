@@ -2634,7 +2634,10 @@ namespace ice
                   {
                     bool ok = true;
                     // berechne Kreissegment und maximalen Abstand
-                    IF_FAILED(sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev))
+                    try {
+		      sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
+		    }
+		    catch (IceException&ex)
                     {
                       ok = false;
                       break;  // Kreissegment konnte nicht berechnet werden

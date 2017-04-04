@@ -78,7 +78,10 @@ namespace ice
     Matrix m = d1v || (-1 * d2v);
     Vector res;
 
-    IF_FAILED(res = SolveLinEqu(m, p2v - p1v))
+    try {
+      res = SolveLinEqu(m, p2v - p1v);
+    }
+    catch (IceException&ex)
     {
       // parallele Geraden
       return Distance(l1.P1(), l2);
@@ -96,7 +99,10 @@ namespace ice
     Vector3d d2v(l2.DP());
     Matrix m = d1v || (-d2v) ;
 
-    IF_FAILED(res = SolveLinEqu(m, p2v - p1v))
+    try {
+      res = SolveLinEqu(m, p2v - p1v);
+    }
+    catch (IceException&ex)
     {
       dist = 1e99;
       res = Vector(0.0, 0.0);

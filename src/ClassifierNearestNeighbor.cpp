@@ -41,11 +41,10 @@ namespace ice
     ClassifierNormal(classes, dimension),
     nNeighbors(nNeighbors), norm(norm)
   {
-    IF_FAILED(Init(classes, dimension, nNeighbors, norm))
-    {
-      // if initialisation fails
-      throw IceException(FNAME, M_0, ERROR);
+    try {
+      Init(classes, dimension, nNeighbors, norm);
     }
+    RETHROW;
   }
 #undef FNAME
 
