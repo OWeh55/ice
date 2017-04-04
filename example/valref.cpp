@@ -42,27 +42,27 @@ int main(int argc, char* argv[])
   Print("Teste..\n");
   start(ta);
 
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       wert(img, x, y);
   PrintT(ta, "Wert: ");
   start(ta);
 
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       ref(img, x, y);
 
   PrintT(ta, "Referenz: ");
 //  GetChar();
   Print("Teste..\n");
   start(ta);
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       wert(img, x, y);
   PrintT(ta, "Wert: ");
   start(ta);
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       ref(img, x, y);
   PrintT(ta, "Referenz: ");
   GetChar();

@@ -29,11 +29,11 @@ int main(int argc, char* argv[])
       Show(_RGB, ir, ig, ib);
       Show(ON, id);
       ReadImg(filename, ir, ig, ib);
-  for (int y=0;y<id.ysize;y++)
-    for (int x=0;x<id.xsize;x++)
-      {
-        PutVal(id, x, y, GetVal(ig, x, y) * 256 + GetVal(ir, x, y));
-      }
+      for (int y = 0; y < id.ysize; y++)
+        for (int x = 0; x < id.xsize; x++)
+          {
+            PutVal(id, x, y, GetVal(ig, x, y) * 256 + GetVal(ir, x, y));
+          }
       WriteImg(ir, ig, ib, basename + "_r.psd");
       WriteImg(id, basename + ".psd");
       GetChar();
@@ -56,14 +56,14 @@ int main(int argc, char* argv[])
       ig = NewImg(id->xsize, id->ysize, 255);
       ib = NewImg(id->xsize, id->ysize, 255);
 
-  for (int y=0;y<id.ysize;y++)
-    for (int x=0;x<id.xsize;x++)
-  {
-        int v = GetVal(id, x, y);
-        PutVal(ir, x, y, v % 256);
-        PutVal(ig, x, y, v / 256);
-        PutVal(ib, x, y, 255);
-      }
+      for (int y = 0; y < id.ysize; y++)
+        for (int x = 0; x < id.xsize; x++)
+          {
+            int v = GetVal(id, x, y);
+            PutVal(ir, x, y, v % 256);
+            PutVal(ig, x, y, v / 256);
+            PutVal(ib, x, y, 255);
+          }
       WriteImg(ir, ig, ib, basename + ".bmp");
     }
 

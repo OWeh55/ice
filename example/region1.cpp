@@ -18,38 +18,38 @@ int main(int argc, char* argv[])
   int x, y;
 
   cout << "Test Region (bildliche Darstellung)" << endl;
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
-  {
-    if (GetVal(img, x, y) & 1)
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       {
-        s1.add(x, y);
+        if (GetVal(img, x, y) & 1)
+          {
+            s1.add(x, y);
+          }
       }
-  }
   s1.draw(mark, 1);
 
   GetChar();
 
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
-  {
-    if (GetVal(img, x, y) & 2)
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       {
-        s2.add(x, y);
+        if (GetVal(img, x, y) & 2)
+          {
+            s2.add(x, y);
+          }
       }
-  }
   s2.draw(mark, 2);
 
   GetChar();
 
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
-  {
-    if (GetVal(img, x, y) & 4)
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       {
-        s3.add(x, y);
+        if (GetVal(img, x, y) & 4)
+          {
+            s3.add(x, y);
+          }
       }
-  }
   s3.draw(mark, 3);
 
   GetChar();

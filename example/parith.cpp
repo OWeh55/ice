@@ -21,17 +21,17 @@ int main(int argc, char* argv[])
   p1 = NewImg(256, 256, 255);
 //  Show(ON,p1);
 
-  for (int y=0;y<p1.ysize;y++)
-    for (int x=0;x<p1.xsize;x++)
+  for (int y = 0; y < p1.ysize; y++)
+    for (int x = 0; x < p1.xsize; x++)
       PutVal(p1, x, y, x);
 
   p2 = NewImg(256, 256, 255);
 //  Show(ON,p2);
 
-  for (int y=0;y<p2.ysize;y++)
-    for (int x=0;x<p2.xsize;x++)
+  for (int y = 0; y < p2.ysize; y++)
+    for (int x = 0; x < p2.xsize; x++)
 
-    PutVal(p2, x, y, y);
+      PutVal(p2, x, y, y);
 
   p3 = NewImg(256, 256, 127);
   Show(ON, p3);

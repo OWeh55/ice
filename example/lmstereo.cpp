@@ -437,32 +437,32 @@ int readproject(const string& fn)
 
   if (!ref.fail())
     {
-      if (! (ref >> fn1))
-      {
-        fn1 = "pict_l.jpg";
-      }
-      if (! (ref >> fn2))
-      {
-        fn2 = "pict_r.jpg";
-      }
-      if (! (ref >> xy12))
-	{
-	  xy12 = Matrix(0, 4);
-	}
-      
+      if (!(ref >> fn1))
+        {
+          fn1 = "pict_l.jpg";
+        }
+      if (!(ref >> fn2))
+        {
+          fn2 = "pict_r.jpg";
+        }
+      if (!(ref >> xy12))
+        {
+          xy12 = Matrix(0, 4);
+        }
+
       if (xy12.rows() == 0)
         {
           xy12 = Matrix(0, 4);
         }
 
-      if (! (ref >> d3d))
-      {
-        d3d = Matrix(0, 3);
-        int i;
+      if (!(ref >> d3d))
+        {
+          d3d = Matrix(0, 3);
+          int i;
 
-        for (i = 0; i < xy12.rows(); i++)
-          d3d.Append(Vector(0.0, 0.0, Z_START_WERT));
-      }
+          for (i = 0; i < xy12.rows(); i++)
+            d3d.Append(Vector(0.0, 0.0, Z_START_WERT));
+        }
 
       if (d3d.rows() == 0)
         {

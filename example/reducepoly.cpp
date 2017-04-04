@@ -47,11 +47,11 @@ int main(int argc, char* argv[])
 
   // abgerundetes Rechteck
   ClearImg(mark);
-    for (int y=0;y<img.ysize;y++)
-      for (int x=0;x<img.xsize;x++)
-  {
-    if (abs(x - 300) + abs(y - 300) > 165) PutVal(img, x, y, 0);
-  }
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        if (abs(x - 300) + abs(y - 300) > 165) PutVal(img, x, y, 0);
+      }
   pp = IPoint(300, 300);
   SearchStart(img, mark, NULL, 15, 1, pp);
   c1 = CalcContur(img, mark, NULL, 15, pp);
@@ -60,11 +60,11 @@ int main(int argc, char* argv[])
   //
   ClearImg(img);
   ClearImg(mark);
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
-  {
-    if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
-  }
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
+      }
 
   for (int i = 0; i < 5; i++)
     DilateImg(img, 3, 3, img);
@@ -77,15 +77,15 @@ int main(int argc, char* argv[])
   // gestörtes Rechteck
   ClearImg(img);
   ClearImg(mark);
-  for (int y=0;y<img.ysize;y++)
-    for (int x=0;x<img.xsize;x++)
-  {
-    if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
 
-    if (Random(19) < 1) PutVal(img, x, y, 255);
+        if (Random(19) < 1) PutVal(img, x, y, 255);
 
-    if (Random(19) < 1) PutVal(img, x, y, 0);
-  }
+        if (Random(19) < 1) PutVal(img, x, y, 0);
+      }
   DilateImg(img, 3, 3, img);
   ErodeImg(img, 3, 3, img);
   pp = IPoint(300, 300);

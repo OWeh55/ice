@@ -162,13 +162,13 @@ int Main(int argc, char* argv[])
       talt = TimeD(TM_PROCESS);
       //    talt=TimeD(TM_WORLD);
       //    talt=((double)clock())/CLOCKS_PER_SEC;
-  for (int y=0;y<ptr.ysize;y++)
-    for (int x=0;x<ptr.xsize;x++)
-      {
-        fwert(x, y, &a, &b);
-        z = (*iter)(a, b, maxcount);
-        PutValUnchecked(ptr, x, y, z % valc);
-      }
+      for (int y = 0; y < ptr.ysize; y++)
+        for (int x = 0; x < ptr.xsize; x++)
+          {
+            fwert(x, y, &a, &b);
+            z = (*iter)(a, b, maxcount);
+            PutValUnchecked(ptr, x, y, z % valc);
+          }
       tneu = TimeD(TM_PROCESS);
       //    tneu=TimeD(TM_WORLD);
       //    tneu=((double)clock())/CLOCKS_PER_SEC;
@@ -529,16 +529,16 @@ void SaveImage(Image ptr)
   ColorImage rgb;
   rgb.create(ptr->xsize, ptr->ysize, 255);
 
-  for (int y=0;y<ptr.ysize;y++)
-    for (int x=0;x<ptr.xsize;x++)
-  {
-    int gw = GetVal(ptr, x, y);
-    unsigned char r, g, b;
-    GetGreyColor(ptr, gw, r, g, b);
-    PutVal(rgb.redImage(), x, y, r ^ 255);
-    PutVal(rgb.greenImage(), x, y, g ^ 255);
-    PutVal(rgb.blueImage(), x, y, b ^ 255);
-  }
+  for (int y = 0; y < ptr.ysize; y++)
+    for (int x = 0; x < ptr.xsize; x++)
+      {
+        int gw = GetVal(ptr, x, y);
+        unsigned char r, g, b;
+        GetGreyColor(ptr, gw, r, g, b);
+        PutVal(rgb.redImage(), x, y, r ^ 255);
+        PutVal(rgb.greenImage(), x, y, g ^ 255);
+        PutVal(rgb.blueImage(), x, y, b ^ 255);
+      }
   rgb.write(fn);
   PopAlpha();
 }
