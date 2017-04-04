@@ -123,13 +123,11 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((val < 0) || (val > img->maxval))
       {
         throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
 
@@ -220,7 +218,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (poly.isClosed() && fval >= 0)
@@ -256,7 +253,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     if (fval >= 0)
       {
@@ -279,13 +275,11 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (f.Size() != (int)pl.size())
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int i = 0; i < f.Size(); i++)

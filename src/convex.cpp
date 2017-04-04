@@ -46,7 +46,6 @@ namespace ice
     if (pl == NULL || pl->lng == 0)
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-        return NULL;
       }
 
     if (pl->lng <= 3)
@@ -96,7 +95,6 @@ namespace ice
     if (ymin == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     int* ymax = new int[xsize];
@@ -105,7 +103,6 @@ namespace ice
       {
         delete ymin;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     int* imin = new int[xsize];
@@ -115,7 +112,6 @@ namespace ice
         delete ymin;
         delete ymax;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     int* imax = new int[xsize];
@@ -126,7 +122,6 @@ namespace ice
         delete ymax;
         delete imin;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     int* used = new int[xsize];
@@ -138,7 +133,6 @@ namespace ice
         delete imin;
         delete imax;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     for (nr = 0; nr < xsize; nr++)
@@ -197,7 +191,6 @@ namespace ice
         delete imax;
         delete used;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     int current = -1;
@@ -327,7 +320,6 @@ namespace ice
         delete used;
         delete pl2;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     for (current = 0; current <= nr2; current++)
@@ -459,7 +451,6 @@ namespace ice
     if (pl1 == NULL || pl1->lng < 3 || pl2 == NULL || pl2->lng < 3)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return POLY_ERROR;
       }
 
     int i, j;

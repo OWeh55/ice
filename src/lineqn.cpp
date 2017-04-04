@@ -214,19 +214,16 @@ namespace ice
     if (!IsMatrix(A))
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return (WRONG_MATRIX);
       }
 
     if (A->type != MAT_DOUBLE)
       {
         throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-        return (WRONG_MATRIX);
       }
 
     if (A->rsize != A->csize)
       {
         throw IceException(FNAME, M_NO_SQUARE, ERROR);
-        return (ERROR);
       }
 
     /*Initialisierungen*/
@@ -236,7 +233,6 @@ namespace ice
     if (indx == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (NO_MEM);
       }
 
     Ah = MoveMat(A, nullptr);
@@ -245,7 +241,6 @@ namespace ice
       {
         free(indx);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (NO_MEM);
       }
 
     a = Ah->data;
@@ -292,19 +287,16 @@ namespace ice
     if (!IsMatrix(A))
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return (WRONG_MATRIX);
       }
 
     if (A->type != MAT_DOUBLE)
       {
         throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-        return (WRONG_MATRIX);
       }
 
     if (A->rsize < A->csize)
       {
         throw IceException(FNAME, M_MATRIX_SINGULAR, NUM_INSTABILITY);
-        return (NUM_INSTABILITY);
       }
 
     /*Initialisierungen*/
@@ -314,7 +306,6 @@ namespace ice
     if (indx == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (NO_MEM);
       }
 
     Ah = NewMatrix(MAT_DOUBLE, n, n);
@@ -323,7 +314,6 @@ namespace ice
       {
         free(indx);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (NO_MEM);
       }
 
     /*A^T * A */
@@ -386,19 +376,16 @@ namespace ice
     if (!IsMatrix(A))
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return (nullptr);
       }
 
     if (A->type != MAT_DOUBLE)
       {
         throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-        return (nullptr);
       }
 
     if (A->rsize != A->csize)
       {
         throw IceException(FNAME, M_NO_SQUARE, ERROR);
-        return (nullptr);
       }
 
     if (B != nullptr)
@@ -406,13 +393,11 @@ namespace ice
         if (!IsMatrix(B))
           {
             throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-            return (nullptr);
           }
 
         if (B->type != MAT_DOUBLE || B->rsize != A->rsize || B->csize != A->csize)
           {
             throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-            return (nullptr);
           }
       }
     else
@@ -430,7 +415,6 @@ namespace ice
     if (icol == nullptr || bcol == nullptr || indx == nullptr || Ah == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (nullptr);
       }
 
     a = Ah->data;
@@ -500,19 +484,16 @@ namespace ice
     if (!IsMatrix(A))
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return (0);
       }
 
     if (A->type != MAT_DOUBLE)
       {
         throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-        return (0);
       }
 
     if (A->rsize != A->csize)
       {
         throw IceException(FNAME, M_NO_SQUARE, ERROR);
-        return (0);
       }
 
     /*Initialisierungen*/
@@ -523,7 +504,6 @@ namespace ice
     if (indx == nullptr || Ah == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (0);
       }
 
     a = Ah->data;

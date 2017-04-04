@@ -230,7 +230,6 @@ namespace ice
         if ((state & st_first) == 0)
           {
             throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-            return;
           }
         interpolatePointList(pl1, distance);
         state &= ~st_references;
@@ -240,7 +239,6 @@ namespace ice
         if ((state & st_second) == 0)
           {
             throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-            return;
           }
         interpolatePointList(pl2, distance);
         state &= ~st_references;
@@ -254,7 +252,6 @@ namespace ice
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-        return;
       }
 
     matrix<double> hu_p1;
@@ -262,14 +259,12 @@ namespace ice
     if (ObjectPointFeatures(pl1, hu_p1, trmode) != 0)
       {
         throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-        return;
       }
 
     matrix<double> hu_p2;
     if (ObjectPointFeatures(pl2, hu_p2, trmode) != 0)
       {
         throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-        return;
       }
 
     int n1 = hu_p1.rows();
@@ -288,7 +283,6 @@ namespace ice
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-        return;
       }
 
     if (pl1.size() >= pl2.size())
@@ -316,14 +310,12 @@ namespace ice
     if (ObjectPointFeatures(p1, hu_p1, trmode) != 0)
       {
         throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-        return;
       }
 
     matrix<double> hu_p2;
     if (ObjectPointFeatures(p2, hu_p2, trmode) != 0)
       {
         throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-        return;
       }
 
     int n1 = hu_p1.rows();
@@ -363,7 +355,6 @@ namespace ice
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-        return;
       }
     if ((state & st_references) == 0)
       {
@@ -384,7 +375,6 @@ namespace ice
     if ((state & (st_first | st_second)) != (st_first | st_second))
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-        return;
       }
     if ((state & st_references) == 0)
       {
@@ -648,7 +638,6 @@ namespace ice
     if (feat1.cols() != feat2.cols())
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return ret;
       }
 
     int dim = feat1.cols();

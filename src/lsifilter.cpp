@@ -127,7 +127,6 @@ namespace ice
     if (mInvert(m, m1) != 0)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return LSIFilter();
       }
     return LSIFilter(m1);
   }

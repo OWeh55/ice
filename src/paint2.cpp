@@ -67,19 +67,16 @@ namespace ice
     if ((val1 < 0) || (val2 < 0) || (val1 > img->maxval) || (val2 > img->maxval))
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (mode != DEFAULT && mode != NOFILL)
       {
         throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
-        return WRONG_PARAM;
       }
 
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // offene Contur des Kreisbogensegments
@@ -109,19 +106,16 @@ namespace ice
         (val1 > img->maxval) || (val2 > img->maxval))
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (mode != DEFAULT && mode != NOFILL)
       {
         throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
-        return WRONG_PARAM;
       }
 
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(c = EllipseSegmentContur(par));
@@ -152,7 +146,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     imgh = NewImg(img->xsize, img->ysize, 255);
@@ -210,7 +203,6 @@ namespace ice
       {
         *xs = *ys = 0;
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return WRONG_STARTPOINT;
       }
 
     for (y = yc; y < img->ysize; y += diff)
@@ -318,13 +310,11 @@ namespace ice
     if ((dx < 1) || (dy < 1))
       {
         throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return ERROR;
       }
 
     if (decision(func, parray, xs, ys, dx, dy) == 0)
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return ERROR;
       }
 
     int xx = xs;
@@ -344,7 +334,6 @@ namespace ice
     if (ct >= 4)
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-        return ERROR;
       }
 
     ct = 0;    /* Zaehler der untersuchten Richtungen */
@@ -360,7 +349,6 @@ namespace ice
     if (ct >= 4)
       {
         throw IceException("calc_function", M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
-        return WRONG_STARTPOINT;
       }
 
     /* Hauptrichtung gefunden, jetzt noch Nebenrichtung testen */

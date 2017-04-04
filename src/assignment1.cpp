@@ -112,7 +112,6 @@ namespace ice
     if ((m <= 0) || (n <= 0))
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
       }
 
     anz = m * n;
@@ -122,7 +121,6 @@ namespace ice
     if (indices == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return ERROR;
       }
 
     if (mode == 0)
@@ -137,7 +135,6 @@ namespace ice
               if (c < 0.0)
                 {
                   throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                  return WRONG_PARAM;
                 }
 
               if (c > max)
@@ -219,7 +216,6 @@ namespace ice
     if (rc == 1)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return ERROR;
       }
 
     matching(m, s, n, t, w);

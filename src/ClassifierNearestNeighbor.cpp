@@ -105,7 +105,6 @@ namespace ice
     if (rp == NULL)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, 2);
-        return -1;
       }
     return rp->classNr;
   }
@@ -159,7 +158,6 @@ namespace ice
     if (id != "ClassifierNearestNeighbor")
       {
         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
       }
     source >> nFeatures;
     source >> nClasses;

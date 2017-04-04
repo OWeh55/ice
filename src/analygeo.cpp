@@ -93,7 +93,6 @@ namespace ice
     if (hs < EPSILON)
       {
         throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
-        return (POINT_IDENTIC);
       }
 
     *p = (p1[0] * dy - p1[1] * dx) / hs;
@@ -120,7 +119,6 @@ namespace ice
     if (hs < EPSILON)
       {
         throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
-        return res;
       }
 
     double p = (p1[0] * dy - p1[1] * dx) / hs;
@@ -235,7 +233,6 @@ namespace ice
     if (pl.cols() < 2)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
       }
 
     int last = pl.rows() - 1;
@@ -559,7 +556,6 @@ label:
         if (a <= 0 || b <= 0)
           {
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
           }
 
 #ifdef DEBUG
@@ -589,7 +585,6 @@ label:
         if (a <= 0 || b <= 0)
           {
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
           }
 
         par[0] = Sqr(cos(phi) / a) - Sqr(sin(phi) / b);
@@ -609,7 +604,6 @@ label:
         if (p <= 0)
           {
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
           }
 
         par[0] = Sqr(sin(phi));
@@ -627,7 +621,6 @@ label:
         return OK;
       default:
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
   }
 #undef FNAME
@@ -652,7 +645,6 @@ label:
     if (l < EPSILON)
       {
         throw IceException(FNAME, M_WRONG_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (d < 0)
@@ -710,7 +702,6 @@ label:
     if ((A <= 0) || (B <= 0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0.0;
       }
 
 #if DEBUG

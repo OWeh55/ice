@@ -183,7 +183,6 @@ namespace ice
     if (of(start) != isobject)
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return res;
       }
 
     // Suche Untergrundpunkt in Nachbarschaft (links beginnend)
@@ -201,7 +200,6 @@ namespace ice
     if (cr == 4)                    // Startpunkt liegt im Objekt
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-        return res;
       }
 
     if (Go(start, startdir, true, of, res))   // if true -> open contur

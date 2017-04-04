@@ -89,7 +89,6 @@ namespace ice
     if ((number < 1) || (diff <= 0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     delete [] klasse;
@@ -125,7 +124,6 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     kl = (int)floor((val - lowerLimit) / classwidth) + 1;
@@ -186,13 +184,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return -1;
       }
 
     if ((index < 0) || (index > nClasses + 1))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1;
       }
 
     return klasse[index];
@@ -204,19 +200,16 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return -1.0;
       }
 
     if (index < 0 || index > nClasses + 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1.0;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return -1.0;
       }
 
     return (double)klasse[index] / (double)sum;
@@ -229,7 +222,6 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     minv = min;
@@ -246,19 +238,16 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if ((q < 0.0) || (q > 0.5))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
       }
 
     qabs = RoundInt(sum * q);
@@ -304,13 +293,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return 0.0;
       }
 
     if (nr < 0 || nr > nClasses + 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0.0;
       }
 
     return (nr - 1 + 0.5) * classwidth + lowerLimit; // Klassenmitte als Repr�entant
@@ -322,13 +309,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return 0.0;
       }
 
     if (nr < 1 || nr > nClasses)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0.0;
       }
 
     min = (nr - 1) * classwidth + lowerLimit;
@@ -346,13 +331,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
       }
 
     sumx = sumx2 = sumx3 = 0;
@@ -385,7 +368,6 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     n = sum;
@@ -417,13 +399,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if (!IsImg(b))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     x1 = 0;
@@ -528,13 +508,11 @@ namespace ice
     if (!IsImg(b))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return h;
       }
 
     if ((diff > b->xsize) || (diff > (b->ysize)) || diff < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return h;
       }
 
     h.Reset((b->maxval + 1 + (klbr - 1)) / klbr, klbr, 0);

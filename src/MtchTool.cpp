@@ -181,7 +181,6 @@ namespace ice
         re->xsize != im->xsize || re->ysize != im->ysize)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
 
     if (dest == NULL)
@@ -191,13 +190,11 @@ namespace ice
         if (dest == NULL)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NULL;
           }
       }
     else if (dest->xsize != re->xsize || dest->ysize != re->ysize)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
 
     if (smear)
@@ -242,7 +239,6 @@ namespace ice
     )
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (mode == CF_CUT)
@@ -276,7 +272,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     double entropy = 0.0;
@@ -311,7 +306,6 @@ namespace ice
     if (!img.isValid())
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1;
       }
 
     double entropy = 0.0;
@@ -370,7 +364,6 @@ namespace ice
     if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img->xsize || sy >= img->ysize)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ConturList();
       }
 
     int weiter = true;
@@ -380,7 +373,6 @@ namespace ice
     if (!IsImg(mark))
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return ConturList();
       }
 
     ClearImg(mark);

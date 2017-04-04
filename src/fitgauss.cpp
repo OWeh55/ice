@@ -52,7 +52,6 @@ namespace ice
     if (dim <= 0)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     values = 0;
@@ -87,7 +86,6 @@ namespace ice
     if ((int)p.size() != dim)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     for (int i = 0; i < dim; i++)
@@ -126,7 +124,6 @@ namespace ice
     if ((p.cols() != dim) || (p.rows() != v.Size()))
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     Init();
@@ -178,7 +175,6 @@ namespace ice
     if (!finished)
       {
         throw IceException(FNAME, M_NOT_FINISHED, ERROR);
-        return;
       }
     v = para;
   }
@@ -188,7 +184,6 @@ namespace ice
     if (!finished)
       {
         throw IceException(FNAME, M_NOT_FINISHED, ERROR);
-        return;
       }
     v = Vector(para);
   }
@@ -198,7 +193,6 @@ namespace ice
     if (!finished)
       {
         throw IceException(FNAME, M_NOT_FINISHED, ERROR);
-        return 0;
       }
     return var / wsum;
   }

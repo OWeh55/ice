@@ -41,7 +41,6 @@ namespace ice
     if (m.cols() < 2)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return OK;
@@ -56,7 +55,6 @@ namespace ice
     if (m.rows() < 3)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return OK;
@@ -71,7 +69,6 @@ namespace ice
     if (diff < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return pl;
       }
 
     std::vector<IPoint> vpl;

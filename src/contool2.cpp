@@ -67,7 +67,6 @@ namespace ice
     if (data == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return c;
       }
 
     c.SetStart(pm[0] + r, pm[1]);

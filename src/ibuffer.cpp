@@ -100,7 +100,6 @@ namespace ice
             break;
           default:
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return Image();
             break;
           }
       }
@@ -119,7 +118,6 @@ namespace ice
             break;
           default:
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return Image();
             break;
           }
       }
@@ -314,7 +312,6 @@ namespace ice
             break;
           default:
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
             break;
           }
       }
@@ -333,7 +330,6 @@ namespace ice
             break;
           default:
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
             break;
           }
       }
@@ -588,7 +584,6 @@ namespace ice
       {
         // cerr << "isimg" << endl;
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int pt = img->ImageType();
@@ -597,7 +592,6 @@ namespace ice
       {
         // cerr << "img-typ" << endl;
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int width = img->xsize;
@@ -705,7 +699,6 @@ namespace ice
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int width;
@@ -718,7 +711,6 @@ namespace ice
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int factor = 3;
@@ -780,7 +772,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     ib.width = img->xsize;
@@ -800,7 +791,6 @@ namespace ice
     if (ib.data == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     if (ib.valuesize == 1)
@@ -834,7 +824,6 @@ namespace ice
     if (!IsImg(RedImage) || !IsImg(GreenImage) || !IsImg(BlueImage))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // some more consistency checks
@@ -843,7 +832,6 @@ namespace ice
         RedImage->maxval != GreenImage->maxval || RedImage->maxval != BlueImage->maxval)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // copy values from the image to the image buffer
@@ -864,7 +852,6 @@ namespace ice
     if (ImageBuffer.data == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     // copy the pixel values
@@ -955,7 +942,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int pt = img->ImageType();
@@ -963,7 +949,6 @@ namespace ice
     if ((pt < 0) || (pt > 3))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int width = img->xsize;
@@ -1090,7 +1075,6 @@ namespace ice
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int width;
@@ -1103,7 +1087,6 @@ namespace ice
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int factor = 3;

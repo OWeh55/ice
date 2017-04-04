@@ -65,7 +65,6 @@ namespace ice
     if (running)
       {
         throw IceException(FNAME, M_NOT_NESTED, ERROR);
-        return ERROR;
       }
 
     int optnumber = optvar.Size();
@@ -73,14 +72,12 @@ namespace ice
     if ((optnumber < 1) || (optnumber > variable.Size() || funcdim < optnumber))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
 
     for (i = 0; i < optnumber; i++)
       if (optvar[i] >= variable.Size())
         {
           throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          return ERROR;
         }
 
     running = true;

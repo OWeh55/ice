@@ -200,13 +200,11 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((val < 0) || (val > img->maxval))
       {
         throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (img.inside(x1, y1) && img.inside(x2, y2))   // keine weitere Umrechnungen
@@ -302,7 +300,6 @@ namespace ice
     if ((p1.Size() != 2) || (p2.Size() != 2))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return Line(p1[0], p1[1], p2[0], p2[1], val, img);
@@ -341,7 +338,6 @@ namespace ice
       default:
       {
         throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
       }
 
@@ -360,7 +356,6 @@ namespace ice
     if ((p1.Size() != 2) || (p2.Size() != 2))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return Line(Point(p1[0], p1[1]), Point(p2[0], p2[1]), val, mode, img);
@@ -389,7 +384,6 @@ namespace ice
     if (p.Size() != 2)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return draw(LineSeg(p[0], p[1]), img, val);

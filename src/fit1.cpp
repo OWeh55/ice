@@ -137,7 +137,6 @@ namespace ice
     if (nr < 2)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return LineSeg();
       }
 
     double n = pl.size();
@@ -171,13 +170,11 @@ namespace ice
     if (nr < 2)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return LineSeg();
       }
 
     if (nr != weight.size())
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return LineSeg();
       }
 
     double n = 0.0;
@@ -206,7 +203,6 @@ namespace ice
     if (n < 1e-10)   // sum of weights too small
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return LineSeg();
       }
 
     return calc_line(n, x, y, xx, xy, yy);
@@ -220,19 +216,16 @@ namespace ice
     if (nr < 2)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return LineSeg();
       }
 
     if (n < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return LineSeg();
       }
 
     if (nr != weight.size())
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return LineSeg();
       }
 
     if (n == 0)
@@ -267,13 +260,11 @@ namespace ice
     if (m.cols() < 2)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return LineSeg();
       }
 
     if (m.rows() < 2)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return LineSeg();
       }
 
     vector<Point> pl;

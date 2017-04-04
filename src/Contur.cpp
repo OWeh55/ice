@@ -137,7 +137,6 @@ namespace ice
     if (!isvalid)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     data.push_back(dir);
@@ -185,7 +184,6 @@ namespace ice
     if (!isvalid)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     //    std::cout << "OK" << std::endl;
@@ -310,7 +308,6 @@ namespace ice
     if (!c.isvalid)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(Add(c.start));
@@ -418,7 +415,6 @@ namespace ice
     if (!isvalid)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (nDirectionCodes == 0)
@@ -486,7 +482,6 @@ namespace ice
     if (!isvalid)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-        return res;
       }
 
     int currentIndex = 0;
@@ -504,7 +499,6 @@ namespace ice
     else if (wantedIndex > nDirectionCodes)
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return res;
       }
 
     if ((cachedIndex != INT_MAX) && (cachedIndex < wantedIndex))
@@ -543,13 +537,11 @@ namespace ice
     if (!isvalid)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-        return INVALID;
       }
 
     if (!isclosed)
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return ERROR;
       }
 
     if (data.empty())
@@ -596,7 +588,6 @@ namespace ice
     if (!isvalid)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-        return INVALID;
       }
 
     std::vector<Freeman> cd;

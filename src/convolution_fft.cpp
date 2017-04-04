@@ -403,7 +403,6 @@ namespace ice
         if (xs != dd.xsize || ys != dd.ysize)
           {
             throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-            return WRONG_PARAM;
           }
       }
 

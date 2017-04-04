@@ -44,7 +44,6 @@ namespace ice
     if (div == 0)
       {
         throw IceException(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
-        return 0;
       }
 
     div = abs(div);
@@ -69,7 +68,6 @@ namespace ice
     if (div == 0.0)
       {
         throw IceException(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
-        return 0;
       }
 
     double adiv = fabs(div);
@@ -160,7 +158,6 @@ namespace ice
     if (val > RAND_MAX)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return rand() % (val + 1);

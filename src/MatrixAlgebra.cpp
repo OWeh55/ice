@@ -604,7 +604,6 @@ namespace ice
     if (rc != OK)
       {
         throw IceException(FNAME, M_0, ERROR);
-        return res;
       }
 
     return res;

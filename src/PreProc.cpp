@@ -41,7 +41,6 @@ namespace ice
     if (!IsImg(imgd))
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return Image();
       }
 
     int g, x, y;
@@ -120,7 +119,6 @@ namespace ice
         if (!IsImg(imgs))
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
           }
 
         newimg = true;

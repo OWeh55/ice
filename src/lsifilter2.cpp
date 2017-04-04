@@ -144,7 +144,6 @@ namespace ice
     if ((sx < 1) || ((sx & 1) != 1) || (norm == 0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
@@ -305,7 +304,6 @@ namespace ice
     if ((sy < 1) || ((sy & 1) != 1) || (norm == 0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));

@@ -47,7 +47,6 @@ namespace ice
     if (v.Size() < 4)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     dp.x = v[2] - p.x;

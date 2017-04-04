@@ -51,7 +51,6 @@ namespace ice
         if (nUse > nTrees)
           {
             throw IceException(FNAME, M_WRONG_PARAMETER, WRONG_PARAM);
-            return;
           }
         for (unsigned int i = 0; i < classifiers.size(); ++i)
           {

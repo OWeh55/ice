@@ -326,7 +326,6 @@ namespace ice
     if (!src.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     int xs = src.xsize;
     int ys = src.ysize;
@@ -337,7 +336,6 @@ namespace ice
     if (dx != xs || dy != ys)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; y++)
@@ -362,7 +360,6 @@ namespace ice
     if (!dst.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int xs = dst.xsize;
@@ -375,7 +372,6 @@ namespace ice
     if (dx != xs || dy != ys)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; y++)
@@ -398,7 +394,6 @@ namespace ice
     if (!src.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     int xs = src.xsize;
     int ys = src.ysize;
@@ -409,7 +404,6 @@ namespace ice
     if (dx != xs || dy != ys)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; y++)
@@ -432,7 +426,6 @@ namespace ice
     if (!dst.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int xs = dst.xsize;
@@ -445,7 +438,6 @@ namespace ice
     if (dx != xs || dy != ys)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; y++)
@@ -468,7 +460,6 @@ namespace ice
     if (!src.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     int xs = src.xsize;
     int ys = src.ysize;
@@ -479,7 +470,6 @@ namespace ice
     if (dx != xs || dy != ys)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; y++)
@@ -501,7 +491,6 @@ namespace ice
     if (!dst.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     int xs = dst.xsize;
     int ys = dst.ysize;
@@ -512,7 +501,6 @@ namespace ice
     if (dx != xs || dy != ys)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; y++)

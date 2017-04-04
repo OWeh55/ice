@@ -666,7 +666,6 @@ namespace ice
         if (size != sourceSize)
           {
             throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
-            return false;
           }
       }
     return true;

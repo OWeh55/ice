@@ -66,7 +66,6 @@ namespace ice
     if (i == -1)
       {
         throw IceException("TimeD()", "keine Zeit", -2000); /* kann nicht vorkommen ?! */
-        return (-1);
       }
 
     return (tt.tv_sec + ((double)tt.tv_usec) / 1000000);

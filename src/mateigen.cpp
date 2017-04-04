@@ -47,13 +47,11 @@ namespace ice
     if (IsMatrix(A) == false)
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return nullptr;
       }
 
     if (A->type != MAT_DOUBLE)
       {
         throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-        return nullptr;
       }
 
     Amat = MoveMat(A, nullptr);
@@ -68,13 +66,11 @@ namespace ice
         if (IsMatrix(evect) == false)
           {
             throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-            return nullptr;
           }
 
         if (evect->csize != n || evect->rsize != n || evect->type != MAT_DOUBLE)
           {
             throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-            return nullptr;
           }
       }
 
@@ -88,7 +84,6 @@ namespace ice
     if (b == nullptr || z == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
       }
 
     //
@@ -219,7 +214,6 @@ namespace ice
     free(b);
     free(z);
     throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-    return nullptr;
   }
 
   /* interne Funktion: Sortierung der Eigenwerte, Eigenvektoren nach Betrag */
@@ -282,13 +276,11 @@ namespace ice
     if (IsMatrix(A) == false)
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return (WRONG_MATRIX);
       }
 
     if (A->type != MAT_DOUBLE)
       {
         throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-        return (WRONG_MATRIX);
       }
 
     m = A->rsize;
@@ -297,7 +289,6 @@ namespace ice
     if (m < n)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     /* Matrizen U,W,V anfordern */
@@ -311,13 +302,11 @@ namespace ice
         if (IsMatrix(*U) == false)
           {
             throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-            return (WRONG_MATRIX);
           }
 
         if ((*U)->rsize != m || (*U)->type != MAT_DOUBLE || (*U)->csize != n)
           {
             throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-            return (MAT_NO_COMPAT);
           }
       }
 
@@ -331,13 +320,11 @@ namespace ice
         if (IsMatrix(*W) == false)
           {
             throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-            return (WRONG_MATRIX);
           }
 
         if ((*W)->rsize != n || (*W)->type != MAT_DOUBLE || (*W)->csize != n)
           {
             throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-            return (MAT_NO_COMPAT);
           }
       }
 
@@ -357,13 +344,11 @@ namespace ice
         if (! IsMatrix(*V))
           {
             throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-            return (WRONG_MATRIX);
           }
 
         if ((*V)->rsize != n || (*V)->type != MAT_DOUBLE || (*V)->csize != n)
           {
             throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-            return (MAT_NO_COMPAT);
           }
       }
 
@@ -637,7 +622,6 @@ namespace ice
             if (its == 40)
               {
                 throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-                return NO_SOLUTION;
               }
 
             x = w[l];

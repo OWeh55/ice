@@ -57,7 +57,6 @@ namespace ice
     if (!p.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     for (int y = 0; y < p.ysize; ++y)
       for (int x = 0; x < p.xsize; ++x)
@@ -174,7 +173,6 @@ namespace ice
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
@@ -200,7 +198,6 @@ namespace ice
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
@@ -226,7 +223,6 @@ namespace ice
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, hx, hy));
@@ -247,7 +243,6 @@ namespace ice
     if (! IsImgD(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return 0;
       }
 
     int xSize = img.xsize;
@@ -275,7 +270,6 @@ namespace ice
     if (! IsImgD(imgD) || ! IsImg(mark))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return res;
       }
 
     int xSize = imgD.xsize;
@@ -284,7 +278,6 @@ namespace ice
     if (xSize != mark.xsize || ySize != mark.ysize)
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return res;
 
       }
 
@@ -324,7 +317,6 @@ namespace ice
     if (! IsImgD(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return 0;
       }
 
     int xSize = img.xsize;
@@ -372,13 +364,11 @@ namespace ice
     if ((!IsImgD(imgs)) || (!IsImgD(imgd)))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     hx = imgs.xsize;
@@ -433,13 +423,11 @@ namespace ice
     if (!IsImg(imgs))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     hx = imgs.xsize;
@@ -451,7 +439,6 @@ namespace ice
     if (!IsImg(imgd))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     himgd = imgd;
@@ -504,7 +491,6 @@ namespace ice
         if (r2 == 0)
           {
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
           }
       }
     else
@@ -512,20 +498,17 @@ namespace ice
         if (!IsImgD(imgs))
           {
             throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-            return WRONG_POINTER;
           }
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImgD(imgd))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (r2 == 0)
@@ -559,13 +542,11 @@ namespace ice
     if (!IsImgD(imgs))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return himgd;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return himgd;
       }
 
     hx = imgs.xsize;
@@ -633,13 +614,11 @@ namespace ice
     if (!IsImg(imgs))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     hx = imgs->xsize;
@@ -651,7 +630,6 @@ namespace ice
     if (!IsImg(imgd))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     himgd = imgd;
@@ -704,20 +682,17 @@ namespace ice
         if (r2 == 0)
           {
             throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
           }
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImgD(imgd))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (r2 == 0)

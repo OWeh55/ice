@@ -49,7 +49,6 @@ namespace ice
     if (norm == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // test if both images have valid pixel arrays and
@@ -98,7 +97,6 @@ namespace ice
     if (norm == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // test if both images have valid pixel arrays and
@@ -157,25 +155,21 @@ namespace ice
     if (norm == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImg(src))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImgD(dest))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return lsiimg(src, dest, nx, ny, mask, norm);
@@ -199,19 +193,16 @@ namespace ice
     if (!IsImg(src))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImgD(dest))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return lsiimg(src, dest, nx, ny, mask);
@@ -234,7 +225,6 @@ namespace ice
     if (norm == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // test if both images have valid pixel arrays and

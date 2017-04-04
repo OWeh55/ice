@@ -67,25 +67,21 @@ namespace ice
     if (dim < 1)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (i > dim || i < 1)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (h <= 0.0)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (mode > 5 || mode < 0)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     /*----------------------------------------------------------------*/
@@ -230,25 +226,21 @@ namespace ice
     if (dim < 1)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (i > dim || i < 1)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (h <= 0.0)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (mode > 4 || mode < 0)
       {
         throw IceException("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     /*----------------------------------------------------------------*/
@@ -390,7 +382,6 @@ namespace ice
     if (*prec >= 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (down > top)

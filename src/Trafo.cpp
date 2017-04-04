@@ -85,7 +85,6 @@ namespace ice
     if ((dimSourcep <= 0) || (dimTargetp < 0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
 
     dimSource = dimSourcep;
@@ -591,7 +590,6 @@ namespace ice
     if (t.dimSource != v.Size())
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
       }
 
     // tmp = t.m * tmp;

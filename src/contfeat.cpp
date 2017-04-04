@@ -50,13 +50,11 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((val < 0) || val > img->maxval)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     xx = c.StartX();
@@ -83,19 +81,16 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((val < 0) || val > img->maxval)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!c.isClosed())
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return (CONOCLOSED);
       }
 
     IMatrix segm = ConturSegmentlist(c);
@@ -121,7 +116,6 @@ namespace ice
     if (!c.isClosed())
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return NULL;
       }
 
     IMatrix segm = ConturSegmentlist(c);
@@ -138,7 +132,6 @@ namespace ice
     if (pl == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     pl->xptr = (double*)malloc(points.rows() * sizeof(double));
@@ -150,7 +143,6 @@ namespace ice
       {
         free(pl);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     x = pl->xptr;
@@ -176,7 +168,6 @@ namespace ice
     if (!c.isClosed())
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return points;
       }
 
     IMatrix segm = ConturSegmentlist(c);
@@ -249,7 +240,6 @@ namespace ice
     if (!c.isClosed())
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return CONOCLOSED;
       }
 
     /* Erstellen der Segmentliste */
@@ -360,7 +350,6 @@ namespace ice
     if (!c.isClosed())
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return IPoint();
       }
 
     /* Erstellen der Segmentliste */
@@ -398,7 +387,6 @@ namespace ice
     if (!c.isClosed())
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return Point();
       }
 
     /* Erstellen der Segmentliste */
@@ -438,7 +426,6 @@ namespace ice
     if (!c.isClosed())
       {
         throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return CONOCLOSED;
       }
 
     if (c.Number() > 0)

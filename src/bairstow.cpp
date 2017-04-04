@@ -34,7 +34,6 @@ namespace ice
       {
         rc = NO_SOLUTION;
         throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-        return rc;
       }
 
     unsigned int n = a.Size() - 1; //Ordnung
@@ -59,7 +58,6 @@ namespace ice
               {
                 rc = NO_SOLUTION;
                 throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-                return rc;
               }
 
             b[0] = a[0];

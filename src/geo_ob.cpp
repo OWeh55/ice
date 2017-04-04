@@ -40,7 +40,6 @@ namespace ice
     if (v.Size() < 2)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     p.x = v[0];

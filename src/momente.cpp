@@ -221,7 +221,6 @@ namespace ice
     if (a1 < 0 || a2 < 0 || a1 >= pl->lng || a2 >= pl->lng)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (i = 0; i < 15; i++)
@@ -744,7 +743,6 @@ namespace ice
     if (m[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return ERROR;
       }
 
     double xs = m[1] / m[0];
@@ -774,7 +772,6 @@ namespace ice
     if (fabs(m[0]) < 1e-15)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     PosSign(m, msk);
@@ -823,7 +820,6 @@ namespace ice
     if ((fabs(msk[3]) < 1e-5) || (fabs(msk[5]) < 1e-5))
       {
         throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
       }
 
     double h1 = msk[5] / (msk[3] * msk[3] * msk[3]);
@@ -832,7 +828,6 @@ namespace ice
     if (h1 < 0 || h2 < 0)
       {
         throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
       }
 
     alpha = pow(h1, 0.125);
@@ -921,7 +916,6 @@ namespace ice
             if (h < 0)
               {
                 throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                return ERROR;
               }
 
             h = sqrt(h);
@@ -935,7 +929,6 @@ namespace ice
             if (m2[7] == 0)
               {
                 throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                return ERROR;
               }
             else
               {
@@ -997,7 +990,6 @@ namespace ice
     if (imin < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
 
     CopyMoments(mx[imin], m2);
@@ -1116,7 +1108,6 @@ namespace ice
     if ((maf[14] < EPSILON) && (maf[10] < EPSILON))
       {
         throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
       }
 
     bool modified = true;
@@ -1217,7 +1208,6 @@ namespace ice
     if (m[0] < EPSILON)
       {
         throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // Normierung

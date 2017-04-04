@@ -56,7 +56,6 @@ namespace ice
     if (n < 0)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     if (n > 0)
@@ -84,7 +83,6 @@ namespace ice
     if (n < 0)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     if (n > 0)
@@ -138,7 +136,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return;
       }
 
     nRows = img->ysize;
@@ -179,7 +176,6 @@ namespace ice
     if (!IsImgD(imgd))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return;
       }
 
     nRows = imgd.ysize;
@@ -252,7 +248,6 @@ namespace ice
     if (pl.size() != weight.size())
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return;
       }
 
     nRows = pl.size();
@@ -329,7 +324,6 @@ namespace ice
     if (!dest)
       {
         throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     dest << "double " << name << "_data[]" ;
@@ -1125,7 +1119,6 @@ namespace ice
     if (colnr >= nColumns)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     sortcolumn = colnr;
@@ -1149,7 +1142,6 @@ namespace ice
     if ((m.rows() != nRows) || (m.cols() != nColumns))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int i = 0 ; i < nRows ; i++)
@@ -1169,7 +1161,6 @@ namespace ice
     if ((v.Size() != nRows) || (v.Size() != nColumns))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int i = 0 ; i < nRows ; i++)
@@ -1191,7 +1182,6 @@ namespace ice
     if ((v.Size() != nRows) || (w.Size() != nColumns))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int i = 0 ; i < nRows ; i++)
@@ -1326,7 +1316,6 @@ namespace ice
     if ((n < 0) || (n >= nColumns))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     *this = (*this)(0, 0, nRows - 1, n - 1) || (*this)(0, n + 1, nRows - 1, nColumns - 1);
@@ -1340,7 +1329,6 @@ namespace ice
     if ((n1 < 0) || (n1 >= nColumns) || (n2 < 0) || (n2 >= nColumns))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (n2 < n1)
@@ -1362,7 +1350,6 @@ namespace ice
     if ((n < 0) || (n >= nRows))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     delete data[n];
@@ -1394,7 +1381,6 @@ namespace ice
     if ((n1 < 0) || (n1 >= nRows) || (n2 < 0) || (n2 >= nRows))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (n2 < n1)
@@ -1416,7 +1402,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int sx = m.cols();
@@ -1425,7 +1410,6 @@ namespace ice
     if ((img->xsize < sx) || (img->ysize < sy))
       {
         throw IceException(FNAME, M_WRONG_WINDOW, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     double minv = m[0][0], maxv = m[0][0];

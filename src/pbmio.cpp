@@ -120,7 +120,6 @@ namespace ice
     if (fd.fd == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     int rc = WritePBMImg(r, g, b, fd);
@@ -139,7 +138,6 @@ namespace ice
     if ((fd = fopen(fname.c_str(), FWMODUS)) == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     maxval = img->maxval;

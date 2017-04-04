@@ -341,7 +341,6 @@ namespace ice
     if (v.size() != 3)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return vh;
       }
 
     vh = tr * v;

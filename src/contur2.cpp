@@ -59,13 +59,11 @@ namespace ice
     if ((direct != HORZ) && (direct != VERT))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImg(imgv))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (IsImg(imgo))
@@ -81,7 +79,6 @@ namespace ice
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
       {
         throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return WRONG_WINDOW;
       }
 
     if ((wxi - 1) == x)
@@ -123,7 +120,6 @@ namespace ice
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return WRONG_STARTPOINT;
       }
 
     xl = x - 1;
@@ -1035,7 +1031,6 @@ namespace ice
     if (cls == NULL)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return Contur();
       }
 
     // Test vom Startpunkt alle acht Richtungen nach links beginnend
@@ -1053,7 +1048,6 @@ namespace ice
     if (cr == 4)                    /* Startpunkt liegt im Objekt */
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-        return Contur();
       }
 
     cr = 0;                        /* Zähler untersuchte Richtungen */
@@ -1069,7 +1063,6 @@ namespace ice
     if (cr == 8)                    /* Startpunkt liegt im Untergrund */
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
-        return Contur();
       }
 
     c.SetStart(xs, ys);

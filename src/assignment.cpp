@@ -35,7 +35,6 @@ namespace ice
     if (feat.rows() != ref.rows())
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
       }
 
     int i;

@@ -20,7 +20,6 @@ namespace ice
         (minDisplacementY >= maxDisplacementY))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(directCrossCorrelation(img1, img2, img3,
@@ -105,7 +104,6 @@ namespace ice
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(directCrossCorrelation(img1, img2, img3,
@@ -277,7 +275,6 @@ namespace ice
         (minDisplacementY >= maxDisplacementY))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(directSquaredError(img1, img2, img3,
@@ -344,7 +341,6 @@ namespace ice
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(directSquaredError(img1, img2, img3,
@@ -915,7 +911,6 @@ namespace ice
     if (!inFile)
       {
         throw IceException(FNAME, M_FILE_OPEN, WRONG_PARAM);
-        return 1;
       }
 
     while (getline(inFile, lineString))

@@ -66,7 +66,6 @@ namespace ice
     if (mx(0, 0) < EPSILON)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return tri;
       }
 
     Trafo tr;

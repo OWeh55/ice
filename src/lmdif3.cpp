@@ -76,7 +76,6 @@ namespace ice
     if (running)
       {
         throw IceException(FNAME, M_NOT_NESTED, ERROR);
-        return ERROR;
       }
 
     int onr = refvecp.size();
@@ -85,7 +84,6 @@ namespace ice
     if ((onr < 1) || (funcdim < onr))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
 
     running = true;

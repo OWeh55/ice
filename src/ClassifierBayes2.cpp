@@ -137,7 +137,6 @@ namespace ice
     if (id != "ClassifierBayes2")
       {
         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     source >> nFeatures >> p1 >> p2;
@@ -154,7 +153,6 @@ namespace ice
     if (source.fail() || source.bad())
       {
         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     Finish();

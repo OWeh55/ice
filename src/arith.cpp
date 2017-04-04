@@ -104,7 +104,6 @@ namespace ice
             default:
             {
               throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
             }
             }
 
@@ -155,7 +154,6 @@ namespace ice
       default:
       {
         throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
       }
 
@@ -234,7 +232,6 @@ namespace ice
             default:
             {
               throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
             }
             }
 
@@ -297,7 +294,6 @@ namespace ice
             default:
             {
               throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
             }
             }
 
@@ -350,7 +346,6 @@ namespace ice
             default:
             {
               throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
             }
             }
 
@@ -373,7 +368,6 @@ namespace ice
     if ((!IsImg(p)) || (!IsImg(dest)))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     nx = dest->xsize;
@@ -548,7 +542,6 @@ namespace ice
     if ((bin < 1) || (bin > src->maxval) || (val < 0) || (val > dest->maxval))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     switch ((src->ImageType() << 4) + dest->ImageType())
@@ -747,7 +740,6 @@ namespace ice
     if (! IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return tmp;
       }
 
     tmp = img->maxval + 1;

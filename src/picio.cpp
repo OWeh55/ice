@@ -345,11 +345,9 @@ namespace ice
         return ReadPSDImg(filename, img, flag);
       case UNSUPPORTED_TYP:
         throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
-        return Image();
       }
 
     throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-    return Image();
   }
 
   Image ReadImg(const std::string& fname)
@@ -382,11 +380,9 @@ namespace ice
         return ReadTIFImg(filename, ir, ig, ib, flag);
       case UNSUPPORTED_TYP:
         throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-    return WRONG_FILE;
   }
 #undef FNAME
   /**********************************************/

@@ -126,13 +126,11 @@ namespace ice
     if ((points != p2.rows()) || (points != weight.Size()))
       {
         throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return res;
       }
 
     if ((p1.cols() != 2) || (p2.cols() != 2))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
       }
 
     Vector para;
@@ -201,7 +199,6 @@ namespace ice
       }
 
     throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-    return res;
   }
 
   Trafo MatchPano(const Matrix& p1, const Matrix& p2,

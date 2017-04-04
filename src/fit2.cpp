@@ -95,13 +95,11 @@ namespace ice
     if (pnr < 3)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return Circle();
       }
 
     if (pnr != weight.size())
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return Circle();
       }
 
     /* Berechnung der Kovarianzmatrix */
@@ -178,13 +176,11 @@ namespace ice
     if (pl.size() < 3)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return res;
       }
 
     if (step < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
       }
 
     double mse = 1.0;

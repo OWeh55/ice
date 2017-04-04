@@ -128,7 +128,6 @@ namespace ice
     if (id != "ClassifierMinimumDistance")
       {
         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     source >> nFeatures >> nClasses;
@@ -154,19 +153,16 @@ namespace ice
     if ((cl < 0) || (cl >= nClasses))
       {
         throw IceException(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
-        return ret;
       }
 
     if (nClasses == 0)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ret;
       }
 
     if (par[cl][nFeatures] == 0)
       {
         throw IceException(FNAME, M_NOT_TRAINED, WRONG_PARAM);
-        return ret;
       }
 
     return par[cl](0, nFeatures - 1);

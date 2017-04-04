@@ -37,12 +37,10 @@ namespace ice
     if (Value < 0)
       {
         throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     if (Value > img.maxval)
       {
         throw IceException(FNAME, M_VALTOOLARGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     return img.set(Value);
   }

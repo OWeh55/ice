@@ -105,7 +105,6 @@ namespace ice
     if (mom[i00] == 0.0)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return Point(0, 0);
       }
 
     return Point(mom[i10] / mom[i00], mom[i01] / mom[i00]);
@@ -120,7 +119,6 @@ namespace ice
     if ((xi < 0) || (yi < 0) || (s > 4))
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return mom[i00];
       }
 
     return mom[os[s] + yi];
@@ -134,7 +132,6 @@ namespace ice
     if ((xi < 0) || (yi < 0) || (s > 4))
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return mom[i00];
       }
 
     return mom[os[s] + yi];
@@ -481,7 +478,6 @@ namespace ice
         return NormalizeScaling(alpha, beta);
       default:
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return *this;
       }
   }
 
@@ -584,7 +580,6 @@ namespace ice
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return Moments();
       }
 
     Matrix trm = tr.Tmatrix();
@@ -592,7 +587,6 @@ namespace ice
     if (fabs(trm[2][0]) + fabs(trm[2][1]) > EPSILON)
       {
         throw IceException(FNAME, M_TRAFO_NOTAFFINE, WRONG_PARAM);
-        return Moments();
       }
 
     double trd[3][3];

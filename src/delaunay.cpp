@@ -490,7 +490,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return;
       }
 
     if (fillValue >= 0)

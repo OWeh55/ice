@@ -406,7 +406,6 @@ namespace ice
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
@@ -649,7 +648,6 @@ namespace ice
       if ((sx<1)||((sx & 1)!=1)||(sy<1)||((sy & 1)!=1))
       {
     throw IceException(FNAME,M_WRONG_PARAM,WRONG_PARAM);
-      return WRONG_PARAM;
       }
     */
 
@@ -718,7 +716,6 @@ namespace ice
     if ((n1 < 1) || ((n1 & 1) != 1) || (n2 < 1) || ((n2 & 1) != 1))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
@@ -807,7 +804,6 @@ namespace ice
                     if (nx != ny)
                       {
                         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                        return WRONG_PARAM;
                       }
 
                     GaussImg(imgs_wide, smearresult, nx, nx / 3.0);
@@ -916,7 +912,6 @@ namespace ice
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       };
 
     /* Bildgrößen ueberpruefen */
@@ -950,7 +945,6 @@ namespace ice
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       };
 
     /* Bildgrößen ueberpruefen */
@@ -1027,7 +1021,6 @@ namespace ice
     if (size < 0 || sigma < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (size == 0)

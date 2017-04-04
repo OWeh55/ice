@@ -54,13 +54,11 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return Image();
       }
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
       }
 
     fread((unsigned char*)&Header, 128, 1, fd);
@@ -92,7 +90,6 @@ namespace ice
       default:
         fclose(fd);
         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return Image();
       }
 
     Shift2 = 3 - Shift1;
@@ -111,7 +108,6 @@ namespace ice
           {
             fclose(fd);
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return Image();
           }
 
         newimg = true; /* merken dass Bild neu angefordert */
@@ -140,7 +136,6 @@ namespace ice
 
                 free(PCXLine);
                 throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-                return Image();
               }
 
             if (Ch >> 6 == 0x03)
@@ -159,7 +154,6 @@ namespace ice
 
                     free(PCXLine);
                     throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-                    return Image();
                   }
 
                 for (ii = 0; ii < Count; ii++)
@@ -177,7 +171,6 @@ namespace ice
 
                         free(PCXLine);
                         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-                        return Image();
                       }
                   }
               }
@@ -223,13 +216,11 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((fd = fopen(hname.c_str(), FWMODUS)) == NULL)
       {
         throw IceException(FNAME, "File kann nicht eroeffnet werden", ERROR);
-        return ERROR;
       }
 
     Header.Signature = 0x0a; /* Kennung PCX-File */
@@ -308,7 +299,6 @@ namespace ice
     if (fwrite(&Header, 128, 1, fd) == 0)
       {
         throw IceException(FNAME, "Fehler beim Schreiben des Headers", ERROR);
-        return ERROR;
       }
 
     PCXLine = (unsigned char*) malloc(Header.BytesPerLine * sizeof(unsigned char));

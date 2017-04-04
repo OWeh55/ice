@@ -55,13 +55,11 @@ namespace ice
     if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (option != NORMAL && option != INVERS)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     bool forward = option == NORMAL;
@@ -69,7 +67,6 @@ namespace ice
     if (n < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if ((n != fftw_size) || (forward != isforward))
@@ -127,13 +124,11 @@ namespace ice
     if (dim < 1 || dim != (int)srcim.size())
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (option != NORMAL && option != INVERS)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     bool forward = option == NORMAL;
@@ -191,13 +186,11 @@ namespace ice
     if (dim < 1 || dim != (int)im.size())
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (option != NORMAL && option != INVERS)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     bool forward = option == NORMAL;

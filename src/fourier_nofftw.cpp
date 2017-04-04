@@ -86,7 +86,6 @@ namespace ice
         if (sint == NULL)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
           }
 
         cost = new double[size];
@@ -94,7 +93,6 @@ namespace ice
         if (cost == NULL)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
           }
       }
 
@@ -237,7 +235,6 @@ namespace ice
     if (makesincostab(n, wi, wr, back) != OK)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     tr = new double[n];
@@ -245,7 +242,6 @@ namespace ice
     if (tr == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     ti = new double[n];
@@ -253,7 +249,6 @@ namespace ice
     if (ti == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     for (i = 0; i < n; ++i)
@@ -304,19 +299,16 @@ namespace ice
     if (option != NORMAL && option != INVERS)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (n < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     inverse = (option != NORMAL);
@@ -361,7 +353,6 @@ namespace ice
     if (option != NORMAL && option != INVERS)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     unsigned int dim = dstre.size();
@@ -369,7 +360,6 @@ namespace ice
     if (dim < 1 || dim != dstim.size())
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     inverse = (option != NORMAL);
@@ -405,7 +395,6 @@ namespace ice
     if (option != NORMAL && option != INVERS)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     unsigned int dim = srcre.size();
@@ -413,7 +402,6 @@ namespace ice
     if (dim < 1 || dim != srcim.size())
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     dstre = srcre;

@@ -224,7 +224,6 @@ namespace ice
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     if (ReadBMPHeader(fp, bmi))
@@ -272,7 +271,6 @@ namespace ice
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
       }
 
     if (ReadBMPHeader(fp, bmi))
@@ -377,7 +375,6 @@ namespace ice
     if (rv)
       {
         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return Image();
       }
 
     if (!IsImg(img))
@@ -405,7 +402,6 @@ namespace ice
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     if (ReadBMPHeader(fp, bmi))
@@ -490,7 +486,6 @@ namespace ice
     if (rv)
       {
         throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     if (!IsImg(red))
@@ -926,7 +921,6 @@ namespace ice
     if (!IsImg(ir) || !IsImg(ig) || !IsImg(ib))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(ir, ig, ib, w, h));
@@ -936,7 +930,6 @@ namespace ice
     if ((fp = fopen(hname.c_str(), FWMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     putc('B', fp);
@@ -970,7 +963,6 @@ namespace ice
       {
         fclose(fp);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     for (j = 0; j < h; j++)
@@ -993,7 +985,6 @@ namespace ice
       {
         fclose(fp);
         throw IceException(FNAME, M_WRONG_WRITE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     fclose(fp);
@@ -1012,7 +1003,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     w = img->xsize;
@@ -1022,7 +1012,6 @@ namespace ice
     if ((fp = fopen(hname.c_str(), FWMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     nc = graymax + 1;
@@ -1134,7 +1123,6 @@ namespace ice
       {
         fclose(fp);
         throw IceException(FNAME, M_WRONG_WRITE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     fclose(fp);

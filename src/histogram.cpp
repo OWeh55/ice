@@ -78,13 +78,11 @@ namespace ice
     if (!IsImg(b))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return;
       }
 
     if (diff < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
     reset(b->maxval + 1);
     addImage(b, diff);
@@ -95,13 +93,11 @@ namespace ice
     if (!IsImg(b))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (diff < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int typ = b->ImageType();
@@ -143,7 +139,6 @@ namespace ice
     if (number < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     nclasses = number;
@@ -166,7 +161,6 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if ((unsigned int)val < (unsigned int)nclasses)
@@ -191,13 +185,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return -1;
       }
 
     if ((index < 0) || (index >= nclasses))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1;
       }
 
     return classes[index];
@@ -210,7 +202,6 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return v;
       }
 
     for (int i = 0; i < nclasses; i++)
@@ -226,7 +217,6 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return;
       }
 
     v.resize(nclasses);
@@ -244,19 +234,16 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return -1.0;
       }
 
     if (index < 0 || index >= nclasses)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1.0;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return -1.0;
       }
 
     return (double)classes[index] / (double)sum;
@@ -269,13 +256,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return res;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return res;
       }
 
     for (int i = 0; i < nclasses; i++)
@@ -291,13 +276,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return;
       }
 
     v.resize(nclasses);
@@ -316,13 +299,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
       }
 
     int i = 0;
@@ -350,19 +331,16 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if ((q < 0.0) || (q > 0.5))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
       }
 
     int qabs = RoundInt(sum * q); // number of values to ignore
@@ -392,13 +370,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if (sum == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
       }
 
     double sumx = 0;
@@ -432,7 +408,6 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     n = sum;
@@ -445,7 +420,6 @@ namespace ice
     if (!h1.isValid() || !h2.isValid() || h1.nClasses() != h2.nClasses())
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0;
       }
 
     EarthMoverVectorDistance emd;
@@ -475,13 +449,11 @@ namespace ice
     if (!isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     if (!IsImg(b))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     x1 = 0;

@@ -34,7 +34,6 @@ namespace ice
     if (pl.rows() < 3 || pl.cols() < 2)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Matrix plw = Matrix(pl);
@@ -114,7 +113,6 @@ namespace ice
     if (!c.isValid())
       {
         throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int nPoints = c.Number();
@@ -122,7 +120,6 @@ namespace ice
     if (nPoints < 3)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Matrix pl = Matrix(nPoints, 2);
@@ -152,20 +149,7 @@ namespace ice
     if (pl.rows() < 3 || pl.cols() < 2)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
-
-    /*PointList rpl = NewPointList(pl.rows());
-      for(int c1=0;c1<pl.rows();c1++){
-      rpl->xptr[c1] = pl[c1][0];
-      rpl->yptr[c1] = pl[c1][1];
-      rpl->wptr[c1] = 1;
-      }
-      if(!IsPolygon(rpl)){
-    throw IceException(FNAME,"KEIN GUELTIGES POLYGON",WRONG_PARAM);
-      return WRONG_PARAM;
-      }
-      FreePointList(rpl);*/
 
     Matrix plw(pl);
     Matrix pcl(1, 2);

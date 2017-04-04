@@ -899,7 +899,6 @@ ende:
     if (!IsImg(retImg))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < CopiedSourceImg.ysize; y++)
@@ -974,7 +973,6 @@ ende:
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Image mark = NewImg(Original->xsize, Original->ysize, 2);
@@ -1055,7 +1053,6 @@ ende:
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg) || Treshold < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     SetImg(GrwImg, 255);
@@ -1068,7 +1065,6 @@ ende:
     if (EG == nullptr)
       {
         throw IceException(FNAME, M_NOT_INITIALISED , WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     EG->ComputeWatershedTrans();  // WST auf Kantengraph ausfuehren

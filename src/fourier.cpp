@@ -45,7 +45,6 @@ namespace ice
     if (dim != (int)im.size())
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     vector<double> real(dim);
@@ -83,7 +82,6 @@ namespace ice
     if ((ms.rows() != 2) && (ms.cols() != 2))
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (ms.rows() != 2)

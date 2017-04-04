@@ -55,7 +55,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int xs, ys;

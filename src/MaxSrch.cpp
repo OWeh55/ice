@@ -32,7 +32,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
       }
 
     // Struktur initialisieren
@@ -42,7 +41,6 @@ namespace ice
     if (ms == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
       }
 
     ms->grwanz = img->maxval + 1;
@@ -150,7 +148,6 @@ namespace ice
     if (ms == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
 
     delete [](ms->allhist);
@@ -173,7 +170,6 @@ namespace ice
     if (ms == nullptr || !IsImg(img) || !IsImg(imgo))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
       }
 
     while (ms->allhist[ms->lastgrw].next_area == nullptr)

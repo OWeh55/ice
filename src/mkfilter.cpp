@@ -87,7 +87,6 @@ namespace ice
     )
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return LSIFilter();
       }
 
     int m = size;

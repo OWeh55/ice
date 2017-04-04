@@ -40,7 +40,6 @@ namespace ice
     if (! i1.isValid() || ! i2.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     xs = i1.xsize;
@@ -49,7 +48,6 @@ namespace ice
     if ((xs != i2.xsize) || (ys != i2.ysize))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return OK;
@@ -60,7 +58,6 @@ namespace ice
     if (! i1.isValid() || ! i2.isValid() || ! i3.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     xs = i1.xsize;
@@ -70,7 +67,6 @@ namespace ice
         (xs != i3.xsize) || (ys != i3.ysize))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return OK;
@@ -103,7 +99,6 @@ namespace ice
     if (!img.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     max = img.getPixelUnchecked(0, 0);
@@ -149,13 +144,11 @@ namespace ice
     if (!inp.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!out.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     sx = inp.xsize;
@@ -164,7 +157,6 @@ namespace ice
     if (!(out.xsize == sx && out.ysize == sy))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (sign == SIGNED)
@@ -209,13 +201,11 @@ namespace ice
     if (!IsImgD(input))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImg(out))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     outmaxval = out->maxval;
@@ -271,7 +261,6 @@ namespace ice
     if (!(out.xsize == xs && out.ysize == ys))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; ++y)
@@ -295,7 +284,6 @@ namespace ice
     if (! MatchImgD(src, dst, xs, ys))
       {
         throw IceException(FNAME, M_0, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ys; ++y)
@@ -405,7 +393,6 @@ namespace ice
     if (!IsImgD(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return false;
       }
     return img.inside(x, y);
   }

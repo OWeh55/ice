@@ -318,7 +318,6 @@ namespace ice
         ! ReadPara(is, "d2", d2) || ! ReadPara(is, "d3", d3) || ! ReadPara(is, "d4", d4))
       {
         throw IceException(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
-        return;
       }
   }
 #undef FNAME
@@ -334,7 +333,6 @@ namespace ice
     if (v.size() != 5)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     x0 = v[0];

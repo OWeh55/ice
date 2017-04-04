@@ -82,7 +82,6 @@ namespace ice
         if (hdata == NULL)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
           }
 
         datalen += CONTURLISTBLOCKSIZE;
@@ -100,7 +99,6 @@ namespace ice
     if ((i < 0) || (i >= conturs))
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     delete data[i];
@@ -125,7 +123,6 @@ namespace ice
     if ((i < 0) || (i > conturs))
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return NULL;
       }
 
     return data[i];

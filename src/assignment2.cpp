@@ -119,7 +119,6 @@ namespace ice
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     int x, x1;
@@ -280,7 +279,6 @@ namespace ice
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     int x, x1;
@@ -464,7 +462,6 @@ namespace ice
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     for (int y = 0; y < ny; y++)   // first row, all columns
@@ -687,7 +684,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return OK;

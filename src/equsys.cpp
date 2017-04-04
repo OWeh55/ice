@@ -78,7 +78,6 @@ namespace ice
     if (hb == NULL)
       {
         throw IceException("EquSysTest", M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     if (b != NULL)
@@ -165,13 +164,11 @@ namespace ice
     if (pa == NULL || pb == NULL || px == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, ERROR);
-        return ERROR;
       };
 
     if (rang < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       };
 
     switch (rang)
@@ -182,7 +179,6 @@ namespace ice
         if (rc != OK)
           {
             throw IceException(FNAME, M_ZERO_DET, rc);
-            return rc;
           }
 
         return OK;
@@ -192,7 +188,6 @@ namespace ice
         if (rc != OK)
           {
             throw IceException(FNAME, M_ZERO_DET, rc);
-            return rc;
           }
 
         return OK;
@@ -203,7 +198,6 @@ namespace ice
         if (dpa == NULL)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return (NO_MEM);
           };
 
         dpb = (double*)malloc(size_b);
@@ -212,7 +206,6 @@ namespace ice
           {
             free(dpa);
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return (NO_MEM);
           };
 
         /* kopieren in dynamischen speicherbereich */
@@ -383,7 +376,6 @@ namespace ice
     if (row < 1 || col < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     /* Bearbeitung der Trivialfalles */
@@ -418,7 +410,6 @@ namespace ice
     if (hA == NULL)
       {
         throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     memcpy(hA, A, size);
@@ -429,7 +420,6 @@ namespace ice
     if (hb == NULL)
       {
         throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     if (b != NULL)
@@ -456,7 +446,6 @@ namespace ice
     if (hb == NULL)
       {
         throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     for (i = 0; i < col; i++)
@@ -866,7 +855,6 @@ namespace ice
         if (fabs(det) < ceps)
           {
             throw IceException(FNAME, M_WRONG_START, ERROR);
-            return ERROR;
           }
 
         RETURN_ERROR_IF_FAILED(EquSys(a, b, dim, x));
@@ -939,7 +927,6 @@ namespace ice
     if ((m1 == NULL) || (v1 == NULL) || (m2 == NULL) || (v2 == NULL))
       {
         throw IceException(FNAME, M_WRONG_PTR, ERROR);
-        return (ERROR);
       }
 
     vp2 = v2;

@@ -333,7 +333,6 @@ namespace ice
     if (stream == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, ERROR);
-        return (ERROR);
       }
 
     fprintf(stream, "%%P\n");
@@ -365,7 +364,6 @@ namespace ice
     if (stream == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, ERROR);
-        return (ERROR);
       }
 
     do
@@ -373,7 +371,6 @@ namespace ice
         if (fgets(line, 100, stream) == nullptr)
           {
             throw IceException(FNAME, M_WRONG_FILE, ERROR);
-            return (ERROR);
           }
       }
     while (line[0] != '%' || line[1] != 'P');
@@ -383,7 +380,6 @@ namespace ice
         if (fgets(line, 100, stream) == nullptr)
           {
             throw IceException(FNAME, M_WRONG_FILE, ERROR);
-            return (ERROR);
           }
 
         frp = &f->frame[i][0];
@@ -391,7 +387,6 @@ namespace ice
         if (sscanf(line, "%le%le%le%le", frp, frp + 1, frp + 2, frp + 3) != 4)
           {
             throw IceException(FNAME, M_WRONG_FILE, ERROR);
-            return (ERROR);
           }
       }
 
@@ -465,7 +460,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_MODE, ERROR);
-        return (nullptr);
       }
 
     for (i = 0; i < 3; i++)
@@ -657,7 +651,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_MODE, ERROR);
-        return (ERROR);
       }
 
     for (i = 0; i < 3; i++)
@@ -680,7 +673,6 @@ namespace ice
     if (l < 1e-15)
       {
         throw IceException(FNAME, RM_NO_BASIS, ERROR);
-        return (nullptr);
       }
 
     ScaleVec(frm->frame[0], 1 / l, frm->frame[0]);
@@ -691,7 +683,6 @@ namespace ice
     if (l < 1e-15)
       {
         throw IceException(FNAME, RM_NO_BASIS, ERROR);
-        return (nullptr);
       }
 
     ScaleVec(frm->frame[1], 1 / l, frm->frame[1]);
@@ -704,7 +695,6 @@ namespace ice
     if (l < 1e-15)
       {
         throw IceException(FNAME, RM_NO_BASIS, ERROR);
-        return (nullptr);
       }
 
     ScaleVec(frm->frame[2], 1 / l, frm->frame[2]);

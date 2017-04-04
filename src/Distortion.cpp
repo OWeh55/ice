@@ -71,7 +71,6 @@ namespace ice
     if (v.size() != 2)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
       }
 
     Distort(v[0], v[1], res[0], res[1]);
@@ -108,7 +107,6 @@ namespace ice
     if (v.size() != 2)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return result;
       }
 
     Rect(v[0], v[1], result[0], result[1]);
@@ -137,13 +135,11 @@ namespace ice
     if (!IsImg(source) || !IsImg(dest))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (dest->maxval != source->maxval)
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (source == dest)
@@ -314,7 +310,6 @@ namespace ice
     if (rc > 4)
       {
         throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
       }
     else
       {
@@ -441,7 +436,6 @@ namespace ice
     if ((int)orig.size() != nrlist)
       {
         throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Vector parameterVector(nr_distortion_parameter + 8 * nrlist);
@@ -519,7 +513,6 @@ namespace ice
     if (rc > 4)
       {
         throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
       }
     else
       {

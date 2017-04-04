@@ -50,7 +50,6 @@ namespace ice
     if (dim != m.rows())
       {
         throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return h;
       }
 
     double max, s, q, pivot;
@@ -89,7 +88,6 @@ namespace ice
         if (max == 0)
           {
             throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
-            return h;
           }
 
         if (p_k[k] != k)
@@ -151,7 +149,6 @@ namespace ice
     if (dim != m.rows())
       {
         throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return h;
       }
 
     double max, s, q, pivot;
@@ -190,7 +187,6 @@ namespace ice
         if (max == 0)
           {
             throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
-            return h;
           }
 
         if (p_k[k] != k)

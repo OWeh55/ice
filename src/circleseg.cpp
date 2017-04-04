@@ -53,7 +53,6 @@ namespace ice
     if (v.Size() < 5)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     phi1 = v[3];

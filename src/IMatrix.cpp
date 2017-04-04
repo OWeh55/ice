@@ -107,7 +107,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return;
       }
 
     dim = img->ysize;
@@ -698,7 +697,6 @@ namespace ice
     if ((n < 0) || (n >= dim))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     delete data[n];
@@ -730,7 +728,6 @@ namespace ice
     if ((n1 < 0) || (n1 >= dim) || (n2 < 0) || (n2 >= dim))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (n2 < n1)

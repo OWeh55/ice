@@ -67,7 +67,6 @@ namespace ice
     if (nPoints < 1)
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-        return;
       }
 
     // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes == Wurzel
@@ -131,7 +130,6 @@ namespace ice
     if (nPoints < 1)
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-        return;
       }
 
     // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes == Wurzel
@@ -272,7 +270,6 @@ namespace ice
     if (nPoints < 1 || distances.cols() != nPoints)
       {
         throw IceException(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
-        return;
       }
 
     // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes = Wurzel
@@ -405,7 +402,6 @@ namespace ice
     if (nTree > 1)
       {
         throw IceException(FNAME, "More than one tree", ERROR);
-        return res;
       }
 
 #endif

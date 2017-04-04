@@ -73,7 +73,6 @@ namespace ice
     if (Trans == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return ERROR;
       }
 
     DefMatrix((double*)m, 3, 3, UNIT);
@@ -85,7 +84,6 @@ namespace ice
     if (normalize(Trans) != OK)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     return OK;
@@ -104,7 +102,6 @@ namespace ice
     if (Trans == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return ERROR;
       }
 
     InitTrans(rot);
@@ -122,7 +119,6 @@ namespace ice
     if (normalize(Trans) != OK)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     return OK;
@@ -140,7 +136,6 @@ namespace ice
     if (Trans == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return ERROR;
       }
 
     InitTrans(scal);
@@ -154,7 +149,6 @@ namespace ice
     if (normalize(Trans) != OK)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     return OK;
@@ -174,7 +168,6 @@ namespace ice
     if (Trans == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return ERROR;
       }
 
     InitTrans(affin);
@@ -190,7 +183,6 @@ namespace ice
     if (normalize(Trans) != OK)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
@@ -198,7 +190,6 @@ namespace ice
     if (fac < eps)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     ScaleMatrix((double*)Trans, 3, 3, fac, (double*)Trans);
@@ -220,7 +211,6 @@ namespace ice
     if (Trans == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return ERROR;
       }
 
     InitTrans(proj);
@@ -239,7 +229,6 @@ namespace ice
     if (normalize(Trans) != OK)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
@@ -247,7 +236,6 @@ namespace ice
     if (fac < eps)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     ScaleMatrix((double*)Trans, 3, 3, fac, (double*)Trans);
@@ -271,7 +259,6 @@ namespace ice
     if (normalize(Trans) != OK)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
@@ -279,7 +266,6 @@ namespace ice
     if (fac < eps)
       {
         throw IceException(FNAME, M_NO_PROJ, ERROR);
-        return ERROR;
       }
 
     ScaleMatrix((double*)Trans, 3, 3, 1 / fac, (double*)Trans);
@@ -297,13 +283,11 @@ namespace ice
     if (pl1->lng < 4)
       {
         throw IceException(FNAME, M_MISS_P, ERROR);
-        return (ERROR);
       }
 
     if (pl2->lng < pl1->lng)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, ERROR);
-        return (ERROR);
       }
 
     A = NewMatrix(MAT_DOUBLE, pl1->lng * 2, 8);
@@ -311,7 +295,6 @@ namespace ice
     if (A == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (ERROR);
       }
 
     ih = ip = (double*)malloc(pl1->lng * 2 * sizeof(double));
@@ -320,7 +303,6 @@ namespace ice
       {
         free(A);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (ERROR);
       }
 
     for (i = 0; i < pl1->lng; i++)
@@ -355,7 +337,6 @@ namespace ice
     if (rc != OK)
       {
         throw IceException(FNAME, M_0, ERROR);
-        return (ERROR);
       }
 
     return (OK);
@@ -372,13 +353,11 @@ namespace ice
     if (pl1->lng < 3)
       {
         throw IceException(FNAME, M_MISS_P, ERROR);
-        return (ERROR);
       }
 
     if (pl2->lng < pl1->lng)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, ERROR);
-        return (ERROR);
       }
 
     A = NewMatrix(MAT_DOUBLE, pl1->lng * 2, 6);
@@ -386,7 +365,6 @@ namespace ice
     if (A == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (ERROR);
       }
 
     ih = ip = (double*)malloc(pl1->lng * 2 * sizeof(double));
@@ -395,7 +373,6 @@ namespace ice
       {
         FreeMatrix(A);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (ERROR);
       }
 
     if (A == NULL || ih == NULL)
@@ -433,7 +410,6 @@ namespace ice
     if (rc != OK)
       {
         throw IceException(FNAME, M_0, ERROR);
-        return (ERROR);
       }
 
     return (OK);

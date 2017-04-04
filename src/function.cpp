@@ -35,7 +35,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return (WRONG_POINTER);
       }
 
     for (int y = 0; y < img.ysize; y++)

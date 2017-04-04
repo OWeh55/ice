@@ -475,7 +475,6 @@ namespace ice
     if (pl2.size() != pnumber)
       {
         throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return res;
       }
 
     Matrix p1(pnumber, 2);
@@ -513,7 +512,6 @@ namespace ice
         if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
           {
             throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-            return res;
           }
 
         nPoints = p1.rows();
@@ -583,7 +581,6 @@ namespace ice
     if ((nPoints != (int)p2.size()) || (nPoints != (int)weights.size()))
       {
         throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return tmatrix;
       }
 
     PointList pl1, pl2;

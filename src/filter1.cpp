@@ -491,7 +491,6 @@ namespace ice
     if (detectionsize <= 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int dimx = pic->xsize;
@@ -627,7 +626,6 @@ namespace ice
     if (detectionsize <= 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int dimx = pic->xsize;
@@ -710,7 +708,6 @@ namespace ice
     if ((pn2->maxval < 7))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Image pn1 = pn1p;

@@ -98,19 +98,16 @@ namespace ice
     if (!IsImg(orig))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (!IsImg(dist))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (orig == dist)
       {
         throw IceException(FNAME, M_SAME_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(orig, dist, xs, ys));
@@ -125,13 +122,11 @@ namespace ice
     if ((mode < 1) || (mode > 2))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (fabs(step) > maxdist)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (step < 0.0)
@@ -154,7 +149,6 @@ namespace ice
     if ((pegl < 0) || (pegl > orig->maxval))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (IsImg(dir))
@@ -162,19 +156,16 @@ namespace ice
         if ((xs != dir->xsize) || (ys != dir->ysize))
           {
             throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-            return WRONG_PARAM;
           }
 
         if ((orig == dir) || (dist == dir))
           {
             throw IceException(FNAME, M_SAME_IMAGE, WRONG_PARAM);
-            return WRONG_PARAM;
           }
 
         if (dir->maxval < 8)
           {
             throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
-            return WRONG_PARAM;
           }
       }
 
@@ -184,7 +175,6 @@ namespace ice
     if (!IsImg(ibin))
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     inr = NewImg(xs, ys, xs * ys / 2);
@@ -193,7 +183,6 @@ namespace ice
       {
         FreeImg(ibin);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
       }
 
     int io, iu;

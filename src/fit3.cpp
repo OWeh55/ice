@@ -143,19 +143,16 @@ namespace ice
     if (pl.size() < 4)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (step < 0  || pl.size() != wv.size())
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (mode != 1 && mode != 2)
       {
         throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // normalize points
@@ -227,7 +224,6 @@ namespace ice
             if (cptr == NULL)
               {
                 throw IceException(FNAME, M_WRONG_POINTS, WRONG_PARAM);
-                return WRONG_PARAM;
               }
 
             RETURN_ERROR_IF_FAILED(EigenVal((double*)cov, 6, eval, (double*)evec));
@@ -332,7 +328,6 @@ namespace ice
             if (code != OK)
               {
                 throw IceException(FNAME, M_0, INTERN_ERROR);
-                return INTERN_ERROR;
               }
 
             koef[0] = 1.0 - loesung[0];

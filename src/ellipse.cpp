@@ -93,7 +93,6 @@ namespace ice
     if (v.Size() < 5)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     r2 = v[3];
@@ -115,7 +114,6 @@ namespace ice
     if (rv < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     r2 = rv;
@@ -222,7 +220,6 @@ namespace ice
     if (v.Size() < 7)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     phi1 = v[5];

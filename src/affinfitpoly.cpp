@@ -55,7 +55,6 @@ namespace ice
     if (pl1 == NULL || pl2 == NULL)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (-1);
       }
 
     /* Abstand der Stuetzstellen */
@@ -156,7 +155,6 @@ namespace ice
     if (pl1 == NULL || pl2 == NULL)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (-1);
       }
 
     MomentPolygon(pl1, m1, pc0);
@@ -169,7 +167,6 @@ namespace ice
     if (m1[0] < EPSILON || m2[0] < EPSILON)
       {
         throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-        return DBL_MAX;
       }
 
     /*Normierung der Momente auf vergleichbare Groessen */
@@ -302,7 +299,6 @@ namespace ice
     if (mx[0] < EPSILON)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     PolyNormMoments(mx, mh, tr);
@@ -351,7 +347,6 @@ namespace ice
     if (mx[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     /*******************************************************/
@@ -512,7 +507,6 @@ namespace ice
     if (mx[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
       }
 
     sx = mx[1] / mx[0];
@@ -734,7 +728,6 @@ namespace ice
     if (mx[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
       }
 
     //
@@ -902,7 +895,6 @@ namespace ice
     if (mx[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
       }
 
     //
@@ -1193,13 +1185,11 @@ namespace ice
     if (mx[0] <= 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (n < 3 || n > 7)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     /*******************************************************/
@@ -1242,7 +1232,6 @@ namespace ice
     if (rc > 3)
       {
         throw IceException(FNAME, "LMDif " + LMDifMessage(rc), ERROR);
-        return ERROR;
       }
 
     for (int i = 0; i < n; i++)
@@ -1318,7 +1307,6 @@ namespace ice
     if (mx[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
       }
 
     //

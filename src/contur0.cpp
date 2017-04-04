@@ -113,7 +113,6 @@ namespace ice
     if (!c.isValid())
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return segmente;
       }
 
     int xmax, xmin, ymax, ymin;
@@ -127,7 +126,6 @@ namespace ice
     if (slist == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return segmente;
       }
 
     /*Segmentliste initialisieren*/

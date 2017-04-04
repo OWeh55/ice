@@ -75,7 +75,6 @@ namespace ice
     if (mx[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return -1;
       }
 
     double xs, ys;
@@ -139,7 +138,6 @@ namespace ice
     if (mx[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return -1;
       }
 
     double sx, sy;
@@ -160,7 +158,6 @@ namespace ice
     if (type != ELLIPSE)
       {
         throw IceException(FNAME, M_NO_ELLIPSE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     ell_par[0] = -sx;
@@ -183,7 +180,6 @@ namespace ice
     if (mom[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
       }
 
     /****************************************************************/
@@ -440,7 +436,6 @@ namespace ice
     if (mom[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return ERROR;
       }
 
     /****************************************************************/
@@ -734,7 +729,6 @@ namespace ice
     if (mom[0] == 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
       }
 
     int i, j;
@@ -850,7 +844,6 @@ namespace ice
         mom[12] <= 0.0 || mom[14] <= 0.0)
       {
         throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
       }
 
     xs = mom[1] / mom[0];

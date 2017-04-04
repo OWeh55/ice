@@ -339,7 +339,6 @@ namespace ice
     if ((val < 0) || (val > img->maxval))
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int DotSize;
@@ -347,7 +346,6 @@ namespace ice
     if (size_exp > 5)
       {
         throw IceException(FNAME, M_WRONG_MAGNITUDE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     else
       {

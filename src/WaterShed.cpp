@@ -488,7 +488,6 @@ ende:
         if (m1[j] == NULL)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
           }
       }
 
@@ -710,7 +709,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     if (ret->maxval < curlab)
       {
         throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < ret.ysize; y++)
@@ -927,7 +925,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     if (!IsImg(i) || !IsImg(io))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < i.ysize; y++)
@@ -950,7 +947,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     if (!IsImg(i) || !IsImg(io))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int y = 0; y < i.ysize; y++)
@@ -1082,7 +1078,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     if (!IsImg(GrwImg) || !IsImg(WSHEDDeleted))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);   // ERROR - Bilder nicht initialisiert
-        return WRONG_PARAM;
       }
 
     int xn, yn;
@@ -1138,7 +1133,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
       {
         // Eingabebilder ungleich NULL?
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int maxval = WSImg->maxval;

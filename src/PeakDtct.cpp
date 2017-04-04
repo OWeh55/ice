@@ -104,7 +104,6 @@ namespace ice
           if (ptr == nullptr)
             {
               throw IceException(FNAME, M_NO_MEM, NO_MEM);
-              return ERROR;
             }
 
           xptr = ptr;
@@ -126,7 +125,6 @@ namespace ice
           if (ptr == nullptr)
             {
               throw IceException(FNAME, M_NO_MEM, NO_MEM);
-              return ERROR;
             }
 
           yptr = ptr;
@@ -148,7 +146,6 @@ namespace ice
           if (ptr == nullptr)
             {
               throw IceException(FNAME, M_NO_MEM, NO_MEM);
-              return ERROR;
             }
 
           wptr = ptr;
@@ -297,7 +294,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
       }
 
     pl->next = nullptr;
@@ -1403,7 +1399,6 @@ namespace ice
                                 img->ysize != global_mark->ysize)))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return nullptr;
       }
 
     if (noise == 0 && feat == IPL_NOFEAT)
@@ -1515,7 +1510,6 @@ namespace ice
         if (pl == nullptr)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return nullptr;
           }
         else
           {
@@ -1715,7 +1709,6 @@ namespace ice
         if (pl == nullptr)
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return nullptr;
           }
         else
           {
@@ -1746,7 +1739,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
 
     while ((ptr->prev) != nullptr)
@@ -1778,7 +1770,6 @@ namespace ice
         (flag != IPL_MAXCONTUR && flag != IPL_MINCONTUR))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return c;
       }
 
     Image mask1;
@@ -1790,7 +1781,6 @@ namespace ice
     if (!IsImg(mask1))
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return c;
       }
 
     ClearImg(mask1);

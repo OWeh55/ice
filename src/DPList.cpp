@@ -41,7 +41,6 @@ namespace ice
     if (pl == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     pl->xptr = new int[BLOCKSIZE];
@@ -50,7 +49,6 @@ namespace ice
       {
         delete pl;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     pl->yptr = new int[BLOCKSIZE];
@@ -60,7 +58,6 @@ namespace ice
         delete [](pl->xptr);
         delete pl;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     pl->wptr = new int[BLOCKSIZE];
@@ -71,7 +68,6 @@ namespace ice
         delete [](pl->yptr);
         delete pl;
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     pl->lng = 0;
@@ -92,7 +88,6 @@ namespace ice
     if (pl == NULL)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
       }
 
     if (pl->aktlng == pl->lng)
@@ -108,7 +103,6 @@ namespace ice
         else
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return false;
           }
 
         ptr = (int*)realloc(pl->yptr, pl->aktlng * sizeof(int));
@@ -120,7 +114,6 @@ namespace ice
         else
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return false;
           }
 
         ptr = (int*)realloc(pl->wptr, pl->aktlng * sizeof(int));
@@ -132,7 +125,6 @@ namespace ice
         else
           {
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return false;
           }
       }
 
@@ -155,7 +147,6 @@ namespace ice
     if (pl == NULL || num >= pl->lng)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
       }
 
     pl->lng--;
@@ -187,7 +178,6 @@ namespace ice
     if (pl == NULL)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
       }
 
     delete [](pl->xptr);

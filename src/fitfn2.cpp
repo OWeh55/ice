@@ -40,7 +40,6 @@ namespace ice
     if (m.cols() < 3)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     FitInit();
@@ -59,7 +58,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     FitInit();
@@ -77,7 +75,6 @@ namespace ice
     if (!IsImgD(img))
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     FitInit();
@@ -330,7 +327,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return 0;
         }
       }
 
@@ -347,7 +343,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return Vector(0);
         }
       }
 
@@ -362,7 +357,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return ERROR;
         }
       }
 
@@ -385,7 +379,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return ERROR;
         }
       }
 
@@ -408,7 +401,6 @@ namespace ice
     if (s < 6)
       {
         throw IceException(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     A = Vector(sx4, sx3y, sx2y2, sx3, sx2y, sx2) &&
@@ -520,7 +512,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return 0;
         }
       }
 
@@ -535,7 +526,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return ERROR;
         }
       }
 
@@ -552,7 +542,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return Vector(0);
         }
       }
 
@@ -570,7 +559,6 @@ namespace ice
         IfFailed(calc_c())
         {
           throw IceException(FNAME, M_0, ERROR);
-          return ERROR;
         }
       }
 
@@ -591,7 +579,6 @@ namespace ice
     if (s < 6)
       {
         throw IceException(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     A = Vector(sx2, sxy, sx) &&

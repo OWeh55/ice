@@ -179,7 +179,6 @@ namespace ice
     if (SizeX <= 0 || SizeY <= 0 || MaxValue <= 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return Image();
       }
 
     Image Img;
@@ -192,7 +191,6 @@ namespace ice
     if (!IsImg(Img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return Image();
       }
 
     Image result;
@@ -214,7 +212,6 @@ namespace ice
     if (!IsImg(imgp))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return Image();
       }
 
     Image result(imgp, w, title);

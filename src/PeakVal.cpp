@@ -63,7 +63,6 @@ namespace ice
         graynull < 0 || graynull > img.maxval)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return DBL_MAX;
       }
 
     double   value = 0, pg0 = 0, noise = 0;
@@ -156,7 +155,6 @@ namespace ice
     if (grwd == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return 0.0;
       }
 
     plptr = pl;

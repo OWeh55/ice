@@ -134,7 +134,6 @@ namespace ice
         if (val < MINVAL)
           {
             throw IceException(FNAME, "Can't detect global shift", ERROR);
-            return ERROR;
           }
 
         tr.Shift(dx, dy);

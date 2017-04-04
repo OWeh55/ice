@@ -139,7 +139,6 @@ namespace ice
     if (!videofile)
       {
         throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
       }
 
     error = no_error;

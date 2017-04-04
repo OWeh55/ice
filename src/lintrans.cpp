@@ -43,7 +43,6 @@ namespace ice
     if (quantile < 0 || quantile >= 0.5)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int len = hi.size();
@@ -91,7 +90,6 @@ namespace ice
     if (!h.isValid())
       {
         throw IceException(FNAME, M_INVALID_STRUCT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int len = h.nClasses();
@@ -114,7 +112,6 @@ namespace ice
     else
       {
         throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return OK;
@@ -127,7 +124,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Histogram h(img);
@@ -145,7 +141,6 @@ namespace ice
 
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     WindowWalker w(src);
@@ -171,7 +166,6 @@ namespace ice
     if (max < min)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     double diff = max - min;

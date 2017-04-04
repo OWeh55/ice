@@ -53,7 +53,6 @@ namespace ice
     if (v.Size() < 6)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     dp = Vector3d(v[3] - pos.x, v[4] - pos.y, v[5] - pos.z);

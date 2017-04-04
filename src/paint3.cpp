@@ -59,7 +59,6 @@ namespace ice
     if (nbr < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
 
     fi = (FuncImage1D)malloc(sizeof(struct FuncImage1D_));
@@ -67,7 +66,6 @@ namespace ice
     if (fi == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     fi->nbr = nbr;
@@ -82,7 +80,6 @@ namespace ice
     if (fi->entry == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     for (i = 0; i < nbr; i++)
@@ -101,7 +98,6 @@ namespace ice
     if ((i < 0) || (i > fi->nbr - 1))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     fi->entry[i] = val;
@@ -132,7 +128,6 @@ namespace ice
     if (mode != DEFAULT)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return Image();
       }
 
     min = HUGE_VAL;

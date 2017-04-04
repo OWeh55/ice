@@ -99,7 +99,6 @@ namespace ice
       if ((uv.rows() != points) || (xyz.cols() < 3) || (uv.cols() < 2))
         {
           throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          return;
         }
     };
     // Dimension der Fehlerfunktion
@@ -177,7 +176,6 @@ namespace ice
     if (info > 3)
       {
         throw IceException(FNAME, "LMDif:" + LMDifMessage(info), ERROR);
-        return ERROR;
       }
 
     cam.Set(camp);

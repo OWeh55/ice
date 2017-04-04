@@ -120,13 +120,11 @@ namespace ice
     if ((direct != HORZ) && (direct != VERT))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImg(imgv))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (IsImg(imgo))
@@ -147,14 +145,12 @@ namespace ice
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
       {
         throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return WRONG_WINDOW;
       }
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
       {
         // cout << "nicht innerhalb:" << x << "," << y << " " << wxi << " " << wyi << " " << wxa << " " << wya << endl;
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return WRONG_STARTPOINT;
       }
 
     if (direct == HORZ)
@@ -377,7 +373,6 @@ namespace ice
         if (!IsImg(imgv))
           {
             throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-            return Contur();
           }
 
         if (IsImg(imgo))

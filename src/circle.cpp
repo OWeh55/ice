@@ -43,7 +43,6 @@ namespace ice
     if (v.Size() < 3)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     setR(v[2]);
@@ -61,7 +60,6 @@ namespace ice
     if (vr < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     r = vr;

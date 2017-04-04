@@ -39,7 +39,6 @@ namespace ice
     if (m.cols() < 2)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     FitInit();

@@ -188,13 +188,11 @@ namespace ice
     if ((!IsImg(quelle)) || (!IsImgD(ziel)))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return pic;
       }
 
     if (p < 0 || q < 0 || n <= 0 || ((n & 1) == 0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return pic;
       }
 
     n = n / 2; // Umgebungsgröße -> Abstandswert

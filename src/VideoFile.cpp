@@ -128,7 +128,6 @@ namespace ice
     if (writer)
       {
         throw IceException(FNAME, "Cannot reset in write mode", WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     close();
@@ -170,7 +169,6 @@ namespace ice
     if (reader || writer)
       {
         throw IceException(FNAME, M_ALREADY_OPEN, WRONG_STATE);
-        return WRONG_STATE;
       }
 
     if (mode == ios_base::in)

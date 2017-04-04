@@ -64,13 +64,11 @@ namespace ice
     if (running)
       {
         throw IceException(FNAME, M_NOT_NESTED, ERROR);
-        return ERROR;
       }
 
     if ((optnumber < 1) || (optnumber > variable.Size() || funcdim < optnumber))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
 
     running = true;

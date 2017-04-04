@@ -64,7 +64,6 @@ namespace ice
     if (depth < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int nx = pic1.xsize;
@@ -76,13 +75,11 @@ namespace ice
     if (!check2p(nx, depth) || !check2p(ny, depth))
       {
         throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return (WRONG_PARAM);
       }
 
     if (mode != NORMAL && mode != INVERS)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (WRONG_PARAM);
       }
 
     if (mode == NORMAL)

@@ -76,7 +76,6 @@ namespace ice
     if (n != A.rows())
       {
         throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // Matrix symmetrisieren
@@ -214,7 +213,6 @@ namespace ice
       }
 
     throw IceException(FNAME, "Too many iterations", NO_SOLUTION);
-    return ERROR;
   }
 #undef ROTATE
 
@@ -291,7 +289,6 @@ namespace ice
     if (n != A.rows())
       {
         throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     // symmetrize matrix
@@ -429,7 +426,6 @@ namespace ice
     else
       {
         throw IceException(FNAME, "Too many iterations", NO_SOLUTION);
-        return ERROR;
       }
   }
 
@@ -536,7 +532,6 @@ namespace ice
     if (m < n)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     /* Matrizen U,W,V anlegen */
@@ -829,7 +824,6 @@ namespace ice
             if (its == 40)
               {
                 throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-                return NO_SOLUTION;
               }
 
             x = w.at(l);
