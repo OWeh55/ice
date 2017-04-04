@@ -129,7 +129,9 @@ int main(int argc, char* argv[])
   PrintRange("Hartley", s1);
   ShowImg(s1, mitte);
   FourierImgD(original, null, NORMAL, s2, s3);
-  wloop(s2, x, y) PutValD(s2, x, y, GetValD(s2, x, y) - GetValD(s3, x, y));
+  for (int y=0;y<s2.ysize;y++)
+    for (int x=0;x<s2.xsize;x++)
+      PutValD(s2, x, y, GetValD(s2, x, y) - GetValD(s3, x, y));
   PrintRange("\"Fourier\"", s2);
   ShowImg(s2, rechts);
   Enter();

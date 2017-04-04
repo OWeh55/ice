@@ -20,11 +20,18 @@ int main(int argc, char* argv[])
   Display(ON);
   p1 = NewImg(256, 256, 255);
 //  Show(ON,p1);
-  wloop(p1, x, y) PutVal(p1, x, y, x);
+
+  for (int y=0;y<p1.ysize;y++)
+    for (int x=0;x<p1.xsize;x++)
+      PutVal(p1, x, y, x);
 
   p2 = NewImg(256, 256, 255);
 //  Show(ON,p2);
-  wloop(p2, x, y) PutVal(p2, x, y, y);
+
+  for (int y=0;y<p2.ysize;y++)
+    for (int x=0;x<p2.xsize;x++)
+
+    PutVal(p2, x, y, y);
 
   p3 = NewImg(256, 256, 127);
   Show(ON, p3);

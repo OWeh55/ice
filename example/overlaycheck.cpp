@@ -10,12 +10,12 @@ int main(int argc, char* argv[])
   p[1] = NewImg(512, 512, 255);
   m = NewImg(512, 512, 64);
 
-  int x, y;
+    for (int y=0;y<p[0].ysize;y++)
+      for (int x=0;x<p[0].xsize;x++)
+	PutVal(p[0], x, y, x % (p[0]->maxval));
 
-  wloop(p[0], x, y)
-  PutVal(p[0], x, y, x % (p[0]->maxval));
-
-  wloop(p[1], x, y)
+    for (int y=0;y<p[1].ysize;y++)
+      for (int x=0;x<p[1].xsize;x++)
   PutVal(p[1], x, y, y % (p[1]->maxval));
 
   Printf("Show picture with MaxIndex = %d\t\t", p[1]->maxval);

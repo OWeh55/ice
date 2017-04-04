@@ -65,12 +65,23 @@ namespace ice
   // are equal. Versions with parameters sizeX and sizeY return
   // the size
   // if the images don't match, an exception is thrown
-  void matchImg(const Image& p1,
-                const Image& p2,
-                const Image& p3, int& sizeX, int& sizeY);
-  void matchImg(const Image& p1, const Image& p2, int& sizeX, int& sizeY);
-  void matchImg(const Image& p1, const Image& p2, const Image& p3);
-  void matchImg(const Image& p1, const Image& p2);
+  void checkSizes(const Image& p1,
+                  const Image& p2,
+                  const Image& p3, int& sizeX, int& sizeY);
+  void checkSizes(const Image& p1, const Image& p2, int& sizeX, int& sizeY);
+  void checkSizes(const Image& p1, const Image& p2, const Image& p3);
+  void checkSizes(const Image& p1, const Image& p2);
+
+  // These functions check if 2 or 3 images match == the sizes of the images
+  // are equal. Versions with parameters sizeX and sizeY return
+  // the size
+  // if the images don't match, an exception is thrown
+  void checkImages(const Image& p1,
+                   const Image& p2,
+                   const Image& p3, int& sizeX, int& sizeY);
+  void checkImages(const Image& p1, const Image& p2, int& sizeX, int& sizeY);
+  void checkImages(const Image& p1, const Image& p2, const Image& p3);
+  void checkImages(const Image& p1, const Image& p2);
 
   // Interpretes the image Img as a continous grey value function.
   // Returns the grey value at location (x, y). This value is

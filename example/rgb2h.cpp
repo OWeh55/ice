@@ -29,8 +29,8 @@ int main(int argc, char* argv[])
       Show(_RGB, ir, ig, ib);
       Show(ON, id);
       ReadImg(filename, ir, ig, ib);
-      int x, y;
-      wloop(id, x, y)
+  for (int y=0;y<id.ysize;y++)
+    for (int x=0;x<id.xsize;x++)
       {
         PutVal(id, x, y, GetVal(ig, x, y) * 256 + GetVal(ir, x, y));
       }
@@ -55,9 +55,10 @@ int main(int argc, char* argv[])
       ir = NewImg(id->xsize, id->ysize, 255);
       ig = NewImg(id->xsize, id->ysize, 255);
       ib = NewImg(id->xsize, id->ysize, 255);
-      int x, y;
-      wloop(id, x, y)
-      {
+
+  for (int y=0;y<id.ysize;y++)
+    for (int x=0;x<id.xsize;x++)
+  {
         int v = GetVal(id, x, y);
         PutVal(ir, x, y, v % 256);
         PutVal(ig, x, y, v / 256);

@@ -205,7 +205,7 @@ namespace ice
 #define FNAME "MatchImg"
   int MatchImg(const Image& i1, const Image& i2, int& xs, int& ys)
   {
-    RETURN_ERROR_IF_FAILED(i1.match(i2));
+    RETURN_ERROR_IF_FAILED(i1.checkSizes(i2));
 
     xs = i1->xsize;
     ys = i1->ysize;
@@ -215,8 +215,8 @@ namespace ice
 
   int MatchImg(const Image& i1, const Image& i2, const Image& i3, int& xs, int& ys)
   {
-    RETURN_ERROR_IF_FAILED(i1.match(i2));
-    RETURN_ERROR_IF_FAILED(i1.match(i3));
+    RETURN_ERROR_IF_FAILED(i1.checkSizes(i2));
+    RETURN_ERROR_IF_FAILED(i1.checkSizes(i3));
 
     xs = i1->xsize;
     ys = i1->ysize;
@@ -238,41 +238,78 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "matchImg"
-  void matchImg(const Image& i1, const Image& i2, int& xs, int& ys)
+#define FNAME "checkImages"
+  void checkImages(const Image& i1, const Image& i2,
+                   int& xs, int& ys, int& mv)
+  {
+    checkImages(i1, i2);
+    xs = i1.xsize;
+    ys = i1.ysize;
+    mv = i1.maxval;
+  }
+
+  void checkImages(const Image& i1, const Image& i2, const Image& i3,
+                   int& xs, int& ys, int& mv)
+  {
+    checkImages(i1, i2, i3);
+    xs = i1.xsize;
+    ys = i1.ysize;
+    mv = i2.maxval;
+  }
+
+  void checkImages(const Image& i1, const Image& i2)
   {
     try
       {
-        i1.match(i2);
-
-        xs = i1->xsize;
-        ys = i1->ysize;
+        i1.checkImages(i2);
       }
     RETHROW;
   }
 
-  void matchImg(const Image& i1, const Image& i2, const Image& i3, int& xs, int& ys)
+  void checkImages(const Image& i1, const Image& i2, const Image& i3)
   {
     try
       {
-        i1.match(i2);
-        i1.match(i3);
-        xs = i1->xsize;
-        ys = i1->ysize;
+        i1.checkImages(i2);
+        i1.checkImages(i3);
+      }
+    RETHROW;
+  }
+#undef FNAME
+#define FNAME "checkSizes"
+  void checkSizes(const Image& i1, const Image& i2,
+                  int& xs, int& ys)
+  {
+    checkSizes(i1, i2);
+    xs = i1.xsize;
+    ys = i1.ysize;
+  }
+
+  void checkSizes(const Image& i1, const Image& i2, const Image& i3,
+                  int& xs, int& ys)
+  {
+    checkSizes(i1, i2, i3);
+    xs = i1.xsize;
+    ys = i1.ysize;
+  }
+
+  void checkSizes(const Image& i1, const Image& i2)
+  {
+    try
+      {
+        i1.checkSizes(i2);
       }
     RETHROW;
   }
 
-  void matchImg(const Image& i1, const Image& i2)
+  void checkSizes(const Image& i1, const Image& i2, const Image& i3)
   {
-    int xs, ys;
-    matchImg(i1, i2, xs, ys);
-  }
-
-  void matchImg(const Image& i1, const Image& i2, const Image& i3)
-  {
-    int xs, ys;
-    matchImg(i1, i2, i3, xs, ys);
+    try
+      {
+        i1.checkSizes(i2);
+        i1.checkSizes(i3);
+      }
+    RETHROW;
   }
 #undef FNAME
 }

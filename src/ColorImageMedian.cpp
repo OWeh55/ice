@@ -32,7 +32,7 @@ namespace ice
 {
 #define FNAME "MedianImg"
   template <typename SrcType, typename DestType>
-  int MedianImg(const ColorImage& src, const ColorImage& dest, int size)
+  void MedianImg(const ColorImage& src, const ColorImage& dest, int size)
   {
     const SrcType** Pixels1 = (const SrcType**)(src.redImage()->getDataPtr());
     const SrcType** Pixels2 = (const SrcType**)(src.greenImage()->getDataPtr());
@@ -99,10 +99,9 @@ namespace ice
         dest.blueImage()->needRefresh();
 #endif
       }
-    return OK;
   }
 
-  int MedianImg_std(const ColorImage& src, const ColorImage& dest, int size)
+  void MedianImg_std(const ColorImage& src, const ColorImage& dest, int size)
   {
     ColorValue akt, vgl;
 
@@ -145,39 +144,35 @@ namespace ice
               }
           dest.setPixel(x + size / 2, y + size / 2, src.getPixel(x + medX, y + medY));
         }
-    return OK;
   }
 
-  int MedianImg(const ColorImage& src, const ColorImage& dest, int size)
+  void MedianImg(const ColorImage& src, const ColorImage& dest, int size)
   {
     if (!src.isValid() || !dest.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
 
     switch ((src.redImage()->ImageType() << 4) + dest.redImage()->ImageType())
       {
       case 17:
-        return MedianImg<unsigned char, unsigned char>(src, dest, size);
+        MedianImg<unsigned char, unsigned char>(src, dest, size);
       case 18:
-        return MedianImg<unsigned char, unsigned short>(src, dest, size);
+        MedianImg<unsigned char, unsigned short>(src, dest, size);
       case 19:
-        return MedianImg<unsigned char, unsigned int>(src, dest, size);
+        MedianImg<unsigned char, unsigned int>(src, dest, size);
       case 33:
-        return MedianImg<unsigned short, unsigned char>(src, dest, size);
+        MedianImg<unsigned short, unsigned char>(src, dest, size);
       case 34:
-        return MedianImg<unsigned short, unsigned short>(src, dest, size);
+        MedianImg<unsigned short, unsigned short>(src, dest, size);
       case 35:
-        return MedianImg<unsigned short, unsigned int>(src, dest, size);
+        MedianImg<unsigned short, unsigned int>(src, dest, size);
       case 49:
-        return MedianImg<unsigned int, unsigned char>(src, dest, size);
+        MedianImg<unsigned int, unsigned char>(src, dest, size);
       case 50:
-        return MedianImg<unsigned int, unsigned short>(src, dest, size);
+        MedianImg<unsigned int, unsigned short>(src, dest, size);
       case 51:
-        return MedianImg<unsigned int, unsigned int>(src, dest, size);
+        MedianImg<unsigned int, unsigned int>(src, dest, size);
       default:
-        return MedianImg_std(src, dest, size);
+        MedianImg_std(src, dest, size);
       }
   }
 #undef FNAME

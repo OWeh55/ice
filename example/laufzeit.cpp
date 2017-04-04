@@ -50,7 +50,8 @@ int main(int argc, char* argv[])
   /* ENABLE, OVERLAY, 255 */
   GetChar();
   t1 = TimeD();
-  wloop(img1, i, j)
+  for (int y=0;y<img1.ysize;y++)
+    for (int x=0;x<img1.xsize;x++)
   {
     PutVal(img1, i, j, 255);
   }
@@ -69,7 +70,8 @@ int main(int argc, char* argv[])
   Show(ON, img2);
   GetChar();
   t1 = TimeD();
-  wloop(img2, i, j)
+  for (int y=0;y<img2.ysize;y++)
+    for (int x=0;x<img2.xsize;x++)
   {
     PutVal(img2, i, j, 255);
   }
@@ -89,9 +91,10 @@ int main(int argc, char* argv[])
   /* ENABLE, OVERLAY, 1023 */
   GetChar();
   t1 = TimeD();
-  wloop(img2, i, j)
+  for (int y=0;y<img2.ysize;y++)
+    for (int x=0;x<img2.xsize;x++)
   {
-    PutVal(img2, i, j, 255);
+    PutVal(img2, x, y, 255);
   }
   t2 = TimeD();
   time6 = t2 - t1;

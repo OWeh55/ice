@@ -18,7 +18,8 @@ int main(int argc, char* argv[])
   int x, y;
 
   cout << "Test Region (bildliche Darstellung)" << endl;
-  wloop(img, x, y)
+  for (int y=0;y<img.ysize;y++)
+    for (int x=0;x<img.xsize;x++)
   {
     if (GetVal(img, x, y) & 1)
       {
@@ -29,7 +30,8 @@ int main(int argc, char* argv[])
 
   GetChar();
 
-  wloop(img, x, y)
+  for (int y=0;y<img.ysize;y++)
+    for (int x=0;x<img.xsize;x++)
   {
     if (GetVal(img, x, y) & 2)
       {
@@ -40,7 +42,8 @@ int main(int argc, char* argv[])
 
   GetChar();
 
-  wloop(img, x, y)
+  for (int y=0;y<img.ysize;y++)
+    for (int x=0;x<img.xsize;x++)
   {
     if (GetVal(img, x, y) & 4)
       {

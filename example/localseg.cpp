@@ -76,7 +76,8 @@ int main(int argc, char* argv[])
       // artificial image for runtime check
       i1 = NewImg(XS, YS, 255);
 
-      wloop(i1, x, y)
+    for (int y=0;y<i1.ysize;y++)
+      for (int x=0;x<i1.xsize;x++)
       {
         if ((x / 20) & 1) PutVal(i1, x, y, y / 4);
         else PutVal(i1, x, y, 255 - (y / 4));
@@ -120,7 +121,9 @@ int main(int argc, char* argv[])
       rot = NewImg(i1->xsize, i1->ysize, 255);
       gruen = NewImg(i1->xsize, i1->ysize, 255);
       blau = NewImg(i1->xsize, i1->ysize, 255);
-      wloop(rot, i, j)
+
+  for (int y=0;y<rot.ysize;y++)
+    for (int x=0;x<rot.xsize;x++)
       {
         int m;
         m = GetVal(m1, i, j) % 6;
@@ -138,11 +141,11 @@ int main(int argc, char* argv[])
       int gv[] = {127, 0, 255, 192, 64};
       Image gray;
       gray = NewImg(i1->xsize, i1->ysize, 255);
-      wloop(gray, i, j)
-      {
-        int m;
-        m = GetVal(m1, i, j) % 6;
-        PutVal(gray, i, j, gv[m]);
+  for (int y=0;y<gray.ysize;y++)
+    for (int x=0;x<gray.xsize;x++)
+     {
+        int m = GetVal(m1, x, y) % 6;
+        PutVal(gray, x, y, gv[m]);
       }
 
       WriteImg(gray, outfilename);

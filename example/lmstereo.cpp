@@ -437,28 +437,26 @@ int readproject(const string& fn)
 
   if (!ref.fail())
     {
-      IfFailed(ref >> fn1)
+      if (! (ref >> fn1))
       {
         fn1 = "pict_l.jpg";
       }
-      IfFailed(ref >> fn2)
+      if (! (ref >> fn2))
       {
         fn2 = "pict_r.jpg";
       }
-      IfFailed(ref >> xy12)
-      {
-        SetOk();
-        xy12 = Matrix(0, 4);
-      }
-
+      if (! (ref >> xy12))
+	{
+	  xy12 = Matrix(0, 4);
+	}
+      
       if (xy12.rows() == 0)
         {
           xy12 = Matrix(0, 4);
         }
 
-      IfFailed(ref >> d3d)
+      if (! (ref >> d3d))
       {
-        SetOk();
         d3d = Matrix(0, 3);
         int i;
 

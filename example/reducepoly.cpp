@@ -47,8 +47,8 @@ int main(int argc, char* argv[])
 
   // abgerundetes Rechteck
   ClearImg(mark);
-  int x, y;
-  wloop(img, x, y)
+    for (int y=0;y<img.ysize;y++)
+      for (int x=0;x<img.xsize;x++)
   {
     if (abs(x - 300) + abs(y - 300) > 165) PutVal(img, x, y, 0);
   }
@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
   //
   ClearImg(img);
   ClearImg(mark);
-  wloop(img, x, y)
-  wloop(img, x, y)
+  for (int y=0;y<img.ysize;y++)
+    for (int x=0;x<img.xsize;x++)
   {
     if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
   }
@@ -77,8 +77,8 @@ int main(int argc, char* argv[])
   // gestörtes Rechteck
   ClearImg(img);
   ClearImg(mark);
-  wloop(img, x, y)
-  wloop(img, x, y)
+  for (int y=0;y<img.ysize;y++)
+    for (int x=0;x<img.xsize;x++)
   {
     if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
 

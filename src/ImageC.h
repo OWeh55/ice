@@ -712,8 +712,12 @@ namespace ice
      * make sure, the sizes of the images match.
      * throws an exception if sizes do not match
      */
-    void match(const Image& img2) const;
-    void match(const Image& img2, const Image& img3) const;
+    void checkSizes(const Image& img2) const;
+    /**
+     * make sure, the sizes and value ranges of the images match.
+     * throws an exception if sizes do not match
+     */
+    void checkImages(const Image& img2) const;
     //@}
 
   protected:

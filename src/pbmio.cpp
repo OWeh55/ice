@@ -132,7 +132,6 @@ namespace ice
   int WritePBMImg(const Image& img, const string& fname)
   {
     FILE* fd;
-    int x, y;
     unsigned char ib;
     short int iw;
     int maxval;

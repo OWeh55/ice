@@ -15,7 +15,8 @@ int main(int argc, char** argv)
   Image src;
   src.create(512, 512, MAXVALUE);
   Show(ON, src, "Source");
-  wloop(src, x, y)
+  for (int y=0;y<src.ysize;y++)
+    for (int x=0;x<src.xsize;x++)
   {
     int h = ((x / QSIZE) & 1) ^ ((y / QSIZE) & 1);
 
@@ -38,8 +39,8 @@ int main(int argc, char** argv)
       Print(".");
       i++;
 //    sleep(1);
-      int x, y;
-      wloop(dst, x, y)
+  for (int y=0;y<dst.ysize;y++)
+    for (int x=0;x<dst.xsize;x++)
       {
         int v = GetVal(dst, x, y);
 

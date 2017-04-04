@@ -73,7 +73,11 @@ int Main(int argc, char* argv[])
   Show(OVERLAY, p[last], m[last], "Bild mit Overlay");
   Print(NumberString(pzahl) + " Bilder, das letzte mit einem Overlay \n");
   GetChar();
-  wloop(m[last], x, y) PutVal(m[last], x, y, (GetVal(m[last], x, y) / FAK / 8) & 3);
+
+  for (int y=0;y<m[last].ysize;y++)
+    for (int x=0;x<m[last].xsize;x++)
+      PutVal(m[last], x, y, (GetVal(m[last], x, y) / FAK / 8) & 3);
+
   Print("Overlay veraendert \n");
   GetChar();
   Print("Bild 4 freigeben\n");
@@ -81,7 +85,11 @@ int Main(int argc, char* argv[])
   Print("Bild 4 neu anlegen\n");
   p[4] = NewImg(p[3]);
   InvertImg(p[3], p[4]);
-  wloop(p[4], x, y) PutVal(p[4], x, y, (GetVal(p[4], x, y) / 7) & 3);
+  for (int y=0;y<p[4].ysize;y++)
+    for (int x=0;x<p[4].xsize;x++)
+  {
+    PutVal(p[4], x, y, (GetVal(p[4], x, y) / 7) & 3);
+  }
   Print("Bild 4 als reines OVERLAY darstellen\n");
   Show(OVERLAY, Image(), p[4], "Reines Overlay");
   GetChar();
@@ -92,7 +100,8 @@ int Main(int argc, char* argv[])
   b = NewImg(512, 512, 255);
   Show(_RGB, r, g, b, "Farbbild");
   Print("RGB-Bild erzeugen\n");
-  wloop(r, x, y)
+  for (int y=0;y<r.ysize;y++)
+    for (int x=0;x<r.xsize;x++)
   {
     PutVal(r, x, y, Min(255, Max(511 - x, y) / 2));
     PutVal(g, x, y, Min(255, Max(x, y) / 2));
@@ -105,19 +114,22 @@ int Main(int argc, char* argv[])
   Show(ON, b, "Blau");
   GetChar();
   Print("Rot-Bild ändern..\n");
-  wloop(r, x, y)
+  for (int y=0;y<r.ysize;y++)
+    for (int x=0;x<r.xsize;x++)
   {
     PutVal(r, x, y, Min(255, Max(x, y) / 2));
   }
   GetChar();
   Print("Grün-Bild ändern..\n");
-  wloop(r, x, y)
+  for (int y=0;y<g.ysize;y++)
+    for (int x=0;x<g.xsize;x++)
   {
     PutVal(g, x, y, Min(255, Max(x, 511 - y) / 2));
   }
   GetChar();
   Print("Blau-Bild ändern..\n");
-  wloop(r, x, y)
+  for (int y=0;y<b.ysize;y++)
+    for (int x=0;x<b.xsize;x++)
   {
     PutVal(b, x, y, Min(255, Max(511 - x, y) / 2));
   }

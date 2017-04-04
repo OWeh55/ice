@@ -336,9 +336,9 @@ namespace ice
       return inside(window.p1) && inside(window.p2);
     }
 
-    /*virtual*/ int match(const ColorImage& img2) const;
     /*virtual*/
-    int match(const ColorImage& img2, const ColorImage& img3) const;
+    void checkSizes(const ColorImage& img2) const;
+    void checkImages(const ColorImage& img2) const;
 
     /*virtual*/
     int read(const std::string& filename);

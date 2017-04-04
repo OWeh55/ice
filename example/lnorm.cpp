@@ -237,7 +237,8 @@ int main(int argc, char** argv)
   for (i = 0; i < bilder; i++)
     {
       Print("+");
-      wloop(grw[i], x, y)
+    for (int y=0;y<grw[i].ysize;y++)
+      for (int x=0;x<grw[i].xsize;x++)
       {
         int x1 = x - nn;
         int y1 = y - nn;

@@ -162,7 +162,8 @@ int Main(int argc, char* argv[])
       talt = TimeD(TM_PROCESS);
       //    talt=TimeD(TM_WORLD);
       //    talt=((double)clock())/CLOCKS_PER_SEC;
-      wloop(ptr, x, y)
+  for (int y=0;y<ptr.ysize;y++)
+    for (int x=0;x<ptr.xsize;x++)
       {
         fwert(x, y, &a, &b);
         z = (*iter)(a, b, maxcount);
@@ -528,7 +529,8 @@ void SaveImage(Image ptr)
   ColorImage rgb;
   rgb.create(ptr->xsize, ptr->ysize, 255);
 
-  wloop(ptr, x, y)
+  for (int y=0;y<ptr.ysize;y++)
+    for (int x=0;x<ptr.xsize;x++)
   {
     int gw = GetVal(ptr, x, y);
     unsigned char r, g, b;

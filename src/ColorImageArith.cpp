@@ -93,101 +93,88 @@ namespace ice
 #undef FNAME
 
 #define FNAME "AddImg"
-  int AddImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest, int mode)
+  void AddImg(const ColorImage& img1, const ColorImage& img2,
+              const ColorImage& dest, int mode)
   {
-    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
-    RETURN_ERROR_IF_FAILED(AddImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
-    RETURN_ERROR_IF_FAILED(AddImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
-    RETURN_ERROR_IF_FAILED(AddImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
-    return OK;
+    try
+      {
+        AddImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
+        AddImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
+        AddImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "SubImg"
-  int SubImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest, int mode, int smode)
+  void SubImg(const ColorImage& img1, const ColorImage& img2,
+              const ColorImage& dest, int mode, int smode)
   {
-    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
-    RETURN_ERROR_IF_FAILED(SubImg(img1.redImage(), img2.redImage(), dest.redImage(), mode, smode));
-    RETURN_ERROR_IF_FAILED(SubImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode, smode));
-    RETURN_ERROR_IF_FAILED(SubImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode, smode));
-    return OK;
+    try
+      {
+        SubImg(img1.redImage(), img2.redImage(), dest.redImage(), mode, smode);
+        SubImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode, smode);
+        SubImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode, smode);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "MaxImg"
-  int MaxImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
-             int mode)
+  void MaxImg(const ColorImage& img1, const ColorImage& img2,
+              const ColorImage& dest, int mode)
   {
-    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
-    RETURN_ERROR_IF_FAILED(MaxImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
-    RETURN_ERROR_IF_FAILED(MaxImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
-    RETURN_ERROR_IF_FAILED(MaxImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
-    return OK;
+    try
+      {
+        MaxImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
+        MaxImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
+        MaxImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "MinImg"
-  int MinImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
-             int mode)
+  void MinImg(const ColorImage& img1, const ColorImage& img2,
+              const ColorImage& dest, int mode)
   {
-    RETURN_ERROR_IF_FAILED(img1.match(img2, dest));
-    RETURN_ERROR_IF_FAILED(MinImg(img1.redImage(), img2.redImage(), dest.redImage(), mode));
-    RETURN_ERROR_IF_FAILED(MinImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode));
-    RETURN_ERROR_IF_FAILED(MinImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode));
-    return OK;
+    try
+      {
+        MinImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
+        MinImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
+        MinImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "RenormImg"
-  int RenormImg(const ColorImage& src, const ColorImage& dest)
+  void RenormImg(const ColorImage& src, const ColorImage& dest)
   {
-    // if both images have the same pixelarrays, we don't need to do anything
-    if ((src.redImage() == dest.redImage()) &&
-        (src.greenImage() == dest.greenImage()) &&
-        (src.blueImage() == dest.blueImage()))
+    try
       {
-        return OK;
+        RenormImg(src.redImage(), dest.redImage());
+        RenormImg(src.greenImage(), dest.greenImage());
+        RenormImg(src.blueImage(), dest.blueImage());
       }
-
-    if (!src.isValid() || !dest.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
-    RETURN_ERROR_IF_FAILED(RenormImg(src.redImage(), dest.redImage()));
-    RETURN_ERROR_IF_FAILED(RenormImg(src.greenImage(), dest.greenImage()));
-    RETURN_ERROR_IF_FAILED(RenormImg(src.blueImage(), dest.blueImage()));
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "HistogramEqual"
-  int HistogramEqualization(const ColorImage& src, const ColorImage& dst)
+  void HistogramEqualization(const ColorImage& src, const ColorImage& dst)
   {
-    if (!src.isValid() || !dst.isValid())
+    try
       {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
+        HistogramEqualization(src.redImage(), dst.redImage());
+        HistogramEqualization(src.greenImage(), dst.greenImage());
+        HistogramEqualization(src.blueImage(), dst.blueImage());
       }
-
-    HistogramEqualization(src.redImage(), dst.redImage());
-    HistogramEqualization(src.greenImage(), dst.greenImage());
-    HistogramEqualization(src.blueImage(), dst.blueImage());
-
-    return OK;
+    RETHROW;
   }
-  int HistogramEqualization(const ColorImage& img)
+  void HistogramEqualization(const ColorImage& img)
   {
-    if (!img.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
     HistogramEqualization(img, img);
-
-    return OK;
   }
 #undef FNAME
 } /* namespace ice */

@@ -203,35 +203,30 @@ namespace ice
            maxval == blue.maxval;
   }
 
-#define FNAME "ColorImage::Match"
-  int ColorImage::match(const ColorImage& img2) const
+#define FNAME "ColorImage::checkSizes"
+  void ColorImage::checkSizes(const ColorImage& img2) const
   {
-    //    std::cout << "match" << std::endl;
-    //    std::cout << isValid() << std::endl;
-    //    std::cout << img2.isValid() << std::endl;
     if (!isValid() || !img2.isValid())
+      throw IceException(FNAME, M_INVALID, WRONG_PARAM);
+    try
       {
-        throw IceException(FNAME, M_INVALID, WRONG_PARAM);
-        return WRONG_PARAM;
+        red.checkSizes(img2.red);
       }
-    //    std::cout << "match1" << std::endl;
-    RETURN_ERROR_IF_FAILED(red.match(img2.red));
-    //    std::cout << "match2" << std::endl;
-    return OK;
+    RETHROW;
   }
-
-  int ColorImage::match(const ColorImage& img2, const ColorImage& img3) const
+#undef FNAME
+#define FNAME "ColorImage::checkImages"
+  void ColorImage::checkImages(const ColorImage& img2) const
   {
-    if (!isValid() || !img2.isValid() || !img3.isValid())
+    if (maxval != img2.maxval)
+      throw IceException(FNAME, M_WRONG_RANGE);
+    try
       {
-        throw IceException(FNAME, M_INVALID, WRONG_PARAM);
-        return WRONG_PARAM;
+        checkSizes(img2);
       }
-
-    RETURN_ERROR_IF_FAILED(red.match(img2.red));
-    RETURN_ERROR_IF_FAILED(red.match(img3.red));
-    return OK;
+    RETHROW;
   }
+#undef FNAME
 
   int ColorImage::read(const std::string& filename)
   {
@@ -248,7 +243,7 @@ namespace ice
   {
     return WriteImg(red, green, blue, filename);
   }
-#undef FNAME
+
 #define FNAME "ColorImage::set"
   int ColorImage::set(ColorValue cv) const // Set all pixel to value
   {

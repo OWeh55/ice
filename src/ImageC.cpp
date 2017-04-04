@@ -151,8 +151,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Image::match"
-  void Image::match(const Image& img2) const
+#define FNAME "Image::checkSizes"
+  void Image::checkSizes(const Image& img2) const
   {
     if (!isValid() || !img2.isValid())
       throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
@@ -160,11 +160,17 @@ namespace ice
     if ((xsize != img2->xsize) || (ysize != img2->ysize))
       throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
   }
-
-  void Image::match(const Image& img2, const Image& img3) const
+#undef FNAME
+#define FNAME "Image::checkImages"
+  void Image::checkImages(const Image& img2) const
   {
-    match(img2);
-    match(img3);
+    try
+      {
+        checkSizes(img2);
+        if (maxval != img2.maxval)
+          throw IceException(FNAME, M_WRONG_RANGE);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "NewImg"
