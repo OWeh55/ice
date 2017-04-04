@@ -69,34 +69,35 @@ namespace ice
 #define FNAME "ClassifierBayes::Init"
   void ClassifierBayes::Init(int classnr, int dimension)
   {
-    try {
-      Classifier::Init(classnr, dimension);
-
-    int classes = nClasses;
-    if (rejection)                          // add rejection class when needed
+    try
       {
-        classes++;
+        Classifier::Init(classnr, dimension);
+
+        int classes = nClasses;
+        if (rejection)                          // add rejection class when needed
+          {
+            classes++;
+          }
+
+        stat_k.resize(classes);          // statistics per class
+        p_k.resize(classes);             // probability per class
+        mue_k.resize(classes * nFeatures); // mean vectors
+        sigma_k_inv.resize(classes * nFeatures * nFeatures);
+        u_constant.resize(classes);
+        u_k.resize(classes);
+
+        for (int i = 0; i < classes; i++)
+          {
+            stat_k[i].Init(nFeatures);
+          }
+
+        for (unsigned int i = 0; i < p_k.size(); i++)
+          {
+            p_k[i] = 1.0 / classes;
+          }
+
+        nSamples = 0;
       }
-
-    stat_k.resize(classes);          // statistics per class
-    p_k.resize(classes);             // probability per class
-    mue_k.resize(classes * nFeatures); // mean vectors
-    sigma_k_inv.resize(classes * nFeatures * nFeatures);
-    u_constant.resize(classes);
-    u_k.resize(classes);
-
-    for (int i = 0; i < classes; i++)
-      {
-        stat_k[i].Init(nFeatures);
-      }
-
-    for (unsigned int i = 0; i < p_k.size(); i++)
-      {
-        p_k[i] = 1.0 / classes;
-      }
-
-    nSamples = 0;
-    }
     RETHROW;
   }
 

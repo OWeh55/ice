@@ -40,20 +40,22 @@ namespace ice
 #define FNAME "SelLine"
   int SelLine(const Image& img, IPoint& p1, IPoint& p2)
   {
-    try {
-    Visual v = GetVisual(img);
-    return v->SelectLine(p1, p2);
-    }
+    try
+      {
+        Visual v = GetVisual(img);
+        return v->SelectLine(p1, p2);
+      }
     RETHROW;
   }
 
   int SelLineFromStart(const Image& img, const IPoint& p1, IPoint& p2)
   {
-    try {
-      Visual v = GetVisual(img);
-      v->SelectLineFromStart(p1, p2);
-      return OK;
-    }
+    try
+      {
+        Visual v = GetVisual(img);
+        v->SelectLineFromStart(p1, p2);
+        return OK;
+      }
     RETHROW;
   }
 

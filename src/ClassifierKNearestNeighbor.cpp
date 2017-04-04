@@ -39,9 +39,10 @@ namespace ice
     ClassifierNormal(classes, dimension),
     nNeighbors(nNeighbors), norm(norm)
   {
-    try {
-      Init(classes, dimension, nNeighbors);
-    }
+    try
+      {
+        Init(classes, dimension, nNeighbors);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -50,11 +51,12 @@ namespace ice
   void ClassifierKNN::Init(int classes, int dimension,
                            int nNeighbors, bool norm)
   {
-    try {
-      ClassifierNormal::Init(classes, dimension);
-    this->nNeighbors = nNeighbors;
-    this->norm = norm;
-    }
+    try
+      {
+        ClassifierNormal::Init(classes, dimension);
+        this->nNeighbors = nNeighbors;
+        this->norm = norm;
+      }
     RETHROW;
   }
 #undef FNAME

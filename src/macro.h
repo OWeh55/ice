@@ -31,8 +31,9 @@ namespace ice
 {
   // Fehlerbehandlung in Prozeduren
   // these macros should be removed!!
+
 #define IF_FAILED(action) try { action; } catch(IceException ex)
-  
+
 #define RETURN_ERROR_IF_FAILED(action) try { action; } catch(IceException &ex) { throw IceException(ex, FNAME); }
 #define RETURN_NULL_IF_FAILED(action) RETURN_ERROR_IF_FAILED(action)
 }

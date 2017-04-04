@@ -412,70 +412,71 @@ namespace ice
 // IS2 = ID (*) IS1
   ImageD crossCorrelationImgD(ImageD is1, ImageD is2, ImageD id, int mode)
   {
-    try {
-    int x, y;
-    int xq, yq;
-    int xs, ys, x0, y0;
-
-    ImageD rc;
-    double rr, rq, ir, iq;
-    double r1, r2, im1, im2;
-    double r3 = 0, im3 = 0;
-    //    double efactor;
-
-    MatchImgD(is1, is2, xs, ys);
-
-    x0 = (xs + 1) / 2;
-    y0 = (ys + 1) / 2;
-
-    if (id.isValid())
+    try
       {
-        MatchImgD(is1, id);
-        rc = id;
-      }
-    else
-      {
-        rc = NewImgD(xs, ys, 0, 1);
-      }
+        int x, y;
+        int xq, yq;
+        int xs, ys, x0, y0;
 
-    //    efactor=sqrt((double)(xs*ys));
+        ImageD rc;
+        double rr, rq, ir, iq;
+        double r1, r2, im1, im2;
+        double r3 = 0, im3 = 0;
+        //    double efactor;
 
-    ImageD ds1 = NewImgD(xs, ys, 0, 1);
-    ImageD ds2 = NewImgD(xs, ys, 0, 1);
+        MatchImgD(is1, is2, xs, ys);
 
-    FourierImgD(is1, is2, NORMAL, ds1, ds2);
+        x0 = (xs + 1) / 2;
+        y0 = (ys + 1) / 2;
 
-    for (y = 0; y < ys; y++)
-      {
-        yq = negf(y, ys);
-
-        for (x = 0; x < xs; x++)
+        if (id.isValid())
           {
-            xq = negf(x, xs);
-            rr = GetValD(ds1, x, y);
-            ir = GetValD(ds2, x, y);
-            rq = GetValD(ds1, xq, yq);
-            iq = GetValD(ds2, xq, yq);
-            r1 = (rr + rq) / 2;
-            im1 = (ir - iq) / 2;
-            r2 = (ir + iq) / 2;
-            im2 = (rq - rr) / 2;
-
-            r3 = (r2 * r1 + im2 * im1);
-            im3 = (r1 * im2 - r2 * im1);
-            PutValD(rc, x, y, r3 - im3);
+            MatchImgD(is1, id);
+            rc = id;
           }
+        else
+          {
+            rc = NewImgD(xs, ys, 0, 1);
+          }
+
+        //    efactor=sqrt((double)(xs*ys));
+
+        ImageD ds1 = NewImgD(xs, ys, 0, 1);
+        ImageD ds2 = NewImgD(xs, ys, 0, 1);
+
+        FourierImgD(is1, is2, NORMAL, ds1, ds2);
+
+        for (y = 0; y < ys; y++)
+          {
+            yq = negf(y, ys);
+
+            for (x = 0; x < xs; x++)
+              {
+                xq = negf(x, xs);
+                rr = GetValD(ds1, x, y);
+                ir = GetValD(ds2, x, y);
+                rq = GetValD(ds1, xq, yq);
+                iq = GetValD(ds2, xq, yq);
+                r1 = (rr + rq) / 2;
+                im1 = (ir - iq) / 2;
+                r2 = (ir + iq) / 2;
+                im2 = (rq - rr) / 2;
+
+                r3 = (r2 * r1 + im2 * im1);
+                im3 = (r1 * im2 - r2 * im1);
+                PutValD(rc, x, y, r3 - im3);
+              }
+          }
+
+        if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
+          {
+            PutValD(rc, x0, y0, 0.0);
+          }
+
+        HartleyImgD(rc, rc);
+
+        return rc;
       }
-
-    if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
-      {
-        PutValD(rc, x0, y0, 0.0);
-      }
-
-    HartleyImgD(rc, rc);
-
-    return rc;
-    }
     RETHROW;
   }
 #undef FNAME
@@ -486,115 +487,117 @@ namespace ice
   ImageD phaseCorrelationD(ImageD is1, ImageD is2, ImageD id,
                            double noise, int mode)
   {
-    try {
-    int xq, yq;
-    int xs, ys, x0, y0;
-
-    ImageD rc;
-    double rr, rq, ir, iq;
-    double r1, r2, im1, im2;
-    double r3 = 0, im3 = 0;
-    double b1;
-    double efactor;
-
-    if (noise < 0)
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-
-    double noise2 = noise * noise;
-
-    MatchImgD(is1, is2, xs, ys);
-
-    x0 = (xs + 1) / 2;
-    y0 = (ys + 1) / 2;
-
-    if (id.isValid())
+    try
       {
-        rc = id;
-      }
-    else
-      {
-        rc = NewImgD(xs, ys, 0, 1);
-      }
+        int xq, yq;
+        int xs, ys, x0, y0;
 
-    efactor = sqrt((double)(xs * ys));
+        ImageD rc;
+        double rr, rq, ir, iq;
+        double r1, r2, im1, im2;
+        double r3 = 0, im3 = 0;
+        double b1;
+        double efactor;
 
-    ImageD ds1 = NewImgD(xs, ys, 0, 1);
-    ImageD ds2 = NewImgD(xs, ys, 0, 1);
-    //  ImageD ddi=NewImgD(xs,ys,0,1);
+        if (noise < 0)
+          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
-    FourierImgD(is1, is2, NORMAL, ds1, ds2);
+        double noise2 = noise * noise;
 
-    for (int y = 0; y < ys; y++)
-      {
-        yq = negf(y, ys);
+        MatchImgD(is1, is2, xs, ys);
 
-        for (int x = 0; x < xs; x++)
+        x0 = (xs + 1) / 2;
+        y0 = (ys + 1) / 2;
+
+        if (id.isValid())
           {
-            xq = negf(x, xs);
-            rr = GetValD(ds1, x, y);
-            ir = GetValD(ds2, x, y);
-            rq = GetValD(ds1, xq, yq);
-            iq = GetValD(ds2, xq, yq);
-            r1 = (rr + rq) / 2;
-            im1 = (ir - iq) / 2;
-            r2 = (ir + iq) / 2;
-            im2 = (rq - rr) / 2;
+            rc = id;
+          }
+        else
+          {
+            rc = NewImgD(xs, ys, 0, 1);
+          }
 
-            b1 = sqrt((r1 * r1 + im1 * im1) * (r2 * r2 + im2 * im2));
+        efactor = sqrt((double)(xs * ys));
 
-            if (noise == 0)
+        ImageD ds1 = NewImgD(xs, ys, 0, 1);
+        ImageD ds2 = NewImgD(xs, ys, 0, 1);
+        //  ImageD ddi=NewImgD(xs,ys,0,1);
+
+        FourierImgD(is1, is2, NORMAL, ds1, ds2);
+
+        for (int y = 0; y < ys; y++)
+          {
+            yq = negf(y, ys);
+
+            for (int x = 0; x < xs; x++)
               {
-                if (b1 == 0)
+                xq = negf(x, xs);
+                rr = GetValD(ds1, x, y);
+                ir = GetValD(ds2, x, y);
+                rq = GetValD(ds1, xq, yq);
+                iq = GetValD(ds2, xq, yq);
+                r1 = (rr + rq) / 2;
+                im1 = (ir - iq) / 2;
+                r2 = (ir + iq) / 2;
+                im2 = (rq - rr) / 2;
+
+                b1 = sqrt((r1 * r1 + im1 * im1) * (r2 * r2 + im2 * im2));
+
+                if (noise == 0)
                   {
-                    r3 = im3 = 0;
+                    if (b1 == 0)
+                      {
+                        r3 = im3 = 0;
+                      }
+                    else
+                      {
+                        r3 = (r2 * r1 + im2 * im1) / b1 * efactor;
+                        im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
+                      }
                   }
                 else
                   {
+                    b1 += noise2;
                     r3 = (r2 * r1 + im2 * im1) / b1 * efactor;
                     im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
                   }
-              }
-            else
-              {
-                b1 += noise2;
-                r3 = (r2 * r1 + im2 * im1) / b1 * efactor;
-                im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
-              }
 
-            PutValD(rc, x, y, r3 - im3);
-            //    PutValD(ddi,x,y,im3);
+                PutValD(rc, x, y, r3 - im3);
+                //    PutValD(ddi,x,y,im3);
+              }
           }
+
+        if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
+          {
+            PutValD(rc, x0, y0, 0.0);
+          }
+
+        HartleyImgD(rc, rc);
+
+        return rc;
       }
-
-    if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
-      {
-        PutValD(rc, x0, y0, 0.0);
-      }
-
-    HartleyImgD(rc, rc);
-
-    return rc;
-    }
     RETHROW;
   }
 
   Image phaseCorrelation(Image img1, Image img2, Image img3, double beta)
   {
-    try {
-    int xs, ys;
-    MatchImg(img1, img2, img3, xs, ys);
+    try
+      {
+        int xs, ys;
+        MatchImg(img1, img2, img3, xs, ys);
 
-    ImageD ds1 = NewImgD(xs, ys);
-    ImageD ds2 = NewImgD(xs, ys);
-    ImageD dd = NewImgD(xs, ys);
-    ConvImgImgD(img1, ds1, NORMALIZED, SIGNED);
-    ConvImgImgD(img2, ds2, NORMALIZED, SIGNED);
+        ImageD ds1 = NewImgD(xs, ys);
+        ImageD ds2 = NewImgD(xs, ys);
+        ImageD dd = NewImgD(xs, ys);
+        ConvImgImgD(img1, ds1, NORMALIZED, SIGNED);
+        ConvImgImgD(img2, ds2, NORMALIZED, SIGNED);
 
-    phaseCorrelationD(ds1, ds2, dd, beta);
-    ConvImgDImg(dd, img3, ADAPTIVE, UNSIGNED);
+        phaseCorrelationD(ds1, ds2, dd, beta);
+        ConvImgDImg(dd, img3, ADAPTIVE, UNSIGNED);
 
-    return img3;
-    }
+        return img3;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -602,171 +605,172 @@ namespace ice
 #define FNAME "horn"
   int horn(Image img1, Image img2, ImageD xDelta, ImageD yDelta, double lambda, int iterationNumber)
   {
-    try {
-    int kWidth;
-    int kHeight;
-
-    MatchImg(img1, img2, kWidth, kHeight);
-    int kWidthd;
-    int kHeightd;
-
-    MatchImgD(xDelta, xDelta, kWidthd, kHeightd);
-
-    if (iterationNumber <= 0 || lambda <= 0)
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-
-    int MASK_DIM = 2;
-
-    double** f_x = new double *[kHeight];
-    double** f_y = new double *[kHeight];
-    double** f_t = new double *[kHeight];
-    double** u = new double *[kHeight];
-    double** u_avg = new double *[kHeight];
-    double** v = new double *[kHeight];
-    double** v_avg = new double *[kHeight];
-
-    for (int i = 0; i < kHeight; i++)
+    try
       {
-        f_x[i] = new double[kWidth];
-        f_y[i] = new double[kWidth];
-        f_t[i] = new double[kWidth];
-        u[i] = new double[kWidth];
-        u_avg[i] = new double[kWidth];
-        v[i] = new double[kWidth];
-        v_avg[i] = new double[kWidth];
-      }
+        int kWidth;
+        int kHeight;
 
-    //derivative masks
-    int f_x_mask[][2] = {{ -1, 1}, { -1, 1}};
-    int f_y_mask[][2] = {{ -1, -1}, {1, 1}};
-    int f_t_mask_pre[][2] = {{ -1, -1}, { -1, -1}};
-    int f_t_mask_post[][2] = {{1, 1}, {1, 1}};
+        MatchImg(img1, img2, kWidth, kHeight);
+        int kWidthd;
+        int kHeightd;
 
+        MatchImgD(xDelta, xDelta, kWidthd, kHeightd);
 
-    for (int i = 0; i < kHeight; i++)
-      {
-        for (int j = 0; j < kWidth; j++)
+        if (iterationNumber <= 0 || lambda <= 0)
+          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+
+        int MASK_DIM = 2;
+
+        double** f_x = new double *[kHeight];
+        double** f_y = new double *[kHeight];
+        double** f_t = new double *[kHeight];
+        double** u = new double *[kHeight];
+        double** u_avg = new double *[kHeight];
+        double** v = new double *[kHeight];
+        double** v_avg = new double *[kHeight];
+
+        for (int i = 0; i < kHeight; i++)
           {
-            u_avg[i][j] = 0.0F;
-            v_avg[i][j] = 0.0F;
-            u[i][j] = 0.0F;
-            v[i][j] = 0.0F;
-            f_x[i][j] = 0.0F;
-            f_y[i][j] = 0.0F;
-            f_t[i][j] = 0.0F;
+            f_x[i] = new double[kWidth];
+            f_y[i] = new double[kWidth];
+            f_t[i] = new double[kWidth];
+            u[i] = new double[kWidth];
+            u_avg[i] = new double[kWidth];
+            v[i] = new double[kWidth];
+            v_avg[i] = new double[kWidth];
           }
-      }
 
-    //calc_derivative_masks();
+        //derivative masks
+        int f_x_mask[][2] = {{ -1, 1}, { -1, 1}};
+        int f_y_mask[][2] = {{ -1, -1}, {1, 1}};
+        int f_t_mask_pre[][2] = {{ -1, -1}, { -1, -1}};
+        int f_t_mask_post[][2] = {{1, 1}, {1, 1}};
 
-    int mr = (int)(MASK_DIM * 0.5); //radius of mask
-    int sum_x, sum_y, sum_t;
-    //~ int max_dim = kWidth - mr;
 
-    //perform convolution operation using derivative masks
-    for (int i = mr; i < kHeight; i++)
-      {
-        for (int j = mr; j < kWidth; j++)
+        for (int i = 0; i < kHeight; i++)
+          {
+            for (int j = 0; j < kWidth; j++)
+              {
+                u_avg[i][j] = 0.0F;
+                v_avg[i][j] = 0.0F;
+                u[i][j] = 0.0F;
+                v[i][j] = 0.0F;
+                f_x[i][j] = 0.0F;
+                f_y[i][j] = 0.0F;
+                f_t[i][j] = 0.0F;
+              }
+          }
+
+        //calc_derivative_masks();
+
+        int mr = (int)(MASK_DIM * 0.5); //radius of mask
+        int sum_x, sum_y, sum_t;
+        //~ int max_dim = kWidth - mr;
+
+        //perform convolution operation using derivative masks
+        for (int i = mr; i < kHeight; i++)
+          {
+            for (int j = mr; j < kWidth; j++)
+              {
+
+                sum_x = 0;
+                sum_y = 0;
+                sum_t = 0;
+
+                //apply derivative masks for fx, fy, and ft
+                for (int y = 0; y < MASK_DIM; y++)
+                  {
+                    for (int x = 0; x < MASK_DIM; x++)
+                      {
+                        sum_x += f_x_mask[y][x] *
+                                 (GetVal(img1, j + x - 1, i + y - 1) + GetVal(img2, j + x - 1, i + y - 1));
+                        sum_y += f_y_mask[y][x] *
+                                 (GetVal(img1, j + x - 1, i + y - 1) + GetVal(img2, j + x - 1, i + y - 1));
+                        sum_t += f_t_mask_pre[y][x] * GetVal(img1, j + x - 1, i + y - 1) +
+                                 f_t_mask_post[y][x] * GetVal(img2, j + x - 1, i + y - 1);
+                      }
+                  }
+
+                f_x[i][j] = (double)(sum_x) * 0.25; //* by 0.25 to average
+                f_y[i][j] = (double)(sum_y) * 0.25;
+                f_t[i][j] = (double)(sum_t) * 0.25;
+                //~ f_t[i][j] = 0.25F;
+              }
+          }
+
+        for (int it = 0; it < iterationNumber; it++)
           {
 
-            sum_x = 0;
-            sum_y = 0;
-            sum_t = 0;
+            printf("Iteration %d\n", it);
 
-            //apply derivative masks for fx, fy, and ft
-            for (int y = 0; y < MASK_DIM; y++)
+            //calc_uv_averages();
+
+
+            float u_sum, v_sum;
+
+            for (int i = 1; i < kHeight - 1; i++)
               {
-                for (int x = 0; x < MASK_DIM; x++)
+                for (int j = 1; j < kWidth - 1; j++)
                   {
-                    sum_x += f_x_mask[y][x] *
-                             (GetVal(img1, j + x - 1, i + y - 1) + GetVal(img2, j + x - 1, i + y - 1));
-                    sum_y += f_y_mask[y][x] *
-                             (GetVal(img1, j + x - 1, i + y - 1) + GetVal(img2, j + x - 1, i + y - 1));
-                    sum_t += f_t_mask_pre[y][x] * GetVal(img1, j + x - 1, i + y - 1) +
-                             f_t_mask_post[y][x] * GetVal(img2, j + x - 1, i + y - 1);
+                    u_sum = (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1]) * 0.25;
+                    v_sum = (v[i - 1][j] + v[i + 1][j] + v[i][j - 1] + v[i][j + 1]) * 0.25;
+                    u_avg[i][j] = u_sum;
+                    v_avg[i][j] = v_sum;
                   }
               }
 
-            f_x[i][j] = (double)(sum_x) * 0.25; //* by 0.25 to average
-            f_y[i][j] = (double)(sum_y) * 0.25;
-            f_t[i][j] = (double)(sum_t) * 0.25;
-            //~ f_t[i][j] = 0.25F;
-          }
-      }
+            //calc_uv();
 
-    for (int it = 0; it < iterationNumber; it++)
-      {
+            float p_over_d = 0; // P/D
 
-        printf("Iteration %d\n", it);
-
-        //calc_uv_averages();
-
-
-        float u_sum, v_sum;
-
-        for (int i = 1; i < kHeight - 1; i++)
-          {
-            for (int j = 1; j < kWidth - 1; j++)
+            for (int y = 0; y < kHeight; y++)
               {
-                u_sum = (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1]) * 0.25;
-                v_sum = (v[i - 1][j] + v[i + 1][j] + v[i][j - 1] + v[i][j + 1]) * 0.25;
-                u_avg[i][j] = u_sum;
-                v_avg[i][j] = v_sum;
+                for (int x = 0; x < kWidth; x++)
+                  {
+                    p_over_d = lambda * ((f_x[y][x] * u_avg[y][x] +
+                                          f_y[y][x] * v_avg[y][x] + f_t[y][x]) /
+                                         (1 + lambda * (f_x[y][x] * f_x[y][x]) + (f_y[y][x] * f_y[y][x])));
+                    u[y][x] = u_avg[y][x] - f_x[y][x] * p_over_d;
+                    v[y][x] = v_avg[y][x] - f_y[y][x] * p_over_d;
+                    //~ u[y][x] = f_t[y][x];
+                    //~ v[y][x] = f_t[y][x];
+                  }
               }
+
+
           }
 
-        //calc_uv();
-
-        float p_over_d = 0; // P/D
-
-        for (int y = 0; y < kHeight; y++)
+        for (int i = 0; i < kHeight; i++)
           {
-            for (int x = 0; x < kWidth; x++)
+            for (int j = 0; j < kWidth; j++)
               {
-                p_over_d = lambda * ((f_x[y][x] * u_avg[y][x] +
-                                      f_y[y][x] * v_avg[y][x] + f_t[y][x]) /
-                                     (1 + lambda * (f_x[y][x] * f_x[y][x]) + (f_y[y][x] * f_y[y][x])));
-                u[y][x] = u_avg[y][x] - f_x[y][x] * p_over_d;
-                v[y][x] = v_avg[y][x] - f_y[y][x] * p_over_d;
-                //~ u[y][x] = f_t[y][x];
-                //~ v[y][x] = f_t[y][x];
+                PutValD(xDelta, j, i, u[i][j]);
+                PutValD(yDelta, j, i, v[i][j]);
               }
+
           }
 
-
-      }
-
-    for (int i = 0; i < kHeight; i++)
-      {
-        for (int j = 0; j < kWidth; j++)
+        for (int i = 0 ; i < kHeight ; i++)
           {
-            PutValD(xDelta, j, i, u[i][j]);
-            PutValD(yDelta, j, i, v[i][j]);
+            delete [] f_x[i];
+            delete [] f_y[i];
+            delete [] f_t[i];
+            delete [] u[i];
+            delete [] u_avg[i];
+            delete [] v[i];
+            delete [] v_avg[i];
           }
 
+        delete [] f_x;
+        delete [] f_y;
+        delete [] f_t;
+        delete [] u;
+        delete [] u_avg;
+        delete [] v;
+        delete [] v_avg;
+
+        return OK;
       }
-
-    for (int i = 0 ; i < kHeight ; i++)
-      {
-        delete [] f_x[i];
-        delete [] f_y[i];
-        delete [] f_t[i];
-        delete [] u[i];
-        delete [] u_avg[i];
-        delete [] v[i];
-        delete [] v_avg[i];
-      }
-
-    delete [] f_x;
-    delete [] f_y;
-    delete [] f_t;
-    delete [] u;
-    delete [] u_avg;
-    delete [] v;
-    delete [] v_avg;
-
-    return OK;
-    }
     RETHROW;
   }
 
@@ -779,13 +783,13 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
 
     if (!(IsImg(img)))
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
 
     int sizeX = xDelta.xsize;
     int sizeY = xDelta.ysize;
 
     if (!(subSampleSize > 0 && subSampleSize <= sizeX && subSampleSize <= sizeY && vectorScale != 0))
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
     int x, y;
     double x1, y1;

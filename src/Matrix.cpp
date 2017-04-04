@@ -441,37 +441,41 @@ namespace ice
       }
   }
 
+#define FNAME "Matrix::Norm"
   double Matrix::Norm(int mode) const
   {
-    double* dptr;
-    double* hptr;
-    double norm;
-    int i, j;
-    dptr = new double[nRows * nColumns];
-
-    if (dptr == nullptr)
+    try
       {
-        ERR("Matrix::Norm", M_NO_MEM, NO_MEM, 0.0);
+        double* dptr;
+        double* hptr;
+        double norm;
+
+        dptr = new double[nRows * nColumns];
+
+        hptr = dptr;
+
+        for (int i = 0; i < nRows; i++)
+          for (int j = 0; j < nColumns; j++)
+            {
+              *(hptr++) = (*data[i])[j];
+            }
+
+        try
+          {
+            NormMatrix(dptr, nRows, nColumns, mode, &norm);
+          }
+        catch (IceException& ex)
+          {
+            delete [] dptr;
+            throw IceException(ex, "Matrix::Norm");
+          }
+
+        delete [] dptr;
+        return norm;
       }
-
-    hptr = dptr;
-
-    for (i = 0; i < nRows; i++)
-      for (j = 0; j < nColumns; j++)
-        {
-          *(hptr++) = (*data[i])[j];
-        }
-
-    IF_FAILED(NormMatrix(dptr, nRows, nColumns, mode, &norm))
-    {
-      throw IceException("Matrix::Norm", M_0, ERROR);
-      delete [] dptr;
-      return 0.0;
-    }
-
-    delete [] dptr;
-    return norm;
+    RETHROW;
   }
+#undef FNAME
 
   double Matrix::MaxVal() const
   {

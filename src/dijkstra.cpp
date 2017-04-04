@@ -38,93 +38,94 @@ namespace ice
 #define FNAME "Dijkstra"
   Contur Dijkstra(const Image& img, IPoint start, Image& marker)
   {
-    try {
-      Contur res;
-      priority_queue<PointX> heap;
-      
-      int dx, dy;
-      
-      MatchImg(img, marker, dx, dy);
-      
-      if (marker->maxval < minrange)
-	  throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
-
-      if (!Inside(img, start))
-	  throw IceException(FNAME, M_OUTSIDE, WRONG_PARAM);
-
-    // prepare marker image:
-    // 0           => 0 - unhandled
-    // all markers => 1 - destination
-    //
-    BinImg(marker, marker, 1, 1);
-
-    if (GetVal(marker, start.x, start.y) != 0)
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_PARAM);
-
-    PointX ap(start, 0, 0);
-    heap.push(ap);
-
-    bool ready = false;
-
-    while (!ready && heap.size() > 0)
+    try
       {
-        ap = heap.top();
-        heap.pop();
-        int state = GetVal(marker, ap);
+        Contur res;
+        priority_queue<PointX> heap;
 
-        if (state == 1)   // reached destination
+        int dx, dy;
+
+        MatchImg(img, marker, dx, dy);
+
+        if (marker->maxval < minrange)
+          throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
+
+        if (!Inside(img, start))
+          throw IceException(FNAME, M_OUTSIDE, WRONG_PARAM);
+
+        // prepare marker image:
+        // 0           => 0 - unhandled
+        // all markers => 1 - destination
+        //
+        BinImg(marker, marker, 1, 1);
+
+        if (GetVal(marker, start.x, start.y) != 0)
+          throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_PARAM);
+
+        PointX ap(start, 0, 0);
+        heap.push(ap);
+
+        bool ready = false;
+
+        while (!ready && heap.size() > 0)
           {
-            ready = true;
-          }
+            ap = heap.top();
+            heap.pop();
+            int state = GetVal(marker, ap);
 
-        if (state < 2)   // point unhandled
-          {
-            PutVal(marker, ap, ap.dir.Int() + 2);
-
-            if (!ready)
+            if (state == 1)   // reached destination
               {
-                for (int dir = 0; dir < 8 && !ready; dir++)
+                ready = true;
+              }
+
+            if (state < 2)   // point unhandled
+              {
+                PutVal(marker, ap, ap.dir.Int() + 2);
+
+                if (!ready)
                   {
-                    PointX np(ap);
-                    Freeman(dir).move(np);
-
-                    if (Inside(marker, np))
+                    for (int dir = 0; dir < 8 && !ready; dir++)
                       {
-                        int mrk = GetVal(marker, np);
+                        PointX np(ap);
+                        Freeman(dir).move(np);
 
-                        if (mrk < 2)   // unbehandelt
+                        if (Inside(marker, np))
                           {
-                            if (dir & 1)
-                              {
-                                np.val += cf(img, np) * 1.414;
-                              }
-                            else
-                              {
-                                np.val += cf(img, np);
-                              }
+                            int mrk = GetVal(marker, np);
 
-                            np.dir = dir;
-                            heap.push(np);
+                            if (mrk < 2)   // unbehandelt
+                              {
+                                if (dir & 1)
+                                  {
+                                    np.val += cf(img, np) * 1.414;
+                                  }
+                                else
+                                  {
+                                    np.val += cf(img, np);
+                                  }
+
+                                np.dir = dir;
+                                heap.push(np);
+                              }
                           }
                       }
                   }
               }
           }
+
+        res.SetStart(ap.x, ap.y);
+
+        while (!(ap == start))
+          {
+            res.Add(ap.x, ap.y);
+            int dir = (GetVal(marker, ap) - 2 + 4) % 8;
+            Freeman(dir).move(ap);
+          }
+
+        res.Add(start);
+        res.InvDir();
+        return res;
       }
-
-    res.SetStart(ap.x, ap.y);
-
-    while (!(ap == start))
-      {
-        res.Add(ap.x, ap.y);
-        int dir = (GetVal(marker, ap) - 2 + 4) % 8;
-        Freeman(dir).move(ap);
-      }
-
-    res.Add(start);
-    res.InvDir();
-    return res;
-    }
     RETHROW;
   }
 

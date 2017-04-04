@@ -122,21 +122,22 @@ namespace ice
 #define FNAME "Trafo::operator="
   Trafo& Trafo::operator=(const Matrix& mat)
   {
-    dimSource = mat.cols() - 1;
-    dimTarget = mat.rows() - 1;
-    m.init(dimTarget + 1, dimSource + 1);
+    try
+      {
+        dimSource = mat.cols() - 1;
+        dimTarget = mat.rows() - 1;
+        m.init(dimTarget + 1, dimSource + 1);
 
-    for (int i = 0; i < mat.rows(); i++)
-      for (int j = 0; j < mat.cols(); j++)
-        {
-          m[i][j] = mat[i][j];
-        }
+        for (int i = 0; i < mat.rows(); i++)
+          for (int j = 0; j < mat.cols(); j++)
+            {
+              m[i][j] = mat[i][j];
+            }
 
-    IF_FAILED(normalize())
-    {
-      throw IceException(FNAME, M_0, ERROR);
-    }
-    return *this;
+        normalize();
+        return *this;
+      }
+    RETHROW;
   }
 #undef FNAME
 

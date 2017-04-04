@@ -1272,163 +1272,165 @@ namespace ice
   double AffinFitMoments(const double m1p[15], const double m2p[15],
                          double tr[3][3])
   {
-    try {
-    double m1[15], m2[15];
-    double mx[15], mn1[15], mn2[15], s3, s4, smin;
-    double tr1[3][3], tr2[3][3], trx[8][3][3], tra[8][3][3];
-    int i, imin, j, k, i1, i2;
-
-    PosSign(m1p, m1);
-    PosSign(m2p, m2);
-
-    // Flaeche darf nicht verschwinden
-    if (m1[0] < EPSILON || m2[0] < EPSILON)
-        throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
-
-    double dx, dy;
-    NormalizeMomentsTranslation(m1, mx, dx, dy);
-    //    TranslateMoments(m1,-m1[1]/m1[0],-m1[2]/m1[0],mx);
-
-    // Normierung der Momente durch isotrope Skalierung auf gleiche Fläche
-    NormalizeMomentsArea(mx, mx);
-
-    // optimale Methode auswaehlen
-    s3 = 0.0;
-
-    for (int i = 6; i < 10; i++)
+    try
       {
-        s3 += mx[i] * mx[i];  // Summe 3. Mom.
-      }
+        double m1[15], m2[15];
+        double mx[15], mn1[15], mn2[15], s3, s4, smin;
+        double tr1[3][3], tr2[3][3], trx[8][3][3], tra[8][3][3];
+        int i, imin, j, k, i1, i2;
 
-    s4 = 0.0;
+        PosSign(m1p, m1);
+        PosSign(m2p, m2);
 
-    for (int i = 10; i < 15; i++)
-      {
-        s4 += mx[i] * mx[i];  // Summe 4. Mom.
-      }
+        // Flaeche darf nicht verschwinden
+        if (m1[0] < EPSILON || m2[0] < EPSILON)
+          throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
 
-    s3 /= 4;
-    s4 /= 5;
+        double dx, dy;
+        NormalizeMomentsTranslation(m1, mx, dx, dy);
+        //    TranslateMoments(m1,-m1[1]/m1[0],-m1[2]/m1[0],mx);
 
-    if (s3 > s4)
-      {
-        // 3. Momente groesser als 4. Momente --> Polynommethode
-        PolyNormMoments(m1, mn1, tr1);
-        PolyNormMoments(m2, mn2, tr2);
-        i1 = 6;
-        i2 = 10;
-      }
-    else
-      {
-        // Iterationsmethode ist besser
-        AffinIterateMoments(m1, mn1, tr1);
-        AffinIterateMoments(m2, mn2, tr2);
-        i1 = 10;
-        i2 = 15;
+        // Normierung der Momente durch isotrope Skalierung auf gleiche Fläche
+        NormalizeMomentsArea(mx, mx);
 
-        // Sonderbehandlung für Dreiecke
-        if (fabs(mn1[6] + mn1[8]) < 1e-5 && fabs(mn1[7] + mn1[9]) < 1e-5)
+        // optimale Methode auswaehlen
+        s3 = 0.0;
+
+        for (int i = 6; i < 10; i++)
           {
-            //Dreieck --> Polynommethode
+            s3 += mx[i] * mx[i];  // Summe 3. Mom.
+          }
+
+        s4 = 0.0;
+
+        for (int i = 10; i < 15; i++)
+          {
+            s4 += mx[i] * mx[i];  // Summe 4. Mom.
+          }
+
+        s3 /= 4;
+        s4 /= 5;
+
+        if (s3 > s4)
+          {
+            // 3. Momente groesser als 4. Momente --> Polynommethode
             PolyNormMoments(m1, mn1, tr1);
             PolyNormMoments(m2, mn2, tr2);
             i1 = 6;
             i2 = 10;
           }
-      }
-
-    InvertTrans(tr2);
-    // alle verbleibenden Möglichkeiten testen
-
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        {
-          trx[0][i][j] = tr2[i][j];
-        }
-
-    // Drehungen um 90 Grad
-    for (i = 0, j = 1; j < 4; i++, j++)
-      {
-        for (k = 0; k < 3; k++)
+        else
           {
-            trx[j][k][0] = trx[i][k][1];
-            trx[j][k][1] = -trx[i][k][0];
-            trx[j][k][2] = trx[i][k][2];
-          }
-      }
+            // Iterationsmethode ist besser
+            AffinIterateMoments(m1, mn1, tr1);
+            AffinIterateMoments(m2, mn2, tr2);
+            i1 = 10;
+            i2 = 15;
 
-    // Spiegelung an der y-Achse
-    for (i = 0; i < 3; i++)
-      {
-        trx[4][i][0] = -tr2[i][0];
-        trx[4][i][1] = tr2[i][1];
-        trx[4][i][2] = tr2[i][2];
-      }
-
-    // Drehungen um 90 Grad
-    for (i = 4, j = 5; j < 8; i++, j++)
-      {
-        for (k = 0; k < 3; k++)
-          {
-            trx[j][k][0] = trx[i][k][1];
-            trx[j][k][1] = -trx[i][k][0];
-            trx[j][k][2] = trx[i][k][2];
-          }
-      }
-
-    // Transformation Objekt1 - Objekt2 bestimmen
-    // und Abstandsmaß für Momente berechnen
-    smin = 1e20;
-    imin = 0;
-
-    for (i = 0; i < 8; i++)
-      {
-        MulMatrix((double*)trx[i], (double*)tr1, 3, 3, 3, (double*)tra[i]);
-        AffinTransMoments(m1, tra[i], mn1);
-        double fehlersumme = 0.0;
-
-        for (j = i1; j < i2; j++)
-          {
-            fehlersumme += Sqr(mn1[j] - m2[j]);
+            // Sonderbehandlung für Dreiecke
+            if (fabs(mn1[6] + mn1[8]) < 1e-5 && fabs(mn1[7] + mn1[9]) < 1e-5)
+              {
+                //Dreieck --> Polynommethode
+                PolyNormMoments(m1, mn1, tr1);
+                PolyNormMoments(m2, mn2, tr2);
+                i1 = 6;
+                i2 = 10;
+              }
           }
 
-        if (fehlersumme < smin)
+        InvertTrans(tr2);
+        // alle verbleibenden Möglichkeiten testen
+
+        for (i = 0; i < 3; i++)
+          for (j = 0; j < 3; j++)
+            {
+              trx[0][i][j] = tr2[i][j];
+            }
+
+        // Drehungen um 90 Grad
+        for (i = 0, j = 1; j < 4; i++, j++)
           {
-            smin = fehlersumme;
-            imin = i;
+            for (k = 0; k < 3; k++)
+              {
+                trx[j][k][0] = trx[i][k][1];
+                trx[j][k][1] = -trx[i][k][0];
+                trx[j][k][2] = trx[i][k][2];
+              }
           }
+
+        // Spiegelung an der y-Achse
+        for (i = 0; i < 3; i++)
+          {
+            trx[4][i][0] = -tr2[i][0];
+            trx[4][i][1] = tr2[i][1];
+            trx[4][i][2] = tr2[i][2];
+          }
+
+        // Drehungen um 90 Grad
+        for (i = 4, j = 5; j < 8; i++, j++)
+          {
+            for (k = 0; k < 3; k++)
+              {
+                trx[j][k][0] = trx[i][k][1];
+                trx[j][k][1] = -trx[i][k][0];
+                trx[j][k][2] = trx[i][k][2];
+              }
+          }
+
+        // Transformation Objekt1 - Objekt2 bestimmen
+        // und Abstandsmaß für Momente berechnen
+        smin = 1e20;
+        imin = 0;
+
+        for (i = 0; i < 8; i++)
+          {
+            MulMatrix((double*)trx[i], (double*)tr1, 3, 3, 3, (double*)tra[i]);
+            AffinTransMoments(m1, tra[i], mn1);
+            double fehlersumme = 0.0;
+
+            for (j = i1; j < i2; j++)
+              {
+                fehlersumme += Sqr(mn1[j] - m2[j]);
+              }
+
+            if (fehlersumme < smin)
+              {
+                smin = fehlersumme;
+                imin = i;
+              }
+          }
+
+        // Rückgabe der Transformation mit minimalem Abstand
+        for (i = 0; i < 3; i++)
+          for (j = 0; j < 3; j++)
+            {
+              tr[i][j] = tra[imin][i][j];
+            }
+
+        return smin;
       }
-
-    // Rückgabe der Transformation mit minimalem Abstand
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        {
-          tr[i][j] = tra[imin][i][j];
-        }
-
-    return smin;
-    }
     RETHROW;
   }
 
   double AffinFitMoments(const double m1[15], const double m2[15], Trafo& tr)
   {
-    try {
-    double oldtr[3][3];
+    try
+      {
+        double oldtr[3][3];
 
-    double ret = AffinFitMoments(m1, m2, oldtr);
-    
-    Matrix m(3, 3);
-    
-    for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 3; j++)
-        {
-          m[i][j] = oldtr[i][j];
-        }
-    
-    tr = Trafo(m);
-    return ret;
-    }
+        double ret = AffinFitMoments(m1, m2, oldtr);
+
+        Matrix m(3, 3);
+
+        for (int i = 0; i < 3; i++)
+          for (int j = 0; j < 3; j++)
+            {
+              m[i][j] = oldtr[i][j];
+            }
+
+        tr = Trafo(m);
+        return ret;
+      }
     RETHROW;
   }
 #undef FNAME

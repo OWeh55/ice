@@ -351,242 +351,238 @@ namespace ice
                     object_rc marked,
                     object_rc outside)
   {
-    Contur c, c1;
-    int startdir, cr;
-    int xs, ys;
-    int xf, yf;
-    int x1, y1;
-    //    int x2, y2;
-    int x3, y3, x4, y4;
-    int dir;
-    int dir1, dir2, dir6;
-    bool stop;
-    bool second = false;
-    object_rc obj;
-
-    xs = ps[0];
-    ys = ps[1];
-
-    if (object == NULL)
+    try
       {
-        object = ObjectThr;
-      }
+        Contur c, c1;
+        int startdir, cr;
+        int xs, ys;
+        int xf, yf;
+        int x1, y1;
+        //    int x2, y2;
+        int x3, y3, x4, y4;
+        int dir;
+        int dir1, dir2, dir6;
+        bool stop;
+        bool second = false;
+        object_rc obj;
 
-    if (!IsImg(imgv))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return Contur();
-      }
+        xs = ps[0];
+        ys = ps[1];
 
-    if (IsImg(imgo))
-      {
-        IF_FAILED(MatchImg(imgv, imgo))
-        {
-          return c;
-        }
-      }
+        if (object == NULL)
+          {
+            object = ObjectThr;
+          }
 
-    if (xs < 0 || xs >= imgv->xsize || ys < 0 || ys >= imgv->ysize)
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return Contur();
-      }
+        if (!IsImg(imgv))
+          {
+            throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+            return Contur();
+          }
 
-    if (checkobjectstartchecked(imgv, imgo, object, pgl, xs, ys) != isobject)
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return Contur();
-      }
+        if (IsImg(imgo))
+          imgv.checkSizes(imgo);
 
-    dir = 4;
-    cr = 0;
+        if (xs < 0 || xs >= imgv->xsize || ys < 0 || ys >= imgv->ysize)
+          {
+            throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+          }
 
-    // Suche Untergrundpunkt in Nachbarschaft (links beginnend)
-    // markierte Punkte und Punkte ausserhalb sind hier nicht untergrund
+        if (checkobjectstartchecked(imgv, imgo, object, pgl, xs, ys) != isobject)
+          {
+            throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+          }
 
-    Freeman(dir).move(xs, ys, xf, yf);
+        dir = 4;
+        cr = 0;
 
-    while ((cr < 4) &&
-           (checkobjectstartchecked(imgv, imgo, object, pgl, xf, yf) != isunderground))
-      {
-        dir = (dir + 2) & 7;
-        cr++;
+        // Suche Untergrundpunkt in Nachbarschaft (links beginnend)
+        // markierte Punkte und Punkte ausserhalb sind hier nicht untergrund
+
         Freeman(dir).move(xs, ys, xf, yf);
-      }
 
-    if (cr == 4)                    // Startpunkt liegt im Objekt
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-        return Contur();
-      }
-
-    startdir = dir;
-
-    do
-      {
-        stop = false;
-        x1 = xs;
-        y1 = ys;
-        // x2 = xf;
-        // y2 = yf;
-        dir = startdir;
-
-        if (!second)
+        while ((cr < 4) &&
+               (checkobjectstartchecked(imgv, imgo, object, pgl, xf, yf) != isunderground))
           {
-            dir2 = 2;
-            dir1 = 1;
-            dir6 = 6;
-          }
-        else
-          {
-            c1 = c; // store found (partial) contur
-            c.Reset(); // re-initialize search contur
-            dir2 = 6; // search backward
-            dir1 = 7;
-            dir6 = 2;
+            dir = (dir + 2) & 7;
+            cr++;
+            Freeman(dir).move(xs, ys, xf, yf);
           }
 
-        // Suche
-        c.SetStart(x1, y1);
+        if (cr == 4)                    // Startpunkt liegt im Objekt
+          {
+            throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
+          }
+
+        startdir = dir;
 
         do
           {
-            Freeman(dir + dir2).move(x1, y1, x3, y3);
-            obj = checkobjectconturchecked(imgv, imgo, object, pgl,
-                                           x3, y3,
-                                           marked, outside);
+            stop = false;
+            x1 = xs;
+            y1 = ys;
+            // x2 = xf;
+            // y2 = yf;
+            dir = startdir;
 
-            if (obj == isunderground)
+            if (!second)
               {
-                // ?? ..
-                // ?? ..
-                //    --
-                // ..|XX
-                // ..|XX
-                // rechts abbiegen
-                // x2 = x3;
-                // y2 = y3;
-                dir = (dir + dir2) & 7;
+                dir2 = 2;
+                dir1 = 1;
+                dir6 = 6;
               }
             else
               {
-                if (obj == isunknown)
+                c1 = c; // store found (partial) contur
+                c.Reset(); // re-initialize search contur
+                dir2 = 6; // search backward
+                dir1 = 7;
+                dir6 = 2;
+              }
+
+            // Suche
+            c.SetStart(x1, y1);
+
+            do
+              {
+                Freeman(dir + dir2).move(x1, y1, x3, y3);
+                obj = checkobjectconturchecked(imgv, imgo, object, pgl,
+                                               x3, y3,
+                                               marked, outside);
+
+                if (obj == isunderground)
                   {
-                    // ?? uu
-                    // ?? uu
-                    //
+                    // ?? ..
+                    // ?? ..
+                    //    --
                     // ..|XX
                     // ..|XX
-                    Freeman(dir + dir1).move(x1, y1, x4, y4);
-                    obj = checkobjectconturchecked(imgv, imgo, object, pgl,
-                                                   x4, y4,
-                                                   marked, outside);
-
-                    if (obj == isobject)
-                      {
-                        // links abbiegen
-                        // XX uu
-                        // XX uu
-                        // --
-                        // ..|XX
-                        // ..|XX
-                        // links abbiegen
-                        c.Add((dir + dir1) & 7);
-                        x1 = x4;
-                        y1 = y4;
-                        dir = (dir + dir6) & 7;
-                      }
-                    else
-                      {
-
-                        // .. uu
-                        // .. uu
-                        //
-                        // ..|XX
-                        // ..|XX
-                        // stop
-
-                        // ODER
-
-                        // uu uu
-                        // uu uu
-                        //
-                        // ..|XX
-                        // ..|XX
-                        // stop
-                        stop = true;
-                      }
+                    // rechts abbiegen
+                    // x2 = x3;
+                    // y2 = y3;
+                    dir = (dir + dir2) & 7;
                   }
-                else     /* obj==isobject */
+                else
                   {
-                    // ?? XX
-                    // ?? XX
-                    //
-                    // ..|XX
-                    // ..|XX
-                    Freeman(dir + dir1).move(x1, y1, x4, y4);
-                    obj = checkobjectconturchecked(imgv, imgo, object, pgl,
-                                                   x4, y4,
-                                                   marked, outside);
+                    if (obj == isunknown)
+                      {
+                        // ?? uu
+                        // ?? uu
+                        //
+                        // ..|XX
+                        // ..|XX
+                        Freeman(dir + dir1).move(x1, y1, x4, y4);
+                        obj = checkobjectconturchecked(imgv, imgo, object, pgl,
+                                                       x4, y4,
+                                                       marked, outside);
 
-                    if (obj == isobject)
-                      {
-                        // XX XX
-                        // XX XX
-                        // --
-                        // ..|XX
-                        // ..|XX
-                        // links abbiegen
-                        c.Add((dir + dir1) & 7);
-                        x1 = x4;
-                        y1 = y4;
-                        dir = (dir + dir6) & 7;
-                      }
-                    else
-                      {
-                        if (obj == isunderground)
+                        if (obj == isobject)
                           {
+                            // links abbiegen
+                            // XX uu
+                            // XX uu
+                            // --
                             // ..|XX
                             // ..|XX
-                            //   |
-                            // ..|XX
-                            // ..|XX
-                            // geradeaus
-                            x1 = x3;
-                            y1 = y3;
-                            //x2 = x4;
-                            //y2 = y4;
-                            c.Add((dir + dir2) & 7);
+                            // links abbiegen
+                            c.Add((dir + dir1) & 7);
+                            x1 = x4;
+                            y1 = y4;
+                            dir = (dir + dir6) & 7;
                           }
-                        else     /* obj == isunknown */
+                        else
                           {
-                            // uu XX
-                            // uu XX
+
+                            // .. uu
+                            // .. uu
                             //
                             // ..|XX
                             // ..|XX
-                            // Halt
+                            // stop
+
+                            // ODER
+
+                            // uu uu
+                            // uu uu
+                            //
+                            // ..|XX
+                            // ..|XX
+                            // stop
                             stop = true;
+                          }
+                      }
+                    else     /* obj==isobject */
+                      {
+                        // ?? XX
+                        // ?? XX
+                        //
+                        // ..|XX
+                        // ..|XX
+                        Freeman(dir + dir1).move(x1, y1, x4, y4);
+                        obj = checkobjectconturchecked(imgv, imgo, object, pgl,
+                                                       x4, y4,
+                                                       marked, outside);
+
+                        if (obj == isobject)
+                          {
+                            // XX XX
+                            // XX XX
+                            // --
+                            // ..|XX
+                            // ..|XX
+                            // links abbiegen
+                            c.Add((dir + dir1) & 7);
+                            x1 = x4;
+                            y1 = y4;
+                            dir = (dir + dir6) & 7;
+                          }
+                        else
+                          {
+                            if (obj == isunderground)
+                              {
+                                // ..|XX
+                                // ..|XX
+                                //   |
+                                // ..|XX
+                                // ..|XX
+                                // geradeaus
+                                x1 = x3;
+                                y1 = y3;
+                                //x2 = x4;
+                                //y2 = y4;
+                                c.Add((dir + dir2) & 7);
+                              }
+                            else     /* obj == isunknown */
+                              {
+                                // uu XX
+                                // uu XX
+                                //
+                                // ..|XX
+                                // ..|XX
+                                // Halt
+                                stop = true;
+                              }
                           }
                       }
                   }
               }
+
+            while (((x1 != xs) || (y1 != ys) || (dir != startdir)) &&
+                   (!stop));
+
+            second = !second;
+          }
+        while (second && stop);
+
+        if (!second)   // zwei durchläufe waren nötig
+          {
+            c.InvDir();
+            c.Add(c1);
           }
 
-        while (((x1 != xs) || (y1 != ys) || (dir != startdir)) &&
-               (!stop));
-
-        second = !second;
+        return c;
       }
-    while (second && stop);
-
-    if (!second)   // zwei durchläufe waren nötig
-      {
-        c.InvDir();
-        c.Add(c1);
-      }
-
-    return c;
+    RETHROW;
   }
 
   Contur CalcContur(const Image& imgv, const Image& imgo,

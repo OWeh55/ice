@@ -35,9 +35,10 @@ namespace ice
 #define FNAME "ClassifierMinimumDistance::ClassifierMinimumDistance()"
   ClassifierMinimumDistance::ClassifierMinimumDistance(int classes, int dimension)
   {
-    try {
-      Init(classes, dimension);
-    }
+    try
+      {
+        Init(classes, dimension);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -45,16 +46,17 @@ namespace ice
 #define FNAME "ClassifierMinimumDistance::Init"
   void ClassifierMinimumDistance::Init(int classes, int dimension)
   {
-    try {
-      Classifier::Init(classes, dimension);
-      
-      par = Matrix(nClasses, nFeatures + 2);
-      
-      for (int i = 0; i < nClasses; i++)
-	{
-	  par[i][nFeatures] = 0.0;
-	}
-    }
+    try
+      {
+        Classifier::Init(classes, dimension);
+
+        par = Matrix(nClasses, nFeatures + 2);
+
+        for (int i = 0; i < nClasses; i++)
+          {
+            par[i][nFeatures] = 0.0;
+          }
+      }
     RETHROW;
   }
 #undef FNAME

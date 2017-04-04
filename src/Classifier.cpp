@@ -276,11 +276,7 @@ namespace ice
   int Classifier::Classify(Matrix& m) const
   {
     IVector cl;
-    IF_FAILED(Classify(m, cl))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    }
+    Classify(m, cl);
     m = m || (Vector)cl;
     return OK;
   }
@@ -293,7 +289,6 @@ namespace ice
     if (!is.good())
       {
         throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
-        return WRONG_FILE;
       }
     return read(is);
   }
@@ -301,7 +296,6 @@ namespace ice
   int Classifier::read(std::istream& is)
   {
     throw IceException(FNAME, M_NOT_IMPLEMENTED, ERROR);
-    return ERROR;
   }
 
 #undef FNAME
@@ -309,23 +303,16 @@ namespace ice
   int Classifier::write(const std::string& fn) const
   {
     if (state != ready)
-      {
-        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED, ERROR);
     std::ofstream os(fn.c_str());
     if (!os.good())
-      {
-        throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
     return write(os);
   }
 
   int Classifier::write(std::ostream& os) const
   {
     throw IceException(FNAME, M_NOT_IMPLEMENTED, ERROR);
-    return ERROR;
   }
 #undef FNAME
 #define FNAME "Test"
@@ -336,19 +323,16 @@ namespace ice
     if (state != ready)
       {
         throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
       }
 
     if (sl.size() < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0.0;
       }
 
     if (nFeatures != (int)sl[0].features.size())
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
       }
 
     int cc = 0; // count correct classified samples
@@ -369,13 +353,11 @@ namespace ice
     if (state != ready)
       {
         throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
       }
 
     if (nFeatures != m.cols() - 1)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
       }
 
     int cc = 0; // count correct classified samples
@@ -397,13 +379,11 @@ namespace ice
     if (state != ready)
       {
         throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
       }
 
     if ((nFeatures != m.cols()) || (m.rows() != clnr.Size()))
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
       }
 
     int cc = 0; // count correct classified samples
@@ -425,13 +405,11 @@ namespace ice
     if (state != ready)
       {
         throw IceException(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
       }
 
     if (nFeatures != m.cols() - 1)
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
       }
 
     int cc = 0; // counter for correct classifications

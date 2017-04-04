@@ -189,22 +189,24 @@ namespace ice
   Matrix DistanceMatrix(const Matrix& feat1, const Matrix& feat2,
                         int mode)
   {
-    try {
-    Matrix res;
-    DistanceMatrix(feat1, feat2, res, mode);
-    return res;
-    }
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat1, feat2, res, mode);
+        return res;
+      }
     RETHROW;
   }
 
 
   Matrix DistanceMatrix(const Matrix& feat, int mode)
   {
-    try {
-    Matrix res;
-    DistanceMatrix(feat, feat, res, mode);
-    return res;
-    }
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat, feat, res, mode);
+        return res;
+      }
     RETHROW;
   }
 
@@ -274,21 +276,23 @@ namespace ice
 
   Matrix DistanceMatrix(const Matrix& feat1, const Matrix& feat2, const VectorDistance& dist)
   {
-    try {
-    Matrix res;
-    DistanceMatrix(feat1, feat2, res, dist);
-    return res;
-    }
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat1, feat2, res, dist);
+        return res;
+      }
     RETHROW;
   }
 
   Matrix DistanceMatrix(const Matrix& feat, const VectorDistance& dist)
   {
-    try {
-    Matrix res;
-    DistanceMatrix(feat, feat, res, dist);
-    return res;
-    }
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat, feat, res, dist);
+        return res;
+      }
     RETHROW;
   }
 #undef FNAME

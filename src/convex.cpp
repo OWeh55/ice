@@ -353,62 +353,63 @@ namespace ice
 
   Matrix ConvexHull(const Matrix& pl)
   {
-    std::vector<Point> vpl(pl.rows());
-    for (int i = 0; i < pl.rows(); i++)
+    try
       {
-        vpl[i].x = pl[i][0];
-        vpl[i].y = pl[i][1];
+        std::vector<Point> vpl(pl.rows());
+        for (int i = 0; i < pl.rows(); i++)
+          {
+            vpl[i].x = pl[i][0];
+            vpl[i].y = pl[i][1];
+          }
+
+        Matrix res(0, 2);
+        std::vector<Point> rpl;
+        ConvexHull<Point>(vpl, rpl);
+
+        for (unsigned int i = 0; i < rpl.size(); i++)
+          {
+            res.Append(Vector(rpl[i].x, rpl[i].y));
+          }
+
+        return res;
       }
-
-    Matrix res(0, 2);
-    std::vector<Point> rpl;
-    IF_FAILED(ConvexHull<Point>(vpl, rpl))
-    {
-      return res;
-    }
-
-    for (unsigned int i = 0; i < rpl.size(); i++)
-      {
-        res.Append(Vector(rpl[i].x, rpl[i].y));
-      }
-
-    return res;
+    RETHROW;
   }
 
   Contur ConvexHull(const Contur& c)
   {
-    Contur res;
-
-    if (!c.isValid())
+    try
       {
-        throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
+        Contur res;
+        if (!c.isValid())
+          throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
+
+        if (c.Number() < 3)
+          {
+            return c;
+          }
+
+        bool hole = c.isHole();
+
+        std::vector<IPoint> pl;
+        c.getPoints(pl);
+
+        ConvexHull(pl, pl);
+
+        res.SetStart(pl[0]);
+        for (unsigned int i = 1; i < pl.size(); i++)
+          {
+            res.Add(pl[i]);
+          }
+        res.Add(pl[0]); // close contur
+
+        if (hole)
+          {
+            res.InvDir();
+          }
         return res;
       }
-
-    if (c.Number() < 3)
-      {
-        return c;
-      }
-
-    bool hole = c.isHole();
-
-    std::vector<IPoint> pl;
-    c.getPoints(pl);
-
-    ConvexHull(pl, pl);
-
-    res.SetStart(pl[0]);
-    for (unsigned int i = 1; i < pl.size(); i++)
-      {
-        res.Add(pl[i]);
-      }
-    res.Add(pl[0]); // close contur
-
-    if (hole)
-      {
-        res.InvDir();
-      }
-    return res;
+    RETHROW;
   }
 
 #undef FNAME

@@ -972,108 +972,111 @@ namespace ice
         (fuer symmetrische Matrizen)
   ....................................................................*/
   {
-    int i, j;
-    double val;
-    double* eval, *evec;
-
-    double eps = 1e-5;
-    i = 0;
-
-    if (m == NULL)
+    try
       {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        int i, j;
+        double val;
+        double* eval, *evec;
 
-    if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        double eps = 1e-5;
+        i = 0;
 
-    switch (mode)
-      {
-      case DEFAULT:
-        val = 0;
-
-        for (i = 0; i < row; i++)
-          for (j = 0; j < col; j++)
-            {
-              val += Sqr(*(m + i * col + j));
-            }
-
-        *norm = sqrt(val);
-        return OK;
-      case 1:
-        *norm = 0;
-
-        for (i = 0; i < row; i++)
+        if (m == NULL)
           {
+            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
+          }
+
+        if (row < 1 || col < 1)
+          {
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          }
+
+        switch (mode)
+          {
+          case DEFAULT:
             val = 0;
+
+            for (i = 0; i < row; i++)
+              for (j = 0; j < col; j++)
+                {
+                  val += Sqr(*(m + i * col + j));
+                }
+
+            *norm = sqrt(val);
+            return OK;
+          case 1:
+            *norm = 0;
+
+            for (i = 0; i < row; i++)
+              {
+                val = 0;
+
+                for (j = 0; j < col; j++)
+                  {
+                    val += m[i * col + j];
+                  }
+
+                if (val > *norm)
+                  {
+                    *norm = val;
+                  }
+              }
+
+            return OK;
+          case 2:
+            *norm = 0;
 
             for (j = 0; j < col; j++)
               {
-                val += m[i * col + j];
+                val = 0;
+
+                for (j = 0; j < row; j++)
+                  {
+                    val += m[j * col + i];
+                  }
+
+                if (val > *norm)
+                  {
+                    *norm = val;
+                  }
               }
 
-            if (val > *norm)
+            return OK;
+          case 3:
+
+            if (row != col)
               {
-                *norm = val;
+                throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
               }
-          }
 
-        return OK;
-      case 2:
-        *norm = 0;
-
-        for (j = 0; j < col; j++)
-          {
-            val = 0;
-
-            for (j = 0; j < row; j++)
+            if (IsMatrixSymm(m, row, &eps) != true)
               {
-                val += m[j * col + i];
+                throw IceException(FNAME, M_NO_SYMM, WRONG_PARAM);
               }
 
-            if (val > *norm)
+            eval = (double*)malloc(row * sizeof(double));
+            evec = (double*)malloc(row * row * sizeof(double));
+
+            try
               {
-                *norm = val;
+                EigenVal(m, row, eval, evec);
               }
+            catch (IceException& ex)
+              {
+                free(eval);
+                free(evec);
+                throw IceException(ex, FNAME);
+              }
+
+            *norm = eval[row - 1];
+            free(eval);
+            free(evec);
+            return OK;
+          default:
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
           }
-
-        return OK;
-      case 3:
-
-        if (row != col)
-          {
-            throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
-
-        if (IsMatrixSymm(m, row, &eps) != true)
-          {
-            throw IceException(FNAME, M_NO_SYMM, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
-
-        eval = (double*)malloc(row * sizeof(double));
-        evec = (double*)malloc(row * row * sizeof(double));
-
-        IF_FAILED(EigenVal(m, row, eval, evec))
-        {
-          free(eval);
-          free(evec);
-          throw IceException(FNAME, M_NO_REGULAR, WRONG_PARAM);
-        }
-
-        *norm = eval[row - 1];
-        free(eval);
-        free(evec);
-        return OK;
-      default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
+    RETHROW;
   }
 #undef FNAME
 //--------------------------------------------------------

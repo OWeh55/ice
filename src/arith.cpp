@@ -678,26 +678,27 @@ namespace ice
 
   bool equalImg(const Image& img1, const Image& img2)
   {
-    try {
-      MatchImg(img1, img2);
-
-    if (img1->ImageType() == img2->ImageType())
+    try
       {
-        switch (img1->ImageType())
-          {
-          case 1:
-            return equalImg<unsigned char>(img1, img2);
-          case 2:
-            return equalImg<unsigned short>(img1, img2);
-          case 3:
-            return equalImg<unsigned int>(img1, img2);
-          default:
-            return equalImg_std(img1, img2);
-          }
-      }
+        MatchImg(img1, img2);
 
-    return equalImg_std(img1, img2);
-    }
+        if (img1->ImageType() == img2->ImageType())
+          {
+            switch (img1->ImageType())
+              {
+              case 1:
+                return equalImg<unsigned char>(img1, img2);
+              case 2:
+                return equalImg<unsigned short>(img1, img2);
+              case 3:
+                return equalImg<unsigned int>(img1, img2);
+              default:
+                return equalImg_std(img1, img2);
+              }
+          }
+
+        return equalImg_std(img1, img2);
+      }
     RETHROW;
   }
 #undef FNAME

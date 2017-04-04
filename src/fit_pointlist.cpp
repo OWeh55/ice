@@ -95,11 +95,15 @@ namespace ice
     sl->prev = nullptr;
     sl->next = nullptr;
 
-    IF_FAILED(FitLine(pl, ad1, ad2, step, par, dmax, adr))
-    {
-      free(sl);
-      throw IceException(FNAME, "Kein Segment angepasst", WRONG_PARAM);
-    }
+    try
+      {
+        FitLine(pl, ad1, ad2, step, par, dmax, adr);
+      }
+    catch (IceException& ex)
+      {
+        free(sl);
+        throw IceException(FNAME, "Kein Segment angepasst");
+      }
 
     p = par[0];
     phi = par[1];

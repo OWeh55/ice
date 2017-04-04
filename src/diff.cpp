@@ -107,118 +107,119 @@ namespace ice
 #define FNAME "Diff"
   double Diff(const Image& img1, const Image& img2, int mode)
   {
-    try {
-    double res = 0.0;
-
-    int dx, dy;
-
-    MatchImg(img1, img2, dx, dy);
-
-    int ptype = img1->ImageType();
-
-    if ((ptype > 0) && (ptype < 4))
+    try
       {
-        if (img2->ImageType() == ptype)
+        double res = 0.0;
+
+        int dx, dy;
+
+        MatchImg(img1, img2, dx, dy);
+
+        int ptype = img1->ImageType();
+
+        if ((ptype > 0) && (ptype < 4))
           {
-            switch (ptype)
+            if (img2->ImageType() == ptype)
               {
-              case 1:
-
-                switch (mode)
+                switch (ptype)
                   {
-                  case ID_ABS:
-                    return Diff1<PixelType1>(img1, img2, dx, dy);
-                    break;
-                  case ID_SQUARE:
-                    return Diff2<PixelType1>(img1, img2, dx, dy);
-                    break;
-                  case ID_COV:
-                    return Diff3<PixelType1>(img1, img2, dx, dy);
-                    break;
-                  }
+                  case 1:
 
-              case 2:
+                    switch (mode)
+                      {
+                      case ID_ABS:
+                        return Diff1<PixelType1>(img1, img2, dx, dy);
+                        break;
+                      case ID_SQUARE:
+                        return Diff2<PixelType1>(img1, img2, dx, dy);
+                        break;
+                      case ID_COV:
+                        return Diff3<PixelType1>(img1, img2, dx, dy);
+                        break;
+                      }
 
-                switch (mode)
-                  {
-                  case ID_ABS:
-                    return Diff1<PixelType2>(img1, img2, dx, dy);
-                    break;
-                  case ID_SQUARE:
-                    return Diff2<PixelType2>(img1, img2, dx, dy);
-                    break;
-                  case ID_COV:
-                    return Diff3<PixelType2>(img1, img2, dx, dy);
-                    break;
-                  }
+                  case 2:
 
-              case 3:
+                    switch (mode)
+                      {
+                      case ID_ABS:
+                        return Diff1<PixelType2>(img1, img2, dx, dy);
+                        break;
+                      case ID_SQUARE:
+                        return Diff2<PixelType2>(img1, img2, dx, dy);
+                        break;
+                      case ID_COV:
+                        return Diff3<PixelType2>(img1, img2, dx, dy);
+                        break;
+                      }
 
-                switch (mode)
-                  {
-                  case ID_ABS:
-                    return Diff1<PixelType3>(img1, img2, dx, dy);
-                    break;
-                  case ID_SQUARE:
-                    return Diff2<PixelType3>(img1, img2, dx, dy);
-                    break;
-                  case ID_COV:
-                    return Diff3<PixelType3>(img1, img2, dx, dy);
-                    break;
+                  case 3:
+
+                    switch (mode)
+                      {
+                      case ID_ABS:
+                        return Diff1<PixelType3>(img1, img2, dx, dy);
+                        break;
+                      case ID_SQUARE:
+                        return Diff2<PixelType3>(img1, img2, dx, dy);
+                        break;
+                      case ID_COV:
+                        return Diff3<PixelType3>(img1, img2, dx, dy);
+                        break;
+                      }
                   }
               }
           }
-      }
 
-    else
-      {
-        switch (mode)
+        else
           {
-          case ID_ABS:
-            for (int y = 0; y < dy; ++y)
-              for (int x = 0; x < dx; ++x)
-                {
-                  int v1 = GetVal(img1, x, y);
-                  int v2 = GetVal(img2, x, y);
-                  res += (abs(v2 - v1));
-                }
-            break;
-          case ID_SQUARE:
-            for (int y = 0; y < dy; ++y)
-              for (int x = 0; x < dx; ++x)
-                {
-                  int v = GetVal(img1, x, y);
-                  v -= GetVal(img2, x, y);
-                  res += v * v;
-                }
-            break;
-          case ID_COV:
-            int v1s = 0;
-            int v2s = 0;
-            for (int y = 0; y < dy; ++y)
-              for (int x = 0; x < dx; ++x)
-                {
-                  v1s += GetVal(img1, x, y);
-                  v2s += GetVal(img2, x, y);
-                }
+            switch (mode)
+              {
+              case ID_ABS:
+                for (int y = 0; y < dy; ++y)
+                  for (int x = 0; x < dx; ++x)
+                    {
+                      int v1 = GetVal(img1, x, y);
+                      int v2 = GetVal(img2, x, y);
+                      res += (abs(v2 - v1));
+                    }
+                break;
+              case ID_SQUARE:
+                for (int y = 0; y < dy; ++y)
+                  for (int x = 0; x < dx; ++x)
+                    {
+                      int v = GetVal(img1, x, y);
+                      v -= GetVal(img2, x, y);
+                      res += v * v;
+                    }
+                break;
+              case ID_COV:
+                int v1s = 0;
+                int v2s = 0;
+                for (int y = 0; y < dy; ++y)
+                  for (int x = 0; x < dx; ++x)
+                    {
+                      v1s += GetVal(img1, x, y);
+                      v2s += GetVal(img2, x, y);
+                    }
 
-            double v1m = (double)v1s / dx / dy;
-            double v2m = (double)v2s / dx / dy;
+                double v1m = (double)v1s / dx / dy;
+                double v2m = (double)v2s / dx / dy;
 
-            for (int y = 0; y < dy; ++y)
-              for (int x = 0; x < dx; ++x)
-                {
-                  double v1 = GetVal(img1, x, y) - v1m;
-                  double v2 = GetVal(img2, x, y) - v2m;
-                  res -= v1 * v2;
-                }
-            break;
+                for (int y = 0; y < dy; ++y)
+                  for (int x = 0; x < dx; ++x)
+                    {
+                      double v1 = GetVal(img1, x, y) - v1m;
+                      double v2 = GetVal(img2, x, y) - v2m;
+                      res -= v1 * v2;
+                    }
+                break;
+              }
+
+            return res / dx / dy;
           }
-
-        return res / dx / dy;
+        return 0;
       }
-    return 0;
-    }
     RETHROW;
   }
 #undef FNAME

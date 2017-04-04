@@ -43,7 +43,7 @@ namespace ice
   //---------------------------
 
 #define FNAME "HartleyD"
-  int HartleyD(const double* src, int n, double* res)
+  void HartleyD(const double* src, int n, double* res)
   {
     double* im;
     double* re;
@@ -52,13 +52,11 @@ namespace ice
     if (n < 2)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (src == NULL || res == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if ((n & 1) == 0)
@@ -153,31 +151,27 @@ namespace ice
         delete [] im;
         delete [] re;
       }
-
-    return OK;
   }
 #undef FNAME
 
 #define FNAME "Hartley"
-  int Hartley(const Vector& src, Vector& dst)
+  void Hartley(const Vector& src, Vector& dst)
   {
-    dst.Resize(src.Size());
-    const double* s = src.getDataPointer();
-    double* d = dst.getDataPointer();
+    try
+      {
+        dst.Resize(src.Size());
+        const double* s = src.getDataPointer();
+        double* d = dst.getDataPointer();
 
-    int n = src.Size();
-    IF_FAILED(HartleyD(s, n, d))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-    return OK;
+        int n = src.Size();
+        HartleyD(s, n, d);
+      }
+    RETHROW;
   }
 
-  int Hartley(Vector& vec)
+  void Hartley(Vector& vec)
   {
-    RETURN_ERROR_IF_FAILED(Hartley(vec, vec));
-    return OK;
+    Hartley(vec, vec);
   }
 #undef FNAME
 }

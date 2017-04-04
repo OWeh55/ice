@@ -41,103 +41,105 @@
 namespace ice
 {
 #define FNAME "WhiteningFImgD"
-  int WhiteningFImgD(ImageD re, ImageD im, ImageD dre, ImageD dim, double beta)
+  void WhiteningFImgD(ImageD re, ImageD im, ImageD dre, ImageD dim, double beta)
   {
-    int xs, ys;
-    PixelFloatType di, dr, did, drd, denom;
-    double beta2 = beta * beta;
-
-    if (beta < 0)
+    try
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+
+        PixelFloatType di, dr, did, drd, denom;
+
+        if (beta < 0)
+          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+
+        double beta2 = beta * beta;
+
+        int xs, ys;
+        MatchImgD(re, im, dre, xs, ys);
+        MatchImgD(dre, dim, xs, ys);
+
+        for (int y = 0; y < re.ysize; ++y)
+          for (int x = 0; x < re.xsize; ++x)
+            {
+              dr = GetValD(re, x, y);
+              di = GetValD(im, x, y);
+              denom = sqrt(dr * dr + di * di) + beta2;
+
+              if (denom == 0)
+                {
+                  drd = 0;
+                  did = 0;
+                }
+              else
+                {
+                  drd = dr / denom;
+                  did = di / denom;
+                }
+
+              PutValD(dre, x, y, drd);
+              PutValD(dim, x, y, did);
+            }
       }
-
-    RETURN_ERROR_IF_FAILED(MatchImgD(re, im, dre, xs, ys));
-    RETURN_ERROR_IF_FAILED(MatchImgD(dre, dim, xs, ys));
-
-    for (int y = 0; y < re.ysize; ++y)
-      for (int x = 0; x < re.xsize; ++x)
-        {
-          dr = GetValD(re, x, y);
-          di = GetValD(im, x, y);
-          denom = sqrt(dr * dr + di * di) + beta2;
-
-          if (denom == 0)
-            {
-              drd = 0;
-              did = 0;
-            }
-          else
-            {
-              drd = dr / denom;
-              did = di / denom;
-            }
-
-          PutValD(dre, x, y, drd);
-          PutValD(dim, x, y, did);
-        }
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 //-----------------------------------------
 #define FNAME "WhiteningHImgD"
-  int WhiteningHImgD(ImageD im, ImageD nrm, double beta)
+  void WhiteningHImgD(ImageD im, ImageD nrm, double beta)
   {
-    int x, y;
-    int xs, ys, xn, yn;
-
-    ImageD h;
-    PixelFloatType r, i, p;
-
-    double beta2 = beta * beta;
-
-    if (beta < 0)
+    try
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        if (beta < 0)
+          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(im, nrm, xs, ys));
+        double beta2 = beta * beta;
 
-    h = NewImgD(xs, ys);
+        int xs, ys;
+        MatchImgD(im, nrm, xs, ys);
 
-    for (y = 0; y < ys; y++)
-      {
-        yn = negf(y, ys);
+        ImageD h = NewImgD(xs, ys);
 
-        for (x = 0; x < xs; x++)
+        PixelFloatType r, i, p;
+
+        for (int y = 0; y < ys; y++)
           {
-            xn = negf(x, xs);
-            r = GetValD(im, x, y);
-            i = GetValD(im, xn, yn);
-            p = sqrt((r * r + i * i) / 2) + beta2;
+            int yn = negf(y, ys);
 
-            if (p != 0)
+            for (int x = 0; x < xs; x++)
               {
-                p = r / p;
+                int xn = negf(x, xs);
+                r = GetValD(im, x, y);
+                i = GetValD(im, xn, yn);
+                p = sqrt((r * r + i * i) / 2) + beta2;
+
+                if (p != 0)
+                  {
+                    p = r / p;
+                  }
+
+                PutValD(h, x, y, p);
               }
-
-            PutValD(h, x, y, p);
           }
-      }
 
-    for (int y = 0; y < h.ysize; ++y)
-      for (int x = 0; x < h.xsize; ++x)
-        {
-          PutValD(nrm, x, y, GetValD(h, x, y));
-        }
-    FreeImgD(h);
-    return OK;
+        for (int y = 0; y < h.ysize; ++y)
+          for (int x = 0; x < h.xsize; ++x)
+            {
+              PutValD(nrm, x, y, GetValD(h, x, y));
+            }
+      }
+    RETHROW;
   }
 #undef FNAME
 //
 #define FNAME "WhiteningImgD"
-  int WhiteningImgD(ImageD im1, ImageD im2, double beta)
+  void WhiteningImgD(ImageD im1, ImageD im2, double beta)
   {
-    RETURN_ERROR_IF_FAILED(HartleyImgD(im1, im2));
-    RETURN_ERROR_IF_FAILED(WhiteningHImgD(im2, im2, beta));
-    return HartleyImgD(im2, im2);
+    try
+      {
+        HartleyImgD(im1, im2);
+        WhiteningHImgD(im2, im2, beta);
+        HartleyImgD(im2, im2);
+      }
+    RETHROW;
   }
 #undef FNAME
 }

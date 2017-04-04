@@ -402,28 +402,29 @@ namespace ice
 #define FNAME "ObjectMatcher::getTrafo"
   Trafo ObjectMatcher::getTrafo(int optmode) const
   {
-    try {
-    Trafo res;
-    vector<Point> OrderedPointList1;
-    vector<Point> OrderedPointList2;
-    getOrderedLists(OrderedPointList1, OrderedPointList2);
-    
-    switch (optmode)
+    try
       {
-      case MM_LINEAR:
-        res = MatchPointlistsLinOpt(OrderedPointList1, OrderedPointList2,
-				    trmode);
-        break;
-      case MM_SQUARE:
-        res = MatchPointlists(OrderedPointList1, OrderedPointList2,
-			      trmode);
-        break;
-      default:
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-      }
+        Trafo res;
+        vector<Point> OrderedPointList1;
+        vector<Point> OrderedPointList2;
+        getOrderedLists(OrderedPointList1, OrderedPointList2);
 
-    return res;
-    }
+        switch (optmode)
+          {
+          case MM_LINEAR:
+            res = MatchPointlistsLinOpt(OrderedPointList1, OrderedPointList2,
+                                        trmode);
+            break;
+          case MM_SQUARE:
+            res = MatchPointlists(OrderedPointList1, OrderedPointList2,
+                                  trmode);
+            break;
+          default:
+            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+          }
+
+        return res;
+      }
     RETHROW;
   }
 #undef FNAME

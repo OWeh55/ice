@@ -87,62 +87,60 @@ namespace ice
   Trafo MatchProjective(const Matrix& p1, const Matrix& p2,
                         const Vector& weights)
   {
-    int nPoints = p1.rows();
-    int dim1 = p1.cols();
-    int dim2 = p2.cols();
-
-    matrix<double> a(nPoints * dim2 + 1, (dim1 + 1) * (dim2 + 1), 0);
-    vector<double> r(nPoints * dim2 + 1);
-    vector<double> rv;
-
-    for (int j = 0; j < nPoints; j++)
+    try
       {
-        double weight = weights[j];
+        int nPoints = p1.rows();
+        int dim1 = p1.cols();
+        int dim2 = p2.cols();
 
-        for (int k = 0; k < dim2; k++)
+        matrix<double> a(nPoints * dim2 + 1, (dim1 + 1) * (dim2 + 1), 0);
+        vector<double> r(nPoints * dim2 + 1);
+        vector<double> rv;
+
+        for (int j = 0; j < nPoints; j++)
           {
-            for (int i = 0; i < dim1; i++)
+            double weight = weights[j];
+
+            for (int k = 0; k < dim2; k++)
               {
-                a[j * dim2 + k][k * (dim1 + 1) + i] = p1[j][i] * weight;
+                for (int i = 0; i < dim1; i++)
+                  {
+                    a[j * dim2 + k][k * (dim1 + 1) + i] = p1[j][i] * weight;
+                  }
+
+                a[j * dim2 + k][k * (dim1 + 1) + dim1] = 1.0 * weight;
+
+                for (int i = 0; i < dim1; i++)
+                  {
+                    a[j * dim2 + k][dim2 * (dim1 + 1) + i] = -p1[j][i] * p2[j][k] * weight;
+                  }
+
+                a[j * dim2 + k][(dim1 + 1) * (dim2 + 1) - 1] = -p2[j][k] * weight;
+                r[j * dim2 + k] = 0.0;
               }
-
-            a[j * dim2 + k][k * (dim1 + 1) + dim1] = 1.0 * weight;
-
-            for (int i = 0; i < dim1; i++)
-              {
-                a[j * dim2 + k][dim2 * (dim1 + 1) + i] = -p1[j][i] * p2[j][k] * weight;
-              }
-
-            a[j * dim2 + k][(dim1 + 1) * (dim2 + 1) - 1] = -p2[j][k] * weight;
-            r[j * dim2 + k] = 0.0;
           }
+
+        for (int i = 0; i < dim1 + 1; i++)
+          {
+            a[nPoints * dim2][dim2 * (dim1 + 1) + i] = 1.0;
+          }
+
+        r[nPoints * dim2] = 1.0;
+
+        //    cout << a << endl;
+
+        rv = SolveLinearEquation(a, r);
+
+        matrix<double> tmatrix(dim1 + 1, dim2 + 1);
+        for (int k = 0; k < dim2 + 1; k++)
+          for (int i = 0; i < dim1 + 1; i++)
+            {
+              tmatrix[k][i] = rv[k * (dim1 + 1) + i];
+            }
+
+        return tmatrix;
       }
-
-    for (int i = 0; i < dim1 + 1; i++)
-      {
-        a[nPoints * dim2][dim2 * (dim1 + 1) + i] = 1.0;
-      }
-
-    r[nPoints * dim2] = 1.0;
-
-    //    cout << a << endl;
-
-    IF_FAILED(rv = SolveLinearEquation(a, r))
-    {
-      throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-      return Trafo();
-    }
-
-    matrix<double> tmatrix(dim1 + 1, dim2 + 1);
-    for (int k = 0; k < dim2 + 1; k++)
-      for (int i = 0; i < dim1 + 1; i++)
-        {
-          tmatrix[k][i] = rv[k * (dim1 + 1) + i];
-        }
-
-    // cout << tmatrix << endl;
-
-    return tmatrix;
+    RETHROW;
   }
 
   void Trafo2Vector(const Trafo& tr, vector<double>& v)
@@ -230,218 +228,202 @@ namespace ice
   Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
                         int mode, const Vector& weights)
   {
-    int nPoints = p1.rows();
-    int dim1 = p1.cols();
-    int dim2 = p2.cols();
-    Trafo res(dim1, dim2);
-
-    double weightsum;
-
-    if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
+    try
       {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return res;
-      }
+        int nPoints = p1.rows();
+        int dim1 = p1.cols();
+        int dim2 = p2.cols();
+        Trafo res(dim1, dim2);
 
-    if (dim2 > dim1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
-      }
+        double weightsum;
 
-    if ((dim1 != dim2) && (mode != TRM_AFFINE) && (mode != TRM_PROJECTIVE))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
-      }
-
-    if ((mode == TRM_SIMILARITY_NOR) && ((dim1 != 2) || (dim2 != 2)))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
-      }
-
-    switch (mode)
-      {
-      case TRM_SHIFT:
-        // dim1==dim2 !!
-      {
-        Vector shift(dim1);
-        weightsum = 0;
-
-        for (int i = 0; i < dim1; i++)
+        if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
           {
-            shift[i] = 0;
+            throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
           }
 
-        for (int j = 0; j < nPoints; j++)
+        if (dim2 > dim1)
           {
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          }
+
+        if ((dim1 != dim2) && (mode != TRM_AFFINE) && (mode != TRM_PROJECTIVE))
+          {
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          }
+
+        if ((mode == TRM_SIMILARITY_NOR) && ((dim1 != 2) || (dim2 != 2)))
+          {
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          }
+
+        switch (mode)
+          {
+          case TRM_SHIFT:
+            // dim1==dim2 !!
+          {
+            Vector shift(dim1);
+            weightsum = 0;
+
             for (int i = 0; i < dim1; i++)
               {
-                shift[i] += (p2[j][i] - p1[j][i]) * weights[j];
+                shift[i] = 0;
               }
 
-            weightsum += weights[j];
-          }
-
-        for (int i = 0; i < dim1; i++)
-          {
-            res.m[i][dim2] = shift[i] / weightsum;
-          }
-      }
-      break;
-      case TRM_SCALE_SHIFT:
-      {
-        weightsum = 0;
-        Vector sum1(dim1);
-        sum1.Set(0);
-        Vector sum2(dim2);
-        sum2.Set(0);
-
-        for (int j = 0; j < nPoints; j++)
-          for (int i = 0; i < dim2; i++)
-            {
-              sum1[i] += weights[j] * p1[j][i];
-            }
-
-        for (int j = 0; j < nPoints; j++)
-          {
-            for (int i = 0; i < dim1; i++)
-              {
-                sum2[i] += weights[j] * p2[j][i];
-              }
-
-            weightsum += weights[j];
-          }
-
-        double s = 0.0;
-        double q = 0.0;
-
-        for (int j = 0; j < nPoints; j++)
-          {
-            s += weights[j] * (p2[j] * p1[j]);
-            q += weights[j] * (p1[j] * p1[j]);
-          }
-
-        double alpha = ((sum2 * sum1) / weightsum - s) / ((sum1 * sum1) / weightsum - q);
-        Vector shift(dim1);
-
-        for (int i = 0; i < dim1; i++)
-          {
-            shift[i] = 0;
-          }
-
-        for (int j = 0; j < nPoints; j++)
-          for (int i = 0; i < dim1; i++)
-            {
-              shift[i] += (p2[j][i] - alpha * p1[j][i]) * weights[j];
-            }
-
-        for (int i = 0; i < dim1; i++)
-          {
-            res.m[i][dim2] = shift[i] / weightsum;
-            res.m[i][i] = alpha;
-          }
-      }
-      break;
-      case TRM_SIMILARITY_NOR:
-        // dim1=dim2=2
-      {
-        Matrix a(2 * nPoints, 4);
-        Vector r(2 * nPoints);
-        Vector rv(4);
-
-        for (int j = 0; j < nPoints; j++)
-          {
-            a[j * 2][0] = p1[j][0] * weights[j];
-            a[j * 2][1] = p1[j][1] * weights[j];
-            a[j * 2][2] = weights[j];
-            a[j * 2][3] = 0;
-            r[j * 2] = p2[j][0] * weights[j];
-            a[j * 2 + 1][0] = p1[j][1] * weights[j];
-            a[j * 2 + 1][1] = -p1[j][0] * weights[j];
-            a[j * 2 + 1][2] = 0;
-            a[j * 2 + 1][3] = weights[j];
-            r[j * 2 + 1] = p2[j][1] * weights[j];
-          }
-
-        IF_FAILED(rv = SolveLinEqu(a, r))
-        {
-          throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-          return res;
-        }
-
-        res.m[0][0] = rv[0];
-        res.m[0][1] = rv[1];
-        res.m[1][0] = -rv[1];
-        res.m[1][1] = rv[0];
-        res.m[0][2] = rv[2];
-        res.m[1][2] = rv[3];
-        break;
-      }
-      case TRM_AFFINE:
-      {
-        // problem is separable
-        Matrix a(nPoints, dim1 + 1);
-        Vector r(nPoints);
-        Vector rv(dim1 + 1);
-
-        for (int j = 0; j < nPoints; j++)
-          {
-            for (int i = 0; i < dim1; i++)
-              {
-                a[j][i] = p1[j][i] * weights[j];
-              }
-
-            a[j][dim1] = 1.0 * weights[j];
-          }
-
-        for (int k = 0; k < dim2; k++)
-          {
             for (int j = 0; j < nPoints; j++)
               {
-                r[j] = p2[j][k] * weights[j];
+                for (int i = 0; i < dim1; i++)
+                  {
+                    shift[i] += (p2[j][i] - p1[j][i]) * weights[j];
+                  }
+
+                weightsum += weights[j];
               }
 
-            IF_FAILED(rv = SolveLinEqu(a, r))
-            {
-              throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-              return res;
-            }
-
-            for (int i = 0; i < dim1 + 1; i++)
+            for (int i = 0; i < dim1; i++)
               {
-                res.m[k][i] = rv[i];
+                res.m[i][dim2] = shift[i] / weightsum;
               }
           }
+          break;
+          case TRM_SCALE_SHIFT:
+          {
+            weightsum = 0;
+            Vector sum1(dim1);
+            sum1.Set(0);
+            Vector sum2(dim2);
+            sum2.Set(0);
 
-        break;
-      }
+            for (int j = 0; j < nPoints; j++)
+              for (int i = 0; i < dim2; i++)
+                {
+                  sum1[i] += weights[j] * p1[j][i];
+                }
 
-      case TRM_PROJECTIVE:
-      {
-        // affine transformation as first approximation
-        IF_FAILED(res = MatchPointlists(p1, p2, TRM_AFFINE, weights))
-        {
-          throw IceException(FNAME, M_0, ERROR);
-          return res;
-        }
+            for (int j = 0; j < nPoints; j++)
+              {
+                for (int i = 0; i < dim1; i++)
+                  {
+                    sum2[i] += weights[j] * p2[j][i];
+                  }
 
-        // iterative refinement to projective transformation
-        IF_FAILED(res = iterateProjective(res, p1, p2, weights))
-        {
-          throw IceException(FNAME, M_0, ERROR);
-        }
+                weightsum += weights[j];
+              }
+
+            double s = 0.0;
+            double q = 0.0;
+
+            for (int j = 0; j < nPoints; j++)
+              {
+                s += weights[j] * (p2[j] * p1[j]);
+                q += weights[j] * (p1[j] * p1[j]);
+              }
+
+            double alpha = ((sum2 * sum1) / weightsum - s) / ((sum1 * sum1) / weightsum - q);
+            Vector shift(dim1);
+
+            for (int i = 0; i < dim1; i++)
+              {
+                shift[i] = 0;
+              }
+
+            for (int j = 0; j < nPoints; j++)
+              for (int i = 0; i < dim1; i++)
+                {
+                  shift[i] += (p2[j][i] - alpha * p1[j][i]) * weights[j];
+                }
+
+            for (int i = 0; i < dim1; i++)
+              {
+                res.m[i][dim2] = shift[i] / weightsum;
+                res.m[i][i] = alpha;
+              }
+          }
+          break;
+          case TRM_SIMILARITY_NOR:
+            // dim1=dim2=2
+          {
+            Matrix a(2 * nPoints, 4);
+            Vector r(2 * nPoints);
+            Vector rv(4);
+
+            for (int j = 0; j < nPoints; j++)
+              {
+                a[j * 2][0] = p1[j][0] * weights[j];
+                a[j * 2][1] = p1[j][1] * weights[j];
+                a[j * 2][2] = weights[j];
+                a[j * 2][3] = 0;
+                r[j * 2] = p2[j][0] * weights[j];
+                a[j * 2 + 1][0] = p1[j][1] * weights[j];
+                a[j * 2 + 1][1] = -p1[j][0] * weights[j];
+                a[j * 2 + 1][2] = 0;
+                a[j * 2 + 1][3] = weights[j];
+                r[j * 2 + 1] = p2[j][1] * weights[j];
+              }
+
+            SolveLinEqu(a, r);
+
+            res.m[0][0] = rv[0];
+            res.m[0][1] = rv[1];
+            res.m[1][0] = -rv[1];
+            res.m[1][1] = rv[0];
+            res.m[0][2] = rv[2];
+            res.m[1][2] = rv[3];
+            break;
+          }
+          case TRM_AFFINE:
+          {
+            // problem is separable
+            Matrix a(nPoints, dim1 + 1);
+            Vector r(nPoints);
+            Vector rv(dim1 + 1);
+
+            for (int j = 0; j < nPoints; j++)
+              {
+                for (int i = 0; i < dim1; i++)
+                  {
+                    a[j][i] = p1[j][i] * weights[j];
+                  }
+
+                a[j][dim1] = 1.0 * weights[j];
+              }
+
+            for (int k = 0; k < dim2; k++)
+              {
+                for (int j = 0; j < nPoints; j++)
+                  {
+                    r[j] = p2[j][k] * weights[j];
+                  }
+
+                rv = SolveLinEqu(a, r);
+
+                for (int i = 0; i < dim1 + 1; i++)
+                  {
+                    res.m[k][i] = rv[i];
+                  }
+              }
+
+            break;
+          }
+
+          case TRM_PROJECTIVE:
+          {
+            // affine transformation as first approximation
+            res = MatchPointlists(p1, p2, TRM_AFFINE, weights);
+
+            // iterative refinement to projective transformation
+            res = iterateProjective(res, p1, p2, weights);
+            return res;
+          }
+          break;
+
+          default:
+            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+          }
+
         return res;
       }
-      break;
-
-      default:
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return res;
-      }
-
-    return res;
+    RETHROW;
   }
 
   Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,

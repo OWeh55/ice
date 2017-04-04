@@ -54,35 +54,36 @@ namespace ice
 #define FNAME "isPolygon"
   bool isPolygon(const Matrix& m)
   {
-    try {
-      CheckPolygon(m);
-
-    int points = m.rows();
-
-    Point dummypoint;
-
-    for (int i = 0; i < points - 2; i++)
+    try
       {
-        int i1 = i + 1;
+        CheckPolygon(m);
 
-        for (int j = i + 2; j < points; j++)
+        int points = m.rows();
+
+        Point dummypoint;
+
+        for (int i = 0; i < points - 2; i++)
           {
-            int j1 = (j + 1) % points;
+            int i1 = i + 1;
 
-            if (j1 != i)
+            for (int j = i + 2; j < points; j++)
               {
-                if (Intersect(Point(m[i]), Point(m[i1]),
-                              Point(m[j]), Point(m[j1]),
-                              dummypoint))
+                int j1 = (j + 1) % points;
+
+                if (j1 != i)
                   {
-                    return false;
+                    if (Intersect(Point(m[i]), Point(m[i1]),
+                                  Point(m[j]), Point(m[j1]),
+                                  dummypoint))
+                      {
+                        return false;
+                      }
                   }
               }
           }
-      }
 
-    return true;
-    }
+        return true;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -91,18 +92,19 @@ namespace ice
 #define FNAME "InsidePolygon"
   bool insidePolygon(const Matrix& m, const Point& p)
   {
-    try {
-      CheckPolygon(m);
-      int res = false;
-      PointList pl = Matrix2PointList(m);
-      
-      double pp[2];
-      pp[0] = p.x;
-      pp[1] = p.y;
-      res = insidePolygon(pp, pl);
-      FreePointList(pl);
-      return res;
-    }
+    try
+      {
+        CheckPolygon(m);
+        int res = false;
+        PointList pl = Matrix2PointList(m);
+
+        double pp[2];
+        pp[0] = p.x;
+        pp[1] = p.y;
+        res = insidePolygon(pp, pl);
+        FreePointList(pl);
+        return res;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -110,19 +112,20 @@ namespace ice
 #define FNAME "PolygonContur"
   Contur PolygonContur(const Matrix& pl)
   {
-    try {
-    Contur c;
-    CheckPolygon(pl);
-    c.SetStart(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
-
-    for (int i = 1; i < pl.rows(); i++)
+    try
       {
-        c.Add(RoundInt(pl[i][0]), RoundInt(pl[i][1]));
-      }
+        Contur c;
+        CheckPolygon(pl);
+        c.SetStart(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
 
-    c.Add(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
-    return c;
-    }
+        for (int i = 1; i < pl.rows(); i++)
+          {
+            c.Add(RoundInt(pl[i][0]), RoundInt(pl[i][1]));
+          }
+
+        c.Add(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
+        return c;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -143,13 +146,14 @@ namespace ice
   {
     // point (x,y)
     // edge pl[i1] -- pl[i2]
-    try {
-      CheckPolygon(pl);
-      int ms = pl.rows();
-      i1 = (i1 % ms + ms) % ms;
-      i2 = (i2 % ms + ms) % ms;
-      return DistancePointEdge_core(x, y, pl, i1, i2);
-    }
+    try
+      {
+        CheckPolygon(pl);
+        int ms = pl.rows();
+        i1 = (i1 % ms + ms) % ms;
+        i2 = (i2 % ms + ms) % ms;
+        return DistancePointEdge_core(x, y, pl, i1, i2);
+      }
     RETHROW;
   }
 
@@ -157,13 +161,14 @@ namespace ice
   {
     // point (x,y)
     // edge pl[i] -- pl[i+1]
-    try {
-      CheckPolygon(pl);
-    int ms = pl.rows();
-    int i1 = (i % ms + ms) % ms;
-    int i2 = ((i + 1) % ms + ms) % ms;
-    return DistancePointEdge_core(x, y, pl, i1, i2);
-    }
+    try
+      {
+        CheckPolygon(pl);
+        int ms = pl.rows();
+        int i1 = (i % ms + ms) % ms;
+        int i2 = ((i + 1) % ms + ms) % ms;
+        return DistancePointEdge_core(x, y, pl, i1, i2);
+      }
     RETHROW;
   }
 
@@ -171,38 +176,40 @@ namespace ice
   {
     // point pl[i]
     // edge pl[i1] -- pl[i2]
-    try {
-      CheckPolygon(pl);
-    int ms = pl.rows();
-    i = (i % ms + ms) % ms;
-    i1 = (i1 % ms + ms) % ms;
-    i2 = (i2 % ms + ms) % ms;
-    return DistancePointEdge(pl[i][0], pl[i][1], pl, i1, i2);
-    }
+    try
+      {
+        CheckPolygon(pl);
+        int ms = pl.rows();
+        i = (i % ms + ms) % ms;
+        i1 = (i1 % ms + ms) % ms;
+        i2 = (i2 % ms + ms) % ms;
+        return DistancePointEdge(pl[i][0], pl[i][1], pl, i1, i2);
+      }
     RETHROW;
   }
 #undef FNAME
 #define FNAME "DistancePointPolygon"
   double DistancePointPolygon(double x, double y, const Matrix& pl, int& mine)
   {
-    try {
-    double mind = DBL_MAX;
-    CheckPolygon(pl);
-    mine = 0;
-
-    for (int i = 0; i < pl.rows(); i++)
+    try
       {
-        double d = DistancePointEdge(x, y, pl, i);
+        double mind = DBL_MAX;
+        CheckPolygon(pl);
+        mine = 0;
 
-        if (d < mind)
+        for (int i = 0; i < pl.rows(); i++)
           {
-            mind = d;
-            mine = i;
-          }
-      }
+            double d = DistancePointEdge(x, y, pl, i);
 
-    return mind;
-    }
+            if (d < mind)
+              {
+                mind = d;
+                mine = i;
+              }
+          }
+
+        return mind;
+      }
     RETHROW;
   }
 
@@ -215,50 +222,51 @@ namespace ice
 #define FNAME "DistancePolygonPolygonDir"
   double DistancePolygonPolygonDir(const Matrix& p1, const Matrix& p2, int mode)
   {
-    try {
-      CheckPolygon(p1);
-      CheckPolygon(p2);
-
-    double dist = DistancePointPolygon(p1[0][0], p1[0][1], p2);
-
-    for (int i = 1; i < p1.rows(); i++)
+    try
       {
-        double pdist = DistancePointPolygon(p1[i][0], p1[i][1], p2);
+        CheckPolygon(p1);
+        CheckPolygon(p2);
 
-        switch (mode)
+        double dist = DistancePointPolygon(p1[0][0], p1[0][1], p2);
+
+        for (int i = 1; i < p1.rows(); i++)
           {
-          case DPP_MIN:
+            double pdist = DistancePointPolygon(p1[i][0], p1[i][1], p2);
 
-            if (pdist < dist)
+            switch (mode)
               {
-                dist = pdist;
+              case DPP_MIN:
+
+                if (pdist < dist)
+                  {
+                    dist = pdist;
+                  }
+
+                break;
+              case DPP_MAX:
+
+                if (pdist > dist)
+                  {
+                    dist = pdist;
+                  }
+
+                break;
+              case DPP_MEAN:
+                dist += pdist;
+                break;
+              default:
+                throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+                return 0.0;
               }
-
-            break;
-          case DPP_MAX:
-
-            if (pdist > dist)
-              {
-                dist = pdist;
-              }
-
-            break;
-          case DPP_MEAN:
-            dist += pdist;
-            break;
-          default:
-            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            return 0.0;
           }
-      }
 
-    if (mode == DPP_MEAN)
-      {
-        dist /= p1.rows();
-      }
+        if (mode == DPP_MEAN)
+          {
+            dist /= p1.rows();
+          }
 
-    return dist;
-    }
+        return dist;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -266,57 +274,59 @@ namespace ice
 #define FNAME "DistancePolygonPolygon"
   double DistancePolygonPolygon(const Matrix& p1, const Matrix& p2, int mode, int pmode)
   {
-    try {
-      double dist1 = DistancePolygonPolygonDir(p1, p2, pmode);
+    try
+      {
+        double dist1 = DistancePolygonPolygonDir(p1, p2, pmode);
 
-      if (mode == DPP_DIR)
-	{
-	  return dist1;
-	}
+        if (mode == DPP_DIR)
+          {
+            return dist1;
+          }
 
-      double dist2 = DistancePolygonPolygonDir(p2, p1, pmode);
+        double dist2 = DistancePolygonPolygonDir(p2, p1, pmode);
 
-      switch (mode)
-	{
-	case DPP_MIN:
+        switch (mode)
+          {
+          case DPP_MIN:
 
-	  if (dist1 < dist2)
-	    {
-	      return dist1;
-	    }
-	  else
-	    {
-	      return dist2;
-	    }
+            if (dist1 < dist2)
+              {
+                return dist1;
+              }
+            else
+              {
+                return dist2;
+              }
 
-	case DPP_MAX:
+          case DPP_MAX:
 
-	  if (dist1 > dist2)
-	    {
-	      return dist1;
-	    }
-	  else
-	    {
-	      return dist2;
-	    }
+            if (dist1 > dist2)
+              {
+                return dist1;
+              }
+            else
+              {
+                return dist2;
+              }
 
-	case DPP_MEAN:
-	  return 0.5 * (dist1 + dist2);
-	default:
-	  throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-	  return 0.0;
-	}
-    }
-      RETHROW;
-    }
+          case DPP_MEAN:
+            return 0.5 * (dist1 + dist2);
+          default:
+            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+            return 0.0;
+          }
+      }
+    RETHROW;
+  }
 #undef FNAME
 #define FNAME "DistanceConturPolygon"
-    double DistanceConturPolygon(const Contur& c, const Matrix& p, int mode, int pmode)
-    {
-      try {
-	Matrix pc = ConturPointlist(c, 1, false);
-      return DistancePolygonPolygon(pc, p, mode, pmode);
-    }
+  double DistanceConturPolygon(const Contur& c, const Matrix& p, int mode, int pmode)
+  {
+    try
+      {
+        Matrix pc = ConturPointlist(c, 1, false);
+        return DistancePolygonPolygon(pc, p, mode, pmode);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -325,39 +335,40 @@ namespace ice
                   int marker, int size, int color)
   {
     if (!IsImg(img))
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
 
-    try {
-      CheckPointlist(pl);
-
-    for (int i = 0, j = 1; i < pl.rows(); i++, j++)
+    try
       {
-        if (j >= pl.rows())
+        CheckPointlist(pl);
+
+        for (int i = 0, j = 1; i < pl.rows(); i++, j++)
           {
-            j = 0;
-          }
-
-        int x1 = RoundInt(pl[i][0]);
-        int y1 = RoundInt(pl[i][1]);
-        int x2 = RoundInt(pl[j][0]);
-        int y2 = RoundInt(pl[j][1]);
-        Line(x1, y1, x2, y2, val, 0, img);
-
-        if (img.inside(x1, y1) && (marker > 0))
-          {
-            int mcolor = color;
-
-            if (mcolor < 0)
+            if (j >= pl.rows())
               {
-                mcolor = val;
+                j = 0;
               }
 
-            Marker(marker, x1, y1, mcolor, size, img);
-          }
-      }
+            int x1 = RoundInt(pl[i][0]);
+            int y1 = RoundInt(pl[i][1]);
+            int x2 = RoundInt(pl[j][0]);
+            int y2 = RoundInt(pl[j][1]);
+            Line(x1, y1, x2, y2, val, 0, img);
 
-    return OK;
-    }
+            if (img.inside(x1, y1) && (marker > 0))
+              {
+                int mcolor = color;
+
+                if (mcolor < 0)
+                  {
+                    mcolor = val;
+                  }
+
+                Marker(marker, x1, y1, mcolor, size, img);
+              }
+          }
+
+        return OK;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -623,124 +634,126 @@ namespace ice
 #endif
   Matrix ReducePolygon(const Matrix& pl, int n, int mode)
   {
-    try {
-    int apn  = pl.rows();
-    int coln = pl.cols();
-
-    Matrix result(0, coln);
-    CheckPolygon(pl);
-
-    if (n < 3 || n > apn)
+    try
       {
-        // reducing to less then 3 point does not make sense
-        // "reducing" to more then original points does not make sense
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+        int apn  = pl.rows();
+        int coln = pl.cols();
 
-    // already reduced enough
-    if (apn == n)
-      {
-        return pl;
-      }
+        Matrix result(0, coln);
+        CheckPolygon(pl);
 
-    if (mode == 2)
-      {
-        reduced_polym rpl(pl, reduced_polym::two);
-
-        while (rpl.size() < n)
+        if (n < 3 || n > apn)
           {
-            rpl.split();
+            // reducing to less then 3 point does not make sense
+            // "reducing" to more then original points does not make sense
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
           }
 
-        while (rpl.size() < n * 5 / 3 && rpl.size() < apn)
+        // already reduced enough
+        if (apn == n)
           {
-            rpl.split();
+            return pl;
           }
 
-        while (rpl.size() > n)
+        if (mode == 2)
           {
-            rpl.merge();
+            reduced_polym rpl(pl, reduced_polym::two);
+
+            while (rpl.size() < n)
+              {
+                rpl.split();
+              }
+
+            while (rpl.size() < n * 5 / 3 && rpl.size() < apn)
+              {
+                rpl.split();
+              }
+
+            while (rpl.size() > n)
+              {
+                rpl.merge();
+              }
+
+            rpl.getPolygon(result);
+          }
+        else if (mode == 1)
+          {
+            reduced_polym rpl(pl, reduced_polym::all);
+
+            while (rpl.size() > n)   // reduce to wished number of edges
+              {
+                rpl.merge();
+              }
+
+            rpl.getPolygon(result);
           }
 
-        rpl.getPolygon(result);
+        return result;
       }
-    else if (mode == 1)
-      {
-        reduced_polym rpl(pl, reduced_polym::all);
-
-        while (rpl.size() > n)   // reduce to wished number of edges
-          {
-            rpl.merge();
-          }
-
-        rpl.getPolygon(result);
-      }
-
-    return result;
-    }
     RETHROW;
   }
 
   Matrix ReducePolygon(const Contur& c, int n, int mode)
   {
     Matrix fpl;
-    
+
     if (n < 3)
       throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-    
+
     // make pointlist from contur
     fpl = ConturPointlist(c, 1, false);
-    
+
     return ReducePolygon(fpl, n, mode);
   }
 
 
   Matrix ReducePolygonPrecision(const Matrix& pl, double prec, int mode)
   {
-    try {
-      int coln = pl.cols();
-      
-      Matrix result(0, coln);
-      CheckPolygon(pl);
-
-    if (prec < 0)
+    try
       {
-        // reducing to less then 3 point does not make sense
-        // "reducing" to more then original points does not make sense
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+        int coln = pl.cols();
 
-    if (mode == 2)
-      {
-        reduced_polym rpl(pl, reduced_polym::two);
-        rpl.split(); // we need at least 3 corners
+        Matrix result(0, coln);
+        CheckPolygon(pl);
 
-        while (rpl.precision() > prec)
+        if (prec < 0)
           {
-            rpl.split();
+            // reducing to less then 3 point does not make sense
+            // "reducing" to more then original points does not make sense
+            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
           }
 
-        rpl.getPolygon(result);
-      }
-    else if (mode == 1)
-      {
-        reduced_polym rpl(pl, reduced_polym::all);
-
-        while (rpl.size() > 3 && rpl.precision() < prec)   // reduce to given precision
+        if (mode == 2)
           {
-            rpl.merge();
+            reduced_polym rpl(pl, reduced_polym::two);
+            rpl.split(); // we need at least 3 corners
+
+            while (rpl.precision() > prec)
+              {
+                rpl.split();
+              }
+
+            rpl.getPolygon(result);
+          }
+        else if (mode == 1)
+          {
+            reduced_polym rpl(pl, reduced_polym::all);
+
+            while (rpl.size() > 3 && rpl.precision() < prec)   // reduce to given precision
+              {
+                rpl.merge();
+              }
+
+            if (rpl.precision() > prec)
+              {
+                rpl.split();  // undo last step
+              }
+
+            rpl.getPolygon(result);
           }
 
-        if (rpl.precision() > prec)
-          {
-            rpl.split();  // undo last step
-          }
-
-        rpl.getPolygon(result);
+        return result;
       }
-
-    return result;
-    }
     RETHROW;
   }
 
@@ -764,24 +777,25 @@ namespace ice
 #define FNAME "FindNearestCorner"
   int FindNearestCorner(double x, double y, const Matrix& pl)
   {
-    try {
-      CheckPolygon(pl);
-    int mini = 0;
-    double mdist = Distance(x, y, pl[0][0], pl[0][1]);
-
-    for (int i = 0; i < pl.rows(); i++)
+    try
       {
-        double da = Distance(x, y, pl[i][0], pl[i][1]);
+        CheckPolygon(pl);
+        int mini = 0;
+        double mdist = Distance(x, y, pl[0][0], pl[0][1]);
 
-        if (da < mdist)
+        for (int i = 0; i < pl.rows(); i++)
           {
-            mdist = da;
-            mini = i;
-          }
-      }
+            double da = Distance(x, y, pl[i][0], pl[i][1]);
 
-    return mini;
-    }
+            if (da < mdist)
+              {
+                mdist = da;
+                mini = i;
+              }
+          }
+
+        return mini;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -930,128 +944,129 @@ namespace ice
   Matrix FitPolygonContur(const Matrix& pl, const Contur& c, int step, int count)
   {
     // fit given polygon pl to contur c
-    try {
-    Matrix res;
-
-    CheckPolygon(pl);
-
-    int pnr = pl.rows();
-
-    res = pl;
-
-    Matrix edge = Matrix(pnr, 2);
-
-    Matrix cl = ConturPointlist(c);
-    int cnr = cl.rows();
-
-    bool changed = true;
-
-    IVector oldcutpoint(4);
-
-    for (int ct = 0; changed && ct < count; ct++)
+    try
       {
-        IVector cutpoints;
+        Matrix res;
 
-        for (int i = 0; i < pnr; i++)
+        CheckPolygon(pl);
+
+        int pnr = pl.rows();
+
+        res = pl;
+
+        Matrix edge = Matrix(pnr, 2);
+
+        Matrix cl = ConturPointlist(c);
+        int cnr = cl.rows();
+
+        bool changed = true;
+
+        IVector oldcutpoint(4);
+
+        for (int ct = 0; changed && ct < count; ct++)
           {
-            double x = res[i][0];
-            double y = res[i][1];
-            int j = FindNearestCorner(x, y, cl);
-            cutpoints.Append(j);
-          }
+            IVector cutpoints;
 
-        // check if cutpoints are ordered
-        int next = cutpoints[0];
-
-        for (int i = 0; i < cutpoints.Size(); i++)
-          {
-            int idx = cutpoints[i];
-
-            while (idx < next)
+            for (int i = 0; i < pnr; i++)
               {
-                idx += cnr;
+                double x = res[i][0];
+                double y = res[i][1];
+                int j = FindNearestCorner(x, y, cl);
+                cutpoints.Append(j);
               }
 
-            next = idx + 2; // every edge must have at least 2 corresponding contur points
-          }
+            // check if cutpoints are ordered
+            int next = cutpoints[0];
 
-        if (next > cutpoints[0] + cnr)
-          {
-            if (ct == 0)
+            for (int i = 0; i < cutpoints.Size(); i++)
               {
-                throw IceException(FNAME, M_WRONG_START, WRONG_PARAM);
+                int idx = cutpoints[i];
+
+                while (idx < next)
+                  {
+                    idx += cnr;
+                  }
+
+                next = idx + 2; // every edge must have at least 2 corresponding contur points
               }
 
-            return res;
-          }
-
-        changed = oldcutpoint != cutpoints;
-
-        oldcutpoint = cutpoints;
-
-        if (changed)
-          {
-            // fit lines to the contur segments
-
-            for (int j = 0; j < pnr; j++)   // every edge
+            if (next > cutpoints[0] + cnr)
               {
-                int j1 = (j + 1) % pnr;
-                Matrix pl1(0, 2);
-                int c1 = cutpoints[j];
-                int c2 = cutpoints[j1];
-
-                if (c2 < c1)
+                if (ct == 0)
                   {
-                    c2 += cnr;
+                    throw IceException(FNAME, M_WRONG_START, WRONG_PARAM);
                   }
 
-                for (int i = c1; i < c2; i++)   // points of that segment
-                  {
-                    int in = i % cnr;
-                    pl1.Append(Vector(cl[in][0], cl[in][1]));
-                  }
-
-                if (step < 0)
-                  {
-                    FitLineLinOpt(pl1, edge[j][0], edge[j][1]);
-                  }
-                else
-                  {
-                    FitLine(pl1, edge[j][0], edge[j][1], step);
-                  }
+                return res;
               }
 
-            // calculate new corners as intersection of "edges"
-            for (int j = 0; j < pnr; j++)
+            changed = oldcutpoint != cutpoints;
+
+            oldcutpoint = cutpoints;
+
+            if (changed)
               {
-                double p1, p2, phi1, phi2;
-                double p[2];
-                int j1 = j - 1;
+                // fit lines to the contur segments
 
-                if (j1 < 0)
+                for (int j = 0; j < pnr; j++)   // every edge
                   {
-                    j1 = pnr - 1;
+                    int j1 = (j + 1) % pnr;
+                    Matrix pl1(0, 2);
+                    int c1 = cutpoints[j];
+                    int c2 = cutpoints[j1];
+
+                    if (c2 < c1)
+                      {
+                        c2 += cnr;
+                      }
+
+                    for (int i = c1; i < c2; i++)   // points of that segment
+                      {
+                        int in = i % cnr;
+                        pl1.Append(Vector(cl[in][0], cl[in][1]));
+                      }
+
+                    if (step < 0)
+                      {
+                        FitLineLinOpt(pl1, edge[j][0], edge[j][1]);
+                      }
+                    else
+                      {
+                        FitLine(pl1, edge[j][0], edge[j][1], step);
+                      }
                   }
 
-                phi1 = edge[j][1];
-                p1 = edge[j][0];
-                phi2 = edge[j1][1];
-                p2 = edge[j1][0];
-
-                if (IntersecLine(p1, phi1, p2, phi2, p) != OK)
+                // calculate new corners as intersection of "edges"
+                for (int j = 0; j < pnr; j++)
                   {
-                    // should not happen !?
-                    throw IceException(FNAME, "Cannot fit", ERROR);
-                  }
+                    double p1, p2, phi1, phi2;
+                    double p[2];
+                    int j1 = j - 1;
 
-                res[j][0] = p[0];
-                res[j][1] = p[1];
+                    if (j1 < 0)
+                      {
+                        j1 = pnr - 1;
+                      }
+
+                    phi1 = edge[j][1];
+                    p1 = edge[j][0];
+                    phi2 = edge[j1][1];
+                    p2 = edge[j1][0];
+
+                    if (IntersecLine(p1, phi1, p2, phi2, p) != OK)
+                      {
+                        // should not happen !?
+                        throw IceException(FNAME, "Cannot fit", ERROR);
+                      }
+
+                    res[j][0] = p[0];
+                    res[j][1] = p[1];
+                  }
               }
-          }
-      } // for (ct=0...
+          } // for (ct=0...
 
-    return res;
-    }
+        return res;
+      }
     RETHROW;
   }
 }

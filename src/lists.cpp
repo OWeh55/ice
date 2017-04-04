@@ -97,60 +97,62 @@ namespace ice
 #define FNAME "PointlistContur"
   Contur PointlistContur(const Matrix& pl, int close)
   {
-    try {
-      
-      Contur c;
+    try
+      {
 
-      CheckPointlist(pl);
+        Contur c;
 
-      int x0 = RoundInt(pl[0][0]);
-      int y0 = RoundInt(pl[0][1]);
+        CheckPointlist(pl);
 
-      c.SetStart(x0, y0);
+        int x0 = RoundInt(pl[0][0]);
+        int y0 = RoundInt(pl[0][1]);
 
-      for (int i = 1; i < pl.rows(); i++)
-	{
-	  int x = RoundInt(pl[i][0]);
-	  int y = RoundInt(pl[i][1]);
-	  c.Add(x, y);
-	}
+        c.SetStart(x0, y0);
 
-      if (close)
-	{
-	  c.Add(x0, y0);
-	}
+        for (int i = 1; i < pl.rows(); i++)
+          {
+            int x = RoundInt(pl[i][0]);
+            int y = RoundInt(pl[i][1]);
+            c.Add(x, y);
+          }
 
-      return c;
-    }
+        if (close)
+          {
+            c.Add(x0, y0);
+          }
+
+        return c;
+      }
     RETHROW;
   }
 
   Contur PointlistContur(const IMatrix& pl, int close)
   {
-    try {
-
-    Contur c;
-    CheckPointlist(pl);
-
-    int x0 = pl[0][0];
-    int y0 = pl[0][1];
-
-    c.SetStart(x0, y0);
-
-    for (int i = 1; i < pl.rows(); i++)
+    try
       {
-        int x = pl[i][0];
-        int y = pl[i][1];
-        c.Add(x, y);
-      }
 
-    if (close)
-      {
-        c.Add(x0, y0);
-      }
+        Contur c;
+        CheckPointlist(pl);
 
-    return c;
-    }
+        int x0 = pl[0][0];
+        int y0 = pl[0][1];
+
+        c.SetStart(x0, y0);
+
+        for (int i = 1; i < pl.rows(); i++)
+          {
+            int x = pl[i][0];
+            int y = pl[i][1];
+            c.Add(x, y);
+          }
+
+        if (close)
+          {
+            c.Add(x0, y0);
+          }
+
+        return c;
+      }
     RETHROW;
   }
 #undef FNAME

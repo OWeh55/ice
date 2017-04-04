@@ -473,21 +473,22 @@ namespace ice
   double CholeskyDeterminant(const Matrix& m)
   {
     if (m.cols() != m.rows())
-        throw IceException(FNAME, M_NO_SQUARE);
+      throw IceException(FNAME, M_NO_SQUARE);
 
-    try {
-    int dimension = m.cols();
-    Matrix l = CholeskyDecomposition(m);
-
-    double det = 1;
-
-    for (int k = 0; k < dimension; k++)
+    try
       {
-        det = det * l[k][k];
-      }
+        int dimension = m.cols();
+        Matrix l = CholeskyDecomposition(m);
 
-    return det * det;
-    }
+        double det = 1;
+
+        for (int k = 0; k < dimension; k++)
+          {
+            det = det * l[k][k];
+          }
+
+        return det * det;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -496,17 +497,18 @@ namespace ice
   int SolveLinEqu1(const Matrix& m, const Vector& v, Vector& res)
   {
     // Matrix is square, v has correct size
-    try {
-    Matrix LU;
-    IVector indx;
+    try
+      {
+        Matrix LU;
+        IVector indx;
 
-    // LU-Zerlegung
-    LUDecompositionPacked(m, LU, indx);
+        // LU-Zerlegung
+        LUDecompositionPacked(m, LU, indx);
 
-    // Lösen von L*U*x=i
-    res = LUSolve(LU, indx, v);
-    return OK;
-    }
+        // Lösen von L*U*x=i
+        res = LUSolve(LU, indx, v);
+        return OK;
+      }
     RETHROW;
   }
 
@@ -515,42 +517,44 @@ namespace ice
                            std::vector<double>& x)
   {
     // Matrix is square, v has correct size
-    try {
-    matrix<double> LU;
-    vector<int> index;
+    try
+      {
+        matrix<double> LU;
+        vector<int> index;
 
-    // LU-Zerlegung
-    LUDecompositionPacked(A, LU, index, true);
-    // Lösen von L*U*x=b
-    x = LUSolve(LU, index, b);
-    return OK;
-    }
+        // LU-Zerlegung
+        LUDecompositionPacked(A, LU, index, true);
+        // Lösen von L*U*x=b
+        x = LUSolve(LU, index, b);
+        return OK;
+      }
     RETHROW;
   }
 
   Vector SolveLinEqu(const Matrix& m, const Vector& v)
   {
-    try {
-    int rc;
-    Vector res(v);
-
-    if (v.Size() != m.rows() || m.cols() > m.rows())
-      throw IceException(FNAME, M_WRONG_MATRIX);
-
-    // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
-    if (m.cols() < m.rows())
+    try
       {
-        Matrix a = m.MulTrans(m); // m^T * m
-        Vector i = m.MulTrans(v); // m^T * v
-        rc = SolveLinEqu1(a, i, res);
-      }
-    else
-      {
-        rc = SolveLinEqu1(m, v, res);
-      }
+        int rc;
+        Vector res(v);
 
-    return res;
-    }
+        if (v.Size() != m.rows() || m.cols() > m.rows())
+          throw IceException(FNAME, M_WRONG_MATRIX);
+
+        // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
+        if (m.cols() < m.rows())
+          {
+            Matrix a = m.MulTrans(m); // m^T * m
+            Vector i = m.MulTrans(v); // m^T * v
+            rc = SolveLinEqu1(a, i, res);
+          }
+        else
+          {
+            rc = SolveLinEqu1(m, v, res);
+          }
+
+        return res;
+      }
     RETHROW;
   }
 

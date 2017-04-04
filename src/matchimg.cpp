@@ -36,33 +36,23 @@ namespace ice
                   double& dx, double& dy, double& val,
                   double beta)
   {
-    int sx, sy;
-    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, sx, sy));
-
-    Image imgr;
-    imgr.create(sx, sy, 255);
-
-    if (!IsImg(imgr))
+    try
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
+        int sx, sy;
+        MatchImg(img1, img2, sx, sy);
+
+        Image imgr;
+        imgr.create(sx, sy, 255);
+
+        InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS);
+
+        val = PeakValuation(imgr, Image(), dx, dy);
+
+        dx -= sx / 2;
+        dy -= sy / 2; // Peak coordinates -> Shift (of windows)
+        return OK;
       }
-
-    IF_FAILED(InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-
-    IF_FAILED(val = PeakValuation(imgr, Image(), dx, dy))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-
-    dx -= sx / 2;
-    dy -= sy / 2; // Peak coordinates -> Shift (of windows)
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 

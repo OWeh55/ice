@@ -383,22 +383,24 @@ namespace ice
 
   Ellipse FitEllipse(const std::vector<Point>& pl, int step, int mode)
   {
-    try {
-    double par[5];
-    FitEllipse(pl, par, step, mode);
-    return Ellipse(par[0], par[1], par[2], par[3], par[4]);
-    }
+    try
+      {
+        double par[5];
+        FitEllipse(pl, par, step, mode);
+        return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+      }
     RETHROW;
   }
 
   Ellipse FitEllipse(const std::vector<Point>& pl, const std::vector<double>& weights,
                      int step, int mode)
   {
-    try {
-    double par[5];
-    FitEllipse(pl, weights, par, step, mode);
-    return Ellipse(par[0], par[1], par[2], par[3], par[4]);
-    }
+    try
+      {
+        double par[5];
+        FitEllipse(pl, weights, par, step, mode);
+        return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+      }
     RETHROW;
   }
 
@@ -413,11 +415,12 @@ namespace ice
 
   Ellipse FitEllipse(const Matrix& pl, int step, int mode)
   {
-    try {
-    double par[5];
-    FitEllipse(pl, par, step, mode);
-    return Ellipse(par[0], par[1], par[2], par[3], par[4]);
-    }
+    try
+      {
+        double par[5];
+        FitEllipse(pl, par, step, mode);
+        return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+      }
     RETHROW;
   }
 

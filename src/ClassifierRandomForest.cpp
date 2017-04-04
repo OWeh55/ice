@@ -42,22 +42,23 @@ namespace ice
                                     int depth,
                                     int nUsep)
   {
-    try {
-    Classifier::Init(classes, dimension);
-    this->nTrees = nTrees;
-    classifiers.resize(nTrees);
-    nUse = nUsep;
-    if (nUse > nTrees)
+    try
       {
-        throw IceException(FNAME, M_WRONG_PARAMETER, WRONG_PARAM);
-        return;
+        Classifier::Init(classes, dimension);
+        this->nTrees = nTrees;
+        classifiers.resize(nTrees);
+        nUse = nUsep;
+        if (nUse > nTrees)
+          {
+            throw IceException(FNAME, M_WRONG_PARAMETER, WRONG_PARAM);
+            return;
+          }
+        for (unsigned int i = 0; i < classifiers.size(); ++i)
+          {
+            classifiers[i].Init(classes, dimension, depth);
+          }
       }
-    for (unsigned int i = 0; i < classifiers.size(); ++i)
-      {
-        classifiers[i].Init(classes, dimension, depth);
-      }
-  }
-  RETHROW;
+    RETHROW;
   }
 
   void ClassifierRandomForest::Init(int classes, int dimension)

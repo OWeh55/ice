@@ -131,71 +131,72 @@ namespace ice
   ImageD ConvolutionImgD(ImageD is1, ImageD is2,
                          ImageD id, int mode)
   {
-    try {
-	int xs, ys;
-	
-	ImageD rc;
-	MatchImgD(is1, is2, xs, ys);
-	
-	// center = \alpha_{0,0}
-	int x0 = xs / 2;
-	int y0 = ys / 2;
+    try
+      {
+        int xs, ys;
 
-	ImageD ds1;
-	ds1.create(xs, ys, 0, 1);
-	ImageD ds2;
-	ds2.create(xs, ys, 0, 1);
+        ImageD rc;
+        MatchImgD(is1, is2, xs, ys);
 
-	if (! id.isValid())
-	  {
-	    rc.create(xs, ys, 0, 1);
-	  }
-	else
-	  {
-	    rc = id;
-	  }
+        // center = \alpha_{0,0}
+        int x0 = xs / 2;
+        int y0 = ys / 2;
 
-	ImageD ddi;
-	ddi.create(xs, ys, 0, 1);
+        ImageD ds1;
+        ds1.create(xs, ys, 0, 1);
+        ImageD ds2;
+        ds2.create(xs, ys, 0, 1);
 
-	// effective factor for Convolution
-	double efac = sqrt((double)xs * (double)ys);
+        if (! id.isValid())
+          {
+            rc.create(xs, ys, 0, 1);
+          }
+        else
+          {
+            rc = id;
+          }
 
-	FourierImgD(is1, is2, NORMAL, ds1, ds2); // "mixed" FT for both images
+        ImageD ddi;
+        ddi.create(xs, ys, 0, 1);
 
-	for (int y = 0; y < ys; y++)
-	  {
-	    int yq = negf(y, ys);
+        // effective factor for Convolution
+        double efac = sqrt((double)xs * (double)ys);
 
-	    for (int x = 0; x < xs; x++)
-	      {
-		int xq = negf(x, xs);
+        FourierImgD(is1, is2, NORMAL, ds1, ds2); // "mixed" FT for both images
 
-		double rr = GetValD(ds1, x, y);
-		double ir = GetValD(ds2, x, y);
-		double rq = GetValD(ds1, xq, yq);
-		double iq = GetValD(ds2, xq, yq);
-		// calculate complex FT-parameter from result of mixed FT
-		double r1 = (rr + rq) / 2;
-		double i1 = (ir - iq) / 2;
-		double r2 = (ir + iq) / 2;
-		double i2 = (rq - rr) / 2;
-		// complex multiplication
-		PutValD(rc, x, y, (r1 * r2 - i1 * i2) * efac);
-		PutValD(ddi, x, y, (r1 * i2 + r2 * i1) * efac);
-	      }
-	  }
+        for (int y = 0; y < ys; y++)
+          {
+            int yq = negf(y, ys);
 
-	if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
-	  {
-	    PutValD(rc, x0, y0, 0.0);
-	    PutValD(ddi, x0, y0, 0.0);
-	  }
+            for (int x = 0; x < xs; x++)
+              {
+                int xq = negf(x, xs);
 
-	// inverse transform
-	FourierImgD(rc, ddi, INVERS, rc, ddi);
+                double rr = GetValD(ds1, x, y);
+                double ir = GetValD(ds2, x, y);
+                double rq = GetValD(ds1, xq, yq);
+                double iq = GetValD(ds2, xq, yq);
+                // calculate complex FT-parameter from result of mixed FT
+                double r1 = (rr + rq) / 2;
+                double i1 = (ir - iq) / 2;
+                double r2 = (ir + iq) / 2;
+                double i2 = (rq - rr) / 2;
+                // complex multiplication
+                PutValD(rc, x, y, (r1 * r2 - i1 * i2) * efac);
+                PutValD(ddi, x, y, (r1 * i2 + r2 * i1) * efac);
+              }
+          }
 
-	return rc;
+        if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
+          {
+            PutValD(rc, x0, y0, 0.0);
+            PutValD(ddi, x0, y0, 0.0);
+          }
+
+        // inverse transform
+        FourierImgD(rc, ddi, INVERS, rc, ddi);
+
+        return rc;
       }
     RETHROW;
   }
@@ -206,35 +207,36 @@ namespace ice
   int ConvolutionImg(const Image& is1, const Image& is2,
                      Image& id, double factor, int mode)
   {
-    try {
-    int xs, ys;
-    MatchImg(is1, is2, id, xs, ys);
-
-    ImageD ds1 = NewImgD(is1);
-    ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
-    ImageD ds2 = NewImgD(is2);
-    ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
-    ImageD dd = NewImgD(xs, ys, 0, 1);
-
-    ConvolutionImgD(ds1, ds2, dd, mode);
-
-    if (factor != 0)
+    try
       {
-        if (factor != 1.0)
-          for (int y = 0; y < dd.ysize; ++y)
-            for (int x = 0; x < dd.xsize; ++x)
-              {
-                PutValD(dd, x, y, factor * GetValD(dd, x, y));
-              }
+        int xs, ys;
+        MatchImg(is1, is2, id, xs, ys);
 
-        ConvImgDImg(dd, id, NORMALIZED, SIGNED);
+        ImageD ds1 = NewImgD(is1);
+        ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
+        ImageD ds2 = NewImgD(is2);
+        ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
+        ImageD dd = NewImgD(xs, ys, 0, 1);
+
+        ConvolutionImgD(ds1, ds2, dd, mode);
+
+        if (factor != 0)
+          {
+            if (factor != 1.0)
+              for (int y = 0; y < dd.ysize; ++y)
+                for (int x = 0; x < dd.xsize; ++x)
+                  {
+                    PutValD(dd, x, y, factor * GetValD(dd, x, y));
+                  }
+
+            ConvImgDImg(dd, id, NORMALIZED, SIGNED);
+          }
+        else
+          {
+            ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
+          }
+        return OK;
       }
-    else
-      {
-        ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
-      }
-    return OK;
-    }
     RETHROW;
   }
 #undef FNAME
@@ -245,97 +247,98 @@ namespace ice
                             ImageD id,
                             double noise, int mode)
   {
-    try {
-    int xs, ys, x0, y0;
-
-    ImageD rc;
-    double rr, rq, ir, iq;
-    double r1, r2, im1, im2;
-    double r3 = 0, im3 = 0;
-    double b1;
-    double efactor;
-
-    if (noise < 0)
-      
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      
-
-    double noise2 = noise * noise;
-
-    MatchImgD(is1, is2, xs, ys);
-
-    x0 = xs / 2;
-    y0 = ys / 2;
-
-    if (id.isValid())
+    try
       {
-        MatchImgD(is1, id);
-        rc = id;
-      }
-    else
-      {
-        rc = NewImgD(xs, ys, 0, 1);
-      }
+        int xs, ys, x0, y0;
 
-    efactor = sqrt((double)(xs * ys));
+        ImageD rc;
+        double rr, rq, ir, iq;
+        double r1, r2, im1, im2;
+        double r3 = 0, im3 = 0;
+        double b1;
+        double efactor;
 
-    ImageD ds1 = NewImgD(xs, ys, 0, 1);
-    ImageD ds2 = NewImgD(xs, ys, 0, 1);
-    //  ImageD ddi=NewImgD(xs,ys,0,1);
+        if (noise < 0)
 
-    FourierImgD(is1, is2, NORMAL, ds1, ds2);
+          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
 
-    for (int y = 0; y < ys; y++)
-      {
-        int yq = negf(y, ys);
 
-        for (int x = 0; x < xs; x++)
+        double noise2 = noise * noise;
+
+        MatchImgD(is1, is2, xs, ys);
+
+        x0 = xs / 2;
+        y0 = ys / 2;
+
+        if (id.isValid())
           {
-            int xq = negf(x, xs);
-            rr = GetValD(ds1, x, y);
-            ir = GetValD(ds2, x, y);
-            rq = GetValD(ds1, xq, yq);
-            iq = GetValD(ds2, xq, yq);
+            MatchImgD(is1, id);
+            rc = id;
+          }
+        else
+          {
+            rc = NewImgD(xs, ys, 0, 1);
+          }
 
-            r1 = (rr + rq) / 2;
-            im1 = (ir - iq) / 2;
-            r2 = (ir + iq) / 2;
-            im2 = (rq - rr) / 2;
-            b1 = r1 * r1 + im1 * im1;
+        efactor = sqrt((double)(xs * ys));
 
-            if (noise == 0)
+        ImageD ds1 = NewImgD(xs, ys, 0, 1);
+        ImageD ds2 = NewImgD(xs, ys, 0, 1);
+        //  ImageD ddi=NewImgD(xs,ys,0,1);
+
+        FourierImgD(is1, is2, NORMAL, ds1, ds2);
+
+        for (int y = 0; y < ys; y++)
+          {
+            int yq = negf(y, ys);
+
+            for (int x = 0; x < xs; x++)
               {
-                if (b1 == 0)
+                int xq = negf(x, xs);
+                rr = GetValD(ds1, x, y);
+                ir = GetValD(ds2, x, y);
+                rq = GetValD(ds1, xq, yq);
+                iq = GetValD(ds2, xq, yq);
+
+                r1 = (rr + rq) / 2;
+                im1 = (ir - iq) / 2;
+                r2 = (ir + iq) / 2;
+                im2 = (rq - rr) / 2;
+                b1 = r1 * r1 + im1 * im1;
+
+                if (noise == 0)
                   {
-                    r3 = im3 = 0;
+                    if (b1 == 0)
+                      {
+                        r3 = im3 = 0;
+                      }
+                    else
+                      {
+                        r3 = (r2 * r1 + im2 * im1) / b1 * efactor;
+                        im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
+                      }
                   }
                 else
                   {
+                    b1 += noise2;
                     r3 = (r2 * r1 + im2 * im1) / b1 * efactor;
                     im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
                   }
-              }
-            else
-              {
-                b1 += noise2;
-                r3 = (r2 * r1 + im2 * im1) / b1 * efactor;
-                im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
-              }
 
-            PutValD(rc, x, y, r3 - im3);
-            //    PutValD(ddi,x,y,im3);
+                PutValD(rc, x, y, r3 - im3);
+                //    PutValD(ddi,x,y,im3);
+              }
           }
+
+        if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
+          {
+            PutValD(rc, x0, y0, 0.0);
+          }
+
+        HartleyImgD(rc, rc);
+
+        return rc;
       }
-
-    if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
-      {
-        PutValD(rc, x0, y0, 0.0);
-      }
-
-    HartleyImgD(rc, rc);
-
-    return rc;
-    }
     RETHROW;
   }
 #undef FNAME

@@ -986,7 +986,6 @@ namespace ice
 #define FNAME "OverEquSys"
   int OverEquSys(double* m1, double* v1, int row, int col, double* x, double* mse)
   {
-    int i, j;
     double* m2, *v2, *mp;
     double w;
 
@@ -994,21 +993,25 @@ namespace ice
     v2 = new double[col];
 
     NormalEqu(m1, v1, row, col, m2, v2);                   /*Normalengleichungen bestimmen*/
-    IF_FAILED(EquSys(m2, v2, col, x))                      /*Normalengleichungssystem loesen*/
-    {
-      free(m2);
-      free(v2);
-      throw IceException(ex, FNAME);
-    }
+    try
+      {
+        EquSys(m2, v2, col, x);                      /*Normalengleichungssystem loesen*/
+      }
+    catch (IceException& ex)
+      {
+        free(m2);
+        free(v2);
+        throw IceException(ex, FNAME);
+      }
 
     mp = m1;
     *mse = 0;                                       /*mittleren qudratischen Fehler best.*/
 
-    for (i = 0; i < row; i++)
+    for (int i = 0; i < row; i++)
       {
         w = 0;
 
-        for (j = 0; j < col; j++)
+        for (int j = 0; j < col; j++)
           {
             w += *mp++ * x[j];
           }

@@ -96,11 +96,12 @@ namespace ice
       {
         title += " - ";
       }
-    try {
-      red.create(xsize, ysize, maxval, title + "red");
-    green.create(xsize, ysize, maxval, title + "green");
-    blue.create(xsize, ysize, maxval, title + "blue");
-    }
+    try
+      {
+        red.create(xsize, ysize, maxval, title + "red");
+        green.create(xsize, ysize, maxval, title + "green");
+        blue.create(xsize, ysize, maxval, title + "blue");
+      }
     RETHROW;
   }
 

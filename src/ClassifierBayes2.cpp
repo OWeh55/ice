@@ -35,9 +35,10 @@ namespace ice
                                      double ap1, double ap2, // probability
                                      double ac12, double ac21) // costs
   {
-    try {
-      Init(classes, dimension, ap1, ap2, ac12, ac21);
-    }
+    try
+      {
+        Init(classes, dimension, ap1, ap2, ac12, ac21);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -48,15 +49,16 @@ namespace ice
                               double ap1, double ap2, // probability
                               double ac12, double ac21) // costs
   {
-    try {
-      Classifier::Init(classes, dimension);
-    p1 = ap1;
-    p2 = ap2;
-    c12 = ac12;
-    c21 = ac21;
-    st1.Init(nFeatures);
-    st2.Init(nFeatures);
-    }
+    try
+      {
+        Classifier::Init(classes, dimension);
+        p1 = ap1;
+        p2 = ap2;
+        c12 = ac12;
+        c21 = ac21;
+        st1.Init(nFeatures);
+        st2.Init(nFeatures);
+      }
     RETHROW;
   }
 #undef FNAME

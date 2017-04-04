@@ -172,28 +172,28 @@ namespace ice
 
   IVector peak1d(const Vector& v, bool cyclic, double noise)
   {
-    IVector ret;
-    std::vector<double> vv(v.size());
-
-    for (unsigned int i = 0; i < v.size(); i++)
+    try
       {
-        vv[i] = v[i];
+        IVector ret;
+        std::vector<double> vv(v.size());
+
+        for (unsigned int i = 0; i < v.size(); i++)
+          {
+            vv[i] = v[i];
+          }
+
+        std::vector<int> ip = peak1d(vv, cyclic, noise);
+
+        ret.Resize(ip.size());
+
+        for (unsigned int i = 0; i < ip.size(); i++)
+          {
+            ret[i] = ip[i];
+          }
+
+        return ret;
       }
-
-    std::vector<int> ip;
-    IF_FAILED(ip = peak1d(vv, cyclic, noise))
-    {
-      return ret;
-    }
-
-    ret.Resize(ip.size());
-
-    for (unsigned int i = 0; i < ip.size(); i++)
-      {
-        ret[i] = ip[i];
-      }
-
-    return ret;
+    RETHROW;
   }
 #undef FNAME
 }

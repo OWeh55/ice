@@ -35,9 +35,10 @@ namespace ice
 #define FNAME "ClassifierTree::ClassifierTree()"
   ClassifierTree::ClassifierTree(int classes, int dimension, int depth)
   {
-    try {
-      Init(classes, dimension, depth);
-    }
+    try
+      {
+        Init(classes, dimension, depth);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -55,11 +56,12 @@ namespace ice
 
   void ClassifierTree::Init(int classes, int dimension, int depth)
   {
-    try {
-      Classifier::Init(classes, dimension);
-      this->depth = depth;
-      tree.init(classes, dimension, depth);
-    }
+    try
+      {
+        Classifier::Init(classes, dimension);
+        this->depth = depth;
+        tree.init(classes, dimension, depth);
+      }
     RETHROW;
   }
 #undef FNAME

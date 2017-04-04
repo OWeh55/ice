@@ -91,18 +91,19 @@ namespace ice
 
   Matrix FitEquilateralTriangle(const Moments& m, double& guetemass)
   {
-    try {
-      Matrix triangle(0, 2);
-      double p[3][2];
-      FitEquilateraltriangleMoments(m.oldMoments(), p, guetemass);
-      
-      for (int i = 0; i < 3; i++)
-	{
-	  triangle.Append(Vector(p[i][0], p[i][1]));
-	}
-      
-      return triangle;
-    }
+    try
+      {
+        Matrix triangle(0, 2);
+        double p[3][2];
+        FitEquilateraltriangleMoments(m.oldMoments(), p, guetemass);
+
+        for (int i = 0; i < 3; i++)
+          {
+            triangle.Append(Vector(p[i][0], p[i][1]));
+          }
+
+        return triangle;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -114,18 +115,19 @@ namespace ice
   }
   Matrix FitIsoscelesTriangle(const Moments& m, double& guetemass)
   {
-    try {
-    Matrix triangle(0, 2);
-    double p[3][2];
-    FitIsoscelestriangleMoments(m.oldMoments(), p, guetemass);
-
-    for (int i = 0; i < 3; i++)
+    try
       {
-        triangle.Append(Vector(p[i][0], p[i][1]));
-      }
+        Matrix triangle(0, 2);
+        double p[3][2];
+        FitIsoscelestriangleMoments(m.oldMoments(), p, guetemass);
 
-    return triangle;
-    }
+        for (int i = 0; i < 3; i++)
+          {
+            triangle.Append(Vector(p[i][0], p[i][1]));
+          }
+
+        return triangle;
+      }
     RETHROW;
   }
 #undef FNAME
@@ -212,36 +214,37 @@ namespace ice
 
   Matrix FitPolygon(const Moments& m, const Matrix& pl, double& guetemass)
   {
-    try {
-      Matrix res(0, 2);
-      CheckPolygon(pl);
-
-    int n = pl.rows();
-
-    if (n > 7)
+    try
       {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        Matrix res(0, 2);
+        CheckPolygon(pl);
+
+        int n = pl.rows();
+
+        if (n > 7)
+          {
+            throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+          }
+
+        double pstart[7][2]; // initial solution
+
+        for (int i = 0; i < n; i++)
+          {
+            pstart[i][0] = pl[i][0];
+            pstart[i][1] = pl[i][1];
+          }
+
+        double p[7][2]; // result
+
+        FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass);
+
+        for (int i = 0; i < n; i++)
+          {
+            res.Append(Vector(p[i][0], p[i][1]));
+          }
+
+        return res;
       }
-
-    double pstart[7][2]; // initial solution
-
-    for (int i = 0; i < n; i++)
-      {
-        pstart[i][0] = pl[i][0];
-        pstart[i][1] = pl[i][1];
-      }
-
-    double p[7][2]; // result
-
-    FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass);
-
-    for (int i = 0; i < n; i++)
-      {
-        res.Append(Vector(p[i][0], p[i][1]));
-      }
-
-    return res;
-    }
     RETHROW;
   }
 
@@ -265,18 +268,19 @@ namespace ice
 
     double p[7][2]; // result
 
-    try {
-      FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass);
-    
-    res.Reset(Point(p[0][0], p[0][1]));
-    for (int i = 1; i < n; i++)
+    try
       {
-        res.Add(Vector(p[i][0], p[i][1]));
+        FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass);
+
+        res.Reset(Point(p[0][0], p[0][1]));
+        for (int i = 1; i < n; i++)
+          {
+            res.Add(Vector(p[i][0], p[i][1]));
+          }
+
+        return res;
       }
-    
-    return res;
-  }
-  RETHROW;
+    RETHROW;
 
   }
 
@@ -325,11 +329,12 @@ namespace ice
 #define FNAME "Orientation"
   double Orientation(const Moments& m)
   {
-    try {
-    double fi;
-    OrientationMoments(m.oldMoments(), fi);
-    return fi;
-    }
+    try
+      {
+        double fi;
+        OrientationMoments(m.oldMoments(), fi);
+        return fi;
+      }
     RETHROW;
   }
 #undef FNAME

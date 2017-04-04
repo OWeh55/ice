@@ -305,11 +305,12 @@ namespace ice
 #define FNAME "Moments::CentralMoments"
   Moments Moments::CentralMoments() const
   {
-    try {
-      double res[15];
-      CalcCentralMoments(mom, res);
-      return Moments(res);
-    }
+    try
+      {
+        double res[15];
+        CalcCentralMoments(mom, res);
+        return Moments(res);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -429,13 +430,13 @@ namespace ice
 
   Moments Moments::NormalizeTranslation(double& x, double& y) const
   {
-    double momres[15];
-    IF_FAILED(NormalizeMomentsTranslation(mom, momres, x, y))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return Moments();
-    }
-    return Moments(momres);
+    try
+      {
+        double momres[15];
+        NormalizeMomentsTranslation(mom, momres, x, y);
+        return Moments(momres);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::NormalizeXShearing"

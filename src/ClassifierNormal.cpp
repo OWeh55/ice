@@ -35,10 +35,11 @@ namespace ice
   ClassifierNormal::ClassifierNormal(int classes, int dimension):
     Classifier(classes, dimension)
   {
-    IF_FAILED(Init(classes, dimension))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        Init(classes, dimension);
+      }
+    RETHROW;
   }
 #undef FNAME
 
