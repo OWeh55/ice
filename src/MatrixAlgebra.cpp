@@ -473,14 +473,11 @@ namespace ice
   double CholeskyDeterminant(const Matrix& m)
   {
     if (m.cols() != m.rows())
-      {
-        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
-      }
+        throw IceException(FNAME, M_NO_SQUARE);
 
+    try {
     int dimension = m.cols();
-    Matrix l;
-
-    RETURN_IF_FAILED(l = CholeskyDecomposition(m), 0.0);
+    Matrix l = CholeskyDecomposition(m);
 
     double det = 1;
 
@@ -490,6 +487,8 @@ namespace ice
       }
 
     return det * det;
+    }
+    RETHROW;
   }
 #undef FNAME
 
@@ -497,19 +496,18 @@ namespace ice
   int SolveLinEqu1(const Matrix& m, const Vector& v, Vector& res)
   {
     // Matrix is square, v has correct size
-
+    try {
     Matrix LU;
     IVector indx;
 
     // LU-Zerlegung
-    IF_FAILED(LUDecompositionPacked(m, LU, indx, true))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    }
+    LUDecompositionPacked(m, LU, indx);
+
     // Lösen von L*U*x=i
     res = LUSolve(LU, indx, v);
     return OK;
+    }
+    RETHROW;
   }
 
   int SolveLinearEquation1(const matrix<double>& A,
@@ -517,35 +515,27 @@ namespace ice
                            std::vector<double>& x)
   {
     // Matrix is square, v has correct size
-
+    try {
     matrix<double> LU;
     vector<int> index;
 
     // LU-Zerlegung
-    IF_FAILED(LUDecompositionPacked(A, LU, index, true))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ERROR;
-    }
+    LUDecompositionPacked(A, LU, index, true);
     // Lösen von L*U*x=b
     x = LUSolve(LU, index, b);
     return OK;
+    }
+    RETHROW;
   }
 
   Vector SolveLinEqu(const Matrix& m, const Vector& v)
   {
+    try {
     int rc;
     Vector res(v);
 
-    if (v.Size() != m.rows())
-      {
-        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
-      }
-
-    if (m.cols() > m.rows())
-      {
-        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
-      }
+    if (v.Size() != m.rows() || m.cols() > m.rows())
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
     if (m.cols() < m.rows())
@@ -559,13 +549,9 @@ namespace ice
         rc = SolveLinEqu1(m, v, res);
       }
 
-    if (rc != OK)
-      {
-        throw IceException(FNAME, M_0, ERROR);
-        return res;
-      }
-
     return res;
+    }
+    RETHROW;
   }
 
 #undef FNAME

@@ -35,11 +35,10 @@ namespace ice
                                      double ap1, double ap2, // probability
                                      double ac12, double ac21) // costs
   {
-    IF_FAILED(Init(classes, dimension, ap1, ap2, ac12, ac21))
-    {
-      // if initialisation fails
-      throw IceException(FNAME, M_0, ERROR);
+    try {
+      Init(classes, dimension, ap1, ap2, ac12, ac21);
     }
+    RETHROW;
   }
 #undef FNAME
 
@@ -49,13 +48,16 @@ namespace ice
                               double ap1, double ap2, // probability
                               double ac12, double ac21) // costs
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
+    try {
+      Classifier::Init(classes, dimension);
     p1 = ap1;
     p2 = ap2;
     c12 = ac12;
     c21 = ac21;
     st1.Init(nFeatures);
     st2.Init(nFeatures);
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Train"

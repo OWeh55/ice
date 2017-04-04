@@ -107,11 +107,12 @@ namespace ice
 #define FNAME "Diff"
   double Diff(const Image& img1, const Image& img2, int mode)
   {
+    try {
     double res = 0.0;
 
     int dx, dy;
 
-    RETURN_IF_FAILED(MatchImg(img1, img2, dx, dy), res);
+    MatchImg(img1, img2, dx, dy);
 
     int ptype = img1->ImageType();
 
@@ -217,6 +218,8 @@ namespace ice
         return res / dx / dy;
       }
     return 0;
+    }
+    RETHROW;
   }
 #undef FNAME
 }

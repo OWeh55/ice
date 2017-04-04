@@ -412,6 +412,7 @@ namespace ice
 // IS2 = ID (*) IS1
   ImageD crossCorrelationImgD(ImageD is1, ImageD is2, ImageD id, int mode)
   {
+    try {
     int x, y;
     int xq, yq;
     int xs, ys, x0, y0;
@@ -422,14 +423,14 @@ namespace ice
     double r3 = 0, im3 = 0;
     //    double efactor;
 
-    RETURN_IF_FAILED(MatchImgD(is1, is2, xs, ys), rc);
+    MatchImgD(is1, is2, xs, ys);
 
     x0 = (xs + 1) / 2;
     y0 = (ys + 1) / 2;
 
     if (id.isValid())
       {
-        RETURN_IF_FAILED(MatchImgD(is1, id), rc);
+        MatchImgD(is1, id);
         rc = id;
       }
     else
@@ -473,9 +474,9 @@ namespace ice
 
     HartleyImgD(rc, rc);
 
-    FreeImgD(ds1);
-    FreeImgD(ds2);
     return rc;
+    }
+    RETHROW;
   }
 #undef FNAME
 
@@ -485,7 +486,7 @@ namespace ice
   ImageD phaseCorrelationD(ImageD is1, ImageD is2, ImageD id,
                            double noise, int mode)
   {
-    int x, y;
+    try {
     int xq, yq;
     int xs, ys, x0, y0;
 
@@ -497,14 +498,11 @@ namespace ice
     double efactor;
 
     if (noise < 0)
-      {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return rc;
-      }
 
     double noise2 = noise * noise;
 
-    RETURN_IF_FAILED(MatchImgD(is1, is2, xs, ys), id);
+    MatchImgD(is1, is2, xs, ys);
 
     x0 = (xs + 1) / 2;
     y0 = (ys + 1) / 2;
@@ -526,11 +524,11 @@ namespace ice
 
     FourierImgD(is1, is2, NORMAL, ds1, ds2);
 
-    for (y = 0; y < ys; y++)
+    for (int y = 0; y < ys; y++)
       {
         yq = negf(y, ys);
 
-        for (x = 0; x < xs; x++)
+        for (int x = 0; x < xs; x++)
           {
             xq = negf(x, xs);
             rr = GetValD(ds1, x, y);
@@ -575,17 +573,16 @@ namespace ice
 
     HartleyImgD(rc, rc);
 
-    FreeImgD(ds1);
-    FreeImgD(ds2);
-    //  FreeImgD(ddi);
     return rc;
+    }
+    RETHROW;
   }
 
   Image phaseCorrelation(Image img1, Image img2, Image img3, double beta)
   {
+    try {
     int xs, ys;
-
-    RETURN_IF_FAILED(MatchImg(img1, img2, img3, xs, ys), img3);
+    MatchImg(img1, img2, img3, xs, ys);
 
     ImageD ds1 = NewImgD(xs, ys);
     ImageD ds2 = NewImgD(xs, ys);
@@ -597,26 +594,26 @@ namespace ice
     ConvImgDImg(dd, img3, ADAPTIVE, UNSIGNED);
 
     return img3;
+    }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "horn"
   int horn(Image img1, Image img2, ImageD xDelta, ImageD yDelta, double lambda, int iterationNumber)
   {
+    try {
     int kWidth;
     int kHeight;
 
-    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, kWidth, kHeight));
+    MatchImg(img1, img2, kWidth, kHeight);
     int kWidthd;
     int kHeightd;
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(xDelta, xDelta, kWidthd, kHeightd));
+    MatchImgD(xDelta, xDelta, kWidthd, kHeightd);
 
     if (iterationNumber <= 0 || lambda <= 0)
-      {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
 
     int MASK_DIM = 2;
 
@@ -769,6 +766,8 @@ namespace ice
     delete [] v_avg;
 
     return OK;
+    }
+    RETHROW;
   }
 
 #undef FNAME
@@ -776,29 +775,18 @@ namespace ice
 #define FNAME "horn"
   int showOpticalFlow(Image img, ImageD xDelta, ImageD yDelta, int subSampleSize, double vectorScale, int color)
   {
-
     if (!(IsImgD(xDelta) && IsImgD(yDelta)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
 
     if (!(IsImg(img)))
-      {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
 
     int sizeX = xDelta.xsize;
     int sizeY = xDelta.ysize;
 
     if (!(subSampleSize > 0 && subSampleSize <= sizeX && subSampleSize <= sizeY && vectorScale != 0))
-      {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
 
-    int i, j;
     int x, y;
     double x1, y1;
     double x2, y2;
@@ -807,9 +795,9 @@ namespace ice
     double sumx, sumy;
     double xd, yd;
 
-    for (i = 0; i < gridSizeX; i++)
+    for (int i = 0; i < gridSizeX; i++)
       {
-        for (j = 0; j < gridSizeY; j++)
+        for (int j = 0; j < gridSizeY; j++)
           {
             sumx = 0;
             sumy = 0;
@@ -829,7 +817,7 @@ namespace ice
             y1 = j * subSampleSize + (subSampleSize / 2);
             x2 = x1 + xd * vectorScale;
             y2 = y1 + yd * vectorScale;
-            RETURN_ERROR_IF_FAILED(drawArrow((int)x1, (int)y1, (int)(x2), (int)y2, color, (int)(5), img));
+            drawArrow((int)x1, (int)y1, (int)(x2), (int)y2, color, 5, img);
           }
       }
 
@@ -961,7 +949,6 @@ namespace ice
 
   Image pivRenormImg(Image img1, Image img2)
   {
-    int x, y;
     int g;
     int ming = 255;
     int maxg = 0;

@@ -35,11 +35,10 @@ namespace ice
 #define FNAME "ClassifierTree::ClassifierTree()"
   ClassifierTree::ClassifierTree(int classes, int dimension, int depth)
   {
-    IF_FAILED(Init(classes, dimension, depth))
-    {
-      // if initialisation fails
-      throw IceException(FNAME, M_0, ERROR);
+    try {
+      Init(classes, dimension, depth);
     }
+    RETHROW;
   }
 #undef FNAME
 
@@ -49,7 +48,6 @@ namespace ice
     if (nClasses == 0)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return;
       }
 
     Init(nClasses, nFeatures);
@@ -57,9 +55,12 @@ namespace ice
 
   void ClassifierTree::Init(int classes, int dimension, int depth)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
-    this->depth = depth;
-    tree.init(classes, dimension, depth);
+    try {
+      Classifier::Init(classes, dimension);
+      this->depth = depth;
+      tree.init(classes, dimension, depth);
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "ClassifierTree::Finish"

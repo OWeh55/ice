@@ -53,9 +53,12 @@ namespace ice
   void ClassifierNearestNeighbor::Init(int classes, int dimension,
                                        int nNeighbors, bool norm)
   {
-    RETURN_VOID_IF_FAILED(ClassifierNormal::Init(classes, dimension));
+    try {
+      ClassifierNormal::Init(classes, dimension);
     this->nNeighbors = nNeighbors;
     this->norm = norm;
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "ClassifierNearestNeighbor::Finish"

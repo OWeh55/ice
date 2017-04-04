@@ -383,31 +383,23 @@ namespace ice
 
   Ellipse FitEllipse(const std::vector<Point>& pl, int step, int mode)
   {
+    try {
     double par[5];
-    int rc;
-    RETURN_IF_FAILED(rc = FitEllipse(pl, par, step, mode), Ellipse());
-    if (rc != OK)
-      {
-        throw IceException(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return Ellipse();
-      }
-
+    FitEllipse(pl, par, step, mode);
     return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+    }
+    RETHROW;
   }
 
   Ellipse FitEllipse(const std::vector<Point>& pl, const std::vector<double>& weights,
                      int step, int mode)
   {
+    try {
     double par[5];
-    int rc;
-    RETURN_IF_FAILED(rc = FitEllipse(pl, weights, par, step, mode), Ellipse());
-    if (rc != OK)
-      {
-        throw IceException(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return Ellipse();
-      }
-
+    FitEllipse(pl, weights, par, step, mode);
     return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+    }
+    RETHROW;
   }
 
   int FitEllipse(const Matrix& mpl, double* par, int step, int mode)
@@ -421,17 +413,12 @@ namespace ice
 
   Ellipse FitEllipse(const Matrix& pl, int step, int mode)
   {
+    try {
     double par[5];
-    int rc;
-    RETURN_IF_FAILED(rc = FitEllipse(pl, par, step, mode), Ellipse());
-
-    if (rc != OK)
-      {
-        throw IceException(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return Ellipse();
-      }
-
+    FitEllipse(pl, par, step, mode);
     return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+    }
+    RETHROW;
   }
 
 #undef FNAME

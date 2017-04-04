@@ -39,11 +39,10 @@ namespace ice
     ClassifierNormal(classes, dimension),
     nNeighbors(nNeighbors), norm(norm)
   {
-    IF_FAILED(Init(classes, dimension, nNeighbors))
-    {
-      // if initialisation fails
-      throw IceException(FNAME, M_0, ERROR);
+    try {
+      Init(classes, dimension, nNeighbors);
     }
+    RETHROW;
   }
 #undef FNAME
 
@@ -51,9 +50,12 @@ namespace ice
   void ClassifierKNN::Init(int classes, int dimension,
                            int nNeighbors, bool norm)
   {
-    RETURN_VOID_IF_FAILED(ClassifierNormal::Init(classes, dimension));
+    try {
+      ClassifierNormal::Init(classes, dimension);
     this->nNeighbors = nNeighbors;
     this->norm = norm;
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "ClassifierKNN::Finish"

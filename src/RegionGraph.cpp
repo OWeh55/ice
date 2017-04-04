@@ -983,7 +983,7 @@ ende:
     SetImg(mark, 0);
 
     int grw, grwsum;
-    int x, y, xn, yn, xkoor, ykoor;
+    int xn, yn, xkoor, ykoor;
     int n;
 
     FIFOList PQ;

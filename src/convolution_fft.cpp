@@ -131,73 +131,73 @@ namespace ice
   ImageD ConvolutionImgD(ImageD is1, ImageD is2,
                          ImageD id, int mode)
   {
-    int xs, ys;
+    try {
+	int xs, ys;
+	
+	ImageD rc;
+	MatchImgD(is1, is2, xs, ys);
+	
+	// center = \alpha_{0,0}
+	int x0 = xs / 2;
+	int y0 = ys / 2;
 
-    ImageD rc;
-    RETURN_IF_FAILED(MatchImgD(is1, is2, xs, ys), rc);
+	ImageD ds1;
+	ds1.create(xs, ys, 0, 1);
+	ImageD ds2;
+	ds2.create(xs, ys, 0, 1);
 
-    // center = \alpha_{0,0}
-    int x0 = xs / 2;
-    int y0 = ys / 2;
+	if (! id.isValid())
+	  {
+	    rc.create(xs, ys, 0, 1);
+	  }
+	else
+	  {
+	    rc = id;
+	  }
 
-    ImageD ds1;
-    ds1.create(xs, ys, 0, 1);
-    ImageD ds2;
-    ds2.create(xs, ys, 0, 1);
+	ImageD ddi;
+	ddi.create(xs, ys, 0, 1);
 
-    if (! id.isValid())
-      {
-        rc.create(xs, ys, 0, 1);
+	// effective factor for Convolution
+	double efac = sqrt((double)xs * (double)ys);
+
+	FourierImgD(is1, is2, NORMAL, ds1, ds2); // "mixed" FT for both images
+
+	for (int y = 0; y < ys; y++)
+	  {
+	    int yq = negf(y, ys);
+
+	    for (int x = 0; x < xs; x++)
+	      {
+		int xq = negf(x, xs);
+
+		double rr = GetValD(ds1, x, y);
+		double ir = GetValD(ds2, x, y);
+		double rq = GetValD(ds1, xq, yq);
+		double iq = GetValD(ds2, xq, yq);
+		// calculate complex FT-parameter from result of mixed FT
+		double r1 = (rr + rq) / 2;
+		double i1 = (ir - iq) / 2;
+		double r2 = (ir + iq) / 2;
+		double i2 = (rq - rr) / 2;
+		// complex multiplication
+		PutValD(rc, x, y, (r1 * r2 - i1 * i2) * efac);
+		PutValD(ddi, x, y, (r1 * i2 + r2 * i1) * efac);
+	      }
+	  }
+
+	if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
+	  {
+	    PutValD(rc, x0, y0, 0.0);
+	    PutValD(ddi, x0, y0, 0.0);
+	  }
+
+	// inverse transform
+	FourierImgD(rc, ddi, INVERS, rc, ddi);
+
+	return rc;
       }
-    else
-      {
-        rc = id;
-      }
-
-    ImageD ddi;
-    ddi.create(xs, ys, 0, 1);
-
-    // effective factor for Convolution
-    double efac = sqrt((double)xs * (double)ys);
-
-    FourierImgD(is1, is2, NORMAL, ds1, ds2); // "mixed" FT for both images
-
-    for (int y = 0; y < ys; y++)
-      {
-        int yq = negf(y, ys);
-
-        for (int x = 0; x < xs; x++)
-          {
-            int xq = negf(x, xs);
-
-            double rr = GetValD(ds1, x, y);
-            double ir = GetValD(ds2, x, y);
-            double rq = GetValD(ds1, xq, yq);
-            double iq = GetValD(ds2, xq, yq);
-            // calculate complex FT-parameter from result of mixed FT
-            double r1 = (rr + rq) / 2;
-            double i1 = (ir - iq) / 2;
-            double r2 = (ir + iq) / 2;
-            double i2 = (rq - rr) / 2;
-            // complex multiplication
-            PutValD(rc, x, y, (r1 * r2 - i1 * i2) * efac);
-            PutValD(ddi, x, y, (r1 * i2 + r2 * i1) * efac);
-          }
-      }
-
-    if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
-      {
-        PutValD(rc, x0, y0, 0.0);
-        PutValD(ddi, x0, y0, 0.0);
-      }
-
-    // inverse transform
-    FourierImgD(rc, ddi, INVERS, rc, ddi);
-
-    FreeImgD(ds1);
-    FreeImgD(ds2);
-    FreeImgD(ddi);
-    return rc;
+    RETHROW;
   }
 #undef FNAME
 
@@ -206,9 +206,9 @@ namespace ice
   int ConvolutionImg(const Image& is1, const Image& is2,
                      Image& id, double factor, int mode)
   {
+    try {
     int xs, ys;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(is1, is2, id, xs, ys));
+    MatchImg(is1, is2, id, xs, ys);
 
     ImageD ds1 = NewImgD(is1);
     ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
@@ -233,11 +233,9 @@ namespace ice
       {
         ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
       }
-
-    FreeImgD(ds1);
-    FreeImgD(ds2);
-    FreeImgD(dd);
     return OK;
+    }
+    RETHROW;
   }
 #undef FNAME
 
@@ -247,6 +245,7 @@ namespace ice
                             ImageD id,
                             double noise, int mode)
   {
+    try {
     int xs, ys, x0, y0;
 
     ImageD rc;
@@ -257,21 +256,20 @@ namespace ice
     double efactor;
 
     if (noise < 0)
-      {
+      
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return rc;
-      }
+      
 
     double noise2 = noise * noise;
 
-    RETURN_IF_FAILED(MatchImgD(is1, is2, xs, ys), rc);
+    MatchImgD(is1, is2, xs, ys);
 
     x0 = xs / 2;
     y0 = ys / 2;
 
     if (id.isValid())
       {
-        RETURN_IF_FAILED(MatchImgD(is1, id), rc);
+        MatchImgD(is1, id);
         rc = id;
       }
     else
@@ -336,10 +334,9 @@ namespace ice
 
     HartleyImgD(rc, rc);
 
-    FreeImgD(ds1);
-    FreeImgD(ds2);
-    //  FreeImgD(ddi);
     return rc;
+    }
+    RETHROW;
   }
 #undef FNAME
 

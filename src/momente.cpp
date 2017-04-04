@@ -1272,6 +1272,7 @@ namespace ice
   double AffinFitMoments(const double m1p[15], const double m2p[15],
                          double tr[3][3])
   {
+    try {
     double m1[15], m2[15];
     double mx[15], mn1[15], mn2[15], s3, s4, smin;
     double tr1[3][3], tr2[3][3], trx[8][3][3], tra[8][3][3];
@@ -1282,17 +1283,14 @@ namespace ice
 
     // Flaeche darf nicht verschwinden
     if (m1[0] < EPSILON || m2[0] < EPSILON)
-      {
         throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
-        return DBL_MAX;
-      }
 
     double dx, dy;
-    RETURN_IF_FAILED(NormalizeMomentsTranslation(m1, mx, dx, dy), 0.0);
+    NormalizeMomentsTranslation(m1, mx, dx, dy);
     //    TranslateMoments(m1,-m1[1]/m1[0],-m1[2]/m1[0],mx);
 
     // Normierung der Momente durch isotrope Skalierung auf gleiche Fläche
-    RETURN_IF_FAILED(NormalizeMomentsArea(mx, mx), 0.0);
+    NormalizeMomentsArea(mx, mx);
 
     // optimale Methode auswaehlen
     s3 = 0.0;
@@ -1409,30 +1407,29 @@ namespace ice
         }
 
     return smin;
+    }
+    RETHROW;
   }
 
   double AffinFitMoments(const double m1[15], const double m2[15], Trafo& tr)
   {
+    try {
     double oldtr[3][3];
-    double ret;
-    int i, j;
 
-    IF_FAILED(ret = AffinFitMoments(m1, m2, oldtr))
-    {
-      throw IceException(FNAME, M_0, ERROR);
-      return ret;
-    }
-
+    double ret = AffinFitMoments(m1, m2, oldtr);
+    
     Matrix m(3, 3);
-
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
+    
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
         {
           m[i][j] = oldtr[i][j];
         }
-
+    
     tr = Trafo(m);
     return ret;
+    }
+    RETHROW;
   }
 #undef FNAME
 }

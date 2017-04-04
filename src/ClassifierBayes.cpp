@@ -69,7 +69,8 @@ namespace ice
 #define FNAME "ClassifierBayes::Init"
   void ClassifierBayes::Init(int classnr, int dimension)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classnr, dimension));
+    try {
+      Classifier::Init(classnr, dimension);
 
     int classes = nClasses;
     if (rejection)                          // add rejection class when needed
@@ -95,6 +96,8 @@ namespace ice
       }
 
     nSamples = 0;
+    }
+    RETHROW;
   }
 
 #undef FNAME

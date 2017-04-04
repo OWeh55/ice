@@ -35,25 +35,27 @@ namespace ice
 #define FNAME "ClassifierMinimumDistance::ClassifierMinimumDistance()"
   ClassifierMinimumDistance::ClassifierMinimumDistance(int classes, int dimension)
   {
-    IF_FAILED(Init(classes, dimension))
-    {
-      // if initialisation fails
-      throw IceException(FNAME, M_0, ERROR);
+    try {
+      Init(classes, dimension);
     }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "ClassifierMinimumDistance::Init"
   void ClassifierMinimumDistance::Init(int classes, int dimension)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
-
-    par = Matrix(nClasses, nFeatures + 2);
-
-    for (int i = 0; i < nClasses; i++)
-      {
-        par[i][nFeatures] = 0.0;
-      }
+    try {
+      Classifier::Init(classes, dimension);
+      
+      par = Matrix(nClasses, nFeatures + 2);
+      
+      for (int i = 0; i < nClasses; i++)
+	{
+	  par[i][nFeatures] = 0.0;
+	}
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Train"

@@ -40,32 +40,27 @@ namespace ice
 #define FNAME "SelLine"
   int SelLine(const Image& img, IPoint& p1, IPoint& p2)
   {
-    Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
-    if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    try {
+    Visual v = GetVisual(img);
     return v->SelectLine(p1, p2);
+    }
+    RETHROW;
   }
 
   int SelLineFromStart(const Image& img, const IPoint& p1, IPoint& p2)
   {
-    Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
-    if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-    return v->SelectLineFromStart(p1, p2);
+    try {
+      Visual v = GetVisual(img);
+      v->SelectLineFromStart(p1, p2);
+      return OK;
+    }
+    RETHROW;
   }
 
   LineSeg SelLine(const Image& img)
   {
     IPoint p1, p2;
-    RETURN_IF_FAILED(SelLine(img, p1, p2), LineSeg());
+    SelLine(img, p1, p2);
     return LineSeg(p1, p2);
   }
 #undef FNAME

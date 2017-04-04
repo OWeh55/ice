@@ -189,17 +189,23 @@ namespace ice
   Matrix DistanceMatrix(const Matrix& feat1, const Matrix& feat2,
                         int mode)
   {
+    try {
     Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat1, feat2, res, mode), res);
+    DistanceMatrix(feat1, feat2, res, mode);
     return res;
+    }
+    RETHROW;
   }
 
 
   Matrix DistanceMatrix(const Matrix& feat, int mode)
   {
+    try {
     Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat, feat, res, mode), res);
+    DistanceMatrix(feat, feat, res, mode);
     return res;
+    }
+    RETHROW;
   }
 
   int DistanceMatrix(const Matrix& feat1, const Matrix& feat2, Matrix& distmatrix, const VectorDistance& dist)
@@ -212,7 +218,6 @@ namespace ice
     if (dim != feat2.cols())
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
       }
 
     distmatrix = Matrix(n1, n2);
@@ -269,18 +274,22 @@ namespace ice
 
   Matrix DistanceMatrix(const Matrix& feat1, const Matrix& feat2, const VectorDistance& dist)
   {
+    try {
     Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat1, feat2, res, dist), res);
+    DistanceMatrix(feat1, feat2, res, dist);
     return res;
+    }
+    RETHROW;
   }
 
   Matrix DistanceMatrix(const Matrix& feat, const VectorDistance& dist)
   {
+    try {
     Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat, feat, res, dist), res);
+    DistanceMatrix(feat, feat, res, dist);
     return res;
+    }
+    RETHROW;
   }
-
-
 #undef FNAME
 }

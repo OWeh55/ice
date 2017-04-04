@@ -96,9 +96,12 @@ namespace ice
       {
         title += " - ";
       }
-    RETURN_VOID_IF_FAILED(red.create(xsize, ysize, maxval, title + "red"));
-    RETURN_VOID_IF_FAILED(green.create(xsize, ysize, maxval, title + "green"));
-    RETURN_VOID_IF_FAILED(blue.create(xsize, ysize, maxval, title + "blue"));
+    try {
+      red.create(xsize, ysize, maxval, title + "red");
+    green.create(xsize, ysize, maxval, title + "green");
+    blue.create(xsize, ysize, maxval, title + "blue");
+    }
+    RETHROW;
   }
 
   // given template colorimage

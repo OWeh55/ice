@@ -42,7 +42,8 @@ namespace ice
                                     int depth,
                                     int nUsep)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
+    try {
+    Classifier::Init(classes, dimension);
     this->nTrees = nTrees;
     classifiers.resize(nTrees);
     nUse = nUsep;
@@ -55,6 +56,8 @@ namespace ice
       {
         classifiers[i].Init(classes, dimension, depth);
       }
+  }
+  RETHROW;
   }
 
   void ClassifierRandomForest::Init(int classes, int dimension)

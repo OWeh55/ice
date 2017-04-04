@@ -678,7 +678,8 @@ namespace ice
 
   bool equalImg(const Image& img1, const Image& img2)
   {
-    RETURN_IF_FAILED(MatchImg(img1, img2), false);
+    try {
+      MatchImg(img1, img2);
 
     if (img1->ImageType() == img2->ImageType())
       {
@@ -696,22 +697,21 @@ namespace ice
       }
 
     return equalImg_std(img1, img2);
+    }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "findMax"
   int findMax(const Image& img, int& PosX, int& PosY)
   {
+    if (! IsImg(img))
+      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+
     int max = 0;
 
-    if (! IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return max;
-      }
-
-    int xSize = img->xsize;
-    int ySize = img->ysize;
+    int xSize = img.xsize;
+    int ySize = img.ysize;
 
     for (int y = 0; y < ySize; y++)
       for (int x = 0; x < xSize; x++)

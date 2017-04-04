@@ -305,9 +305,12 @@ namespace ice
 #define FNAME "Moments::CentralMoments"
   Moments Moments::CentralMoments() const
   {
-    double res[15];
-    RETURN_IF_FAILED(CalcCentralMoments(mom, res), Moments());
-    return Moments(res);
+    try {
+      double res[15];
+      CalcCentralMoments(mom, res);
+      return Moments(res);
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::XShear"

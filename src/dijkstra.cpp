@@ -38,24 +38,19 @@ namespace ice
 #define FNAME "Dijkstra"
   Contur Dijkstra(const Image& img, IPoint start, Image& marker)
   {
-    Contur res;
-    priority_queue<PointX> heap;
+    try {
+      Contur res;
+      priority_queue<PointX> heap;
+      
+      int dx, dy;
+      
+      MatchImg(img, marker, dx, dy);
+      
+      if (marker->maxval < minrange)
+	  throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
 
-    int dx, dy;
-
-    RETURN_IF_FAILED(MatchImg(img, marker, dx, dy), res);
-
-    if (marker->maxval < minrange)
-      {
-        throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
-        return res;
-      }
-
-    if (!Inside(img, start))
-      {
-        throw IceException(FNAME, M_OUTSIDE, WRONG_PARAM);
-        return res;
-      }
+      if (!Inside(img, start))
+	  throw IceException(FNAME, M_OUTSIDE, WRONG_PARAM);
 
     // prepare marker image:
     // 0           => 0 - unhandled
@@ -64,10 +59,7 @@ namespace ice
     BinImg(marker, marker, 1, 1);
 
     if (GetVal(marker, start.x, start.y) != 0)
-      {
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_PARAM);
-        return res;
-      }
 
     PointX ap(start, 0, 0);
     heap.push(ap);
@@ -132,6 +124,8 @@ namespace ice
     res.Add(start);
     res.InvDir();
     return res;
+    }
+    RETHROW;
   }
 
   Contur Dijkstra(const Image& img, IPoint start, IPoint end)

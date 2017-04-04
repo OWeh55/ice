@@ -368,7 +368,7 @@ namespace ice
 #define FNAME "Camera::Ray"
   Line3d Camera::Ray(const Point& bp) const
   {
-    int i;
+    try {
     create_trans(); // Transformation erzeugen
     Vector bpu(dist->Rect(bp));// Unverzeichneter Bildpunkt
     bpu.Append(1); // in homogene Koordinaten umwandeln
@@ -376,15 +376,17 @@ namespace ice
     Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)
     Vector a(3);
 
-    for (i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
       {
         a[i] = T[i][3];
       }
 
-    RETURN_IF_FAILED(A = -Inverse(A), Line3d());
+    A = -Inverse(A);
     Vector c1 = A * a;   // Projektionszentrum
     Vector c2 = A * bpu + c1; // Zweiter Punkt im Raum
     return Line3d(Vector3d(c1), Vector3d(c2)); //Strahl zurückgeben
+    }
+    RETHROW;
   }
 
   Line3d Camera::Ray(double u, double v) const
