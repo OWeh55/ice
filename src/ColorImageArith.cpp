@@ -31,7 +31,7 @@
  * int SubImg(const ColorImage &img1, const ColorImage &img2, const ColorImage &dest, int smode=SMD_ABSOLUTE, int mode=MD_NORMALIZE)
  * int MaxImg(const ColorImage &img1, const ColorImage &img2, const ColorImage &dest, int mode=MD_NORMALIZE)
  * int MinImg(const ColorImage &img1, const ColorImage &img2, const ColorImage &dest, int mode=MD_NORMALIZE)
- * int RenormImg(const ColorImage &src, const ColorImage &dest)
+ * int renormImg(const ColorImage &src, const ColorImage &dest)
  *
  * "ColorFunctionsArith.cpp" - Niels Oertel 2008, Wolfgang Ortmann 02/2013
  */
@@ -140,8 +140,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "RenormImg"
-  void RenormImg(const ColorImage& src, const ColorImage& dest)
+#define FNAME "renormImg"
+  void renormImg(const ColorImage& src, const ColorImage& dest)
   {
     try
       {

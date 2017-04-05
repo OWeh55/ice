@@ -29,13 +29,13 @@ int main(int argc, char** argv)
   mrk.create(512, 512, 4);
   clearImg(mrk);
   Show(OVERLAY, dst, mrk, "Destination");
-  SmearImg(src, dst, SSIZE);
+  smearImg(src, dst, SSIZE);
   Print(".");
   int i = 1;
 
   while (i < SNUMBER)
     {
-      SmearImg(dst, dst, SSIZE);
+      smearImg(dst, dst, SSIZE);
       Print(".");
       i++;
 //    sleep(1);

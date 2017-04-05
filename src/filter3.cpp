@@ -204,8 +204,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "SmearImg"
-  /****************** SmearImg *************************/
+#define FNAME "smearImg"
+  /****************** smearImg *************************/
 
   static void smear_core_std(const Image& pn1, const Image& pn2, int sx, int sy)
   {
@@ -398,7 +398,7 @@ namespace ice
     delete [] tmp;
   }
 
-  int SmearImg(const Image& pn1, const Image& pn2, int sx, int sy)
+  void smearImg(const Image& pn1, const Image& pn2, int sx, int sy)
   {
     int dx, dy;
 
@@ -432,18 +432,16 @@ namespace ice
             break;
           }
       }
-
-    return OK;
   }
 
-  int SmearImg(const Image& pn1, const Image& pn2, int sx)
+  void smearImg(const Image& pn1, const Image& pn2, int sx)
   {
-    return SmearImg(pn1, pn2, sx, sx);
+    smearImg(pn1, pn2, sx, sx);
   }
 
-  int SmearImg(const Image& imgs, int sx)
+  void smearImg(const Image& imgs, int sx)
   {
-    return SmearImg(imgs, imgs, sx, sx);
+    smearImg(imgs, imgs, sx, sx);
   }
 #undef FNAME
 
@@ -716,8 +714,8 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
     Image box1 = NewImg(dx, dy, imgs->maxval);
     Image box2 = NewImg(dx, dy, imgs->maxval);
-    RETURN_ERROR_IF_FAILED(SmearImg(imgs, box1, n1));
-    RETURN_ERROR_IF_FAILED(SmearImg(imgs, box2, n2));
+    RETURN_ERROR_IF_FAILED(smearImg(imgs, box1, n1));
+    RETURN_ERROR_IF_FAILED(smearImg(imgs, box2, n2));
     RETURN_ERROR_IF_FAILED(SubImg(box1, box2, imgd, mode));
 
     return OK;
@@ -803,7 +801,7 @@ namespace ice
                   }
                 else
                   {
-                    SmearImg(imgs_wide, smearresult, nx, ny);
+                    smearImg(imgs_wide, smearresult, nx, ny);
                   }
 
                 smearimgs[key] = smearresult;

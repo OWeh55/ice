@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
   cout << "v5.Sort(1);       " << v5 << endl;
 
   cout << endl << "Vektor mit Clear() loeschen " ;
-  v5.Clear();
+  v5.clear();
   cout << v5 << endl << endl;
 
   Matrix m(4, 4);

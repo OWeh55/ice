@@ -22,7 +22,7 @@ int main(int argc, char** argv)
   SelPoint(img);
 
   double start = TimeD();
-  RenormImg(img, result);
+  renormImg(img, result);
   printf("time elapsed: %f\n", TimeD() - start);
   Show(ON, result);
 

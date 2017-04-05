@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
   h = NewImgD(imgsize, imgsize, 0, 255);
 
   null = NewImgD(imgsize, imgsize, 0, 255);
-  SetImgD(null, 0);
+  setImgD(null, 0);
 
   links = NewImg(imgsize, imgsize, 255);
 
@@ -199,7 +199,7 @@ int main(int argc, char* argv[])
 
   Printf("Faltung: Hartley/Fourier\n");
   HartleyImgD(original, s1);
-  SetImgD(maske, 0);
+  setImgD(maske, 0);
   PutValD(maske, imgsize / 2, imgsize / 2, 1); //Faltungsmaske
   PutValD(maske, imgsize / 2 + 10, imgsize / 2 + 20, -0.9);
   PutValD(maske, imgsize / 2 - 20, imgsize / 2 + 15, 0.8);
@@ -256,7 +256,7 @@ int main(int argc, char* argv[])
 
   Printf("CrossCorrelation (Hartley)\n");
   HartleyImgD(original, s1);
-  SetImgD(maske, 0);
+  setImgD(maske, 0);
   PutValD(maske, imgsize / 2 - 50, imgsize / 2 - 30, 1); //Faltungsmaske
   PutValD(maske, imgsize / 2 - 30, imgsize / 2 - 50, 1);
   HartleyImgD(maske, s2);

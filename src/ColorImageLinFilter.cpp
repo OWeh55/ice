@@ -26,8 +26,8 @@
  * Anyway no automatic conversion will be done, to provide the filters to be
  * used in any color space.
  *
- * int SmearImg(const ColorImage &src, const ColorImage &dest, int n=3)
- * int SmearImg(const ColorImage &src, const ColorImage &dest, int nx, int ny)
+ * int smearImg(const ColorImage &src, const ColorImage &dest, int n=3)
+ * int smearImg(const ColorImage &src, const ColorImage &dest, int nx, int ny)
  * int DoBImg(const ColorImage &src, const ColorImage &dest, int n1, int n2, int mode=MD_NORMALIZE)
  * int GradXImg(const ColorImage &src, const ColorImage &dest, int norm=1)
  * int GradYImg(const ColorImage &src, const ColorImage &dest, int norm=1)
@@ -53,7 +53,7 @@ namespace ice
 {
   /********************* SMOOTHNESS FILTERS ********************/
 
-#define FNAME "SmearImg"
+#define FNAME "smearImg"
   void smearImg(const ColorImage& src, const ColorImage& dest, int n)
   {
     smearImg(src, dest, n, n);
@@ -63,9 +63,9 @@ namespace ice
   {
     try
       {
-        SmearImg(src.redImage(), dest.redImage(), nx, ny);
-        SmearImg(src.greenImage(), dest.greenImage(), nx, ny);
-        SmearImg(src.blueImage(), dest.blueImage(), nx, ny);
+        smearImg(src.redImage(), dest.redImage(), nx, ny);
+        smearImg(src.greenImage(), dest.greenImage(), nx, ny);
+        smearImg(src.blueImage(), dest.blueImage(), nx, ny);
       }
     RETHROW;
   }

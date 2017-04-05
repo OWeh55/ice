@@ -47,7 +47,7 @@ int main(int argc, char** argv)
   ColorImage imgdiff;
   imgdiff.create(img);
 
-  SubImg(img, imgr, imgdiff);
+  subImg(img, imgr, imgdiff);
   cout << "error in R channel: " << findMin(imgdiff.redImage()) << " " << findMax(imgdiff.redImage()) << endl;
   cout << "error in G channel: " << findMin(imgdiff.greenImage()) << " " << findMax(imgdiff.greenImage()) << endl;
   cout << "error in B channel: " << findMin(imgdiff.blueImage()) << " " << findMax(imgdiff.blueImage()) << endl;

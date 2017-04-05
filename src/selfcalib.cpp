@@ -457,7 +457,7 @@ namespace ice
     pic2 = NewImg(image);
     CopyImg(image, pic1);
     CopyImg(image, pic2);
-    SmearImg(image, pic2, 5, 5);
+    smearImg(image, pic2, 5, 5);
     copyborder(image, pic2, 2);
 
     mark1 = NewImg(dimx, dimy, max_gw);

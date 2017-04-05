@@ -57,7 +57,7 @@ int main(int argc, char** argv)
   printf("LSIImg(Matrix): time elapsed: %f\n", TimeD() - start);
 
   start = TimeD();
-  SmearImg(src, resultLSI);
+  smearImg(src, resultLSI);
   printf("SmearImg: time elapsed: %f\n", TimeD() - start);
   //  src.setTitle((string)"result");
   Show(OFF, src);

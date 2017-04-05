@@ -64,9 +64,9 @@ namespace ice
   int LaplaceImg(const Image& imgs, const Image& imgd, int norm = 1);
 
   // filter3.cpp
-  int SmearImg(const Image& imgs, const Image& imgd, int sx, int sy);
-  int SmearImg(const Image& imgs, const Image& imgd, int sx = 3);
-  int SmearImg(const Image& imgs, int sx = 3);
+  void smearImg(const Image& imgs, const Image& imgd, int sx, int sy);
+  void smearImg(const Image& imgs, const Image& imgd, int sx = 3);
+  void smearImg(const Image& imgs, int sx = 3);
 
   int BoxImg(const Image& imgs, const Image& imgd, int sx, int sy);
   int BoxImg(const Image& imgs, const Image& imgd, int sx = 3);

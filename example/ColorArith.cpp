@@ -25,25 +25,25 @@ int main(int argc, char** argv)
   Show(ON, result);
 
   double start = TimeD();
-  AddImg(img1, img2, result, MD_NORMALIZE);
+  addImg(img1, img2, result, MD_NORMALIZE);
   printf("time elapsed: %f\n", TimeD() - start);
 
   printf("Click to sub the images\n");
   SelPoint(result);
   start = TimeD();
-  SubImg(img1, img2, result, MD_NORMALIZE);
+  subImg(img1, img2, result, MD_NORMALIZE);
   printf("time elapsed: %f\n", TimeD() - start);
 
   printf("Click to create the MinImg\n");
   SelPoint(result);
   start = TimeD();
-  MinImg(img1, img2, result);
+  minImg(img1, img2, result);
   printf("time elapsed: %f\n", TimeD() - start);
 
   printf("Click to create the MaxImg\n");
   SelPoint(result);
   start = TimeD();
-  MaxImg(img1, img2, result);
+  maxImg(img1, img2, result);
   printf("time elapsed: %f\n", TimeD() - start);
 
   printf("Click to exit\n");

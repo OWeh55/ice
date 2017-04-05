@@ -188,8 +188,8 @@ int main(int argc, char* argv[])
       {
         PutVal(tests, x, y, Random(255));
       }
-  //  Text("Unser ICE",25,222,255,2,tests);
-  SmearImg(tests);
+
+  smearImg(tests);
 
   switch (mode)
     {
