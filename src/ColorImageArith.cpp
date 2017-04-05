@@ -90,9 +90,9 @@ namespace ice
   {
     try
       {
-        AddImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
-        AddImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
-        AddImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
+        addImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
+        addImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
+        addImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
       }
     RETHROW;
   }
@@ -104,9 +104,9 @@ namespace ice
   {
     try
       {
-        SubImg(img1.redImage(), img2.redImage(), dest.redImage(), mode, smode);
-        SubImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode, smode);
-        SubImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode, smode);
+        subImg(img1.redImage(), img2.redImage(), dest.redImage(), mode, smode);
+        subImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode, smode);
+        subImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode, smode);
       }
     RETHROW;
   }
@@ -118,9 +118,9 @@ namespace ice
   {
     try
       {
-        MaxImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
-        MaxImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
-        MaxImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
+        maxImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
+        maxImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
+        maxImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
       }
     RETHROW;
   }
@@ -132,9 +132,9 @@ namespace ice
   {
     try
       {
-        MinImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
-        MinImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
-        MinImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
+        minImg(img1.redImage(), img2.redImage(), dest.redImage(), mode);
+        minImg(img1.greenImage(), img2.greenImage(), dest.greenImage(), mode);
+        minImg(img1.blueImage(), img2.blueImage(), dest.blueImage(), mode);
       }
     RETHROW;
   }
@@ -145,9 +145,9 @@ namespace ice
   {
     try
       {
-        RenormImg(src.redImage(), dest.redImage());
-        RenormImg(src.greenImage(), dest.greenImage());
-        RenormImg(src.blueImage(), dest.blueImage());
+        renormImg(src.redImage(), dest.redImage());
+        renormImg(src.greenImage(), dest.greenImage());
+        renormImg(src.blueImage(), dest.blueImage());
       }
     RETHROW;
   }

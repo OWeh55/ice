@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
   Printf("Pegel vom Histogramm %d \n", pglh);
   Printf("Pegel vom Bild %d \n", pgli);
 
-  BinImg(picture, pglh, picture);
+  binImg(picture, pglh, picture);
   GetChar();
 
   return (0);

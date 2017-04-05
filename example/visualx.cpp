@@ -84,7 +84,7 @@ int Main(int argc, char* argv[])
   FreeImg(p[4]);
   Print("Bild 4 neu anlegen\n");
   p[4] = NewImg(p[3]);
-  InvertImg(p[3], p[4]);
+  invertImg(p[3], p[4]);
   for (int y = 0; y < p[4].ysize; y++)
     for (int x = 0; x < p[4].xsize; x++)
       {

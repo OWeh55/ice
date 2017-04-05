@@ -212,7 +212,7 @@ namespace ice
     if (maxv < 2)
       throw IceException(FNAME, M_LOWRANGE);
 
-    BinImg(pic, lvl, skelett); // Ausgangsbild binarisieren
+    binImg(pic, lvl, skelett); // Ausgangsbild binarisieren
 
     /* Iterativ verduennen nach modifiziertem Zhang/Suen-Algorith. */
 
@@ -295,7 +295,7 @@ namespace ice
 
     Image timg = NewImg(dimx, dimy, 3);
 
-    BinImg(pic, lvl, timg); // binarisieren und im Zwischenbild speichern
+    binImg(pic, lvl, timg); // binarisieren und im Zwischenbild speichern
 
     PixelType1** tdata = (PixelType1**)timg->getDataPtr();
 

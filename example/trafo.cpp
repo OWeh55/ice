@@ -105,7 +105,7 @@ int main(int argc, char* argv [])
   CopyImg(i1, i3);
   Show(ON, i3);
   Transform(t1, i1, i3);
-  SubImg(i3, i2, 3, i3);
+  subImg(i3, i2, 3, i3);
   GetChar();
   Show(OFF, i3);
 

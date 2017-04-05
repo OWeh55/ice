@@ -16,13 +16,13 @@ int main(int argc, char** argv)
   Printf("Sub %d %d %d\n", sub->xsize, sub->ysize, sub->maxval);
   Printf("SubSub %d %d %d\n", subsub->xsize, subsub->ysize, subsub->maxval);
   Printf("\nInvertiere sub\n");
-  InvertImg(sub);
+  invertImg(sub);
   GetChar();
   Printf("\nInvertiere subsub\n");
-  InvertImg(subsub);
+  invertImg(subsub);
   GetChar();
   Printf("\nInvertiere img(Window(222,333,444,389))\n");
-  InvertImg(img(Window(222, 333, 444, 389)));
+  invertImg(img(Window(222, 333, 444, 389)));
   GetChar();
   return OK;
 }

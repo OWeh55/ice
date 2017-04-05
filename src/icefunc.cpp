@@ -1101,7 +1101,7 @@ namespace ice
 
         RotateImg(temp2, RI_180GRAD);
 
-        MaxImg(imgd, temp2, imgd);
+        maxImg(imgd, temp2, imgd);
         FreeImg(temp2);
       }
   }

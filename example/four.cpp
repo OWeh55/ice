@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 
   Printf("Konvertiere Original\n");
   p1 = NewImg(dx, dy, 255);
-  RenormImg(p0, p1);
+  renormImg(p0, p1);
 
   Printf("Lege Imaginärteil an\n");
   p2 = NewImg(dx, dy, 255);

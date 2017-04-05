@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 
   while (!ready)
     {
-      SubImg(img1, img2, img3);
+      subImg(img1, img2, img3);
       Printf("dif: %g ",  Diff(img1, img2, 0));
       Printf("abs: %g ",  Diff(img1, img2, 1));
       Printf("sqr: %g\n", Diff(img1, img2, 2));
@@ -57,16 +57,16 @@ int main(int argc, char** argv)
           ready = true;
           break;
         case 'X':
-          Shift(img2, img2, 1, 0, 0);
+          shift(img2, img2, 1, 0, 0);
           break;
         case 'x':
-          Shift(img2, img2, -1, 0, 0);
+          shift(img2, img2, -1, 0, 0);
           break;
         case 'Y':
-          Shift(img2, img2, 0, 1, 0);
+          shift(img2, img2, 0, 1, 0);
           break;
         case 'y':
-          Shift(img2, img2, 0, -1, 0);
+          shift(img2, img2, 0, -1, 0);
           break;
         }
     }

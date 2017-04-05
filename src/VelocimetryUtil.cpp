@@ -388,7 +388,7 @@ namespace ice
       }
 
     doubleArrayToImg(cor, img3, maxDisplacementX - minDisplacementX + 1, maxDisplacementY - minDisplacementY + 1);
-    InvertImg(img3, img3);
+    invertImg(img3, img3);
     freeDoubleArray(cor, maxDisplacementX - minDisplacementX + 1);
     return OK;
   }
@@ -966,7 +966,7 @@ namespace ice
     Image puffer2 = NewImg(img1->xsize, img1->ysize, 255);
     GaussImg(img1, puffer1, size, sigma1);
     GaussImg(img1, puffer2, size, sigma2);
-    SubImg(puffer1, puffer2, 1, img2);
+    subImg(puffer1, puffer2, 1, img2);
     pivRenormImg(img2, img2);
     FreeImg(puffer1);
     FreeImg(puffer2);

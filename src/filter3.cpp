@@ -716,7 +716,7 @@ namespace ice
     Image box2 = NewImg(dx, dy, imgs->maxval);
     RETURN_ERROR_IF_FAILED(smearImg(imgs, box1, n1));
     RETURN_ERROR_IF_FAILED(smearImg(imgs, box2, n2));
-    RETURN_ERROR_IF_FAILED(SubImg(box1, box2, imgd, mode));
+    RETURN_ERROR_IF_FAILED(subImg(box1, box2, imgd, mode));
 
     return OK;
   }

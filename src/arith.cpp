@@ -27,6 +27,7 @@
 
 #include "IceException.h"
 #include "defs.h"
+
 #include "macro.h"
 
 #include "base.h"
@@ -64,8 +65,8 @@ namespace ice
 //
 // Bildaddition
 //
-#define FNAME "AddImg"
-  int AddImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
+#define FNAME "addImg"
+  void addImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
   {
     int dx, dy;
     int x, y;
@@ -108,16 +109,14 @@ namespace ice
           PutVal(pn3, x, y, val);
         }
       }
-
-    return OK;
   }
 
 #undef FNAME
 //
 // Bild-Subtraktion
 //
-#define FNAME "SubImg"
-  int SubImg(const Image& pn1, const Image& pn2, int smode, const Image& pn3, int mode)
+#define FNAME "subImg"
+  void subImg(const Image& pn1, const Image& pn2, int smode, const Image& pn3, int mode)
 //
 //  Subtraktion zweier Bilder, ergebnis muss immer positiv sein
 //  smode   rechnung
@@ -232,24 +231,19 @@ namespace ice
           PutVal(pn3, x, y, val);
         }/*switch (mode) */
       }/*else*/
-
-    return OK;
   }
 
-  int SubImg(const Image& pn1, const Image& pn2, const Image& pn3,
-             int smode, int mode)
+  void subImg(const Image& pn1, const Image& pn2, const Image& pn3,
+              int smode, int mode)
   {
-    int rc;
-    RETURN_ERROR_IF_FAILED(rc = SubImg(pn1, pn2, smode, pn3, mode));
-    return rc;
+    subImg(pn1, pn2, smode, pn3, mode);
   }
-
 #undef FNAME
 //
 // Maximal-Bild zweier Bilder
 //
-#define FNAME "MaxImg"
-  int MaxImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
+#define FNAME "maxImg"
+  void maxImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
   {
     int dx, dy;
     int x, y;
@@ -292,15 +286,13 @@ namespace ice
           PutVal(pn3, x, y, val);
         }
       }
-
-    return OK;
   }
 #undef FNAME
 //
 // Minimal-Bild zweier Bilder
 //
-#define FNAME "MinImg"
-  int MinImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
+#define FNAME "minImg"
+  void minImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
   {
     int dx, dy;
     int x, y;
@@ -342,15 +334,13 @@ namespace ice
           PutVal(pn3, x, y, val);
         }
       }
-
-    return OK;
   }
 #undef FNAME
   /***************************************************************/
   /* Bild mit neuen Abmessungen generieren                       */
   /***************************************************************/
-#define FNAME "RenormImg"
-  int RenormImg(const Image& p, const Image& dest)
+#define FNAME "renormImg"
+  void renormImg(const Image& p, const Image& dest)
   {
     int ax, ay, av;
     int nx, ny, nv;
@@ -373,14 +363,13 @@ namespace ice
           int yo = MulDiv(y, ay, ny);
           PutVal(dest, x, y, MulDiv(GetVal(p, xo, yo), nv, av));
         }
-    return OK;
   }
 #undef FNAME
   /*********************************************************************/
   /* invertiertes Bild                                                 */
   /*********************************************************************/
-#define FNAME "InvertImg"
-  static int InvertImg_core_std(const Image& pn1, const Image& pn2)
+#define FNAME "invertImg"
+  static void invertImg_core_std(const Image& pn1, const Image& pn2)
   {
     int gmax1 = pn1->maxval; /*maximaler wert*/
     int gmax2 = pn2->maxval;  /* maximalwert aus Zielbild ermitteln */
@@ -404,12 +393,10 @@ namespace ice
               PutValUnchecked(pn2, x, y, MulDiv(gmax1 - go, gmax2, gmax1));
             }
       }
-
-    return OK;
   }
 
   template<class T>
-  int InvertImg_core(const Image& pn1, const Image& pn2)
+  void invertImg_core(const Image& pn1, const Image& pn2)
   {
     int gmax = pn1->maxval; /*maximaler wert*/
 
@@ -424,10 +411,9 @@ namespace ice
 #ifdef CONTROLLED_REFRESH
     pn2->needRefresh();
 #endif
-    return OK;
   }
 
-  int InvertImg(const Image& pn1, const Image& pn2)
+  void invertImg(const Image& pn1, const Image& pn2)
   {
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2));
 
@@ -436,7 +422,7 @@ namespace ice
 
     if (gmax1 != gmax2)
       {
-        return InvertImg_core_std(pn1, pn2);
+        return invertImg_core_std(pn1, pn2);
       }
 
     int pt1 = pn1->ImageType();
@@ -444,39 +430,35 @@ namespace ice
 
     if (pt1 != pt2)
       {
-        return InvertImg_core_std(pn1, pn2);
+        return invertImg_core_std(pn1, pn2);
       }
 
     switch (pt1)
       {
       case 1:
-        return InvertImg_core<PixelType1>(pn1, pn2);
+        invertImg_core<PixelType1>(pn1, pn2);
         break;
       case 2:
-        return InvertImg_core<PixelType2>(pn1, pn2);
+        invertImg_core<PixelType2>(pn1, pn2);
         break;
       case 3:
-        return InvertImg_core<PixelType3>(pn1, pn2);
+        invertImg_core<PixelType3>(pn1, pn2);
         break;
       default:
-        return InvertImg_core_std(pn1, pn2);
+        invertImg_core_std(pn1, pn2);
         break;
       }
-
-    return OK;
   }
 
-  int InvertImg(const Image& pn)
+  void invertImg(const Image& pn)
   {
-    int ret;
-    RETURN_ERROR_IF_FAILED(ret = InvertImg(pn, pn));
-    return ret;
+    invertImg(pn, pn);
   }
 #undef FNAME
   /*********************************************************************/
   /* Binär-Bild                                                        */
   /*********************************************************************/
-#define FNAME "BinImg"
+#define FNAME "binImg"
   template<typename SrcType, typename DestType>
   void _bin(const Image& src, const Image& dest, int bin, int val)
   {
@@ -518,7 +500,7 @@ namespace ice
         }
   }
 
-  int BinImg(const Image& src, const Image& dest, int bin, int val)
+  void binImg(const Image& src, const Image& dest, int bin, int val)
   {
     RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
@@ -563,26 +545,24 @@ namespace ice
         _bin_std(src, dest, bin, val);
         break;
       }
-
-    return OK;
   }
 
-  int BinImg(const Image& imgs, int thr, const Image& imgd)
+  void binImg(const Image& imgs, int thr, const Image& imgd)
   {
-    return BinImg(imgs, imgd, thr);
+    binImg(imgs, imgd, thr);
   }
 
-  int BinImg(const Image& imgs, int thr)
+  void binImg(const Image& imgs, int thr)
   {
-    return BinImg(imgs, imgs, thr);
+    binImg(imgs, imgs, thr);
   }
 
 #undef FNAME
   /*********************************************************************/
   /* Bild - Skalierung                                                 */
   /*********************************************************************/
-#define FNAME "ScaleImg"
-  int ScaleImg(const Image& pn1, int a, int b, const Image& pn2)
+#define FNAME "scaleImg"
+  void scaleImg(const Image& pn1, int a, int b, const Image& pn2)
   {
 
     int dx, dy;
@@ -609,8 +589,6 @@ namespace ice
               PutVal(pn2, x, y, v);
             }
         }
-
-    return OK;
   }
 #undef FNAME
 

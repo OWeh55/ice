@@ -40,31 +40,31 @@ namespace ice
 #define SMD_SHIFT 3
 
 // unäre Operatoren Op(imgs) -> imgd
-  int BinImg(const Image& imgs, int thr, const Image& imgd);
-  int BinImg(const Image& imgs, const Image& imgd, int thr = 1, int val = -1);
-  int BinImg(const Image& imgs, int thr = 1);
+  void binImg(const Image& imgs, int thr, const Image& imgd);
+  void binImg(const Image& imgs, const Image& imgd, int thr = 1, int val = -1);
+  void binImg(const Image& imgs, int thr = 1);
 
-  int ScaleImg(const Image& imgs, int a, int b, const Image& imgd);
-  int ScaleImg(const Image& imgs, int a, int b);
-  int InvertImg(const Image& imgs, const Image& imgd);
-  int InvertImg(const Image& imgs);
+  void scaleImg(const Image& imgs, int a, int b, const Image& imgd);
+  void scaleImg(const Image& imgs, int a, int b);
+  void invertImg(const Image& imgs, const Image& imgd);
+  void invertImg(const Image& imgs);
 
 // binäre Operatoren Op(imgs1,imgs2) -> imgd
-  int AddImg(const Image& imgs1, const Image& imgs2, const Image& imgd, int mode = MD_LIMIT);
+  void addImg(const Image& imgs1, const Image& imgs2, const Image& imgd, int mode = MD_LIMIT);
 
-  int SubImg(const Image& imgs1, const Image& imgs2,
-             int smode, const Image& imgd, int mode = MD_LIMIT);
-  int SubImg(const Image& imgs1, const Image& imgs2, const Image& imgd,
-             int smode = SMD_ABSOLUTE, int mode = MD_LIMIT);
+  void subImg(const Image& imgs1, const Image& imgs2,
+              int smode, const Image& imgd, int mode = MD_LIMIT);
+  void subImg(const Image& imgs1, const Image& imgs2, const Image& imgd,
+              int smode = SMD_ABSOLUTE, int mode = MD_LIMIT);
 
-  int MaxImg(const Image& imgs1, const Image& imgs2, const Image& imgd,
-             int mode = MD_LIMIT);
-  int MinImg(const Image& imgs1, const Image& imgs2, const Image& imgd,
-             int mode = MD_LIMIT);
+  void maxImg(const Image& imgs1, const Image& imgs2, const Image& imgd,
+              int mode = MD_LIMIT);
+  void minImg(const Image& imgs1, const Image& imgs2, const Image& imgd,
+              int mode = MD_LIMIT);
 
-  int RenormImg(const Image& img, const Image& imgd);
+  void renormImg(const Image& img, const Image& imgd);
 
-  int   Shift(const Image& simg, const Image& dimg, int dx, int dy, int mode = 0);
+  void shift(const Image& simg, const Image& dimg, int dx, int dy, int mode = 0);
 
   bool equalImg(const Image& img1, const Image& img2);
 

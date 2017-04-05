@@ -57,7 +57,7 @@ namespace ice
         // 0           => 0 - unhandled
         // all markers => 1 - destination
         //
-        BinImg(marker, marker, 1, 1);
+        binImg(marker, marker, 1, 1);
 
         if (GetVal(marker, start.x, start.y) != 0)
           throw IceException(FNAME, M_WRONG_STARTPOINT);

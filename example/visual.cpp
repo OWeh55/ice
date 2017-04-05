@@ -70,7 +70,7 @@ int Main(int argc, char* argv[])
   FreeImg(p[4]);
   Print("Bild 4 neu anlegen\n");
   p[4] = NewImg(p[3]);
-  InvertImg(p[3], p[4]);
+  invertImg(p[3], p[4]);
 
   WindowWalker wwp(p[4]);
   for (wwp.init(); !wwp.ready(); wwp.next())

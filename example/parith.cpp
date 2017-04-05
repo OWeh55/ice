@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
   for (mode = MD_NORMALIZE; mode <= MD_MODULO; mode++)
     {
       Print("Add " + modes[mode - 1] + "\n");
-      AddImg(p1, p2, p3, mode);
+      addImg(p1, p2, p3, mode);
       GetChar();
     }
 
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     for (mode = MD_NORMALIZE; mode <= MD_MODULO; mode++)
       {
         Print("Sub " + smodes[smode - 1] + " " + modes[mode - 1] + "\n");
-        SubImg(p1, p2, p3, smode, mode);
+        subImg(p1, p2, p3, smode, mode);
         GetChar();
       }
 
