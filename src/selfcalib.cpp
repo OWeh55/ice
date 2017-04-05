@@ -268,9 +268,7 @@ namespace ice
 
     // compute A from B
     if (!IsPositivDefinit(B))
-      {
-        throw IceException(FNAME, M_INTERN, ERROR);
-      }
+      throw IceException(FNAME, M_INTERN);
 
     Matrix A = CholeskyDecomposition(B);
 
@@ -569,7 +567,6 @@ namespace ice
 
     LocalSeg(pic2, mark1, neighb, 30);
 
-
     //while (SearchStart(pic1, mark1, NULL, threshold, 1, ps, HORZ) == OK)
     while (SearchStart(mark1, Image(), LocalSegObj, 0, 1, ps, HORZ) == OK)
       {
@@ -588,7 +585,6 @@ namespace ice
                   {
                     FillRegion(c, 3, mark1);
                   }
-
 
                 // wenn Objektgroesse oder Form nicht stimmt wird das Objekt nicht benutzt
                 if (area > ((dimx * dimy) /  100.0))
@@ -974,7 +970,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
   }
 #undef FNAME
@@ -1043,9 +1039,7 @@ namespace ice
     error = scan_image(image, number_of_points, pl1, pl2, reference_pairs, debug_image, debug_mark);
 
     if (error != 0)
-      {
-        throw IceException(FNAME, M_INTERN, ERROR);
-      }
+      throw IceException(FNAME, M_INTERN);
 
     error = sort_reference_pairs(reference_pairs, number_of_points, pl1, pl2, imagepoints, worldpoints);
 
@@ -1162,7 +1156,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1272,12 +1266,11 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
         delete[] cps;
         delete[] all_repro_coords;
         return ERROR;
       }
-
 
     // Bestimmung der internen Kameraparameter nach Zhang
     K = calib_intrinsic_zhang(H);
@@ -1329,7 +1322,7 @@ namespace ice
                 }
 #endif
 
-                throw IceException(FNAME, M_INTERN, NO_UNIQUE_SOLUTION);
+                throw IceException(FNAME, M_INTERN);
                 delete[] cps;
                 delete[] all_repro_coords;
                 return NO_UNIQUE_SOLUTION;
@@ -1391,7 +1384,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     delete[] cps;
@@ -1415,7 +1408,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT);
 
         return WRONG_PARAM;
       }
@@ -1437,7 +1430,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1459,7 +1452,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT);
 
         return WRONG_PARAM;
       }
@@ -1479,7 +1472,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1502,7 +1495,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     int error = 0;
@@ -1525,7 +1518,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1546,7 +1539,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1565,7 +1558,7 @@ namespace ice
             }
 #endif
 
-            throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIXFORMAT);
 
             return WRONG_PARAM;
           }
@@ -1601,7 +1594,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1622,7 +1615,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1641,7 +1634,7 @@ namespace ice
             }
 #endif
 
-            throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIXFORMAT);
 
             return WRONG_PARAM;
           }
@@ -1670,7 +1663,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1691,7 +1684,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
       }
 
     int error = 0;
@@ -1735,7 +1728,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1756,7 +1749,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1793,7 +1786,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1815,7 +1808,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1850,7 +1843,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1871,7 +1864,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
       }
 
     int error = 0;
@@ -1915,7 +1908,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1936,7 +1929,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
 
         Image img = NewImg(dimx, dimy, 255);
 

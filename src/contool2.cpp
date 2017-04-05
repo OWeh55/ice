@@ -65,9 +65,7 @@ namespace ice
     data = (char*)malloc(8 * r * sizeof(char));
 
     if (data == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     c.SetStart(pm[0] + r, pm[1]);
 
@@ -167,7 +165,7 @@ namespace ice
         int xf, yf;
 
         if (fabs(par[3] - par[4]) > 2 * M_PI)
-          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         e.xm = par[0];
         e.ym = par[1];
@@ -280,7 +278,7 @@ namespace ice
         int xf, yf;
 
         if (fabs(PHI1 - PHI2) > 2 * M_PI || fabs(PHI1 - PHI2)*RA < 1)
-          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         e.xm = XM;
         e.ym = YM;

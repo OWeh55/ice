@@ -41,9 +41,7 @@ namespace ice
                             double quantile)
   {
     if (quantile < 0 || quantile >= 0.5)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int len = hi.size();
     double alq = 0;
@@ -88,9 +86,7 @@ namespace ice
                     double quantile)
   {
     if (!h.isValid())
-      {
-        throw IceException(FNAME, M_INVALID_STRUCT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_INVALID_STRUCT);
 
     int len = h.nClasses();
     vector<double> hi(len);
@@ -110,21 +106,16 @@ namespace ice
         return getGrayLimitsMean(hi, l, r);
       }
     else
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     return OK;
   }
-
 
   int GetGrayLimits(const Image& img, int& l, int& r, int mode,
                     double quantile)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Histogram h(img);
 
@@ -139,9 +130,7 @@ namespace ice
   {
     if (MatchImg(src, tgt) != OK)
 
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     WindowWalker w(src);
 
@@ -164,9 +153,7 @@ namespace ice
   int GrayTransformLimits(const Image& src, const Image& tgt, int min, int max)
   {
     if (max < min)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double diff = max - min;
     double a1, a0;

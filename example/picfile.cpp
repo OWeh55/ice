@@ -15,7 +15,7 @@ int main(int argc, char** argv)
   cout << "-->" << fn << "<---" << endl;
   Image img;
   img.create(XSIZE, YSIZE, 256 * 256 - 1);
-  ClearImg(img);
+  clearImg(img);
   Show(ON, img);
   ReadImg(fn, img);
 #if 0

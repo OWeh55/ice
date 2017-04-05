@@ -103,9 +103,7 @@ namespace ice
   Point Moments::Centre() const
   {
     if (mom[i00] == 0.0)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     return Point(mom[i10] / mom[i00], mom[i01] / mom[i00]);
   }
@@ -117,9 +115,7 @@ namespace ice
     int os[] = {0, 1, 3, 6, 10};
 
     if ((xi < 0) || (yi < 0) || (s > 4))
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return mom[os[s] + yi];
   }
@@ -130,9 +126,7 @@ namespace ice
     int os[] = {0, 1, 3, 6, 10};
 
     if ((xi < 0) || (yi < 0) || (s > 4))
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return mom[os[s] + yi];
   }
@@ -477,7 +471,7 @@ namespace ice
       case anisotropic:
         return NormalizeScaling(alpha, beta);
       default:
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
   }
 
@@ -552,7 +546,7 @@ namespace ice
         AffinIterateMoments(mom, resd, trd);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     Matrix trm(3, 3);
@@ -578,16 +572,12 @@ namespace ice
   Moments Moments::AffineTransform(const Trafo& tr) const
   {
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     Matrix trm = tr.Tmatrix();
 
     if (fabs(trm[2][0]) + fabs(trm[2][1]) > EPSILON)
-      {
-        throw IceException(FNAME, M_TRAFO_NOTAFFINE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TRAFO_NOTAFFINE);
 
     double trd[3][3];
     int i, j;

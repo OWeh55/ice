@@ -305,28 +305,20 @@ namespace ice
     double getPixel(int x, int y) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
       return (*mat)[y][x];
     }
 
     double getPixel(IPoint p) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
       return (*mat)[p.y][p.x];
     }
 #undef FNAME
@@ -374,14 +366,10 @@ namespace ice
     void setPixel(int x, int y, double val) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       (*mat)[y][x] = val;
     }
@@ -389,14 +377,10 @@ namespace ice
     void setPixel(IPoint p, double val) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       (*mat)[p.y][p.x] = val;
     }

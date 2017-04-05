@@ -223,7 +223,6 @@ namespace ice
     edges.resize(dest_idx);
   }
 
-
   void Delaunay::triangulate()
   {
     result.clear();
@@ -488,9 +487,7 @@ namespace ice
   void Delaunay::draw(const Image& img, int edgeValue, int fillValue, double limit) const
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (fillValue >= 0)
       {

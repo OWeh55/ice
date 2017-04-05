@@ -198,14 +198,10 @@ namespace ice
   {
     /* Parametertestung */
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((val < 0) || (val > img->maxval))
-      {
-        throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_VALTOOSMALL);
 
     if (img.inside(x1, y1) && img.inside(x2, y2))   // keine weitere Umrechnungen
       {
@@ -298,9 +294,7 @@ namespace ice
   int Line(const IVector& p1, const IVector& p2, int val, const Image& img)
   {
     if ((p1.Size() != 2) || (p2.Size() != 2))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return Line(p1[0], p1[1], p2[0], p2[1], val, img);
   }
@@ -336,9 +330,7 @@ namespace ice
         lmode = LineSeg::ray;
         break;
       default:
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-      }
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     if (lmode == LineSeg::segment)
@@ -354,9 +346,7 @@ namespace ice
   int Line(const IVector& p1, const IVector& p2, int val, int mode, const Image& img)
   {
     if ((p1.Size() != 2) || (p2.Size() != 2))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return Line(Point(p1[0], p1[1]), Point(p2[0], p2[1]), val, mode, img);
   }
@@ -382,9 +372,7 @@ namespace ice
   int HesseLine(const Vector& p, int val, const Image& img)
   {
     if (p.Size() != 2)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return draw(LineSeg(p[0], p[1]), img, val);
   }

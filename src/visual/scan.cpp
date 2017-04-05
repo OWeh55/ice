@@ -259,14 +259,10 @@ namespace ice
     channels = channelnum;
     //  cout << "info channels " << channels << endl;
     if (ch < 0 || ch >= channels)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
     //  cout << "info" << endl;
     return (*(Channel[ch].info))(ch, xm, ym, maxval, flags, descr);
   }
@@ -278,14 +274,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
     if (x1 > x2)
       {
         h = x1;
@@ -301,9 +293,7 @@ namespace ice
     if (Channel[ch].xsize > 0)
       {
         if ((x1 < 0) || (y1 < 0) || (x2 > Channel[ch].xsize) || (y2 > Channel[ch].ysize))
-          {
-            throw IceException(FNAME, M_WRONG_WINDOW, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_WINDOW);
       }
     Channel[ch].wxi = x1;
     Channel[ch].wyi = y1;
@@ -318,14 +308,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
 
     if ((Channel[ch].flags & SC_DIALOG) != 0)
       {
@@ -340,23 +326,17 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
 
     if ((Channel[ch].flags & SC_PREVIEW) != 0)
       {
         return (*(Channel[ch].preview))(ch, on);
       }
     else
-      {
-        throw IceException(FNAME, M_NO_PREVIEW, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PREVIEW);
   }
 #undef FNAME
 #define FNAME "ScanSetProperties"
@@ -367,14 +347,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
     return (*(Channel[ch].setproperties))(ch,
                                           brightness, contrast,
                                           saturation, hue);
@@ -388,14 +364,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
 
     return (*(Channel[ch].getproperties))(ch,
                                           brightness, contrast,
@@ -409,19 +381,13 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
 
     if (!IsImg(pi))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     ib.width = pi->xsize;
     ib.height = pi->ysize;
     ib.maxval = pi->maxval;
@@ -442,9 +408,7 @@ namespace ice
     do
       {
         if ((*(Channel[ch].grab))(ch, ib) != OK)
-          {
-            throw IceException(FNAME, M_SCAN_ERROR, ERROR);
-          }
+          throw IceException(FNAME, M_SCAN_ERROR);
         Buffer2Image(ib, pi, IB_SCALE);
         if (interactive)
           if (GetKey() == 13)
@@ -462,14 +426,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pr, pg, pb, xs, ys));
 
@@ -503,9 +463,7 @@ namespace ice
     do
       {
         if ((*(Channel[ch].grab))(ch, ib) != OK)
-          {
-            throw IceException(FNAME, M_SCAN_ERROR, ERROR);
-          }
+          throw IceException(FNAME, M_SCAN_ERROR);
         Buffer2Image(ib, pr, pg, pb, IB_SCALE);
         if (interactive)
           if (GetKey() == 13)
@@ -524,14 +482,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
 
     if ((Channel[ch].flags & SC_GLOBALDRIVER) != 0)
       {
@@ -547,14 +501,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
-      {
-        throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SCANDEVICE);
 
     if ((Channel[ch].flags & SC_EXTDATA) != 0)
       {

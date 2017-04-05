@@ -31,7 +31,6 @@
 namespace ice
 {
 
-
   Node::Node()
   {
 
@@ -121,7 +120,6 @@ namespace ice
     Label = number;
   }
 
-
 // ------------------- Anfang der Funktionen, die die NodeList veraendern --------------
 
 // Nachbar zu Knoten hinzufuegen, Knotennummer in Nachbarliste eintragen
@@ -181,7 +179,6 @@ namespace ice
           PutVal(working, temp.x, temp.y, color);
         }
   }
-
 
 // ------------------- Ende der Funktionen, die die NodeList veraendern --------------
 
@@ -314,7 +311,6 @@ namespace ice
     RegNodeCount = 0;
   }
 
-
 // Regionengraph mit Bilder initialisieren
 #define FNAME "RegionGraph()"
   RegionGraph::RegionGraph(Image source, Image labImg, Image& retImg)
@@ -325,7 +321,7 @@ namespace ice
     if (!IsImg(source) || !IsImg(labImg) || !IsImg(retImg))
       {
         // Eingabebilder gültig?
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     CopiedLabImg = NewImg(labImg, true);  //CopyImg(labImg,CopiedLabImg);
@@ -654,7 +650,6 @@ namespace ice
     return true;
   }
 
-
 // Wasserscheidentransformation auf Kantengraph anwenden
   void EdgeGraph::ComputeWatershedTrans()
   {
@@ -763,7 +758,6 @@ ende:
         }
   }
 
-
 // Wasserscheidenlinien einzeichnen, die nach der Wasserscheidentransformation
 // auf dem Kantengraphen uebriggeblieben sind
   void EdgeGraph::drawAllWSHEDs(Image i1, Image& wsheds, int tresh)
@@ -793,7 +787,6 @@ ende:
             }
 
   }
-
 
   void RegionGraph::CompRegion4(Image sourceImg, Image labImg, Image workImg, int x, int y, int RegionNbr)
   {
@@ -894,9 +887,7 @@ ende:
     RegNodeCount = 0;
 
     if (!IsImg(retImg))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (int yw = 0; yw < CopiedSourceImg.ysize; yw++)
       for (int xw = 0; xw < CopiedSourceImg.xsize; xw++)
@@ -943,7 +934,7 @@ ende:
         }
 
     WorkingImg = NewImg(WorkingImg->xsize, WorkingImg->ysize, RegNodeCount + 1);
-    WorkingImg.set(0); 
+    WorkingImg.set(0);
 
     for (int i = 0;   i < RegNodeCount; i++)
       {
@@ -968,14 +959,12 @@ ende:
   {
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image mark = NewImg(Original->xsize, Original->ysize, 2);
 
     setImg(GrwImg, 0);
-   setImg(mark, 0);
+    setImg(mark, 0);
 
     int grw, grwsum;
     int xn, yn, xkoor, ykoor;
@@ -1048,9 +1037,7 @@ ende:
   {
     // Bilder initialisert und Schwellwert fuer Wasserscheidenlinien groesser 0 ?
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg) || Treshold < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     setImg(GrwImg, 255);
     Image BlWh = NewImg(WSImg);
@@ -1060,9 +1047,7 @@ ende:
     EG = RG.ComputeEdgeGraph();   // Kantengraph berechnen
 
     if (EG == nullptr)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED , WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     EG->ComputeWatershedTrans();  // WST auf Kantengraph ausfuehren
 

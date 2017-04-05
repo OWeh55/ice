@@ -53,9 +53,7 @@ namespace ice
     int i, j, k, diff, cnt = 20;
 
     if (pl1 == NULL || pl2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /* Abstand der Stuetzstellen */
     diff = pl1->lng / cnt;
@@ -153,9 +151,7 @@ namespace ice
     int i, imin, j, k;
 
     if (pl1 == NULL || pl2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     MomentPolygon(pl1, m1, pc0);
     MomentPolygon(pl2, m2, pc0);
@@ -165,9 +161,7 @@ namespace ice
 
     /* Flaeche darf nicht verschwinden */
     if (m1[0] < EPSILON || m2[0] < EPSILON)
-      {
-        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     /*Normierung der Momente auf vergleichbare Groessen */
     TranslateMoments(m1, -m1[1] / m1[0], -m1[2] / m1[0], mx);
@@ -297,9 +291,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] < EPSILON)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     PolyNormMoments(mx, mh, tr);
     InvertTrans(tr);
@@ -345,9 +337,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     /*******************************************************/
     mhor40 = mhor04 = 0.519615;
@@ -467,7 +457,6 @@ namespace ice
   }
 #undef FNAME
 
-
 #define FNAME "FitRectangleMoments"
   int FitRectangleMoments(const double mp[], double p[][2])
   {
@@ -505,9 +494,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     sx = mx[1] / mx[0];
     sy = mx[2] / mx[0];
@@ -533,17 +520,14 @@ namespace ice
 
     // Rotationsnormierung mit m11=0
 
-
     alpha = 1.0 / sqrt(mrot[0]);
     ScaleMoments(mrot, alpha, alpha, mtrop);
     // Skalierung auf m00=1
-
 
     quot = (mtrop[3] - mtrop[5]) * (mtrop[3] - mtrop[5]) + 4 * mtrop[4] * mtrop[4];
     quot /= ((mtrop[3] + mtrop[5]) * (mtrop[3] + mtrop[5]));
 
     // 0<=quot<=1 ist mass, ob quadratisches oder lÃ¤ngliches Objekt
-
 
     //    int k = 0;
     double min_m40_m04 = 1.0e+38;
@@ -584,7 +568,6 @@ namespace ice
       {
         phi_korr = 0.0;
       }
-
 
     /************************************************************************/
     /* Auf mtrop stehen die Momente des Objektes in Standardlage            */
@@ -649,7 +632,6 @@ namespace ice
     guetemass = min1;
     b_opt = b1_opt;
 
-
     /********************************************************************/
     InitTrans(tr);
     ShiftTrans(-sx, -sy, tr);
@@ -701,7 +683,6 @@ namespace ice
   }
 #undef FNAME
 
-
 #define FNAME "FitEquilateraltriangleMoments"
   int FitEquilateraltriangleMoments(const double mp[], double p[][2], double& guetemass)
   {
@@ -726,9 +707,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     //
     // *****************************************************
@@ -825,11 +804,9 @@ namespace ice
     //  for (int i=0;i<15;i++)
     //  Printf(" %lf\n",mrot[i]);
 
-
     //RotateMoments(mtrans,cos(phi_opt),sin(phi_opt),mrot);
     //for (int i=0;i<15;i++)
     //  Printf(" %lf  %lf\n",m_can[i],mrot[i]);
-
 
     // Ab jetzt zurueck-transformieren !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     /********************************************************************/
@@ -838,7 +815,6 @@ namespace ice
     RotTrans(0, 0, phi + phi_opt, tr);
     ScaleTrans(0, 0, alpha, alpha, tr);
     InvertTrans(tr);
-
 
     /****************************************************************************/
     p2[0] = cx1;
@@ -870,7 +846,6 @@ namespace ice
   }
 #undef FNAME
 
-
 #define FNAME "FitIsoscelestriangleMoments"
   int FitIsoscelestriangleMoments(const double mp[], double p[][2], double& guetemass)
   {
@@ -893,9 +868,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     //
     // *****************************************************
@@ -1045,7 +1018,6 @@ namespace ice
     //  printf("%lf  %lf \n",mtrop[i],m_can[i]);
     //      getchar();fflush(stdin);
 
-
     // *********************************************************************
     // Ende anisotrope Skalierung
 
@@ -1112,9 +1084,6 @@ namespace ice
     //  printf("%lf  %lf \n",mtrop[i],m_can[i]);
     //getchar();fflush(stdin);
 
-
-
-
     // Ab jetzt zurueck-transformieren !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     /********************************************************************/
     InitTrans(tr);
@@ -1122,7 +1091,6 @@ namespace ice
     RotTrans(0, 0, phi_min, tr);
     ScaleTrans(0, 0, beta_min, gamma_min, tr);
     InvertTrans(tr);
-
 
     /****************************************************************************/
     p2[0] = cx1;
@@ -1146,7 +1114,6 @@ namespace ice
     return OK;
   }
 #undef FNAME
-
 
 #define FNAME "FitPolygonMoments"
   int FitPolygonMoments(int n, const double mp[15],
@@ -1183,14 +1150,10 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] <= 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     if (n < 3 || n > 7)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /*******************************************************/
 
@@ -1221,7 +1184,6 @@ namespace ice
       {
         corners[j++] = maf[i];
       }
-
 
     int rc = LMDif(corners, 2 * n, LM_polygon, 15, inumber, 10000);
 
@@ -1305,9 +1267,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     //
     // *****************************************************
@@ -1407,7 +1367,6 @@ namespace ice
     //printf("\n");
     //  for (int i=0;i<15;i++)
     //  Printf(" %lf\n",mrot[i]);
-
 
     //RotateMoments(mtrans,cos(phi_opt),sin(phi_opt),mrot);
     // for (int i=0;i<15;i++)

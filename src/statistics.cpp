@@ -48,7 +48,7 @@ namespace ice
   {
     if (dimension < 1)
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
         dim = 0;
       }
     else
@@ -66,9 +66,7 @@ namespace ice
   int Statistics::Init()
   {
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     sweight = 0.0;
 
@@ -85,7 +83,7 @@ namespace ice
   {
     if (dimension < 1)
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
         dim = 0;
         return WRONG_PARAM;
       }
@@ -98,14 +96,10 @@ namespace ice
   int Statistics::put(const Vector& val, double weight)
   {
     if (weight < 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (val.Size() != dim)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
       {
@@ -136,14 +130,10 @@ namespace ice
   int Statistics::put(const std::vector<double>& val, double weight)
   {
     if (weight < 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((int)val.size() != dim)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
       {
@@ -174,9 +164,7 @@ namespace ice
   int Statistics::put(const Matrix& vals)
   {
     if (vals.cols() != dim)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < vals.rows(); i++)
       {
@@ -191,9 +179,7 @@ namespace ice
   {
     std::vector<double> res(dim);
     if (sweight == 0.0)
-      {
-        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     double inv_weight = 1 / sweight;
 
@@ -209,9 +195,7 @@ namespace ice
   Vector Mean(const Statistics& st)
   {
     if (st.sweight == 0.0)
-      {
-        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     Vector mean(st.dim);
     double inv_weight = 1 / st.sweight;
@@ -235,9 +219,7 @@ namespace ice
   {
     matrix<double> res(dim, dim);
     if (sweight == 0.0)
-      {
-        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     double nrm = 1 / sweight;
 
@@ -258,9 +240,7 @@ namespace ice
     Matrix res(st.dim, st.dim);
 
     if (st.sweight == 0.0)
-      {
-        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     double nrm = 1 / st.sweight;
 
@@ -284,9 +264,7 @@ namespace ice
   {
 
     if (sweight == 0.0)
-      {
-        throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
     try
       {
         matrix<double> res = getCovariance();
@@ -294,9 +272,7 @@ namespace ice
         for (int i = 0; i < dim; i++)
           {
             if (res[i][i] < 1e-32)
-              {
-                throw IceException(FNAME, M_ZERO_VARIANZ, ERROR);
-              }
+              throw IceException(FNAME, M_ZERO_VARIANZ);
           }
 
         for (int i = 0; i < dim; i++)
@@ -320,7 +296,7 @@ namespace ice
   Matrix Correlation(const Statistics& st)
   {
     if (st.sweight == 0.0)
-      throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     try
       {
@@ -329,9 +305,7 @@ namespace ice
         for (int i = 0; i < st.dim; i++)
           {
             if (res[i][i] < 1e-32)
-              {
-                throw IceException(FNAME, M_ZERO_VARIANZ);
-              }
+              throw IceException(FNAME, M_ZERO_VARIANZ);
           }
 
         for (int i = 0; i < st.dim; i++)
@@ -406,7 +380,7 @@ namespace ice
     if ((c != ',') && (c != '#'))
       {
         inp.clear(std::ios::badbit);
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     inp >> st.sweight;

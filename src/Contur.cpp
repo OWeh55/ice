@@ -135,9 +135,7 @@ namespace ice
   int Contur::Add(Freeman dir)
   {
     if (!isvalid)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     data.push_back(dir);
     dir.move(endp);
@@ -182,9 +180,7 @@ namespace ice
   int Contur::Add(IPoint p)
   {
     if (!isvalid)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     //    std::cout << "OK" << std::endl;
 
@@ -306,9 +302,7 @@ namespace ice
     int i;
 
     if (!c.isvalid)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     RETURN_ERROR_IF_FAILED(Add(c.start));
 
@@ -413,9 +407,7 @@ namespace ice
   int Contur::InvDir()
   {
     if (!isvalid)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (nDirectionCodes == 0)
       {
@@ -480,9 +472,7 @@ namespace ice
     IPoint res;
 
     if (!isvalid)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     int currentIndex = 0;
     res = start;
@@ -497,9 +487,7 @@ namespace ice
         wantedIndex = wantedIndex % nDirectionCodes;  // bei geschlossener Kontur zyklisch arbeiten
       }
     else if (wantedIndex > nDirectionCodes)
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if ((cachedIndex != INT_MAX) && (cachedIndex < wantedIndex))
       {
@@ -535,14 +523,10 @@ namespace ice
     fc.clear();
 
     if (!isvalid)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (!isclosed)
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     if (data.empty())
       {
@@ -586,9 +570,7 @@ namespace ice
     upl.clear();
 
     if (!isvalid)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     std::vector<Freeman> cd;
 

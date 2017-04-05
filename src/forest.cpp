@@ -70,9 +70,7 @@ namespace ice
   void Forest::setFather(int x, int newfather)
   {
     if (newfather < rootval || newfather > size || x < 0 || x > size)
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     int oldfather = sarray[x];
 

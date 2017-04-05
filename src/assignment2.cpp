@@ -117,9 +117,7 @@ namespace ice
     dirptr dir;
 
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     int x, x1;
     int y, y1, y2;
@@ -277,9 +275,7 @@ namespace ice
     signed char** dir;
 
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     int x, x1;
     int y, y1, y2;
@@ -460,9 +456,7 @@ namespace ice
     double* min2;
 
     if (AllocAll(min1, min2, dir, nx, ny) != OK)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (int y = 0; y < ny; y++)   // first row, all columns
       {
@@ -501,7 +495,6 @@ namespace ice
             int y2 = MyMod(y + dy2, ny);
             if (min1[y2] < min2[y])
               {
-
 
                 min2[y] = min1[y2];
                 dy = dy2;
@@ -683,7 +676,7 @@ namespace ice
         RETURN_ERROR_IF_FAILED(TimeWarpReduced(distance, ref, mode));
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     return OK;

@@ -71,9 +71,7 @@ namespace ice
     double m[3][3];
 
     if (Trans == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     DefMatrix((double*)m, 3, 3, UNIT);
     m[0][2] = x0;
@@ -82,9 +80,7 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     return OK;
   }
@@ -100,9 +96,7 @@ namespace ice
     double rot[3][3];
 
     if (Trans == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     InitTrans(rot);
     rot[0][0] = cos(phi);
@@ -117,9 +111,7 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     return OK;
   }
@@ -134,9 +126,7 @@ namespace ice
     double scal[3][3];
 
     if (Trans == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     InitTrans(scal);
     scal[0][0] = facx;
@@ -147,9 +137,7 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     return OK;
   }
@@ -166,9 +154,7 @@ namespace ice
     double fac;
 
     if (Trans == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     InitTrans(affin);
     affin[0][0] = a11;
@@ -181,16 +167,12 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
     if (fac < eps)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     ScaleMatrix((double*)Trans, 3, 3, fac, (double*)Trans);
     return OK;
@@ -209,9 +191,7 @@ namespace ice
     double fac;
 
     if (Trans == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     InitTrans(proj);
     proj[0][0] = a11;
@@ -227,16 +207,12 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
     if (fac < eps)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     ScaleMatrix((double*)Trans, 3, 3, fac, (double*)Trans);
     return OK;
@@ -257,16 +233,12 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
     if (fac < eps)
-      {
-        throw IceException(FNAME, M_NO_PROJ, ERROR);
-      }
+      throw IceException(FNAME, M_NO_PROJ);
 
     ScaleMatrix((double*)Trans, 3, 3, 1 / fac, (double*)Trans);
     return OK;
@@ -281,28 +253,22 @@ namespace ice
     int i, rc;
 
     if (pl1->lng < 4)
-      {
-        throw IceException(FNAME, M_MISS_P, ERROR);
-      }
+      throw IceException(FNAME, M_MISS_P);
 
     if (pl2->lng < pl1->lng)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     A = NewMatrix(MAT_DOUBLE, pl1->lng * 2, 8);
 
     if (A == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     ih = ip = (double*)malloc(pl1->lng * 2 * sizeof(double));
 
     if (ih == NULL)
       {
         free(A);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     for (i = 0; i < pl1->lng; i++)
@@ -335,9 +301,7 @@ namespace ice
     tr[2][2] = 1;
 
     if (rc != OK)
-      {
-        throw IceException(FNAME, M_0, ERROR);
-      }
+      throw IceException(FNAME, M_0);
 
     return (OK);
   }
@@ -351,28 +315,22 @@ namespace ice
     int i, rc;
 
     if (pl1->lng < 3)
-      {
-        throw IceException(FNAME, M_MISS_P, ERROR);
-      }
+      throw IceException(FNAME, M_MISS_P);
 
     if (pl2->lng < pl1->lng)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     A = NewMatrix(MAT_DOUBLE, pl1->lng * 2, 6);
 
     if (A == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     ih = ip = (double*)malloc(pl1->lng * 2 * sizeof(double));
 
     if (ih == NULL)
       {
         FreeMatrix(A);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     if (A == NULL || ih == NULL)
@@ -408,9 +366,7 @@ namespace ice
     tr[2][2] = 1;
 
     if (rc != OK)
-      {
-        throw IceException(FNAME, M_0, ERROR);
-      }
+      throw IceException(FNAME, M_0);
 
     return (OK);
   }

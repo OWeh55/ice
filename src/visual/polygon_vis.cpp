@@ -76,9 +76,7 @@ namespace ice
     int maxp = 100;
     p = (int*)malloc(maxp * 2 * sizeof(int));
     if (p == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
     /* let pp1 point to p */
     pp1 = p;
 
@@ -117,9 +115,7 @@ namespace ice
             maxp += 100;
             p = (int*)realloc(p, maxp * 2 * sizeof(int));
             if (p == NULL)
-              {
-                throw IceException(FNAME, M_NO_MEM, NO_MEM);
-              }
+              throw IceException(FNAME, M_NO_MEM);
             pp2 = p + i * 2;
             pp1 = pp2 - 2;
           }

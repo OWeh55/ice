@@ -49,14 +49,10 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m2 == NULL)
       {
@@ -85,9 +81,7 @@ namespace ice
     int i, j;
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m == NULL)
       {
@@ -119,7 +113,7 @@ namespace ice
 
         return m;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
   }
 #undef FNAME
@@ -131,9 +125,7 @@ namespace ice
     double* mptr;
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m1 == NULL)
       {
@@ -163,14 +155,10 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL)
-      {
-        throw IceException(FNAME , M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME , M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m2 == NULL)
       {
@@ -200,14 +188,10 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL || m2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m3 == NULL)
       {
@@ -237,14 +221,10 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL || m2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m3 == NULL)
       {
@@ -274,14 +254,10 @@ namespace ice
     double* mh, *mptr;
 
     if (m1 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m2 == NULL)
       {
@@ -299,9 +275,7 @@ namespace ice
     mh = (double*) malloc(row * col * sizeof(double));
 
     if (mh == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < row; i++)
       for (j = 0; j < col; j++)
@@ -322,14 +296,10 @@ namespace ice
     double* mh, *mptr;
 
     if (m1 == NULL || m2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row1 < 1 || col1 < 1 || col2 < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m3 == NULL)
       {
@@ -354,9 +324,7 @@ namespace ice
     mh = (double*) malloc(row1 * col2 * sizeof(double));
 
     if (mh == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < row1; i++)
       {
@@ -393,7 +361,7 @@ namespace ice
     maxa = 0;
 
     if (m1 == NULL)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (m2 == NULL)
       mptr = (double*)malloc(row * col * sizeof(double));
@@ -533,7 +501,7 @@ namespace ice
             free(mptr);
           }
 
-        throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
+        throw IceException(FNAME, M_NO_INVERSE);
       }
 
     free(dpa);
@@ -546,7 +514,7 @@ namespace ice
             free(mptr);
           }
 
-        throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
+        throw IceException(FNAME, M_NUM_INSTABILITY);
       }
 
     return mptr;
@@ -567,9 +535,7 @@ namespace ice
 
     /* Test Parmeterbelegung */
     if (m1 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (m2 == NULL)
       {
@@ -578,7 +544,7 @@ namespace ice
 
     if (row < 1 || col < 1)
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
 
         if (mptr != NULL)
           {
@@ -590,7 +556,7 @@ namespace ice
 
     if (row > col)
       {
-        throw IceException(FNAME, M_VEC_DEPEND, WRONG_PARAM);
+        throw IceException(FNAME, M_VEC_DEPEND);
 
         if (mptr != NULL)
           {
@@ -604,7 +570,7 @@ namespace ice
 
     if (rang < row)
       {
-        throw IceException(FNAME, M_VEC_DEPEND, WRONG_PARAM);
+        throw IceException(FNAME, M_VEC_DEPEND);
 
         if (mptr != NULL)
           {
@@ -620,7 +586,7 @@ namespace ice
 
     if (hx == NULL)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
 
         if (mptr != NULL)
           {
@@ -638,7 +604,7 @@ namespace ice
 
     if (hb1 == NULL)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(hx);
 
         if (mptr != NULL)
@@ -653,7 +619,7 @@ namespace ice
 
     if (hb2 == NULL)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(hx);
         free(hb1);
 
@@ -764,14 +730,10 @@ namespace ice
     colmem = 0;
 
     if (m == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /* Test auf Trivialfall */
     flag = 1;
@@ -807,9 +769,7 @@ namespace ice
     hA = (double*) malloc(size);
 
     if (hA == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     memcpy(hA, m, size);
     /*** Transformation von (m,b) in Trapezform */
@@ -961,14 +921,10 @@ namespace ice
         i = 0;
 
         if (m == NULL)
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
         if (row < 1 || col < 1)
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         switch (mode)
           {
@@ -1024,14 +980,10 @@ namespace ice
           case 3:
 
             if (row != col)
-              {
-                throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-              }
+              throw IceException(FNAME, M_NO_SQUARE);
 
             if (IsMatrixSymm(m, row, &eps) != true)
-              {
-                throw IceException(FNAME, M_NO_SYMM, WRONG_PARAM);
-              }
+              throw IceException(FNAME, M_NO_SYMM);
 
             eval = (double*)malloc(row * sizeof(double));
             evec = (double*)malloc(row * row * sizeof(double));
@@ -1052,7 +1004,7 @@ namespace ice
             free(evec);
             return OK;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
           }
       }
     RETHROW;
@@ -1071,21 +1023,17 @@ namespace ice
     colh = 0;
 
     if (a == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /* Anforderung des dynamischen Speichers */
     ha = (double*) malloc(row * col * sizeof(double));
 
     if (ha == NULL)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(ha);
         return (NO_MEM);
       }
@@ -1099,7 +1047,7 @@ namespace ice
     if (NormMatrix(ha, row, col, DEFAULT, &eps) != OK)
       {
         free(ha);
-        throw IceException(FNAME, M_0, ERROR);
+        throw IceException(FNAME, M_0);
       }
 
     eps = eps * 1e-60;
@@ -1193,14 +1141,10 @@ namespace ice
     int i;
 
     if (m == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (row1 < 0 || row2 < 0 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (row1 != row2)
       for (i = 0; i < col; i++)
@@ -1218,14 +1162,10 @@ namespace ice
     int i;
 
     if (m == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (col1 < 0 || col2 < 0 || row < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (col1 != col2)
       for (i = 0; i < row; i++)
@@ -1244,14 +1184,10 @@ namespace ice
     double val;
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
@@ -1279,14 +1215,10 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
@@ -1319,14 +1251,10 @@ namespace ice
     int flag;
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     m1 = (double*)malloc(dim * dim * sizeof(double));
     m2 = (double*)malloc(dim * dim * sizeof(double));
@@ -1354,14 +1282,10 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
@@ -1390,14 +1314,10 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
@@ -1426,14 +1346,10 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
@@ -1462,14 +1378,10 @@ namespace ice
     int rank;
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     DetMatrix(m, dim, dim, &val, &rank);
 
@@ -1493,9 +1405,7 @@ namespace ice
     int i;
 
     if (dim < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     eval = (double*)malloc(dim * sizeof(double));
     evec = (double*)malloc(dim * dim * sizeof(double));
@@ -1506,7 +1416,7 @@ namespace ice
       {
         free(eval);
         free(evec);
-        throw IceException(FNAME, M_NO_REGULAR, WRONG_PARAM);
+        throw IceException(FNAME, M_NO_REGULAR);
       }
 
     free(evec);

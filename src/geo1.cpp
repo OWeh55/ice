@@ -81,7 +81,6 @@ namespace ice
     return Trafo(c * m * Inverse(c));
   }
 
-
 #undef FNAME
 #define FNAME "MatchPointlists"
   Trafo MatchProjective(const Matrix& p1, const Matrix& p2,
@@ -224,7 +223,6 @@ namespace ice
     return res;
   }
 
-
   Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
                         int mode, const Vector& weights)
   {
@@ -238,24 +236,16 @@ namespace ice
         double weightsum;
 
         if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
-          {
-            throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
         if (dim2 > dim1)
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         if ((dim1 != dim2) && (mode != TRM_AFFINE) && (mode != TRM_PROJECTIVE))
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         if ((mode == TRM_SIMILARITY_NOR) && ((dim1 != 2) || (dim2 != 2)))
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         switch (mode)
           {
@@ -418,7 +408,7 @@ namespace ice
           break;
 
           default:
-            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_MODE);
           }
 
         return res;
@@ -441,12 +431,12 @@ namespace ice
       {
 
         if ((pl1 == NULL) || (pl2 == NULL))
-          throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PTR);
 
         int pnumber = pl1->lng;
 
         if (pl2->lng != pnumber)
-          throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
+          throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
         Matrix p1(pnumber, 2);
         Matrix p2(pnumber, 2);
@@ -473,9 +463,7 @@ namespace ice
     unsigned int pnumber = pl1.size();
 
     if (pl2.size() != pnumber)
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     Matrix p1(pnumber, 2);
     Matrix p2(pnumber, 2);
@@ -510,16 +498,12 @@ namespace ice
         nPoints = p1.rows();
 
         if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
-          {
-            throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
         nPoints = p1.rows();
 
         if ((dim2 != 2) || (dim1 != 2))   // for linear opt. only 2 dimensions
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         // construct pointlist
         pl1 = NewPointList(nPoints);
@@ -579,9 +563,7 @@ namespace ice
 
     Matrix tmatrix(3, 3, 1);
     if ((nPoints != (int)p2.size()) || (nPoints != (int)weights.size()))
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     PointList pl1, pl2;
     double tr[3][3];

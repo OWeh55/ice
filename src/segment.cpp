@@ -108,13 +108,10 @@ namespace ice
 #define PARABOLA 1
 #define HYPERBOLA 2
 
-
 #define SMALL 1                                               /* type of arc */
 #define BIG 2
 #define CLOCKWISE 1                 /* direction of arc from start to finish */
 #define ANTICLOCKWISE 2
-
-
 
 #define LOWE_STOP 1
 #define BLATT_STOP 2
@@ -122,7 +119,6 @@ namespace ice
 
 #define MIN_DEV 0.1
 #define MIN_LNG 6
-
 
   /* ***************************************************************************
      get_ratio -  Ermittelt Verhaeltnis  max. Abweichung / Laenge              */
@@ -141,7 +137,6 @@ namespace ice
 
     return (dev / lng);
   }
-
 
   /* ***************************************************************************
      compute_lbreak_pos -                                                      */
@@ -176,7 +171,6 @@ namespace ice
 
     return (pos_max);
   }
-
 
   /* ***************************************************************************
      determine_line - berechnet Parameter eines Liniensegmentes för die Punkte
@@ -219,7 +213,6 @@ namespace ice
       }
   }
 
-
   /* ***************************************************************************
 
      segfit2.c
@@ -228,7 +221,6 @@ namespace ice
      21.1.97
 
      ***************************************************************************/
-
 
   /* ***************************************************************************
      angle -                                                                   */
@@ -247,7 +239,6 @@ namespace ice
 
     return (w);
   }
-
 
   /* ***************************************************************************
      compute_abreak_pos -                                                      */
@@ -276,7 +267,6 @@ namespace ice
 
     return (pos_max);
   }
-
 
   /* ***************************************************************************
      compute_algt -                                                            */
@@ -314,7 +304,6 @@ namespace ice
     return (angle * radius);
   }
 
-
   /* ***************************************************************************
      compute_error -                                                           */
 
@@ -343,7 +332,6 @@ namespace ice
     return (error);
   }
 
-
   /* ***************************************************************************
      gradient -                                                                */
 
@@ -356,7 +344,6 @@ namespace ice
     error2 = compute_error(pos + direction, npl, &temp);
     return (error1 - error2);
   }
-
 
   /* ***************************************************************************
      search -                                                                  */
@@ -388,7 +375,6 @@ namespace ice
         compute_error(*b_y, npl, b_r);
       }
   }
-
 
 // function only replaced from another position in this file:
 
@@ -729,7 +715,6 @@ namespace ice
         *psi2 = -temp;
       }
 
-
     /*
 
     *psi1 = angle_a (*x_cent, *y_cent, pl->xptr[pos_st], pl->yptr[pos_st]);
@@ -756,8 +741,6 @@ namespace ice
 
      ***************************************************************************/
 
-
-
   /* ***************************************************************************
      distance                                                                  */
 
@@ -766,7 +749,6 @@ namespace ice
   {
     return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
   }
-
 
   /* ***************************************************************************
      find_conic_type                                                           */
@@ -796,7 +778,6 @@ namespace ice
 
     return (temp);
   }
-
 
   /* ***************************************************************************
      ludcmp                                                                    */
@@ -895,7 +876,6 @@ namespace ice
       }
   }
 
-
   /* ***************************************************************************
      lubksb                                                                    */
 
@@ -939,7 +919,6 @@ namespace ice
           }
       }
   }
-
 
   /* ***************************************************************************
      run_lms_fitting                                                           */
@@ -1045,7 +1024,6 @@ namespace ice
     *conic_type = find_conic_type(m[1], m[2], m[3]);
   }
 
-
   /* ***************************************************************************
      determine_ellipse_lms3                                                    */
 
@@ -1084,7 +1062,6 @@ namespace ice
         run_lms_fitting(npl, m, lambda, &conic_type, ok);
       }
   }
-
 
   /* ***************************************************************************
      compute_lgt -                                                             */
@@ -1128,7 +1105,6 @@ namespace ice
 
     return (lgt);
   }
-
 
   /* ***************************************************************************
      compute_minimum_diff -                                                   */
@@ -1183,7 +1159,6 @@ namespace ice
 
     return (deviation);
   }
-
 
   /* ***************************************************************************
      compute_break_pos -                                                       */
@@ -1288,7 +1263,6 @@ namespace ice
     *major_axis = sqrt((((v * v) / (4 * t)) + ((w * w) / (4 * u)) - f) / t);
     *minor_axis = sqrt((((v * v) / (4 * t)) + ((w * w) / (4 * u)) - f) / u);
   }
-
 
   /* ***************************************************************************
      determine_ellipse - berechnet Parameter eines Ellipsensegmentes för die
@@ -1470,7 +1444,6 @@ namespace ice
 
     compute_st_fi(pl, pos_st, pos_fi, *x_cent, *y_cent, psi1, psi2);
 
-
     arc_lng = compute_elgt(npl, *major_axis, *minor_axis);
     *w = rot_angle;
     *pos_break = compute_ebreak_pos(npl, *major_axis, *minor_axis, max_dev)
@@ -1521,7 +1494,6 @@ namespace ice
 
      ***************************************************************************/
 
-
   struct Segmentt                          /* mit ICE-Typ Segment vergleichbar */
   {
     double p0[2], p1[2];                                /* Anfangs- & Endpunkt */
@@ -1537,7 +1509,6 @@ namespace ice
     int flag;                                                   /* Abbruchflag */
     Segmentt* prev, *next;                         /* Listenverkettung */
   };
-
 
   /* ***************************************************************************
      determine_segment - öbergibt Linien/Kreis/Ellipsen -  Parameter an das
@@ -1636,7 +1607,6 @@ namespace ice
       }
   }
 
-
   /* ***************************************************************************
      add_seg - fuegt ein Segment hinten an die Segment-Liste sl an             */
 
@@ -1693,7 +1663,6 @@ namespace ice
     return (sl);
   }
 
-
   /* ***************************************************************************
      all_seg_gr - gibt False zuröck, falls die Anzahl der Punkte in der
                   Punktliste zwischen den Positionen pa und pi bzw. pi und pb
@@ -1710,7 +1679,6 @@ namespace ice
         return (true);
       }
   }
-
 
   /* ***************************************************************************
      m_tree - Baut rekursiv binà¥ren Baum aus dem Typ Segmentt                  */
@@ -1762,7 +1730,6 @@ namespace ice
     return (sig);
   }
 
-
   /* ***************************************************************************
      t_tree - Traversiert Baum und baut dabei Segmentliste sl auf              */
 
@@ -1813,7 +1780,6 @@ namespace ice
     return (sl);
   }
 
-
   /* ***************************************************************************
      f_tree - gibt Baum wieder frei                                            */
 
@@ -1831,7 +1797,6 @@ namespace ice
 
     free(act);
   }
-
 
   /* ***************************************************************************
      improve - Datenreduktion auf der Segment-Liste                            */
@@ -2067,7 +2032,6 @@ namespace ice
     return (sl);
   }
 
-
   /* ***************************************************************************
      changesl - wandelt die Segmentliste vom erweiterten Typ Segmentt in eine
                 Segmentliste vom Typ Segment um                                */
@@ -2122,7 +2086,6 @@ namespace ice
     return (segl);
   }
 
-
   /* ***************************************************************************
      SegmentPointList - Segmentiert die Punkliste pl je nach mode in Linien -
                         Kreis & Ellipsensegmente.
@@ -2143,34 +2106,24 @@ namespace ice
     double code;
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((mode < 0) || (mode > 2))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pl->lng < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     sl = nullptr;
     tree = (Segmentt*)malloc(sizeof(Segmentt));                      /* Wurzel */
 
     if (tree == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     code = m_tree(tree, 0, (pl->lng) - 1, pl, mode);          /* Baum aufbauen */
 
     if (code == -1)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     sl = t_tree(tree, sl);        /* Baum traversieren & Segmentliste aufbauen */
 
@@ -2206,8 +2159,6 @@ namespace ice
     return (segl);
   }
 #undef FNAME
-
-
 
   double compute_PointEllipseDist(double* pt, double* par)
   {
@@ -2274,23 +2225,16 @@ namespace ice
 
     double par[7], ppa[2], ppe[2];
 
-
     // Parameterkontrolle
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((type < 1) || (type > 7) || (pa < 0) || (pe >= pl->lng) || (pa > pe))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pe == pa)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     // Fuer ein Ellipsensegment muessen mindestens 6 Punkte zur
     // Verfuegung stehen
@@ -2299,9 +2243,7 @@ namespace ice
       {
 
         if (type == DS_ELLIPSE)
-          {
-            throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_TOO_LESS_POINTS);
 
         type &= ~DS_ELLIPSE;
       }
@@ -2313,9 +2255,7 @@ namespace ice
       {
 
         if (type == DS_CIRCLE)
-          {
-            throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_TOO_LESS_POINTS);
 
         type &= ~DS_CIRCLE;
       }
@@ -2325,9 +2265,7 @@ namespace ice
     sg = (Segment)malloc(sizeof(struct Segment_));
 
     if (sg == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     sg->typ = -1;
 
@@ -2466,7 +2404,6 @@ namespace ice
   }
 #undef FNAME
 
-
   /* ***************************************************************************
      SegmentPointList - Segmentiert eine Punktliste mit dem
               CSegment-Algortihmus (DIAS)
@@ -2505,19 +2442,13 @@ namespace ice
     // Parameterkontrolle
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) > 2) || max_dev <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pl->lng < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     start = 0;
     sg = nullptr;
@@ -2665,7 +2596,6 @@ namespace ice
 
               }
 
-
             if ((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) == 0 && pl->lng - start > 6)   // Ellipsen erwuenscht und Punktliste genuegend Punkte
               {
                 // Laengstes Ellipsensegment suchen
@@ -2676,7 +2606,6 @@ namespace ice
                   {
                     ende = start + 5;  // Ellipsensegment muss mindestens 6 Punkte enthalten
                   }
-
 
                 if (ende < pl->lng)
                   {
@@ -2733,7 +2662,6 @@ namespace ice
               } // if (Ellipsensegment probieren)
 
           } // if (Kreissegment probieren)
-
 
         if (sg)   // gefundenes Segment an Segmentliste anhaengen
           {
@@ -2836,7 +2764,6 @@ namespace ice
 
               }
 
-
             if ((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) < 2 && pl->lng - start > 5 && sg->typ > 1)
               // Kreissegmente erwuenscht und noch genuegend Punkte da
               // und Segment an dieser Stelle (aus anderer Richtung war keine Gerade)
@@ -2915,7 +2842,6 @@ namespace ice
                       {
                         ende = start + 5;  // Ellipsensegment muss mindestens 6 Punkte enthalten
                       }
-
 
                     if (ende <= stop)
                       {
@@ -3130,7 +3056,7 @@ namespace ice
         if (pl_temp == nullptr)
           {
             FreeSegmentList(sg);
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           }
 
         c = 0;

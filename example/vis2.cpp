@@ -499,7 +499,7 @@ int Main(int argc, char* argv[])
 
   // Bild für Darstellung (mit beschränktem Wertumfang)
   dimg = NewImg(sx, sy, maxval, "Fraktal");
-  ClearImg(dimg);
+  dimg.set(0);
 
   // Bild für Speicherung der Werte im Original
   vimg = NewImg(sx, sy, MAXCOUNT_MAX, "Fraktalwerte");

@@ -41,9 +41,7 @@ namespace ice
     explicit vector3d(const Vector& v)
     {
       if (v.Size() != 3)
-        {
-          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_DIM);
 
       x = v[0];
       y = v[1];
@@ -52,9 +50,7 @@ namespace ice
     explicit vector3d(const IVector& v)
     {
       if (v.Size() != 3)
-        {
-          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_DIM);
 
       x = v[0];
       y = v[1];
@@ -63,9 +59,7 @@ namespace ice
     explicit vector3d(const std::vector<T>& v)
     {
       if (v.size() != 3)
-        {
-          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_DIM);
 
       x = v[0];
       y = v[1];
@@ -113,7 +107,7 @@ namespace ice
         case 2:
           return z;
         default:
-          throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_INDEX);
         }
 
       return x;
@@ -130,7 +124,7 @@ namespace ice
         case 2:
           return z;
         default:
-          throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_INDEX);
         }
 
       return x;
@@ -263,9 +257,7 @@ namespace ice
       double l = Length();
 
       if (l == 0)
-        {
-          throw IceException(FNAME, M_ZERO_VECTOR, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_ZERO_VECTOR);
       double fac = 1.0 / l;
       *this *= fac;
     }
@@ -288,9 +280,7 @@ namespace ice
     vector3d& operator = (const Vector& v)
     {
       if (v.Size() != 3)
-        {
-          throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_DIM);
 
       x = v[0];
       y = v[1];

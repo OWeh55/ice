@@ -101,9 +101,7 @@ namespace ice
   void Distortion0::Set(const Vector& v)
   {
     if (v.size() != 3)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     x0 = v[0];
     y0 = v[1];
@@ -125,9 +123,7 @@ namespace ice
     istringstream is(parastr);
 
     if (! ReadPara(is, "x0", x0) || ! ReadPara(is, "y0", y0) || ! ReadPara(is, "d2", d2))
-      {
-        throw IceException(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_FORMAT);
   }
 #undef FNAME
 }

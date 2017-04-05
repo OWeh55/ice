@@ -80,9 +80,7 @@ namespace ice
         hdata = (Contur**)realloc(data, (datalen + CONTURLISTBLOCKSIZE) * sizeof(Contur*));
 
         if (hdata == NULL)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         datalen += CONTURLISTBLOCKSIZE;
         data = hdata;
@@ -97,9 +95,7 @@ namespace ice
   int ConturList::Sub(int i)
   {
     if ((i < 0) || (i >= conturs))
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     delete data[i];
 
@@ -121,9 +117,7 @@ namespace ice
       }
 
     if ((i < 0) || (i > conturs))
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return data[i];
   }

@@ -43,7 +43,7 @@ namespace ice
   double* MoveVec(double* v1, double* v2)
   {
     if (v1 == NULL)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (v2 == NULL)
       v2 = new double [3];
@@ -61,7 +61,7 @@ namespace ice
   double LengthVec(double* v)
   {
     if (v == NULL)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     double l = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 
@@ -74,7 +74,7 @@ namespace ice
   double* AddVec(double* v1, double* v2, double* v3)
   {
     if (v1 == NULL || v2 == NULL)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (v3 == NULL)
       v3 = new double [3];
@@ -92,7 +92,7 @@ namespace ice
   double* SubVec(double* v1, double* v2, double* v3)
   {
     if (v1 == NULL || v2 == NULL)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (v3 == NULL)
       v3 = new double [3];
@@ -109,12 +109,12 @@ namespace ice
   double* NormVec(double* v1, double* v2)
   {
     if (v1 == nullptr)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     double l = LengthVec(v1);
 
     if (l <= 0.0)
-      throw IceException(FNAME, M_ZERO_VECTOR, WRONG_PARAM);
+      throw IceException(FNAME, M_ZERO_VECTOR);
 
     if (v2 == nullptr)
       v2 = new double [3];
@@ -132,7 +132,7 @@ namespace ice
   double* ScaleVec(double* v1, double fac, double* v2)
   {
     if (v1 == nullptr)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (v2 == nullptr)
       v2 = new double [3];
@@ -151,7 +151,7 @@ namespace ice
   double ScalProdVec(double v1[3], double v2[3])
   {
     if (v1 == nullptr || v2 == nullptr)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
   }
@@ -164,7 +164,7 @@ namespace ice
     double vintern[3];
 
     if (v1 == nullptr || v2 == nullptr)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (v3 == nullptr)
       v3 = new double [3];
@@ -183,7 +183,7 @@ namespace ice
     double vintern[3];
 
     if (v1 == nullptr || v2 == nullptr || v3 == nullptr)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     CrossProdVec(v1, v2, vintern);
     return ScalProdVec(vintern, v3);
@@ -196,13 +196,13 @@ namespace ice
   double AngleVec(double* v1, double* v2)
   {
     if (v1 == nullptr || v2 == nullptr)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     double l1 = LengthVec(v1);
     double l2 = LengthVec(v2);
 
     if (l1 == 0.0 || l2 == 0.0)
-      throw IceException(FNAME, M_ZERO_VECTOR, ZERO_VECTOR);
+      throw IceException(FNAME, M_ZERO_VECTOR);
 
     return acos(ScalProdVec(v1, v2) / (l1 * l2));
   }
@@ -252,7 +252,7 @@ namespace ice
   double LengthVecRn(double* v, int dim)
   {
     if (v == nullptr)
-      throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     double l2 = 0;
 
@@ -273,9 +273,7 @@ namespace ice
     double* dptr;
 
     if (v1 == nullptr || v2 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (v2 == nullptr)
       {
@@ -306,9 +304,7 @@ namespace ice
     double* dptr;
 
     if (v1 == nullptr || v2 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (v3 == nullptr)
       {
@@ -340,16 +336,12 @@ namespace ice
     double* dptr = v2;
 
     if (v1 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     double l = LengthVecRn(v1, dim);
 
     if (l < EPS)
-      {
-        throw IceException(FNAME, M_ZERO_VECTOR, ZERO_VECTOR);
-      }
+      throw IceException(FNAME, M_ZERO_VECTOR);
 
     if (dptr == nullptr)
       {
@@ -373,9 +365,7 @@ namespace ice
     double* dptr = v2;
 
     if (v1 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (dptr == nullptr)
       {
@@ -396,9 +386,7 @@ namespace ice
   double ScalProdVecRn(double* v1, double* v2, int dim)
   {
     if (v1 == nullptr || v2 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     double scalar = 0;
 
@@ -419,17 +407,13 @@ namespace ice
     double eps = 1e-10;
 
     if (v1 == nullptr || v2 == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     l1 = LengthVecRn(v1, dim);
     l2 = LengthVecRn(v2, dim);
 
     if ((l1 * l2) < eps)
-      {
-        throw IceException(FNAME, M_ZERO_VECTOR, ZERO_VECTOR);
-      }
+      throw IceException(FNAME, M_ZERO_VECTOR);
 
     return acos(ScalProdVecRn(v1, v2, dim) / (l1 * l2));
   }
@@ -441,7 +425,7 @@ namespace ice
   // Sortieren eines Double-Arrays "ptr" der Laenge "lng"
   {
     if ((ptr == nullptr))
-      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (lng >= 2)
       {
@@ -458,10 +442,10 @@ namespace ice
   */
   {
     if ((dvec == nullptr) || (ivec == nullptr))
-      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (dim < 1)
-      throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
       {
@@ -478,10 +462,10 @@ namespace ice
   void ConvVecID(int* ivec, int dim, double* dvec)
   {
     if ((dvec == nullptr) || (ivec == nullptr))
-      throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (dim < 1)
-      throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
       {

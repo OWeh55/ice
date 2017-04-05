@@ -37,9 +37,7 @@ namespace ice
   Constant::Constant(const std::vector<double>& v): FunctionWithFittingG(1)
   {
     if (v.size() < 1)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     co[0] = v[0];
   }
@@ -58,9 +56,7 @@ namespace ice
   Polynom1o::Polynom1o(const std::vector<double>& v): FunctionWithFittingG(2)
   {
     if (v.size() < 2)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     co[0] = v[0];
     co[1] = v[1];
@@ -80,9 +76,7 @@ namespace ice
   Polynom2o::Polynom2o(const Vector& v): FunctionWithFittingG(3)
   {
     if (v.Size() < 3)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     co[0] = v[0];
     co[1] = v[1];

@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
   Image img;
   img = ReadImg("test_gray.jpg");
   Image mark = NewImg(img);
-  ClearImg(mark);
+  clearImg(mark);
   Show(OVERLAY, img, mark);
   ClearAlpha();
   Display(ON);

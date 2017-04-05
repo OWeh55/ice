@@ -118,14 +118,10 @@ namespace ice
     y = ps[1];
 
     if ((direct != HORZ) && (direct != VERT))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImg(imgv))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (IsImg(imgo))
       {
@@ -143,14 +139,12 @@ namespace ice
       }
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-      {
-        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
       {
         // cout << "nicht innerhalb:" << x << "," << y << " " << wxi << " " << wyi << " " << wxa << " " << wya << endl;
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT);
       }
 
     if (direct == HORZ)
@@ -371,22 +365,16 @@ namespace ice
           }
 
         if (!IsImg(imgv))
-          {
-            throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-          }
+          throw IceException(FNAME, M_WRONG_IMAGE);
 
         if (IsImg(imgo))
           imgv.checkSizes(imgo);
 
         if (xs < 0 || xs >= imgv->xsize || ys < 0 || ys >= imgv->ysize)
-          {
-            throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-          }
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         if (checkobjectstartchecked(imgv, imgo, object, pgl, xs, ys) != isobject)
-          {
-            throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-          }
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         dir = 4;
         cr = 0;
@@ -405,9 +393,7 @@ namespace ice
           }
 
         if (cr == 4)                    // Startpunkt liegt im Objekt
-          {
-            throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-          }
+          throw IceException(FNAME, M_WRONG_STARTPOINT3);
 
         startdir = dir;
 

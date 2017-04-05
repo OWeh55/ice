@@ -53,9 +53,7 @@ namespace ice
     int dim = a.cols(); // Dimension merken
 
     if (dim != a.rows())   // auf quadratische Matrix testen
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     LU = a;
 
@@ -79,9 +77,7 @@ namespace ice
           }
 
         if (big == 0)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         vv[i] = 1.0 / big;
       }
@@ -139,9 +135,7 @@ namespace ice
           }
 
         if (LU(j, j) == 0)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         if (j < dim - 1)
           {
@@ -172,9 +166,7 @@ namespace ice
     int dim = a.cols(); // Dimension merken
 
     if (dim != a.rows())   // auf quadratische Matrix testen
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     LU = a;
 
@@ -198,9 +190,7 @@ namespace ice
           }
 
         if (big == 0)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         vv[i] = 1.0 / big;
       }
@@ -261,9 +251,7 @@ namespace ice
           }
 
         if (LU[j][j] == 0.0)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         if (j < dim - 1)
           {
@@ -374,19 +362,13 @@ namespace ice
     int dim = LU.cols(); // Dimension merken
 
     if (dim != LU.rows())   // auf quadratische Matrix testen
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     if (indx.Size() != dim)   // Größe permutation korrekt
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     if (b.Size() != dim)   // Größe inhomogenität korrekt
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     int ii = -1;
 
@@ -437,19 +419,13 @@ namespace ice
     int dim = LU.cols(); // Dimension merken und auf quadratische Matrix testen
 
     if (dim != LU.rows())
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     if ((int)indx.size() != dim)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     if ((int)b.size() != dim)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     int ii = -1;
 

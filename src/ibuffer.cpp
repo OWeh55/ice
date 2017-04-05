@@ -99,7 +99,7 @@ namespace ice
             valueFunction = get4l;
             break;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
@@ -117,11 +117,10 @@ namespace ice
             valueFunction = get4h;
             break;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
-
 
     int xsb = ib.width;
     int ysb = ib.height; // Bildgroesse im Puffer
@@ -141,7 +140,7 @@ namespace ice
 
         if (!IsImg(himg))
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
 
             if (ib.can_delete)
               {
@@ -311,7 +310,7 @@ namespace ice
             valueFunction = get4l;
             break;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
@@ -329,7 +328,7 @@ namespace ice
             valueFunction = get4h;
             break;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
@@ -337,7 +336,7 @@ namespace ice
     if (ib.planes == 1)
       {
         // kein RGB-Bild
-        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
 
         if (ib.can_delete)
           {
@@ -391,7 +390,7 @@ namespace ice
 
     if ((imgr->maxval != imgg->maxval) || (imgr->maxval != imgb->maxval))
       {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE);
 
         if (ib.can_delete)
           {
@@ -417,7 +416,7 @@ namespace ice
     if (ib.planes == 1)
       {
         // kein RGB-Bild
-        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
 
         if (ib.can_delete)
           {
@@ -454,7 +453,7 @@ namespace ice
                 rptr = gptr + ib.width * ib.linelength;
                 break;
               default:
-                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_PARAM);
 
                 if (ib.can_delete)
                   {
@@ -503,7 +502,7 @@ namespace ice
                     bptr = bptr + ib.valuesize * scal;
                     break;
                   default:
-                    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                    throw IceException(FNAME, M_WRONG_PARAM);
 
                     if (ib.can_delete)
                       {
@@ -583,7 +582,7 @@ namespace ice
     if (!IsImg(img))
       {
         // cerr << "isimg" << endl;
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE);
       }
 
     int pt = img->ImageType();
@@ -591,7 +590,7 @@ namespace ice
     if ((pt < 0) || (pt > 3))
       {
         // cerr << "img-typ" << endl;
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE);
       }
 
     int width = img->xsize;
@@ -684,7 +683,7 @@ namespace ice
                (T*)buffer + 2 * height * lineoffset, lineoffset, 1, 0, intensity);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
         rc = WRONG_PARAM;
       }
 
@@ -697,9 +696,7 @@ namespace ice
                    int packmode, int lineoffset)
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int width;
     int height;
@@ -709,9 +706,7 @@ namespace ice
     int pt = imgr->ImageType();
 
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int factor = 3;
 
@@ -770,9 +765,7 @@ namespace ice
   int Image2Buffer(const Image& img, ibuffer& ib)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     ib.width = img->xsize;
     ib.height = img->ysize;
@@ -789,9 +782,7 @@ namespace ice
     ib.data = (unsigned char*) malloc(ib.linelength * ib.height);
 
     if (ib.data == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     if (ib.valuesize == 1)
       {
@@ -822,17 +813,13 @@ namespace ice
   {
     // consistency checks at first
     if (!IsImg(RedImage) || !IsImg(GreenImage) || !IsImg(BlueImage))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     // some more consistency checks
     if (RedImage->xsize != GreenImage->xsize || RedImage->ysize != GreenImage->ysize ||
         RedImage->xsize != BlueImage->xsize  || RedImage->ysize != BlueImage->ysize ||
         RedImage->maxval != GreenImage->maxval || RedImage->maxval != BlueImage->maxval)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // copy values from the image to the image buffer
     ImageBuffer.width = RedImage->xsize;
@@ -850,9 +837,7 @@ namespace ice
     ImageBuffer.data = (unsigned char*)malloc(ImageBuffer.linelength * ImageBuffer.height);
 
     if (ImageBuffer.data == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     // copy the pixel values
     if (ImageBuffer.valuesize == 1)
@@ -934,22 +919,17 @@ namespace ice
       }
   }
 
-
   int Image2Buffer(const Image& img,
                    unsigned char*& buffer, int& size,
                    bool intensity, int lineoffset, int factor, int offset)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int pt = img->ImageType();
 
     if ((pt < 0) || (pt > 3))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int width = img->xsize;
     int height = img->ysize;
@@ -1061,7 +1041,7 @@ namespace ice
                  (T*)buffer + 2 * height * lineoffset, lineoffset, 1, 0, intensity);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
         rc = WRONG_PARAM;
       }
 
@@ -1073,9 +1053,7 @@ namespace ice
                    bool intensity, int packmode, int lineoffset)
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int width;
     int height;
@@ -1085,9 +1063,7 @@ namespace ice
     int pt = imgr->ImageType();
 
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int factor = 3;
 

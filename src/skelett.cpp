@@ -210,9 +210,7 @@ namespace ice
     int maxv = skelett->maxval;
 
     if (maxv < 2)
-      {
-        throw IceException(FNAME, M_LOWRANGE, ERROR);
-      }
+      throw IceException(FNAME, M_LOWRANGE);
 
     BinImg(pic, lvl, skelett); // Ausgangsbild binarisieren
 
@@ -369,7 +367,6 @@ namespace ice
             }
       }
     while (changes > 0);   // Ende erst, falls keine Aenderung mehr
-
 
     for (int y = 0; y < dimy; y++)
       for (int x = 0; x < dimx; x++)

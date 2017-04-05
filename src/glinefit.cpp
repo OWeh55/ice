@@ -86,7 +86,7 @@ namespace ice
     if (mean == 0)
       {
         FreePointList(pl);
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_POINTLIST);
       }
 
     thr = (int)(mean / (double)pl->lng + 0.5);

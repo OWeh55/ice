@@ -43,9 +43,7 @@ namespace ice
   {
     int dim = re.size();
     if (dim != (int)im.size())
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     vector<double> real(dim);
     vector<double> imag(dim);
@@ -80,9 +78,7 @@ namespace ice
   int Fourier(const Matrix& ms, int option, Matrix& md)
   {
     if ((ms.rows() != 2) && (ms.cols() != 2))
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (ms.rows() != 2)
       {

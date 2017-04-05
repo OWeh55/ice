@@ -51,9 +51,9 @@ int main(int argc, char* argv[])
   GetChar();
 
   Print("Lese Farb-Bilder ein (rechtes Bild):\n");
-  ClearImg(ir1);
-  ClearImg(ig1);
-  ClearImg(ib1);
+  clearImg(ir1);
+  clearImg(ig1);
+  clearImg(ib1);
   Print("test_rgb.jpg\n");
   ReadJPEGImg("test_rgb.jpg", ir1, ig1, ib1);
   GetChar();
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
   Show(ON, ir);
   Show(ON, ir1);
   Print("Lese Grauwert-Bilder ein (rechtes Bild):\n");
-  ClearImg(ir1);
+  clearImg(ir1);
   Print("test_gray.jpg\n");
   ReadJPEGImg("test_gray.jpg", ir1);
   GetChar();

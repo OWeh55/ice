@@ -41,18 +41,16 @@ namespace ice
    *
    * @param img the image we want to process
    * @param val the value all channels will be set to
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int SetImg(const ColorImage& img, unsigned int val);
+  void setImg(const ColorImage& img, unsigned int val);
 
   /**
    * Fills each channel with its corresponding value in val
    *
    * @param img the image we want to process
    * @param val contains the value information for each channel
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int SetImg(const ColorImage& img, const ColorValue& val);
+  void setImg(const ColorImage& img, const ColorValue& val);
 
   /**
    * Adds the two input images. Depending on the mode the channels are
@@ -70,7 +68,7 @@ namespace ice
    * @param mode defines how the result is adjusted to the properties of dest
    */
 
-  void AddImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
+  void addImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
               int mode = MD_NORMALIZE);
 
   /**
@@ -93,7 +91,7 @@ namespace ice
    * @param smode defines how negative values are treated
    * @param mode defines how the result is adjusted to the properties of dest
    */
-  void SubImg(const ColorImage& img1, const ColorImage& img2,
+  void subImg(const ColorImage& img1, const ColorImage& img2,
               const ColorImage& dest,
               int mode = MD_NORMALIZE, int smode = SMD_ABSOLUTE);
 
@@ -106,7 +104,7 @@ namespace ice
    * @param img2 the second source image
    * @param dest the destination image
    */
-  void MaxImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
+  void maxImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
               int mode = MD_LIMIT);
 
   /**
@@ -118,7 +116,7 @@ namespace ice
    * @param img2 the second source image
    * @param dest the destination image
    */
-  void MinImg(const ColorImage& img1, const ColorImage& img2,
+  void minImg(const ColorImage& img1, const ColorImage& img2,
               const ColorImage& dest,
               int mode = MD_LIMIT);
 
@@ -130,7 +128,7 @@ namespace ice
    * @param src: the source image
    * @param dest: the destination image
    */
-  void RenormImg(const ColorImage& src, const ColorImage& dest);
+  void renormImg(const ColorImage& src, const ColorImage& dest);
 
   /**
    * equalizes the histogram of intensity channel of an image
@@ -159,7 +157,7 @@ namespace ice
    * @param dest destination image
    * @param n size of the filter
    */
-  void SmearImg(const ColorImage& src, const ColorImage& dest, int n = 3);
+  void smearImg(const ColorImage& src, const ColorImage& dest, int n = 3);
 
   /**
    * Convolutes each channel of src with a n times n 1-matrix
@@ -171,7 +169,7 @@ namespace ice
    * @param nx horizontal size of the filter
    * @param ny vertical size of the filter
    */
-  void SmearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny);
+  void smearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny);
 
   /**
    * The "Difference of Boxes" filter applies the SmearImg filter, first

@@ -44,9 +44,7 @@ namespace ice
   PointList ConvexHull(PointList pl)
   {
     if (pl == NULL || pl->lng == 0)
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     if (pl->lng <= 3)
       {
@@ -93,16 +91,14 @@ namespace ice
     int* ymin = new int[xsize];
 
     if (ymin == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     int* ymax = new int[xsize];
 
     if (ymax == NULL)
       {
         delete ymin;
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int* imin = new int[xsize];
@@ -111,7 +107,7 @@ namespace ice
       {
         delete ymin;
         delete ymax;
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int* imax = new int[xsize];
@@ -121,7 +117,7 @@ namespace ice
         delete ymin;
         delete ymax;
         delete imin;
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int* used = new int[xsize];
@@ -132,7 +128,7 @@ namespace ice
         delete ymax;
         delete imin;
         delete imax;
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     for (nr = 0; nr < xsize; nr++)
@@ -190,7 +186,7 @@ namespace ice
         delete imin;
         delete imax;
         delete used;
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int current = -1;
@@ -319,7 +315,7 @@ namespace ice
         delete imax;
         delete used;
         delete pl2;
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     for (current = 0; current <= nr2; current++)
@@ -341,7 +337,6 @@ namespace ice
 
     return pl3;
   }
-
 
   Matrix ConvexHull(const Matrix& pl)
   {
@@ -374,7 +369,7 @@ namespace ice
       {
         Contur res;
         if (!c.isValid())
-          throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
+          throw IceException(FNAME, M_INVALID_CONTUR);
 
         if (c.Number() < 3)
           {
@@ -449,9 +444,7 @@ namespace ice
   {
 
     if (pl1 == NULL || pl1->lng < 3 || pl2 == NULL || pl2->lng < 3)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int i, j;
 

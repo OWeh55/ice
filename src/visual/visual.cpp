@@ -48,9 +48,7 @@ namespace ice
   int Cursor(int Mode, const Image& Img)
   {
     if (!IsImg(Img))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
@@ -75,15 +73,13 @@ namespace ice
       }
 
     // if no valid Mode was specified, return some error code
-    throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE);
   }
 
   int Cursor(int Mode, const Image& Img, int x, int y)
   {
     if (!IsImg(Img))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
@@ -101,7 +97,7 @@ namespace ice
       }
 
     // if no valid Mode was specified, return some error code
-    throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE);
   }
 
   int Cursor(int Mode, const Image& Img, IPoint p)
@@ -134,9 +130,7 @@ namespace ice
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
     return v->Zoom(ZoomFactor);
   }
 
@@ -159,9 +153,7 @@ namespace ice
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
 
     RETURN_ERROR_IF_FAILED(v->SetGreyColor(Entry, Red, Green, Blue));
     return OK;
@@ -173,9 +165,7 @@ namespace ice
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
 
     RETURN_ERROR_IF_FAILED(v->SetGreyLUT(First, Last));
     return OK;
@@ -202,9 +192,7 @@ namespace ice
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
 
     RETURN_ERROR_IF_FAILED(v->SetOverlayColor(Entry, Red, Green, Blue));
     return OK;
@@ -217,9 +205,7 @@ namespace ice
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
     RETURN_ERROR_IF_FAILED(v->GetGreyColor(Entry, Red, Green, Blue));
     return OK;
   }
@@ -232,9 +218,7 @@ namespace ice
     Visual v;
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
     RETURN_ERROR_IF_FAILED(v->GetOverlayColor(Entry, Red, Green, Blue));
     return OK;
   }
@@ -282,7 +266,7 @@ namespace ice
         return 1;
 
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
   }
 #undef FNAME
@@ -297,9 +281,7 @@ namespace ice
               const std::string& name)
   {
     if (!IsImg(Img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     return wxGetApp().GetImageManager()->Show(Mode, Img.Img(), name);
   }
 
@@ -322,9 +304,7 @@ namespace ice
 
     if ((!IsImg(Image1)) ||
         (!IsImg(Image2)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     return wxGetApp().GetImageManager()->Show(Mode,
            Image1.Img(),
            Image2.Img(),
@@ -340,9 +320,7 @@ namespace ice
     if ((!IsImg(Image1)) ||
         (!IsImg(Image2)) ||
         (!IsImg(Image3)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     return wxGetApp().GetImageManager()->Show(Mode,
            Image1.Img(),
            Image2.Img(),
@@ -366,9 +344,7 @@ namespace ice
       (!IsImg(Image5)) ||
       (!IsImg(Image6))
     )
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     return wxGetApp().GetImageManager()->Show(Mode,
            Image1.Img(),
            Image2.Img(),
@@ -378,7 +354,6 @@ namespace ice
            Image6.Img(),
            name);
   }
-
 
   Visual Show(int Mode,
               const ColorImage& Image1,

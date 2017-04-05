@@ -8,7 +8,6 @@
 
 #include "paint.h"
 
-
 namespace ice
 {
 
@@ -337,16 +336,12 @@ namespace ice
     int hfeld[5] = {1, 2, 4, 8, 16};
 
     if ((val < 0) || (val > img->maxval))
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     int DotSize;
 
     if (size_exp > 5)
-      {
-        throw IceException(FNAME, M_WRONG_MAGNITUDE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_MAGNITUDE);
     else
       {
         if (size_exp >= 0)

@@ -55,7 +55,7 @@ namespace ice
     if ((fabs(m310) < EPS) || (fabs(m320) < EPS) || (fabs(m312) < EPS) ||
         (fabs(m410) < EPS) || (fabs(m420) < EPS) || (fabs(m412) < EPS))
       {
-        throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+        throw IceException(FNAME, M_NO_SOLUTION);
         *i1 = *i2 = 0;
         return (NO_SOLUTION);
       }
@@ -144,7 +144,7 @@ namespace ice
     if ((fabs(m310) < EPS) || (fabs(m320) < EPS) || (fabs(m312) < EPS) ||
         (fabs(m410) < EPS) || (fabs(m420) < EPS) || (fabs(m412) < EPS))
       {
-        throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+        throw IceException(FNAME, M_NO_SOLUTION);
         *i1 = *i2 = 0;
         return (NO_SOLUTION);
       }
@@ -186,14 +186,10 @@ namespace ice
     ImageD pic;
 
     if ((!IsImg(quelle)) || (!IsImgD(ziel)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (p < 0 || q < 0 || n <= 0 || ((n & 1) == 0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     n = n / 2; // Umgebungsgröße -> Abstandswert
     nx = quelle->xsize;

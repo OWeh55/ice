@@ -52,14 +52,10 @@ namespace ice
     int ByteNbr, PosInByte;
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     fread((unsigned char*)&Header, 128, 1, fd);
 
@@ -89,7 +85,7 @@ namespace ice
         break;
       default:
         fclose(fd);
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     Shift2 = 3 - Shift1;
@@ -107,7 +103,7 @@ namespace ice
         if (!IsImg(img))
           {
             fclose(fd);
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           }
 
         newimg = true; /* merken dass Bild neu angefordert */
@@ -135,7 +131,7 @@ namespace ice
                   }
 
                 free(PCXLine);
-                throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILE);
               }
 
             if (Ch >> 6 == 0x03)
@@ -153,7 +149,7 @@ namespace ice
                       }
 
                     free(PCXLine);
-                    throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+                    throw IceException(FNAME, M_WRONG_FILE);
                   }
 
                 for (ii = 0; ii < Count; ii++)
@@ -170,7 +166,7 @@ namespace ice
                           }
 
                         free(PCXLine);
-                        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+                        throw IceException(FNAME, M_WRONG_FILE);
                       }
                   }
               }
@@ -214,9 +210,7 @@ namespace ice
     unsigned char* ColorTable;
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((fd = fopen(hname.c_str(), FWMODUS)) == NULL)
       {
@@ -385,7 +379,6 @@ namespace ice
   }
 
 #undef FNAME
-
 
   /************************************************************************/
 #define FNAME "InfPCXFile"

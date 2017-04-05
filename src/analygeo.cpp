@@ -91,9 +91,7 @@ namespace ice
     double hs = sqrt(dx * dx + dy * dy);
 
     if (hs < EPSILON)
-      {
-        throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
-      }
+      throw IceException(FNAME, M_POINT_IDENTIC);
 
     *p = (p1[0] * dy - p1[1] * dx) / hs;
 
@@ -117,9 +115,7 @@ namespace ice
     double hs = sqrt(dx * dx + dy * dy);
 
     if (hs < EPSILON)
-      {
-        throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
-      }
+      throw IceException(FNAME, M_POINT_IDENTIC);
 
     double p = (p1[0] * dy - p1[1] * dx) / hs;
 
@@ -231,9 +227,7 @@ namespace ice
     double area = 0;
 
     if (pl.cols() < 2)
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     int last = pl.rows() - 1;
 
@@ -554,9 +548,7 @@ label:
         b = feat[3];
 
         if (a <= 0 || b <= 0)
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
 #ifdef DEBUG
         printf("xm: %f ym %f phi %f a %f b %f\n", xm, ym, phi, a, b);
@@ -583,9 +575,7 @@ label:
         b = feat[3];
 
         if (a <= 0 || b <= 0)
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         par[0] = Sqr(cos(phi) / a) - Sqr(sin(phi) / b);
         par[1] = Sqr(sin(phi) / a) - Sqr(cos(phi) / b);
@@ -602,9 +592,7 @@ label:
         p = feat[2];
 
         if (p <= 0)
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         par[0] = Sqr(sin(phi));
         par[1] = Sqr(cos(phi));
@@ -620,7 +608,7 @@ label:
                  par[4] * xm * ym;
         return OK;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
   }
 #undef FNAME
@@ -643,9 +631,7 @@ label:
     l = sqrt(a * a + b * b + c * c);
 
     if (l < EPSILON)
-      {
-        throw IceException(FNAME, M_WRONG_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTS);
 
     if (d < 0)
       {
@@ -700,9 +686,7 @@ label:
     phi = par[4];
 
     if ((A <= 0) || (B <= 0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
 #if DEBUG
     printf("DistPointEllipse\n");

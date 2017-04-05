@@ -127,7 +127,7 @@ namespace ice
         return TimeD2(true, true);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
         break;
       }
 

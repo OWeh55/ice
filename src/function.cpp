@@ -32,16 +32,17 @@ namespace ice
 #define FNAME "SetImg"
   void setImg(const Image& img, const Function2d& fn)
   {
-    try {
-    checkImage(img);
+    try
+      {
+        checkImage(img);
 
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        {
-          int v = RoundInt(fn(x, y));
-          PutValUnchecked(img, x, y, Max(0, limited(v, img)));
-        }
-    }
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            {
+              int v = RoundInt(fn(x, y));
+              PutValUnchecked(img, x, y, Max(0, limited(v, img)));
+            }
+      }
     RETHROW;
   }
 #undef FNAME

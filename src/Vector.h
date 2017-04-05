@@ -146,7 +146,7 @@ namespace ice
     }
 
   public:
-    void Clear()
+    void clear()
     {
       // special case of resize and realloc
       delete data;
@@ -336,9 +336,9 @@ namespace ice
     operator pointT<T>() const
     {
       if (dim != 2)
-	{
-        throw IceException("Vector::Point", M_WRONG_DIM, WRONG_PARAM);
-	}
+        {
+          throw IceException("Vector::Point", M_WRONG_DIM, WRONG_PARAM);
+        }
       return pointT<T>(data[0], data[1]);
     }
 
@@ -483,7 +483,7 @@ namespace ice
     const VectorT& operator+=(const VectorT& h)
     {
       if (dim != h.dim)
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM);
 
       for (unsigned int i = 0; i < dim; i++)
         {
@@ -506,7 +506,7 @@ namespace ice
     {
       if (dim != rhs.dim)
 
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM);
 
       for (unsigned int i = 0; i < dim; i++)
         {
@@ -541,7 +541,7 @@ namespace ice
       T dist = 0.0;
 
       if (dim != h.dim)
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIM);
 
       for (unsigned i = 0; i < dim; i++)
         {
@@ -759,13 +759,13 @@ namespace ice
     friend std::istream& operator>>(std::istream& is, VectorT& v)
     {
       char c = 0;
-      v.Clear();
+      v.clear();
       is >> c;
 
       if (c != '<')
         {
           is.clear();
-          throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+          throw IceException(FNAME, M_WRONG_FILE);
         }
 
       if (is.peek() == '>')
@@ -784,7 +784,7 @@ namespace ice
           if ((c != ',') && (c != '#') && (c != '>'))
             {
               is.clear();
-              throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+              throw IceException(FNAME, M_WRONG_FILE);
             }
         }
       while (c != '>');

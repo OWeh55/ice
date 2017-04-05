@@ -102,9 +102,7 @@ namespace ice
               val = val % gzahl;
               break;
             default:
-            {
-              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
@@ -152,9 +150,7 @@ namespace ice
         gmax1 = Max(pn1->maxval, pn2->maxval) * 2 + 1;
         break;
       default:
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-      }
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     gmax = pn3->maxval;
@@ -230,9 +226,7 @@ namespace ice
               val = val % gzahl;
               break;
             default:
-            {
-              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
@@ -292,9 +286,7 @@ namespace ice
               val = (val + gzahl) % gzahl;
               break;
             default:
-            {
-              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
@@ -344,9 +336,7 @@ namespace ice
               val = (val + gzahl) % gzahl;
               break;
             default:
-            {
-              throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
@@ -366,9 +356,7 @@ namespace ice
     int nx, ny, nv;
 
     if ((!IsImg(p)) || (!IsImg(dest)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     nx = dest->xsize;
     ny = dest->ysize;
@@ -540,9 +528,7 @@ namespace ice
       }
 
     if ((bin < 1) || (bin > src->maxval) || (val < 0) || (val > dest->maxval))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     switch ((src->ImageType() << 4) + dest->ImageType())
       {
@@ -700,7 +686,7 @@ namespace ice
   int findMax(const Image& img, int& PosX, int& PosY)
   {
     if (! IsImg(img))
-      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int max = 0;
 
@@ -738,9 +724,7 @@ namespace ice
     int tmp = 0;
 
     if (! IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     tmp = img->maxval + 1;
     int xSize = img->xsize;

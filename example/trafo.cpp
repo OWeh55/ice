@@ -110,9 +110,9 @@ int main(int argc, char* argv [])
   Show(OFF, i3);
 
   m1 = NewImg(i1->xsize, i1->ysize, 255);
-  ClearImg(m1);
+  clearImg(m1);
   m2 = NewImg(i2->xsize, i2->ysize, 255);
-  ClearImg(m2);
+  clearImg(m2);
 
   Show(OVERLAY, i1, m1);
   Contur c1, c2;

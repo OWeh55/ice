@@ -96,19 +96,13 @@ namespace ice
     double maxdist;
 
     if (!IsImg(orig))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImg(dist))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (orig == dist)
-      {
-        throw IceException(FNAME, M_SAME_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_SAME_IMAGE);
 
     RETURN_ERROR_IF_FAILED(MatchImg(orig, dist, xs, ys));
 
@@ -120,14 +114,10 @@ namespace ice
       }
 
     if ((mode < 1) || (mode > 2))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (fabs(step) > maxdist)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (step < 0.0)
       {
@@ -147,42 +137,32 @@ namespace ice
       }
 
     if ((pegl < 0) || (pegl > orig->maxval))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (IsImg(dir))
       {
         if ((xs != dir->xsize) || (ys != dir->ysize))
-          {
-            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_SIZES_DIFFER);
 
         if ((orig == dir) || (dist == dir))
-          {
-            throw IceException(FNAME, M_SAME_IMAGE, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_SAME_IMAGE);
 
         if (dir->maxval < 8)
-          {
-            throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_LOWRANGE);
       }
 
     Image ibin, inr;
     ibin = NewImg(xs, ys, 2);
 
     if (!IsImg(ibin))
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     inr = NewImg(xs, ys, xs * ys / 2);
 
     if (!IsImg(inr))
       {
         FreeImg(ibin);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int io, iu;

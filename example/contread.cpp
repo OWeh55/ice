@@ -187,7 +187,7 @@ int main(int argc, char** argv)
 //  cout << "-->" << fn << "<---" << endl;
   Image img;
   img.create(XSIZE, YSIZE, MAXVALUE);
-  ClearImg(img);
+  clearImg(img);
 
   if (!quiet)
     Show(ON, img);

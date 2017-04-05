@@ -32,7 +32,6 @@
 
 #include "rotquaternion.h"
 
-
 namespace ice
 {
 
@@ -372,7 +371,7 @@ namespace ice
 
     if (!(in.rows() == 3 && in.cols() == 3))
       {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
         return out;
       }
@@ -443,7 +442,7 @@ namespace ice
         return out;
       }
 
-    throw IceException(FNAME, M_CONVERT_NOT_POSSIBLE, CONVERT_NOT_POSSIBLE);
+    throw IceException(FNAME, M_CONVERT_NOT_POSSIBLE);
 
     return out;
   }

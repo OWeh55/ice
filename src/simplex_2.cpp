@@ -37,25 +37,16 @@ namespace ice
   int FitLineLinOpt(PointList pl, int a1, int a2, int step, double par[], double limit)
   {
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (a1 < 0 || a2 > pl->lng - 1)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (step < 0)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (pl->lng < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
-
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     // Bezüglich  der Punktlisten pl1 und pl2
     // wird mittels linearer Optimierung
@@ -222,7 +213,6 @@ namespace ice
       }
 
     // ***************************
-
 
     // Speziell: Füllen von a
 
@@ -406,7 +396,6 @@ namespace ice
 
 #include "simplex_init.inc"
 
-
     code = simplex_method_modified(
              m,   /* number of constraints */
              n,   /* number of variables */
@@ -452,7 +441,6 @@ namespace ice
         par[1] = atan2(k_b, k_a);
       }
 
-
     delete [] ia;
     delete [] ka;
     delete [] a;
@@ -471,9 +459,7 @@ namespace ice
   int FitLineLinOpt(const Matrix& m, double& p, double& phi, double limit)
   {
     if ((m.cols() < 2) || (m.rows() < 2))
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     PointList pl = Matrix2PointList(m);
     double par[2];
@@ -499,9 +485,7 @@ namespace ice
     int nPoints = pl.size();
 
     if (nPoints < 2)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     PointList ppl = NewPointList(nPoints);
 
@@ -536,32 +520,22 @@ namespace ice
 // **************************************************************************
 // **************************************************************************
 
-
 #define FNAME "FitCircleLinOpt"
 
   int FitCircleLinOpt(PointList pl, int a1, int a2, int step, double par[], double limit)
   {
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (a1 < 0 || a2 > pl->lng - 1)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (step < 0)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (pl->lng < 3)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
-
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     // Bezüglich  der Punktlisten pl1 und pl2
     // wird mittels linearer Optimierung
@@ -747,7 +721,6 @@ namespace ice
 
     // ***************************
 
-
     // Speziell: Füllen von a
 
     for (i = 0; i < N; ++i)
@@ -839,9 +812,7 @@ namespace ice
 
     // ************************************
 
-
 #ifdef DEBUG
-
 
     // Anzeige der Eingabedaten
     Printf("Zielfunktion \n");
@@ -892,7 +863,6 @@ namespace ice
 #endif
 
 #include "simplex_init.inc"
-
 
     code = simplex_method_modified(
              m,   /* number of constraints */
@@ -964,33 +934,22 @@ namespace ice
 // *********************************************************************************
 // *********************************************************************************
 
-
 #define FNAME "FitEllipseLinOpt"
-
 
   int FitEllipseLinOpt(PointList pl, int a1, int a2, int step, double par[], double limit)
   {
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (a1 < 0 || a2 > pl->lng - 1)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (step < 0)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (pl->lng < 5)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
-
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     // Bezüglich  der Punktlisten pl1 und pl2
     // wird mittels linearer Optimierung
@@ -1178,7 +1137,6 @@ namespace ice
 
     // ***************************
 
-
     // Speziell: Füllen von a
 
     for (i = 0; i < N; ++i)
@@ -1313,9 +1271,7 @@ namespace ice
 
     // ************************************
 
-
 #ifdef DEBUG
-
 
     // Anzeige der Eingabedaten
     Printf("Zielfunktion \n");

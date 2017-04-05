@@ -36,7 +36,6 @@ namespace ice
   a.at(i).at(j)=g-s*(h+g*tau);          \
   a.at(k).at(l)=h+s*(g-h*tau);
 
-
   void EigenvalueSort(Vector& d, Matrix& v);
 
 #define FNAME "Eigenvalue"
@@ -51,7 +50,7 @@ namespace ice
       {
         W = Matrix(w.size(), w.size());
 
-        /* Umschreiben der L"osung */
+        /* Umschreiben der Loesung */
         for (unsigned int i = 0; i < w.size(); i++)
           {
             W[i][i] = w[i];
@@ -74,9 +73,7 @@ namespace ice
     int n = A.cols();
 
     if (n != A.rows())
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     // Matrix symmetrisieren
     for (int ip = 0; ip < n; ip++)
@@ -287,9 +284,7 @@ namespace ice
     // requires square matrix
     int n = A.cols();
     if (n != A.rows())
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     // symmetrize matrix
     for (int ip = 0; ip < n; ip++)
@@ -530,9 +525,7 @@ namespace ice
     n = A.cols();
 
     if (m < n)
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     /* Matrizen U,W,V anlegen */
     /* Matrix U als Kopie von A */
@@ -822,9 +815,7 @@ namespace ice
               }
 
             if (its == 40)
-              {
-                throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-              }
+              throw IceException(FNAME, M_NO_SOLUTION);
 
             x = w.at(l);
             nm = k - 1;
@@ -902,7 +893,7 @@ namespace ice
       {
         W = Matrix(w.size(), w.size());
 
-        /* Umschreiben der L"osung */
+        /* Umschreiben der Loesung */
         for (unsigned int i = 0; i < w.size(); i++)
           {
             W.at(i).at(i) = w.at(i);

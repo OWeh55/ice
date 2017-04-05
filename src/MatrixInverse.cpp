@@ -48,9 +48,7 @@ namespace ice
     Matrix h(m);
 
     if (dim != m.rows())
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     double max, s, q, pivot;
     vector<int> p_k(dim);
@@ -86,9 +84,7 @@ namespace ice
           }
 
         if (max == 0)
-          {
-            throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
-          }
+          throw IceException(FNAME, M_NO_INVERSE);
 
         if (p_k[k] != k)
           {
@@ -138,7 +134,6 @@ namespace ice
     return h;
   }
 
-
 #define FNAME "Inverse"
   matrix<double> Inverse(const matrix<double>& m)
   {
@@ -147,9 +142,7 @@ namespace ice
     matrix<double> h(m);
 
     if (dim != m.rows())
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     double max, s, q, pivot;
     vector<int> p_k(dim);
@@ -185,9 +178,7 @@ namespace ice
           }
 
         if (max == 0)
-          {
-            throw IceException(FNAME, M_NO_INVERSE, NO_SOLUTION);
-          }
+          throw IceException(FNAME, M_NO_INVERSE);
 
         if (p_k[k] != k)
           {
@@ -237,6 +228,5 @@ namespace ice
     return h;
   }
 #undef FNAME
-
 
 }

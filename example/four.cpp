@@ -16,13 +16,13 @@ ImageD d1, d2;
 void toimag()
 {
   CopyImg(p1, p2);
-  SetImg(p1, p1->maxval / 2);
+  setImg(p1, p1->maxval / 2);
 }
 
 void toreal()
 {
   CopyImg(p2, p1);
-  SetImg(p2, p2->maxval / 2);
+  setImg(p2, p2->maxval / 2);
 }
 
 void todouble()
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
   Printf("Lege Imaginärteil an\n");
   p2 = NewImg(dx, dy, 255);
-  SetImg(p2, p2->maxval / 2);
+  setImg(p2, p2->maxval / 2);
 
   p3 = NewImg(dx, dy, 255);
   p4 = NewImg(dx, dy, 255);

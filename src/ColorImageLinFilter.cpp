@@ -54,12 +54,12 @@ namespace ice
   /********************* SMOOTHNESS FILTERS ********************/
 
 #define FNAME "SmearImg"
-  void SmearImg(const ColorImage& src, const ColorImage& dest, int n)
+  void smearImg(const ColorImage& src, const ColorImage& dest, int n)
   {
-    SmearImg(src, dest, n, n);
+    smearImg(src, dest, n, n);
   }
 
-  void SmearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny)
+  void smearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny)
   {
     try
       {

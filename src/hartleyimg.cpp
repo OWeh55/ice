@@ -60,9 +60,7 @@ namespace ice
             fr = new double[xs];
 
             if (fr == NULL)
-              {
-                throw IceException(FNAME, M_NO_MEM, NO_MEM);
-              }
+              throw IceException(FNAME, M_NO_MEM);
 
             for (y = 0; y < ys; ++y)
               {
@@ -93,9 +91,7 @@ namespace ice
             fr = new double[ys];
 
             if (fr == NULL)
-              {
-                throw IceException(FNAME, M_NO_MEM, NO_MEM);
-              }
+              throw IceException(FNAME, M_NO_MEM);
 
             for (x = 0; x < xs; ++x)
               {

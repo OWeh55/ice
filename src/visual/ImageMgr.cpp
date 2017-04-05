@@ -67,7 +67,6 @@ namespace ice
   END_EVENT_TABLE()
   ;
 
-
   ImageManager::ImageManager()
     : RefreshTimer(this, REFRESH_TIMER),
       RefreshEnabled(true)
@@ -302,9 +301,7 @@ namespace ice
   Visual ImageManager::Show(int Mode, Visual vis)
   {
     if (vis == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
 
     switch (Mode)
       {
@@ -320,7 +317,7 @@ namespace ice
       }
       default:
         // if no valid Mode was specified, there must be some error
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
   }
 
@@ -360,9 +357,7 @@ namespace ice
       case ON:
       {
         if (Img->maxval > ColorTable::maxEntries)
-          {
-            throw IceException(FNAME, M_HIGHRANGE_VIS, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_HIGHRANGE_VIS);
         // Windows MUST be created in main thread
         wxCommandEvent Event(CREATE_GREY_COLORTABLE_WIN);
         Event.SetClientData(&id);
@@ -395,7 +390,7 @@ namespace ice
       }
 
     // if no valid Mode was specified, there must be some error
-    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM);
   }
 
   Visual ImageManager::Show(int Mode, ImageD* Img,
@@ -440,7 +435,7 @@ namespace ice
 
       default:
         // if no valid Mode was specified, there must be some error
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
   }
 
@@ -481,9 +476,7 @@ namespace ice
 
         // Check if the images match in size.
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize)
-          {
-            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_SIZES_DIFFER);
 
         // Windows MUST be created in main thread
         wxCommandEvent Event(CREATE_OVERLAY_WIN);
@@ -500,9 +493,7 @@ namespace ice
       {
         // Check if the images match in size.
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize)
-          {
-            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_SIZES_DIFFER);
         if (Mode == OVERLAY1)
           {
             id.param = 64;
@@ -527,7 +518,7 @@ namespace ice
       } // switch(Mode)
 
     // if no valid Mode was specified, there must be some error
-    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM);
   }
 
   Visual ImageManager::Show(int Mode,
@@ -558,9 +549,7 @@ namespace ice
         // Check if the images match in size
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize ||
             Image2->xsize != Image3->xsize || Image2->ysize != Image3->ysize)
-          {
-            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_SIZES_DIFFER);
 
         // Windows MUST be created in main thread
         wxCommandEvent Event(CREATE_RGB_WIN);
@@ -573,7 +562,7 @@ namespace ice
       } // switch(Mode)
 
     // if no valid Mode was specified, there must be some error
-    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM);
   }
 
   Visual ImageManager::Show(int Mode,
@@ -613,9 +602,7 @@ namespace ice
             Image1->xsize != Image4->xsize || Image1->ysize != Image4->ysize ||
             Image1->xsize != Image5->xsize || Image1->ysize != Image5->ysize ||
             Image1->xsize != Image6->xsize || Image1->ysize != Image6->ysize)
-          {
-            throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_SIZES_DIFFER);
 
         // Windows MUST be created in main thread
         wxCommandEvent Event(CREATE_STEREO_IH_WIN);
@@ -628,7 +615,7 @@ namespace ice
       } // switch(Mode)
 
     // if no valid Mode was specified, there must be some error
-    throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_PARAM);
   }
 #undef FNAME
 

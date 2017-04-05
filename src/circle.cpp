@@ -41,9 +41,7 @@ namespace ice
   Circle::Circle(const Vector& v) : GeoObject(v)
   {
     if (v.Size() < 3)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     setR(v[2]);
   }
@@ -58,9 +56,7 @@ namespace ice
   int Circle::setR(double vr)
   {
     if (vr < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     r = vr;
     return OK;

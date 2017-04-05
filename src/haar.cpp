@@ -62,9 +62,7 @@ namespace ice
   int HaarImg(const Image& pic1, Image& pic2, int depth, int mode)
   {
     if (depth < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int nx = pic1.xsize;
     int ny = pic1.ysize;
@@ -73,14 +71,10 @@ namespace ice
     // n? =  2 ^ depth * k?
 
     if (!check2p(nx, depth) || !check2p(ny, depth))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (mode != NORMAL && mode != INVERS)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (mode == NORMAL)
       {
@@ -123,7 +117,6 @@ namespace ice
         haar(hCol, p);
         setColumn(pic2, j, hCol);
       }
-
 
     //Jetzt zeilenweise transformieren
     for (int i = 0; i < pic1.ysize; i++)

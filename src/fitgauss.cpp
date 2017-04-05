@@ -50,9 +50,7 @@ namespace ice
       }
 
     if (dim <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     values = 0;
     gsquare = 0;
@@ -84,9 +82,7 @@ namespace ice
   void GaussFit::Value(const vector<double>& p, double v, double w)
   {
     if ((int)p.size() != dim)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
       {
@@ -122,9 +118,7 @@ namespace ice
   void GaussFit::Fit(const Matrix& p, const Vector& v)
   {
     if ((p.cols() != dim) || (p.rows() != v.Size()))
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     Init();
 
@@ -173,27 +167,21 @@ namespace ice
   void GaussFit::getResult(vector<double>& v) const
   {
     if (!finished)
-      {
-        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
     v = para;
   }
 
   void GaussFit::getResult(Vector& v) const
   {
     if (!finished)
-      {
-        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
     v = Vector(para);
   }
 
   double GaussFit::Variance() const
   {
     if (!finished)
-      {
-        throw IceException(FNAME, M_NOT_FINISHED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
     return var / wsum;
   }
 #undef FNAME

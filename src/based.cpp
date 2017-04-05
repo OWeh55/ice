@@ -38,17 +38,13 @@ namespace ice
   int MatchImgD(const ImageD& i1, const ImageD& i2, int& xs, int& ys)
   {
     if (! i1.isValid() || ! i2.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     xs = i1.xsize;
     ys = i1.ysize;
 
     if ((xs != i2.xsize) || (ys != i2.ysize))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     return OK;
   }
@@ -56,18 +52,14 @@ namespace ice
   int MatchImgD(const ImageD& i1, const ImageD& i2, const ImageD& i3, int& xs, int& ys)
   {
     if (! i1.isValid() || ! i2.isValid() || ! i3.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     xs = i1.xsize;
     ys = i1.ysize;
 
     if ((xs != i2.xsize) || (ys != i2.ysize) ||
         (xs != i3.xsize) || (ys != i3.ysize))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     return OK;
   }
@@ -97,9 +89,7 @@ namespace ice
     double max, min, val;
 
     if (!img.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     max = img.getPixelUnchecked(0, 0);
     min = max;
@@ -142,22 +132,16 @@ namespace ice
     double factor = 1;
 
     if (!inp.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!out.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     sx = inp.xsize;
     sy = inp.ysize;
 
     if (!(out.xsize == sx && out.ysize == sy))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (sign == SIGNED)
       {
@@ -199,14 +183,10 @@ namespace ice
     double factor = 1.0, offset = 0.0;
 
     if (!IsImgD(input))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (!IsImg(out))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     outmaxval = out->maxval;
 
@@ -259,9 +239,7 @@ namespace ice
     ys = inp.ysize;
 
     if (!(out.xsize == xs && out.ysize == ys))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     for (int y = 0; y < ys; ++y)
       {
@@ -282,9 +260,7 @@ namespace ice
     int xs, ys;
 
     if (! MatchImgD(src, dst, xs, ys))
-      {
-        throw IceException(FNAME, M_0, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_0);
 
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
@@ -391,9 +367,7 @@ namespace ice
   bool Inside(const ImageD& img, int x, int y)
   {
     if (!IsImgD(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
     return img.inside(x, y);
   }
 

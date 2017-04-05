@@ -45,14 +45,10 @@ namespace ice
 
     /* Testung der Parameter */
     if (IsMatrix(A) == false)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
     Amat = MoveMat(A, nullptr);
     n = A->rsize;
@@ -64,14 +60,10 @@ namespace ice
     else
       {
         if (IsMatrix(evect) == false)
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
         if (evect->csize != n || evect->rsize != n || evect->type != MAT_DOUBLE)
-          {
-            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-          }
+          throw IceException(FNAME, M_MAT_NO_COMPAT);
       }
 
     // pointers to data
@@ -82,9 +74,7 @@ namespace ice
     z = (double*)malloc(n * sizeof(double));
 
     if (b == nullptr || z == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     //
     for (ip = 0; ip < n; ip++)
@@ -213,7 +203,7 @@ namespace ice
     FreeMatrix(Amat);
     free(b);
     free(z);
-    throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+    throw IceException(FNAME, M_NO_SOLUTION);
   }
 
   /* interne Funktion: Sortierung der Eigenwerte, Eigenvektoren nach Betrag */
@@ -274,22 +264,16 @@ namespace ice
 
     /* Testung der Parameter */
     if (IsMatrix(A) == false)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
     m = A->rsize;
     n = A->csize;
 
     if (m < n)
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     /* Matrizen U,W,V anfordern */
     /* Matrix U */
@@ -300,14 +284,10 @@ namespace ice
     else
       {
         if (IsMatrix(*U) == false)
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
         if ((*U)->rsize != m || (*U)->type != MAT_DOUBLE || (*U)->csize != n)
-          {
-            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-          }
+          throw IceException(FNAME, M_MAT_NO_COMPAT);
       }
 
     /* W - Die Singulaerwerte */
@@ -318,14 +298,10 @@ namespace ice
     else
       {
         if (IsMatrix(*W) == false)
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
         if ((*W)->rsize != n || (*W)->type != MAT_DOUBLE || (*W)->csize != n)
-          {
-            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-          }
+          throw IceException(FNAME, M_MAT_NO_COMPAT);
       }
 
     for (i = 1; i < n; i++)
@@ -342,14 +318,10 @@ namespace ice
     else
       {
         if (! IsMatrix(*V))
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
         if ((*V)->rsize != n || (*V)->type != MAT_DOUBLE || (*V)->csize != n)
-          {
-            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-          }
+          throw IceException(FNAME, M_MAT_NO_COMPAT);
       }
 
     /* Zeigeruebergabe */
@@ -620,9 +592,7 @@ namespace ice
               }
 
             if (its == 40)
-              {
-                throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
-              }
+              throw IceException(FNAME, M_NO_SOLUTION);
 
             x = w[l];
             nm = k - 1;
@@ -688,7 +658,7 @@ namespace ice
 
     free(rv1);
 
-    /* Umschreiben der L"osung */
+    /* Umschreiben der Loesung */
     for (i = 1; i < n; i++)
       {
         (*W)->data[i][i] = (*W)->data[0][i];

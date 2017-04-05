@@ -37,10 +37,10 @@ int main(int argc, char* argv[])
       WriteImg(ir, ig, ib, basename + "_r.psd");
       WriteImg(id, basename + ".psd");
       GetChar();
-      ClearImg(id);
-      ClearImg(ir);
-      ClearImg(ig);
-      ClearImg(ib);
+      clearImg(id);
+      clearImg(ir);
+      clearImg(ig);
+      clearImg(ib);
       GetChar();
       ReadImg(basename + ".psd", id);
       ReadImg(basename + "_r.psd", ir, ig, ib);

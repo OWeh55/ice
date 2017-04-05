@@ -199,7 +199,7 @@ namespace ice
       }
 
     ImageD akku = NewImgD(resimg->xsize, resimg->ysize);
-    SetImgD(akku, 0.0);
+    setImgD(akku, 0.0);
 
     //#pragma omp parallel for firstprivate(tr) schedule(dynamic,20)
     for (int yr = 0; yr < radonimg->ysize; yr++)

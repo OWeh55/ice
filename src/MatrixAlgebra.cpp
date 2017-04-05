@@ -47,7 +47,7 @@ namespace ice
         int dimension = mat.cols();
 
         if (dimension != mat.rows())
-          throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
+          throw IceException(FNAME, M_NO_SQUARE);
 
         Matrix l = CholeskyDecomposition(mat);
 
@@ -107,10 +107,7 @@ namespace ice
 
         return inverse;
       }
-    catch (IceException& ex)
-      {
-        throw IceException(ex, FNAME);
-      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -539,7 +536,6 @@ namespace ice
   {
     try
       {
-        int rc;
         Vector res(v);
 
         if (v.Size() != m.rows() || m.cols() > m.rows())
@@ -550,11 +546,11 @@ namespace ice
           {
             Matrix a = m.MulTrans(m); // m^T * m
             Vector i = m.MulTrans(v); // m^T * v
-            rc = SolveLinEqu1(a, i, res);
+            SolveLinEqu1(a, i, res);
           }
         else
           {
-            rc = SolveLinEqu1(m, v, res);
+            SolveLinEqu1(m, v, res);
           }
 
         return res;
@@ -602,9 +598,7 @@ namespace ice
       }
 
     if (rc != OK)
-      {
-        throw IceException(FNAME, M_0, ERROR);
-      }
+      throw IceException(FNAME, M_0);
 
     return res;
   }

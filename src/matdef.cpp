@@ -47,9 +47,7 @@ namespace ice
     unsigned char* cptr;
 
     if (csize < 1 || rsize < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     mat = (MatrixStruct)malloc(sizeof(struct MatrixStruct_));
     /* Daten eintragen */
@@ -58,9 +56,7 @@ namespace ice
     mat->type = type;
 
     if (mat == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     if (last_mat == nullptr)
       {
@@ -83,15 +79,13 @@ namespace ice
         mat->data = (double**)malloc(rsize * sizeof(double*));
 
         if (mat->data == nullptr)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         mat->data[0] = (double*)malloc(csize * rsize * sizeof(double));
 
         if (mat->data[0] == nullptr)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             free(mat->data);
             free(mat);
             return (nullptr);
@@ -109,15 +103,13 @@ namespace ice
         mat->datai = (int**)malloc(rsize * sizeof(int*));
 
         if (mat->datai == nullptr)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         mat->datai[0] = (int*)malloc(csize * rsize * sizeof(int));
 
         if (mat->datai[0] == nullptr)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             free(mat->datai);
             free(mat);
             return (nullptr);
@@ -135,15 +127,13 @@ namespace ice
         mat->datac = (unsigned char**)malloc(rsize * sizeof(char*));
 
         if (mat->datac == nullptr)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         mat->datac[0] = (unsigned char*)malloc(csize * rsize * sizeof(char));
 
         if (mat->datac[0] == nullptr)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             free(mat->datac);
             free(mat);
             return (nullptr);
@@ -158,7 +148,7 @@ namespace ice
         mat->datai = nullptr;
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
         free(mat);
         return (nullptr);
       }
@@ -190,9 +180,7 @@ namespace ice
   int FreeMatrix(MatrixStruct mat)
   {
     if (IsMatrix(mat) == false)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     switch (mat->type)
       {
@@ -245,22 +233,16 @@ namespace ice
 
     /* Test der Matrizen */
     if (IsMatrix(m1) == false)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (m2 != nullptr)
       {
         if (IsMatrix(m2) == false)
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
         else
           {
             if (m1->type != m2->type || m1->csize != m2->rsize || m1->rsize != m2->csize)
-              {
-                throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-              }
+              throw IceException(FNAME, M_MAT_NO_COMPAT);
 
             dmat = m2;
           }
@@ -315,22 +297,16 @@ namespace ice
 
     /* Test der Matrizen */
     if (IsMatrix(m1) == false)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (m2 != nullptr)
       {
         if (IsMatrix(m2) == false)
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
         else
           {
             if (m1->type != m2->type || m1->csize != m2->csize || m1->rsize != m2->rsize)
-              {
-                throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-              }
+              throw IceException(FNAME, M_MAT_NO_COMPAT);
 
             dmat = m2;
           }
@@ -384,26 +360,18 @@ namespace ice
 
     /*Parametertest*/
     if (!IsMatrix(m1) || !IsMatrix(m2))
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (m1->type != m2->type || m1->csize != m2->rsize)
-      {
-        throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-      }
+      throw IceException(FNAME, M_MAT_NO_COMPAT);
 
     if (m3 != nullptr)
       {
         if (!IsMatrix(m3))
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
         if (m1->type != m3->type || m3->rsize != m1->rsize || m3->csize != m2->csize)
-          {
-            throw IceException(FNAME, M_MAT_NO_COMPAT, MAT_NO_COMPAT);
-          }
+          throw IceException(FNAME, M_MAT_NO_COMPAT);
       }
     /*Zielmatrix anfordern*/
     else
@@ -411,9 +379,7 @@ namespace ice
         m3 = NewMatrix(m1->type, m1->rsize, m2->csize);
 
         if (m3 == nullptr)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
       }
 
     /*hier geht's los*/
@@ -462,9 +428,7 @@ namespace ice
     int i, j;
 
     if (!IsMatrix(A))
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     switch (A->type)
       {

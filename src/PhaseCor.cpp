@@ -50,8 +50,8 @@ namespace ice
         ImageD imgd3  = NewImgD(xs, ys, -DBL_MAX, DBL_MAX);
         ImageD imgd3i = NewImgD(xs, ys, -DBL_MAX, DBL_MAX);
 
-        SetImgD(imgd1i, 0.0);
-        SetImgD(imgd2i, 0.0);
+        setImgD(imgd1i, 0.0);
+        setImgD(imgd2i, 0.0);
 
         FourierImgD(imgd1, imgd1i, NORMAL, imgd3, imgd3i);
         FourierImgD(imgd2, imgd2i, NORMAL, imgd1, imgd1i);

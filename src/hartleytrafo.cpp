@@ -50,14 +50,10 @@ namespace ice
     int i;
 
     if (n < 2)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (src == NULL || res == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((n & 1) == 0)
       {

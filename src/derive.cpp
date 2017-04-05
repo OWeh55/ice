@@ -202,7 +202,6 @@ namespace ice
   /*                        huefner 1/94                             */
   /*******************************************************************/
 
-
   int Derive2Func(FuncD func, int dim, int i, double* x, double h, int mode, double* val)
 
   /*
@@ -217,7 +216,6 @@ namespace ice
     mode=1 - Stützstellen: -1, 0, 1, 2, 3
     mode=0 - Stützstellen: -2,-1, 0, 1, 2
   */
-
 
   {
     double* hptrx0;
@@ -380,9 +378,7 @@ namespace ice
 
     /*--- Parametertest ----------------------------------------------*/
     if (*prec >= 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (down > top)
       {

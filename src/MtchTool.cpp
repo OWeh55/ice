@@ -179,23 +179,17 @@ namespace ice
   {
     if (re == NULL || im == NULL ||
         re->xsize != im->xsize || re->ysize != im->ysize)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (dest == NULL)
       {
         dest = NewImgD(re->xsize, re->ysize, -DBL_MAX, DBL_MAX);
 
         if (dest == NULL)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
       }
     else if (dest->xsize != re->xsize || dest->ysize != re->ysize)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (smear)
       {
@@ -237,9 +231,7 @@ namespace ice
       dy >= img->xsize / 2 || dy >= img->ysize / 2 ||
       dx < 0 || dy < 0
     )
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (mode == CF_CUT)
       {
@@ -254,9 +246,7 @@ namespace ice
             PutVal(dest, x, y, GetVal(img, x - dest->xsize / 2 + img->xsize / 2, y - dest->ysize / 2 + img->ysize / 2));
       }
     else
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return OK;
   }
@@ -270,9 +260,7 @@ namespace ice
   double EntropyImg(Image img)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double entropy = 0.0;
     double p;
@@ -304,9 +292,7 @@ namespace ice
   double EntropyImgD(ImageD img, double& maxentro)
   {
     if (!img.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double entropy = 0.0;
     int i, j, g;
@@ -362,18 +348,14 @@ namespace ice
     ConturList clist;
 
     if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img->xsize || sy >= img->ysize)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int weiter = true;
 
     Image mark = NewImg(img->xsize, img->ysize, 1);
 
     if (!IsImg(mark))
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     clearImg(mark);
 
@@ -414,9 +396,7 @@ namespace ice
         DPointList pl = NewDPointList();
 
         if (pl == NULL)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         x = x0;
         y = y0;
@@ -476,7 +456,7 @@ namespace ice
         if (plnrm == NULL)
           {
             FreePointList(pl);
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           }
 
         for (int pln = 0; pln < pl->lng; pln++)

@@ -87,9 +87,7 @@ namespace ice
         delete [] Buffer;
       }
     else
-      {
-        throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_FOUND);
     return img;
   }
 
@@ -156,9 +154,7 @@ namespace ice
         return OK;
       }
     else
-      {
-        throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_FOUND);
   }
 #undef FNAME
 
@@ -188,7 +184,7 @@ namespace ice
         return OK;
       }
 
-    throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
+    throw IceException(FNAME, M_NOT_FOUND);
   }
 #undef FNAME
 
@@ -197,17 +193,13 @@ namespace ice
   int WriteTIFImg(const Image& img, const string& fname)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     TIFF* image;
 
     // Open the TIFF file
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, ERROR);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // We need to set some values for basic tags before we can add any data
     TIFFSetField(image, TIFFTAG_IMAGEWIDTH, img.xsize);
@@ -246,9 +238,7 @@ namespace ice
                   const string& fname)
   {
     if (! imgr.isValid() && imgg.isValid() && imgb.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xs, ys;
     RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
@@ -257,9 +247,7 @@ namespace ice
 
     // Open the TIFF file
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, ERROR);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // We need to set some values for basic tags before we can add any data
     TIFFSetField(image, TIFFTAG_IMAGEWIDTH, xs);

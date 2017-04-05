@@ -46,9 +46,7 @@ namespace ice
         Contur res;
 
         if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-          {
-            throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_DIM);
 
         IMatrix m = ConturPointlist(c);
 
@@ -78,7 +76,7 @@ namespace ice
       }
 
     if (tr.dimSource > m1.cols())
-      throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIM);
 
     m2 = Matrix(m1.rows(), tr.dimTarget);
 

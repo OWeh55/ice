@@ -94,9 +94,7 @@ namespace ice
 
     if ((!orig.inside(p)) || (maxSize <= 0) ||
         (stdmax <= 0))   // Parametertestung
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig -> Fehlermeldung
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Histogram stat(orig.maxval + 1);
 
@@ -201,9 +199,7 @@ namespace ice
     Region res;
 
     if ((!orig.inside(p)) || (MaxSize <= 0))   // Parametertestung
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image himg;
     himg.create(orig.xsize, orig.ysize, 1);

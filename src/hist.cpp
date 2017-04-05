@@ -87,9 +87,7 @@ namespace ice
     int i;
 
     if ((number < 1) || (diff <= 0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     delete [] klasse;
     nClasses = number;
@@ -97,7 +95,7 @@ namespace ice
 
     if (klasse == nullptr)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         delete [] klasse;
         return NO_MEM;
       }
@@ -122,9 +120,7 @@ namespace ice
     int kl;
 
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     kl = (int)floor((val - lowerLimit) / classwidth) + 1;
 
@@ -182,14 +178,10 @@ namespace ice
   int Hist::Count(int index) const
   {
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if ((index < 0) || (index > nClasses + 1))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return klasse[index];
   }
@@ -198,19 +190,13 @@ namespace ice
   double Hist::Rel(int index) const
   {
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (index < 0 || index > nClasses + 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (sum == 0)
-      {
-        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     return (double)klasse[index] / (double)sum;
   }
@@ -220,9 +206,7 @@ namespace ice
   int Hist::Limits(double& minv, double& maxv) const
   {
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     minv = min;
     maxv = max;
@@ -236,19 +220,13 @@ namespace ice
     int qabs;
 
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if ((q < 0.0) || (q > 0.5))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (sum == 0)
-      {
-        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     qabs = RoundInt(sum * q);
 
@@ -291,14 +269,10 @@ namespace ice
   double Hist::ClassValue(int nr) const
   {
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (nr < 0 || nr > nClasses + 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return (nr - 1 + 0.5) * classwidth + lowerLimit; // Klassenmitte als Repr�entant
   }
@@ -307,14 +281,10 @@ namespace ice
   {
     // hier nur "normale" Klassen
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (nr < 1 || nr > nClasses)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     min = (nr - 1) * classwidth + lowerLimit;
     max = min + classwidth;
@@ -329,18 +299,13 @@ namespace ice
     int i;
 
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (sum == 0)
-      {
-        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     sumx = sumx2 = sumx3 = 0;
     n = sum;
-
 
     for (i = 1; i <= nClasses; i++)
       {
@@ -366,9 +331,7 @@ namespace ice
   int Hist::Statistic(int& n) const
   {
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     n = sum;
     return OK;
@@ -397,14 +360,10 @@ namespace ice
     char zahlstr[80];
 
     if (!isInit)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (!IsImg(b))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     x1 = 0;
     y1 = 0;
@@ -506,14 +465,10 @@ namespace ice
     Hist h;
 
     if (!IsImg(b))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((diff > b->xsize) || (diff > (b->ysize)) || diff < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     h.Reset((b->maxval + 1 + (klbr - 1)) / klbr, klbr, 0);
 

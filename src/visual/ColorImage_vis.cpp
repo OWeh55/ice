@@ -40,9 +40,7 @@ namespace ice
   Visual Show(int mode, const ColorImage& img, string wname)
   {
     if (!img.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (wname.empty())
       {
@@ -60,7 +58,7 @@ namespace ice
       case OFF:
         return wxGetApp().GetImageManager()->Show(OFF, GetVisual(img));
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
     return OK;
   }

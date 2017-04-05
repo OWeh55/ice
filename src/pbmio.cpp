@@ -118,9 +118,7 @@ namespace ice
     EXFILE fd = exopen(fname, FWMODUS);
 
     if (fd.fd == nullptr)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     int rc = WritePBMImg(r, g, b, fd);
 
@@ -136,9 +134,7 @@ namespace ice
     int maxval;
 
     if ((fd = fopen(fname.c_str(), FWMODUS)) == nullptr)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     maxval = img->maxval;
     fprintf(fd, "P5\n%d %d %d\n", img->xsize, img->ysize, maxval);

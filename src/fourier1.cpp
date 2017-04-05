@@ -54,7 +54,7 @@ namespace ice
         direction = false;
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     int xs, ys;

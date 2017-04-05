@@ -233,7 +233,7 @@ int main(int argc, char* argv[])
   ReadImg(filename, r, g, b);
 
   m1 = NewImg(r);
-  ClearImg(m1);
+  clearImg(m1);
 
   if (readtags)
     {
@@ -267,7 +267,7 @@ int main(int argc, char* argv[])
   if (writereadtest)
     {
       m2 = NewImg(r);
-      ClearImg(m2);
+      clearImg(m2);
     }
 
   Vector feat;

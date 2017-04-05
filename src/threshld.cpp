@@ -50,9 +50,7 @@ namespace ice
     int topt;
 
     if (!hist.valid())
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     int n = hist.classes();
 
@@ -77,9 +75,7 @@ namespace ice
       }
 
     if (nn == 0)
-      {
-        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     if (nn == 1)
       {
@@ -175,9 +171,7 @@ namespace ice
     int topt;
 
     if (!hist.isValid())
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     int n = hist.nClasses();
 
@@ -203,9 +197,7 @@ namespace ice
       }
 
     if (nn == 0)
-      {
-        throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     if (nn == 1)
       {

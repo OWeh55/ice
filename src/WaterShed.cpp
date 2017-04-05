@@ -69,7 +69,7 @@ namespace ice
             WST2(temp, WSImg);
             break;
           default:
-            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_MODE);
           }
       }
     RETHROW;
@@ -383,7 +383,7 @@ ende:
     // Test, ob Regionenzahl in Zielbild passt
     if (ret->maxval < current_label)
       {
-        throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
+        throw IceException(FNAME, M_LOWRANGE);
         FreeImg(m3);
         ddelete(m1, xsize, ysize);
         return WRONG_PARAM;
@@ -403,7 +403,6 @@ ende:
     return OK;
   }
 #undef FNAME
-
 
 // verschiedene Labels an Markerregionen vergeben
   int fillStartRegion(Image& m1, Image& m2, int x, int y, int currLab)
@@ -486,9 +485,7 @@ ende:
         m1[j] = (int*) malloc(sizeof(int) * xmax);
 
         if (m1[j] == NULL)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
       }
 
     // WS-Markierungsbild initialisieren
@@ -707,9 +704,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
     // Rueckgabebild
     if (ret->maxval < curlab)
-      {
-        throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_LOWRANGE);
 
     for (int y = 0; y < ret.ysize; y++)
       for (int x = 0; x < ret.xsize; x++)
@@ -735,7 +730,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     };)
     return true;
   }
-
 
   bool PixelIsMinimum(const Image& i, int x, int y)
   {
@@ -891,7 +885,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     return second;
   }
 
-
 // Bildminima in Bild io markieren
   int getImgMinimas2(const Image& i, Image& io)
   {
@@ -923,9 +916,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     if (!IsImg(i) || !IsImg(io))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (int y = 0; y < i.ysize; y++)
       for (int x = 0; x < i.xsize; x++)
@@ -945,9 +936,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     if (!IsImg(i) || !IsImg(io))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (int y = 0; y < i.ysize; y++)
       for (int x = 0; x < i.xsize; x++)
@@ -1012,9 +1001,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     setImg(status, 0);
 
     if (!IsImg(i1) || treshold < 0)     // Eingabebild gueltig
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     struct STPoint temp;
 
@@ -1076,9 +1063,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     if (!IsImg(GrwImg) || !IsImg(WSHEDDeleted))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);   // ERROR - Bilder nicht initialisiert
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int xn, yn;
 
@@ -1132,7 +1117,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {
         // Eingabebilder ungleich NULL?
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     int maxval = WSImg->maxval;

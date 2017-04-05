@@ -297,14 +297,10 @@ namespace ice
     int getPixel(int x, int y) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       return img->getP(x, y);
     }
@@ -312,14 +308,10 @@ namespace ice
     int getPixel(IPoint p) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       return img->getP(p.x, p.y);
     }
@@ -388,19 +380,13 @@ namespace ice
     void setPixel(int x, int y, int val) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if ((unsigned int)val > (unsigned int)maxval)
-        {
-          throw IceException(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_VAL_OUT_OF_RANGE);
 
       img->setP(x, y, val);
     }
@@ -408,19 +394,13 @@ namespace ice
     void setPixel(IPoint p, int val) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if ((unsigned int)val > (unsigned int)maxval)
-        {
-          throw IceException(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_VAL_OUT_OF_RANGE);
 
       img->setP(p.x, p.y, val);
     }
@@ -467,14 +447,10 @@ namespace ice
     void setPixelLimited(int x, int y, int val) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if (val <= 0)
         {
@@ -493,14 +469,10 @@ namespace ice
     void setPixelLimited(IPoint p, int val) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if (val <= 0)
         {

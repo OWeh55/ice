@@ -49,9 +49,7 @@ namespace ice
         classifiers.resize(nTrees);
         nUse = nUsep;
         if (nUse > nTrees)
-          {
-            throw IceException(FNAME, M_WRONG_PARAMETER, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAMETER);
         for (unsigned int i = 0; i < classifiers.size(); ++i)
           {
             classifiers[i].Init(classes, dimension, depth);

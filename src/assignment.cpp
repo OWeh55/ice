@@ -33,9 +33,7 @@ namespace ice
     // Ordnung: originale Zeile mit dem Index ref[i][0] erscheint
     // im Ergebnis in Zeile ref[i][1]
     if (feat.rows() != ref.rows())
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     int i;
     Matrix f1 = feat;

@@ -32,7 +32,6 @@
 #include "IceException.h"
 #include "numbase.h"
 
-
 #include "PeakVal.h"
 #include "PeakDtct.h"
 
@@ -61,9 +60,7 @@ namespace ice
     if (!IsImg(img) ||
         (mode != PN_NORMAL && mode != PN_CONVOLUTION) ||
         graynull < 0 || graynull > img.maxval)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double   value = 0, pg0 = 0, noise = 0;
 
@@ -136,7 +133,6 @@ namespace ice
         return 0.0;
       }
 
-
     x0 = pl->x;
     y0 = pl->y;
 
@@ -153,9 +149,7 @@ namespace ice
     double* grwd = new double[panz];
 
     if (grwd == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     plptr = pl;
     panz = 0;
@@ -171,8 +165,6 @@ namespace ice
 
     do
       {
-
-
 
         if (pnum == 0)
           {
@@ -205,7 +197,6 @@ namespace ice
     return pg0 / value;
 
   }
-
 
 #undef FNAME
 }

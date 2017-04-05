@@ -47,9 +47,7 @@ namespace ice
              int norm, int offset)
   {
     if (norm == 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
@@ -95,9 +93,7 @@ namespace ice
                 int norm, int offset)
   {
     if (norm == 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
@@ -153,24 +149,16 @@ namespace ice
              int norm)
   {
     if (norm == 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImg(src))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImgD(dest))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     return lsiimg(src, dest, nx, ny, mask, norm);
   }
@@ -191,19 +179,13 @@ namespace ice
     // equal size of the active windows
 
     if (!IsImg(src))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImgD(dest))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     return lsiimg(src, dest, nx, ny, mask);
   }
@@ -223,9 +205,7 @@ namespace ice
              int norm)
   {
     if (norm == 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows

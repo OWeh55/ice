@@ -53,7 +53,8 @@ int main(int argc, char* argv[])
   Printf("Now switching overlay colors cyclically on keypress. end with typing 'X'");
   int i = 1;
 
-  while (GetChar() != 'X') SetImg(m, (i++) % 64);
+  while (GetChar() != 'X')
+    setImg(m, (i++) % 64);
 
   return 0;
 }

@@ -418,9 +418,7 @@ namespace ice
            bool restore, const string& title)
   {
     if (zz.size() != id.size())
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
     int sel = Menu(zz, x1, y1, x2, y2, restore, title);
     if (sel >= 0)
       {
@@ -434,9 +432,7 @@ namespace ice
            bool restore, const string& title)
   {
     if (zz.size() != id.size())
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
     int sel = Menu(zz, x1, y1, x2, y2, restore, title);
     if (sel >= 0)
       {

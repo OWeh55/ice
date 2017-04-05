@@ -93,14 +93,10 @@ namespace ice
                          double* solution, double& costs)
   {
     if ((rows <= 0) || (columns <= 0))
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (matrix == NULL || r_side == NULL || cost_function == NULL || solution == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     int m;    /* number of constraints */
     int n;    /* number of variables */
@@ -311,7 +307,6 @@ namespace ice
              &zf,
              gew
            );
-
 
     for (i = 0; i < n; ++i)
       {

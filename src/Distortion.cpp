@@ -69,9 +69,7 @@ namespace ice
     Vector res(2);
 
     if (v.size() != 2)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     Distort(v[0], v[1], res[0], res[1]);
     return res;
@@ -105,9 +103,7 @@ namespace ice
     Vector result = v;
 
     if (v.size() != 2)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     Rect(v[0], v[1], result[0], result[1]);
     return result;
@@ -133,14 +129,10 @@ namespace ice
   int Distortion::RectImg(const Image& source, const Image& dest, int mode) const
   {
     if (!IsImg(source) || !IsImg(dest))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (dest->maxval != source->maxval)
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (source == dest)
       {
@@ -308,9 +300,7 @@ namespace ice
     int rc = LMDif(op, DistError(*this, parvec, marker, orig), 10000, inumber);
     //    cout << LMDifMessage(rc) << endl;
     if (rc > 4)
-      {
-        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
     else
       {
         // store calculated parameters of distortion
@@ -434,9 +424,7 @@ namespace ice
 
     int nrlist = marker.size();
     if ((int)orig.size() != nrlist)
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     Vector parameterVector(nr_distortion_parameter + 8 * nrlist);
 
@@ -511,9 +499,7 @@ namespace ice
     cout << inumber << " Iterationen" << endl;
 #endif
     if (rc > 4)
-      {
-        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
     else
       {
         // store calculated parameters of distortion
@@ -529,7 +515,6 @@ namespace ice
 
     return OK;
   }
-
 
   int Distortion::Calc(const Matrix& marker, const Matrix& orig,
                        Trafo& tr, double mx, double my)

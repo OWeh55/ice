@@ -32,9 +32,9 @@ int main(int argc, char* argv[])
   Show(ON, img2, "Min");
   Show(ON, img3, "Max");
 
-  ClearImg(img);
-  ClearImg(img2);
-  ClearImg(img3);
+  clearImg(img);
+  clearImg(img2);
+  clearImg(img3);
 
   PutVal(img, XSIZE / 2, YSIZE / 2, GMAX);
   PutVal(img, XSIZE / 2 + 2, YSIZE / 2, GMAX);

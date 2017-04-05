@@ -65,16 +65,14 @@ namespace ice
         sortarray = pl->wptr;
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     /*Indexfeld anlegen*/
     ix = (int*)malloc(pl->lng * sizeof(int));
 
     if (ix == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < pl->lng; i++)
       {
@@ -89,7 +87,7 @@ namespace ice
     if (pls == NULL)
       {
         free(ix);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     /*Punkte in Reihenfolge übertragen*/
@@ -169,14 +167,10 @@ namespace ice
     MatrixStruct mats;
 
     if (!IsMatrix(mat))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (col >= mat->csize)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /*zu sortierendes Feld auswählen*/
     sortcol = col;
@@ -184,9 +178,7 @@ namespace ice
     ix = (int*)malloc(mat->rsize * sizeof(int));
 
     if (ix == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < mat->rsize; i++)
       {
@@ -199,7 +191,7 @@ namespace ice
     if (mats == NULL)
       {
         free(ix);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     /*Matrix sortieren */

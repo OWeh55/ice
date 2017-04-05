@@ -39,9 +39,7 @@ namespace ice
     Image imgd = NewImg(img);
 
     if (!IsImg(imgd))
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     int g, x, y;
     gmean = 0;
@@ -117,9 +115,7 @@ namespace ice
         imgs = NewImg(img1, true); // Kopie als Quelle erzeugen
 
         if (!IsImg(imgs))
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         newimg = true;
       }
@@ -139,7 +135,6 @@ namespace ice
 
     int x, y, max = 0, g;
     double maxgauss = Gauss2D(0, 0, 0, 0, (img1->xsize) / 3.5, (img1->ysize) / 3.5, 0);
-
 
     for (y = 0; y < imgs->ysize; y++)
       {

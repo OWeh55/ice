@@ -124,14 +124,10 @@ namespace ice
     int points = p1.rows();
 
     if ((points != p2.rows()) || (points != weight.Size()))
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     if ((p1.cols() != 2) || (p2.cols() != 2))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Vector para;
     IVector opara;
@@ -198,7 +194,7 @@ namespace ice
         return res;
       }
 
-    throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
+    throw IceException(FNAME, M_NUM_INSTABILITY);
   }
 
   Trafo MatchPano(const Matrix& p1, const Matrix& p2,

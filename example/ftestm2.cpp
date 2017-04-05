@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 
   while (c)
     {
-      ClearImg(img);
+      clearImg(img);
       Printf("Bitte Punkte eingeben, Abbruch mit rechter Maustaste.\n");
 
       Matrix pl(0, 2);
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
         }
       while (!(rc < 0));
 
-      ClearImg(img);
+      clearImg(img);
 
       for (int i = 0; i < pl.rows(); i++)
         Marker(1, RoundInt(pl[i][0]), RoundInt(pl[i][1]), 4, 15, img);

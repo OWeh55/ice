@@ -151,7 +151,6 @@ namespace ice
               }
           }
 
-
         pl[i1] = IMatrix(xlen, 2);
 
         for (ind = 0, sind = xlen - 1; ind < xlen; ind++, sind--)

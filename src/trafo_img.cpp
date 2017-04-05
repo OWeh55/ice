@@ -47,14 +47,10 @@ namespace ice
     Trafo tri;
 
     if ((!IsImg(hsimg)) || (!IsImg(dimg)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     try
       {

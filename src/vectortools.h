@@ -135,7 +135,7 @@ namespace ice
       {
         if (c != '<')
           {
-            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE);
             is.clear();
             return is;
           }
@@ -154,7 +154,7 @@ namespace ice
 
             if ((c != ',') && (c != '>'))
               {
-                throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILE);
                 is.clear();
                 return is;
               }

@@ -59,9 +59,7 @@ namespace ice
     {
       if (sortmode != SORT_X && sortmode != SORT_Y &&
           sortmode != SORT_VAL)
-        {
-          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_PARAM);
 
       xptr = yptr = wptr = vptr = nullptr;
       lng = 0;
@@ -102,9 +100,7 @@ namespace ice
             }
 
           if (ptr == nullptr)
-            {
-              throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            }
+            throw IceException(FNAME, M_NO_MEM);
 
           xptr = ptr;
 
@@ -123,9 +119,7 @@ namespace ice
             }
 
           if (ptr == nullptr)
-            {
-              throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            }
+            throw IceException(FNAME, M_NO_MEM);
 
           yptr = ptr;
 
@@ -144,9 +138,7 @@ namespace ice
             }
 
           if (ptr == nullptr)
-            {
-              throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            }
+            throw IceException(FNAME, M_NO_MEM);
 
           wptr = ptr;
 
@@ -292,9 +284,7 @@ namespace ice
     PeakList pl = new _PeakList;
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->next = nullptr;
     pl->prev = nullptr;
@@ -1283,7 +1273,7 @@ namespace ice
 
     if (index == nullptr)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         FreeImg(mask1);
         return nullptr;
       }
@@ -1397,9 +1387,7 @@ namespace ice
         mingrw > img->maxval ||
         (IsImg(global_mark) && (img->xsize != global_mark->xsize ||
                                 img->ysize != global_mark->ysize)))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (noise == 0 && feat == IPL_NOFEAT)
       {
@@ -1508,9 +1496,7 @@ namespace ice
         pl = NewPeakList();
 
         if (pl == nullptr)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
         else
           {
             pl->x = pl->y = pl->grw = -1;
@@ -1707,9 +1693,7 @@ namespace ice
         pl = NewPeakList();
 
         if (pl == nullptr)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
         else
           {
             pl->x = pl->y = pl->grw = -1;
@@ -1737,9 +1721,7 @@ namespace ice
     PeakList ptr = pl;
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     while ((ptr->prev) != nullptr)
       {
@@ -1768,9 +1750,7 @@ namespace ice
 
     if (!IsImg(img) || x < 0 || y < 0 || x >= img->xsize || y >= img->ysize ||
         (flag != IPL_MAXCONTUR && flag != IPL_MINCONTUR))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image mask1;
     mask1.create(img->xsize, img->ysize, 3);
@@ -1779,9 +1759,7 @@ namespace ice
     long  count = 0;
 
     if (!IsImg(mask1))
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     clearImg(mask1);
 

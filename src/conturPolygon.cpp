@@ -32,9 +32,7 @@ namespace ice
   {
 
     if (pl.rows() < 3 || pl.cols() < 2)
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     Matrix plw = Matrix(pl);
     Matrix pcl = Matrix(1, 2);
@@ -111,16 +109,12 @@ namespace ice
   bool pointInside(double x, double y, const Contur& c)
   {
     if (!c.isValid())
-      {
-        throw IceException(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_INVALID_CONTUR);
 
     int nPoints = c.Number();
 
     if (nPoints < 3)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     Matrix pl = Matrix(nPoints, 2);
     int hx, hy;
@@ -147,9 +141,7 @@ namespace ice
   {
 
     if (pl.rows() < 3 || pl.cols() < 2)
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     Matrix plw(pl);
     Matrix pcl(1, 2);

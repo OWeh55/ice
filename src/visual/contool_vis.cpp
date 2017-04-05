@@ -56,9 +56,7 @@ namespace ice
     Contur c;
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     lastPoint = IPoint(img->xsize / 2, img->ysize / 2);
     newPoint = lastPoint;

@@ -84,16 +84,12 @@ namespace ice
         sint = new double[size];
 
         if (sint == NULL)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         cost = new double[size];
 
         if (cost == NULL)
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
       }
 
     double n = size;
@@ -233,23 +229,17 @@ namespace ice
     int index;
 
     if (makesincostab(n, wi, wr, back) != OK)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     tr = new double[n];
 
     if (tr == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     ti = new double[n];
 
     if (ti == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < n; ++i)
       {
@@ -297,19 +287,13 @@ namespace ice
     int inverse;
 
     if (option != NORMAL && option != INVERS)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (n < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     inverse = (option != NORMAL);
 
@@ -351,16 +335,12 @@ namespace ice
     int inverse;
 
     if (option != NORMAL && option != INVERS)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     unsigned int dim = dstre.size();
 
     if (dim < 1 || dim != dstim.size())
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     inverse = (option != NORMAL);
 
@@ -393,16 +373,12 @@ namespace ice
     int inverse;
 
     if (option != NORMAL && option != INVERS)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     unsigned int dim = srcre.size();
 
     if (dim < 1 || dim != srcim.size())
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     dstre = srcre;
     dstim = srcim;

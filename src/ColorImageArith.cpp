@@ -53,47 +53,39 @@ namespace ice
    * the user has the posibility to fill the channels independent
    * from the current colorspace
    */
-  int setImg(const ColorImage& img, unsigned int val)
+  void setImg(const ColorImage& img, unsigned int val)
   {
     RETURN_ERROR_IF_FAILED((setImg(img.redImage(), val)));
     RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), val)));
     RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), val)));
-
-    return OK;
   }
 
-  int setImg(const ColorImage& img, const ColorValue& val)
+  void setImg(const ColorImage& img, const ColorValue& val)
   {
     int maxval = img.maxval;
     RETURN_ERROR_IF_FAILED((setImg(img.redImage(), maxval - val.red)));
     RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), maxval - val.green)));
     RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), maxval - val.blue)));
-
-    return OK;
   }
 
-  int setImg(const ColorImage& img, const Function2d& fn)
+  void setImg(const ColorImage& img, const Function2d& fn)
   {
     RETURN_ERROR_IF_FAILED((setImg(img.redImage(), fn)));
     RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), fn)));
     RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), fn)));
-
-    return OK;
   }
 
-  int setImg(const ColorImage& img, const Function2d& fn1,
-             const Function2d& fn2, const Function2d& fn3)
+  void setImg(const ColorImage& img, const Function2d& fn1,
+              const Function2d& fn2, const Function2d& fn3)
   {
     RETURN_ERROR_IF_FAILED((setImg(img.redImage(), fn1)));
     RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), fn2)));
     RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), fn3)));
-
-    return OK;
   }
 #undef FNAME
 
 #define FNAME "AddImg"
-  void AddImg(const ColorImage& img1, const ColorImage& img2,
+  void addImg(const ColorImage& img1, const ColorImage& img2,
               const ColorImage& dest, int mode)
   {
     try
@@ -107,7 +99,7 @@ namespace ice
 #undef FNAME
 
 #define FNAME "SubImg"
-  void SubImg(const ColorImage& img1, const ColorImage& img2,
+  void subImg(const ColorImage& img1, const ColorImage& img2,
               const ColorImage& dest, int mode, int smode)
   {
     try
@@ -121,7 +113,7 @@ namespace ice
 #undef FNAME
 
 #define FNAME "MaxImg"
-  void MaxImg(const ColorImage& img1, const ColorImage& img2,
+  void maxImg(const ColorImage& img1, const ColorImage& img2,
               const ColorImage& dest, int mode)
   {
     try
@@ -135,7 +127,7 @@ namespace ice
 #undef FNAME
 
 #define FNAME "MinImg"
-  void MinImg(const ColorImage& img1, const ColorImage& img2,
+  void minImg(const ColorImage& img1, const ColorImage& img2,
               const ColorImage& dest, int mode)
   {
     try

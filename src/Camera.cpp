@@ -325,7 +325,6 @@ namespace ice
     assign(d);
   }
 
-
   Trafo& Camera::GetTrafo() const
   {
     create_trans();
@@ -339,9 +338,7 @@ namespace ice
     create_trans();
 
     if (v.size() != 3)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     vh = tr * v;
     vh = dist->Distort(vh);

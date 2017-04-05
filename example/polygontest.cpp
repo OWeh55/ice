@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 
       Print("\n Test distance()");
 
-      ClearImg(mark);
+      clearImg(mark);
       Contur c = m.MakeContur();
       FillRegion(c, 3, mark);
       MarkContur(c, 1, mark);
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
       GetChar();
 
       Print("\n Test closestCorner()");
-      ClearImg(mark);
+      clearImg(mark);
 #if 0
       MarkContur(c, 2, mark);
       IPoint sel;

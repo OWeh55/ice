@@ -167,9 +167,7 @@ namespace ice
   int VideoFile::open(const string& fn, ios_base::openmode mode)
   {
     if (reader || writer)
-      {
-        throw IceException(FNAME, M_ALREADY_OPEN, WRONG_STATE);
-      }
+      throw IceException(FNAME, M_ALREADY_OPEN);
 
     if (mode == ios_base::in)
       {
@@ -236,9 +234,7 @@ namespace ice
   bool VideoFile::read(const Image& img, int ch)
   {
     if (!reader)
-      {
-        throw IceException(FNAME, M_NOT_OPEN);
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
     try
       {
         Image r = NewImg(img->xsize, img->ysize, img->maxval);
@@ -284,7 +280,7 @@ namespace ice
   bool VideoFile::read(const Image& imgr, const Image& imgg, const Image& imgb)
   {
     if (!reader)
-      throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
+      throw IceException(FNAME, M_NOT_OPEN);
     try
       {
         return reader->read(imgr, imgg, imgb);
@@ -295,7 +291,7 @@ namespace ice
   bool VideoFile::read()
   {
     if (!reader)
-      throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
+      throw IceException(FNAME, M_NOT_OPEN);
     try
       {
         return reader -> read();
@@ -316,9 +312,7 @@ namespace ice
         writer->getPara(xsize, ysize, maxval, fpsp);
       }
     else
-      {
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
   }
 #undef FNAME
 #define FNAME "VideoFile::set"
@@ -334,16 +328,14 @@ namespace ice
         writer->setPara(xsize, ysize, maxval, fpsp, brate);
       }
     else
-      {
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
   }
 #undef FNAME
 #define FNAME "VideoFile::write"
   bool VideoFile::write(const Image& ir, const Image& ig, const Image& ib)
   {
     if (!writer)
-      throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
+      throw IceException(FNAME, M_NOT_OPEN);
 
     try
       {

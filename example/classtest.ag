@@ -296,7 +296,7 @@ int main(int argc, char* argv[])
       if (interactive > 0)
         {
           marker = Image::createImage(xsize, ysize, 255);
-          ClearImg(marker);
+          clearImg(marker);
           Show(OVERLAY, marker);
           setColorTable(marker);
           if (nClasses == 0)
@@ -310,7 +310,7 @@ int main(int argc, char* argv[])
               if (nClasses == 0)
                 nClasses = 3;
               marker = Image::createImage(xsize, ysize, 255);
-              ClearImg(marker);
+              clearImg(marker);
               switch (patternNr)
                 {
                 case 1:
@@ -507,7 +507,7 @@ int main(int argc, char* argv[])
         cout << "Finishing: " << finishTime << endl;
 
 
-      ClearImg(marker);
+      clearImg(marker);
       double classifyTime = -TimeD();
       classifyImage(marker, classifier, featureMode, nFeatures);
       classifyTime += TimeD();
@@ -515,7 +515,7 @@ int main(int argc, char* argv[])
         cout << "Classifying: " << classifyTime << endl;
 
       Image show = Image::createImage(xsize, ysize, 255);
-      ClearImg(show);
+      clearImg(show);
 
       Show(OVERLAY, show, classifierName[classifierNr]);
       setColorTable(show);

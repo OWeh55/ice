@@ -38,9 +38,7 @@ namespace ice
   GeoObject::GeoObject(const Vector& v)
   {
     if (v.Size() < 2)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     p.x = v[0];
     p.y = v[1];

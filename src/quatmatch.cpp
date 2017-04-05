@@ -35,7 +35,6 @@
 #include "mateigen.h"
 #include "defs.h"
 
-
 namespace ice
 {
 
@@ -45,14 +44,10 @@ namespace ice
     TrafoDualQuaternion out = TrafoDualQuaternion();
 
     if (!(orig.cols() == 3 && trans.cols() == 3))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!(orig.rows() == trans.rows()))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int k = orig.rows();
 
@@ -151,14 +146,14 @@ namespace ice
 
     if (!(orig.cols() == 3 && trans.cols() == 3 && weights.cols() == 1))
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
 
         return out;
       }
 
     if (!(orig.rows() == trans.rows() && orig.rows() == weights.rows()))
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
 
         return out;
       }
@@ -252,7 +247,6 @@ namespace ice
 
     Quaternion r = Quaternion(x[0], x[1], x[2], x[3]);
     RotQuaternion rot = convertToRotQuaternion(r);
-
 
     //Vector s = -0.5/k*(c2*x);
     Vector s = -c3 * (c2 * x);

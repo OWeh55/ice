@@ -64,9 +64,7 @@ namespace ice
     Moments mx = m.NormalizeSign();
 
     if (mx(0, 0) < EPSILON)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     Trafo tr;
     // trafo in die Standardlage ermitteln
@@ -221,9 +219,7 @@ namespace ice
         int n = pl.rows();
 
         if (n > 7)
-          {
-            throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_MATRIXFORMAT);
 
         double pstart[7][2]; // initial solution
 
@@ -247,7 +243,6 @@ namespace ice
     RETHROW;
   }
 
-
   Polygon FitPolygon(const Moments& m, const Polygon& pl, double& guetemass)
   {
     Polygon res(pl);
@@ -255,7 +250,7 @@ namespace ice
     int n = pl.size();
 
     if (n > 7)
-      throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double pstart[7][2]; // initial solution
 

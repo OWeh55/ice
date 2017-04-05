@@ -104,11 +104,11 @@ int main(int argc, char* argv[])
   r = u * d * (!v);
   stop("Matrix-Multiplikation");
 
-  SetImg(img2, r, RAW, UNSIGNED);
+  setImg(img2, r, RAW, UNSIGNED);
 
   GetChar();
 
-  ClearImgD(imgd);
+  clearImgD(imgd);
   bool abort = false;
   for (k = 0; !abort && k < dim; k++)
     {
@@ -146,7 +146,7 @@ int main(int argc, char* argv[])
   Show(ON, img1x);
   Show(ON, img2x);
 
-  SetImg(img1x, 127);
+  setImg(img1x, 127);
 
   // Symmetrisches Bild erzeugen
   for (i = 0; i < dim; i++)
@@ -171,7 +171,7 @@ int main(int argc, char* argv[])
   r = u * d * (!u);
   Print("fertig\n");
 
-  SetImg(img2x, r);
+  setImg(img2x, r);
 
   GetChar();
 

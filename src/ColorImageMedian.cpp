@@ -149,7 +149,7 @@ namespace ice
   void MedianImg(const ColorImage& src, const ColorImage& dest, int size)
   {
     if (!src.isValid() || !dest.isValid())
-      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     switch ((src.redImage()->ImageType() << 4) + dest.redImage()->ImageType())
       {

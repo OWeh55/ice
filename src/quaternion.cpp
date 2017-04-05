@@ -23,7 +23,6 @@
  * Author: Alexander Lärz, 2005
  */
 
-
 #include <math.h>
 
 #include "macro.h"
@@ -138,7 +137,7 @@ namespace ice
           }
       }
 
-    throw IceException(FNAME, M_NO_QUATERNIONEIGENWINKEL, NO_QUATERNIONEIGENWINKEL);
+    throw IceException(FNAME, M_NO_QUATERNIONEIGENWINKEL);
 
     return -1.0;
   }
@@ -149,7 +148,7 @@ namespace ice
   {
     if (i == 0 && j == 0 && k == 0)
       {
-        throw IceException(FNAME, M_NO_QUATERNIONEIGENACHSE, NO_QUATERNIONEIGENACHSE);
+        throw IceException(FNAME, M_NO_QUATERNIONEIGENACHSE);
 
         return Quaternion(0, 0, 0, 0);
       }
@@ -171,7 +170,7 @@ namespace ice
 
     if (getSquareNorm() == 0)
       {
-        throw IceException(FNAME, M_NO_QUATERNIONPHASES, NO_QUATERNIONPHASES);
+        throw IceException(FNAME, M_NO_QUATERNIONPHASES);
 
         return Vector3d(0, 0, 0);
       }
@@ -233,7 +232,6 @@ namespace ice
           }
       }
 
-
     return Vector3d(alpha, beta, delta);
   }
 #undef FNAME
@@ -278,7 +276,6 @@ namespace ice
     return Quaternion(nreal, ni, nj, nk);
   }
 
-
 #define FNAME "Quaternion :: getInverse()"
   Quaternion Quaternion :: getInverse()
   {
@@ -286,7 +283,7 @@ namespace ice
 
     if (norm == 0)
       {
-        throw IceException(FNAME, M_NO_QUATERNIONINVERSE, NO_QUATERNIONINVERSE);
+        throw IceException(FNAME, M_NO_QUATERNIONINVERSE);
 
         return (*this);
       }
@@ -307,7 +304,7 @@ namespace ice
 
     if (norm == 0)
       {
-        throw IceException(FNAME, M_NOT_NORMALIZEABLE, NOT_NORMALIZEABLE);
+        throw IceException(FNAME, M_NOT_NORMALIZEABLE);
 
         return (*this);
       }
@@ -421,7 +418,6 @@ namespace ice
     return ost << x.real << str1 << x.i << "i" << str2 << x.j << "j" << str3 << x.k << "k";
   }
 
-
   Quaternion qexp(const Quaternion& x)
   {
     double vectornorm = sqrt(x.i * x.i + x.j * x.j + x.k * x.k);
@@ -476,5 +472,4 @@ namespace ice
   }
 
 }
-
 

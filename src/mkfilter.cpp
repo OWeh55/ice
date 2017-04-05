@@ -85,9 +85,7 @@ namespace ice
       (ii < 0) ||
       (jj < 0)
     )
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int m = size;
     Matrix f(m * m, (grad + 1) * (grad + 2) / 2);
@@ -123,7 +121,6 @@ namespace ice
     return LSIFilter(mask);
   }
 #undef FNAME
-
 
 // these filters generate a (quasi boolean) huge matrix and
 // reduce size later by combining elements by "counting"

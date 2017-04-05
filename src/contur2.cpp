@@ -57,14 +57,10 @@ namespace ice
     y = ps[1];
 
     if ((direct != HORZ) && (direct != VERT))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImg(imgv))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (IsImg(imgo))
       {
@@ -77,9 +73,7 @@ namespace ice
     wya = imgv->ysize - 1;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-      {
-        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     if ((wxi - 1) == x)
       {
@@ -118,9 +112,7 @@ namespace ice
       }
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     xl = x - 1;
     xr = x + 1;
@@ -497,14 +489,10 @@ namespace ice
         maxdir = 0;
 
         if (!IsImg(imgv))
-          {
-            throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-          }
+          throw IceException(FNAME, M_WRONG_IMAGE);
 
         if (!IsImg(imgo))
-          {
-            throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-          }
+          throw IceException(FNAME, M_WRONG_IMAGE);
 
         MatchImg(imgv, imgo);
 
@@ -514,10 +502,10 @@ namespace ice
         wya = imgv->ysize - 1;
 
         if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-          throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+          throw IceException(FNAME, M_WRONG_WINDOW2);
 
         if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
-          throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         if (maxgap < 1)
           {
@@ -528,7 +516,7 @@ namespace ice
         pgl *= pgl;
 
         if ((val = GradVal(imgv, imgo, xs, ys, &startdir)) < pgl)
-          throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         gap = 0;
         PutVal(imgo, xs, ys, 1);
@@ -1029,9 +1017,7 @@ namespace ice
     ys = ps[1];
 
     if (cls == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // Test vom Startpunkt alle acht Richtungen nach links beginnend
     Freeman dir(4);
@@ -1046,9 +1032,7 @@ namespace ice
       }
 
     if (cr == 4)                    /* Startpunkt liegt im Objekt */
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT3);
 
     cr = 0;                        /* Zähler untersuchte Richtungen */
     dir.move(xs, ys, xf, yf);
@@ -1061,9 +1045,7 @@ namespace ice
       }
 
     if (cr == 8)                    /* Startpunkt liegt im Untergrund */
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT2);
 
     c.SetStart(xs, ys);
 

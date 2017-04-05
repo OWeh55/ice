@@ -181,9 +181,7 @@ namespace ice
               roottest(ch[1].real(), p3, p2, p1, p0, a0, a1, b0, b1) ||
               roottest(ch[2].real(), p3, p2, p1, p0, a0, a1, b0, b1))
            )
-          {
-            throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
-          }
+          throw IceException(FNAME, M_NUM_INSTABILITY);
 
         Complex hc1, hc2;
         Root2(a1, a0, hc1, hc2);
@@ -254,9 +252,7 @@ namespace ice
   double GammaFunction(double x)
   {
     if (x <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double c0 = 1.0;
     double c1 = 1.0    / 12.0;

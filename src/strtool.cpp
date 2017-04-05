@@ -182,9 +182,7 @@ namespace ice
     int wchars = mbstowcs(nullptr, str.c_str(), 0);
 
     if (wchars < 0)
-      {
-        throw IceException(FNAME, M_WRONG_CODING, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_CODING);
 
     wchar_t* ws = new wchar_t[wchars + 2];
     mbstowcs(ws, str.c_str(), wchars + 1);
@@ -200,9 +198,7 @@ namespace ice
     int chars = wcstombs(nullptr, str.c_str(), 0);
 
     if (chars < 0)
-      {
-        throw IceException(FNAME, M_WRONG_CODING, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_CODING);
 
     char* ms = new char[chars + 2];
     wcstombs(ms, str.c_str(), chars + 1);

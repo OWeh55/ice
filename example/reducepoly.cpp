@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
   Image mark;
   mark.create(600, 600, 8);
   Show(OVERLAY, img, mark);
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
 
   // ideales Rechteck
   Contur c1;
@@ -36,8 +36,8 @@ int main(int argc, char* argv[])
   reduceAndShow(c1, mark);
 
   // Kreis
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
   Circle ci(300, 300, 140);
   draw(ci, img, 255, 255);
   IPoint pp(300, 300);
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
   reduceAndShow(c1, mark);
 
   // abgerundetes Rechteck
-  ClearImg(mark);
+  clearImg(mark);
   for (int y = 0; y < img.ysize; y++)
     for (int x = 0; x < img.xsize; x++)
       {
@@ -58,8 +58,8 @@ int main(int argc, char* argv[])
   reduceAndShow(c1, mark);
 
   //
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
   for (int y = 0; y < img.ysize; y++)
     for (int x = 0; x < img.xsize; x++)
       {
@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
   reduceAndShow(c1, mark);
 
   // gestörtes Rechteck
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
   for (int y = 0; y < img.ysize; y++)
     for (int x = 0; x < img.xsize; x++)
       {

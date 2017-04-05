@@ -162,9 +162,7 @@ namespace ice
 
     if ((pn1.maxval >= MHISTSIZE) ||
         (sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
@@ -173,9 +171,7 @@ namespace ice
     int maxval = pn1.maxval;
 
     if (pn2.maxval < maxval)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     MinMaxHistogram mh(maxval);
     int** tmp = newtemp(dx, dy);
@@ -312,9 +308,7 @@ namespace ice
     int val;
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
@@ -420,9 +414,7 @@ namespace ice
       }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (destinationImage == imgs)
       {
@@ -516,9 +508,7 @@ namespace ice
       }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (destinationImage == imgs)
       {
@@ -655,14 +645,10 @@ namespace ice
     int x, y;
 
     if (pn1.maxval >= MHISTSIZE)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
@@ -673,9 +659,7 @@ namespace ice
     int maxval = pn1.maxval;
 
     if (pn2.maxval < maxval)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     MinMaxHistogram mh(maxval);
 
@@ -809,9 +793,7 @@ namespace ice
     int* buffer = NULL;
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
@@ -1332,24 +1314,18 @@ namespace ice
     int dx, dy;
 
     if (pn1->maxval >= MHISTSIZE)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     if ((sx < 1) || ((sx & 1) != 1) ||
         (sy < 1) || ((sy & 1) != 1) ||
         (sx >= dx) || (sy >= dy))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((pn1->maxval != pn2->maxval) ||
         (pn2->maxval != pn3->maxval))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;

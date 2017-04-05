@@ -181,6 +181,8 @@ namespace ice
     Mode currentMode;
     int linelength;
     int state;
+
+    //  device state constants
     static const int invalid = 0;
     static const int setUp = 1;
     static const int initialized = 2;

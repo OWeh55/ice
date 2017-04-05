@@ -380,22 +380,14 @@ int DetectShift1(Image img1, Image img2,
   imgr = NewImg(sx, sy, 255);
 
 //  Show(ON,imgr);
-  IF_FAILED(InvConvolutionImg(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS))
-  {
-    FreeImg(imgr);
-    return ERROR;
-  }
+  InvConvolutionImg(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS);
 
-  IF_FAILED(val = PeakValuation(imgr, Image(), dxy[0], dxy[1]))
-  {
-    FreeImg(imgr);
-    return ERROR;
-  }
+
+  PeakValuation(imgr, Image(), dxy[0], dxy[1]);
 
   dxy[0] -= sx / 2;
   dxy[1] -= sy / 2;
 //  GetChar();
-  FreeImg(imgr);
   return OK;
 }
 
@@ -403,8 +395,8 @@ int DetectShift1(Image img1, Image img2,
 void MarkRefs(const Matrix& xy, Image m1, Image m2)
 {
   int i;
-  ClearImg(m1);
-  ClearImg(m2);
+  clearImg(m1);
+  clearImg(m2);
 
   for (i = 0; i < xy.rows(); i++)
     {
@@ -544,13 +536,13 @@ void Modify()
           Printf("Referenz gelöscht\n");
           break;
         case '2':
-          ClearImg(hm2);
+          clearImg(hm2);
           dxy = Vector(SelVector(DEFAULT, hi2));
           xy12m[i] = Vector(xy12m[i][0], xy12m[i][1],
                             xy12m[i][2] + dxy[0] - SS2, xy12m[i][3] + dxy[1] - SS2);
           break;
         case '1':
-          ClearImg(hm1);
+          clearImg(hm1);
           dxy = Vector(SelVector(DEFAULT, hi1));
           xy12m[i] = Vector(xy12m[i][0] + dxy[0] - SS2, xy12m[i][1] + dxy[1] - SS2,
                             xy12m[i][2], xy12m[i][3]);
@@ -667,13 +659,13 @@ int main(int argc, char* argv[])
   readproject(project);
   i1 = ReadImg(fn1);
   m1 = NewImg(i1->xsize, i1->ysize, 7);
-  ClearImg(m1);
+  clearImg(m1);
   hi1 = NewImg(SSIZE, SSIZE, 255);
   hm1 = NewImg(SSIZE, SSIZE, 7);
 
   i2 = ReadImg(fn2);
   m2 = NewImg(i2->xsize, i2->ysize, 7);
-  ClearImg(m2);
+  clearImg(m2);
   hi2 = NewImg(SSIZE, SSIZE, 255);
   hm2 = NewImg(SSIZE, SSIZE, 7);
   Display(ON);

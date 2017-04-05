@@ -35,7 +35,6 @@
 // RC: 1       Alles O.K., aber Referenzpaare < min(m,n)
 // *************************************************************************
 
-
 #include <limits.h>
 #include <limits>
 
@@ -110,18 +109,14 @@ namespace ice
     n = cost.cols();
 
     if ((m <= 0) || (n <= 0))
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     anz = m * n;
 
     indices = new int[3 * anz];
 
     if (indices == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     if (mode == 0)
       {
@@ -133,16 +128,13 @@ namespace ice
               double c = cost.at(i).at(j);
 
               if (c < 0.0)
-                {
-                  throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                }
+                throw IceException(FNAME, M_WRONG_PARAM);
 
               if (c > max)
                 {
                   max = c;
                 }
             }
-
 
         double fak = ((double)INT_MAX) / max / 1000;
 
@@ -189,7 +181,6 @@ namespace ice
 
         double fak = new_maxval / max_cost;
 
-
         int k = 0;
 
         for (int i = 0; i < (int)cost.rows(); i++)
@@ -214,9 +205,7 @@ namespace ice
     rc = input_graph(m, n, anz, indices, &s, &t, &e, &w);
 
     if (rc == 1)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     matching(m, s, n, t, w);
 

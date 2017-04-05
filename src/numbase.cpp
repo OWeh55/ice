@@ -42,9 +42,7 @@ namespace ice
   int Mod(int d, int div)
   {
     if (div == 0)
-      {
-        throw IceException(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIVISION_ZERO);
 
     div = abs(div);
 
@@ -66,9 +64,7 @@ namespace ice
   double FMod(double v, double div)
   {
     if (div == 0.0)
-      {
-        throw IceException(FNAME, M_DIVISION_ZERO, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIVISION_ZERO);
 
     double adiv = fabs(div);
     double result = fmod(v, adiv);
@@ -129,7 +125,6 @@ namespace ice
     return 0;
   }
 
-
   /*** double-Vorzeichen eines "double"-Wertes ***/
   double SignD(double val)
   {
@@ -156,9 +151,7 @@ namespace ice
   int Random(int val)
   {
     if (val > RAND_MAX)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     return rand() % (val + 1);
     //    return (int)((double)(val + 1) * rand() / RAND_MAX);
@@ -201,7 +194,6 @@ namespace ice
   {
     return M_SQRT1_2 / sigma * exp(- x * x / (2 * sigma * sigma)) + my;
   }
-
 
   bool Solve2(double a1, double b1, double i1, // erste Gleichung
               double a2, double b2, double i2, // zweite Gleichung

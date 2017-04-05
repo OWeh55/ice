@@ -76,9 +76,7 @@ namespace ice
                 imag = new iceImage3(SizeX, SizeY, MaxValue, title);
               }
             else
-              {
-                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-              }
+              throw IceException(FNAME, M_WRONG_PARAM);
           }
       }
     assign(imag);
@@ -141,7 +139,7 @@ namespace ice
         imag = new iceImage3((iceImage3*)i.img, w, title);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     xsize = imag->xsize;
@@ -177,9 +175,7 @@ namespace ice
   Image NewImg(int sizeX, int sizeY, int maxValue, const std::string& title)
   {
     if (sizeX <= 0 || sizeY <= 0 || maxValue <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image Img;
     Img.create(sizeX, sizeY, maxValue, title);
@@ -189,9 +185,7 @@ namespace ice
   Image NewImg(const ice::Image& Img, bool ShallCopyContents, const std::string& title)
   {
     if (!IsImg(Img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Image result;
     result.create(Img, title); // create with given size..
@@ -209,9 +203,7 @@ namespace ice
                const std::string& title)
   {
     if (!IsImg(imgp))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Image result(imgp, w, title);
 
@@ -222,7 +214,7 @@ namespace ice
   void FreeImg(Image& img)
   {
     if (!IsImg(img))
-      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     img.destroy();
   }
@@ -281,8 +273,8 @@ namespace ice
     double dy  = y - (double) yi;
     double dy1 = 1.0 - dy;
     return dx1 * (dy1 * img->getP(xi, yi) + dy * img->getP(xi, yi1))
-      + dx  * (dy1 * img->getP(xi1, yi) + dy * img->getP(xi1, yi1));
-    
+           + dx  * (dy1 * img->getP(xi1, yi) + dy * img->getP(xi1, yi1));
+
   }
 
   bool Image::getPixelInterpol(double x, double y, double& val) const

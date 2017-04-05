@@ -149,36 +149,36 @@ int main(int argc, char* argv[])
     display = true;
 
   Image tests = NewImg(xsize, ysize, 255);
-  ClearImg(tests);
+  clearImg(tests);
 
   if (display) Show(ON, tests, "Source");
 
   Image testd = NewImg(xsize, ysize, 255);
-  ClearImg(testd);
+  clearImg(testd);
 
   if (display) Show(ON, testd, "Destination");
 
   // double complex images
   // src
   ImageD srcr = NewImgD(xsize, ysize);
-  ClearImgD(srcr);
+  clearImgD(srcr);
   //  DViewer srcrd("source real");
   //  if (display) srcrd.Update(srcr);
 
   ImageD srci = NewImgD(xsize, ysize);
-  ClearImgD(srci);
+  clearImgD(srci);
   //  DViewer srcid("source imag");
   //  if (display) srcid.Update(srci);
 
   // dst
   ImageD dstr = NewImgD(xsize, ysize);
-  ClearImgD(dstr);
+  clearImgD(dstr);
   DViewer dstrd("dest real");
 
   if (display) dstrd.Update(dstr);
 
   ImageD dsti = NewImgD(xsize, ysize);
-  ClearImgD(dsti);
+  clearImgD(dsti);
   DViewer dstid("dest imag");
 
   if (display) dstid.Update(dsti);

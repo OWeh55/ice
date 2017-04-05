@@ -56,8 +56,8 @@ int main(int argc, char* argv[])
   // Markierungsbild für ungültige Punkte
   Image mark = NewImg(511, 511, 255);
 
-  ClearImg(img);
-  SetImg(img, 111);
+  clearImg(img);
+  setImg(img, 111);
 
   for (int i = 0; i < 300; i += 10)
     Line(5, 95, 477, i, 255, img);

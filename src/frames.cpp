@@ -27,7 +27,6 @@
 /*
 */
 
-
 #include <stdlib.h>
 
 #include "defs.h"
@@ -163,9 +162,7 @@ namespace ice
     B = NewMatrix(MAT_DOUBLE, 4, 4);
 
     if (A == nullptr || B == nullptr)
-      {
-        throw IceException(FNAME, M_0, ERROR);
-      }
+      throw IceException(FNAME, M_0);
 
     for (i = 0; i < 4; i++)
       for (j = 0; j < 4; j++)
@@ -331,9 +328,7 @@ namespace ice
     stream = fopen(file, "w");
 
     if (stream == nullptr)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, ERROR);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     fprintf(stream, "%%P\n");
 
@@ -362,32 +357,24 @@ namespace ice
     stream = fopen(file, "r");
 
     if (stream == nullptr)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, ERROR);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     do
       {
         if (fgets(line, 100, stream) == nullptr)
-          {
-            throw IceException(FNAME, M_WRONG_FILE, ERROR);
-          }
+          throw IceException(FNAME, M_WRONG_FILE);
       }
     while (line[0] != '%' || line[1] != 'P');
 
     for (i = 0; i < 4; i++)
       {
         if (fgets(line, 100, stream) == nullptr)
-          {
-            throw IceException(FNAME, M_WRONG_FILE, ERROR);
-          }
+          throw IceException(FNAME, M_WRONG_FILE);
 
         frp = &f->frame[i][0];
 
         if (sscanf(line, "%le%le%le%le", frp, frp + 1, frp + 2, frp + 3) != 4)
-          {
-            throw IceException(FNAME, M_WRONG_FILE, ERROR);
-          }
+          throw IceException(FNAME, M_WRONG_FILE);
       }
 
     fclose(stream);
@@ -459,7 +446,7 @@ namespace ice
         frm->frame[2][2] = cb;
         break;
       default:
-        throw IceException(FNAME, M_WRONG_MODE, ERROR);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     for (i = 0; i < 3; i++)
@@ -650,7 +637,7 @@ namespace ice
 
         break;
       default:
-        throw IceException(FNAME, M_WRONG_MODE, ERROR);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     for (i = 0; i < 3; i++)
@@ -671,9 +658,7 @@ namespace ice
     l = LengthVec(frm->frame[0]);
 
     if (l < 1e-15)
-      {
-        throw IceException(FNAME, RM_NO_BASIS, ERROR);
-      }
+      throw IceException(FNAME, RM_NO_BASIS);
 
     ScaleVec(frm->frame[0], 1 / l, frm->frame[0]);
     ScaleVec(frm->frame[0], ScalProdVec(frm->frame[1], frm->frame[0]), hv1);
@@ -681,9 +666,7 @@ namespace ice
     l = LengthVec(frm->frame[1]);
 
     if (l < 1e-15)
-      {
-        throw IceException(FNAME, RM_NO_BASIS, ERROR);
-      }
+      throw IceException(FNAME, RM_NO_BASIS);
 
     ScaleVec(frm->frame[1], 1 / l, frm->frame[1]);
     ScaleVec(frm->frame[0], ScalProdVec(frm->frame[2], frm->frame[0]), hv1);
@@ -693,9 +676,7 @@ namespace ice
     l = LengthVec(frm->frame[2]);
 
     if (l < 1e-15)
-      {
-        throw IceException(FNAME, RM_NO_BASIS, ERROR);
-      }
+      throw IceException(FNAME, RM_NO_BASIS);
 
     ScaleVec(frm->frame[2], 1 / l, frm->frame[2]);
     return (frm);

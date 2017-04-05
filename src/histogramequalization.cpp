@@ -140,7 +140,6 @@ namespace ice
     //   cout << cdf[i] << " " ;
     // cout << endl;
 
-
     for (int i = 0; i < lutSize; i++)
       {
         // cout << h[i] << " " << cdf[i] << " " << cdf[i+1] << endl;
@@ -160,9 +159,7 @@ namespace ice
     // has to get
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Histogram h(img);
     return HistogramEqualizationLUT(h, lut, maxv, reg);

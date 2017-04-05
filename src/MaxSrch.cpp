@@ -30,18 +30,14 @@ namespace ice
   MaxSearch NewMaxSearch(Image img)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     // Struktur initialisieren
 
     MaxSearch ms = new MaxSearch_;
 
     if (ms == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     ms->grwanz = img->maxval + 1;
     ms->amin = ms->areaanz = img->xsize;
@@ -54,7 +50,7 @@ namespace ice
 
     if (ms->hists == nullptr)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         delete ms;
         return nullptr;
       }
@@ -65,7 +61,7 @@ namespace ice
 
         if (ms->hists[a] == nullptr)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
 
             for (aa = 0; aa < a; aa++)
               {
@@ -89,7 +85,7 @@ namespace ice
 
     if (ms->allhist == nullptr)
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
 
         for (aa = 0; aa < ms->areaanz; aa++)
           {
@@ -146,9 +142,7 @@ namespace ice
   void FreeMaxSearch(MaxSearch ms)
   {
     if (ms == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     delete [](ms->allhist);
 
@@ -168,9 +162,7 @@ namespace ice
   {
 
     if (ms == nullptr || !IsImg(img) || !IsImg(imgo))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     while (ms->allhist[ms->lastgrw].next_area == nullptr)
       {

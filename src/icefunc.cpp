@@ -244,7 +244,6 @@ namespace ice
 
   ***********************************************************************/
 
-
 //////////////////////////////////////////////////////////////////////////
 // Rotation eines Bildes
 // (typ=RI_90GRAD,RI_180GRAD,RI_270GRAD)
@@ -259,9 +258,7 @@ namespace ice
   void RotateImg(Image& img, short typ)
   {
     if (!IsImg(img) || (typ != RI_90GRAD && typ != RI_180GRAD && typ != RI_270GRAD))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     try
       {
@@ -275,9 +272,7 @@ namespace ice
             img2 = NewImg(img->ysize, img->xsize, img->maxval);
 
             if (!IsImg(img2))
-              {
-                throw IceException(FNAME, M_NO_MEM, NO_MEM);
-              }
+              throw IceException(FNAME, M_NO_MEM);
 
             if (typ == RI_270GRAD)
               {
@@ -330,7 +325,6 @@ namespace ice
       die relative zulaessige Grauwertdifferenz fuer Pixel neben dem
       Plateau, die noch zum Plateau zugehoerig zaehlen.
 
-
   **********************************************************************/
 
 #define FNAME "Skeleton"
@@ -346,16 +340,12 @@ namespace ice
         (mode != ALL_EXTREMA && mode != FIRST_EXTREMA && mode != LAST_EXTREMA && mode != MID_EXTREMA && mode != NO_EXTREMA) ||
         (mode2 != ALL_EXTREMA && mode2 != FIRST_EXTREMA && mode2 != LAST_EXTREMA && mode2 != MID_EXTREMA && mode2 != NO_EXTREMA) ||
         (mode == NO_EXTREMA && mode2 == NO_EXTREMA))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // Initalisierung
 
     if (!IsImg(imgd) || imgd->maxval != 1 || imgd->xsize != img->xsize || imgd->ysize != img->ysize)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     clearImg(imgd);
 
@@ -1093,16 +1083,14 @@ namespace ice
         temp = NewImg(img, true);
 
         if (!IsImg(temp))
-          {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         temp2 = NewImg(temp);
 
         if (!IsImg(temp2))
           {
             FreeImg(temp);
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           }
 
         RotateImg(temp, RI_180GRAD);
@@ -1164,7 +1152,6 @@ namespace ice
     HistogramEqual(imgd, imgd);
   }
 #undef FNAME
-
 
   /******************************************************************
 

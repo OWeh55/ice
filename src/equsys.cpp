@@ -163,12 +163,12 @@ namespace ice
 
     if (pa == NULL || pb == NULL || px == NULL)
       {
-        throw IceException(FNAME, M_WRONG_PTR, ERROR);
+        throw IceException(FNAME, M_WRONG_PTR);
       };
 
     if (rang < 1)
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       };
 
     switch (rang)
@@ -177,18 +177,14 @@ namespace ice
         rc = equsysr2(pa, pb, &px[0], &px[1]);
 
         if (rc != OK)
-          {
-            throw IceException(FNAME, M_ZERO_DET, rc);
-          }
+          throw IceException(FNAME, M_ZERO_DET);
 
         return OK;
       case 3:
         rc = equsysr3(pa, pb, px);
 
         if (rc != OK)
-          {
-            throw IceException(FNAME, M_ZERO_DET, rc);
-          }
+          throw IceException(FNAME, M_ZERO_DET);
 
         return OK;
       default:
@@ -197,7 +193,7 @@ namespace ice
 
         if (dpa == NULL)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           };
 
         dpb = (double*)malloc(size_b);
@@ -205,7 +201,7 @@ namespace ice
         if (dpb == NULL)
           {
             free(dpa);
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           };
 
         /* kopieren in dynamischen speicherbereich */
@@ -263,7 +259,7 @@ namespace ice
             /* setzen der spalte "col" zu 0 ab zeile "colh+1" */
             if (fabs(*dpa) < 1e-20)
               {
-                throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
+                throw IceException(FNAME, M_NUM_INSTABILITY);
                 free(dpa);
                 free(dpb);
                 return NUM_INSTABILITY;
@@ -340,13 +336,13 @@ namespace ice
         switch (ret)
           {
           case NO_SOLUTION:
-            throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+            throw IceException(FNAME, M_NO_SOLUTION);
             break;
           case VARIOUS_SOLUTION:
-            throw IceException(FNAME, M_SOL_MANIFOLD, VARIOUS_SOLUTION);
+            throw IceException(FNAME, M_SOL_MANIFOLD);
             break;
           case NUM_INSTABILITY:
-            throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
+            throw IceException(FNAME, M_NUM_INSTABILITY);
             break;
           }
 
@@ -374,9 +370,7 @@ namespace ice
     colmem = 0;
 
     if (row < 1 || col < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /* Bearbeitung der Trivialfalles */
     if (row == 1)
@@ -853,9 +847,7 @@ namespace ice
 #endif
 
         if (fabs(det) < ceps)
-          {
-            throw IceException(FNAME, M_WRONG_START, ERROR);
-          }
+          throw IceException(FNAME, M_WRONG_START);
 
         RETURN_ERROR_IF_FAILED(EquSys(a, b, dim, x));
 
@@ -925,9 +917,7 @@ namespace ice
     double* mp1i, *mp1j, *mp2, *vp2;
 
     if ((m1 == NULL) || (v1 == NULL) || (m2 == NULL) || (v2 == NULL))
-      {
-        throw IceException(FNAME, M_WRONG_PTR, ERROR);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     vp2 = v2;
     mp2 = m2;

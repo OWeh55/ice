@@ -95,24 +95,16 @@ namespace ice
     pgl *= 6;
 
     if ((dir != HORZ) && (dir != VERT))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImg(imgv))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImg(imgo))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!(Inside(imgv, x, y)))
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     wxi = BOFF;
     wxa = min(imgv->xsize, imgo->xsize) - 1 - BOFF;
@@ -120,9 +112,7 @@ namespace ice
     wya = min(imgv->ysize, imgo->ysize) - 1 - BOFF;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
-      {
-        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     /* an verkleinertes Suchfenster anpassen*/
     if (x < wxi)
@@ -286,14 +276,10 @@ namespace ice
     ys = ps[1];
 
     if (!IsImg(imgv))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImg(imgo))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     wxi = BOFF;
     wxa = min(imgv->xsize, imgo->xsize) - 1 - BOFF;
@@ -301,14 +287,10 @@ namespace ice
     wya = min(imgv->ysize, imgo->ysize) - 1 - BOFF;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
-      {
-        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     /*beste Startrichtung suchen*/
     maxval = 0;
@@ -319,9 +301,7 @@ namespace ice
         Freeman(i).move(xs, ys, xf, yf);
 
         if (GetVal(imgo, xf, yf) != 0)
-          {
-            throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-          }
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         dir = r_NextDir(imgv, xs, ys, i, val);
 

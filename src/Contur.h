@@ -140,9 +140,7 @@ namespace ice
       pl.clear();
 
       if (!isvalid)
-        {
-          throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-        }
+        throw IceException(FNAME, M_NOT_INITIALISED);
 
       int nPoints = nDirectionCodes + 1;
 

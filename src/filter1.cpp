@@ -489,9 +489,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int dimx = pic->xsize;
     int dimy = pic->ysize;
@@ -530,9 +528,9 @@ namespace ice
         }
 
     // Mittelwertbildung
-    SmearImgD(xx, xx, detectionsize, detectionsize);
-    SmearImgD(xy, xy, detectionsize, detectionsize);
-    SmearImgD(yy, yy, detectionsize, detectionsize);
+    smearImgD(xx, xx, detectionsize, detectionsize);
+    smearImgD(xy, xy, detectionsize, detectionsize);
+    smearImgD(yy, yy, detectionsize, detectionsize);
 
     double area = detection_rad * 2 + 1;
     area = area * area;
@@ -624,9 +622,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int dimx = pic->xsize;
     int dimy = pic->ysize;
@@ -661,8 +657,8 @@ namespace ice
         }
 
     // Mittelwertbildung
-    SmearImgD(gx, gx, detectionsize, detectionsize);
-    SmearImgD(gy, gy, detectionsize, detectionsize);
+    smearImgD(gx, gx, detectionsize, detectionsize);
+    smearImgD(gy, gy, detectionsize, detectionsize);
 
     double area = detection_rad * 2 + 1;
     area = area * area;
@@ -706,9 +702,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
 
     if ((pn2->maxval < 7))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image pn1 = pn1p;
 

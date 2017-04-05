@@ -550,9 +550,7 @@ namespace ice
     double d, dmax = 0;
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     cr1 = pfit_NewCorner(pl, 0);
     cr2 = pfit_NewCorner(pl, pl->lng - 1);

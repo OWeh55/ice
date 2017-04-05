@@ -219,9 +219,7 @@ namespace ice
     double x1, y1, x2, y2;
 
     if (a1 < 0 || a2 < 0 || a1 >= pl->lng || a2 >= pl->lng)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (i = 0; i < 15; i++)
       {
@@ -741,9 +739,7 @@ namespace ice
   int CalcCentralMoments(const double m[15], double mc[15])
   {
     if (m[0] == 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     double xs = m[1] / m[0];
     double ys = m[2] / m[0];
@@ -770,9 +766,7 @@ namespace ice
     ys = 0;
 
     if (fabs(m[0]) < 1e-15)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     PosSign(m, msk);
 
@@ -818,17 +812,13 @@ namespace ice
 
     // anisotrope Skalierungsnormierung
     if ((fabs(msk[3]) < 1e-5) || (fabs(msk[5]) < 1e-5))
-      {
-        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     double h1 = msk[5] / (msk[3] * msk[3] * msk[3]);
     double h2 = msk[3] / (msk[5] * msk[5] * msk[5]);
 
     if (h1 < 0 || h2 < 0)
-      {
-        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     alpha = pow(h1, 0.125);
     gamma = pow(h2, 0.125);
@@ -914,9 +904,7 @@ namespace ice
             double h = p2 * p2 - q;
 
             if (h < 0)
-              {
-                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-              }
+              throw IceException(FNAME, M_WRONG_PARAM);
 
             h = sqrt(h);
             sol[0] = Complex(-p2 + h, 0.0);
@@ -927,9 +915,7 @@ namespace ice
         else
           {
             if (m2[7] == 0)
-              {
-                throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-              }
+              throw IceException(FNAME, M_WRONG_PARAM);
             else
               {
                 sol[0] = Complex(-m2[6] / (3 * m2[7]), 0.0);
@@ -988,9 +974,7 @@ namespace ice
       }
 
     if (imin < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     CopyMoments(mx[imin], m2);
     //    for (i=0;i<15;i++)
@@ -1106,9 +1090,7 @@ namespace ice
 
     // iterative Scherungsnormierung maf13=maf31=0
     if ((maf[14] < EPSILON) && (maf[10] < EPSILON))
-      {
-        throw IceException(FNAME, M_NUM_INSTABILITY, ERROR);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     bool modified = true;
 
@@ -1206,9 +1188,7 @@ namespace ice
     PosSign(m1, m);
 
     if (m[0] < EPSILON)
-      {
-        throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     // Normierung
     alpha = 1.0 / sqrt(m[0]);
@@ -1274,7 +1254,7 @@ namespace ice
 
         // Flaeche darf nicht verschwinden
         if (m1[0] < EPSILON || m2[0] < EPSILON)
-          throw IceException(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
+          throw IceException(FNAME, M_NUM_INSTABILITY);
 
         double dx, dy;
         NormalizeMomentsTranslation(m1, mx, dx, dy);

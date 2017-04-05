@@ -222,13 +222,11 @@ namespace ice
     string hname = fname;
 
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
       {
-        throw IceException(FNAME, Error, WRONG_FILE);
+        throw IceException(FNAME, Error);
         fclose(fp);
         return WRONG_FILE;
       }
@@ -269,20 +267,18 @@ namespace ice
     string hname = fname;
 
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return Image();
       }
 
     if (!LoadCMap(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return Image();
       }
@@ -306,7 +302,7 @@ namespace ice
 
         if (!pic24)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return Image();
           }
@@ -317,7 +313,7 @@ namespace ice
 
         if (!pic8)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return Image();
           }
@@ -373,9 +369,7 @@ namespace ice
       }
 
     if (rv)
-      {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     if (!IsImg(img))
       {
@@ -400,20 +394,18 @@ namespace ice
     string hname = fname;
 
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return WRONG_FILE;
       }
 
     if (!LoadCMap(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return WRONG_FILE;
       }
@@ -425,7 +417,7 @@ namespace ice
 
         if (!pic24)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return NO_MEM;
           }
@@ -436,7 +428,7 @@ namespace ice
 
         if (!pic8)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return NO_MEM;
           }
@@ -484,9 +476,7 @@ namespace ice
     fclose(fp);
 
     if (rv)
-      {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     if (!IsImg(red))
       {
@@ -503,7 +493,6 @@ namespace ice
 
     return Buffer2Image(ib, red, green, blue, flag);
   }
-
 
   /*******************************************/
   static int loadBMP1(FILE* fp, unsigned char* pic8, u_int w, u_int h)
@@ -542,14 +531,11 @@ namespace ice
     return (FERROR(fp));
   }
 
-
-
   /*******************************************/
   static int loadBMP4(FILE* fp, unsigned char* pic8, u_int w, u_int h, u_int comp)
   {
     int   i, j, c, c1, x, y, nybnum, padw, rv;
     unsigned char* pp;
-
 
     rv = 0;
     c = c1 = 0;
@@ -678,7 +664,6 @@ namespace ice
 
     return rv;
   }
-
 
   /*******************************************/
   static int loadBMP8(FILE* fp, unsigned char* pic8, u_int w, u_int h, u_int comp)
@@ -919,18 +904,14 @@ namespace ice
     FILE* fp;
 
     if (!IsImg(ir) || !IsImg(ig) || !IsImg(ib))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(MatchImg(ir, ig, ib, w, h));
 
     bperlin = ((w * 24 + 31) / 32) * 4;   /* # bytes written per line */
 
     if ((fp = fopen(hname.c_str(), FWMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     putc('B', fp);
     putc('M', fp);           /* BMP file magic number */
@@ -952,8 +933,8 @@ namespace ice
     putshort(fp, 24);       /* biBitCount: 1,4,8, or 24 */
     putint(fp, BI_RGB);     /* biCompression:  BI_RGB, BI_RLE8 or BI_RLE4 */
     putint(fp, bperlin * h);/* biSizeImage:  size of raw image data */
-    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39" per meter) */
-    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39" per meter) */
+    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39 inch per meter) */
+    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39 inc per meter) */
     putint(fp, 0);          /* biColorsUsed: # of colors used in cmap */
     putint(fp, 0);          /* biClrImportant: same as above */
 
@@ -962,7 +943,7 @@ namespace ice
     if (rgb == NULL)
       {
         fclose(fp);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     for (j = 0; j < h; j++)
@@ -984,7 +965,7 @@ namespace ice
     if (FERROR(fp))
       {
         fclose(fp);
-        throw IceException(FNAME, M_WRONG_WRITE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_WRITE);
       }
 
     fclose(fp);
@@ -1001,18 +982,14 @@ namespace ice
     FILE* fp;
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     w = img->xsize;
     h = img->ysize;
     graymax = img->maxval;
 
     if ((fp = fopen(hname.c_str(), FWMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     nc = graymax + 1;
 
@@ -1057,11 +1034,10 @@ namespace ice
     putshort(fp, nbits);    /* biBitCount: 1,4,8, or 24 */
     putint(fp, BI_RGB);     /* biCompression:  BI_RGB, BI_RLE8 or BI_RLE4 */
     putint(fp, bperlin * h);/* biSizeImage:  size of raw image data */
-    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39" per meter) */
-    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39" per meter) */
+    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39 inch per meter) */
+    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39 inch per meter) */
     putint(fp, nc);         /* biColorsUsed: # of colors used in cmap */
     putint(fp, nc);         /* biClrImportant: same as above */
-
 
     /* write out the colormap */
     for (i = 0; i < nc; i++)
@@ -1122,7 +1098,7 @@ namespace ice
     if (FERROR(fp))
       {
         fclose(fp);
-        throw IceException(FNAME, M_WRONG_WRITE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_WRITE);
       }
 
     fclose(fp);
@@ -1158,8 +1134,6 @@ namespace ice
           }
       }
   }
-
-
 
   /*******************************************/
   static void writeBMP4(FILE* fp, unsigned char* pic8, int w, int h)
@@ -1215,7 +1189,6 @@ namespace ice
           }
       }
   }
-
 
   /*******************************************/
   static void writeBMP24(FILE* fp, unsigned char* pic24, int w, int h)

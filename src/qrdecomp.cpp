@@ -17,9 +17,7 @@ namespace ice
     int dim = A.cols();
 
     if (A.rows() != dim)
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     a = A;
     c = Vector(dim);
@@ -89,9 +87,7 @@ namespace ice
     int dim = A.cols();
 
     if (A.rows() != dim)
-      {
-        throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     int i, j, k;
 

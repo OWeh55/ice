@@ -69,9 +69,7 @@ namespace ice
     virtual void addClass(Tlabel cln)
     {
       if (initialized)
-        {
-          throw IceException(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
-        }
+        throw IceException(FNAME, M_ALREADY_INITIALIZED);
       clIndex[cln] = nLabels;
       clName.push_back(cln);
       nLabels++;
@@ -80,9 +78,7 @@ namespace ice
     void addClass(Tlabel cln1, Tlabel cln2)
     {
       if (initialized)
-        {
-          throw IceException(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
-        }
+        throw IceException(FNAME, M_ALREADY_INITIALIZED);
 
       for (Tlabel i = cln1; i < cln2; i++)
         {
@@ -93,9 +89,7 @@ namespace ice
     void addClass(const std::vector<Tlabel>& nl)
     {
       if (initialized)
-        {
-          throw IceException(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
-        }
+        throw IceException(FNAME, M_ALREADY_INITIALIZED);
 
       for (Tlabel d : nl)
         {

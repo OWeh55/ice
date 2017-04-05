@@ -65,14 +65,10 @@ namespace ice
     double par[3];
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((val < 0) || (val > img->maxval) || (size < 2))
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if ((x < 0) || (y < 0) || (x >= img->xsize) || (y >= img->ysize))
       {
@@ -142,7 +138,7 @@ namespace ice
         FillRegion(c, val, img);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_VAL);
       }
 
     return OK;
@@ -159,19 +155,13 @@ namespace ice
       (val1 < 0) || (val2 > img->maxval) ||
       (val2 < 0) || (val2 > img->maxval)
     )
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(c = CircleContur(par));
 
@@ -193,19 +183,13 @@ namespace ice
     Contur c;
 
     if ((val1 < 0) || (val2 < 0) || (val2 > img->maxval))
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(c = EllipseContur(par));
 
@@ -234,10 +218,7 @@ namespace ice
     double z1u, z1o;
 
     if ((val < 0) || val > pic->maxval)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
-
+      throw IceException(FNAME, M_WRONG_VAL);
 
     for (j = 0; j < dimy; ++j)
       for (i = 0; i < dimx; ++i)

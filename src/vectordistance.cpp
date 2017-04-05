@@ -136,9 +136,7 @@ namespace ice
     int dim = feat1.cols();
 
     if (dim != feat2.cols())
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     Vector am(dim);
 
@@ -197,7 +195,6 @@ namespace ice
     RETHROW;
   }
 
-
   Matrix DistanceMatrix(const Matrix& feat, int mode)
   {
     try
@@ -217,9 +214,7 @@ namespace ice
     int dim = feat1.cols();
 
     if (dim != feat2.cols())
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     distmatrix = Matrix(n1, n2);
 
@@ -244,15 +239,11 @@ namespace ice
     unsigned int n1 = features_1.size();
     unsigned int n2 = features_2.size();
     if (n1 < 1 || n2 < 1)
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     unsigned int feature_dim = features_1[0].size();
     if (features_2[0].size() != feature_dim)
-      {
-        throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_VECTORDIM);
 
     dist = Matrix(n1, n2);
     for (unsigned int i = 0; i < n1; ++i)

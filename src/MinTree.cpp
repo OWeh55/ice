@@ -65,9 +65,7 @@ namespace ice
     nPoints(pointList.size()), tree(nPoints), edgeLength(nPoints)
   {
     if (nPoints < 1)
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes == Wurzel
 
@@ -128,9 +126,7 @@ namespace ice
     nPoints(pointList.size()), tree(nPoints), edgeLength(nPoints)
   {
     if (nPoints < 1)
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes == Wurzel
 
@@ -268,9 +264,7 @@ namespace ice
     nPoints(distances.rows()), tree(nPoints), edgeLength(nPoints)
   {
     if (nPoints < 1 || distances.cols() != nPoints)
-      {
-        throw IceException(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_FORMAT);
 
     // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes = Wurzel
 

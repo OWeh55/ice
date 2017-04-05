@@ -54,9 +54,7 @@ namespace ice
   Matrix::Matrix(int n, int m, int init): nRows(n), nColumns(m), data(nullptr)
   {
     if (n < 0)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     if (n > 0)
       {
@@ -81,9 +79,7 @@ namespace ice
   Matrix::Matrix(int n, int m, double* init): nRows(n), nColumns(m), data(nullptr)
   {
     if (n < 0)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     if (n > 0)
       {
@@ -134,9 +130,7 @@ namespace ice
   Matrix::Matrix(const Image& img, int mode, int sign): nRows(0), nColumns(0), data(nullptr)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     nRows = img->ysize;
     nColumns = img->xsize;
@@ -174,9 +168,7 @@ namespace ice
   Matrix::Matrix(ImageD imgd): nRows(0), nColumns(0), data(nullptr)
   {
     if (!IsImgD(imgd))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     nRows = imgd.ysize;
     nColumns = imgd.xsize;
@@ -246,9 +238,7 @@ namespace ice
                  const std::vector<double>& weight): nRows(0), nColumns(0), data(nullptr)
   {
     if (pl.size() != weight.size())
-      {
-        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     nRows = pl.size();
     nColumns = 3;
@@ -270,7 +260,6 @@ namespace ice
         (*data[j])[2] = weight[j];
       }
   }
-
 
 #undef FNAME
   Matrix::~Matrix()
@@ -322,9 +311,7 @@ namespace ice
     ofstream dest(fname.c_str());
 
     if (!dest)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     dest << "double " << name << "_data[]" ;
     dest << "={ /* Matrix data */" << endl;
@@ -642,7 +629,6 @@ namespace ice
 
     return res;
   }
-
 
   Matrix operator *(double f, const Matrix& m)
   {
@@ -1117,9 +1103,7 @@ namespace ice
   int Matrix::Sort(int colnr, bool asc)
   {
     if (colnr >= nColumns)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     sortcolumn = colnr;
 
@@ -1140,9 +1124,7 @@ namespace ice
   int Matrix::Add(const Matrix& m)
   {
     if ((m.rows() != nRows) || (m.cols() != nColumns))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (int i = 0 ; i < nRows ; i++)
       for (int j = 0 ; j < nColumns ; j++)
@@ -1159,9 +1141,7 @@ namespace ice
   {
     // *this += v * !v
     if ((v.Size() != nRows) || (v.Size() != nColumns))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (int i = 0 ; i < nRows ; i++)
       for (int j = i ; j < nColumns ; j++)
@@ -1180,9 +1160,7 @@ namespace ice
   {
     // *this += v * !w
     if ((v.Size() != nRows) || (w.Size() != nColumns))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (int i = 0 ; i < nRows ; i++)
       for (int j = 0 ; j < nColumns ; j++)
@@ -1227,7 +1205,7 @@ namespace ice
 
     if (c != '<')
       {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         is.clear(ios::badbit);
         return is;
       }
@@ -1256,7 +1234,7 @@ namespace ice
 
         if ((c != ',') && (c != '#') && (c != '>'))
           {
-            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE);
             is.clear(ios::badbit);
             return is;
           }
@@ -1276,7 +1254,7 @@ namespace ice
 
     if (c != '<')
       {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         is.clear(ios::badbit);
       }
 
@@ -1295,7 +1273,7 @@ namespace ice
 
         if (v.Size() != cols())
           {
-            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE);
             is.clear(ios::badbit);
           }
 
@@ -1303,7 +1281,7 @@ namespace ice
 
         if ((c != ',') && (c != '#') && (c != '>'))
           {
-            throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE);
             is.clear(ios::badbit);
           }
       }
@@ -1314,9 +1292,7 @@ namespace ice
   int Matrix::DeleteCol(int n)
   {
     if ((n < 0) || (n >= nColumns))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     *this = (*this)(0, 0, nRows - 1, n - 1) || (*this)(0, n + 1, nRows - 1, nColumns - 1);
     return OK;
@@ -1327,9 +1303,7 @@ namespace ice
     int i;
 
     if ((n1 < 0) || (n1 >= nColumns) || (n2 < 0) || (n2 >= nColumns))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (n2 < n1)
       {
@@ -1348,9 +1322,7 @@ namespace ice
   int Matrix::DeleteRow(int n)
   {
     if ((n < 0) || (n >= nRows))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     delete data[n];
 
@@ -1379,9 +1351,7 @@ namespace ice
   int Matrix::DeleteRow(int n1, int n2)
   {
     if ((n1 < 0) || (n1 >= nRows) || (n2 < 0) || (n2 >= nRows))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (n2 < n1)
       {
@@ -1396,21 +1366,17 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "SetImg"
-  int SetImg(const Image& img, const Matrix& m, int mode, int sign)
+#define FNAME "setImg"
+  void setImg(const Image& img, const Matrix& m, int mode, int sign)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int sx = m.cols();
     int sy = m.rows();
 
     if ((img->xsize < sx) || (img->ysize < sy))
-      {
-        throw IceException(FNAME, M_WRONG_WINDOW, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW);
 
     double minv = m[0][0], maxv = m[0][0];
 
@@ -1482,8 +1448,6 @@ namespace ice
           ival = Min(Max(0, ival), img->maxval);
           PutVal(img, x, y, ival);
         }
-
-    return OK;
   }
 #undef FNAME
 }

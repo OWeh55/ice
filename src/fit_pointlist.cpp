@@ -79,16 +79,12 @@ namespace ice
     Segment sl;
 
     if ((ad2 - ad1) < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     sl = (Segment)malloc(sizeof(struct Segment_));
 
     if (sl == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     sl->prev = nullptr;
     sl->next = nullptr;
@@ -197,19 +193,13 @@ namespace ice
     eta20 = 0;
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((adr1 < 0) || (adr2 < 0) || (adr2 < adr1) || (adr2 > pl->lng - 1))
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if ((adr2 - adr1) < 6)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     FitCircle(pl, adr1, adr2, step, par, mdist, madr);
 
@@ -221,9 +211,7 @@ namespace ice
     ptr = (double*)malloc(len * sizeof(double));
 
     if (ptr == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = adr1; i <= adr2; i++)
       {
@@ -266,7 +254,7 @@ namespace ice
     if ((segm = (Segment)malloc(sizeof(struct Segment_))) == nullptr)
       {
         free(ptr);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     segm->typ = 2; /* Kreis */
@@ -315,19 +303,13 @@ namespace ice
     eta20 = 0;
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((adr1 < 0) || (adr2 < 0) || (adr2 < adr1) || (adr2 > pl->lng - 1))
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if ((adr2 - adr1) < 6)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     RETURN_ERROR_IF_FAILED(FitEllipse(pl, adr1, adr2, step, par, mdist, madr));
 
@@ -382,7 +364,7 @@ namespace ice
     if ((segm = (Segment)malloc(sizeof(struct Segment_))) == nullptr)
       {
         free(ptr);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     segm->typ = 3; /* Ellipse */

@@ -48,14 +48,10 @@ namespace ice
     int i;
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((val < 0) || val > img->maxval)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     xx = c.StartX();
     yy = c.StartY();
@@ -79,19 +75,13 @@ namespace ice
     int i, x;
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((val < 0) || val > img->maxval)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (!c.isClosed())
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     IMatrix segm = ConturSegmentlist(c);
 
@@ -114,9 +104,7 @@ namespace ice
     PointList pl;
 
     if (!c.isClosed())
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     IMatrix segm = ConturSegmentlist(c);
     IMatrix points(0, 2);
@@ -130,9 +118,7 @@ namespace ice
     pl = (PointList)malloc(sizeof(struct PointList_));
 
     if (pl == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->xptr = (double*)malloc(points.rows() * sizeof(double));
     pl->yptr = (double*)malloc(points.rows() * sizeof(double));
@@ -142,7 +128,7 @@ namespace ice
     if ((pl->xptr == NULL) || (pl->yptr == NULL) || (pl->wptr == NULL))
       {
         free(pl);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     x = pl->xptr;
@@ -166,9 +152,7 @@ namespace ice
     IMatrix points(0, 2);
 
     if (!c.isClosed())
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     IMatrix segm = ConturSegmentlist(c);
 
@@ -238,9 +222,7 @@ namespace ice
   {
 
     if (!c.isClosed())
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     /* Erstellen der Segmentliste */
     IMatrix segm = ConturSegmentlist(c);
@@ -348,9 +330,7 @@ namespace ice
     int m10 = 0, m01 = 0, m00 = 0;
 
     if (!c.isClosed())
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     /* Erstellen der Segmentliste */
     IMatrix segm = ConturSegmentlist(c);
@@ -385,9 +365,7 @@ namespace ice
     int m10 = 0, m01 = 0, m00 = 0;
 
     if (!c.isClosed())
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     /* Erstellen der Segmentliste */
     IMatrix segm = ConturSegmentlist(c);
@@ -424,9 +402,7 @@ namespace ice
                     double& form, double& conv)
   {
     if (!c.isClosed())
-      {
-        throw IceException(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     if (c.Number() > 0)
       {

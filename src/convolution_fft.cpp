@@ -97,7 +97,6 @@ namespace ice
         r2 = (ir + iq) / 2;
         im2 = (rq - rr) / 2;
 
-
         b1 = r1 * r1 + im1 * im1;
 
         if (noise == 0)
@@ -260,8 +259,7 @@ namespace ice
 
         if (noise < 0)
 
-          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         double noise2 = noise * noise;
 
@@ -401,9 +399,7 @@ namespace ice
     else
       {
         if (xs != dd.xsize || ys != dd.ysize)
-          {
-            throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_IMGSIZE);
       }
 
     InvConvolutionImgD(ds1, ds2, dd, noise, mode);

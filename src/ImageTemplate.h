@@ -194,14 +194,10 @@ namespace ice
   inline ValueType* iceImage<ValueType>::PixelAddress(int PosX, int PosY)
   {
     if ((int)PosX >= (int)xsize)
-      {
-        throw IceException(FNAME, M_XTOOLARGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_XTOOLARGE);
 
     if ((int)PosY >= (int)ysize)
-      {
-        throw IceException(FNAME, M_YTOOLARGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_YTOOLARGE);
 
     return Pixel[PosY] + PosX;
   }

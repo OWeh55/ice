@@ -54,7 +54,6 @@ namespace ice
   int Invers(int x, int y, int n1, int n2,
              double a, double b, double c, double d, double* xx, double* yy);
 
-
   /*** oeffentliche Funktionen ****************************************/
 
 #define FNAME "TransPoint"
@@ -65,9 +64,7 @@ namespace ice
     double* ptr;
 
     if ((p1 == NULL) || (t == NULL))
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     ph[0] = p1[0];
     ph[1] = p1[1];
@@ -75,9 +72,7 @@ namespace ice
     MulMatrix((double*)t, (double*)ph, 3, 3, 1, (double*)ph);
 
     if (fabs(ph[2]) < 1e-10)
-      {
-        throw IceException(FNAME, M_WRONG_TRANS, WRONG_TRANS);
-      }
+      throw IceException(FNAME, M_WRONG_TRANS);
 
     if (p2 == NULL)
       {
@@ -106,14 +101,10 @@ namespace ice
     double eps = 1e-15;
 
     if (t == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (IsMatrixRegular((double*)t, 3, &eps) != true)
-      {
-        throw IceException(FNAME, M_NO_REGULAR, WRONG_TRANS);
-      }
+      throw IceException(FNAME, M_NO_REGULAR);
 
     ds[0] = c1.StartX();
     ds[1] = c1.StartY();
@@ -159,9 +150,7 @@ namespace ice
     int has_temp = false;
 
     if (!IsImg(imgss) || !IsImg(imgd))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image imgs;
 
@@ -171,9 +160,7 @@ namespace ice
         imgs = NewImg(imgd, true);
 
         if (!IsImg(imgs))
-          {
-            throw IceException(FNAME, M_0, ERROR);
-          }
+          throw IceException(FNAME, M_0);
 
         has_temp = true;
       }
@@ -417,20 +404,16 @@ namespace ice
     double ox, oy;
     int has_temp = false;
 
-
     normalize(t);
 
     if ((Abs(t[2][0]) > eps) || (Abs(t[2][1]) > eps) || (Abs(t[2][2] - 1.0) > eps))
       {
         // not an affine transform
-        throw IceException(FNAME, M_WRONG_TRANS, WRONG_TRANS);
+        throw IceException(FNAME, M_WRONG_TRANS);
       }
-
 
     if (!IsImg(imgd) || !IsImg(imgss))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image imgs;
 
@@ -440,9 +423,7 @@ namespace ice
         imgs = NewImg(imgd, true);
 
         if (!IsImg(imgs))
-          {
-            throw IceException(FNAME, M_0, ERROR);
-          }
+          throw IceException(FNAME, M_0);
 
         has_temp = true;
       }

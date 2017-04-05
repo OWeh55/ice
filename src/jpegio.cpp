@@ -99,9 +99,7 @@ namespace ice
     int gm;
 
     if (!(IsImg(ir) && IsImg(ig) && IsImg(ib)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     xs = ir->xsize;
     ys = ir->ysize;
@@ -112,9 +110,7 @@ namespace ice
       (ys != ig->ysize) || (ys != ib->ysize) ||
       (gm != ig->maxval) || (gm != ib->maxval)
     )
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     /* Select the output file.
      */
@@ -122,9 +118,7 @@ namespace ice
     FILE* output_file;
 
     if ((output_file = fopen(fname.c_str(), FWMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // create data structures
     struct jpeg_compress_struct cinfo;
@@ -141,7 +135,7 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_compress(&cinfo);
@@ -212,9 +206,7 @@ namespace ice
     int gm;
 
     if (! IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     xs = img->xsize;
     ys = img->ysize;
@@ -226,9 +218,7 @@ namespace ice
     FILE* output_file;
 
     if ((output_file = fopen(fname.c_str(), FWMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // create data structures
     struct jpeg_compress_struct cinfo;
@@ -245,11 +235,10 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_compress(&cinfo);
-
 
     jpeg_stdio_dest(&cinfo, output_file);
 
@@ -309,9 +298,7 @@ namespace ice
     FILE* infile;
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == NULL)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     struct jpeg_decompress_struct cinfo;
 
@@ -329,7 +316,7 @@ namespace ice
          */
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_decompress(&cinfo);
@@ -367,9 +354,7 @@ namespace ice
     FILE* infile;
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == nullptr)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     struct jpeg_decompress_struct cinfo;
 
@@ -393,7 +378,7 @@ namespace ice
             free(ib.data);
           }
 
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_decompress(&cinfo);
@@ -461,9 +446,7 @@ namespace ice
     FILE* infile;
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == nullptr)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     struct jpeg_decompress_struct cinfo;
 
@@ -487,7 +470,7 @@ namespace ice
             free(ib.data);
           }
 
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_decompress(&cinfo);

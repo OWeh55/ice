@@ -23,7 +23,6 @@
  * Author: Alexander Lärz, 2005
  */
 
-
 #include "quaternion.h"
 #include "qft.h"
 
@@ -34,7 +33,6 @@
 #include "base.h"
 #include "macro.h"
 #include "fourier.h"
-
 
 namespace ice
 {
@@ -106,7 +104,6 @@ namespace ice
             im4[j] = mim2[j][i];
           }
 
-
         Fourier(re3, im3, option);
 
         Fourier(re4, im4, option);
@@ -129,7 +126,6 @@ namespace ice
         o = o * f;
       }
 
-
     output = o;
 
     return OK;
@@ -140,25 +136,16 @@ namespace ice
   int PowerSpektrumQFT(QuatMatrix& input, Image& output, int type, int mode)
   {
     if (!IsImg(output))
-      {
-        throw IceException(FNAME, M_INVALID, INVALID);
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != output->xsize || int(input.getRows()) != output->ysize)
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (!(type == LOG || type == POWER || type == NORM))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
-
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int maxcolor = output->maxval;
     int i, j;
@@ -254,26 +241,18 @@ namespace ice
   int EigenwinkelSpektrumQFT(QuatMatrix& input, Image& r, Image& g, Image& b, int mode)
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
-      {
-        throw IceException(FNAME, M_INVALID, INVALID);
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
-      {
-        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (r->maxval != g->maxval || r->maxval != b->maxval)
-      {
-        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int maxcolor = r->maxval;
     int i, j;
@@ -282,7 +261,6 @@ namespace ice
     int xs, ys;
     double I = (maxcolor - 1) / 3.0;
     double ew, red, green, blue;
-
 
     for (i = 0; i < Y; i++)
       {
@@ -357,26 +335,18 @@ namespace ice
   int EigenachsenSpektrumQFT(QuatMatrix& input, Image& r, Image& g, Image& b, int mode)
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
-      {
-        throw IceException(FNAME, M_INVALID, INVALID);
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
-      {
-        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (r->maxval != g->maxval || r->maxval != b->maxval)
-      {
-        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int maxcolor = r->maxval;
     int i, j;
@@ -385,7 +355,6 @@ namespace ice
     int xs, ys;
     double red, green, blue;
     Quaternion mu;
-
 
     for (i = 0; i < Y; i++)
       {
@@ -451,21 +420,15 @@ namespace ice
   int PhasenSpektrumQFT(QuatMatrix& input, Image& alpha, Image& beta, Image& delta, int mode)
   {
     if (!(IsImg(alpha) && IsImg(beta) && IsImg(delta)))
-      {
-        throw IceException(FNAME, M_INVALID, INVALID);
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != alpha->xsize || int(input.getRows()) != alpha->ysize ||
         int(input.getColumns()) != beta->xsize || int(input.getRows()) != beta->ysize ||
         int(input.getColumns()) != delta->xsize || int(input.getRows()) != delta->ysize)
-      {
-        throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int i, j;
     int X = input.getColumns();
@@ -503,7 +466,6 @@ namespace ice
                 xs = j;
                 ys = i;
               }
-
 
             bool ok = true;
             try

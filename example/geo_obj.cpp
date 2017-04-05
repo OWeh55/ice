@@ -16,9 +16,9 @@ int main(int args, char** argv)
   LineSeg l(p);
   Image g, m;
   g = NewImg(1000, 700, 255);
-  SetImg(g, 255);
+  setImg(g, 255);
   m = NewImg(1000, 700, 255);
-  ClearImg(m);
+  clearImg(m);
   Alpha(ON);
   ClearAlpha();
   Display(ON);

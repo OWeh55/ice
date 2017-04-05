@@ -48,10 +48,10 @@ namespace ice
         MatchImg(img, marker, dx, dy);
 
         if (marker->maxval < minrange)
-          throw IceException(FNAME, M_LOWRANGE, WRONG_PARAM);
+          throw IceException(FNAME, M_LOWRANGE);
 
         if (!Inside(img, start))
-          throw IceException(FNAME, M_OUTSIDE, WRONG_PARAM);
+          throw IceException(FNAME, M_OUTSIDE);
 
         // prepare marker image:
         // 0           => 0 - unhandled
@@ -60,7 +60,7 @@ namespace ice
         BinImg(marker, marker, 1, 1);
 
         if (GetVal(marker, start.x, start.y) != 0)
-          throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         PointX ap(start, 0, 0);
         heap.push(ap);

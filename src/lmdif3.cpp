@@ -74,17 +74,13 @@ namespace ice
     int i;
 
     if (running)
-      {
-        throw IceException(FNAME, M_NOT_NESTED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_NESTED);
 
     int onr = refvecp.size();
     int funcdim = fcn.funcdim();
 
     if ((onr < 1) || (funcdim < onr))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     running = true;
 
@@ -114,7 +110,7 @@ namespace ice
     if (info == 0)
       {
         /* Fehler sollte nicht auftreten, da vorher getestet */
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Fehler melden
+        throw IceException(FNAME, M_WRONG_PARAM);
         info = ERROR; // Rückgabewert vorbereiten
       }
 

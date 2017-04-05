@@ -27,7 +27,7 @@ int main(int argc, char** argv)
   dst.create(512, 512, MAXVALUE);
   Image mrk;
   mrk.create(512, 512, 4);
-  ClearImg(mrk);
+  clearImg(mrk);
   Show(OVERLAY, dst, mrk, "Destination");
   SmearImg(src, dst, SSIZE);
   Print(".");

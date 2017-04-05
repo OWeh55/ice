@@ -109,22 +109,16 @@ namespace ice
       }
 
     if ((!IsImg(source)) || (!IsImg(oimg)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!(neighb & 1))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((oimg->xsize != source->xsize) ||
         (oimg->ysize != source->ysize) ||
         (oimg->maxval < 2)
        )
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     try
       {
@@ -173,22 +167,16 @@ namespace ice
       }
 
     if ((!IsImg(source)) || (!IsImg(oimg)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!(neighb & 1))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((oimg->xsize != source->xsize) ||
         (oimg->ysize != source->ysize) ||
         (oimg->maxval < 4)
        )
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     try
       {
@@ -250,9 +238,7 @@ namespace ice
   void LocalSeg(const Image& img, int neighb, int level)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     try
       {
         Image hsource = NewImg(img);
@@ -264,9 +250,7 @@ namespace ice
   void LocalSeg(const Image& img, int neighb, int level, int level2)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     try
       {

@@ -121,15 +121,10 @@ namespace ice
   {
     /* Parametertestung */
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((val < 0) || (val > img->maxval))
-      {
-        throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-      }
-
+      throw IceException(FNAME, M_VALTOOSMALL);
 
     double mya = 0.0; // Rel. Anfangspunkt
     double mye = 1.0; // Rel. Endpunkt
@@ -216,9 +211,7 @@ namespace ice
   int draw(const PolygonalCurve& poly, const Image& img, int val, int fval)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (poly.isClosed() && fval >= 0)
       {
@@ -251,9 +244,7 @@ namespace ice
   int draw(const Triangle& triangle, const Image& img, int val, int fval)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     if (fval >= 0)
       {
         Region region;
@@ -273,14 +264,10 @@ namespace ice
            const Image& img, int val)
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (f.Size() != (int)pl.size())
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < f.Size(); i++)
       {
@@ -292,7 +279,6 @@ namespace ice
       }
     return OK;
   }
-
 
 #undef FNAME
 }

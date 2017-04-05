@@ -228,18 +228,14 @@ namespace ice
     if (which == 0)
       {
         if ((state & st_first) == 0)
-          {
-            throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-          }
+          throw IceException(FNAME, M_EMPTY_POINTLIST);
         interpolatePointList(pl1, distance);
         state &= ~st_references;
       }
     else
       {
         if ((state & st_second) == 0)
-          {
-            throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-          }
+          throw IceException(FNAME, M_EMPTY_POINTLIST);
         interpolatePointList(pl2, distance);
         state &= ~st_references;
       }
@@ -250,22 +246,16 @@ namespace ice
   void ObjectMatcher::calcDistances(matrix<double>& dm) const
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     matrix<double> hu_p1;
 
     if (ObjectPointFeatures(pl1, hu_p1, trmode) != 0)
-      {
-        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_OBJECT_FEATURE);
 
     matrix<double> hu_p2;
     if (ObjectPointFeatures(pl2, hu_p2, trmode) != 0)
-      {
-        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_OBJECT_FEATURE);
 
     int n1 = hu_p1.rows();
     int n2 = hu_p2.rows();
@@ -281,9 +271,7 @@ namespace ice
   void ObjectMatcher::calcReferences() const
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     if (pl1.size() >= pl2.size())
       {
@@ -308,15 +296,11 @@ namespace ice
 
     matrix<double> hu_p1;
     if (ObjectPointFeatures(p1, hu_p1, trmode) != 0)
-      {
-        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_OBJECT_FEATURE);
 
     matrix<double> hu_p2;
     if (ObjectPointFeatures(p2, hu_p2, trmode) != 0)
-      {
-        throw IceException(FNAME, M_OBJECT_FEATURE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_OBJECT_FEATURE);
 
     int n1 = hu_p1.rows();
     int n2 = hu_p2.rows();
@@ -353,9 +337,7 @@ namespace ice
   void ObjectMatcher::getReferences(std::vector<int>& i1, std::vector<int>& i2) const
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
     if ((state & st_references) == 0)
       {
         calcReferences();
@@ -373,9 +355,7 @@ namespace ice
   void ObjectMatcher::getOrderedLists(vector<Point>& opl1, vector<Point>& opl2) const
   {
     if ((state & (st_first | st_second)) != (st_first | st_second))
-      {
-        throw IceException(FNAME, M_EMPTY_POINTLIST, ERROR);
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
     if ((state & st_references) == 0)
       {
         calcReferences();
@@ -410,7 +390,7 @@ namespace ice
                                   trmode);
             break;
           default:
-            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_MODE);
           }
 
         return res;
@@ -636,9 +616,7 @@ namespace ice
       }
 
     if (feat1.cols() != feat2.cols())
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     int dim = feat1.cols();
     Matrix distance(n1, n2);

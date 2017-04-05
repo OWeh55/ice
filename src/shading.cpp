@@ -51,9 +51,7 @@ namespace ice
     Function2dWithFitting* fn;
 
     if (mode < 0)
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     switch (mode)
       {

@@ -126,9 +126,7 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierMinimumDistance")
-      {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     source >> nFeatures >> nClasses;
 
@@ -151,19 +149,13 @@ namespace ice
     Vector ret(nFeatures);
 
     if ((cl < 0) || (cl >= nClasses))
-      {
-        throw IceException(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_INVALID_CLASSNUMBER);
 
     if (nClasses == 0)
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (par[cl][nFeatures] == 0)
-      {
-        throw IceException(FNAME, M_NOT_TRAINED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_TRAINED);
 
     return par[cl](0, nFeatures - 1);
   }

@@ -65,19 +65,13 @@ namespace ice
     Contur c;
 
     if ((val1 < 0) || (val2 < 0) || (val1 > img->maxval) || (val2 > img->maxval))
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     // offene Contur des Kreisbogensegments
     RETURN_ERROR_IF_FAILED(c = CircleSegmentContur(par));
@@ -104,19 +98,13 @@ namespace ice
 
     if ((val1 < 0) || (val2 < 0) ||
         (val1 > img->maxval) || (val2 > img->maxval))
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_MODE);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(c = EllipseSegmentContur(par));
 
@@ -144,9 +132,7 @@ namespace ice
     int ast;
 
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     imgh = NewImg(img->xsize, img->ysize, 255);
     setImg(imgh, 0);
@@ -194,7 +180,7 @@ namespace ice
 
     if ((dx < 4) || (dy < 4))
       {
-        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2);
         *xs = *ys = 0;
         return WRONG_WINDOW;
       }
@@ -202,7 +188,7 @@ namespace ice
     if (! Inside(img, xc, yc))
       {
         *xs = *ys = 0;
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
+        throw IceException(FNAME, M_WRONG_STARTPOINT);
       }
 
     for (y = yc; y < img->ysize; y += diff)
@@ -308,14 +294,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(img, imgh, dx, dy));
 
     if ((dx < 1) || (dy < 1))
-      {
-        throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     if (decision(func, parray, xs, ys, dx, dy) == 0)
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     int xx = xs;
     int yy = ys;
@@ -332,9 +314,7 @@ namespace ice
     while (ct < 4 && decision(func, parray, xx, yy, dx, dy) == 1);
 
     if (ct >= 4)
-      {
-        throw IceException(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT3);
 
     ct = 0;    /* Zaehler der untersuchten Richtungen */
 
@@ -373,12 +353,6 @@ namespace ice
     yy = ys;
     exist = 0;
 
-    /*
-      printf("startpunt:\n");
-      printf("Direction: %d dirneu: %d xx: %d yy:
-      %d xs: %d ys: %d\n",Direction,dirneu,xx,yy,xs,ys);
-      getch();
-    */
     /* Beginn der Konturfolge */
     do
       {

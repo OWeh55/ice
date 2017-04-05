@@ -37,9 +37,7 @@ namespace ice
     int samples = m.rows();
 
     if (m.cols() < 2)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     FitInit();
 
@@ -53,7 +51,6 @@ namespace ice
         {
           FitVal(m[i][0], m[i][1]);
         }
-
 
     FitFinish();
     return OK;
@@ -136,9 +133,7 @@ namespace ice
       }
 
     if ((ord + 1) * (ord + 2) / 2 != vsize)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
   }
 #undef FNAME
   void Polynom2d::FitInit(int n)

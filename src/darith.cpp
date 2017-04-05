@@ -39,11 +39,10 @@ namespace ice
   /********************************************************************/
   /* Bild loeschen                            */
   /********************************************************************/
-#define FNAME "ClearImgD"
-  int ClearImgD(ImageD p)
+#define FNAME "clearImgD"
+  void clearImgD(ImageD p)
   {
-    RETURN_ERROR_IF_FAILED(SetImgD(p, 0));
-    return OK;
+    setImgD(p, 0);
   }
 #undef FNAME
 
@@ -51,25 +50,21 @@ namespace ice
   /* Bild definiert setzten                                     */
   /********************************************************************/
 
-#define FNAME "SetImgD"
-  int SetImgD(ImageD p, double val)
+#define FNAME "setImgD"
+  void setImgD(ImageD p, double val)
   {
     if (!p.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
     for (int y = 0; y < p.ysize; ++y)
       for (int x = 0; x < p.xsize; ++x)
         {
           PutValD(p, x, y, val);
         }
-    return OK;
   }
 #undef FNAME
 
 #define FNAME "SmearImgD"
-
-  int SmearImgD(ImageD pn1, ImageD pn2, int sx, int sy)
+  void smearImgD(ImageD pn1, ImageD pn2, int sx, int sy)
   {
 
     int dx, dy;
@@ -150,14 +145,11 @@ namespace ice
         {
           PutValD(pn2, x, y, 0);
         }
-
-    //    FreeImgD(tmp);
-    return OK;
   }
 
-  int SmearImgD(const ImageD src, ImageD dest, int nx)
+  void smearImgD(const ImageD src, ImageD dest, int nx)
   {
-    return SmearImgD(src, dest, nx, nx);
+    return smearImgD(src, dest, nx, nx);
   }
 
 #undef FNAME
@@ -165,15 +157,13 @@ namespace ice
   /*********************************************************************/
   /* Bildaddition                  */
   /*********************************************************************/
-#define FNAME "AddImgD"
-  int AddImgD(ImageD pn1, ImageD pn2, ImageD pn3)
+#define FNAME "addImgD"
+  void addImgD(ImageD pn1, ImageD pn2, ImageD pn3)
   {
     int i, j, hx, hy;
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
 
@@ -182,8 +172,6 @@ namespace ice
         {
           PutValD(pn3, i, j, GetValD(pn1, i, j) + GetValD(pn2, i, j));
         }
-
-    return OK;
   }
 #undef FNAME
 
@@ -191,14 +179,12 @@ namespace ice
   /* BildMultiplikation                */
   /*********************************************************************/
 #define FNAME "MulImgD"
-  int MulImgD(ImageD pn1, ImageD pn2, ImageD pn3)
+  void mulImgD(ImageD pn1, ImageD pn2, ImageD pn3)
   {
     int i, j, hx, hy;
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
 
@@ -207,8 +193,6 @@ namespace ice
         {
           PutValD(pn3, i, j, GetValD(pn1, i, j)*GetValD(pn2, i, j));
         }
-
-    return OK;
   }
 #undef FNAME
 
@@ -221,9 +205,7 @@ namespace ice
     int i, j, hx, hy;
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, hx, hy));
 
@@ -241,9 +223,7 @@ namespace ice
   double findMax(const ImageD& img, int& PosX, int& PosY)
   {
     if (! IsImgD(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xSize = img.xsize;
     int ySize = img.ysize;
@@ -268,16 +248,14 @@ namespace ice
   {
     IPoint res(-1, -1); // point outside == not found
     if (! IsImgD(imgD) || ! IsImg(mark))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xSize = imgD.xsize;
     int ySize = imgD.ysize;
 
     if (xSize != mark.xsize || ySize != mark.ysize)
       {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE);
 
       }
 
@@ -315,9 +293,7 @@ namespace ice
   double findMin(const ImageD& img, int& PosX, int& PosY)
   {
     if (! IsImgD(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xSize = img.xsize;
     int ySize = img.ysize;
@@ -362,14 +338,10 @@ namespace ice
     double rfac;
 
     if ((!IsImgD(imgs)) || (!IsImgD(imgd)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -421,14 +393,10 @@ namespace ice
     double rfac;
 
     if (!IsImg(imgs))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -437,9 +405,7 @@ namespace ice
     y0 = (hy) / 2;
 
     if (!IsImg(imgd))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     himgd = imgd;
 
@@ -489,27 +455,19 @@ namespace ice
       {
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
       }
     else
       {
         if (!IsImgD(imgs))
-          {
-            throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-          }
+          throw IceException(FNAME, M_WRONG_IMAGED);
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImgD(imgd))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (r2 == 0)
       {
@@ -540,14 +498,10 @@ namespace ice
     double rfac;
 
     if (!IsImgD(imgs))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -612,14 +566,10 @@ namespace ice
     double rfac;
 
     if (!IsImg(imgs))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs->xsize;
     hy = imgs->ysize;
@@ -628,9 +578,7 @@ namespace ice
     y0 = hy / 2;
 
     if (!IsImg(imgd))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     himgd = imgd;
 
@@ -680,20 +628,14 @@ namespace ice
       {
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
-          {
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImgD(imgd))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (r2 == 0)
       {

@@ -34,7 +34,6 @@
 #include "xio.h"
 #endif
 
-
 // Aus 2 gegebenen Listen wird eine Transformation
 // mittels linearer Optimierung berechnet
 namespace ice
@@ -47,24 +46,16 @@ namespace ice
     int code = 0;
 
     if (pl1 == NULL || pl2 == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (pl1->lng != pl2->lng)
-      {
-        throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     if (limit < 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (pl1->lng > MAXMATCHPOINTSLINOPT)
-      {
-        throw IceException(FNAME, M_TOO_MUCH_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_MUCH_POINTS);
 
 #include "simplex_init.inc"
 
@@ -83,7 +74,7 @@ namespace ice
         code = FitProjectiveLinOpt(pl1, pl2, tr, limit);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
 #include "simplex_free.inc"
@@ -148,7 +139,6 @@ namespace ice
 
     gew[2 * N] = 0.0;
 
-
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 12; ++i)
@@ -191,7 +181,6 @@ namespace ice
       {
         ka[i] = ka[i - 1] + 2;
       }
-
 
     // Speziell: Füllen von ia
     for (j = 0; j < 6; ++j)
@@ -338,7 +327,6 @@ namespace ice
 
     /* some variable names have changed, commenting out */
 
-
     // Anzeige der Eingabedaten
     Printf("Zielfunktion \n");
 
@@ -384,7 +372,6 @@ namespace ice
 
     Printf("\n");
     GetChar();
-
 
 #endif
 
@@ -438,7 +425,6 @@ namespace ice
     tr[2][1] = 0.0;
     tr[2][2] = 1.0;
 
-
     delete [] ia;
     delete [] ka;
     delete []  a;
@@ -459,7 +445,6 @@ namespace ice
 
   int FitShiftLinOpt(PointList pl1, PointList pl2, double tr[][3], double limit)
   {
-
 
     // Bezüglich  der Punktlisten pl1 und pl2
     // wird mittels linearer Optimierung
@@ -515,7 +500,6 @@ namespace ice
 
     gew[2 * N] = 0.0;
 
-
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 12; ++i)
@@ -558,7 +542,6 @@ namespace ice
       {
         ka[i] = ka[i - 1] + 2;
       }
-
 
     // Speziell: Füllen von ia
     for (j = 0; j < 6; ++j)
@@ -700,10 +683,7 @@ namespace ice
 
     // ************************************
 
-
-
 #ifdef DEBUG
-
 
     // Anzeige der Eingabedaten
     Printf("Zielfunktion \n");
@@ -751,7 +731,6 @@ namespace ice
     Printf("\n");
     GetChar();
 
-
 #endif
 
     code = simplex_method_modified(
@@ -787,7 +766,6 @@ namespace ice
         return code;
       }
 
-
     a10 = x[4] - x[5];
 
     a20 = x[10] - x[11];
@@ -801,7 +779,6 @@ namespace ice
     tr[2][0] = 0.0;
     tr[2][1] = 0.0;
     tr[2][2] = 1.0;
-
 
     delete [] ia;
     delete [] ka;
@@ -879,7 +856,6 @@ namespace ice
       }
 
     gew[2 * N] = 0.0;
-
 
     // ******************************
     // Füllen der Zielfunktion
@@ -1052,7 +1028,6 @@ namespace ice
 
     a[l + 4 * NN - 1] = 1.0;
 
-
     for (i = l + 4 * NN; i < l + 4 * NN + 4 * N; i = i + 2)
       {
         a[i] = -1.0;
@@ -1062,7 +1037,6 @@ namespace ice
     // ************************************
 
 #ifdef DEBUG
-
 
     // Anzeige der Eingabedaten
     Printf("Zielfunktion \n");
@@ -1109,7 +1083,6 @@ namespace ice
 
     Printf("\n");
     GetChar();
-
 
 #endif
 
@@ -1163,7 +1136,6 @@ namespace ice
     tr[2][1] = 0.0;
     tr[2][2] = 1.0;
 
-
     delete [] ia;
     delete [] ka;
     delete []  a;
@@ -1177,7 +1149,6 @@ namespace ice
 
     return 0;
   }
-
 
   int FitProjectiveLinOpt(PointList pl1, PointList pl2,
                           double tr[][3], double limit)
@@ -1238,7 +1209,6 @@ namespace ice
 
     gew[2 * N] = 0.0;
 
-
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 16; ++i)
@@ -1286,7 +1256,6 @@ namespace ice
       {
         ka[i] = ka[i - 1] + 2;
       }
-
 
     // Speziell: Füllen von ia
     for (j = 0; j < 6; ++j)
@@ -1490,10 +1459,7 @@ namespace ice
 
     // ************************************
 
-
-
 #ifdef DEBUG
-
 
     // Anzeige der Eingabedaten
     Printf("Zielfunktion \n");
@@ -1540,7 +1506,6 @@ namespace ice
 
     Printf("\n");
     GetChar();
-
 
 #endif
 
@@ -1595,7 +1560,6 @@ namespace ice
     tr[2][0] = a31;
     tr[2][1] = a32;
     tr[2][2] = 1.0;
-
 
     delete [] ia;
     delete [] ka;

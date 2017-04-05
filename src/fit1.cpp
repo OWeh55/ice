@@ -135,9 +135,7 @@ namespace ice
     unsigned int nr = pl.size();
 
     if (nr < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     double n = pl.size();
     double x = 0.0;
@@ -168,14 +166,10 @@ namespace ice
     unsigned int nr = pl.size();
 
     if (nr < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (nr != weight.size())
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     double n = 0.0;
     double x = 0.0;
@@ -201,9 +195,7 @@ namespace ice
       }
 
     if (n < 1e-10)   // sum of weights too small
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     return calc_line(n, x, y, xx, xy, yy);
   }
@@ -214,19 +206,13 @@ namespace ice
     unsigned int nr = pl.size();
 
     if (nr < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (n < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (nr != weight.size())
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     if (n == 0)
       {
@@ -258,14 +244,10 @@ namespace ice
   LineSeg FitLine(const Matrix& m, int step)
   {
     if (m.cols() < 2)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (m.rows() < 2)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     vector<Point> pl;
     Matrix2pl(m, pl);

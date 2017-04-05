@@ -93,14 +93,10 @@ namespace ice
     unsigned int pnr = pl.size();
 
     if (pnr < 3)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (pnr != weight.size())
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     /* Berechnung der Kovarianzmatrix */
     cov.Set(0.0);
@@ -168,20 +164,15 @@ namespace ice
     return FitCircle(pl, weight);
   }
 
-
   Circle FitCircle(const std::vector<Point>& pl, std::vector<double>& weight, int step)
   {
     Circle res;
 
     if (pl.size() < 3)
-      {
-        throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (step < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double mse = 1.0;
 

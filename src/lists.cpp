@@ -39,9 +39,7 @@ namespace ice
   int CheckPointlist(const Matrix& m)
   {
     if (m.cols() < 2)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     return OK;
   }
@@ -53,9 +51,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(CheckPointlist(m));
 
     if (m.rows() < 3)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     return OK;
   }
@@ -67,9 +63,7 @@ namespace ice
     IMatrix pl(0, 2);
 
     if (diff < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     std::vector<IPoint> vpl;
     c.getPoints(vpl, true);

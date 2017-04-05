@@ -16,7 +16,6 @@ namespace ice
 
     int i = para.size() - 1;
 
-
     // determine real degree of polygon
     while (para[i] == 0.0 && i >= 0)
       {
@@ -33,7 +32,7 @@ namespace ice
     if (a.Size() < 2)
       {
         rc = NO_SOLUTION;
-        throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+        throw IceException(FNAME, M_NO_SOLUTION);
       }
 
     unsigned int n = a.Size() - 1; //Ordnung
@@ -57,7 +56,7 @@ namespace ice
             if (i1 >= inumber)
               {
                 rc = NO_SOLUTION;
-                throw IceException(FNAME, M_NO_SOLUTION, NO_SOLUTION);
+                throw IceException(FNAME, M_NO_SOLUTION);
               }
 
             b[0] = a[0];

@@ -111,9 +111,7 @@ namespace ice
     IMatrix segmente;
 
     if (!c.isValid())
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     int xmax, xmin, ymax, ymin;
     c.getRect(xmin, ymin, xmax, ymax);
@@ -124,9 +122,7 @@ namespace ice
     slist = (struct segm*) calloc(sizeof(struct segm), yanz);
 
     if (slist == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     /*Segmentliste initialisieren*/
     for (i = 0; i < yanz; i++)
@@ -149,7 +145,7 @@ namespace ice
           {
             if (append_seglist(slist, xx, yy) != OK)
               {
-                throw IceException(FNAME, M_NO_MEM, NO_MEM);
+                throw IceException(FNAME, M_NO_MEM);
 
                 for (i = 0; i < yanz; i++)
                   {

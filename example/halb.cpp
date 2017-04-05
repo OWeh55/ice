@@ -55,7 +55,7 @@ int main(int argv, char** argc)
   Contur c;
   Image mark;
   mark = NewImg(800, 600, 255);
-  ClearImg(mark);
+  clearImg(mark);
   Display(ON);
   Show(OVERLAY, mark);
   Matrix cpl;

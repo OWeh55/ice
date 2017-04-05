@@ -125,9 +125,7 @@ namespace ice
 
     matrix<double> m1(sizex, sizey);
     if (mInvert(m, m1) != 0)
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
     return LSIFilter(m1);
   }
 #undef FNAME

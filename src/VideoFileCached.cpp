@@ -83,7 +83,7 @@ namespace ice
             throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
             break;
           case 6:
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           default:
             throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
@@ -137,9 +137,7 @@ namespace ice
                              const Image& imgb, int frame)
   {
     if (!videofile)
-      {
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
 
     error = no_error;
 
@@ -184,9 +182,7 @@ namespace ice
   void VideoFileCached::getPara(int& xsize, int& ysize, int& maxval, int& fpsp) const
   {
     if (!videofile)
-      {
-        throw IceException(FNAME, M_NOT_OPEN, WRONG_STATE);
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
 
     videofile->getPara(xsize, ysize, maxval, fpsp);
   }

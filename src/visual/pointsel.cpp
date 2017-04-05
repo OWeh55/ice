@@ -52,9 +52,7 @@ namespace ice
     int rc;
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
     rc = v->SelPoint(mode, p);
     point[0] = p.x;
     point[1] = p.y;
@@ -122,9 +120,7 @@ namespace ice
   {
     Visual v = GetVisual(img);
     if (NULL == v)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
     IPoint p(0, 0);
     v->SelPoint(DEFAULT, p);
     return p;

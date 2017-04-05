@@ -255,7 +255,7 @@ namespace ice
                 dist += pdist;
                 break;
               default:
-                throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_MODE);
               }
           }
 
@@ -311,7 +311,7 @@ namespace ice
           case DPP_MEAN:
             return 0.5 * (dist1 + dist2);
           default:
-            throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_MODE);
           }
       }
     RETHROW;
@@ -333,7 +333,7 @@ namespace ice
                   int marker, int size, int color)
   {
     if (!IsImg(img))
-      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     try
       {
@@ -387,7 +387,6 @@ namespace ice
     int basenr; // number of base corners
 
     vector<int> idx; // indices of subset corners
-
 
     vector<double> maxdist1; // maximal "distance" of an edge of red. poly
     vector<int> maxi1; // point with maximal distance to an edge
@@ -644,7 +643,7 @@ namespace ice
           {
             // reducing to less then 3 point does not make sense
             // "reducing" to more then original points does not make sense
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
           }
 
         // already reduced enough
@@ -696,14 +695,13 @@ namespace ice
     Matrix fpl;
 
     if (n < 3)
-      throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // make pointlist from contur
     fpl = ConturPointlist(c, 1, false);
 
     return ReducePolygon(fpl, n, mode);
   }
-
 
   Matrix ReducePolygonPrecision(const Matrix& pl, double prec, int mode)
   {
@@ -718,7 +716,7 @@ namespace ice
           {
             // reducing to less then 3 point does not make sense
             // "reducing" to more then original points does not make sense
-            throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
           }
 
         if (mode == 2)
@@ -760,9 +758,7 @@ namespace ice
     Matrix fpl;
 
     if (prec < 0.0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // make pointlist from contur
     fpl = ConturPointlist(c, 1, false);
@@ -855,15 +851,12 @@ namespace ice
         if (next > cutpoints[0] + nOriginalPoints)
           {
             if (ct == 0)
-              {
-                throw IceException(FNAME, M_WRONG_START, WRONG_PARAM);
-              }
+              throw IceException(FNAME, M_WRONG_START);
 
             return res;
           }
 
         changed = oldcutpoint != cutpoints;
-
 
         if (changed)
           {
@@ -936,7 +929,6 @@ namespace ice
     return res;
   }
 
-
   Matrix FitPolygonContur(const Matrix& pl, const Contur& c, int step, int count)
   {
     // fit given polygon pl to contur c
@@ -989,9 +981,7 @@ namespace ice
             if (next > cutpoints[0] + cnr)
               {
                 if (ct == 0)
-                  {
-                    throw IceException(FNAME, M_WRONG_START, WRONG_PARAM);
-                  }
+                  throw IceException(FNAME, M_WRONG_START);
 
                 return res;
               }

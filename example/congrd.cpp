@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
   pgl1 = pgl / 3;
   imgm = NewImg(img->xsize, img->ysize, 63);
-  ClearImg(imgm);
+  clearImg(imgm);
   Display(ON);
   Show(OVERLAY, img, imgm);
 

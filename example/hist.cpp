@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
   Printf("\n\ngrafische Darstellung mit Hist::Vis\n");
   grw = NewImg(700, 400, 255);
   mrk = NewImg(700, 400, 8);
-  SetImg(mrk, 0);
+  setImg(mrk, 0);
   Show(OVERLAY, grw, mrk);
   Display(ON);
   h2.Vis(1, mrk);
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
       }
 
   mrk = NewImg(grw->xsize, grw->ysize, 4);
-  SetImg(mrk, 0);
+  setImg(mrk, 0);
   Show(OVERLAY, grw, mrk);
   Zoom(grw, 0, 0, 0);
   Display(ON);

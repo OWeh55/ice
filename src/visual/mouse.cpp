@@ -25,7 +25,6 @@
 #include "visual/ImageWindow.h"
 #include "visual/mouse.h"
 
-
 // using namespace ice;
 
 namespace ice
@@ -40,16 +39,12 @@ namespace ice
   {
     // check if the parameters are valid
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Visual p;
     RETURN_ERROR_IF_FAILED(p = GetVisual(img));
     if (p == NULL)
-      {
-        throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
 
     return Mouse(*p, x, y);
   }
@@ -62,9 +57,7 @@ namespace ice
   int Mouse(const Image& Img, int* x, int* y)
   {
     if (!IsImg(Img) || x == NULL || y == NULL)
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     return Mouse(Img, *x, *y);
   }
 #undef FNAME

@@ -59,9 +59,7 @@ namespace ice
   ColorImage::ColorImage(const Image& rot, const Image& gruen, const Image& blau, const std::string& title)
   {
     if ((!IsImg(rot)) || (!IsImg(gruen)) || (!IsImg(blau)))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     else
       {
         // bilder (smart pointer) original übernehmen
@@ -211,7 +209,7 @@ namespace ice
   void ColorImage::checkSizes(const ColorImage& img2) const
   {
     if (!isValid() || !img2.isValid())
-      throw IceException(FNAME, M_INVALID, WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID);
     try
       {
         red.checkSizes(img2.red);

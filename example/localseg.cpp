@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     }
 
   Image m1 = NewImg(i1);
-  ClearImg(m1);
+  clearImg(m1);
 
 //  Image mi=NewImg(i1);
 //  Image ma=NewImg(i1);

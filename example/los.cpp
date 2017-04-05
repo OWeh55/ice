@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 
   grw = NewImg(xs, ys, 255);
   mrk = NewImg(xs, ys, 7);
-  ClearImg(mrk);
+  clearImg(mrk);
   Display(ON);
   Show(OVERLAY, grw, mrk);
   Zoom(grw);

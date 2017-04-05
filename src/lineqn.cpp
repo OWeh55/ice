@@ -212,35 +212,27 @@ namespace ice
 
     /*Parametertestung*/
     if (!IsMatrix(A))
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
     if (A->rsize != A->csize)
-      {
-        throw IceException(FNAME, M_NO_SQUARE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     /*Initialisierungen*/
     n = A->rsize;
     indx = (int*)malloc(n * sizeof(int));
 
     if (indx == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     Ah = MoveMat(A, nullptr);
 
     if (Ah == nullptr)
       {
         free(indx);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     a = Ah->data;
@@ -253,14 +245,10 @@ namespace ice
         FreeMatrix(Ah);
 
         if (rc == NO_MEM)
-          {
-            throw IceException(FNAME, M_NO_MEM, rc);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         if (rc == NUM_INSTABILITY)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         return (rc);
       }
@@ -285,35 +273,27 @@ namespace ice
 
     /*Parametertestung*/
     if (!IsMatrix(A))
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
     if (A->rsize < A->csize)
-      {
-        throw IceException(FNAME, M_MATRIX_SINGULAR, NUM_INSTABILITY);
-      }
+      throw IceException(FNAME, M_MATRIX_SINGULAR);
 
     /*Initialisierungen*/
     n = A->csize;
     indx = (int*)malloc(n * sizeof(int));
 
     if (indx == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     Ah = NewMatrix(MAT_DOUBLE, n, n);
 
     if (Ah == nullptr)
       {
         free(indx);
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     /*A^T * A */
@@ -334,14 +314,10 @@ namespace ice
         FreeMatrix(Ah);
 
         if (rc == NO_MEM)
-          {
-            throw IceException(FNAME, M_NO_MEM, rc);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         if (rc == NUM_INSTABILITY)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         return (rc);
       }
@@ -374,31 +350,21 @@ namespace ice
 
     /*Parametertestung*/
     if (!IsMatrix(A))
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
     if (A->rsize != A->csize)
-      {
-        throw IceException(FNAME, M_NO_SQUARE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     if (B != nullptr)
       {
         if (!IsMatrix(B))
-          {
-            throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
         if (B->type != MAT_DOUBLE || B->rsize != A->rsize || B->csize != A->csize)
-          {
-            throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-          }
+          throw IceException(FNAME, M_WRONG_MATRIXTYPE);
       }
     else
       {
@@ -413,9 +379,7 @@ namespace ice
     Ah = MoveMat(A, nullptr);                      /*Hilfsmatrix für Dreiecksmatrix*/
 
     if (icol == nullptr || bcol == nullptr || indx == nullptr || Ah == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     a = Ah->data;
     b = B->data;
@@ -430,14 +394,10 @@ namespace ice
         FreeMatrix(Ah);
 
         if (rc == NO_MEM)
-          {
-            throw IceException(FNAME, M_NO_MEM, rc);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         if (rc == NUM_INSTABILITY)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         return (nullptr);
       }
@@ -482,19 +442,13 @@ namespace ice
 
     /*Parametertestung*/
     if (!IsMatrix(A))
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
     if (A->rsize != A->csize)
-      {
-        throw IceException(FNAME, M_NO_SQUARE, ERROR);
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     /*Initialisierungen*/
     n = A->rsize;
@@ -502,9 +456,7 @@ namespace ice
     Ah = MoveMat(A, nullptr);                      /*Hilfsmatrix für Dreiecksmatrix*/
 
     if (indx == nullptr || Ah == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     a = Ah->data;
     /*LU-Dekomposition*/
@@ -516,14 +468,10 @@ namespace ice
         FreeMatrix(Ah);
 
         if (rc == NO_MEM)
-          {
-            throw IceException(FNAME, M_NO_MEM, rc);
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         if (rc == NUM_INSTABILITY)
-          {
-            throw IceException(FNAME, M_MATRIX_SINGULAR, rc);
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         return (0);
       }

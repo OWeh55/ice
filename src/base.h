@@ -72,17 +72,17 @@ namespace ice
   void checkSizes(const Image& p1, const Image& p2, const Image& p3);
   void checkSizes(const Image& p1, const Image& p2);
 
-  // These functions check if images are valid. In the case of 2 or 3 images 
+  // These functions check if images are valid. In the case of 2 or 3 images
   // the size and maximum value are compared.  If images are invalid or
   // sizes or maximum value are different, an exception ist thrown.
   // Versions with parameters sizeX, sizeY and maxVal return
   // the size and maximum value
-  
+
   void checkImage(const Image& p1,
-                   const Image& p2,
-                   const Image& p3, int& sizeX, int& sizeY,int &maxVal);
-  void checkImage(const Image& p1, const Image& p2, int& sizeX, int& sizeY,int &maxVal);
-  void checkImage(const Image& p1, int& sizeX, int& sizeY,int &maxVal);
+                  const Image& p2,
+                  const Image& p3, int& sizeX, int& sizeY, int& maxVal);
+  void checkImage(const Image& p1, const Image& p2, int& sizeX, int& sizeY, int& maxVal);
+  void checkImage(const Image& p1, int& sizeX, int& sizeY, int& maxVal);
   void checkImage(const Image& p1, const Image& p2, const Image& p3);
   void checkImage(const Image& p1, const Image& p2);
   void checkImage(const Image& p1);

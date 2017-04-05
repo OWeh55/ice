@@ -344,10 +344,10 @@ namespace ice
       case PSD:
         return ReadPSDImg(filename, img, flag);
       case UNSUPPORTED_TYP:
-        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE);
       }
 
-    throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    throw IceException(FNAME, M_WRONG_FILETYPE);
   }
 
   Image ReadImg(const std::string& fname)
@@ -379,10 +379,10 @@ namespace ice
       case TIF:
         return ReadTIFImg(filename, ir, ig, ib, flag);
       case UNSUPPORTED_TYP:
-        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE);
       }
 
-    throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    throw IceException(FNAME, M_WRONG_FILETYPE);
   }
 #undef FNAME
   /**********************************************/
@@ -414,15 +414,13 @@ namespace ice
         rc = WritePSDImg(img, filename);
         break;
       case UNSUPPORTED_TYP:
-        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE);
       }
 
     WriteImgFileComment = "";
 
     if (rc == WRONG_FILE)
-      {
-        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
     return rc;
   }
@@ -455,16 +453,14 @@ namespace ice
         rc = WritePSDImg(ir, ig, ib, filename);
         break;
       case UNSUPPORTED_TYP:
-        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE);
         break;
       }
 
     WriteImgFileComment = "";
 
     if (rc == WRONG_FILE)
-      {
-        throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
     return rc;
   }
@@ -494,10 +490,10 @@ namespace ice
       case PSD:
         return InfPSDFile(fname, xsize, ysize, maxval, nr);
       case UNSUPPORTED_TYP:
-        throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_UNSUPPORTED_FILE);
       }
 
-    throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+    throw IceException(FNAME, M_WRONG_FILETYPE);
   }
 
   int InfImgFile(const string& fname, int& xsize, int& ysize,

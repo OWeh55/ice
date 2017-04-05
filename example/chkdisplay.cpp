@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 {
   int i;
   Image p = NewImg(512, 512, 255);
-  ClearImg(p);
+  p.set(0);
   Show(ON, p); // announce visualization
 
   OpenAlpha("zack");

@@ -92,9 +92,7 @@ namespace ice
       Directory(fn, filemask, DIR_FILE | DIR_WITHPATH);
       zsize = fn.size();
       if (zsize == 0)
-        {
-          throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_NOT_FOUND);
 
       seq.resize(zsize);
 
@@ -121,9 +119,7 @@ namespace ice
 
       zsize = files.size();
       if (zsize == 0)
-        {
-          throw IceException(FNAME, M_EMPTY_LIST, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_EMPTY_LIST);
       for (unsigned int i = 0; i < files.size(); i++)
         {
           seq.push_back(ReadImg(files[i]));
@@ -152,9 +148,7 @@ namespace ice
             }
         }
       else
-        {
-          throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_IMGSIZE);
       return OK;
     }
 #undef FNAME
@@ -186,29 +180,17 @@ namespace ice
     ValueType getPixel(int x, int y, int z) const
     {
       if (x < 0)
-        {
-          throw IceException(FNAME, M_XTOOSMALL, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_XTOOSMALL);
       else if (x >= xsize)
-        {
-          throw IceException(FNAME, M_XTOOLARGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_XTOOLARGE);
       else if (y < 0)
-        {
-          throw IceException(FNAME, M_YTOOSMALL, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_YTOOSMALL);
       else if (y >= ysize)
-        {
-          throw IceException(FNAME, M_YTOOLARGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_YTOOLARGE);
       else if (z < 0)
-        {
-          throw IceException(FNAME, M_ZTOOSMALL, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_ZTOOSMALL);
       else if (z >= zsize)
-        {
-          throw IceException(FNAME, M_ZTOOLARGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_ZTOOLARGE);
       else
         {
           return seq[z].getPixelUnchecked(x, y);
@@ -226,29 +208,17 @@ namespace ice
     void setPixel(int x, int y, int z, ValueType val) const
     {
       if (x < 0)
-        {
-          throw IceException(FNAME, M_XTOOSMALL, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_XTOOSMALL);
       else if (x >= xsize)
-        {
-          throw IceException(FNAME, M_XTOOLARGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_XTOOLARGE);
       else if (y < 0)
-        {
-          throw IceException(FNAME, M_YTOOSMALL, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_YTOOSMALL);
       else if (y >= ysize)
-        {
-          throw IceException(FNAME, M_YTOOLARGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_YTOOLARGE);
       else if (z < 0)
-        {
-          throw IceException(FNAME, M_ZTOOSMALL, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_ZTOOSMALL);
       else if (z >= zsize)
-        {
-          throw IceException(FNAME, M_ZTOOLARGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_ZTOOLARGE);
       else
         {
           seq[z].setPixelUnchecked(x, y, val);
@@ -290,14 +260,10 @@ namespace ice
     int match(const Image3d<TImage>& img2) const
     {
       if (!isValid() || !img2.isValid())
-        {
-          throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_IMAGE);
 
       if ((xsize != img2.xsize) || (ysize != img2.ysize) || (zsize != img2.zsize))
-        {
-          throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_IMGSIZE);
 
       return OK;
     }
@@ -356,13 +322,9 @@ namespace ice
       z /= scale_z;
 
       if (z < -0.5)
-        {
-          throw IceException(FNAME, M_ZTOOSMALL, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_ZTOOSMALL);
       else if (z > zsize)
-        {
-          throw IceException(FNAME, M_ZTOOLARGE, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_ZTOOLARGE);
       else if (z < 0)
         {
           GetInterpolVal(seq[0], x, y);

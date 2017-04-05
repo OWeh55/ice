@@ -35,13 +35,9 @@ namespace ice
   void setImg(const Image& img, int Value)
   {
     if (Value < 0)
-      {
-        throw IceException(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_VALTOOSMALL);
     if (Value > img.maxval)
-      {
-        throw IceException(FNAME, M_VALTOOLARGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_VALTOOLARGE);
     img.set(Value);
   }
 #undef FNAME
@@ -198,7 +194,6 @@ namespace ice
       }
   }
 
-
 #define FNAME "MatchImg"
   int MatchImg(const Image& i1, const Image& i2, int& xs, int& ys)
   {
@@ -237,7 +232,7 @@ namespace ice
 #undef FNAME
 #define FNAME "checkImage"
   void checkImage(const Image& i1,
-                   int& xs, int& ys, int& mv)
+                  int& xs, int& ys, int& mv)
   {
     checkImage(i1);
     xs = i1.xsize;
@@ -246,7 +241,7 @@ namespace ice
   }
 
   void checkImage(const Image& i1, const Image& i2,
-                   int& xs, int& ys, int& mv)
+                  int& xs, int& ys, int& mv)
   {
     checkImage(i1, i2);
     xs = i1.xsize;
@@ -255,7 +250,7 @@ namespace ice
   }
 
   void checkImage(const Image& i1, const Image& i2, const Image& i3,
-                   int& xs, int& ys, int& mv)
+                  int& xs, int& ys, int& mv)
   {
     checkImage(i1, i2, i3);
     xs = i1.xsize;

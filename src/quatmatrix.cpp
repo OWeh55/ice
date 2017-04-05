@@ -52,12 +52,12 @@ namespace ice
 
         if (data == nullptr)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           }
       }
     else
       {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_MATRIX);
+        throw IceException(FNAME, M_MATRIXFORMAT);
         data = nullptr;
         return;
       }
@@ -81,7 +81,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            throw IceException(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
           }
       }
     else

@@ -39,9 +39,7 @@ namespace ice
     IMatrix segl;
 
     if (!c.isValid())
-      {
-        throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     segl = ConturSegmentlist(c);
 
@@ -97,7 +95,6 @@ namespace ice
 
     return OK;
   }
-
 
   int Region::getMinY() const
   {
@@ -282,9 +279,7 @@ namespace ice
   int Region::draw(const Image& img, int val) const
   {
     if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (val == -1)
       {

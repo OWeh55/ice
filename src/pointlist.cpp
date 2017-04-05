@@ -56,9 +56,7 @@ namespace ice
     pl = (PointList) malloc(sizeof(struct PointList_));
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, ERROR);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->lng = lng;
     pl->xptr = (double*)malloc(lng * sizeof(double));
@@ -73,19 +71,13 @@ namespace ice
   int PutPoint(PointList pl, int adr, double x, double y, double weight)
   {
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (adr < 0 || adr > pl->lng)
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (weight < 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     pl->xptr[adr] = x;
     pl->yptr[adr] = y;
@@ -99,9 +91,7 @@ namespace ice
   int FreePointList(PointList pl)
   {
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (pl->lng != 0)
       {
@@ -126,16 +116,12 @@ namespace ice
     double* wp;
 
     if (diff < 1)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     pl = (PointList)malloc(sizeof(struct PointList_));
 
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->lng = c.Number() / diff + 1;
     pl->xptr = (double*)malloc(pl->lng * sizeof(double) + 1);
@@ -144,7 +130,7 @@ namespace ice
 
     if ((pl->xptr == nullptr) || (pl->yptr == nullptr) || (pl->wptr == nullptr))
       {
-        throw IceException(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(pl);
         return nullptr;
       }
@@ -243,14 +229,10 @@ namespace ice
   int PointList2Matrix(PointList pl, int ad1, int ad2, Matrix& m)
   {
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (ad1 < 0 || ad1 > pl->lng - 1 || ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     m = Matrix(0, 3);
 
@@ -269,15 +251,11 @@ namespace ice
   int PointList2vector(PointList pl, int ad1, int ad2, vector<PointValue>& vpv)
   {
     if (pl == nullptr)
-      {
-        throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (ad1 < 0 || ad1 > pl->lng - 1 ||
         ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
-      {
-        throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     vpv.clear();
 
@@ -296,9 +274,7 @@ namespace ice
   PointList Matrix2PointList(const Matrix& m)
   {
     if ((m.cols() < 2))
-      {
-        throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     PointList pl = NewPointList(m.rows());
 

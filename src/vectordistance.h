@@ -130,9 +130,7 @@ namespace ice
     int dim = feat1.cols();
 
     if (dim != feat2.cols())
-      {
-        throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     // calculating distance field
     for (int i = 0; i < n1; ++i)
@@ -157,7 +155,6 @@ namespace ice
                   {
                     d += Sqr(feat1[i][k] - feat2[j][k]);
                   }
-
 
                 break;
 

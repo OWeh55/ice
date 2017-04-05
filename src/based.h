@@ -41,9 +41,7 @@ namespace ice
   {
     ImageD img;
     if ((xsize <= 0) || (ysize <= 0) || (minval > maxval))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
     img.create(xsize, ysize, minval, maxval);
     return img;
   }
@@ -53,9 +51,7 @@ namespace ice
     ImageD res;
 
     if (! im.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     res.create(im.xsize, im.ysize, im.minval, im.maxval);
 
@@ -76,9 +72,7 @@ namespace ice
     ImageD res;
 
     if (!img.isValid())
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     res.create(img.xsize, img.ysize, 0, img.maxval);
 

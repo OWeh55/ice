@@ -125,9 +125,7 @@ namespace ice
     int x1, y1, x2, y2;
 
     if ((fsize & 1) == 0 || rank < 0 || rank >= fsize * fsize)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int size2 = fsize / 2;
 
@@ -167,7 +165,6 @@ namespace ice
         {
           PutVal(imgd, x, y, 0);
         }
-
 
     minimalHistogram rh(img.maxval + 1, fsize * fsize, rank);
 
@@ -250,9 +247,7 @@ namespace ice
     int dx, dy;
 
     if (((fsizex & 1) == 0) || ((fsizey & 1) == 0))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int sizex = fsizex / 2;
     int sizey = fsizey / 2;
@@ -381,9 +376,7 @@ namespace ice
     int ret;
 
     if ((size & 1) == 0)
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int rank = (size * size) / 2;
     RETURN_ERROR_IF_FAILED(ret = RankImg(img, size, rank, imgd));

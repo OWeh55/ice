@@ -45,9 +45,7 @@ namespace ice
   LineSeg::LineSeg(const Vector& v, int typep) : GeoObject(v), type(typep)
   {
     if (v.Size() < 4)
-      {
-        throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     dp.x = v[2] - p.x;
     dp.y = v[3] - p.y;
@@ -58,9 +56,7 @@ namespace ice
   void LineSeg::setType(int typep)
   {
     if ((typep != line) && (typep != ray) && (typep != segment) && (typep != inv_ray))
-      {
-        throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     type = typep;
   }

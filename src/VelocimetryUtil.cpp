@@ -18,9 +18,7 @@ namespace ice
 
     if ((minDisplacementX >= maxDisplacementX) ||
         (minDisplacementY >= maxDisplacementY))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     RETURN_ERROR_IF_FAILED(directCrossCorrelation(img1, img2, img3,
                            0, 0, img1.xsize, img1.ysize,
@@ -91,7 +89,6 @@ namespace ice
             }
         }
 
-
     return OK;
   }
 
@@ -102,9 +99,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, img3));
 
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     RETURN_ERROR_IF_FAILED(directCrossCorrelation(img1, img2, img3,
                            0, 0, img1->xsize, img1->ysize,
@@ -273,9 +268,7 @@ namespace ice
 
     if ((minDisplacementX >= maxDisplacementX) ||
         (minDisplacementY >= maxDisplacementY))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     RETURN_ERROR_IF_FAILED(directSquaredError(img1, img2, img3,
                            0, 0, img1.xsize, img1.ysize,
@@ -339,9 +332,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, img3));
 
     if ((minDisplacementX >= maxDisplacementX) || (minDisplacementY >= maxDisplacementY))
-      {
-        throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     RETURN_ERROR_IF_FAILED(directSquaredError(img1, img2, img3,
                            0, 0, img1->xsize, img1->ysize,
@@ -402,7 +393,6 @@ namespace ice
     return OK;
   }
 #undef FNAME
-
 
 #define FNAME "crossCorrelationImgD"
 // IS2 = ID (*) IS1
@@ -477,7 +467,6 @@ namespace ice
   }
 #undef FNAME
 
-
 #define FNAME "phaseCorrelation"
 // IS2 = ID (*) IS1
   ImageD phaseCorrelationD(ImageD is1, ImageD is2, ImageD id,
@@ -496,7 +485,7 @@ namespace ice
         double efactor;
 
         if (noise < 0)
-          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         double noise2 = noise * noise;
 
@@ -613,7 +602,7 @@ namespace ice
         MatchImgD(xDelta, xDelta, kWidthd, kHeightd);
 
         if (iterationNumber <= 0 || lambda <= 0)
-          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAM);
 
         int MASK_DIM = 2;
 
@@ -641,7 +630,6 @@ namespace ice
         int f_y_mask[][2] = {{ -1, -1}, {1, 1}};
         int f_t_mask_pre[][2] = {{ -1, -1}, { -1, -1}};
         int f_t_mask_post[][2] = {{1, 1}, {1, 1}};
-
 
         for (int i = 0; i < kHeight; i++)
           {
@@ -701,7 +689,6 @@ namespace ice
 
             //calc_uv_averages();
 
-
             float u_sum, v_sum;
 
             for (int i = 1; i < kHeight - 1; i++)
@@ -732,7 +719,6 @@ namespace ice
                     //~ v[y][x] = f_t[y][x];
                   }
               }
-
 
           }
 
@@ -776,16 +762,16 @@ namespace ice
   int showOpticalFlow(Image img, ImageD xDelta, ImageD yDelta, int subSampleSize, double vectorScale, int color)
   {
     if (!(IsImgD(xDelta) && IsImgD(yDelta)))
-      throw IceException(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (!(IsImg(img)))
-      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int sizeX = xDelta.xsize;
     int sizeY = xDelta.ysize;
 
     if (!(subSampleSize > 0 && subSampleSize <= sizeX && subSampleSize <= sizeY && vectorScale != 0))
-      throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int x, y;
     double x1, y1;
@@ -824,8 +810,6 @@ namespace ice
     return OK;
   }
 #undef FNAME
-
-
 
   void FlipX(Image& img)
   {
@@ -909,9 +893,7 @@ namespace ice
     string paraValue;
 
     if (!inFile)
-      {
-        throw IceException(FNAME, M_FILE_OPEN, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     while (getline(inFile, lineString))
       {

@@ -314,7 +314,7 @@ namespace ice
                 break;
 
               default:
-                throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_MODE);
               }
 
             sum += u_k[i]; // Summenwerte für Normierung
@@ -496,9 +496,7 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierBayes")
-      {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     source >> nFeatures;
     source >> nClasses;
@@ -564,9 +562,7 @@ namespace ice
       }
 
     if (source.fail() || source.bad())
-      {
-        throw IceException(FNAME, M_WRONG_FILE, WRONG_FILE);
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
     state = ready;
     return OK;
   }

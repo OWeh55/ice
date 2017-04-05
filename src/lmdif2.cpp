@@ -63,22 +63,16 @@ namespace ice
     int i;
 
     if (running)
-      {
-        throw IceException(FNAME, M_NOT_NESTED, ERROR);
-      }
+      throw IceException(FNAME, M_NOT_NESTED);
 
     int optnumber = optvar.Size();
 
     if ((optnumber < 1) || (optnumber > variable.Size() || funcdim < optnumber))
-      {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (i = 0; i < optnumber; i++)
       if (optvar[i] >= variable.Size())
-        {
-          throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        }
+        throw IceException(FNAME, M_WRONG_PARAM);
 
     running = true;
     varvec = new Vector(variable);
@@ -103,7 +97,7 @@ namespace ice
     if (info == 0)
       {
         /* Fehler sollte nicht auftreten, da vorher getestet */
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Fehler melden
+        throw IceException(FNAME, M_WRONG_PARAM);
         info = ERROR; // Rückgabewert vorbereiten
       }
 
