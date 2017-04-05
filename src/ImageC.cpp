@@ -155,14 +155,14 @@ namespace ice
   void Image::checkSizes(const Image& img2) const
   {
     if (!isValid() || !img2.isValid())
-      throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((xsize != img2->xsize) || (ysize != img2->ysize))
-      throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
   }
 #undef FNAME
-#define FNAME "Image::checkImages"
-  void Image::checkImages(const Image& img2) const
+#define FNAME "Image::checkImage"
+  void Image::checkImage(const Image& img2) const
   {
     try
       {
@@ -174,15 +174,15 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "NewImg"
-  Image NewImg(int SizeX, int SizeY, int MaxValue, const std::string& title)
+  Image NewImg(int sizeX, int sizeY, int maxValue, const std::string& title)
   {
-    if (SizeX <= 0 || SizeY <= 0 || MaxValue <= 0)
+    if (sizeX <= 0 || sizeY <= 0 || maxValue <= 0)
       {
-        throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     Image Img;
-    Img.create(SizeX, SizeY, MaxValue, title);
+    Img.create(sizeX, sizeY, maxValue, title);
     return Img;
   }
 
@@ -190,12 +190,11 @@ namespace ice
   {
     if (!IsImg(Img))
       {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE);
       }
 
     Image result;
     result.create(Img, title); // create with given size..
-    // result.setTitle(title); // rename to given name
 
     if (ShallCopyContents)   // copy content if neccesary
       {
@@ -281,11 +280,9 @@ namespace ice
     double dx1 = 1.0 - dx;
     double dy  = y - (double) yi;
     double dy1 = 1.0 - dy;
-    return dx1 * (dy1 * img->getP(xi, yi)
-                  + dy * img->getP(xi, yi1))
-           + dx  * (dy1 * img->getP(xi1, yi)
-                    + dy * img->getP(xi1, yi1));
-
+    return dx1 * (dy1 * img->getP(xi, yi) + dy * img->getP(xi, yi1))
+      + dx  * (dy1 * img->getP(xi1, yi) + dy * img->getP(xi1, yi1));
+    
   }
 
   bool Image::getPixelInterpol(double x, double y, double& val) const
@@ -329,6 +326,4 @@ namespace ice
                     dy * getPixelUnchecked(xi1, yi1));
     return true;
   }
-
-
 } // namespace

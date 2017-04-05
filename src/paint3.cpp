@@ -155,7 +155,7 @@ namespace ice
     l = Max(l1, l2);
     sizey = (int)((double)(fi->nbr) * fac);
     img = NewImg(fi->nbr + l * CHARX + 3 * GAPX + LAST + 1, sizey + 4 * CHARY + 6 * GAPY + 1, 255);
-    SetImg(img, 0);
+    img.set(0);
     Line(l * CHARX + 2 * GAPX, 2 * CHARY + 3 * GAPY,
          l * CHARX + 2 * GAPX, 2 * CHARY + 3 * GAPY + LAST + sizey,
          255, DEFAULT, img);

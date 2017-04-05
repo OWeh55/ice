@@ -299,13 +299,11 @@ namespace ice
       if ((unsigned int)x >= (unsigned int)xsize)
         {
           throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
         }
 
       if ((unsigned int)y >= (unsigned int)ysize)
         {
           throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
         }
 
       return img->getP(x, y);
@@ -316,13 +314,11 @@ namespace ice
       if ((unsigned int)p.x >= (unsigned int)xsize)
         {
           throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
         }
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
         {
           throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
         }
 
       return img->getP(p.x, p.y);
@@ -394,19 +390,16 @@ namespace ice
       if ((unsigned int)x >= (unsigned int)xsize)
         {
           throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if ((unsigned int)y >= (unsigned int)ysize)
         {
           throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if ((unsigned int)val > (unsigned int)maxval)
         {
           throw IceException(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       img->setP(x, y, val);
@@ -417,19 +410,16 @@ namespace ice
       if ((unsigned int)p.x >= (unsigned int)xsize)
         {
           throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
         {
           throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if ((unsigned int)val > (unsigned int)maxval)
         {
           throw IceException(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       img->setP(p.x, p.y, val);
@@ -479,13 +469,11 @@ namespace ice
       if ((unsigned int)x >= (unsigned int)xsize)
         {
           throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if ((unsigned int)y >= (unsigned int)ysize)
         {
           throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if (val <= 0)
@@ -507,13 +495,11 @@ namespace ice
       if ((unsigned int)p.x >= (unsigned int)xsize)
         {
           throw IceException(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
         {
           throw IceException(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
         }
 
       if (val <= 0)
@@ -717,7 +703,7 @@ namespace ice
      * make sure, the sizes and value ranges of the images match.
      * throws an exception if sizes do not match
      */
-    void checkImages(const Image& img2) const;
+    void checkImage(const Image& img2) const;
     //@}
 
   protected:

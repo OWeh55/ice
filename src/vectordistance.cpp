@@ -138,7 +138,6 @@ namespace ice
     if (dim != feat2.cols())
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
       }
 
     Vector am(dim);
@@ -247,14 +246,12 @@ namespace ice
     if (n1 < 1 || n2 < 1)
       {
         throw IceException(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     unsigned int feature_dim = features_1[0].size();
     if (features_2[0].size() != feature_dim)
       {
         throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     dist = Matrix(n1, n2);

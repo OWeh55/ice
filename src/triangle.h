@@ -67,7 +67,6 @@ namespace ice
           return p3;
         default:
           throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAMETER);
-          return p1;
         }
     }
 #undef FNAME

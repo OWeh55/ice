@@ -96,7 +96,6 @@ namespace ice
         (stdmax <= 0))   // Parametertestung
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig -> Fehlermeldung
-        return Region();
       }
 
     Histogram stat(orig.maxval + 1);
@@ -109,7 +108,7 @@ namespace ice
     Image i;
     i.create(orig.xsize, orig.ysize, 1);
 
-    ClearImg(i);
+    clearImg(i);
     i.setPixel(p, 1);
 
     int PointCount = 0;
@@ -204,12 +203,11 @@ namespace ice
     if ((!orig.inside(p)) || (MaxSize <= 0))   // Parametertestung
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig
-        return res;
       }
 
     Image himg;
     himg.create(orig.xsize, orig.ysize, 1);
-    ClearImg(himg);
+    clearImg(himg);
 
     vector<IPoint> collectedPoints;
 

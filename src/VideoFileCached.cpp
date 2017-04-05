@@ -54,11 +54,11 @@ namespace ice
         for (int i = 0; i < size; i++)
           {
             vr[i] = NewImg(xs, ys, mv);
-            SetImg(vr[i], mv);
+            setImg(vr[i], mv);
             vg[i] = NewImg(xs, ys, mv);
-            ClearImg(vg[i]);
+            clearImg(vg[i]);
             vb[i] = NewImg(xs, ys, mv);
-            SetImg(vb[i], mv);
+            setImg(vb[i], mv);
           }
 
         // ersten Frame lesen

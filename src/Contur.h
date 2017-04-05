@@ -142,7 +142,6 @@ namespace ice
       if (!isvalid)
         {
           throw IceException(FNAME, M_NOT_INITIALISED, INVALID);
-          return;
         }
 
       int nPoints = nDirectionCodes + 1;

@@ -43,7 +43,6 @@ namespace ice
     if ((xsize <= 0) || (ysize <= 0) || (minval > maxval))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return img;
       }
     img.create(xsize, ysize, minval, maxval);
     return img;
@@ -56,7 +55,6 @@ namespace ice
     if (! im.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return res;
       }
 
     res.create(im.xsize, im.ysize, im.minval, im.maxval);
@@ -80,7 +78,6 @@ namespace ice
     if (!img.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return res;
       }
 
     res.create(img.xsize, img.ysize, 0, img.maxval);

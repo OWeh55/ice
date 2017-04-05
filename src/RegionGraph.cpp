@@ -333,7 +333,7 @@ namespace ice
     CopiedSourceImg = NewImg(source, true); //CopyImg(source,CopiedSourceImg);
 
     WorkingImg = NewImg(labImg);
-    SetImg(WorkingImg, 0);
+    WorkingImg.set(0);
 
     BuildGraph(retImg);
   }
@@ -753,7 +753,7 @@ ende:
   {
 
     int k, i;
-    SetImg(i1, i1->maxval);
+    i1.set(i1.maxval);
 
     for (k = 0; k < 256; k++)
       for (i = 0; i < int(Sorted[k].size()); i++)
@@ -770,9 +770,9 @@ ende:
   {
 
     int k, i;
-    SetImg(i1, i1->maxval);
+    i1.set(i1.maxval);
     wsheds = NewImg(i1);
-    SetImg(wsheds, i1->maxval);
+    wsheds.set(i1.maxval);
 
     for (k = 0; k < 256; k++)
       for (i = 0; i < int(Sorted[k].size()); i++)
@@ -889,11 +889,8 @@ ende:
 #define FNAME "BuildGraph"
   int RegionGraph::BuildGraph(Image& retImg)
   {
-
-    int xw, yw;
-    int i;
     // WorkingImg initialisieren
-    SetImg(WorkingImg, 0);
+    WorkingImg.set(0);
     RegNodeCount = 0;
 
     if (!IsImg(retImg))
@@ -901,8 +898,8 @@ ende:
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
-    for (int y = 0; y < CopiedSourceImg.ysize; y++)
-      for (int x = 0; x < CopiedSourceImg.xsize; x++)
+    for (int yw = 0; yw < CopiedSourceImg.ysize; yw++)
+      for (int xw = 0; xw < CopiedSourceImg.xsize; xw++)
         {
           // Pixel (=Region) noch nicht bearbeitet
           if (GetVal(CopiedLabImg, xw, yw) != 0)
@@ -934,7 +931,7 @@ ende:
             }
         }
 
-    SetImg(WorkingImg, WorkingImg->maxval);
+    WorkingImg.set(WorkingImg->maxval);
 
     if (!WShedPixels.empty())
 
@@ -946,16 +943,16 @@ ende:
         }
 
     WorkingImg = NewImg(WorkingImg->xsize, WorkingImg->ysize, RegNodeCount + 1);
-    SetImg(WorkingImg, 0); //WorkingImg->maxval);
+    WorkingImg.set(0); 
 
-    for (i = 0;   i < RegNodeCount; i++)
+    for (int i = 0;   i < RegNodeCount; i++)
       {
         regions[i]->drawRegion(WorkingImg, regions[i]->Label); // und Label ist RegNodeCount+1!!!!! //->GrwMw);
         regions[i]->drawWSHDPixel(WorkingImg, 0);
       }
 
     // Nachbarschaften der Regionen berechnen
-    for (i = 0;   i < RegNodeCount; i++)
+    for (int i = 0;   i < RegNodeCount; i++)
       {
         regions[i]->CompNeighborRegions8(WorkingImg);
       }
@@ -977,8 +974,8 @@ ende:
 
     Image mark = NewImg(Original->xsize, Original->ysize, 2);
 
-    SetImg(GrwImg, 0);
-    SetImg(mark, 0);
+    setImg(GrwImg, 0);
+   setImg(mark, 0);
 
     int grw, grwsum;
     int xn, yn, xkoor, ykoor;
@@ -1055,7 +1052,7 @@ ende:
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
-    SetImg(GrwImg, 255);
+    setImg(GrwImg, 255);
     Image BlWh = NewImg(WSImg);
     RegionGraph RG;
     EdgeGraph* EG;

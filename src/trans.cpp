@@ -67,7 +67,6 @@ namespace ice
     if ((p1 == NULL) || (t == NULL))
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return NULL;
       }
 
     ph[0] = p1[0];
@@ -109,13 +108,11 @@ namespace ice
     if (t == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return c2;
       }
 
     if (IsMatrixRegular((double*)t, 3, &eps) != true)
       {
         throw IceException(FNAME, M_NO_REGULAR, WRONG_TRANS);
-        return c2;
       }
 
     ds[0] = c1.StartX();
@@ -164,7 +161,6 @@ namespace ice
     if (!IsImg(imgss) || !IsImg(imgd))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Image imgs;
@@ -177,7 +173,6 @@ namespace ice
         if (!IsImg(imgs))
           {
             throw IceException(FNAME, M_0, ERROR);
-            return ERROR;
           }
 
         has_temp = true;
@@ -429,14 +424,12 @@ namespace ice
       {
         // not an affine transform
         throw IceException(FNAME, M_WRONG_TRANS, WRONG_TRANS);
-        return WRONG_TRANS;
       }
 
 
     if (!IsImg(imgd) || !IsImg(imgss))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Image imgs;
@@ -449,7 +442,6 @@ namespace ice
         if (!IsImg(imgs))
           {
             throw IceException(FNAME, M_0, ERROR);
-            return ERROR;
           }
 
         has_temp = true;

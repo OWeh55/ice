@@ -183,7 +183,6 @@ namespace ice
            )
           {
             throw IceException(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
-            return NUM_INSTABILITY;
           }
 
         Complex hc1, hc2;
@@ -257,7 +256,6 @@ namespace ice
     if (x <= 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0;
       }
 
     double c0 = 1.0;

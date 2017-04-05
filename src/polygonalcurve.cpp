@@ -35,7 +35,6 @@ namespace ice
     if (im.cols() < 2 || im.rows() < 2)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
       }
 
     for (int i = 0; i < im.rows(); i++)
@@ -276,7 +275,6 @@ namespace ice
         // reducing to less then 3 point does not make sense
         // "reducing" to more then original points does not make sense
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
 
     // already reduced enough
@@ -368,7 +366,6 @@ namespace ice
       {
         // undefined mode
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
 
       }
@@ -386,7 +383,6 @@ namespace ice
     if (prec < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
 
     switch (mode)
@@ -476,7 +472,6 @@ namespace ice
       {
         // undefined mode
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
       }
 
       }

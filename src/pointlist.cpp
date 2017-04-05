@@ -58,7 +58,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, ERROR);
-        return nullptr;
       }
 
     pl->lng = lng;
@@ -76,19 +75,16 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (adr < 0 || adr > pl->lng)
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (weight < 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     pl->xptr[adr] = x;
@@ -105,7 +101,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (pl->lng != 0)
@@ -133,7 +128,6 @@ namespace ice
     if (diff < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return nullptr;
       }
 
     pl = (PointList)malloc(sizeof(struct PointList_));
@@ -141,7 +135,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
       }
 
     pl->lng = c.Number() / diff + 1;
@@ -252,13 +245,11 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (ad1 < 0 || ad1 > pl->lng - 1 || ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     m = Matrix(0, 3);
@@ -280,14 +271,12 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (ad1 < 0 || ad1 > pl->lng - 1 ||
         ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
       {
         throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     vpv.clear();
@@ -309,7 +298,6 @@ namespace ice
     if ((m.cols() < 2))
       {
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return nullptr;
       }
 
     PointList pl = NewPointList(m.rows());

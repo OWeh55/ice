@@ -172,7 +172,7 @@ namespace ice
 
   Matrix operator !(const Matrix&);
 
-  int SetImg(const Image& img, const Matrix& m, int mode = ADAPTIVE, int sign = UNSIGNED);
+  void setImg(const Image& img, const Matrix& m, int mode = ADAPTIVE, int sign = UNSIGNED);
 
 } // namespace ice
 #endif

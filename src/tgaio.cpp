@@ -64,7 +64,6 @@ namespace ice
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     int identlen = tga_bread(fd);
@@ -100,19 +99,16 @@ namespace ice
     if (typ != 2)   /* nur RGB und keine Kompression */
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     if (interleave != 0)   /*nur ohne Interleave */
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     switch (bit)
@@ -127,7 +123,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     ib.planes = 3;
@@ -157,7 +152,6 @@ namespace ice
     if (!IsImg(r) || !IsImg(g) || !IsImg(b))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return (WRONG_PARAM);
       }
 
     if (dir != 0)
@@ -248,7 +242,6 @@ namespace ice
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
       }
 
     identlen = tga_bread(fd);
@@ -284,19 +277,16 @@ namespace ice
     if (typ != 2)   /* nur RGB und keine Kompression */
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
       }
 
     if (interleave != 0)   /*nur ohne Interleave */
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
       }
 
     if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
       }
 
     switch (bit)
@@ -311,7 +301,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
       }
 
     ib.planes = 3;
@@ -392,7 +381,6 @@ namespace ice
     if ((fd = fopen(hname.c_str(), FWMODUS)) == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     identlen = WriteImgFileComment.length();
@@ -506,7 +494,6 @@ namespace ice
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return ERROR;
       }
 
     identlen = tga_bread(fd);
@@ -532,19 +519,16 @@ namespace ice
     if (typ != 2)   /* nur RGB und keine Kompression */
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     if (interleave != 0)   /*nur ohne Interleave */
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     if (colormaplen != 0)   /*nur ohne Farbtabelle*/
       {
         throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     xsize = width;

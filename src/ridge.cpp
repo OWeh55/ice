@@ -97,25 +97,21 @@ namespace ice
     if ((dir != HORZ) && (dir != VERT))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (!IsImg(imgv))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (!IsImg(imgo))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     if (!(Inside(imgv, x, y)))
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return (WRONG_STARTPOINT);
       }
 
     wxi = BOFF;
@@ -126,7 +122,6 @@ namespace ice
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
       {
         throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return WRONG_WINDOW;
       }
 
     /* an verkleinertes Suchfenster anpassen*/
@@ -293,13 +288,11 @@ namespace ice
     if (!IsImg(imgv))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return c;
       }
 
     if (!IsImg(imgo))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return c;
       }
 
     wxi = BOFF;
@@ -310,13 +303,11 @@ namespace ice
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
       {
         throw IceException(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return c;
       }
 
     if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
       {
         throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return c;
       }
 
     /*beste Startrichtung suchen*/
@@ -330,7 +321,6 @@ namespace ice
         if (GetVal(imgo, xf, yf) != 0)
           {
             throw IceException(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-            return c;
           }
 
         dir = r_NextDir(imgv, xs, ys, i, val);

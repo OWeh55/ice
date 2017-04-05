@@ -69,7 +69,6 @@ namespace ice
     if (!isValid())
       {
         throw IceException(FNAME, M_INVALID_STRUCT, ERROR);
-        return c;
       }
 
     c.SetStart(IPoint(pl[0]));
@@ -139,7 +138,6 @@ namespace ice
         return 0.5 * (dist1 + dist2);
       default:
         throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return 0.0;
       }
   }
 
@@ -174,7 +172,6 @@ namespace ice
             break;
           default:
             throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            return 0.0;
           }
       }
 

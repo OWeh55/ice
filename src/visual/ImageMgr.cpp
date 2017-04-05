@@ -304,7 +304,6 @@ namespace ice
     if (vis == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return vis;
       }
 
     switch (Mode)
@@ -322,7 +321,6 @@ namespace ice
       default:
         // if no valid Mode was specified, there must be some error
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
   }
 
@@ -364,7 +362,6 @@ namespace ice
         if (Img->maxval > ColorTable::maxEntries)
           {
             throw IceException(FNAME, M_HIGHRANGE_VIS, WRONG_PARAM);
-            return NULL;
           }
         // Windows MUST be created in main thread
         wxCommandEvent Event(CREATE_GREY_COLORTABLE_WIN);
@@ -399,7 +396,6 @@ namespace ice
 
     // if no valid Mode was specified, there must be some error
     throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-    return NULL;
   }
 
   Visual ImageManager::Show(int Mode, ImageD* Img,
@@ -445,7 +441,6 @@ namespace ice
       default:
         // if no valid Mode was specified, there must be some error
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
   }
 
@@ -488,7 +483,6 @@ namespace ice
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize)
           {
             throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-            return NULL;
           }
 
         // Windows MUST be created in main thread
@@ -508,7 +502,6 @@ namespace ice
         if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize)
           {
             throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-            return NULL;
           }
         if (Mode == OVERLAY1)
           {
@@ -535,7 +528,6 @@ namespace ice
 
     // if no valid Mode was specified, there must be some error
     throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-    return NULL;
   }
 
   Visual ImageManager::Show(int Mode,
@@ -568,7 +560,6 @@ namespace ice
             Image2->xsize != Image3->xsize || Image2->ysize != Image3->ysize)
           {
             throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-            return NULL;
           }
 
         // Windows MUST be created in main thread
@@ -583,8 +574,6 @@ namespace ice
 
     // if no valid Mode was specified, there must be some error
     throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-    return NULL;
-
   }
 
   Visual ImageManager::Show(int Mode,
@@ -626,7 +615,6 @@ namespace ice
             Image1->xsize != Image6->xsize || Image1->ysize != Image6->ysize)
           {
             throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-            return NULL;
           }
 
         // Windows MUST be created in main thread
@@ -641,8 +629,6 @@ namespace ice
 
     // if no valid Mode was specified, there must be some error
     throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-    return NULL;
-
   }
 #undef FNAME
 

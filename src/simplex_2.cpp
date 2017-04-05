@@ -39,25 +39,21 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (a1 < 0 || a2 > pl->lng - 1)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (step < 0)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (pl->lng < 2)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
 
@@ -477,7 +473,6 @@ namespace ice
     if ((m.cols() < 2) || (m.rows() < 2))
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     PointList pl = Matrix2PointList(m);
@@ -506,7 +501,6 @@ namespace ice
     if (nPoints < 2)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return LineSeg();
       }
 
     PointList ppl = NewPointList(nPoints);
@@ -551,25 +545,21 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (a1 < 0 || a2 > pl->lng - 1)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (step < 0)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (pl->lng < 3)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
 
@@ -984,25 +974,21 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (a1 < 0 || a2 > pl->lng - 1)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (step < 0)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (pl->lng < 5)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
 

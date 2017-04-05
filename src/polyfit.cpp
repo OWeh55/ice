@@ -644,7 +644,6 @@ namespace ice
     if (i == 0)
       {
         throw IceException(FNAME, "Can't fit polygon", ERROR);
-        return nullptr;
       }
 
     if (!closed)

@@ -152,7 +152,6 @@ namespace ice
     else
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     return RobSendCommand(cmd);
   }

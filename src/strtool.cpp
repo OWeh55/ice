@@ -184,7 +184,6 @@ namespace ice
     if (wchars < 0)
       {
         throw IceException(FNAME, M_WRONG_CODING, WRONG_PARAM);
-        return res;
       }
 
     wchar_t* ws = new wchar_t[wchars + 2];
@@ -203,7 +202,6 @@ namespace ice
     if (chars < 0)
       {
         throw IceException(FNAME, M_WRONG_CODING, WRONG_PARAM);
-        return res;
       }
 
     char* ms = new char[chars + 2];

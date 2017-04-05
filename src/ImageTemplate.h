@@ -196,13 +196,11 @@ namespace ice
     if ((int)PosX >= (int)xsize)
       {
         throw IceException(FNAME, M_XTOOLARGE, WRONG_PARAM);
-        return nullptr;
       }
 
     if ((int)PosY >= (int)ysize)
       {
         throw IceException(FNAME, M_YTOOLARGE, WRONG_PARAM);
-        return nullptr;
       }
 
     return Pixel[PosY] + PosX;

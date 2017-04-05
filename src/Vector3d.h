@@ -114,7 +114,6 @@ namespace ice
           return z;
         default:
           throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-          return x;
         }
 
       return x;
@@ -132,7 +131,6 @@ namespace ice
           return z;
         default:
           throw IceException(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-          return x;
         }
 
       return x;
@@ -267,7 +265,6 @@ namespace ice
       if (l == 0)
         {
           throw IceException(FNAME, M_ZERO_VECTOR, WRONG_PARAM);
-          return;
         }
       double fac = 1.0 / l;
       *this *= fac;
@@ -293,7 +290,6 @@ namespace ice
       if (v.Size() != 3)
         {
           throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          return *this;
         }
 
       x = v[0];

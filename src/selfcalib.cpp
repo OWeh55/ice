@@ -270,7 +270,6 @@ namespace ice
     if (!IsPositivDefinit(B))
       {
         throw IceException(FNAME, M_INTERN, ERROR);
-        return B;
       }
 
     Matrix A = CholeskyDecomposition(B);
@@ -464,7 +463,7 @@ namespace ice
     copyborder(image, pic2, 2);
 
     mark1 = NewImg(dimx, dimy, max_gw);
-    ClearImg(mark1);
+    clearImg(mark1);
 
     double abstand = 0.0;        // Abstand der Muster in Bezug abhaengig von Pixelzahl und Bildrichtung
     double verschiebung_x = 0.0; // Verschiebung, damit Muster in der Mitte liegt
@@ -767,12 +766,12 @@ namespace ice
 
       if (IsImg(debug_image))
         {
-          ClearImg(debug_image);
+          clearImg(debug_image);
         }
 
       if (IsImg(debug_mark))
         {
-          ClearImg(debug_mark);
+          clearImg(debug_mark);
         }
     }
 #endif
@@ -792,7 +791,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, "wrong number of objects"/*M_INTERN*/, ERROR);
-        return number_of_found_objects;
       }
 
     pl2 = NewPointList(number_of_found_objects);
@@ -977,7 +975,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_INTERN, ERROR);
-        return number_of_points;
       }
   }
 #undef FNAME
@@ -1048,7 +1045,6 @@ namespace ice
     if (error != 0)
       {
         throw IceException(FNAME, M_INTERN, ERROR);
-        return error;
       }
 
     error = sort_reference_pairs(reference_pairs, number_of_points, pl1, pl2, imagepoints, worldpoints);
@@ -1148,7 +1144,7 @@ namespace ice
 
           if (IsImg(debug_image))
             {
-              ClearImg(debug_image);
+              clearImg(debug_image);
             }
         }
 #endif
@@ -1507,7 +1503,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int error = 0;
@@ -1697,7 +1692,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int error = 0;
@@ -1878,7 +1872,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_VECTORDIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int error = 0;

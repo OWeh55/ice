@@ -42,7 +42,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     Visual p;
@@ -50,7 +49,6 @@ namespace ice
     if (p == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     return Mouse(*p, x, y);
@@ -66,7 +64,6 @@ namespace ice
     if (!IsImg(Img) || x == NULL || y == NULL)
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
     return Mouse(Img, *x, *y);
   }

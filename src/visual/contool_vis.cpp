@@ -58,7 +58,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return c;
       }
 
     lastPoint = IPoint(img->xsize / 2, img->ysize / 2);

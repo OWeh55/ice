@@ -275,7 +275,6 @@ namespace ice
     if (v1 == nullptr || v2 == nullptr)
       {
         throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return nullptr;
       }
 
     if (v2 == nullptr)
@@ -309,7 +308,6 @@ namespace ice
     if (v1 == nullptr || v2 == nullptr)
       {
         throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return nullptr;
       }
 
     if (v3 == nullptr)
@@ -344,7 +342,6 @@ namespace ice
     if (v1 == nullptr)
       {
         throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return nullptr;
       }
 
     double l = LengthVecRn(v1, dim);
@@ -352,7 +349,6 @@ namespace ice
     if (l < EPS)
       {
         throw IceException(FNAME, M_ZERO_VECTOR, ZERO_VECTOR);
-        return nullptr;
       }
 
     if (dptr == nullptr)
@@ -379,7 +375,6 @@ namespace ice
     if (v1 == nullptr)
       {
         throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return nullptr;
       }
 
     if (dptr == nullptr)
@@ -403,7 +398,6 @@ namespace ice
     if (v1 == nullptr || v2 == nullptr)
       {
         throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return 0.0;
       }
 
     double scalar = 0;
@@ -427,7 +421,6 @@ namespace ice
     if (v1 == nullptr || v2 == nullptr)
       {
         throw IceException(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return 0.0;
       }
 
     l1 = LengthVecRn(v1, dim);
@@ -436,7 +429,6 @@ namespace ice
     if ((l1 * l2) < eps)
       {
         throw IceException(FNAME, M_ZERO_VECTOR, ZERO_VECTOR);
-        return 0.0;
       }
 
     return acos(ScalProdVecRn(v1, v2, dim) / (l1 * l2));

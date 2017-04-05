@@ -211,12 +211,12 @@ namespace ice
             }
         }
 
-    SetImg(inr, 0);
-    SetImg(dist, 0);
+    setImg(inr, 0);
+    setImg(dist, 0);
 
     if (IsImg(dir))
       {
-        SetImg(dir, 8);
+        setImg(dir, 8);
       }
 
     if (step < 0)

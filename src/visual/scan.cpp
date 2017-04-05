@@ -232,12 +232,6 @@ namespace ice
                   ifunc++;
                 }
 
-            /* ignore unknown definitions
-               if (!found) {
-            throw IceException(FNAME,M_WRONG_CONFIG,ERROR);
-               return ERROR;
-               }
-            */
             if (found)
               {
                 channelnum++;
@@ -267,13 +261,11 @@ namespace ice
     if (ch < 0 || ch >= channels)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
     //  cout << "info" << endl;
     return (*(Channel[ch].info))(ch, xm, ym, maxval, flags, descr);
@@ -288,13 +280,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
     if (x1 > x2)
       {
@@ -313,7 +303,6 @@ namespace ice
         if ((x1 < 0) || (y1 < 0) || (x2 > Channel[ch].xsize) || (y2 > Channel[ch].ysize))
           {
             throw IceException(FNAME, M_WRONG_WINDOW, WRONG_PARAM);
-            return WRONG_PARAM;
           }
       }
     Channel[ch].wxi = x1;
@@ -331,13 +320,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_DIALOG) != 0)
@@ -355,13 +342,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_PREVIEW) != 0)
@@ -371,7 +356,6 @@ namespace ice
     else
       {
         throw IceException(FNAME, M_NO_PREVIEW, ERROR);
-        return ERROR;
       }
   }
 #undef FNAME
@@ -385,13 +369,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
     return (*(Channel[ch].setproperties))(ch,
                                           brightness, contrast,
@@ -408,13 +390,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
 
     return (*(Channel[ch].getproperties))(ch,
@@ -431,19 +411,16 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
 
     if (!IsImg(pi))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     ib.width = pi->xsize;
     ib.height = pi->ysize;
@@ -467,7 +444,6 @@ namespace ice
         if ((*(Channel[ch].grab))(ch, ib) != OK)
           {
             throw IceException(FNAME, M_SCAN_ERROR, ERROR);
-            return ERROR;
           }
         Buffer2Image(ib, pi, IB_SCALE);
         if (interactive)
@@ -488,13 +464,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(pr, pg, pb, xs, ys));
@@ -531,7 +505,6 @@ namespace ice
         if ((*(Channel[ch].grab))(ch, ib) != OK)
           {
             throw IceException(FNAME, M_SCAN_ERROR, ERROR);
-            return ERROR;
           }
         Buffer2Image(ib, pr, pg, pb, IB_SCALE);
         if (interactive)
@@ -553,13 +526,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_GLOBALDRIVER) != 0)
@@ -578,13 +549,11 @@ namespace ice
     if (ch < 0 || ch >= channelnum)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       {
         throw IceException(FNAME, M_NO_SCANDEVICE, ERROR);
-        return ERROR;
       }
 
     if ((Channel[ch].flags & SC_EXTDATA) != 0)
@@ -593,7 +562,6 @@ namespace ice
       }
 
     throw IceException(FNAME, "No global driver", ERROR);
-    return ERROR;
   }
 
   int ScanGetExtData(int ch, int datanr, int& val)

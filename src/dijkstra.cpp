@@ -132,7 +132,7 @@ namespace ice
   Contur Dijkstra(const Image& img, IPoint start, IPoint end)
   {
     Image mark = NewImg(img->xsize, img->ysize, minrange);
-    ClearImg(mark);
+    clearImg(mark);
     PutVal(mark, end, 1);
     return Dijkstra(img, start, mark);
   }

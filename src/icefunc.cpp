@@ -357,7 +357,7 @@ namespace ice
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
       }
 
-    ClearImg(imgd);
+    clearImg(imgd);
 
     int* vec = NULL, *vecl = NULL, mem = 0, thr, flag = mode3 > HORZ_VERT;
 

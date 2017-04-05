@@ -149,7 +149,7 @@ namespace ice
       }
 
     imgh = NewImg(img->xsize, img->ysize, 255);
-    SetImg(imgh, 0);
+    setImg(imgh, 0);
     ast = 0;
     xc = 1;
     yc = 1;

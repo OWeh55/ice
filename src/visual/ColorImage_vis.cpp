@@ -42,7 +42,6 @@ namespace ice
     if (!img.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return NULL;
       }
 
     if (wname.empty())

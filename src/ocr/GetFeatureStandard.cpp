@@ -55,7 +55,7 @@ int GetFeatureStandard::get_feature(const Image& pic,
   Image temp = NewImg(win.Width(), win.Height(), 255);
 
   Image normalized = NewImg(gitter1 * 5, gitter2 * 5, 255);
-  ClearImg(normalized);
+  clearImg(normalized);
   //FIXME gibt es hier einen besseren Weg das Fenster in einem Bild zu speichern?
   int top = win.YI();
   int left = win.XI();
@@ -149,7 +149,7 @@ GetFeatureStandard::get_feature(const Image& pic, Vector& feature) const
     }
 
   Image normalized = NewImg(gitter1 * 5, gitter2 * 5, 255);
-  ClearImg(normalized);
+  clearImg(normalized);
   if (temp->xsize > 1 && temp->ysize > 5)
     {
       normalizeSeg(temp, normalized, gitter1, gitter2);

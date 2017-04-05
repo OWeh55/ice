@@ -23,10 +23,10 @@
  * This source file provides the implementation of some easy
  * arithmetic functions for modifying ColorImages.
  *
- * int SetImg(const ColorImage &img, unsigned int val)
- * int SetImg(const ColorImage &img, ColorVal &val)
- * int SetImg(const ColorImage &img, Func2D &fn)
- * int SetImg(const ColorImage &img, Func2D &fn1, Func2D &fn2, Func2D &fn3)
+ * int setImg(const ColorImage &img, unsigned int val)
+ * int setImg(const ColorImage &img, ColorVal &val)
+ * int setImg(const ColorImage &img, Func2D &fn)
+ * int setImg(const ColorImage &img, Func2D &fn1, Func2D &fn2, Func2D &fn3)
  * int AddImg(const ColorImage &img1, const ColorImage &img2, const ColorImage &dest, int mode=MD_NORMALIZE)
  * int SubImg(const ColorImage &img1, const ColorImage &img2, const ColorImage &dest, int smode=SMD_ABSOLUTE, int mode=MD_NORMALIZE)
  * int MaxImg(const ColorImage &img1, const ColorImage &img2, const ColorImage &dest, int mode=MD_NORMALIZE)
@@ -47,46 +47,46 @@
 namespace ice
 {
 
-#define FNAME "SetImg"
+#define FNAME "setImg"
   /**
    * does not depend on the colorspace
    * the user has the posibility to fill the channels independent
    * from the current colorspace
    */
-  int SetImg(const ColorImage& img, unsigned int val)
+  int setImg(const ColorImage& img, unsigned int val)
   {
-    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), val)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), val)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), val)));
+    RETURN_ERROR_IF_FAILED((setImg(img.redImage(), val)));
+    RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), val)));
+    RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), val)));
 
     return OK;
   }
 
-  int SetImg(const ColorImage& img, const ColorValue& val)
+  int setImg(const ColorImage& img, const ColorValue& val)
   {
     int maxval = img.maxval;
-    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), maxval - val.red)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), maxval - val.green)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), maxval - val.blue)));
+    RETURN_ERROR_IF_FAILED((setImg(img.redImage(), maxval - val.red)));
+    RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), maxval - val.green)));
+    RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), maxval - val.blue)));
 
     return OK;
   }
 
-  int SetImg(const ColorImage& img, const Function2d& fn)
+  int setImg(const ColorImage& img, const Function2d& fn)
   {
-    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), fn)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), fn)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), fn)));
+    RETURN_ERROR_IF_FAILED((setImg(img.redImage(), fn)));
+    RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), fn)));
+    RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), fn)));
 
     return OK;
   }
 
-  int SetImg(const ColorImage& img, const Function2d& fn1,
+  int setImg(const ColorImage& img, const Function2d& fn1,
              const Function2d& fn2, const Function2d& fn3)
   {
-    RETURN_ERROR_IF_FAILED((SetImg(img.redImage(), fn1)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.greenImage(), fn2)));
-    RETURN_ERROR_IF_FAILED((SetImg(img.blueImage(), fn3)));
+    RETURN_ERROR_IF_FAILED((setImg(img.redImage(), fn1)));
+    RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), fn2)));
+    RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), fn3)));
 
     return OK;
   }

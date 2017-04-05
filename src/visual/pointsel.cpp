@@ -54,7 +54,6 @@ namespace ice
     if (v == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     rc = v->SelPoint(mode, p);
     point[0] = p.x;
@@ -125,7 +124,6 @@ namespace ice
     if (NULL == v)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return IPoint(0, 0);
       }
     IPoint p(0, 0);
     v->SelPoint(DEFAULT, p);

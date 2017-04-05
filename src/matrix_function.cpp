@@ -281,7 +281,6 @@ namespace ice
     if (row < 1 || col < 1)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
 
     if (m2 == NULL)

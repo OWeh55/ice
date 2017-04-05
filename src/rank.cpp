@@ -127,7 +127,6 @@ namespace ice
     if ((fsize & 1) == 0 || rank < 0 || rank >= fsize * fsize)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int size2 = fsize / 2;
@@ -253,7 +252,6 @@ namespace ice
     if (((fsizex & 1) == 0) || ((fsizey & 1) == 0))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int sizex = fsizex / 2;
@@ -385,7 +383,6 @@ namespace ice
     if ((size & 1) == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int rank = (size * size) / 2;

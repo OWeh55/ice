@@ -158,7 +158,6 @@ namespace ice
     else
       {
         throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
-        return WRONG_PARAM;
       }
   }
 #undef FNAME
@@ -190,7 +189,6 @@ namespace ice
       }
 
     throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
-    return WRONG_PARAM;
   }
 #undef FNAME
 
@@ -201,7 +199,6 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     TIFF* image;
@@ -210,7 +207,6 @@ namespace ice
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, ERROR);
-        return ERROR;
       }
 
     // We need to set some values for basic tags before we can add any data
@@ -252,7 +248,6 @@ namespace ice
     if (! imgr.isValid() && imgg.isValid() && imgb.isValid())
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
       }
 
     int xs, ys;
@@ -264,7 +259,6 @@ namespace ice
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, ERROR);
-        return ERROR;
       }
 
     // We need to set some values for basic tags before we can add any data

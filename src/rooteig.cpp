@@ -118,7 +118,6 @@ namespace ice
             free(zminus);
             free(vec1);
             throw IceException(FNAME, M_NO_REGULAR, NO_REGULAR);
-            return NO_REGULAR;
           }
 
         NormVecRn(xt, dim, xt);
@@ -177,7 +176,6 @@ namespace ice
             getchar();
 #endif
             throw IceException(FNAME, M_NO_REGULAR, NO_REGULAR);
-            return NO_REGULAR;
           }
 
         l1 = LengthVecRn(zplus, dim);

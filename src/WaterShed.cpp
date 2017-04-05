@@ -142,7 +142,7 @@ namespace ice
     // WS-Markierungsbild initialisieren
     setM(m1, x, y, xsize, ysize, INIT);
     // Distanzbild initialisieren
-    SetImg(m3, 0);
+    setImg(m3, 0);
 
     // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
 
@@ -1009,7 +1009,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     Image status = NewImg(i1);
-    SetImg(status, 0);
+    setImg(status, 0);
 
     if (!IsImg(i1) || treshold < 0)     // Eingabebild gueltig
       {
@@ -1127,7 +1127,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     Image Histo = NewImg(300, 300, 255);
-    SetImg(Histo, 255);
+    setImg(Histo, 255);
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {

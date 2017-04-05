@@ -375,7 +375,7 @@ namespace ice
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
       }
 
-    ClearImg(mark);
+    clearImg(mark);
 
     do
       {

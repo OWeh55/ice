@@ -48,7 +48,6 @@ namespace ice
     if (!h.isInit)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     Printf("          x<%7.3f          %d \n", h.lowerLimit, h.klasse[0]);

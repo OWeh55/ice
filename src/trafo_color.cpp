@@ -39,7 +39,6 @@ namespace ice
     if ((!simg.isValid()) || (!dimg.isValid()))
       {
         throw IceException(FNAME, M_INVALID, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(Transform(tr, simg.redImage(), dimg.redImage(), mode));

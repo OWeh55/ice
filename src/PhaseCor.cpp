@@ -136,7 +136,7 @@ namespace ice
                   }
                 else
                   {
-                    SetImg(img, (img->maxval + 1) / 2);
+                    setImg(img, (img->maxval + 1) / 2);
                   }
               }
             else
@@ -149,7 +149,7 @@ namespace ice
           }
         else
           {
-            SetImg(img, (img->maxval + 1) / 2);
+            setImg(img, (img->maxval + 1) / 2);
           }
       }
     RETHROW;

@@ -73,7 +73,6 @@ namespace ice
     else
       {
         throw IceException(FNAME, M_HIGHRANGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     fwrite(head, 40, 1, ofp);
@@ -165,7 +164,6 @@ namespace ice
     else
       {
         throw IceException(FNAME, M_HIGHRANGE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     fwrite(head, 40, 1, ofp);
@@ -361,7 +359,6 @@ namespace ice
     if ((fd = fopen(filename.c_str(), FRMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     int bits;
@@ -398,7 +395,6 @@ namespace ice
     if ((fd = fopen(fname.c_str(), FRMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
       }
 
     if (!read_header(fd, xs, ys, bits, ch))
@@ -452,7 +448,6 @@ namespace ice
     if ((fd = fopen(fname.c_str(), FRMODUS)) == NULL)
       {
         throw IceException(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
       }
 
     if (!read_header(fd, xs, ys, bits, ch))

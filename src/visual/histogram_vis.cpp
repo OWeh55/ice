@@ -45,7 +45,6 @@ namespace ice
     if (!h.isValid())
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
       }
 
     for (i = 0; i < h.nClasses(); i++)

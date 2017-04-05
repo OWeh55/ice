@@ -52,7 +52,6 @@ namespace ice
     if (!hist.valid())
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return 0;
       }
 
     int n = hist.classes();
@@ -80,7 +79,6 @@ namespace ice
     if (nn == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return 0.0;
       }
 
     if (nn == 1)
@@ -179,7 +177,6 @@ namespace ice
     if (!hist.isValid())
       {
         throw IceException(FNAME, M_NOT_INITIALISED, ERROR);
-        return 0;
       }
 
     int n = hist.nClasses();
@@ -208,7 +205,6 @@ namespace ice
     if (nn == 0)
       {
         throw IceException(FNAME, M_HIST_EMPTY, ERROR);
-        return 0;
       }
 
     if (nn == 1)

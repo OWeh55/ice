@@ -420,7 +420,6 @@ namespace ice
     if (zz.size() != id.size())
       {
         throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     int sel = Menu(zz, x1, y1, x2, y2, restore, title);
     if (sel >= 0)
@@ -437,7 +436,6 @@ namespace ice
     if (zz.size() != id.size())
       {
         throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     int sel = Menu(zz, x1, y1, x2, y2, restore, title);
     if (sel >= 0)

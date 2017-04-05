@@ -2145,19 +2145,16 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return (nullptr);
       }
 
     if ((mode < 0) || (mode > 2))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (nullptr);
       }
 
     if (pl->lng < 2)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return (nullptr);
       }
 
     sl = nullptr;
@@ -2166,7 +2163,6 @@ namespace ice
     if (tree == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (nullptr);
       }
 
     code = m_tree(tree, 0, (pl->lng) - 1, pl, mode);          /* Baum aufbauen */
@@ -2174,7 +2170,6 @@ namespace ice
     if (code == -1)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (nullptr);
       }
 
     sl = t_tree(tree, sl);        /* Baum traversieren & Segmentliste aufbauen */
@@ -2182,7 +2177,6 @@ namespace ice
     if (sl == nullptr)
       {
         throw IceException(FNAME, "Nicht genug Speicher för die Segmentliste", NO_MEM);
-        return (nullptr);
       }
 
     f_tree(tree);                                              /* Baum là¥«schen */
@@ -2286,19 +2280,16 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return (nullptr);
       }
 
     if ((type < 1) || (type > 7) || (pa < 0) || (pe >= pl->lng) || (pa > pe))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (nullptr);
       }
 
     if (pe == pa)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return (nullptr);
       }
 
     // Fuer ein Ellipsensegment muessen mindestens 6 Punkte zur
@@ -2310,7 +2301,6 @@ namespace ice
         if (type == DS_ELLIPSE)
           {
             throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-            return (nullptr);
           }
 
         type &= ~DS_ELLIPSE;
@@ -2325,7 +2315,6 @@ namespace ice
         if (type == DS_CIRCLE)
           {
             throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-            return (nullptr);
           }
 
         type &= ~DS_CIRCLE;
@@ -2338,7 +2327,6 @@ namespace ice
     if (sg == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (nullptr);
       }
 
     sg->typ = -1;
@@ -2519,19 +2507,16 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return (nullptr);
       }
 
     if (((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) > 2) || max_dev <= 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (nullptr);
       }
 
     if (pl->lng < 2)
       {
         throw IceException(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return (nullptr);
       }
 
     start = 0;
@@ -2632,7 +2617,6 @@ namespace ice
 
                 do   // solange, bis Punktliste zu Ende, oder laengstmoegliches Kreissegment gefunden
                   {
-                    bool ok = true;
                     // berechne Kreissegment und maximalen Abstand
                     try
                       {
@@ -2640,7 +2624,6 @@ namespace ice
                       }
                     catch (IceException& ex)
                       {
-                        ok = false;
                         break;  // Kreissegment konnte nicht berechnet werden
                       }
 
@@ -3148,7 +3131,6 @@ namespace ice
           {
             FreeSegmentList(sg);
             throw IceException(FNAME, M_NO_MEM, NO_MEM);
-            return (nullptr);
           }
 
         c = 0;

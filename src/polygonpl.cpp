@@ -529,13 +529,11 @@ namespace ice
     if ((pl1 == nullptr) || (pl2 == nullptr))
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return nullptr;
       }
 
     if ((pl1->lng < 3) || (pl2->lng < 3))
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return nullptr;
       }
 
     c1 = p_ClipList(pl1);
@@ -600,7 +598,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return false;
       }
 
     if (pl->lng < 2)
@@ -627,13 +624,11 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return (-1);
       }
 
     if (pl->lng < 2)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return (-1);
       }
 
     for (i = 0, j = 1; i < pl->lng; i++, j++)
@@ -698,7 +693,6 @@ namespace ice
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return c;
       }
 
     c.SetStart(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
@@ -721,13 +715,11 @@ namespace ice
     if (!IsImg(img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, ERROR);
-        return;
       }
 
     if (pl == nullptr)
       {
         throw IceException(FNAME, M_WRONG_PARAM, ERROR);
-        return;
       }
 
     for (i = 0, j = 1; i < pl->lng; i++, j++)

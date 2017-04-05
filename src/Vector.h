@@ -336,7 +336,9 @@ namespace ice
     operator pointT<T>() const
     {
       if (dim != 2)
+	{
         throw IceException("Vector::Point", M_WRONG_DIM, WRONG_PARAM);
+	}
       return pointT<T>(data[0], data[1]);
     }
 

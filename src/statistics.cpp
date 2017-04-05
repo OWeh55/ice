@@ -68,7 +68,6 @@ namespace ice
     if (dim < 1)
       {
         throw IceException(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     sweight = 0.0;
@@ -101,13 +100,11 @@ namespace ice
     if (weight < 0.0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (val.Size() != dim)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int i = 0; i < dim; i++)
@@ -141,13 +138,11 @@ namespace ice
     if (weight < 0.0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if ((int)val.size() != dim)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int i = 0; i < dim; i++)
@@ -181,7 +176,6 @@ namespace ice
     if (vals.cols() != dim)
       {
         throw IceException(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     for (int i = 0; i < vals.rows(); i++)
@@ -199,7 +193,6 @@ namespace ice
     if (sweight == 0.0)
       {
         throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-        return res;
       }
 
     double inv_weight = 1 / sweight;
@@ -218,7 +211,6 @@ namespace ice
     if (st.sweight == 0.0)
       {
         throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-        return Vector(st.dim);
       }
 
     Vector mean(st.dim);
@@ -245,7 +237,6 @@ namespace ice
     if (sweight == 0.0)
       {
         throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-        return res;
       }
 
     double nrm = 1 / sweight;
@@ -269,7 +260,6 @@ namespace ice
     if (st.sweight == 0.0)
       {
         throw IceException(FNAME, M_STAT_NOENTRY, ERROR);
-        return res;
       }
 
     double nrm = 1 / st.sweight;

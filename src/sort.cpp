@@ -171,13 +171,11 @@ namespace ice
     if (!IsMatrix(mat))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
 
     if (col >= mat->csize)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
       }
 
     /*zu sortierendes Feld auswählen*/
@@ -188,7 +186,6 @@ namespace ice
     if (ix == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     for (i = 0; i < mat->rsize; i++)
@@ -203,7 +200,6 @@ namespace ice
       {
         free(ix);
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
       }
 
     /*Matrix sortieren */

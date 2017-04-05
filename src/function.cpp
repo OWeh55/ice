@@ -30,12 +30,10 @@
 namespace ice
 {
 #define FNAME "SetImg"
-  int SetImg(const Image& img, const Function2d& fn)
+  void setImg(const Image& img, const Function2d& fn)
   {
-    if (!IsImg(img))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+    try {
+    checkImage(img);
 
     for (int y = 0; y < img.ysize; y++)
       for (int x = 0; x < img.xsize; x++)
@@ -43,8 +41,8 @@ namespace ice
           int v = RoundInt(fn(x, y));
           PutValUnchecked(img, x, y, Max(0, limited(v, img)));
         }
-
-    return OK;
+    }
+    RETHROW;
   }
 #undef FNAME
 }

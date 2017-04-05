@@ -39,7 +39,6 @@ namespace ice
     if ((fp = fopen(name, "w")) == NULL)
       {
         throw IceException("WriteArrayD", "Kann File nicht Oeffnen", WRONG_FILE);
-        return (ERROR);
       }
 
     fprintf(fp, "%d\n", number);
@@ -62,7 +61,6 @@ namespace ice
     if ((fp = fopen(name, "r")) == NULL)
       {
         throw IceException("ReadArrayD", "File nicht gefunden", FILE_NOT_FOUND);
-        return (FILE_NOT_FOUND);
       }
 
     if (fscanf(fp, "%d\n", &nbr) == 0)

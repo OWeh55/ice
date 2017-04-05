@@ -78,7 +78,6 @@ namespace ice
     if (p == NULL)
       {
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
-        return (NULL);
       }
     /* let pp1 point to p */
     pp1 = p;
@@ -120,7 +119,6 @@ namespace ice
             if (p == NULL)
               {
                 throw IceException(FNAME, M_NO_MEM, NO_MEM);
-                return (NULL);
               }
             pp2 = p + i * 2;
             pp1 = pp2 - 2;

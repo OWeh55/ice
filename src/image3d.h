@@ -94,7 +94,6 @@ namespace ice
       if (zsize == 0)
         {
           throw IceException(FNAME, M_NOT_FOUND, WRONG_PARAM);
-          return;
         }
 
       seq.resize(zsize);
@@ -124,7 +123,6 @@ namespace ice
       if (zsize == 0)
         {
           throw IceException(FNAME, M_EMPTY_LIST, WRONG_PARAM);
-          return;
         }
       for (unsigned int i = 0; i < files.size(); i++)
         {
@@ -156,7 +154,6 @@ namespace ice
       else
         {
           throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-          return WRONG_PARAM;
         }
       return OK;
     }
@@ -295,13 +292,11 @@ namespace ice
       if (!isValid() || !img2.isValid())
         {
           throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-          return WRONG_PARAM;
         }
 
       if ((xsize != img2.xsize) || (ysize != img2.ysize) || (zsize != img2.zsize))
         {
           throw IceException(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-          return WRONG_PARAM;
         }
 
       return OK;

@@ -132,7 +132,6 @@ namespace ice
     if (dim != feat2.cols())
       {
         throw IceException(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
       }
 
     // calculating distance field

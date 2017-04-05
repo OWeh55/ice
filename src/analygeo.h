@@ -68,7 +68,6 @@ namespace ice
     if (dd < EPSILON)
       {
         throw IceException(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
-        return (POINT_IDENTIC);
       }
 
     p = (p1.x * dy - p1.y * dx) / dd;

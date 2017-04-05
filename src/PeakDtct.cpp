@@ -1447,13 +1447,13 @@ namespace ice
     if (use_masks)
       {
         mask1.create(img->xsize, img->ysize, 2);
-        ClearImg(mask1);
+        clearImg(mask1);
         mask2.create(img->xsize, img->ysize, 1);
-        ClearImg(mask2);
+        clearImg(mask2);
       }
 
     mask3.create(img->xsize, img->ysize, 1);
-    ClearImg(mask3);
+    clearImg(mask3);
 
     int wxi, wyi, wxa, wya;
     long count, imgdim = img->xsize * img->ysize;
@@ -1783,7 +1783,7 @@ namespace ice
         throw IceException(FNAME, M_NO_MEM, NO_MEM);
       }
 
-    ClearImg(mask1);
+    clearImg(mask1);
 
     ms = nullptr; // Optimierte Maximumsuche ab dem 2.Peak wird nicht benötigt
 

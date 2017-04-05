@@ -212,7 +212,6 @@ namespace ice
     if (maxv < 2)
       {
         throw IceException(FNAME, M_LOWRANGE, ERROR);
-        return ERROR;
       }
 
     BinImg(pic, lvl, skelett); // Ausgangsbild binarisieren

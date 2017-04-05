@@ -49,25 +49,21 @@ namespace ice
     if (pl1 == NULL || pl2 == NULL)
       {
         throw IceException(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (pl1->lng != pl2->lng)
       {
         throw IceException(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (limit < 0.0)
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (pl1->lng > MAXMATCHPOINTSLINOPT)
       {
         throw IceException(FNAME, M_TOO_MUCH_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
 #include "simplex_init.inc"
@@ -88,7 +84,6 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
 #include "simplex_free.inc"

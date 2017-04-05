@@ -19,7 +19,6 @@ namespace ice
     if (A.rows() != dim)
       {
         throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     a = A;
@@ -92,7 +91,6 @@ namespace ice
     if (A.rows() != dim)
       {
         throw IceException(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int i, j, k;

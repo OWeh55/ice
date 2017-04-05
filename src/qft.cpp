@@ -256,7 +256,6 @@ namespace ice
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
       {
         throw IceException(FNAME, M_INVALID, INVALID);
-        return ERROR;
       }
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
@@ -264,19 +263,16 @@ namespace ice
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
       }
 
     if (r->maxval != g->maxval || r->maxval != b->maxval)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
       }
 
     if (!(mode == CENTER || mode == NOCENTER))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
 
     int maxcolor = r->maxval;
@@ -363,7 +359,6 @@ namespace ice
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
       {
         throw IceException(FNAME, M_INVALID, INVALID);
-        return ERROR;
       }
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
@@ -371,19 +366,16 @@ namespace ice
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
       }
 
     if (r->maxval != g->maxval || r->maxval != b->maxval)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
       }
 
     if (!(mode == CENTER || mode == NOCENTER))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
 
     int maxcolor = r->maxval;
@@ -461,7 +453,6 @@ namespace ice
     if (!(IsImg(alpha) && IsImg(beta) && IsImg(delta)))
       {
         throw IceException(FNAME, M_INVALID, INVALID);
-        return ERROR;
       }
 
     if (int(input.getColumns()) != alpha->xsize || int(input.getRows()) != alpha->ysize ||
@@ -469,20 +460,11 @@ namespace ice
         int(input.getColumns()) != delta->xsize || int(input.getRows()) != delta->ysize)
       {
         throw IceException(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
       }
-
-    /*
-        if(r->maxval != g->maxval || r->maxval != b->maxval)
-        {
-    throw IceException(FNAME,M_SIZES_DIFFER,WRONG_PARAM);
-          return ERROR;
-        }*/
 
     if (!(mode == CENTER || mode == NOCENTER))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
 
     int i, j;

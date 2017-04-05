@@ -47,8 +47,11 @@ namespace ice
   static double  fkt_3(double moment[15], double x);
   static double  fkt_4(double moment[15], double x);
 
-  static int NewtonRaphson(double moment[15], double x0, double eps, double(*f)(double*, double), double(*f_strich)(double*, double), double& root);
-
+  static int NewtonRaphson(double moment[15], 
+			   double x0, double eps, 
+			   double(*f)(double*, double), 
+			   double(*f_strich)(double*, double), double& root);
+  
   static double f3(double m[15], double x);
   static double f3_strich(double m[15], double x);
   static double f4(double m[15], double x);
@@ -607,12 +610,14 @@ namespace ice
 
   static int S_Sim_Moments(double s, double* norm_moments, double* p_b, double* p_c)
   {
-    /* Berechnung der normierten Momente bez. Ähnlichkeits. Transf.
+    /* 
+       Berechnung der normierten Momente bez. Ähnlichkeits. Transf.
        mit der Normierung
        m10=m01=0 für Translation
        m11=0     für Rotation
        m00=1     für isotrope Skalierung
-       fuer vorgegebenes Kreissegment mit dem Parameter s */
+       fuer vorgegebenes Kreissegment mit dem Parameter s 
+    */
     double xs, phi, xc, yc, b, c;
     double M00, M10, M01, M20, M11, M02, M30, M21, M12, M03, M40, M31, M22, M13, M04;
     double MS00, MS10, MS01, MS20, MS11, MS02, MS30, MS21, MS12, MS03, MS40, MS31, MS22, MS13, MS04;

@@ -54,7 +54,6 @@ namespace ice
     )
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (frame)
@@ -114,7 +113,6 @@ namespace ice
     if ((xs > xm - 2) || (ys > ym - 2))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     x = 0;
@@ -267,7 +265,6 @@ namespace ice
     if (strlen(yns) < 2)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0;
       }
     yn[0] = tolower(yns[0]);
     yn[1] = tolower(yns[1]);
@@ -292,7 +289,6 @@ namespace ice
     if (yns.length() < 2)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0;
       }
     yn[0] = toupper(yns[0]);
     yn[1] = toupper(yns[1]);

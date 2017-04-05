@@ -495,11 +495,9 @@ namespace ice
         return InfPSDFile(fname, xsize, ysize, maxval, nr);
       case UNSUPPORTED_TYP:
         throw IceException(FNAME, M_UNSUPPORTED_FILE, WRONG_FILE);
-        return WRONG_FILE;
       }
 
     throw IceException(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-    return WRONG_FILE;
   }
 
   int InfImgFile(const string& fname, int& xsize, int& ysize,

@@ -32,7 +32,7 @@ using namespace std;
 namespace ice
 {
 #define FNAME "SetImg"
-  int SetImg(const Image& img, int Value)
+  void setImg(const Image& img, int Value)
   {
     if (Value < 0)
       {
@@ -42,18 +42,17 @@ namespace ice
       {
         throw IceException(FNAME, M_VALTOOLARGE, WRONG_PARAM);
       }
-    return img.set(Value);
+    img.set(Value);
   }
 #undef FNAME
 
 //
 // Bild löschen
 //
-#define FNAME "ClearImg"
-  int ClearImg(const Image& img)
+#define FNAME "clearImg"
+  void clearImg(const Image& img)
   {
     img.set(0);
-    return OK;
   }
 #undef FNAME
 
@@ -236,40 +235,55 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "checkImages"
-  void checkImages(const Image& i1, const Image& i2,
+#define FNAME "checkImage"
+  void checkImage(const Image& i1,
                    int& xs, int& ys, int& mv)
   {
-    checkImages(i1, i2);
+    checkImage(i1);
     xs = i1.xsize;
     ys = i1.ysize;
     mv = i1.maxval;
   }
 
-  void checkImages(const Image& i1, const Image& i2, const Image& i3,
+  void checkImage(const Image& i1, const Image& i2,
                    int& xs, int& ys, int& mv)
   {
-    checkImages(i1, i2, i3);
+    checkImage(i1, i2);
+    xs = i1.xsize;
+    ys = i1.ysize;
+    mv = i1.maxval;
+  }
+
+  void checkImage(const Image& i1, const Image& i2, const Image& i3,
+                   int& xs, int& ys, int& mv)
+  {
+    checkImage(i1, i2, i3);
     xs = i1.xsize;
     ys = i1.ysize;
     mv = i2.maxval;
   }
 
-  void checkImages(const Image& i1, const Image& i2)
+  void checkImage(const Image& i1)
+  {
+    if (!i1.isValid())
+      throw IceException(FNAME, M_INVALID);
+  }
+
+  void checkImage(const Image& i1, const Image& i2)
   {
     try
       {
-        i1.checkImages(i2);
+        i1.checkImage(i2);
       }
     RETHROW;
   }
 
-  void checkImages(const Image& i1, const Image& i2, const Image& i3)
+  void checkImage(const Image& i1, const Image& i2, const Image& i3)
   {
     try
       {
-        i1.checkImages(i2);
-        i1.checkImages(i3);
+        i1.checkImage(i2);
+        i1.checkImage(i3);
       }
     RETHROW;
   }

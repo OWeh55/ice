@@ -95,13 +95,11 @@ namespace ice
     if ((rows <= 0) || (columns <= 0))
       {
         throw IceException(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     if (matrix == NULL || r_side == NULL || cost_function == NULL || solution == NULL)
       {
         throw IceException(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     int m;    /* number of constraints */

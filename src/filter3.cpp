@@ -797,7 +797,7 @@ namespace ice
               {
                 Image smearresult = NewImg(imgs_wide->xsize,
                                            imgs_wide->ysize, imgs_wide->maxval);
-                ClearImg(smearresult);
+                clearImg(smearresult);
 
                 if (use_gauss_filter)
                   {
@@ -818,7 +818,7 @@ namespace ice
           }
       }
 
-    ClearImg(imgd);
+    clearImg(imgd);
 
     for (int i = 0 ; i < filtersizes.rows() ; i++)
       {

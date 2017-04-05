@@ -50,7 +50,6 @@ namespace ice
     if (!IsImg(Img))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Visual v;
@@ -77,7 +76,6 @@ namespace ice
 
     // if no valid Mode was specified, return some error code
     throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-    return WRONG_PARAM;
   }
 
   int Cursor(int Mode, const Image& Img, int x, int y)
@@ -85,7 +83,6 @@ namespace ice
     if (!IsImg(Img))
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     Visual v;
@@ -105,7 +102,6 @@ namespace ice
 
     // if no valid Mode was specified, return some error code
     throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-    return WRONG_PARAM;
   }
 
   int Cursor(int Mode, const Image& Img, IPoint p)
@@ -140,7 +136,6 @@ namespace ice
     if (v == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     return v->Zoom(ZoomFactor);
   }
@@ -166,7 +161,6 @@ namespace ice
     if (v == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(v->SetGreyColor(Entry, Red, Green, Blue));
@@ -181,7 +175,6 @@ namespace ice
     if (v == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(v->SetGreyLUT(First, Last));
@@ -211,7 +204,6 @@ namespace ice
     if (v == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     RETURN_ERROR_IF_FAILED(v->SetOverlayColor(Entry, Red, Green, Blue));
@@ -227,7 +219,6 @@ namespace ice
     if (v == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     RETURN_ERROR_IF_FAILED(v->GetGreyColor(Entry, Red, Green, Blue));
     return OK;
@@ -243,7 +234,6 @@ namespace ice
     if (v == NULL)
       {
         throw IceException(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
       }
     RETURN_ERROR_IF_FAILED(v->GetOverlayColor(Entry, Red, Green, Blue));
     return OK;
@@ -293,7 +283,6 @@ namespace ice
 
       default:
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
       }
   }
 #undef FNAME
@@ -310,7 +299,6 @@ namespace ice
     if (!IsImg(Img))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode, Img.Img(), name);
   }
@@ -336,7 +324,6 @@ namespace ice
         (!IsImg(Image2)))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode,
            Image1.Img(),
@@ -355,7 +342,6 @@ namespace ice
         (!IsImg(Image3)))
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode,
            Image1.Img(),
@@ -382,7 +368,6 @@ namespace ice
     )
       {
         throw IceException(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return NULL;
       }
     return wxGetApp().GetImageManager()->Show(Mode,
            Image1.Img(),

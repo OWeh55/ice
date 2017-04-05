@@ -53,7 +53,6 @@ namespace ice
     if (mode < 0)
       {
         throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
       }
 
     switch (mode)

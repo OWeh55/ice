@@ -256,7 +256,6 @@ namespace ice
                 break;
               default:
                 throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-                return 0.0;
               }
           }
 
@@ -313,7 +312,6 @@ namespace ice
             return 0.5 * (dist1 + dist2);
           default:
             throw IceException(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            return 0.0;
           }
       }
     RETHROW;
@@ -764,7 +762,6 @@ namespace ice
     if (prec < 0.0)
       {
         throw IceException(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return fpl;
       }
 
     // make pointlist from contur
@@ -923,7 +920,6 @@ namespace ice
                   {
                     // should not happen !?
                     throw IceException(FNAME, "Can´t fit", ERROR);
-                    return res;
                   }
 
                 polym[j][0] = p[0];
