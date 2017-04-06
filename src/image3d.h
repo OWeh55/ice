@@ -87,27 +87,31 @@ namespace ice
     virtual void create(const std::string& filemask,
                         double xscale = 1.0, double yscale = 1.0, double zscale = 1.0)
     {
-      seq.clear();
-      std::vector<std::string> fn;
-      Directory(fn, filemask, DIR_FILE | DIR_WITHPATH);
-      zsize = fn.size();
-      if (zsize == 0)
-        throw IceException(FNAME, M_NOT_FOUND);
+      try {
+	seq.clear();
+	std::vector<std::string> fn;
+	Directory(fn, filemask, DIR_FILE | DIR_WITHPATH);
+	zsize = fn.size();
+      
+	if (zsize == 0)
+	  throw IceException("", M_NOT_FOUND, filemask);
 
-      seq.resize(zsize);
+	seq.resize(zsize);
 
-      for (int i = 0; i < zsize; i++)
-        {
-          // cout << "lese " << fn[i] << endl;
-          seq[i] = ReadImg(fn[i]);
-        }
-      xsize = seq[0].xsize;
-      ysize = seq[0].ysize;
-      maxval = seq[0].maxval;
+	for (int i = 0; i < zsize; i++)
+	  {
+	    // cout << "lese " << fn[i] << endl;
+	    seq[i] = ReadImg(fn[i]);
+	  }
+	xsize = seq[0].xsize;
+	ysize = seq[0].ysize;
+	maxval = seq[0].maxval;
 
-      scale_x = xscale;
-      scale_y = yscale;
-      scale_z = zscale;
+	scale_x = xscale;
+	scale_y = yscale;
+	scale_z = zscale;
+      }
+      RETHROW;
     }
 
     virtual void create(const std::vector<std::string>& files,

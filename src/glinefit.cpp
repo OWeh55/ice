@@ -71,9 +71,9 @@ namespace ice
     cp[3][0] = (int)(lp[1][0] + cc * dist + 0.5);
     cp[3][1] = (int)(lp[1][1] + ss * dist + 0.5);
     c = LineContur(cp[0], cp[1]);
-    c.Add(cp[2][0], cp[2][1]);
-    c.Add(cp[3][0], cp[3][1]);
-    c.Add(cp[0][0], cp[0][1]);
+    c.add(cp[2][0], cp[2][1]);
+    c.add(cp[3][0], cp[3][1]);
+    c.add(cp[0][0], cp[0][1]);
 
     pl = RegionPointList(c);
 
@@ -160,9 +160,9 @@ namespace ice
     cp[3][1] = (int)(lp[1][1] + ss * dist + 0.5);
 
     c = LineContur(cp[0], cp[1]);
-    c.Add(cp[2][0], cp[2][1]);
-    c.Add(cp[3][0], cp[3][1]);
-    c.Add(cp[0][0], cp[0][1]);
+    c.add(cp[2][0], cp[2][1]);
+    c.add(cp[3][0], cp[3][1]);
+    c.add(cp[0][0], cp[0][1]);
     pl = RegionPointList(c);
     mean = 0;
 

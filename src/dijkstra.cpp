@@ -113,17 +113,17 @@ namespace ice
               }
           }
 
-        res.SetStart(ap.x, ap.y);
+        res.setStart(ap.x, ap.y);
 
         while (!(ap == start))
           {
-            res.Add(ap.x, ap.y);
+            res.add(ap.x, ap.y);
             int dir = (GetVal(marker, ap) - 2 + 4) % 8;
             Freeman(dir).move(ap);
           }
 
-        res.Add(start);
-        res.InvDir();
+        res.add(start);
+        res.invertDir();
         return res;
       }
     RETHROW;

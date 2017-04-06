@@ -129,11 +129,11 @@ namespace ice
         Line(x, y + h, x - h, y, val, DEFAULT, img);
         break;
       case 7: /* volles schraeges Quadrat */
-        c.SetStart(x - h, y);
-        c.Add(x, y - h);
-        c.Add(x + h, y);
-        c.Add(x, y + h);
-        c.Add(x - h, y);
+        c.setStart(x - h, y);
+        c.add(x, y - h);
+        c.add(x + h, y);
+        c.add(x, y + h);
+        c.add(x - h, y);
 
         FillRegion(c, val, img);
         break;

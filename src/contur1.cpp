@@ -139,7 +139,7 @@ namespace ice
 
             for (ind = 0; ind < pl[i1].rows(); ind++)
               {
-                result.Add(pl[i1][ind][0], pl[i1][ind][1]);
+                result.add(pl[i1][ind][0], pl[i1][ind][1]);
               }
 
           }
@@ -202,10 +202,10 @@ namespace ice
           {
             for (ind = 0; ind < pl[i1].rows(); ind++)
               {
-                result.Add(pl[i1][ind][0], pl[i1][ind][1]);
+                result.add(pl[i1][ind][0], pl[i1][ind][1]);
               }
 
-            result.Add(x1, maxy[0]); // Contur schliessen
+            result.add(x1, maxy[0]); // Contur schliessen
           }
         else if (mode == CC_EXACT)
           {
@@ -219,12 +219,12 @@ namespace ice
 
         if (result.isHole() && !c.isHole())
           {
-            result.InvDir();
+            result.invertDir();
           }
 
         if (!result.isHole() && c.isHole())
           {
-            result.InvDir();
+            result.invertDir();
           }
 
         return result;

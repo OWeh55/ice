@@ -67,7 +67,7 @@ namespace ice
     if (data == NULL)
       throw IceException(FNAME, M_NO_MEM);
 
-    c.SetStart(pm[0] + r, pm[1]);
+    c.setStart(pm[0] + r, pm[1]);
 
     // Bresenham im 1.Quadranten
     i = 0;
@@ -83,20 +83,20 @@ namespace ice
             s += -4 * x + 2;
             x--;
             data[i++] = 3;
-            c.Add(3);
+            c.add(3);
 
             while (s > 1)
               {
                 s += -4 * x + 2;
                 x--;
                 data[i++] = 4;
-                c.Add(4);
+                c.add(4);
               }
           }
         else
           {
             data[i++] = 2;
-            c.Add(2);
+            c.add(2);
           }
       }
 
@@ -104,17 +104,17 @@ namespace ice
 
     for (j = 1; j <= i; j++)                   // 2. Quadrant
       {
-        c.Add(8 - data[i - j]);
+        c.add(8 - data[i - j]);
       }
 
     for (j = 0; j < i; j++)                    // 3. Quadrant
       {
-        c.Add((data[j] + 4) % 8);
+        c.add((data[j] + 4) % 8);
       }
 
     for (j = 1; j <= i; j++)                   // 4. Quadrant
       {
-        c.Add(((8 - data[i - j]) + 4) % 8);
+        c.add(((8 - data[i - j]) + 4) % 8);
       }
 
     return c;
@@ -197,7 +197,7 @@ namespace ice
         if ((e.rr < 2) || ((e.phi_e - e.phi_a)*par[2] < 2))
           {
             // entartet zu einem Punkt
-            c.SetStart(ps[0], ps[1]);
+            c.setStart(ps[0], ps[1]);
             return c;
           }
 

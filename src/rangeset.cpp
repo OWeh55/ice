@@ -59,7 +59,7 @@ namespace ice
   {
     for (int i = 0; i < (int)elements.size(); i += 2)
       {
-        m.Add(y, elements[i].x, elements[i + 1].x - 1);
+        m.add(y, elements[i].x, elements[i + 1].x - 1);
       }
 
     return OK;

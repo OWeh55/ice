@@ -66,10 +66,10 @@ int main(int argc, char* argv[])
   r.add(-10, -10, 10, 10);
 
   Contur c(-10, -10);
-  c.Add(10, -10);
-  c.Add(10, 10);
-  c.Add(-10, 10);
-  c.Add(-10, -10);
+  c.add(10, -10);
+  c.add(10, 10);
+  c.add(-10, 10);
+  c.add(-10, -10);
 
   Moments m1, m2, m3;
   Moments m1n, m2n, m3n;
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
       pmom(m1);
 
       m2.Init();      // "leerer" Konstruktor
-      m2.Add(q1);     // Hinzufügen eines Objekt
+      m2.add(q1);     // Hinzufügen eines Objekt
       pmom(m2);
       cout << "Differenz: " << m1.Diff(m2) << endl;
 

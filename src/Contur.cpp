@@ -88,7 +88,7 @@ namespace ice
   {
   }
 
-  int Contur::SetStart(IPoint p)
+  int Contur::setStart(IPoint p)
   {
     if (nDirectionCodes == 0)
       {
@@ -132,7 +132,7 @@ namespace ice
     return diff;
   }
 
-  int Contur::Add(Freeman dir)
+  int Contur::add(Freeman dir)
   {
     if (!isvalid)
       throw IceException(FNAME, M_NOT_INITIALISED);
@@ -177,7 +177,7 @@ namespace ice
     return OK;
   }
 
-  int Contur::Add(IPoint p)
+  int Contur::add(IPoint p)
   {
     if (!isvalid)
       throw IceException(FNAME, M_NOT_INITIALISED);
@@ -249,7 +249,7 @@ namespace ice
       {
         for (i = 0; i < step1; i++)
           {
-            Add(dir1);
+            add(dir1);
           }
       }
     else
@@ -266,12 +266,12 @@ namespace ice
 
               if (count <= 0)
                 {
-                  Add(dir2);
+                  add(dir2);
                   count += step1;
                 }
               else
                 {
-                  Add(dir1);
+                  add(dir1);
                 }
             }
         else
@@ -282,12 +282,12 @@ namespace ice
 
               if (count < 0)
                 {
-                  Add(dir2);
+                  add(dir2);
                   count += step1;
                 }
               else
                 {
-                  Add(dir1);
+                  add(dir1);
                 }
             }
       }
@@ -297,18 +297,18 @@ namespace ice
     return OK;
   }
 
-  int Contur::Add(const Contur& c)
+  int Contur::add(const Contur& c)
   {
     int i;
 
     if (!c.isvalid)
       throw IceException(FNAME, M_NOT_INITIALISED);
 
-    RETURN_ERROR_IF_FAILED(Add(c.start));
+    RETURN_ERROR_IF_FAILED(add(c.start));
 
     for (i = 0; i < c.nDirectionCodes; i++)
       {
-        RETURN_ERROR_IF_FAILED(Add(c.data[i]));
+        RETURN_ERROR_IF_FAILED(add(c.data[i]));
       }
 
     cachedIndex = 0;
@@ -320,7 +320,7 @@ namespace ice
   Contur operator+(const Contur& c1, const Contur& c2)
   {
     Contur res = c1;
-    res.Add(c2);
+    res.add(c2);
     return res;
   }
 #undef FNAME
@@ -332,12 +332,12 @@ namespace ice
         return *this;
       }
 
-    Reset();
+    reset();
 
     if (c.isvalid)
       {
-        SetStart(c.start);
-        Add(c);
+        setStart(c.start);
+        add(c);
       }
     else
       {
@@ -348,7 +348,7 @@ namespace ice
   }
 #undef FNAME
 
-  int Contur::Reset()
+  int Contur::reset()
   {
     data.clear();
     nDirectionCodes = 0;
@@ -356,7 +356,7 @@ namespace ice
     return OK;
   }
 
-  int Contur::Reset(IPoint p)
+  int Contur::reset(IPoint p)
   {
     data.clear();
     nDirectionCodes = 0;
@@ -364,7 +364,7 @@ namespace ice
     return OK;
   }
 
-  int Contur::Reset(int x, int y)
+  int Contur::reset(int x, int y)
   {
     data.clear();
     nDirectionCodes = 0;
@@ -403,8 +403,8 @@ namespace ice
     return OK;
   }
 
-#define FNAME "Contur::InvDir"
-  int Contur::InvDir()
+#define FNAME "Contur::invertDir"
+  int Contur::invertDir()
   {
     if (!isvalid)
       throw IceException(FNAME, M_NOT_INITIALISED);

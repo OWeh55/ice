@@ -520,7 +520,7 @@ namespace ice
 
         gap = 0;
         PutVal(imgo, xs, ys, 1);
-        c.SetStart(xs, ys); // set startpoint of Contur
+        c.setStart(xs, ys); // set startpoint of Contur
         xx = xs;
         yy = ys;   // begin of contur following
         aktdir = startdir; // save start direction
@@ -571,12 +571,12 @@ namespace ice
             Freeman(maxdir).move(xx, yy);
             meangrad += maxgrad;           /* Kantenstärke aktualisieren */
             PutVal(imgo, xx, yy, 1);
-            c.Add(maxdir);
+            c.add(maxdir);
             aktdir = nextdir;              /* nächste Suchrichtung*/
           }
         while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
 
-        c.InvDir();
+        c.invertDir();
 
         aktdir = startdir;            // restore start direction
 
@@ -625,7 +625,7 @@ namespace ice
             Freeman(maxdir).move(xx, yy);  /* nächster Konturpunkt*/
             meangrad += maxgrad;           /* Kantenstärke aktualisieren*/
             PutVal(imgo, xx, yy, 1);
-            c.Add(maxdir);
+            c.add(maxdir);
             aktdir = nextdir;              /* nächste Suchrichtung*/
           }
         while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
@@ -642,7 +642,7 @@ namespace ice
 
             if ((xf == c.StartX()) && (yf == c.StartY()))
               {
-                c.Add(dir);
+                c.add(dir);
                 meangrad += GradVal(imgv, imgo, xx, yy, &grdir);
                 break;
               }
@@ -1047,7 +1047,7 @@ namespace ice
     if (cr == 8)                    /* Startpunkt liegt im Untergrund */
       throw IceException(FNAME, M_WRONG_STARTPOINT2);
 
-    c.SetStart(xs, ys);
+    c.setStart(xs, ys);
 
     xx = xs;
     yy = ys;                   /* Beginn der Konturfolge */
@@ -1057,7 +1057,7 @@ namespace ice
     do
       {
         dir.move(xx, yy);
-        c.Add(dir);
+        c.add(dir);
         dir = dir + 6;                   /* neue Richtung bestimmen */
         dir.move(xx, yy, xf, yf);
 

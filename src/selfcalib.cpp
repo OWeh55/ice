@@ -1998,12 +1998,12 @@ namespace ice
             pl[3][1] = pattern[i][7] * abstand + verschiebung_y;
           }
 
-        c.Reset();
-        c.SetStart((int)pl[3][0], (int)pl[3][1]);
+        c.reset();
+        c.setStart((int)pl[3][0], (int)pl[3][1]);
 
         for (int j = 0; j < 4; j++)
           {
-            c.Add((int)pl[j][0], (int)pl[j][1]);
+            c.add((int)pl[j][0], (int)pl[j][1]);
           }
 
         FillRegion(c, 255, img);

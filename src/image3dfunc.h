@@ -26,63 +26,68 @@ namespace ice
 {
 #define FNAME "BinImg"
   template<typename T>
-  int BinImg(const Image3d<T>& source, const Image3d<T>& dest,
-             typename T::ValueType threshold = 1, typename T::ValueType value = -1)
+  void binImg(const Image3d<T>& source, const Image3d<T>& dest,
+	      typename T::ValueType threshold = 1, typename T::ValueType value = -1)
   {
-    ReturnErrorIfFailed(source.match(dest));
-
-    for (int z = 0; z < source.zsize; z++)
-      {
-        BinImg(source[z], dest[z], threshold, value);
-      }
-    return OK;
+    try {
+      for (int z = 0; z < source.zsize; z++)
+	{
+	  binImg(source[z], dest[z], threshold, value);
+	}
+    }
+    RETHROW;
   }
-
+  
   template<typename T>
-  int BinImg(const Image3d<T>& image, typename T::ValueType threshold = 1)
+  void binImg(const Image3d<T>& image, typename T::ValueType threshold = 1)
   {
+    try {
     for (int z = 0; z < image.zsize; z++)
       {
-        BinImg(image[z], threshold);
+        binImg(image[z], threshold);
       }
-    return OK;
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "InvertImg"
   template<typename T>
-  int InvertImg(const Image3d<T>& source, const Image3d<T>& dest)
+  void invertImg(const Image3d<T>& source, const Image3d<T>& dest)
   {
-    ReturnErrorIfFailed(source.match(dest));
-
+    try {
     for (int z = 0; z < source.zsize; z++)
       {
-        InvertImg(source[z], dest[z]);
+        invertImg(source[z], dest[z]);
       }
-    return OK;
+    }
+    RETHROW;
   }
+
   template<typename T>
-  int InvertImg(const Image3d<T>& image)
+  void invertImg(const Image3d<T>& image)
   {
+    try {
     for (int z = 0; z < image.zsize; z++)
       {
-        InvertImg(image[z]);
+        invertImg(image[z]);
       }
-    return OK;
+    }
+    RETHROW;
   }
 #undef FNAME
   // binary operators - op(imgs1,imgs2) -> imgd
   template<typename T>
-  int AddImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd,
+  int addImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd,
              int mode = MD_LIMIT);
 
   template<typename T>
-  int SubImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd,
+  int subImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd,
              int smode = SMD_ABSOLUTE, int mode = MD_LIMIT);
 
   template<typename T>
-  int MaxImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd, int mode = MD_LIMIT);
+  int maxImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd, int mode = MD_LIMIT);
 
   template<typename T>
-  int MinImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd, int mode = MD_LIMIT);
+  int minImg(const Image3d<T>& imgs1, const Image3d<T>& imgs2, const Image3d<T>& imgd, int mode = MD_LIMIT);
 }
 #endif

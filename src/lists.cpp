@@ -98,18 +98,18 @@ namespace ice
         int x0 = RoundInt(pl[0][0]);
         int y0 = RoundInt(pl[0][1]);
 
-        c.SetStart(x0, y0);
+        c.setStart(x0, y0);
 
         for (int i = 1; i < pl.rows(); i++)
           {
             int x = RoundInt(pl[i][0]);
             int y = RoundInt(pl[i][1]);
-            c.Add(x, y);
+            c.add(x, y);
           }
 
         if (close)
           {
-            c.Add(x0, y0);
+            c.add(x0, y0);
           }
 
         return c;
@@ -128,18 +128,18 @@ namespace ice
         int x0 = pl[0][0];
         int y0 = pl[0][1];
 
-        c.SetStart(x0, y0);
+        c.setStart(x0, y0);
 
         for (int i = 1; i < pl.rows(); i++)
           {
             int x = pl[i][0];
             int y = pl[i][1];
-            c.Add(x, y);
+            c.add(x, y);
           }
 
         if (close)
           {
-            c.Add(x0, y0);
+            c.add(x0, y0);
           }
 
         return c;

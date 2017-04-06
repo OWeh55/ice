@@ -34,7 +34,7 @@ namespace ice
     IPoint pUnderground = startdir.step(pObject);
     Freeman adir = startdir;
 
-    res.Reset();
+    res.reset();
 
     int dir2 = 2;
     int dir1 = 1;
@@ -47,7 +47,7 @@ namespace ice
         dir6 = 2;
       }
 
-    res.SetStart(pObject);
+    res.setStart(pObject);
 
     //    std::cout << "is Valid " << res.isValid() << std::endl;
 
@@ -92,7 +92,7 @@ namespace ice
                     // ..|XX
                     // ..|XX
                     // links abbiegen
-                    res.Add((adir + dir1).Int());
+                    res.add((adir + dir1).Int());
                     pObject = test2;
                     adir = adir + dir6;
                   }
@@ -135,7 +135,7 @@ namespace ice
                     // ..|XX
                     // ..|XX
                     // links abbiegen
-                    res.Add((adir + dir1).Int());
+                    res.add((adir + dir1).Int());
                     pObject = test2;
                     adir = adir + dir6;
                   }
@@ -151,7 +151,7 @@ namespace ice
                         // geradeaus
                         pObject = test;
                         pUnderground = test2;
-                        res.Add((adir + dir2).Int());
+                        res.add((adir + dir2).Int());
                       }
                     else     /* obj == isunknown */
                       {
@@ -204,9 +204,9 @@ namespace ice
         Contur h;
         Go(start, startdir, false, of, h);
         // invert found contur
-        h.InvDir();
+        h.invertDir();
         // add first contur
-        h.Add(res);
+        h.add(res);
         // -> this is result
         res = h;
       }

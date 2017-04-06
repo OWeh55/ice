@@ -45,19 +45,19 @@ namespace ice
   Contur LineContur(int s1[2], int s2[2])
   {
     Contur c(s1[0], s1[1]);
-    c.Add(s2[0], s2[1]);
+    c.add(s2[0], s2[1]);
     return c;
   }
   Contur LineContur(IPoint p1, IPoint p2)
   {
     Contur c(p1);
-    c.Add(p2);
+    c.add(p2);
     return c;
   }
   Contur LineContur(int x, int y, int x1, int y1)
   {
     Contur c(x, y);
-    c.Add(x1, y1);
+    c.add(x1, y1);
     return c;
   }
 #undef FNAME

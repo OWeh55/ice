@@ -153,7 +153,7 @@ namespace ice
 
     if (!c.isValid())
       {
-        c.Reset();
+        c.reset();
       }
 
     //erst Startpunkt und dessen Nachbarn hinzufuegen, damit last und
@@ -165,7 +165,7 @@ namespace ice
 
     int stx = (int)plw[0][0];
     int sty = (int)plw[0][1];
-    c.SetStart(stx, sty);
+    c.setStart(stx, sty);
 
     // last added point
     int lastaddx = stx;
@@ -208,7 +208,7 @@ namespace ice
           }
       }
 
-    c.Add(x, y);
+    c.add(x, y);
     lastaddx = x;
     lastaddy = y;
 
@@ -237,14 +237,14 @@ namespace ice
               }
           }
 
-        c.Add(x, y);
+        c.add(x, y);
         lastaddx = x;
         lastaddy = y;
       }
 
     if (c.isHole())
       {
-        c.InvDir();
+        c.invertDir();
       }
 
     return OK;

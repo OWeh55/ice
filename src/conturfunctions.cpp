@@ -415,14 +415,14 @@ namespace ice
             else
               {
                 c1 = c; // store found (partial) contur
-                c.Reset(); // re-initialize search contur
+                c.reset(); // re-initialize search contur
                 dir2 = 6; // search backward
                 dir1 = 7;
                 dir6 = 2;
               }
 
             // Suche
-            c.SetStart(x1, y1);
+            c.setStart(x1, y1);
 
             do
               {
@@ -466,7 +466,7 @@ namespace ice
                             // ..|XX
                             // ..|XX
                             // links abbiegen
-                            c.Add((dir + dir1) & 7);
+                            c.add((dir + dir1) & 7);
                             x1 = x4;
                             y1 = y4;
                             dir = (dir + dir6) & 7;
@@ -512,7 +512,7 @@ namespace ice
                             // ..|XX
                             // ..|XX
                             // links abbiegen
-                            c.Add((dir + dir1) & 7);
+                            c.add((dir + dir1) & 7);
                             x1 = x4;
                             y1 = y4;
                             dir = (dir + dir6) & 7;
@@ -531,7 +531,7 @@ namespace ice
                                 y1 = y3;
                                 //x2 = x4;
                                 //y2 = y4;
-                                c.Add((dir + dir2) & 7);
+                                c.add((dir + dir2) & 7);
                               }
                             else     /* obj == isunknown */
                               {
@@ -557,8 +557,8 @@ namespace ice
 
         if (!second)   // zwei durchläufe waren nötig
           {
-            c.InvDir();
-            c.Add(c1);
+            c.invertDir();
+            c.add(c1);
           }
 
         return c;

@@ -116,14 +116,14 @@ namespace ice
       {
         Contur c;
         CheckPolygon(pl);
-        c.SetStart(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
+        c.setStart(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
 
         for (int i = 1; i < pl.rows(); i++)
           {
-            c.Add(RoundInt(pl[i][0]), RoundInt(pl[i][1]));
+            c.add(RoundInt(pl[i][0]), RoundInt(pl[i][1]));
           }
 
-        c.Add(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
+        c.add(RoundInt(pl[0][0]), RoundInt(pl[0][1]));
         return c;
       }
     RETHROW;

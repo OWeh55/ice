@@ -111,7 +111,7 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(TransPoint(ds, t, dd));
 
-    c2.SetStart(RoundInt(dd[0]), RoundInt(dd[1]));
+    c2.setStart(RoundInt(dd[0]), RoundInt(dd[1]));
 
     for (i = 1; i <= c1.Number(); i++)
       {
@@ -120,7 +120,7 @@ namespace ice
         ds[1] = y;
         RETURN_ERROR_IF_FAILED(TransPoint(ds, t, dd));
 
-        c2.Add(RoundInt(dd[0]), RoundInt(dd[1]));
+        c2.add(RoundInt(dd[0]), RoundInt(dd[1]));
       }
 
     return c2;

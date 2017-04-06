@@ -683,14 +683,14 @@ namespace ice
     if (pl == nullptr)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    c.SetStart(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
+    c.setStart(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
 
     for (i = 1; i < pl->lng; i++)
       {
-        c.Add(RoundInt(pl->xptr[i]), RoundInt(pl->yptr[i]));
+        c.add(RoundInt(pl->xptr[i]), RoundInt(pl->yptr[i]));
       }
 
-    c.Add(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
+    c.add(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
     return c;
   }
 

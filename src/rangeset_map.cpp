@@ -81,7 +81,7 @@ namespace ice
         ++i;
         int x2 = i->first;
         ++i;
-        m.Add(y, x1, x2 - 1);
+        m.add(y, x1, x2 - 1);
       }
 
     return OK;

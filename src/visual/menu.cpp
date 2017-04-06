@@ -470,7 +470,6 @@ namespace ice
   {
     string path;
     SplitFilename(mask, path, mask);
-    // cout << path << " - " << mask << endl;
     if (path.empty())
       {
         path = ".";

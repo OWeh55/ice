@@ -21,10 +21,6 @@
 #ifndef _CONTUR_H
 #define _CONTUR_H
 
-//
-// Die Klasse Contur
-//
-
 #include <vector>
 
 #include "defs.h"
@@ -47,34 +43,34 @@ namespace ice
 
     ~Contur();
 
-    int Reset();        // Freigabe der Daten und Neu-Initialisierung
-    int Reset(IPoint p);  // Freigabe der Daten und Neu-Initialisierung mit neuem Startpunkt
-    int Reset(int x, int y);  // Freigabe der Daten und Neu-Initialisierung mit neuem Startpunkt
+    int reset();        // Freigabe der Daten und Neu-Initialisierung
+    int reset(IPoint p);  // Freigabe der Daten und Neu-Initialisierung mit neuem Startpunkt
+    int reset(int x, int y);  // Freigabe der Daten und Neu-Initialisierung mit neuem Startpunkt
 
-    int SetStart(IPoint p);
-    int SetStart(int x, int y)
+    int setStart(IPoint p);
+    int setStart(int x, int y)
     {
-      return SetStart(IPoint(x, y));
+      return setStart(IPoint(x, y));
     }
 
     // Aufbau der Kontur
-    int Add(Freeman dir);   // Richtung anhängen
+    int add(Freeman dir);   // Richtung anhängen
 
-    int Add(IPoint p); // Verbindung zu Punkt p anhängen
-    int Add(int x, int y) // Verbindung zu Punkt (x,y) anhängen
+    int add(IPoint p); // Verbindung zu Punkt p anhängen
+    int add(int x, int y) // Verbindung zu Punkt (x,y) anhängen
     {
-      return Add(IPoint(x, y));
+      return add(IPoint(x, y));
     }
 
-    void Close() // Close Contur = return to start point
+    void close() // Close Contur = return to start point
     {
       if (isvalid && !isclosed)
         {
-          Add(start);
+          add(start);
         }
     }
 
-    int Add(const Contur& c); // Contur anhängen
+    int add(const Contur& c); // Contur anhängen
 
     Contur& operator=(const Contur&);
 
@@ -99,6 +95,7 @@ namespace ice
     {
       return nDirectionCodes;
     } ;
+
     inline double Length() const
     {
       return length;
@@ -195,7 +192,7 @@ namespace ice
     int getPairs(std::vector<IPoint>& pl, std::vector<Freeman>& fc) const;
     int getPairs(std::vector<IPoint>& opl, std::vector<IPoint>& upl) const;
 
-    int InvDir();
+    int invertDir();
 
   protected:
     int Init();   // Initialisierung

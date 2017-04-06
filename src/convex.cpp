@@ -383,16 +383,16 @@ namespace ice
 
         ConvexHull(pl, pl);
 
-        res.SetStart(pl[0]);
+        res.setStart(pl[0]);
         for (unsigned int i = 1; i < pl.size(); i++)
           {
-            res.Add(pl[i]);
+            res.add(pl[i]);
           }
-        res.Add(pl[0]); // close contur
+        res.add(pl[0]); // close contur
 
         if (hole)
           {
-            res.InvDir();
+            res.invertDir();
           }
         return res;
       }

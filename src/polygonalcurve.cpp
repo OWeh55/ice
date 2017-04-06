@@ -67,17 +67,17 @@ namespace ice
   {
     Contur c;
 
-    c.SetStart(IPoint(pl[0]));
+    c.setStart(IPoint(pl[0]));
 
     for (unsigned int i = 1; i < pl.size(); i++)
       {
-        c.Add(IPoint(pl[i]));
+        c.add(IPoint(pl[i]));
       }
 
     // close contur ?
     if (closed)
       {
-        c.Add(IPoint(pl[0]));
+        c.add(IPoint(pl[0]));
       }
 
     return c;

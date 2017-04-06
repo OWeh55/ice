@@ -318,10 +318,10 @@ namespace ice
         return c;
       }
 
-    c.SetStart(xs, ys);
+    c.setStart(xs, ys);
     /* Beginn der Konturfolge */
     PutVal(imgo, xs, ys, 1);
-    c.Add(startdir);
+    c.add(startdir);
 
     Freeman(startdir).move(xs, ys, xx, yy);
 
@@ -352,14 +352,14 @@ namespace ice
 
         xx = xn;
         yy = yn;
-        c.Add(aktdir);
+        c.add(aktdir);
         PutVal(imgo, xx, yy, 1);
         meanval += val;
       }
     while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
 
     /* Durchlaufrichtung der Kontur umdrehen*/
-    c.InvDir();
+    c.invertDir();
     /*jetzt in der anderen Richtung suchen*/
     aktdir = c.DirCode(c.Number() - 1);
 
@@ -386,7 +386,7 @@ namespace ice
 
         xx = xn;
         yy = yn;
-        c.Add(aktdir);
+        c.add(aktdir);
 
         PutVal(imgo, xx, yy, 1);
         meanval += val;
@@ -407,7 +407,7 @@ namespace ice
 
         if ((xf == c.StartX()) && (yf == c.StartY()))
           {
-            c.Add(dir);
+            c.add(dir);
             break;
           }
       }

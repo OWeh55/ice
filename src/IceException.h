@@ -13,13 +13,15 @@ namespace ice
       where_(where), message_(message)
     {
     }
+
     IceException(const IceException& ex, const std::string& newWhere):
-      where_(newWhere), message_(ex.what())
+      where_(newWhere), message_(ex.message_)
     {
+      where_ += "/" + ex.where_;
     }
 
     IceException(const std::string& where, const std::string& message, const std::string& emessage):
-      where_(where), message_(message + " " + emessage)
+      where_(where), message_(message + " (" + emessage + ")")
     {
     }
 
