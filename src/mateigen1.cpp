@@ -209,7 +209,7 @@ namespace ice
         //
       }
 
-    throw IceException(FNAME, "Too many iterations", NO_SOLUTION);
+    throw IceException(FNAME, "Too many iterations");
   }
 #undef ROTATE
 
@@ -420,7 +420,7 @@ namespace ice
       }
     else
       {
-        throw IceException(FNAME, "Too many iterations", NO_SOLUTION);
+        throw IceException(FNAME, "Too many iterations");
       }
   }
 
@@ -536,7 +536,7 @@ namespace ice
 
     /* Matrix V */
     v = Matrix(n, n);
-    v.Set(0.0);
+    v.set(0.0);
 
     /* der eigentliche Algorithmus */
     rv1 = Vector(n);

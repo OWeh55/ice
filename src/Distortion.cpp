@@ -200,7 +200,7 @@ namespace ice
           paravec[i] = para[pidx++];
         }
 
-      di.Set(paravec);
+      di.set(paravec);
 
       double m11 = para[pidx++];
       double m12 = para[pidx++];
@@ -265,7 +265,7 @@ namespace ice
         dipara[i] = 0.0;
       }
 
-    Set(dipara);
+    set(dipara);
 
     // init parameter vector
     int k = 0;
@@ -314,7 +314,7 @@ namespace ice
         center.x = dipara[0];
         center.y = dipara[1];
 
-        Set(dipara);
+        set(dipara);
 
         // .. and projective transform
         tm[0][0] = parvec[k++];
@@ -373,7 +373,7 @@ namespace ice
           distortionParameter[k] = para[parameterIndex++];
         }
 
-      di.Set(distortionParameter);
+      di.set(distortionParameter);
 
       int residx = 0;
 
@@ -456,7 +456,7 @@ namespace ice
         distortion_parameters[i] = 0.0;
       }
 
-    Set(distortion_parameters);
+    set(distortion_parameters);
 
     // init parameter vector
     int k = 0;
@@ -510,7 +510,7 @@ namespace ice
             distortion_parameters[i] = parameterVector[k++];
           }
 
-        Set(distortion_parameters);
+        set(distortion_parameters);
       }
 
     return OK;

@@ -42,7 +42,7 @@ namespace ice
     {
       if (nPoints < 1)
         {
-          throw IceException("MinTree::MinTree", M_EMPTY_POINTLIST, WRONG_PARAM);
+          throw IceException("MinTree::MinTree", M_EMPTY_POINTLIST);
         }
 
       // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes == Wurzel

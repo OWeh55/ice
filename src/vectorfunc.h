@@ -23,7 +23,7 @@
 
 #include "Vector.h"
 
-#define vERR(f,m,r,ret) { throw IceException("VectorT::" f,m,r); }
+#define vERR(f,m,r,ret) { throw IceException("VectorT::" f,m); }
 
 namespace ice
 {

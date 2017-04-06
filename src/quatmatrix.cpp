@@ -122,7 +122,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            throw IceException("operator=", M_NO_MEM, NO_MEM);
+            throw IceException("operator=", M_NO_MEM);
           }
       }
     else
@@ -167,7 +167,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(rows)))
       {
-        throw IceException("operator[]", "Wrong index", WRONG_PARAM);
+        throw IceException("operator[]", "Wrong index");
       }
 
     return *data[i];
@@ -177,7 +177,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(rows)))
       {
-        throw IceException("operator[]", "Wrong index", WRONG_PARAM);
+        throw IceException("operator[]", "Wrong index");
       }
 
     return *data[i];
@@ -187,7 +187,7 @@ namespace ice
   {
     if ((qm1.rows != qm2.rows) || (qm1.columns != qm2.columns))
       {
-        throw IceException("operator+", "Format doesn't match", WRONG_PARAM);
+        throw IceException("operator+", "Format doesn't match");
       }
 
     QuatMatrix res(qm1.rows, qm1.columns);
@@ -204,7 +204,7 @@ namespace ice
   {
     if ((qm1.rows != qm2.rows) || (qm1.columns != qm2.columns))
       {
-        throw IceException("operator+", "Format doesn't match", WRONG_PARAM);
+        throw IceException("operator+", "Format doesn't match");
       }
 
     QuatMatrix res(qm1.rows, qm1.columns);

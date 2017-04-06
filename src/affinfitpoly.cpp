@@ -1193,7 +1193,7 @@ namespace ice
 
     if (rc > 3)
       {
-        throw IceException(FNAME, "LMDif " + LMDifMessage(rc), ERROR);
+        throw IceException(FNAME, "LMDif " + LMDifMessage(rc));
       }
 
     for (int i = 0; i < n; i++)

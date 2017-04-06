@@ -77,7 +77,7 @@ namespace ice
 
     if (hb == NULL)
       {
-        throw IceException("EquSysTest", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysTest", M_NO_MEM);
       }
 
     if (b != NULL)
@@ -403,7 +403,7 @@ namespace ice
 
     if (hA == NULL)
       {
-        throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysMultiple", M_NO_MEM);
       }
 
     memcpy(hA, A, size);
@@ -413,7 +413,7 @@ namespace ice
 
     if (hb == NULL)
       {
-        throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysMultiple", M_NO_MEM);
       }
 
     if (b != NULL)
@@ -439,7 +439,7 @@ namespace ice
 
     if (hb == NULL)
       {
-        throw IceException("EquSysMultiple", M_NO_MEM, NO_MEM);
+        throw IceException("EquSysMultiple", M_NO_MEM);
       }
 
     for (i = 0; i < col; i++)

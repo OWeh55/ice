@@ -61,7 +61,7 @@ namespace ice
 
     if (Header.Signature != 0x0a)
       {
-        throw IceException(FNAME, "Kein PCX-File !!!", ERROR);
+        throw IceException(FNAME, M_WRONG_FORMAT);
         fclose(fd);
       }
 
@@ -214,7 +214,7 @@ namespace ice
 
     if ((fd = fopen(hname.c_str(), FWMODUS)) == NULL)
       {
-        throw IceException(FNAME, "File kann nicht eroeffnet werden", ERROR);
+        throw IceException(FNAME, M_FILE_OPEN);
       }
 
     Header.Signature = 0x0a; /* Kennung PCX-File */
@@ -292,7 +292,7 @@ namespace ice
     /* Schreiben des PCX-Headers in PCX-File */
     if (fwrite(&Header, 128, 1, fd) == 0)
       {
-        throw IceException(FNAME, "Fehler beim Schreiben des Headers", ERROR);
+        throw IceException(FNAME, M_WRONG_WRITE);
       }
 
     PCXLine = (unsigned char*) malloc(Header.BytesPerLine * sizeof(unsigned char));

@@ -261,7 +261,7 @@ namespace ice
         {
           dv[i] = v[idx++];
         }
-      dist->Set(dv);
+      dist->set(dv);
       return idx;
     }
   };

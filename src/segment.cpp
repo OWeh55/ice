@@ -2127,29 +2127,10 @@ namespace ice
 
     sl = t_tree(tree, sl);        /* Baum traversieren & Segmentliste aufbauen */
 
-    if (sl == nullptr)
-      {
-        throw IceException(FNAME, "Nicht genug Speicher för die Segmentliste", NO_MEM);
-      }
-
     f_tree(tree);                                              /* Baum là¥«schen */
     sl = improve(sl, pl, mode);                              /* Datenreduktion */
 
-    if (sl == nullptr)
-      {
-        throw IceException(FNAME, "Nicht genug Speicher beim Bearbeiten der Segmentliste",
-                           NO_MEM);
-        return (nullptr);
-      }
-
     segl = changesl(sl);                         /* in Segmentliste Typ à¥ndern */
-
-    if (segl == nullptr)
-      {
-        throw IceException(FNAME, "Nicht genug Speicher beim à¤¦ndern der Segmentliste",
-                           NO_MEM);
-        return (nullptr);
-      }
 
     if (segl) while (segl->prev)
         {

@@ -60,18 +60,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
                 break;
               case 2:
               case 3:
-                throw IceException(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILETYPE, fn);
                 break;
               case 4:
               case 5:
-                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
                 break;
               default:
-                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
               }
 
             reader = nullptr;
@@ -85,7 +85,7 @@ namespace ice
           }
         catch (int error)
           {
-            throw IceException(FNAME, M_FILE_OPEN + NumberString(error), WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN + NumberString(error));
             writer = nullptr;
           }
       }
@@ -127,7 +127,7 @@ namespace ice
   {
     if (writer)
       {
-        throw IceException(FNAME, "Cannot reset in write mode", WRONG_PARAM);
+        throw IceException(FNAME, "Cannot reset in write mode");
       }
 
     close();
@@ -142,18 +142,18 @@ namespace ice
         switch (error)
           {
           case 1:
-            throw IceException(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, filename);
             break;
           case 2:
           case 3:
-            throw IceException(FNAME, M_WRONG_FILETYPE, filename, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILETYPE, filename);
             break;
           case 4:
           case 5:
-            throw IceException(FNAME, M_UNSUPPORTED_FILE, filename, WRONG_FILE);
+            throw IceException(FNAME, M_UNSUPPORTED_FILE, filename);
             break;
           default:
-            throw IceException(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, filename);
           }
 
         reader = nullptr;
@@ -180,18 +180,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
                 break;
               case 2:
               case 3:
-                throw IceException(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILETYPE, fn);
                 break;
               case 4:
               case 5:
-                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
                 break;
               default:
-                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
               }
 
             reader = nullptr;
@@ -214,10 +214,10 @@ namespace ice
               case 1:
               case 20:
               case 21:
-                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
                 break;
               default:
-                throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
               }
 
             reader = nullptr;
@@ -346,13 +346,13 @@ namespace ice
         switch (error)
           {
           case 30:
-            throw IceException(FNAME, "Cannot convert color space", error);
+            throw IceException(FNAME, "Cannot convert color space");
             break;
           case 31:
-            throw IceException(FNAME, "Cannot encode video", error);
+            throw IceException(FNAME, "Cannot encode video");
             break;
           case 32:
-            throw IceException(FNAME, "Cannot write video", error);
+            throw IceException(FNAME, "Cannot write video");
             break;
           }
         return false;

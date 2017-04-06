@@ -97,8 +97,8 @@ namespace ice
     return Vector(x0, y0, d2);
   }
 
-#define FNAME "Distortion0::Set"
-  void Distortion0::Set(const Vector& v)
+#define FNAME "Distortion0::set"
+  void Distortion0::set(const Vector& v)
   {
     if (v.size() != 3)
       throw IceException(FNAME, M_WRONG_DIM);
@@ -117,8 +117,8 @@ namespace ice
     return os.str();
   }
 #undef FNAME
-#define FNAME "Distortion0::Set"
-  void Distortion0::Set(const string& parastr)
+#define FNAME "Distortion0::set"
+  void Distortion0::set(const string& parastr)
   {
     istringstream is(parastr);
 

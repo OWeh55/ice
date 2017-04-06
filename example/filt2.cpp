@@ -230,17 +230,17 @@ int main(int argc, char* argv[])
             case 6:
 
               smearImg(p1, p2, 11, 5);
-	      
+
               break;
             case 7:
 
               LSIImg(p1, imatrix, KSIZE * KSIZE,
-		     p1->maxval / 2, p2);
+                     p1->maxval / 2, p2);
               break;
 
             case 8:
               LSIImg(p1, matrix * (1.0 / (KSIZE * KSIZE)),
-		     p1->maxval / 2, p2);
+                     p1->maxval / 2, p2);
               break;
 
             case 9:

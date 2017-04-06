@@ -912,7 +912,7 @@ namespace ice
                 if (IntersecLine(p1, phi1, p2, phi2, p) != OK)
                   {
                     // should not happen !?
-                    throw IceException(FNAME, "Can´t fit", ERROR);
+                    throw IceException(FNAME, "Can´t fit");
                   }
 
                 polym[j][0] = p[0];
@@ -1042,7 +1042,7 @@ namespace ice
                     if (IntersecLine(p1, phi1, p2, phi2, p) != OK)
                       {
                         // should not happen !?
-                        throw IceException(FNAME, "Cannot fit", ERROR);
+                        throw IceException(FNAME, "Cannot fit");
                       }
 
                     res[j][0] = p[0];

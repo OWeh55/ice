@@ -98,10 +98,10 @@ namespace ice
     }
 
     virtual Vector MakeVector() const;
-    virtual void Set(const Vector& v);
+    virtual void set(const Vector& v);
 
     virtual std::string toString() const;
-    virtual void Set(const std::string& parastring);
+    virtual void set(const std::string& parastring);
 
     virtual Distortion2& operator =(const Distortion2& d);
 

@@ -210,7 +210,7 @@ namespace ice
   }
 
 // Parameter nach Vektor setzen
-  void Camera::Set(const Vector& res, int what)
+  void Camera::set(const Vector& res, int what)
   {
     int i = 0;
 
@@ -249,15 +249,15 @@ namespace ice
         switch (disttyp)
           {
           case 1:
-            dist->Set(res(i, i + 3));
+            dist->set(res(i, i + 3));
             i += 4;
             break;
           case 2:
-            dist->Set(res(i, i + 4));
+            dist->set(res(i, i + 4));
             i += 5;
             break;
           case 3:
-            dist->Set(res(i, i + 4));
+            dist->set(res(i, i + 4));
             i += 5;
             break;
           }
@@ -266,7 +266,7 @@ namespace ice
     c_val = false;
   }
 
-  void Camera::Set(double fp, double ap, double sp, double u0p, double v0p)
+  void Camera::set(double fp, double ap, double sp, double u0p, double v0p)
   {
     f = fp;
     a = ap;
@@ -278,7 +278,7 @@ namespace ice
     c_val = false;
   }
 
-  void Camera::Get(double& fp, double& ap, double& sp,
+  void Camera::get(double& fp, double& ap, double& sp,
                    double& u0p, double& v0p) const
   {
     fp = f;
@@ -289,15 +289,15 @@ namespace ice
     v0p = v0;
   }
 
-  void Camera::Set(double fp, double ap, double sp,
+  void Camera::set(double fp, double ap, double sp,
                    double u0p, double v0p, const Distortion& d)
   {
-    Set(fp, ap, sp, u0p, v0p);
+    set(fp, ap, sp, u0p, v0p);
     assign(d);
     c_val = false;
   }
 
-  void Camera::SetExt(double dxp, double dyp, double dzp,
+  void Camera::setExt(double dxp, double dyp, double dzp,
                       double ap, double bp, double cp)
   {
     dx = dxp;
@@ -309,7 +309,7 @@ namespace ice
     c_val = false;
   }
 
-  void Camera::GetExt(double& dxp, double& dyp, double& dzp,
+  void Camera::getExt(double& dxp, double& dyp, double& dzp,
                       double& ap, double& bp, double& cp) const
   {
     dxp = dx;
@@ -320,12 +320,12 @@ namespace ice
     cp = gamma;
   }
 
-  void Camera::SetDist(const Distortion& d)
+  void Camera::setDist(const Distortion& d)
   {
     assign(d);
   }
 
-  Trafo& Camera::GetTrafo() const
+  Trafo& Camera::getTrafo() const
   {
     create_trans();
     return tr;

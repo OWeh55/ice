@@ -68,7 +68,7 @@ namespace ice
 
     int  WriteC(std::string fn) const;
 
-    void Set(double val = 0.0);
+    void set(double val = 0.0);
 
     void ExchangeRow(int, int);
     void ExchangeCol(int, int);

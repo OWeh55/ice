@@ -62,8 +62,8 @@ namespace ice
         int xlen = x2 - x1 + 1;
         IVector maxy(xlen);
         IVector miny(xlen);
-        maxy.Set(y1);
-        miny.Set(y2);
+        maxy.set(y1);
+        miny.set(y2);
         int ap;
         int ind, sind;
         int dx1, dy1, dx2, dy2;

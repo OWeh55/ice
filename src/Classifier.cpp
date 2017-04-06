@@ -343,10 +343,10 @@ namespace ice
     int cc = 0; // counter for correct classifications
 
     IVector anz(nFeatures);
-    anz.Set(0);
+    anz.set(0);
 
     r = Matrix(nFeatures, nFeatures);
-    r.Set(0.0);
+    r.set(0.0);
 
     for (int i = 0; i < m.rows(); i++)
       {

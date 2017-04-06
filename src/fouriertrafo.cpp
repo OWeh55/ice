@@ -97,7 +97,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        throw IceException(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete");
       }
     else
       {
@@ -118,7 +118,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        throw IceException(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete");
       }
     else
       {
@@ -140,7 +140,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        throw IceException(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete");
       }
     else
       {
@@ -161,7 +161,7 @@ namespace ice
   {
     if (state != sDone)
       {
-        throw IceException(FNAME, "data incomplete", ERROR);
+        throw IceException(FNAME, "data incomplete");
       }
     else
       {

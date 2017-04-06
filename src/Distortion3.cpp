@@ -127,7 +127,7 @@ namespace ice
   }
 
 #define FNAME "Distortion3::Set"
-  void Distortion3::Set(const string& parastr)
+  void Distortion3::set(const string& parastr)
   {
     istringstream is(parastr);
 
@@ -142,8 +142,8 @@ namespace ice
     return Vector(x0, y0, d2, d4, d6);
   }
 
-#define FNAME "Distortion3::Set"
-  void Distortion3::Set(const Vector& v)
+#define FNAME "Distortion3::set"
+  void Distortion3::set(const Vector& v)
   {
     if (v.size() != 5)
       throw IceException(FNAME, M_WRONG_DIM);

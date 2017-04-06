@@ -93,7 +93,7 @@ namespace ice
                         int mode = DEFAULT) const;
 
     virtual Vector MakeVector() const = 0;
-    virtual void Set(const Vector& v) = 0;
+    virtual void set(const Vector& v) = 0;
 
     virtual double X0() const
     {
@@ -119,7 +119,7 @@ namespace ice
     virtual int Calc(const Matrix& marker, const Matrix& orig);
 
     virtual std::string toString() const = 0;
-    virtual void Set(const std::string& parastring) = 0;
+    virtual void set(const std::string& parastring) = 0;
 
   protected:
     double x0, y0;

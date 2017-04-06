@@ -44,7 +44,7 @@ namespace ice
 
     int ExchangeRow(int, int);
     int ExchangeCol(int, int);
-    int Set(int val);
+    int set(int val);
     int Append(const IVector& v);
 
     friend IMatrix operator+(const IMatrix&, const IMatrix&);

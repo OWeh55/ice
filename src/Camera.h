@@ -66,7 +66,7 @@ namespace ice
     Camera(const Vector& v, int dtyp = 1): disttyp(dtyp)
     {
       newdist(dtyp);
-      Set(v);
+      set(v);
     };
 
     Camera(const Camera&);
@@ -81,24 +81,24 @@ namespace ice
     Camera& operator=(Camera c);
 
     virtual Vector MakeVector(int what = all) const; // Parameter in Vektor speichern
-    virtual void Set(const Vector& res, int what = all); // Parameter nach Vektor setzen
+    virtual void set(const Vector& res, int what = all); // Parameter nach Vektor setzen
 
-    virtual void Set(double fp, double ap, double sp,
+    virtual void set(double fp, double ap, double sp,
                      double u0p, double v0p, const Distortion& d);
-    virtual void Set(double fp, double ap, double sp, double u0p, double v0p);
+    virtual void set(double fp, double ap, double sp, double u0p, double v0p);
 
-    virtual void SetExt(double dxp, double dyp, double dzp,
+    virtual void setExt(double dxp, double dyp, double dzp,
                         double ap, double bp, double cp);
 
-    virtual void Get(double& fp, double& ap, double& sp,
+    virtual void get(double& fp, double& ap, double& sp,
                      double& u0p, double& v0p) const;
 
-    virtual void GetExt(double& dxp, double& dyp, double& dzp,
+    virtual void getExt(double& dxp, double& dyp, double& dzp,
                         double& ap, double& bp, double& cp) const;
 
-    virtual Trafo& GetTrafo() const;
+    virtual Trafo& getTrafo() const;
 
-    virtual void SetDist(const Distortion& d);
+    virtual void setDist(const Distortion& d);
     virtual int DistType() const
     {
       return disttyp;

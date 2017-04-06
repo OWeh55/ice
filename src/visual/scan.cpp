@@ -511,7 +511,7 @@ namespace ice
         return (*(Channel[ch].getdriverextdata))(ch, datanr, val, issubchannel, desc);
       }
 
-    throw IceException(FNAME, "No global driver", ERROR);
+    throw IceException(FNAME, "No global driver");
   }
 
   int ScanGetExtData(int ch, int datanr, int& val)

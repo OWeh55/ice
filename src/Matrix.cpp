@@ -40,8 +40,8 @@ using namespace std;
 #define FILE_SEP '#'
 #endif
 
-#define ERR(f,m,r,ret) { throw IceException("Matrix::" f,m,r); }
-#define ERR0(f,m,r) { throw IceException("Matrix::" f,m,r); }
+#define ERR(f,m,r,ret) { throw IceException("Matrix::" f,m); }
+#define ERR0(f,m,r) { throw IceException("Matrix::" f,m); }
 
 namespace ice
 {
@@ -288,11 +288,11 @@ namespace ice
     swap(newmat);
   }
 
-  void Matrix::Set(double val)
+  void Matrix::set(double val)
   {
     for (int i = 0; i < nRows; i++)
       {
-        data[i]->Set(val);
+        data[i]->set(val);
       }
   }
 

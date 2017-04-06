@@ -328,7 +328,7 @@ namespace ice
 
     if (ct >= 4)
       {
-        throw IceException("calc_function", M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
+        throw IceException("calc_function", M_WRONG_STARTPOINT2);
       }
 
     /* Hauptrichtung gefunden, jetzt noch Nebenrichtung testen */

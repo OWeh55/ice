@@ -173,10 +173,10 @@ namespace ice
 
     if (info > 3)
       {
-        throw IceException(FNAME, "LMDif:" + LMDifMessage(info), ERROR);
+        throw IceException(FNAME, "LMDif:" + LMDifMessage(info));
       }
 
-    cam.Set(camp);
+    cam.set(camp);
 
     return OK;
   }

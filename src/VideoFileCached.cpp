@@ -72,21 +72,21 @@ namespace ice
         switch (error)
           {
           case 1:
-            throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, fn);
             break;
           case 2:
           case 3:
-            throw IceException(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILETYPE, fn);
             break;
           case 4:
           case 5:
-            throw IceException(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+            throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
             break;
           case 6:
             throw IceException(FNAME, M_WRONG_PARAM);
             break;
           default:
-            throw IceException(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, fn);
           }
 
         videofile = nullptr;

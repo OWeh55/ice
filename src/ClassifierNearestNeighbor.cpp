@@ -104,7 +104,7 @@ namespace ice
     const ClassSample* rp = tree.findNearest(fn);
     if (rp == NULL)
       {
-        throw IceException(FNAME, M_NOT_INITIALISED, 2);
+        throw IceException(FNAME, M_NOT_INITIALISED);
       }
     return rp->classNr;
   }

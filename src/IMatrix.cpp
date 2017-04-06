@@ -31,8 +31,8 @@
 
 #define PRECISION 1e-14
 
-#define vERR(f,m,r,ret) { throw IceException("IMatrix::" f,m,r); }
-#define ERR0(f,m,r) { throw IceException("IMatrix::" f,m,r); }
+#define vERR(f,m,r,ret) { throw IceException("IMatrix::" f,m); }
+#define ERR0(f,m,r) { throw IceException("IMatrix::" f,m); }
 
 namespace ice
 {
@@ -168,11 +168,11 @@ namespace ice
     return OK;
   }
 
-  int IMatrix::Set(int val)
+  int IMatrix::set(int val)
   {
     for (int i = 0; i < dim; i++)
       {
-        data[i]->Set(val);
+        data[i]->set(val);
       }
 
     return OK;

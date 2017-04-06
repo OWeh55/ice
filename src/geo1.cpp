@@ -280,9 +280,9 @@ namespace ice
           {
             weightsum = 0;
             Vector sum1(dim1);
-            sum1.Set(0);
+            sum1.set(0);
             Vector sum2(dim2);
-            sum2.Set(0);
+            sum2.set(0);
 
             for (int j = 0; j < nPoints; j++)
               for (int i = 0; i < dim2; i++)
@@ -420,7 +420,7 @@ namespace ice
                         int mode)
   {
     Vector weights(p1.rows());
-    weights.Set(1.0);
+    weights.set(1.0);
     return MatchPointlists(p1, p2, mode, weights);
   }
 

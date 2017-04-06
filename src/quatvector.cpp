@@ -115,7 +115,7 @@ namespace ice
 
             if (data == nullptr)
               {
-                throw IceException("operator=", M_NO_MEM, NO_MEM);
+                throw IceException("operator=", M_NO_MEM);
               }
           }
         else
@@ -147,7 +147,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(dimension)))
       {
-        throw IceException("operator[]", "Wrong index", WRONG_PARAM);
+        throw IceException("operator[]", "Wrong index");
       }
 
     return data[i];
@@ -164,7 +164,7 @@ namespace ice
 
     if (qv1.dimension != qv2.dimension)
       {
-        throw IceException("Operator+", "Wrong dimension", WRONG_PARAM);
+        throw IceException("Operator+", "Wrong dimension");
       }
 
     for (int i = 0; i < int(qv1.dimension); i++)
@@ -181,7 +181,7 @@ namespace ice
 
     if (qv1.dimension != qv2.dimension)
       {
-        throw IceException("Operator+", "Wrong dimension", WRONG_PARAM);
+        throw IceException("Operator+", "Wrong dimension");
       }
 
     for (int i = 0; i < int(qv1.dimension); i++)

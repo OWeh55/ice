@@ -518,7 +518,7 @@ namespace ice
   void Trafo::Scale(const Vector& center, double f)
   {
     Vector h(center.Size());
-    h.Set(f);
+    h.set(f);
     Scale(center, h);
   }
 #undef FNAME

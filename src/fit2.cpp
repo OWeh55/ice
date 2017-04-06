@@ -99,7 +99,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_DIM);
 
     /* Berechnung der Kovarianzmatrix */
-    cov.Set(0.0);
+    cov.set(0.0);
 
     for (unsigned int i = 0; i < pnr; i++)
       {

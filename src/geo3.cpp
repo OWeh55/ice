@@ -201,7 +201,7 @@ namespace ice
                   int mode)
   {
     Vector weights(p1.rows());
-    weights.Set(1.0);
+    weights.set(1.0);
     return MatchPano(p1, p2, mode, weights);
   }
 

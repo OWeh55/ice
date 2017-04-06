@@ -641,7 +641,7 @@ namespace ice
 
     if (i == 0)
       {
-        throw IceException(FNAME, "Can't fit polygon", ERROR);
+        throw IceException(FNAME, "Can't fit polygon");
       }
 
     if (!closed)

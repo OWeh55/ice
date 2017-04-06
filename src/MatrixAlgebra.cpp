@@ -33,7 +33,7 @@
 
 #define PRECISION 1e-200
 
-#define ERR(f,m,r,ret) { throw IceException(f,m,r); }
+#define ERR(f,m,r,ret) { throw IceException(f,m); }
 
 using std::vector;
 namespace ice
@@ -76,7 +76,7 @@ namespace ice
 
         for (int n = 0; n < dimension; n++)
           {
-            x.Set(0.0);
+            x.set(0.0);
             x[n] = 1.0;
 
             for (int i = 0; i < dimension; i++)
@@ -120,7 +120,7 @@ namespace ice
       throw IceException(FNAME, M_NO_SQUARE);
 
     Matrix res(dimension, dimension);
-    res.Set(0.0);
+    res.set(0.0);
 
     Matrix hilf2(mat);
 
@@ -172,7 +172,7 @@ namespace ice
     Matrix hilf2(mat);
 
     Matrix h(dimension, dimension);
-    h.Set(0);
+    h.set(0);
 
     double sum;
 

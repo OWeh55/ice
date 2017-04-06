@@ -786,7 +786,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, "wrong number of objects"/*M_INTERN*/, ERROR);
+        throw IceException(FNAME, "wrong number of objects");
       }
 
     pl2 = NewPointList(number_of_found_objects);
@@ -1069,7 +1069,7 @@ namespace ice
             verzeichnung.RectImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
-            c.SetDist(verzeichnung);
+            c.setDist(verzeichnung);
 
             // Matrix der Bildkoordinaten entzeichnen und
             // normierte Bildkoordinaten aus entzeichneter Matrix berechnen
@@ -1091,7 +1091,7 @@ namespace ice
             verzeichnung.RectImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
-            c.SetDist(verzeichnung);
+            c.setDist(verzeichnung);
 
             // Matrix der Bildkoordinaten entzeichnen und
             // normierte Bildkoordinaten aus entzeichneter Matrix berechnen
@@ -1112,7 +1112,7 @@ namespace ice
             verzeichnung.RectImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
-            c.SetDist(verzeichnung);
+            c.setDist(verzeichnung);
 
             // Matrix der Bildkoordinaten entzeichnen und
             // normierte Bildkoordinaten aus entzeichneter Matrix berechnen
@@ -1335,7 +1335,7 @@ namespace ice
             int ain = actual_image_number;
 
             //Set(double fp,double ap,double sp,double u0p,double v0p);
-            cv[ain].Set(cps[ain]->K[0][0] * (dimmax / 2.0),
+            cv[ain].set(cps[ain]->K[0][0] * (dimmax / 2.0),
                         cps[ain]->K[1][1] / (-cps[ain]->K[0][0]),
                         cps[ain]->K[0][1] / cps[ain]->K[0][0],
                         cps[ain]->K[0][2] * (dimmax / 2.0) + (dimx / 2.0),
@@ -1344,7 +1344,7 @@ namespace ice
             //SetExt(double dxp,double dyp,double dzp,double ap,double bp,double cp);
             if ((cps[ain]->R[0][0] == 0) && (cps[ain]->R[1][0] == 0))
               {
-                cv[ain].SetExt(cps[ain]->t[0] * (dimmax / 2.0),
+                cv[ain].setExt(cps[ain]->t[0] * (dimmax / 2.0),
                                cps[ain]->t[1] * (dimmax / 2.0),
                                cps[ain]->t[2] * (dimmax / 2.0),
                                0.0,
@@ -1353,7 +1353,7 @@ namespace ice
               }
             else
               {
-                cv[ain].SetExt(cps[ain]->t[0] * (dimmax / 2.0),
+                cv[ain].setExt(cps[ain]->t[0] * (dimmax / 2.0),
                                cps[ain]->t[1] * (dimmax / 2.0),
                                cps[ain]->t[2] * (dimmax / 2.0),
                                atan(cps[ain]->R[1][0] / cps[ain]->R[0][0]),
@@ -1366,7 +1366,7 @@ namespace ice
       {
         // Kameraparameter in Vector schreiben
         //Set(double fp,double ap,double sp,double u0p,double v0p);
-        cv[0].Set(K[0][0] * (dimmax / 2.0),
+        cv[0].set(K[0][0] * (dimmax / 2.0),
                   K[1][1] / (-K[0][0]),
                   K[0][1] / K[0][0],
                   K[0][2] * (dimmax / 2.0) + (dimx / 2.0),

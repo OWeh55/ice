@@ -194,7 +194,7 @@ namespace ice
     void Resize(int newdim)
     {
       if (newdim < 0)
-        throw IceException("Vector::Resize", M_WRONG_DIM, WRONG_PARAM);
+        throw IceException("Vector::Resize", M_WRONG_DIM);
 
       resize(newdim);
     }
@@ -337,7 +337,7 @@ namespace ice
     {
       if (dim != 2)
         {
-          throw IceException("Vector::Point", M_WRONG_DIM, WRONG_PARAM);
+          throw IceException("Vector::Point", M_WRONG_DIM);
         }
       return pointT<T>(data[0], data[1]);
     }
@@ -354,7 +354,7 @@ namespace ice
     const T& operator[](unsigned int i) const
     {
       if (i >= dim)
-        throw IceException("Vector::operator[]", M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException("Vector::operator[]", M_WRONG_INDEX);
 
       return data[i];
     }
@@ -362,7 +362,7 @@ namespace ice
     T& operator[](unsigned int i)
     {
       if (i >= dim)
-        throw IceException("Vector::operator[]", M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException("Vector::operator[]", M_WRONG_INDEX);
 
       return data[i];
     }
@@ -370,7 +370,7 @@ namespace ice
     VectorT operator()(unsigned int i1, unsigned int i2) const
     {
       if ((i1 > i2 + 1) || (i2 >= dim))
-        throw IceException("Vector::operator()", M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException("Vector::operator()", M_WRONG_INDEX);
 
       VectorT ret(i2 - i1 + 1);
 
@@ -382,43 +382,43 @@ namespace ice
       return ret;
     }
 
-    void SetV(T x1, T x2, T x3, T x4)
+    void setV(T x1, T x2, T x3, T x4)
     {
       if (dim < 4)
-        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
+        throw IceException("Vector::setV", M_WRONG_DIM);
 
       data[3] = x4;
 
-      SetV(x1, x2, x3);
+      setV(x1, x2, x3);
     }
 
-    void SetV(T x1, T x2, T x3)
+    void setV(T x1, T x2, T x3)
     {
       if (dim < 3)
-        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
+        throw IceException("Vector::setV", M_WRONG_DIM);
 
       data[2] = x3;
-      SetV(x1, x2);
+      setV(x1, x2);
     }
 
-    void SetV(T x1, T x2)
+    void setV(T x1, T x2)
     {
       if (dim < 2)
-        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
+        throw IceException("Vector::setV", M_WRONG_DIM);
 
       data[1] = x2;
-      SetV(x1);
+      setV(x1);
     }
 
-    void SetV(T x1)
+    void setV(T x1)
     {
       if (dim < 1)
-        throw IceException("Vector::SetV", M_WRONG_DIM, WRONG_PARAM);
+        throw IceException("Vector::setV", M_WRONG_DIM);
 
       data[0] = x1;
     }
 
-    void Set(T val)
+    void set(T val)
     {
       for (unsigned int i = 0; i < dim; i++)
         {
@@ -429,7 +429,7 @@ namespace ice
     void Exchange(unsigned int i1, unsigned int i2)
     {
       if ((i1 >= dim) || (i2 >= dim))
-        throw IceException("Vector::Exchange", M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException("Vector::Exchange", M_WRONG_INDEX);
 
       std::swap(data[i1], data[i2]);
     }
@@ -437,7 +437,7 @@ namespace ice
     void Delete(unsigned int i1, unsigned int i2)
     {
       if ((i1 > i2) || (i2 >= dim))
-        throw IceException("Vector::Delete", M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException("Vector::Delete", M_WRONG_INDEX);
 
       unsigned int diff = i2 - i1 + 1;
       unsigned int newdim = dim - diff;
@@ -453,7 +453,7 @@ namespace ice
     void Delete(unsigned int i1)
     {
       if (i1 >= dim)
-        throw IceException("Vector::Delete", M_WRONG_INDEX, WRONG_PARAM);
+        throw IceException("Vector::Delete", M_WRONG_INDEX);
 
       int newdim = dim - 1;
 
@@ -600,7 +600,7 @@ namespace ice
       T prod = 0;
 
       if (dim != h.dim)
-        throw IceException("Vector::operator*", M_WRONG_DIM, WRONG_PARAM);
+        throw IceException("Vector::operator*", M_WRONG_DIM);
 
       for (unsigned int i = 0; i < dim; i++)
         {
@@ -703,7 +703,7 @@ namespace ice
       double l = Length();
 
       if (l == 0)
-        throw IceException("Vector::Normalize", M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException("Vector::Normalize", M_WRONG_PARAM);
 
       for (unsigned int j = 0; j < dim; j++)
         {

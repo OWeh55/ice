@@ -233,7 +233,7 @@ namespace ice
   double* MoveVecRn(double* v1, int dim, double* v2)
   {
     if (v1 == nullptr)
-      throw IceException("FNAME", M_WRONG_VECTOR, WRONG_VECTOR);
+      throw IceException("FNAME", M_WRONG_VECTOR);
 
     if (v2 == nullptr)
       v2 = (double*)malloc(dim * sizeof(double));
