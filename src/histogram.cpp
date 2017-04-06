@@ -52,7 +52,7 @@ namespace ice
     reset(number);
   }
 
-  void Histogram::AddImg0(const Image& b, int diff)
+  void Histogram::addImg0(const Image& b, int diff)
   {
     for (int y = 0; y < b->ysize; y += diff)
       for (int x = 0; x < b->xsize; x += diff)
@@ -62,7 +62,7 @@ namespace ice
   }
 
   template<class T>
-  void Histogram::AddImg(const Image& b, int diff)
+  void Histogram::addImg(const Image& b, int diff)
   {
     T** bp = (T**)b->getDataPtr();
 
@@ -97,16 +97,16 @@ namespace ice
     switch (typ)
       {
       case 1:
-        AddImg<PixelType1>(b, diff);
+        addImg<PixelType1>(b, diff);
         break;
       case 2:
-        AddImg<PixelType2>(b, diff);
+        addImg<PixelType2>(b, diff);
         break;
       case 3:
-        AddImg<PixelType3>(b, diff);
+        addImg<PixelType3>(b, diff);
         break;
       default:
-        AddImg0(b, diff);
+        addImg0(b, diff);
         break;
       }
     return OK;

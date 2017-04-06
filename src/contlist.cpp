@@ -71,7 +71,7 @@ namespace ice
   }
 
 #define FNAME "ConturList::Add"
-  int ConturList::Add(const Contur& c)
+  int ConturList::add(const Contur& c)
   {
     Contur** hdata;
 
@@ -92,7 +92,7 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "ConturList::Sub"
-  int ConturList::Sub(int i)
+  int ConturList::sub(int i)
   {
     if ((i < 0) || (i >= conturs))
       throw IceException(FNAME, M_WRONG_INDEX);
@@ -108,8 +108,8 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "ConturList::Contur"
-  Contur* ConturList::GetContur(int i)
+#define FNAME "ConturList::getContur"
+  Contur* ConturList::getContur(int i)
   {
     if (i == conturs)
       {

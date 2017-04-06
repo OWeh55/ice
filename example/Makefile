@@ -4,7 +4,7 @@ ifndef CXX
 CXX=g++
 endif
 
-CXX=g++-5
+CXX=g++
 
 # main program to build
 MAIN=vis2

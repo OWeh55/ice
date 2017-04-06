@@ -92,10 +92,10 @@ namespace ice
 
   protected:
 
-    void AddImg0(const Image& b, int diff);
+    void addImg0(const Image& b, int diff);
 
     template<typename T>
-    void AddImg(const Image& b, int diff);
+    void addImg(const Image& b, int diff);
 
     bool isInit;
     int nclasses;           // number of classes

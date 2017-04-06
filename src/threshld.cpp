@@ -62,7 +62,7 @@ namespace ice
 
     for (int i = 1; i <= n; i++)
       {
-        ct = hist.Count(i);
+        ct = hist.count(i);
 
         if (ct > 0)
           {
@@ -82,7 +82,7 @@ namespace ice
         discmax = 0.0;
 
         int i = 1;
-        while (hist.Count(i) == 0)
+        while (hist.count(i) == 0)
           {
             i++;
           }
@@ -99,7 +99,7 @@ namespace ice
 
         for (int i = 1; i <= n; i++)
           {
-            ct = hist.Count(i);
+            ct = hist.count(i);
 
             if (ct > 0)
               {
@@ -127,7 +127,7 @@ namespace ice
 
     for (int t = 2; t <= n; t++)
       {
-        ct = hist.Count(t - 1);
+        ct = hist.count(t - 1);
         c1 += ct;
         m1 += ct * (t - 1);
         s1 += ct * (t - 1) * (t - 1);
@@ -477,7 +477,7 @@ namespace ice
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;
 
-    h.Reset((int)ceil((img->maxval + 1) * 1.415)); /* max. Grad: sqrt(2)*maxval */
+    h.reset((int)ceil((img->maxval + 1) * 1.415)); /* max. Grad: sqrt(2)*maxval */
 
     for (y = yi; y <= ya; y += diffy)
       {
@@ -485,7 +485,7 @@ namespace ice
           {
             grd = (sqrt(Sqr(GetVal(img, x + 1, y) - GetVal(img, x - 1, y)) + \
                         Sqr(GetVal(img, x, y + 1) - GetVal(img, x, y - 1))));
-            h.Add(grd);
+            h.add(grd);
           }
       }
 
@@ -495,7 +495,7 @@ namespace ice
           {
             grd = (sqrt(Sqr(GetVal(img, x + 1, y) - GetVal(img, x - 1, y)) + \
                         Sqr(GetVal(img, x, y + 1) - GetVal(img, x, y - 1))));
-            h.Add(grd);
+            h.add(grd);
           }
       }
 
@@ -527,7 +527,7 @@ namespace ice
 
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;
-    hist.Reset((img->maxval + 1) * 6);
+    hist.reset((img->maxval + 1) * 6);
 
     for (y = yi; y <= ya; y += diffy)
       {
@@ -535,7 +535,7 @@ namespace ice
           {
             lpl = (6 * GetVal(img, x, y) - 2 * (GetVal(img, x - 1, y) + GetVal(img, x + 1, y)) - \
                    GetVal(img, x - 2, y) - GetVal(img, x + 2, y));
-            hist.Add(lpl);
+            hist.add(lpl);
           }
       }
 
@@ -545,7 +545,7 @@ namespace ice
           {
             lpl = (6 * GetVal(img, x, y) - 2 * (GetVal(img, x, y - 1) + GetVal(img, x, y + 1)) - \
                    GetVal(img, x, y - 2) - GetVal(img, x, y + 2));
-            hist.Add(lpl);
+            hist.add(lpl);
           }
       }
 

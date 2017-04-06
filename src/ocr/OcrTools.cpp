@@ -57,8 +57,8 @@ namespace ice
           if (g >= threshold)
             {
               count++;
-              hist_x.Add(double(i));
-              hist_y.Add(double(j));
+              hist_x.add(double(i));
+              hist_y.add(double(j));
             }
         }
 

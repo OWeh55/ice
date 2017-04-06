@@ -63,16 +63,16 @@ namespace ice
       return nClasses;
     }
 
-    int Add(double v, int count = 1);
+    int add(double v, int count = 1);
 
-    int Count(int nr) const;
+    int count(int nr) const;
     double Rel(int nr) const;
 
     double ClassValue(int nr) const;
     double ClassValue(int nr, double& min, double& max) const;
 
-    int Reset();
-    int Reset(int number, double diff = 1.0, double minval = 0.0);
+    int reset();
+    int reset(int number, double diff = 1.0, double minval = 0.0);
 
     int Limits(double& min, double& max) const;
     int Limits(double& min, double& max, double quantil) const;

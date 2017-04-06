@@ -46,13 +46,13 @@ namespace ice
 #define FNAME "Hist::Hist"
   Hist::Hist() : klasse(nullptr)
   {
-    Reset();
+    reset();
   }
 
   Hist::Hist(const Hist& h) : klasse(nullptr)
   {
     int i;
-    Reset(h.nClasses, h.classwidth, h.lowerLimit); // initialization as in h
+    reset(h.nClasses, h.classwidth, h.lowerLimit); // initialization as in h
     min = h.min;
     max = h.max;
     sum = h.sum;
@@ -66,7 +66,7 @@ namespace ice
   Hist::Hist(int number, double diff, double minval):
     klasse(nullptr)
   {
-    Reset(number, diff, minval);
+    reset(number, diff, minval);
   }
 
   Hist::~Hist()
@@ -74,18 +74,16 @@ namespace ice
     delete [] klasse;
   }
 #undef FNAME
-#define FNAME "Hist::Reset"
-  int Hist::Reset()
+#define FNAME "Hist::reset"
+  int Hist::reset()
   {
     delete [] klasse;
     isInit = false;
     return OK;
   }
 
-  int Hist::Reset(int number, double diff, double minval)
+  int Hist::reset(int number, double diff, double minval)
   {
-    int i;
-
     if ((number < 1) || (diff <= 0))
       throw IceException(FNAME, M_WRONG_PARAM);
 
@@ -93,14 +91,7 @@ namespace ice
     nClasses = number;
     klasse = new unsigned int[number + 2];
 
-    if (klasse == nullptr)
-      {
-        throw IceException(FNAME, M_NO_MEM);
-        delete [] klasse;
-        return NO_MEM;
-      }
-
-    for (i = 0; i < nClasses + 2; i++)
+    for (int i = 0; i < nClasses + 2; i++)
       {
         klasse[i] = 0;
       }
@@ -114,8 +105,8 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "Hist::Add"
-  int Hist::Add(double val, int count)
+#define FNAME "Hist::add"
+  int Hist::add(double val, int count)
   {
     int kl;
 
@@ -161,7 +152,7 @@ namespace ice
         return *this;
       }
 
-    Reset(h.nClasses, h.classwidth, h.lowerLimit); // reisInitialization as in h
+    reset(h.nClasses, h.classwidth, h.lowerLimit); // reisInitialization as in h
     min = h.min;
     max = h.max;
     sum = h.sum;
@@ -175,7 +166,7 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "Hist::Count"
-  int Hist::Count(int index) const
+  int Hist::count(int index) const
   {
     if (!isInit)
       throw IceException(FNAME, M_NOT_INITIALISED);
@@ -470,12 +461,12 @@ namespace ice
     if ((diff > b->xsize) || (diff > (b->ysize)) || diff < 1)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    h.Reset((b->maxval + 1 + (klbr - 1)) / klbr, klbr, 0);
+    h.reset((b->maxval + 1 + (klbr - 1)) / klbr, klbr, 0);
 
     for (y = 0; y < b->ysize; y += diff)
       for (x = 0; x < b->xsize; x += diff)
         {
-          h.Add(GetVal(b, x, y));
+          h.add(GetVal(b, x, y));
         }
 
     return h;

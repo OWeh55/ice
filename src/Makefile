@@ -14,8 +14,8 @@
 ###########################################
 
 #NOFFTW3=1
-CXX := g++
-#CXX=g++-5
+#CXX := g++
+CXX=g++
 #CXX=clang++
 
 SUBDIRS := devices ocr

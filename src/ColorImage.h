@@ -193,19 +193,6 @@ namespace ice
       return set(maxval, maxval, maxval);
     }
 
-    /*
-      virtual int Add(const ColorImage &i1, const ColorImage &i2, int mode = MD_LIMIT);
-      virtual int Add(const ColorImage &i1, int mode = MD_LIMIT);
-      virtual int Sub(const ColorImage &i1, const ColorImage &i2,
-      int smode = SMD_ABSOLUTE, int mode = MD_LIMIT);
-      virtual int Sub(const ColorImage &i1, int smode = SMD_ABSOLUTE, int mode = MD_LIMIT);
-
-      virtual int Max(const ColorImage &i1, const ColorImage &i2, int mode = MD_LIMIT);
-      virtual int Max(const ColorImage &i1, int mode = MD_LIMIT);
-      virtual int Min(const ColorImage &i1, const ColorImage &i2, int mode = MD_LIMIT);
-      virtual int Min(const ColorImage &i1, int mode = MD_LIMIT);
-    */
-
     /*virtual*/
     const Image& redImage() const
     {

@@ -468,7 +468,7 @@ namespace ice
 
         Contur c = PolygonContur(plnrm);
         FreePointList(plnrm);
-        clist.Add(c);
+        clist.add(c);
 
       }
     while (weiter);

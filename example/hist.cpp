@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
   h1 = Hist(10, 20, -100);
 
   for (i = 0; i < 10000; i++)
-    h1.Add((double)rand() * 220 / (double)RAND_MAX - 110);
+    h1.add((double)rand() * 220 / (double)RAND_MAX - 110);
 
   PrintHist(h1);
   h1.Statistic(n, xm, xs, sk);
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
   h2 = Hist(20, 0.05, 0.0);
 
   for (i = 0; i < 10000; i++)
-    h2.Add((double)rand() / (double)RAND_MAX);
+    h2.add((double)rand() / (double)RAND_MAX);
 
   PrintHist(h2);
   GetChar();
