@@ -71,7 +71,7 @@ namespace ice
     mx.Normalize(tr, Moments::polynom);
 
     // Trafo umkehren
-    tr.Invert();
+    tr.invert();
 
     // und Standard-Dreieck transformieren
     TransformList(tr, tri);
@@ -269,7 +269,7 @@ namespace ice
         res.Reset(Point(p[0][0], p[0][1]));
         for (int i = 1; i < n; i++)
           {
-            res.Add(Vector(p[i][0], p[i][1]));
+            res.add(Vector(p[i][0], p[i][1]));
           }
 
         return res;

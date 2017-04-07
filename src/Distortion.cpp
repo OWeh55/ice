@@ -184,7 +184,7 @@ namespace ice
       di(di), para(para), marker(marker), orig(orig)
     {
       points = marker.size();
-      dipara = di.MakeVector().size();
+      dipara = di.makeVector().size();
     }
 
     int operator()(ice::Vector& res) const
@@ -249,7 +249,7 @@ namespace ice
                        Trafo& tr, Point& center)
   {
 
-    Vector dipara = MakeVector();
+    Vector dipara = makeVector();
     int diparams = dipara.size();
 
     Vector parvec(diparams + 8);
@@ -357,7 +357,7 @@ namespace ice
           nrpoint += marker[i].size();
         }
 
-      nr_distortion_parameter = di.MakeVector().size();
+      nr_distortion_parameter = di.makeVector().size();
     }
 
     int operator()(ice::Vector& res) const
@@ -419,7 +419,7 @@ namespace ice
   int Distortion::Calc(const std::vector<std::vector<Point> >& marker,
                        const std::vector<std::vector<Point> >& orig)
   {
-    Vector distortion_parameters = MakeVector();
+    Vector distortion_parameters = makeVector();
     int nr_distortion_parameter = distortion_parameters.size();
 
     int nrlist = marker.size();

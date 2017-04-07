@@ -598,7 +598,7 @@ namespace ice
         Freeman(fc[i].Int() - 1).move(p2);
         ap = Point(0.5 * (opl[i].x + p2.x), 0.5 * (opl[i].y + p2.y));
         //  std::cout << << ap << std::endl;
-        poly.Add(ap);
+        poly.add(ap);
       }
     return OK;
   }

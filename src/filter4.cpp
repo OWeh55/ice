@@ -50,7 +50,7 @@ namespace ice
         for (int i = 0; i < dirsteps; ++i)
           {
             double fi = i * dirfac + M_PI * 0.5;
-            fsmear.push_back(mkOrientedSmearFilter(filter_size, fi, filter_length, filter_width));
+            fsmear.push_back(makeOrientedSmearFilter(filter_size, fi, filter_length, filter_width));
           }
 
 #ifdef OPENMP
@@ -103,7 +103,7 @@ namespace ice
     for (int i = 0; i < dirsteps; ++i)
       {
         double fi = i * dirfac;
-        fedge.push_back(mkOrientedEdgeFilter(filter_size, fi, filter_rad));
+        fedge.push_back(makeOrientedEdgeFilter(filter_size, fi, filter_rad));
       }
 
 #ifdef OPENMP
@@ -154,7 +154,7 @@ namespace ice
     for (int i = 0; i < dirsteps; ++i)
       {
         double fi = i * dirfac + 0.5 * M_PI;
-        fdob.push_back(mkOrientedDoBFilter(filter_size, fi, filter_length, filter_width));
+        fdob.push_back(makeOrientedDoBFilter(filter_size, fi, filter_length, filter_width));
       }
 
 #ifdef OPENMP

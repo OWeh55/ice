@@ -136,7 +136,7 @@ namespace ice
             throw IceException(FNAME, "Can't detect global shift");
           }
 
-        tr.Shift(dx, dy);
+        tr.shift(dx, dy);
       }
 
     int bs = Min(sx, sy) / 5;
@@ -154,7 +154,7 @@ namespace ice
       {
         Transform(tr, img1, himg, INTERPOL);
         tri = tr;
-        tri.Invert();
+        tri.invert();
         int xi = sx / blocksize;
         int yi = sy / blocksize;
 

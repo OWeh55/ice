@@ -63,7 +63,7 @@ namespace ice
 
   /******************************************************/
 #define FNAME "PolygonalCurve::MakeContur"
-  Contur PolygonalCurve::MakeContur() const
+  Contur PolygonalCurve::makeContur() const
   {
     Contur c;
 

@@ -27,7 +27,7 @@ namespace ice
 {
 // functions for generation of LSIFilters
 
-#define FNAME "mkPolynomFilter"
+#define FNAME "makePolynomFilter"
 #if 0
   static int powi(int b, int e)
   {
@@ -75,7 +75,7 @@ namespace ice
     return idx + i;
   }
 
-  LSIFilter mkPolynomFilter(int size, int grad, int ii, int jj)
+  LSIFilter makePolynomFilter(int size, int grad, int ii, int jj)
   {
     // Parametertest
     if (
@@ -103,11 +103,8 @@ namespace ice
         }
 
     Matrix ft = !f;
-    //  cout << ft;
     Matrix ftf = ft * f;
-    // cout << ftf;
     Matrix iftf = Inverse(ftf);
-    // cout << iftf;
     Matrix az = iftf * ft;
     int zidx = kidx(grad, ii, jj);
     Matrix mask(m, m);
@@ -146,14 +143,11 @@ namespace ice
                 }
 
             small[yi][xi] = sum;
-            //      cout << sum << " ";
           }
-
-        //  cout << endl;
       }
   }
 
-  LSIFilter mkOrientedSmearFilter(int size, double dir, double len, double width)
+  LSIFilter makeOrientedSmearFilter(int size, double dir, double len, double width)
   {
     // generate huge (int-)matrix (quasi boolean)
     int xsize = xfak * size;
@@ -196,7 +190,7 @@ namespace ice
     return LSIFilter(mask, ct);
   }
 
-  LSIFilter mkOrientedDoBFilter(int size, double dir, double len, double width)
+  LSIFilter makeOrientedDoBFilter(int size, double dir, double len, double width)
   {
     // generate huge (int-)matrix (quasi boolean)
     int xsize = xfak * size;
@@ -250,7 +244,7 @@ namespace ice
     return LSIFilter(mask, ct * size2);
   }
 
-  LSIFilter mkOrientedEdgeFilter(int size, double dir, double rad)
+  LSIFilter makeOrientedEdgeFilter(int size, double dir, double rad)
   {
     int xsize = xfak * size;
     double xrad = 0.5 * rad * xfak;
@@ -280,28 +274,22 @@ namespace ice
 
                 if (xrot < 0)
                   {
-                    //        cout << "-";
                     hm[yi][xi] = -1;
                   }
                 else if (xrot > 0)
                   {
-                    //          cout << "+";
                     hm[yi][xi] = 1;
                   }
                 else
                   {
-                    //          cout << ".";
                     hm[yi][xi] = 0;
                   }
               }
             else
               {
                 hm[yi][xi] = 0;
-                //    cout << "." ;
               }
           }
-
-        //  cout << endl;
       }
 
     matrix<int> mask(size, size);

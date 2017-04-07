@@ -29,8 +29,8 @@ int main(int argc, char* argv [])
   cout.precision(2);
 
   Trafo t1(3, 3);
-  t1.Rotate(Vector3d(0.5, 0.5, 0.5), Vector3d(0, 1, 0), 90);
-  t1.Scale(Vector(0.5, 0.5, 0.5), 0.5);
+  t1.rotate(Vector3d(0.5, 0.5, 0.5), Vector3d(0, 1, 0), 90);
+  t1.scale(Vector(0.5, 0.5, 0.5), 0.5);
 
   for (i = 0; i < pl1.rows(); i++)
     {

@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
     }
 
   // eine transformation konstruieren
-  tr1.Shift(-255, -255);
-  tr1.Rotate(0, 0, 66);
-  tr1.Shift(255, 255);
+  tr1.shift(-255, -255);
+  tr1.rotate(0, 0, 66);
+  tr1.shift(255, 255);
 
   // die punktliste transformieren
   TransformList(tr1, p1, p2);

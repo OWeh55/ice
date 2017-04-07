@@ -215,7 +215,7 @@ namespace ice
 
     for (unsigned int i = 1; i < npl.size(); i++)
       {
-        p.Add(npl[i]);
+        p.add(npl[i]);
       }
   }
 

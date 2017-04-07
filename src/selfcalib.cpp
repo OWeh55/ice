@@ -23,7 +23,7 @@
  * selfcalib.cpp  planar self calibration (zhang)
  *
  * Michael Schwarz 04/2007
- * Ortmann 08/2012
+ * Ortmann 08/2012, 04/2017
  */
 
 #include <float.h>
@@ -92,17 +92,17 @@ namespace ice
 
 #define FNAME "project_point"
 // Projektion eines Punktes aus der Welt in das Bild
-  void project_point(const double world[], const CameraParameters cp, double image[])
+  void project_point(const double world[], const CameraParameters &cp, double image[])
   {
     double cc[3];
-    cc[0] = world[0] * cp->R[0][0] + world[1] * cp->R[0][1] + world[2] * cp->R[0][2] + cp->t[0];
-    cc[1] = world[0] * cp->R[1][0] + world[1] * cp->R[1][1] + world[2] * cp->R[1][2] + cp->t[1];
-    cc[2] = world[0] * cp->R[2][0] + world[1] * cp->R[2][1] + world[2] * cp->R[2][2] + cp->t[2];
+    cc[0] = world[0] * cp.R[0][0] + world[1] * cp.R[0][1] + world[2] * cp.R[0][2] + cp.t[0];
+    cc[1] = world[0] * cp.R[1][0] + world[1] * cp.R[1][1] + world[2] * cp.R[1][2] + cp.t[1];
+    cc[2] = world[0] * cp.R[2][0] + world[1] * cp.R[2][1] + world[2] * cp.R[2][2] + cp.t[2];
 
     double sc[3];
-    sc[0] = cp->K[0][0] * cc[0] + cp->K[0][1] * cc[1] + cp->K[0][2] * cc[2];
-    sc[1] = cp->K[1][0] * cc[0] + cp->K[1][1] * cc[1] + cp->K[1][2] * cc[2];
-    sc[2] = cp->K[2][0] * cc[0] + cp->K[2][1] * cc[1] + cp->K[2][2] * cc[2];
+    sc[0] = cp.K[0][0] * cc[0] + cp.K[0][1] * cc[1] + cp.K[0][2] * cc[2];
+    sc[1] = cp.K[1][0] * cc[0] + cp.K[1][1] * cc[1] + cp.K[1][2] * cc[2];
+    sc[2] = cp.K[2][0] * cc[0] + cp.K[2][1] * cc[1] + cp.K[2][2] * cc[2];
 
     if (sc[2] != 0.0)
       {
@@ -131,49 +131,49 @@ namespace ice
 // Berechnung der Homographie aus Punktkorrespondenzen
 // image -> punktliste bild
 // world -> punktliste vorgabe
-  Matrix calib_homography_zhang(int num_points, Matrix& image, Matrix& world)
+  Matrix calib_homography_zhang(int nPoints, Matrix& image, Matrix& world)
   {
-    int mat_size = 2 * num_points;
+    int nRows = 2 * nPoints;
 
-    if (mat_size < 9)
+    if (nRows < 9)
       {
-        mat_size = 9;
+        nRows = 9;
       }
 
-    Matrix A(mat_size, 9);
-    int num_eqn = 0;
+    Matrix A(nRows, 9);
+    int equationNr = 0;
 
-    for (int i = 0; i < num_points; i++)
+    for (int i = 0; i < nPoints; i++)
       {
         // Zhang has the things the other way round... anyway...
-        A[num_eqn][0] = 0;
-        A[num_eqn][1] = 0;
-        A[num_eqn][2] = 0;
-        A[num_eqn][3] = -world[i][0];
-        A[num_eqn][4] = -world[i][1];
-        A[num_eqn][5] = -1;
-        A[num_eqn][6] = image[i][1] * world[i][0];
-        A[num_eqn][7] = image[i][1] * world[i][1];
-        A[num_eqn][8] = image[i][1];
+        A[equationNr][0] = 0;
+        A[equationNr][1] = 0;
+        A[equationNr][2] = 0;
+        A[equationNr][3] = -world[i][0];
+        A[equationNr][4] = -world[i][1];
+        A[equationNr][5] = -1;
+        A[equationNr][6] = image[i][1] * world[i][0];
+        A[equationNr][7] = image[i][1] * world[i][1];
+        A[equationNr][8] = image[i][1];
 
-        num_eqn++;
-        A[num_eqn][0] = world[i][0];
-        A[num_eqn][1] = world[i][1];
-        A[num_eqn][2] = 1;
-        A[num_eqn][3] = 0;
-        A[num_eqn][4] = 0;
-        A[num_eqn][5] = 0;
-        A[num_eqn][6] = -image[i][0] * world[i][0];
-        A[num_eqn][7] = -image[i][0] * world[i][1];
-        A[num_eqn][8] = -image[i][0];
-        num_eqn++;
+        equationNr++;
+        A[equationNr][0] = world[i][0];
+        A[equationNr][1] = world[i][1];
+        A[equationNr][2] = 1;
+        A[equationNr][3] = 0;
+        A[equationNr][4] = 0;
+        A[equationNr][5] = 0;
+        A[equationNr][6] = -image[i][0] * world[i][0];
+        A[equationNr][7] = -image[i][0] * world[i][1];
+        A[equationNr][8] = -image[i][0];
+        equationNr++;
       }
 
-    for (; num_eqn < mat_size; num_eqn++)
+    for (; equationNr < nRows; equationNr++)
       {
         for (int i = 0; i < 9; i++)
           {
-            A[num_eqn][i] = 0.0;
+            A[equationNr][i] = 0.0;
           }
       }
 
@@ -181,9 +181,9 @@ namespace ice
     Matrix U, V;
     Vector s;
     SingularValueDcmp(A, U, s, V);
+
     double min = s[0];
     int min_col = 0;
-
     for (int i = 1; i < 9; i++)
       {
         if (s[i] < min)
@@ -213,7 +213,7 @@ namespace ice
 #define FNAME "calib_intrinsic_zhang"
 // Berechnung der internen Kameraparametern nach Zhang
 
-  void mkequation(Vector& es, const Trafo& homographie, int z_i, int z_j)
+  void makeEquation(Vector& es, const Trafo& homographie, int z_i, int z_j)
   {
     Matrix T = homographie.Tmatrix();
     es[0] = T[0][z_i] * T[0][z_j];
@@ -226,19 +226,19 @@ namespace ice
 
   Matrix calib_intrinsic_zhang(const vector<Trafo>& H)
   {
-    int num_homographies = H.size();
-    Matrix C(2 * num_homographies, 6, 1);
-    int num_eqn = 0;
+    int nHomographies = H.size();
+    Matrix C(2 * nHomographies, 6, 1);
 
-    for (int k = 0; k < num_homographies; k++)
+    int equationNr = 0;
+    for (int k = 0; k < nHomographies; k++)
       {
-        // second row is v11-v22
-        mkequation(C[num_eqn + 1], H[k], 0, 0);
-        mkequation(C[num_eqn], H[k], 1, 1);
-        C[num_eqn + 1] = C[num_eqn + 1] - C[num_eqn];
+        // second row is v11 - v22
+        makeEquation(C[equationNr + 1], H[k], 0, 0);
+        makeEquation(C[equationNr], H[k], 1, 1);
+        C[equationNr + 1] = C[equationNr + 1] - C[equationNr];
         // first row is v12
-        mkequation(C[num_eqn], H[k], 0, 1);
-        num_eqn += 2;
+        makeEquation(C[equationNr], H[k], 0, 1);
+        equationNr += 2;
       }
 
     Matrix U, V;
@@ -283,11 +283,11 @@ namespace ice
 // Berechnung der externen Kameraparameter nach Zhang
   CameraParameters calib_extrinsic_zhang(const Matrix& H, const Matrix& K)
   {
-    CameraParameters ret = (CameraParameters)calloc(sizeof(struct _T_campar), 1);
+    CameraParameters ret;
     Matrix A = Inverse(K);
-    ret->R = Matrix(3, 3, 1);
-    ret->K = Matrix(K);
-    ret->t = Vector(3);
+    ret.R = Matrix(3, 3, 1);
+    ret.K = Matrix(K);
+    ret.t = Vector(3);
 
     Vector h(3);
 
@@ -301,7 +301,7 @@ namespace ice
 
     for (int i = 0; i < 3; i++)
       {
-        ret->R[i][0] = r[i];
+        ret.R[i][0] = r[i];
       }
 
     for (int i = 0; i < 3; i++)
@@ -313,26 +313,26 @@ namespace ice
 
     for (int i = 0; i < 3; i++)
       {
-        ret->R[i][1] = r[i];
+        ret.R[i][1] = r[i];
       }
 
     // in theory r1 and r2 have the same length... we take the mean anyway
     lambda = (lambda + (1.0 / r.Length())) / 2.0;
-    ret->R = ret->R * lambda;
+    ret.R = ret.R * lambda;
 
-    ret->R[0][2] = ret->R[1][0] * ret->R[2][1] - ret->R[2][0] * ret->R[1][1];
-    ret->R[1][2] = ret->R[2][0] * ret->R[0][1] - ret->R[0][0] * ret->R[2][1];
-    ret->R[2][2] = ret->R[0][0] * ret->R[1][1] - ret->R[1][0] * ret->R[0][1];
-    ret->R = Orthonormalize(ret->R);
+    ret.R[0][2] = ret.R[1][0] * ret.R[2][1] - ret.R[2][0] * ret.R[1][1];
+    ret.R[1][2] = ret.R[2][0] * ret.R[0][1] - ret.R[0][0] * ret.R[2][1];
+    ret.R[2][2] = ret.R[0][0] * ret.R[1][1] - ret.R[1][0] * ret.R[0][1];
+    ret.R = Orthonormalize(ret.R);
 
     for (int i = 0; i < 3; i++)
       {
         h[i] = H[i][2];
       }
 
-    ret->t = A * h;
+    ret.t = A * h;
 
-    ret->t = ret->t * lambda;
+    ret.t = ret.t * lambda;
 
     return ret;
   }
@@ -862,9 +862,9 @@ namespace ice
     for (phi = 0.0; phi < 360.0; phi += 10.0)
       {
         rot2 = rot1;
-        rot2.Shift(-sum1, -sum2);
-        rot2.Rotate(0.0, 0.0, (phi / 180.0)*M_PI);
-        rot2.Shift(+sum1, +sum2);
+        rot2.shift(-sum1, -sum2);
+        rot2.rotate(0.0, 0.0, (phi / 180.0)*M_PI);
+        rot2.shift(+sum1, +sum2);
         TransformList(rot2, m1, m1_rot);
 
         // Abstandsmatrix bestimmen
@@ -926,9 +926,9 @@ namespace ice
       }
 
     rot2 = rot1;
-    rot2.Shift(-sum1, -sum2);
-    rot2.Rotate(0.0, 0.0, (phi_min / 180.0)*M_PI);
-    rot2.Shift(+sum1, +sum2);
+    rot2.shift(-sum1, -sum2);
+    rot2.rotate(0.0, 0.0, (phi_min / 180.0)*M_PI);
+    rot2.shift(+sum1, +sum2);
 
     TransformList(rot2, m1, m1_rot);
 
@@ -1184,7 +1184,7 @@ namespace ice
     int number_of_images = images_in.size();
     int number_of_points = CPOINTS;
 
-    CameraParameters* cps = new CameraParameters [number_of_images];
+    vector<CameraParameters> cps(number_of_images);
 
     Matrix K;
 
@@ -1265,11 +1265,8 @@ namespace ice
           getchar();
         }
 #endif
-
-        throw IceException(FNAME, M_INTERN);
-        delete[] cps;
         delete[] all_repro_coords;
-        return ERROR;
+        throw IceException(FNAME, M_INTERN);
       }
 
     // Bestimmung der internen Kameraparameter nach Zhang
@@ -1322,10 +1319,8 @@ namespace ice
                 }
 #endif
 
-                throw IceException(FNAME, M_INTERN);
-                delete[] cps;
                 delete[] all_repro_coords;
-                return NO_UNIQUE_SOLUTION;
+                throw IceException(FNAME, M_INTERN);
               }
           }
 
@@ -1335,30 +1330,30 @@ namespace ice
             int ain = actual_image_number;
 
             //Set(double fp,double ap,double sp,double u0p,double v0p);
-            cv[ain].set(cps[ain]->K[0][0] * (dimmax / 2.0),
-                        cps[ain]->K[1][1] / (-cps[ain]->K[0][0]),
-                        cps[ain]->K[0][1] / cps[ain]->K[0][0],
-                        cps[ain]->K[0][2] * (dimmax / 2.0) + (dimx / 2.0),
-                        cps[ain]->K[1][2] * (dimmax / 2.0) + (dimy / 2.0));
+            cv[ain].set(cps[ain].K[0][0] * (dimmax / 2.0),
+                        cps[ain].K[1][1] / (-cps[ain].K[0][0]),
+                        cps[ain].K[0][1] / cps[ain].K[0][0],
+                        cps[ain].K[0][2] * (dimmax / 2.0) + (dimx / 2.0),
+                        cps[ain].K[1][2] * (dimmax / 2.0) + (dimy / 2.0));
 
             //SetExt(double dxp,double dyp,double dzp,double ap,double bp,double cp);
-            if ((cps[ain]->R[0][0] == 0) && (cps[ain]->R[1][0] == 0))
+            if ((cps[ain].R[0][0] == 0) && (cps[ain].R[1][0] == 0))
               {
-                cv[ain].setExt(cps[ain]->t[0] * (dimmax / 2.0),
-                               cps[ain]->t[1] * (dimmax / 2.0),
-                               cps[ain]->t[2] * (dimmax / 2.0),
+                cv[ain].setExt(cps[ain].t[0] * (dimmax / 2.0),
+                               cps[ain].t[1] * (dimmax / 2.0),
+                               cps[ain].t[2] * (dimmax / 2.0),
                                0.0,
                                90.0,
-                               atan(cps[ain]->R[0][1] / cps[ain]->R[1][1]));
+                               atan(cps[ain].R[0][1] / cps[ain].R[1][1]));
               }
             else
               {
-                cv[ain].setExt(cps[ain]->t[0] * (dimmax / 2.0),
-                               cps[ain]->t[1] * (dimmax / 2.0),
-                               cps[ain]->t[2] * (dimmax / 2.0),
-                               atan(cps[ain]->R[1][0] / cps[ain]->R[0][0]),
-                               atan(-cps[ain]->R[2][0]) / sqrt((cps[ain]->R[0][0] * cps[ain]->R[0][0]) + (cps[ain]->R[1][0] * cps[ain]->R[1][0])),
-                               atan(cps[ain]->R[2][1] / cps[ain]->R[2][2]));
+                cv[ain].setExt(cps[ain].t[0] * (dimmax / 2.0),
+                               cps[ain].t[1] * (dimmax / 2.0),
+                               cps[ain].t[2] * (dimmax / 2.0),
+                               atan(cps[ain].R[1][0] / cps[ain].R[0][0]),
+                               atan(-cps[ain].R[2][0]) / sqrt((cps[ain].R[0][0] * cps[ain].R[0][0]) + (cps[ain].R[1][0] * cps[ain].R[1][0])),
+                               atan(cps[ain].R[2][1] / cps[ain].R[2][2]));
               }
           }
       }
@@ -1387,7 +1382,6 @@ namespace ice
         throw IceException(FNAME, M_INTERN);
       }
 
-    delete[] cps;
     delete[] all_repro_coords;
     return error;
   }

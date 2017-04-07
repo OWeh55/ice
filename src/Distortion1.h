@@ -102,7 +102,7 @@ namespace ice
       return d4;
     }
 
-    virtual Vector MakeVector() const;
+    virtual Vector makeVector() const;
     virtual void set(const Vector& v);
 
     virtual std::string toString() const;

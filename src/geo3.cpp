@@ -41,14 +41,14 @@ namespace ice
     // erzeugt eine 3D-2D-Trafo (Kamera)
     // Parameter in param
     Trafo c(3, 3); // Null-Transformation
-    c.RotateZ(param[0]); // Rotation (Eulersche Winkel)
-    c.RotateY(param[1]);
-    c.RotateX(param[2]);
-    c.Shift(Vector(param[3], param[4], param[5]));
+    c.rotateZ(param[0]); // Rotation (Eulersche Winkel)
+    c.rotateY(param[1]);
+    c.rotateX(param[2]);
+    c.shift(Vector(param[3], param[4], param[5]));
     c.Projective();
-    c.Scale(0, 0, param[6], param[6]*param[7]);
-    c.ShearX(param[8]);
-    c.Shift(param[9], param[10]);
+    c.scale(0, 0, param[6], param[6]*param[7]);
+    c.shearX(param[8]);
+    c.shift(param[9], param[10]);
     return c;
   }
 
@@ -60,9 +60,9 @@ namespace ice
 
     Trafo R(3, 3); // "Externe Kamera-parameter"
     // translation entfällt
-    R.RotateZ(param[0]); // Rotation (Eulersche Winkel)
-    R.RotateY(param[1]);
-    R.RotateX(param[2]);
+    R.rotateZ(param[0]); // Rotation (Eulersche Winkel)
+    R.rotateY(param[1]);
+    R.rotateX(param[2]);
     Matrix m = R.Tmatrix()(0, 0, 2, 2); // Rotationsmatrix
 
     Matrix c(3, 3); // Kamera-Matrix (interne Parameter)

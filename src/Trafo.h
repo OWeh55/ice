@@ -72,44 +72,44 @@ namespace ice
     virtual int DimSource() const;
     virtual int DimTarget() const;
 
-    virtual void Init();
+    virtual void init();
 
     // these methods *append* transformations to existing one
 
-    virtual void Shift(double x0, double y0);
-    virtual void Shift(double x0, double y0, double z0);
-    virtual void Shift(Vector3d v);
-    virtual void Shift(const ice::Vector& v);
-    virtual void Shift(const ice::Point& p)
+    virtual void shift(double x0, double y0);
+    virtual void shift(double x0, double y0, double z0);
+    virtual void shift(Vector3d v);
+    virtual void shift(const ice::Vector& v);
+    virtual void shift(const ice::Point& p)
     {
-      return Shift(p.x, p.y);
+      return shift(p.x, p.y);
     }
 
-    virtual void Rotate(double x0, double y0, double phi);
-    virtual void Rotate(Vector3d point, Vector3d axis, double phi);
+    virtual void rotate(double x0, double y0, double phi);
+    virtual void rotate(Vector3d point, Vector3d axis, double phi);
 
     // Eulersche Winkel!
-    virtual void RotateX(double phi);
-    virtual void RotateY(double phi);
-    virtual void RotateZ(double phi);
+    virtual void rotateX(double phi);
+    virtual void rotateY(double phi);
+    virtual void rotateZ(double phi);
 
     // euclidian move in 3d
     // shift (dx, dy, dz) + z-rotation alpha + y-rotation beta + x-rotation gamma
-    virtual void Move(double dx, double dy, double dz, double alpha, double beta, double gamma);
+    virtual void move(double dx, double dy, double dz, double alpha, double beta, double gamma);
     // shift d + z-rotation alpha + y-rotation beta + x-rotation gamma
-    virtual void Move(Vector3d d, double alpha, double beta, double gamma);
+    virtual void move(Vector3d d, double alpha, double beta, double gamma);
 
-    virtual void Flip(int axis);
+    virtual void flip(int axis);
 
-    virtual void ShearY(double dyx);
-    virtual void ShearX(double dxy);
+    virtual void shearY(double dyx);
+    virtual void shearX(double dxy);
 
-    virtual void Scale(double x0, double y0, double f);
-    virtual void Scale(double x0, double y0, double fx, double fy);
-    virtual void Scale(Vector3d center, double f);
-    virtual void Scale(Vector3d center, double fx, double fy, double fz);
-    virtual void Scale(const ice::Vector& center, double f);
-    virtual void Scale(const ice::Vector& center, const ice::Vector& f);
+    virtual void scale(double x0, double y0, double f);
+    virtual void scale(double x0, double y0, double fx, double fy);
+    virtual void scale(Vector3d center, double f);
+    virtual void scale(Vector3d center, double fx, double fy, double fz);
+    virtual void scale(const ice::Vector& center, double f);
+    virtual void scale(const ice::Vector& center, const ice::Vector& f);
 
     virtual void Projective();
 
@@ -118,9 +118,9 @@ namespace ice
     // prepend another Trafo
     virtual void prepend(const Trafo& tr);
 
-    virtual void Invert();
+    virtual void invert();
 
-    virtual Trafo Inverse() const;
+    virtual Trafo inverse() const;
 
     virtual Matrix Tmatrix() const;
 

@@ -385,9 +385,9 @@ namespace ice
               int norm, int offset/*=0*/);
 
 // functions for generation of LSIFilters
-  LSIFilter mkOrientedSmearFilter(int n, double dir, double len, double width);
-  LSIFilter mkOrientedDoBFilter(int n, double dir, double len, double width);
-  LSIFilter mkOrientedEdgeFilter(int n, double dir, double rad);
-  LSIFilter mkPolynomFilter(int size, int grad, int ii, int jj);
+  LSIFilter makeOrientedSmearFilter(int n, double dir, double len, double width);
+  LSIFilter makeOrientedDoBFilter(int n, double dir, double len, double width);
+  LSIFilter makeOrientedEdgeFilter(int n, double dir, double rad);
+  LSIFilter makePolynomFilter(int size, int grad, int ii, int jj);
 }
 #endif

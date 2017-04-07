@@ -97,9 +97,9 @@ Trafo Kamera1(const Vector& par)
   double v0 = par[4];
 
   tr.Projective();
-  tr.ShearX(s);
-  tr.Scale(0, 0, f, a * f);
-  tr.Shift(u0, v0);
+  tr.shearX(s);
+  tr.scale(0, 0, f, a * f);
+  tr.shift(u0, v0);
   return tr;
 }
 
@@ -124,16 +124,16 @@ Trafo Kamera2(const Vector& par)
   double alpha = par[10]; // alpha - fz
 
   // Rotation Kamera
-  tr.RotateZ(alpha);
-  tr.RotateY(beta);
-  tr.RotateX(gamma);
+  tr.rotateZ(alpha);
+  tr.rotateY(beta);
+  tr.rotateX(gamma);
 
-  tr.Shift(dx, dy, dz);
+  tr.shift(dx, dy, dz);
 
   tr.Projective();
-  tr.ShearX(s);
-  tr.Scale(0, 0, f, a * f);
-  tr.Shift(u0, v0);
+  tr.shearX(s);
+  tr.scale(0, 0, f, a * f);
+  tr.shift(u0, v0);
   return tr;
 }
 

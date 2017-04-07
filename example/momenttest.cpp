@@ -114,10 +114,10 @@ int main(int argc, char* argv[])
 
       cout << "Eine Transformation als 'Trafo'" << endl;
       Trafo tr;
-      tr.Rotate(0, 0, 3);
-      tr.Scale(0, 0, 0.75);
-      tr.ShearX(0.1);
-      Trafo tri = tr.Inverse();
+      tr.rotate(0, 0, 3);
+      tr.scale(0, 0, 0.75);
+      tr.shearX(0.1);
+      Trafo tri = tr.inverse();
       m2 = m1.AffineTransform(tr);
 //    pmom(m1); pmom(m2);
       cout << "..und die inverse Transformation" << endl;
@@ -213,8 +213,8 @@ int main(int argc, char* argv[])
 
       cout << "fast Ellipse -> Ellipse" << endl;
       Trafo tr;
-      tr.Scale(0.0, 0.0, 2.0, 1.0);
-      tr.Rotate(0.0, 0.0, 2);
+      tr.scale(0.0, 0.0, 2.0, 1.0);
+      tr.rotate(0.0, 0.0, 2);
       Moments mel(CircA);
       mel = mel.AffineTransform(tr);
       Ellipse el = FitEllipse(mel);

@@ -967,7 +967,7 @@ namespace ice
    *  (x*x+y*y - 2 * sigma^2)/sigma^4 * exp(-(x*x+y*y)/(2*sigma^2)
    */
 
-  void mkLoG(Matrix& f, double sigma)
+  void makeLoG(Matrix& f, double sigma)
   {
     int sx = f.cols();
     int sy = f.rows();
@@ -1007,7 +1007,7 @@ namespace ice
   }
 
 #define FNAME "MexicanHatImg"
-  int mkMexicanHatFilter(double sigma, int size, LSIFilter& f)
+  int makeMexicanHatFilter(double sigma, int size, LSIFilter& f)
   {
     if (size < 0 || sigma < 0)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -1018,7 +1018,7 @@ namespace ice
       }
 
     Matrix fc(size, size);
-    mkLoG(fc, sigma);
+    makeLoG(fc, sigma);
     f = LSIFilter(fc);
     return OK;
   }
@@ -1027,7 +1027,7 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
     RETURN_ERROR_IF_FAILED(f.Filter(img1, img2, img2->maxval / 2));
     return OK;
   }
@@ -1036,7 +1036,7 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
     RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
     return OK;
   }
@@ -1045,7 +1045,7 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
     RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
     return OK;
   }

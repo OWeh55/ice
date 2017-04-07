@@ -100,7 +100,7 @@ namespace ice
     {
       if (modified)
         {
-          inv = tr.Inverse();
+          inv = tr.inverse();
           modified = false;
         }
     }
@@ -245,7 +245,7 @@ namespace ice
     virtual void getCoefficient(vector<double>& v) const
     {
       Function2dModifier::getCoefficient(v);
-      Vector dv = dist->MakeVector();
+      Vector dv = dist->makeVector();
       v.push_back(dv.Size());
       for (int i = 0; i < dv.Size(); i++)
         {

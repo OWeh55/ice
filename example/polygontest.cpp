@@ -16,7 +16,7 @@ Polygon MakePoly(int n = 4)
       for (int i = 1; i < n; i++)
         {
           p = Point(Random(400) + 50, Random(400) + 50);
-          m.Add(p);
+          m.add(p);
         }
     }
   while (! m.isValid());
@@ -35,7 +35,7 @@ PolygonalCurve MakePolygonalCurve(int n = 4)
   for (int i = 1; i < n; i++)
     {
       p = Point(Random(400) + 50, Random(400) + 50);
-      m.Add(p);
+      m.add(p);
     }
 
   return m;
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
       Print("\n Test distance()");
 
       clearImg(mark);
-      Contur c = m.MakeContur();
+      Contur c = m.makeContur();
       FillRegion(c, 3, mark);
       MarkContur(c, 1, mark);
 

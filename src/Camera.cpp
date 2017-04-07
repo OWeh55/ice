@@ -152,11 +152,11 @@ namespace ice
 
     // Bewegung Weltkoordinaten -> Kamerakoordinaten
     // x_w -> x_k
-    tr.Shift(-dx, -dy, -dz);
+    tr.shift(-dx, -dy, -dz);
 
-    tr.RotateZ(alpha);
-    tr.RotateY(beta);
-    tr.RotateX(gamma);
+    tr.rotateZ(alpha);
+    tr.rotateY(beta);
+    tr.rotateX(gamma);
 
     // Transformation Kamerakoordinaten -> (unverzerrte) Bildkoordinaten
     // x_k -> uv
@@ -168,9 +168,9 @@ namespace ice
     //
 
     tr.Projective(); // 3d -> 2d
-    tr.ShearX(s);
-    tr.Scale(0, 0, f, -a * f);
-    tr.Shift(u0, v0);
+    tr.shearX(s);
+    tr.scale(0, 0, f, -a * f);
+    tr.shift(u0, v0);
 
     c_val = true;
   }
@@ -203,7 +203,7 @@ namespace ice
 
     if ((what == all) || (what == internal))
       {
-        res.Append(dist->MakeVector());
+        res.Append(dist->makeVector());
       }
 
     return res;

@@ -230,7 +230,7 @@ namespace ice
     GrayTransformLimits(segImg, min, max);  // eigentliches Normalisieren
     //normalize size
     Trafo t = Trafo();
-    t.Scale(0, 0, ((double) gitter1 * 5.0) / double(segImg->xsize - 1),
+    t.scale(0, 0, ((double) gitter1 * 5.0) / double(segImg->xsize - 1),
             ((double) gitter2 * 5.0) / double(segImg->ysize - 1));
     Transform(t, segImg, normedSeg, INTERPOL);
 

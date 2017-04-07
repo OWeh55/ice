@@ -114,7 +114,7 @@ namespace ice
   }
 
 // Knotennummer vergeben
-  void Node::SetLabel(int number)
+  void Node::setLabel(int number)
   {
 
     Label = number;
@@ -903,7 +903,7 @@ ende:
                   // alle Punkte berechnen, die in der Region liegen
                   CompRegion4(CopiedSourceImg, CopiedLabImg, WorkingImg, xw, yw, RegNodeCount);
                   // Regionenknoten etikettieren
-                  regions[RegNodeCount]->SetLabel(RegNodeCount + 1);
+                  regions[RegNodeCount]->setLabel(RegNodeCount + 1);
                   // durchschnittlichen Grauwert und Grauwertvarianz der Punkte der Regione berechnen
                   regions[RegNodeCount]->CompGRWMW();
                   regions[RegNodeCount]->CompGRWVAR();

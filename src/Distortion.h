@@ -92,7 +92,7 @@ namespace ice
     virtual int RectImg(const Image& source, const Image& dest,
                         int mode = DEFAULT) const;
 
-    virtual Vector MakeVector() const = 0;
+    virtual Vector makeVector() const = 0;
     virtual void set(const Vector& v) = 0;
 
     virtual double X0() const

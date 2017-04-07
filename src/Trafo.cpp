@@ -87,11 +87,11 @@ namespace ice
 
     dimSource = dimSourcep;
     dimTarget = dimTargetp;
-    Init();
+    init();
   }
 #undef FNAME
 //-----------------------------------------
-  void Trafo::Init()
+  void Trafo::init()
   {
     m.init(dimTarget + 1, dimSource + 1, 1); // init as identity
 
@@ -187,8 +187,8 @@ namespace ice
     m *= 1 / m[dimTarget][dimSource];
   }
 #undef FNAME
-#define FNAME "Trafo::Shift"
-  void Trafo::Shift(double x, double y)
+#define FNAME "Trafo::shift"
+  void Trafo::shift(double x, double y)
   {
     if (dimTarget != 2)
       throw IceException(FNAME, M_WRONG_DIM);
@@ -200,7 +200,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(normalize());
   }
 
-  void Trafo::Shift(double x, double y, double z)
+  void Trafo::shift(double x, double y, double z)
   {
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
@@ -215,12 +215,12 @@ namespace ice
     RETURN_ERROR_IF_FAILED(normalize());
   }
 
-  void Trafo::Shift(Vector3d s)
+  void Trafo::shift(Vector3d s)
   {
-    Shift(s.x, s.y, s.z);
+    shift(s.x, s.y, s.z);
   }
 
-  void Trafo::Shift(const Vector& s)
+  void Trafo::shift(const Vector& s)
   {
     if (dimTarget != s.Size())
       throw IceException(FNAME, M_WRONG_DIM);
@@ -238,8 +238,8 @@ namespace ice
     RETURN_ERROR_IF_FAILED(normalize());
   }
 #undef FNAME
-#define FNAME "Trafo::Flip"
-  void Trafo::Flip(int achse)
+#define FNAME "Trafo::flip"
+  void Trafo::flip(int achse)
   {
     if (dimTarget - 1 < achse)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -250,14 +250,14 @@ namespace ice
       }
   }
 #undef FNAME
-#define FNAME "Trafo::Rotate"
-  void Trafo::Rotate(double x0, double y0, double phi)
+#define FNAME "Trafo::rotate"
+  void Trafo::rotate(double x0, double y0, double phi)
   {
     // 2D-rotation um einen Punkt (x0,y0)
     if (dimTarget != 2)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Shift(-x0, -y0);
+    shift(-x0, -y0);
 
     double si = sin(phi);
     double co = cos(phi);
@@ -269,16 +269,16 @@ namespace ice
     h[1][1] = co;
     m = h * m;
 
-    Shift(x0, y0);
+    shift(x0, y0);
   }
 
-  void Trafo::Rotate(Vector3d p, Vector3d dir, double phi)
+  void Trafo::rotate(Vector3d p, Vector3d dir, double phi)
   {
     // 3D-Rotation um einen durch Punkt und Richtung gegebenen Strahl
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Shift(-p);
+    shift(-p);
 
     double sind = sin(phi);
     double cosd = cos(phi);
@@ -303,12 +303,12 @@ namespace ice
     h[2][1] = dirz * dirz * cosd1 + cosd;
 
     m = h * m;
-    Shift(p);
+    shift(p);
   }
 #undef FNAME
 
-#define FNAME "Trafo::RotateX"
-  void Trafo::RotateX(double phi)
+#define FNAME "Trafo::rotateX"
+  void Trafo::rotateX(double phi)
 // Rotation um X-Achse für 3D/3D-Trafo (Euler)
   {
     if (dimTarget != 3)
@@ -327,8 +327,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Trafo::RotateY"
-  void Trafo::RotateY(double phi)
+#define FNAME "Trafo::rotateY"
+  void Trafo::rotateY(double phi)
 // Rotation um Y-Achse für 3D/3D-Trafo (Euler)
   {
     if (dimTarget != 3)
@@ -349,8 +349,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Trafo::RotateZ"
-  void Trafo::RotateZ(double phi)
+#define FNAME "Trafo::rotateZ"
+  void Trafo::rotateZ(double phi)
 // Rotation um Z-Achse für 3D/3D-Trafo (Euler)
   {
     if (dimTarget != 3)
@@ -370,24 +370,24 @@ namespace ice
   }
 #undef FNAME
 
-  void Trafo::Move(double dx, double dy, double dz,
+  void Trafo::move(double dx, double dy, double dz,
                    double alpha, double beta, double gamma)
   {
-    Shift(dx, dy, dz);
+    shift(dx, dy, dz);
 
-    RotateZ(alpha);
-    RotateY(beta);
-    RotateX(gamma);
+    rotateZ(alpha);
+    rotateY(beta);
+    rotateX(gamma);
   }
 
-  void Trafo::Move(Vector3d d,
+  void Trafo::move(Vector3d d,
                    double alpha, double beta, double gamma)
   {
-    Shift(d);
+    shift(d);
 
-    RotateZ(alpha);
-    RotateY(beta);
-    RotateX(gamma);
+    rotateZ(alpha);
+    rotateY(beta);
+    rotateX(gamma);
   }
 
 #define FNAME "Trafo::Projective"
@@ -420,8 +420,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Trafo::ShearY"
-  void Trafo::ShearY(double dyx)
+#define FNAME "Trafo::shearY"
+  void Trafo::shearY(double dyx)
   {
     // Scherung in Y-Richtung (in Ebene!)
     if (dimTarget != 2)
@@ -435,7 +435,7 @@ namespace ice
 #undef FNAME
 
 #define FNAME "Trafo::ShearX"
-  void Trafo::ShearX(double dxy)
+  void Trafo::shearX(double dxy)
   {
     // Scherung in X-Richtung (in Ebene!)
     if (dimTarget != 2)
@@ -450,18 +450,18 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Trafo::Scale"
-  void Trafo::Scale(double x0, double y0, double f)
+#define FNAME "Trafo::scale"
+  void Trafo::scale(double x0, double y0, double f)
   {
-    Scale(x0, y0, f, f);
+    scale(x0, y0, f, f);
   }
 
-  void Trafo::Scale(double x0, double y0, double fx, double fy)
+  void Trafo::scale(double x0, double y0, double fx, double fy)
   {
     if (dimTarget != 2)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Shift(-x0, -y0);
+    shift(-x0, -y0);
 
     for (int i = 0; i <= dimSource; i++)
       {
@@ -469,15 +469,15 @@ namespace ice
         m[1][i] = fy * m[1][i];
       }
 
-    Shift(x0, y0);
+    shift(x0, y0);
   }
 
-  void Trafo::Scale(Vector3d center, double fx, double fy, double fz)
+  void Trafo::scale(Vector3d center, double fx, double fy, double fz)
   {
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Shift(-center);
+    shift(-center);
 
     for (int i = 0; i <= dimSource; i++)
       {
@@ -486,20 +486,20 @@ namespace ice
         m[2][i] = fz * m[2][i];
       }
 
-    Shift(center);
+    shift(center);
   }
 
-  void Trafo::Scale(Vector3d center, double f)
+  void Trafo::scale(Vector3d center, double f)
   {
-    Scale(center, f, f, f);
+    scale(center, f, f, f);
   }
 
-  void Trafo::Scale(const Vector& center, const Vector& f)
+  void Trafo::scale(const Vector& center, const Vector& f)
   {
     if ((dimTarget != f.Size()) || (dimTarget != center.Size()))
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Shift(-center);
+    shift(-center);
 
     matrix<double> h(dimTarget + 1, dimTarget + 1, 1);
 
@@ -512,14 +512,14 @@ namespace ice
 
     m = h * m;
 
-    Shift(center);
+    shift(center);
   }
 
-  void Trafo::Scale(const Vector& center, double f)
+  void Trafo::scale(const Vector& center, double f)
   {
     Vector h(center.Size());
     h.set(f);
-    Scale(center, h);
+    scale(center, h);
   }
 #undef FNAME
 #define FNAME "Trafo::append"
@@ -547,26 +547,27 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Trafo::Invert"
-  void Trafo::Invert()
+#define FNAME "Trafo::invert"
+  void Trafo::invert()
   {
     if (dimSource != dimTarget)
       throw IceException(FNAME, M_WRONG_DIM);
-
-    m = ice::Inverse(m);
-    normalize();
+    try {
+      m = ice::Inverse(m);
+      normalize();
+    }
+    RETHROW;
   }
 #undef FNAME
-#define FNAME "Trafo::Inverse"
-  Trafo Trafo::Inverse() const
+#define FNAME "Trafo::inverse"
+  Trafo Trafo::inverse() const
   {
-    if (dimSource != dimTarget)
-      throw IceException(FNAME, M_WRONG_DIM);
-
-    Trafo res(*this);
-
-    res.Invert();
-    return res;
+    try {
+      Trafo res(*this);
+      res.invert();
+      return res;
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Trafo::operator*"

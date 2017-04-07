@@ -270,7 +270,7 @@ namespace ice
     for (unsigned int i = 1; i < idx.size(); i++)
       {
         int ib = idx[i];
-        poly.Add(base[ib]);
+        poly.add(base[ib]);
       }
   }
 

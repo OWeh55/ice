@@ -52,7 +52,7 @@ namespace ice
       {
         // invert trafo
         tri = tr;
-        tri.Invert();
+        tri.invert();
 
         // if source=dest then temporary Image needed
         if (hsimg == dimg)

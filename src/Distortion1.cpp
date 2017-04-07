@@ -130,7 +130,7 @@ namespace ice
   }
 #undef FNAME
 
-  Vector Distortion1::MakeVector() const
+  Vector Distortion1::makeVector() const
   {
     return Vector(x0, y0, d2, d4);
   }
