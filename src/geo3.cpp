@@ -103,7 +103,7 @@ namespace ice
         x2 = para[pidx++];
         y2 = para[pidx++];
         weight = para[pidx++];
-        Transform(tr, x1, y1, xt, yt);
+        transform(tr, x1, y1, xt, yt);
         result[ridx++] = (x2 - xt) * weight;
         result[ridx++] = (y2 - yt) * weight;
       }

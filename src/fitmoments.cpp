@@ -74,7 +74,7 @@ namespace ice
     tr.invert();
 
     // und Standard-Dreieck transformieren
-    TransformList(tr, tri);
+    transformList(tr, tri);
 
     return tri;
   }

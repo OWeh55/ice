@@ -52,7 +52,7 @@ namespace ice
 
         for (int i = 0; i < m.rows(); i++)
           {
-            TransformAndRound(tr, m[i][0], m[i][1]);
+            transformAndRound(tr, m[i][0], m[i][1]);
           }
 
         return PointlistContur(m, true);
@@ -60,19 +60,19 @@ namespace ice
     RETHROW;
   }
 #undef FNAME
-#define FNAME "TransformList"
-  void TransformList(const Trafo& tr, Matrix& m)
+#define FNAME "transformList"
+  void transformList(const Trafo& tr, Matrix& m)
   {
     Matrix temp;
-    TransformList(tr, m, temp);
+    transformList(tr, m, temp);
     m = temp;
   }
 
-  void TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2)
+  void transformList(const Trafo& tr, const Matrix& m1, Matrix& m2)
   {
     if (&m1 == &m2)
       {
-        return TransformList(tr, m2);
+        return transformList(tr, m2);
       }
 
     if (tr.dimSource > m1.cols())

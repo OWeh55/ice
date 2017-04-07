@@ -123,7 +123,7 @@ namespace ice
     {
       makeInverse();
       double xt, yt;
-      Transform(inv, x, y, xt, yt);
+      transform(inv, x, y, xt, yt);
       return basefunc(xt, yt);
     }
 

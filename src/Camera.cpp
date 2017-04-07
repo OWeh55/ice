@@ -349,7 +349,7 @@ namespace ice
   {
     create_trans();
     Point res;
-    ice::Transform(tr, p.x, p.y, p.z, res.x, res.y);
+    ice::transform(tr, p.x, p.y, p.z, res.x, res.y);
     dist->Distort(res.x, res.y);
     return res;
   }
@@ -357,7 +357,7 @@ namespace ice
   void Camera::Transform(double x, double y, double z, double& u, double& v) const
   {
     create_trans();
-    ice::Transform(tr, x, y, z, u, v);
+    ice::transform(tr, x, y, z, u, v);
     dist->Distort(u, v);
   }
 #undef FNAME

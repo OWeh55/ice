@@ -130,24 +130,24 @@ namespace ice
     friend ice::Point operator *(const Trafo&, const ice::Point&);
 
     // transformations in 2d
-    friend void Transform(const Trafo&, double& x, double& y);
-    friend void Transform(const Trafo&,
+    friend void transform(const Trafo&, double& x, double& y);
+    friend void transform(const Trafo&,
                           double x, double y,
                           double& xt, double& yt);
 
     // transformations in 3d
-    friend void Transform(const Trafo&, double& x, double& y, double& z);
-    friend void Transform(const Trafo&,
+    friend void transform(const Trafo&, double& x, double& y, double& z);
+    friend void transform(const Trafo&,
                           double x, double y, double z,
                           double& xt, double& yt, double& zt);
 
     // transformations 3d to 2d
-    friend void Transform(const Trafo&,
+    friend void transform(const Trafo&,
                           double x, double y, double z,
                           double& xt, double& yt);
 
-    friend void TransformList(const Trafo& tr, Matrix& m);
-    friend void TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2);
+    friend void transformList(const Trafo& tr, Matrix& m);
+    friend void transformList(const Trafo& tr, const Matrix& m1, Matrix& m2);
 
     friend Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
                                  int mode, const ice::Vector& weight);
@@ -167,25 +167,25 @@ namespace ice
   ice::Vector operator *(const Trafo&, const ice::Vector&);
 
 // transform in 2d
-  void Transform(const Trafo&, double& x, double& y);
-  void Transform(const Trafo&, double x, double y, double& xt, double& yt);
-  void Transform(const Trafo&, Point p1, Point& p2);
-  void Transform(const Trafo&, Point& p);
+  void transform(const Trafo&, double& x, double& y);
+  void transform(const Trafo&, double x, double y, double& xt, double& yt);
+  void transform(const Trafo&, Point p1, Point& p2);
+  void transform(const Trafo&, Point& p);
 
-  void Transform(const Trafo&, std::vector<Point>& p);
-  void Transform(const Trafo&, const std::vector<Point>& p1, std::vector<Point>& p2);
+  void transform(const Trafo&, std::vector<Point>& p);
+  void transform(const Trafo&, const std::vector<Point>& p1, std::vector<Point>& p2);
 
-  // rounding in name of function to avoid accidentally rounding
-  void TransformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt);
-  void TransformAndRound(const Trafo& tr, int& xt, int& yt);
+  // "round" in name of function to avoid accidentally rounding
+  void transformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt);
+  void transformAndRound(const Trafo& tr, int& xt, int& yt);
 
 // transform in 3d
-  void Transform(const Trafo&, double& x, double& y, double& z);
-  void Transform(const Trafo&, double x, double y, double z,
+  void transform(const Trafo&, double& x, double& y, double& z);
+  void transform(const Trafo&, double x, double y, double z,
                  double& xt, double& yt, double& zt);
 
 // transform 3d to 2d
-  void Transform(const Trafo&, double x, double y, double z,
+  void transform(const Trafo&, double x, double y, double z,
                  double& xt, double& yt);
 
 }

@@ -636,8 +636,8 @@ namespace ice
 // Several ways to use a Trafo
 //-------------------------------
 // runtime optimization : explicite formula instead of matrix-Vector-product
-#define FNAME "Transform"
-  void Transform(const Trafo& tr, double& x, double& y)
+#define FNAME "transform"
+  void transform(const Trafo& tr, double& x, double& y)
   {
     double hf, xt, yt;
 
@@ -652,35 +652,35 @@ namespace ice
     y = yt;
   }
 
-  void Transform(const Trafo& tr, Point& p)
+  void transform(const Trafo& tr, Point& p)
   {
-    Transform(tr, p.x, p.y, p.x, p.y);
+    transform(tr, p.x, p.y, p.x, p.y);
   }
 
-  void Transform(const Trafo& tr, std::vector<Point>& pl)
+  void transform(const Trafo& tr, std::vector<Point>& pl)
   {
     for (unsigned int i = 0; i < pl.size(); i++)
       {
-        Transform(tr, pl[i]);
+        transform(tr, pl[i]);
       }
   }
 
-  void Transform(const Trafo& tr,
+  void transform(const Trafo& tr,
                  const std::vector<Point>& pl1, std::vector<Point>& pl2)
   {
     pl2.resize(pl1.size());
     for (unsigned int i = 0; i < pl1.size(); i++)
       {
-        Transform(tr, pl1[i], pl2[i]);
+        transform(tr, pl1[i], pl2[i]);
       }
   }
 
-  void Transform(const Trafo& tr, Point p1, Point& p2)
+  void transform(const Trafo& tr, Point p1, Point& p2)
   {
-    Transform(tr, p1.x, p1.y, p2.x, p2.y);
+    transform(tr, p1.x, p1.y, p2.x, p2.y);
   }
 
-  void Transform(const Trafo& tr, double& x, double& y, double& z)
+  void transform(const Trafo& tr, double& x, double& y, double& z)
   {
     if ((tr.dimSource != 3) || (tr.dimTarget != 3))
       throw IceException(FNAME, M_WRONG_DIM);
@@ -696,43 +696,43 @@ namespace ice
     z = zt;
   }
 
-  void Transform(const Trafo& tr,
+  void transform(const Trafo& tr,
                  double x, double y,
                  double& xt, double& yt)
   {
     xt = x;
     yt = y;
-    Transform(tr, xt, yt);
+    transform(tr, xt, yt);
   }
 
-  void TransformAndRound(const Trafo& tr,
+  void transformAndRound(const Trafo& tr,
                          int& xt, int& yt)
   {
     double xtf, ytf;
-    RETURN_ERROR_IF_FAILED(Transform(tr, xt, yt, xtf, ytf));
+    RETURN_ERROR_IF_FAILED(transform(tr, xt, yt, xtf, ytf));
     xt = RoundInt(xtf);
     yt = RoundInt(ytf);
   }
 
-  void TransformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt)
+  void transformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt)
   {
     double xs, ys;
-    RETURN_ERROR_IF_FAILED(Transform(tr, x, y, xs, ys));
+    RETURN_ERROR_IF_FAILED(transform(tr, x, y, xs, ys));
     xt = RoundInt(xs);
     yt = RoundInt(ys);
   }
 
-  void Transform(const Trafo& tr,
+  void transform(const Trafo& tr,
                  double x, double y, double z,
                  double& xt, double& yt, double& zt)
   {
     xt = x;
     yt = y;
     zt = z;
-    Transform(tr, xt, yt, zt);
+    transform(tr, xt, yt, zt);
   }
 
-  void Transform(const Trafo& tr,
+  void transform(const Trafo& tr,
                  double x, double y, double z,
                  double& xt, double& yt)
   {

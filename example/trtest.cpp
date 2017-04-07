@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
   tr1.shift(255, 255);
 
   // die punktliste transformieren
-  TransformList(tr1, p1, p2);
+  transformList(tr1, p1, p2);
 
   // ein paar fehler einbauen
   // jeden dritten Punkt verschieben
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     }
 
   // transformierte Punktlisten darstellen
-  TransformList(tr2, p1, p3);
+  transformList(tr2, p1, p3);
 
   for (i = 0; i < 100; i++)
     {
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
       drawCircle(circle, 1, 1, NOFILL, img);
     }
 
-  TransformList(tr3, p1, p3);
+  transformList(tr3, p1, p3);
 
   for (i = 0; i < 100; i++)
     {

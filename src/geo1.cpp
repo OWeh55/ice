@@ -187,7 +187,7 @@ namespace ice
       Trafo tr(p1.cols(), p2.cols());
       Vector2Trafo(trpara, tr);
       Matrix pointsTransformed;
-      TransformList(tr, p1, pointsTransformed);
+      transformList(tr, p1, pointsTransformed);
       int k = 0;
       for (int i = 0; i < (int)p2.rows(); ++i)
         for (int l = 0; l < (int) p2.cols(); ++l)

@@ -63,7 +63,7 @@ namespace ice
   int inside(const Image& img, const Trafo& tr, IPoint p)
   {
     Point dp = p;
-    Transform(tr, dp);
+    transform(tr, dp);
     return img.inside(p);
   }
 

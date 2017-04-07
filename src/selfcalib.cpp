@@ -865,7 +865,7 @@ namespace ice
         rot2.shift(-sum1, -sum2);
         rot2.rotate(0.0, 0.0, (phi / 180.0)*M_PI);
         rot2.shift(+sum1, +sum2);
-        TransformList(rot2, m1, m1_rot);
+        transformList(rot2, m1, m1_rot);
 
         // Abstandsmatrix bestimmen
         for (i = 0; i < M; i++)
@@ -914,7 +914,7 @@ namespace ice
 
         t1 = MatchPointlistsLinOpt(m3, m4, TRANSFORMATION);
 
-        TransformList(t1, m3, m5);
+        transformList(t1, m3, m5);
 
         set_distance = point_set_distance(m4, m5);
 
@@ -930,7 +930,7 @@ namespace ice
     rot2.rotate(0.0, 0.0, (phi_min / 180.0)*M_PI);
     rot2.shift(+sum1, +sum2);
 
-    TransformList(rot2, m1, m1_rot);
+    transformList(rot2, m1, m1_rot);
 
     // Abstandsmatrix bestimmen
     for (i = 0; i < M; i++)
