@@ -117,11 +117,11 @@ namespace ice
     virtual std::string toString(const std::string& del = "\n") const;
 
     // Abbildung des 3D Vektors v -> 2D
-    virtual Vector Transform(const Vector& v) const;
-    virtual Point Transform(const Vector3d& v) const;
+    virtual Vector transform(const Vector& v) const;
+    virtual Point transform(const Vector3d& v) const;
 
     // Abbildung des 3D Vektors (x,y,z) -> 2D (u,v)
-    virtual void Transform(double x, double y, double z, double& u, double& v) const;
+    virtual void transform(double x, double y, double z, double& u, double& v) const;
 
     // Sehstrahl berechnen
     virtual Line3d Ray(const Point& bp) const;

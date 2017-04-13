@@ -248,7 +248,6 @@ namespace ice
                        const vector<Point>& orig,
                        Trafo& tr, Point& center)
   {
-
     Vector dipara = makeVector();
     int diparams = dipara.size();
 
@@ -276,8 +275,8 @@ namespace ice
         parvec[k++] = dipara[i];
       }
 
-    Matrix tm = tr.Tmatrix();
-    //  cout << tm << endl;
+    matrix<double> tm = tr.getMatrix();
+
     // homographie
     parvec[k++] = tm[0][0] / tm[2][2];
     parvec[k++] = tm[0][1] / tm[2][2];
@@ -298,7 +297,7 @@ namespace ice
     int inumber;
 
     int rc = LMDif(op, DistError(*this, parvec, marker, orig), 10000, inumber);
-    //    cout << LMDifMessage(rc) << endl;
+
     if (rc > 4)
       throw IceException(FNAME, M_NUM_INSTABILITY);
     else
@@ -472,7 +471,7 @@ namespace ice
       {
         // startlösung wird ohne Berücksichtigung der Verzeichnung berechnet
         Trafo tr = MatchPointlists(orig[listnr], marker[listnr]);
-        Matrix tm = tr.Tmatrix();
+        Matrix tm = tr.getMatrix();
         // cout << tm << endl;
         parameterVector[k++] = tm[0][0] / tm[2][2];
         parameterVector[k++] = tm[0][1] / tm[2][2];

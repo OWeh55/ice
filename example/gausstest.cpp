@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
       Vector z(fw * fw, fw, 1);
       double f = 9 * fw * fw + 8 * fw + 7  + 3 * (RandomD() - 0.5);
       g.Value(z, f, 1);
-      p.Append(z);
+      p.append(z);
       v.Append(f);
     }
 

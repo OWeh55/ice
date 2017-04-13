@@ -215,7 +215,7 @@ namespace ice
 
   void makeEquation(Vector& es, const Trafo& homographie, int z_i, int z_j)
   {
-    Matrix T = homographie.Tmatrix();
+    Matrix T = homographie.getMatrix();
     es[0] = T[0][z_i] * T[0][z_j];
     es[1] = T[0][z_i] * T[1][z_j] + T[1][z_i] * T[0][z_j];
     es[2] = T[0][z_i] * T[2][z_j] + T[2][z_i] * T[0][z_j];
@@ -653,7 +653,7 @@ namespace ice
                               intersection))
                   {
 //      cout << "Schnittpunkt: " << intersection << endl;
-                    h_matrix.Append(intersection);
+                    h_matrix.append(intersection);
                     ++number_of_found_objects;
                   }
               }
@@ -1279,7 +1279,7 @@ namespace ice
             double summe_der_abst = 0.0;
 
             // Bestimmung der externen Kameraparameter nach Zhang
-            cps[actual_image_number] = calib_extrinsic_zhang(H[actual_image_number].Tmatrix(), K);
+            cps[actual_image_number] = calib_extrinsic_zhang(H[actual_image_number].getMatrix(), K);
 
             for (int i = 0; i < number_of_points; i++)
               {

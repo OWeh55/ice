@@ -100,7 +100,7 @@ int main(int argc, char* argv [])
   cout << pl1 << pl2 ;
 
   t1 = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);
-  cout << t1.Tmatrix();
+  cout << t1.getMatrix();
   i3 = NewImg(i1);
   CopyImg(i1, i3);
   Show(ON, i3);
@@ -117,7 +117,7 @@ int main(int argc, char* argv [])
   Show(OVERLAY, i1, m1);
   Contur c1, c2;
   c1 = SelContur(m1);
-  c2 = Transform(t1, c1);
+  c2 = transform(t1, c1);
   Show(OFF, i1);
   Show(OVERLAY, i2, m2);
   MarkContur(c2, 3, m2);

@@ -574,7 +574,7 @@ namespace ice
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Matrix trm = tr.Tmatrix();
+    Matrix trm = tr.getMatrix();
 
     if (fabs(trm[2][0]) + fabs(trm[2][1]) > EPSILON)
       throw IceException(FNAME, M_TRAFO_NOTAFFINE);

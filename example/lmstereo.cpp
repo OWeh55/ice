@@ -453,7 +453,7 @@ int readproject(const string& fn)
           int i;
 
           for (i = 0; i < xy12.rows(); i++)
-            d3d.Append(Vector(0.0, 0.0, Z_START_WERT));
+            d3d.append(Vector(0.0, 0.0, Z_START_WERT));
         }
 
       if (d3d.rows() == 0)

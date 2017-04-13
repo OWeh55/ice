@@ -236,11 +236,11 @@ namespace ice
 
     m = Matrix(0, 3);
 
-    m.Append(Vector(pl->xptr[ad1], pl->yptr[ad1], pl->wptr[ad1]));
+    m.append(Vector(pl->xptr[ad1], pl->yptr[ad1], pl->wptr[ad1]));
 
     for (int i = ad1 + 1; i != ad2; i = (i + 1) % pl->lng)
       {
-        m.Append(Vector(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+        m.append(Vector(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
       }
 
     return OK;

@@ -122,7 +122,11 @@ namespace ice
 
     virtual Trafo inverse() const;
 
-    virtual Matrix Tmatrix() const;
+    //    virtual Matrix Tmatrix() const;
+    virtual const matrix<double>& getMatrix() const
+    {
+      return m;
+    }
 
     friend Trafo operator *(const Trafo&, const Trafo&);
     friend ice::Vector operator *(const Trafo&, const ice::Vector&);
@@ -152,10 +156,6 @@ namespace ice
     friend Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
                                  int mode, const ice::Vector& weight);
 
-    const matrix<double>& getMatrix() const
-    {
-      return m;
-    }
 
   protected:
     void normalize();

@@ -155,7 +155,7 @@ namespace ice
   {
     return m[i][j];
   }
-
+  /*
   Matrix Trafo::Tmatrix() const
   {
     Matrix res(dimTarget + 1, dimSource + 1);
@@ -168,7 +168,7 @@ namespace ice
 
     return res;
   }
-
+  */
   Trafo::~Trafo()
   {
   }

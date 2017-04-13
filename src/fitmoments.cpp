@@ -96,7 +96,7 @@ namespace ice
 
         for (int i = 0; i < 3; i++)
           {
-            triangle.Append(Vector(p[i][0], p[i][1]));
+            triangle.append(Vector(p[i][0], p[i][1]));
           }
 
         return triangle;
@@ -120,7 +120,7 @@ namespace ice
 
         for (int i = 0; i < 3; i++)
           {
-            triangle.Append(Vector(p[i][0], p[i][1]));
+            triangle.append(Vector(p[i][0], p[i][1]));
           }
 
         return triangle;
@@ -235,7 +235,7 @@ namespace ice
 
         for (int i = 0; i < n; i++)
           {
-            res.Append(Vector(p[i][0], p[i][1]));
+            res.append(Vector(p[i][0], p[i][1]));
           }
 
         return res;

@@ -37,7 +37,7 @@ int hpc(const Contur& c, Matrix& cm, int steps = SANZ)
 
           if (cross > 0)
             {
-              hpl.Append(cpl[j]);
+              hpl.append(cpl[j]);
             }
         }
 

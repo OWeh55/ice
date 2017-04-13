@@ -624,7 +624,7 @@ namespace ice
       for (unsigned int i = 0; i < idx.size(); i++)
         {
           int ib = idx[i];
-          poly.Append(Vector(base[ib][0], base[ib][1]));
+          poly.append(Vector(base[ib][0], base[ib][1]));
         }
     }
   };
@@ -879,7 +879,7 @@ namespace ice
                 for (int i = c1; i <= c2; i++)   // points of that segment
                   {
                     int in = i % nOriginalPoints;
-                    pl1.Append(Vector(cl[in][0], cl[in][1]));
+                    pl1.append(Vector(cl[in][0], cl[in][1]));
                   }
                 // cout << pl1.rows() << endl;
                 if (step < 0)
@@ -1009,7 +1009,7 @@ namespace ice
                     for (int i = c1; i < c2; i++)   // points of that segment
                       {
                         int in = i % cnr;
-                        pl1.Append(Vector(cl[in][0], cl[in][1]));
+                        pl1.append(Vector(cl[in][0], cl[in][1]));
                       }
 
                     if (step < 0)

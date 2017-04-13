@@ -70,15 +70,16 @@ namespace ice
 
         bool projective = true;
 
-        double m00 = tri.Tmatrix()[0][0];
-        double m01 = tri.Tmatrix()[0][1];
-        double m02 = tri.Tmatrix()[0][2];
-        double m10 = tri.Tmatrix()[1][0];
-        double m11 = tri.Tmatrix()[1][1];
-        double m12 = tri.Tmatrix()[1][2];
-        double m20 = tri.Tmatrix()[2][0];
-        double m21 = tri.Tmatrix()[2][1];
-        double m22 = tri.Tmatrix()[2][2];
+	const matrix<double> &tMatrix=tri.getMatrix();
+        double m00 = tMatrix[0][0];
+        double m01 = tMatrix[0][1];
+        double m02 = tMatrix[0][2];
+        double m10 = tMatrix[1][0];
+        double m11 = tMatrix[1][1];
+        double m12 = tMatrix[1][2];
+        double m20 = tMatrix[2][0];
+        double m21 = tMatrix[2][1];
+        double m22 = tMatrix[2][2];
         double nn;
 
         if ((m20 == 0.0) && (m21 == 0.0) && (m22 == 1.0))

@@ -355,7 +355,7 @@ namespace ice
 
         for (unsigned int i = 0; i < rpl.size(); i++)
           {
-            res.Append(Vector(rpl[i].x, rpl[i].y));
+            res.append(Vector(rpl[i].x, rpl[i].y));
           }
 
         return res;

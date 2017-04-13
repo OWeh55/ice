@@ -63,7 +63,7 @@ namespace ice
     R.rotateZ(param[0]); // Rotation (Eulersche Winkel)
     R.rotateY(param[1]);
     R.rotateX(param[2]);
-    Matrix m = R.Tmatrix()(0, 0, 2, 2); // Rotationsmatrix
+    Matrix m = Matrix(R.getMatrix())(0, 0, 2, 2); // Rotationsmatrix
 
     Matrix c(3, 3); // Kamera-Matrix (interne Parameter)
     c[0][0] = param[3];

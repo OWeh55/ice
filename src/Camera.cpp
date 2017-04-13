@@ -331,8 +331,8 @@ namespace ice
     return tr;
   }
 
-#define FNAME "Camera::Transform"
-  Vector Camera::Transform(const Vector& v) const
+#define FNAME "Camera::transform"
+  Vector Camera::transform(const Vector& v) const
   {
     Vector vh(2);
     create_trans();
@@ -345,7 +345,7 @@ namespace ice
     return vh;
   }
 
-  Point Camera::Transform(const Vector3d& p) const
+  Point Camera::transform(const Vector3d& p) const
   {
     create_trans();
     Point res;
@@ -354,7 +354,7 @@ namespace ice
     return res;
   }
 
-  void Camera::Transform(double x, double y, double z, double& u, double& v) const
+  void Camera::transform(double x, double y, double z, double& u, double& v) const
   {
     create_trans();
     ice::transform(tr, x, y, z, u, v);
@@ -369,7 +369,7 @@ namespace ice
         create_trans(); // Transformation erzeugen
         Vector bpu(dist->Rect(bp));// Unverzeichneter Bildpunkt
         bpu.Append(1); // in homogene Koordinaten umwandeln
-        Matrix T = tr.Tmatrix(); // Transformationsmatrix
+        Matrix T = tr.getMatrix(); // Transformationsmatrix
         Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)
         Vector a(3);
 

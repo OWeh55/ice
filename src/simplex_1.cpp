@@ -29,22 +29,25 @@
 #include "simplex_glbl.h"
 #include "simplex4.h"
 
-#ifdef DEBUG
-#include "screen.h"
-#include "xio.h"
-#endif
-
+using namespace std;
 // Aus 2 gegebenen Listen wird eine Transformation
 // mittels linearer Optimierung berechnet
+
 namespace ice
 {
-
 #define FNAME "MatchPointListsLinOpt"
   int MatchPointlistsLinOpt(PointList pl1, PointList pl2, double tr[][3],
                             int mode, double limit)
   {
     int code = 0;
-
+    
+    /*
+    for (int i=0;i<pl1->lng;i++)
+      {
+	cout << pl1->xptr[i] << " " << pl1->yptr[i] << endl;
+	cout << " " << pl2->xptr[i] << " " << pl2->yptr[i] << endl;
+      }
+    */
     if (pl1 == NULL || pl2 == NULL)
       throw IceException(FNAME, M_WRONG_POINTLIST);
 
@@ -321,60 +324,6 @@ namespace ice
         a[i + 1] = 1.0;
       }
 
-    // ************************************
-
-#ifdef DEBUG
-
-    /* some variable names have changed, commenting out */
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      {
-        Printf("%f  ", c[i]);
-      }
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      {
-        Printf("%f  ", b[i]);
-      }
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      {
-        Printf("%d  ", ka[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      {
-        Printf("%d  ", ia[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < (12 * NN + 4 * N); ++i)
-      {
-        Printf("%f  ", a[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-
-#endif
-
     code = simplex_method_modified(
              m,     /* number of constraints */
              n,     /* number of variables */
@@ -414,6 +363,9 @@ namespace ice
     a21 = x[6] - x[7];
     a22 = x[8] - x[9];
     a20 = x[10] - x[11];
+
+    // cout << a11 << "  " << a12 << " " << a10 << endl;
+    // cout << a21 << "  " << a22 << " " << a20 << endl;
 
     tr[0][0] = a11;
     tr[0][1] = a12;
@@ -680,58 +632,6 @@ namespace ice
         a[i] = -1.0;
         a[i + 1] = 1.0;
       }
-
-    // ************************************
-
-#ifdef DEBUG
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      {
-        Printf("%f  ", c[i]);
-      }
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      {
-        Printf("%f  ", b[i]);
-      }
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      {
-        Printf("%d  ", ka[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      {
-        Printf("%d  ", ia[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < (12 * NN + 4 * N); ++i)
-      {
-        Printf("%f  ", a[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-
-#endif
 
     code = simplex_method_modified(
              m,   /* number of constraints */
@@ -1035,56 +935,6 @@ namespace ice
       }
 
     // ************************************
-
-#ifdef DEBUG
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      {
-        Printf("%f  ", c[i]);
-      }
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      {
-        Printf("%f  ", b[i]);
-      }
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      {
-        Printf("%d  ", ka[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      {
-        Printf("%d  ", ia[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < nz ; ++i)
-      {
-        Printf("%f  ", a[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-
-#endif
 
     code = simplex_method_modified(
              m,   /* number of constraints */
@@ -1458,56 +1308,6 @@ namespace ice
       }
 
     // ************************************
-
-#ifdef DEBUG
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      {
-        Printf("%f  ", c[i]);
-      }
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      {
-        Printf("%f  ", b[i]);
-      }
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      {
-        Printf("%d  ", ka[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      {
-        Printf("%d  ", ia[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < (nz); ++i)
-      {
-        Printf("%f  ", a[i]);
-      }
-
-    Printf("\n");
-    GetChar();
-
-#endif
 
     code = simplex_method_modified(
              m,   /* number of constraints */

@@ -65,7 +65,7 @@ namespace ice
     R.rotateZ(param[0]); // Rotation (Eulersche Winkel)
     R.rotateY(param[1]);
     R.rotateX(param[2]);
-    Matrix m = R.Tmatrix()(0, 0, 2, 2); // Rotationsmatrix
+    Matrix m = Matrix(R.getMatrix())(0, 0, 2, 2); // Rotationsmatrix
 
     Matrix c(3, 3); // Kamera-Matrix (interne Parameter)
     c[0][0] = param[3];
@@ -491,7 +491,7 @@ namespace ice
         int dim2 = p2.cols();
         PointList pl1, pl2;
         double tr[3][3];
-        //    int rc;
+
         Matrix tmatrix(3, 3);
         Trafo res(2, 2);
 
@@ -502,7 +502,7 @@ namespace ice
 
         nPoints = p1.rows();
 
-        if ((dim2 != 2) || (dim1 != 2))   // for linear opt. only 2 dimensions
+        if ((dim2 != 2) || (dim1 != 2)) // linear opt. only 2 dimensions
           throw IceException(FNAME, M_WRONG_PARAM);
 
         // construct pointlist
@@ -516,6 +516,9 @@ namespace ice
           }
 
         MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
+
+	FreePointList(pl1);
+	FreePointList(pl2);
 
         for (int i = 0; i < 3; i++)
           for (int j = 0; j < 3; j++)
@@ -536,7 +539,7 @@ namespace ice
       {
         weights[i] = 1.0;
       }
-
+    
     return MatchPointlistsLinOpt(p1, p2, mode, weights);
   }
 
@@ -557,7 +560,7 @@ namespace ice
                               int mode, const std::vector<double>& weights,
                               double limit)
   {
-    // wrapper function to use old style MatchPointlistsLinOpt with classes
+    // wrapper function for old style MatchPointlistsLinOpt
 
     int nPoints = p1.size();
 
@@ -576,21 +579,12 @@ namespace ice
       {
         PutPoint(pl1, i, p1[i].x, p1[i].y, weights[i]);
         PutPoint(pl2, i, p2[i].x, p2[i].y, weights[i]);
-        // cout << p1[i].x << "," << p1[i].y << " - " <<p2[i].x << "," << p2[i].y <<endl;
       }
 
     MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
 
-#if 0
-    for (int i = 0; i < 3; i++)
-      {
-        for (int j = 0; j < 3; j++)
-          {
-            cout << tr[i][j] << " " ;
-          }
-        cout << endl;
-      }
-#endif
+    FreePointList(pl1);
+    FreePointList(pl2);
 
     for (int i = 0; i < 3; i++)
       for (int j = 0; j < 3; j++)

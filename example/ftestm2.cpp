@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
           if (!(rc < 0))
             {
-              pl.Append(Vector(p.X(), p.Y()));
+              pl.append(Vector(p.X(), p.Y()));
               Marker(1, p, 4, 15, img);
             }
         }

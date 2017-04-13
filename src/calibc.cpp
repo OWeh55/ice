@@ -113,7 +113,7 @@ namespace ice
       for (i = 0, j = 0; j < points; j++)   // für jeden Funktionswert
         {
           double us, vs;
-          cam.Transform(xyz.at(j).at(0), xyz.at(j).at(1), xyz.at(j).at(2), us, vs);
+          cam.transform(xyz.at(j).at(0), xyz.at(j).at(1), xyz.at(j).at(2), us, vs);
           result.at(i) = us - uv.at(j).at(0);
           i++;
           result.at(i) = vs - uv.at(j).at(1);

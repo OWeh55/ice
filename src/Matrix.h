@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <vector>
+#include "matrixtemplate.h"
 #include "Vector.h"
 #include "IMatrix.h"
 #include "based.h"
@@ -43,6 +44,7 @@ namespace ice
     explicit Matrix(int rows, int cols, double* data);
     explicit Matrix(const std::vector<Point>& pl);
     explicit Matrix(const std::vector<std::vector<double> >& vv);
+    Matrix(const ice::matrix<double>& vv);
     Matrix(const std::vector<Point>& pl, const std::vector<double>& weight);
     ~Matrix();
 
@@ -113,7 +115,7 @@ namespace ice
     int DeleteCol(int n);
     int DeleteCol(int n1, int n2);
 
-    int Append(const Vector& v);
+    int append(const Vector& v);
 
     int Sort(int col = 0, bool asc = true);
 

@@ -39,7 +39,7 @@ namespace ice
 
     if (pl[0][0] != pl[pl.rows() - 1][0] || pl[0][1] != pl[pl.rows() - 1][1])
       {
-        plw.Append(plw[0]);
+        plw.append(plw[0]);
       }
 
     int cr_nr = 0;
@@ -148,7 +148,7 @@ namespace ice
 
     if (pl[0][0] != pl[pl.rows() - 1][0] || pl[0][1] != pl[pl.rows() - 1][1])
       {
-        plw.Append(pl[0]);
+        plw.append(pl[0]);
       }
 
     if (!c.isValid())

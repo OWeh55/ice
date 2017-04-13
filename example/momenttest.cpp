@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
 
       for (int i = 0; i < 360; i += 1)
         {
-          CircA.Append(Vector(10.0 * cos(Arcus(i)) + 9.0, 10.0 * sin(Arcus(i)) + 8.0));
+          CircA.append(Vector(10.0 * cos(Arcus(i)) + 9.0, 10.0 * sin(Arcus(i)) + 8.0));
         }
 
       cout << "fast Kreis -> Kreis" << endl;

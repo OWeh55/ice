@@ -40,9 +40,6 @@ using namespace std;
 #define FILE_SEP '#'
 #endif
 
-#define ERR(f,m,r,ret) { throw IceException("Matrix::" f,m); }
-#define ERR0(f,m,r) { throw IceException("Matrix::" f,m); }
-
 namespace ice
 {
   // Konstruktoren
@@ -234,6 +231,28 @@ namespace ice
         }
   }
 
+  Matrix::Matrix(const ice::matrix<double>& m)
+  {
+    nRows = m.rows();
+    nColumns = m.cols();
+    
+    if (nRows > 0)
+      {
+        data = new Vector* [nRows];
+      }
+    
+    for (int i = 0; i < nRows; i++)
+      {
+        data[i] = new Vector(nColumns);
+      }
+    
+    for (int i = 0; i < nRows; i++)
+      for (int j = 0; j < nColumns; j++)
+        {
+          (*data[i])[j] = m[i][j];
+        }
+  }
+
   Matrix::Matrix(const std::vector<Point>& pl,
                  const std::vector<double>& weight): nRows(0), nColumns(0), data(nullptr)
   {
@@ -347,12 +366,12 @@ namespace ice
     return OK;
   }
 #undef FNAME
-
+#define FNAME "Matrix::operator[]"
   const Vector& Matrix::operator[](int i) const
   {
     if ((i < 0) || (i >= nRows))
       {
-        ERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+	throw IceException(FNAME,M_WRONG_INDEX);
       }
 
     return *data[i];
@@ -362,12 +381,13 @@ namespace ice
   {
     if ((i < 0) || (i >= nRows))
       {
-        ERR("operator[]", "Wrong index", WRONG_PARAM, *data[0]);
+	throw IceException(FNAME,M_WRONG_INDEX);
       }
 
     return *data[i];
   }
-
+#undef FNAME
+#define FNAME "Matrix::operator()"
   Matrix Matrix::operator()(int i1, int j1, int i2, int j2) const
   {
     int i;
@@ -377,7 +397,7 @@ namespace ice
       (j1 < 0) || (j1 > j2 + 1) || (j2 >= nColumns)
     )
       {
-        ERR("operator()", "Wrong index", WRONG_PARAM, *this);
+	throw IceException(FNAME,M_WRONG_INDEX);
       }
 
     Matrix tm(i2 - i1 + 1, j2 - j1 + 1);
@@ -389,21 +409,23 @@ namespace ice
 
     return tm;
   }
-
+#undef FNAME
+#define FNAME "Matrix::ExchangeRow"
   void Matrix::ExchangeRow(int i1, int i2)
   {
     Vector* h;
 
     if ((i1 < 0) || (i1 >= nRows) || (i2 < 0) || (i2 >= nRows))
       {
-        ERR0("ExchangeRow()", "Wrong index", WRONG_PARAM);
+	throw IceException(FNAME,M_WRONG_INDEX);
       }
 
     h = data[i1];
     data[i1] = data[i2];
     data[i2] = h;
   }
-
+#undef FNAME
+#define FNAME "Matrix::ExchangeCol"
   void Matrix::ExchangeCol(int i1, int i2)
   {
     double h;
@@ -411,7 +433,7 @@ namespace ice
 
     if ((i1 < 0) || (i1 >= nColumns) || (i2 < 0) || (i2 >= nColumns))
       {
-        ERR0("ExchangeCol()", "Wrong index", WRONG_PARAM);
+	throw IceException(FNAME,M_WRONG_INDEX);
       }
 
     for (j = 0; j < nRows; j++)
@@ -421,7 +443,7 @@ namespace ice
         (*data[j])[i2] = h;
       }
   }
-
+#undef FNAME
 #define FNAME "Matrix::Norm"
   double Matrix::Norm(int mode) const
   {
@@ -448,7 +470,7 @@ namespace ice
         catch (IceException& ex)
           {
             delete [] dptr;
-            throw IceException(ex, "Matrix::Norm");
+            throw IceException(ex, FNAME);
           }
 
         delete [] dptr;
@@ -581,6 +603,7 @@ namespace ice
       }
   }
 
+#define FNAME "Matrix::operator+"
   Matrix operator+(const Matrix& m1, const Matrix& m2)
   {
     int i;
@@ -588,7 +611,7 @@ namespace ice
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
       {
-        ERR("operator+", "Format doesn't match", WRONG_PARAM, res);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     for (i = 0; i < m1.rows(); i++)
@@ -598,7 +621,8 @@ namespace ice
 
     return res;
   }
-
+#undef FNAME
+#define FNAME "Matrix::operator-"
   Matrix operator-(const Matrix& m1, const Matrix& m2)
   {
     int i;
@@ -606,7 +630,7 @@ namespace ice
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
       {
-        ERR("operator+", "Format doesn't match", WRONG_PARAM, res);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     for (i = 0; i < m1.rows(); i++)
@@ -629,7 +653,8 @@ namespace ice
 
     return res;
   }
-
+#undef FNAME
+#define FNAME "Matrix::operator*"
   Matrix operator *(double f, const Matrix& m)
   {
     int i;
@@ -664,7 +689,7 @@ namespace ice
 
     if (m1.cols() != m2.rows())
       {
-        ERR("operator*", "Format doesn't match", WRONG_PARAM, m1);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows(), m2.cols());
@@ -684,6 +709,7 @@ namespace ice
 
     return res;
   }
+#undef FNAME
 
   Matrix& Matrix::operator *=(double v)
   {
@@ -729,23 +755,22 @@ namespace ice
   Matrix Matrix::MulTrans(const Matrix& m2) const
   {
     // Matrizen-Multiplikation
-    int i, j, k;
     Matrix res(cols(), m2.cols());
 
     if (rows() != m2.rows())
       {
-        ERR(FNAME, M_MATRIXFORMAT, WRONG_PARAM, res);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
 #if 0
     double sum;
 
-    for (i = 0; i < cols(); i++)
-      for (j = 0; j < m2.cols(); j++)
+    for (int i = 0; i < cols(); i++)
+      for (int j = 0; j < m2.cols(); j++)
         {
           sum = 0;
 
-          for (k = 0; k < rows(); k++)
+          for (int k = 0; k < rows(); k++)
             {
               sum += (*data[k]).at(i) * m2.at(k).at(j);
             }
@@ -755,9 +780,9 @@ namespace ice
 
 #else
 
-    for (k = 0; k < rows(); k++)
-      for (i = 0; i < cols(); i++)
-        for (j = 0; j < m2.cols(); j++)
+    for (int k = 0; k < rows(); k++)
+      for (int i = 0; i < cols(); i++)
+        for (int j = 0; j < m2.cols(); j++)
           {
             res[i][j] += (*data[k]).at(i) * m2.at(k).at(j);
           }
@@ -775,7 +800,7 @@ namespace ice
 
     if (rows() != v.Size())
       {
-        ERR(FNAME, M_MATRIXFORMAT, WRONG_PARAM, res);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     for (i = 0; i < cols(); i++)
@@ -794,7 +819,7 @@ namespace ice
   }
 
 #undef FNAME
-
+#define FNAME "Matrix::operator*"
   Vector operator *(const Vector& v, const Matrix& m)
   {
     // Multiplikation Matrix^T * Vector
@@ -804,7 +829,7 @@ namespace ice
 
     if (m.rows() != v.Size())
       {
-        ERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     Vector res(m.cols());
@@ -833,7 +858,7 @@ namespace ice
 
     if (m.cols() != v.Size())
       {
-        ERR("operator*", "Format doesn't match", WRONG_PARAM, v);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     Vector res(m.rows());
@@ -852,7 +877,8 @@ namespace ice
 
     return res;
   }
-
+#undef FNAME
+#define FNAME "Matrix::operator ||"
   Matrix operator ||(const Matrix& m1, const Matrix& m2)
   {
     // matrizen nebeneinanderstellen und verknuepfen
@@ -860,7 +886,7 @@ namespace ice
 
     if (m1.rows() != m2.rows())
       {
-        ERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows(), m1.cols() + m2.cols());
@@ -881,6 +907,77 @@ namespace ice
     return res;
   }
 
+  Matrix operator ||(const Matrix& m1, const Vector& v2)
+  {
+    // Vector an Matrix rechts anhaengen
+    int i, j;
+
+    if (m1.rows() != v2.Size())
+      {
+	throw IceException(FNAME,M_MATRIXFORMAT);
+      }
+
+    Matrix res(m1.rows(), m1.cols() + 1);
+
+    for (i = 0; i < m1.rows(); i++)
+      {
+        for (j = 0; j < m1.cols(); j++)
+          {
+            res[i][j] = m1[i][j];
+          }
+
+        res[i][m1.cols()] = v2[i];
+      }
+
+    return res;
+  }
+
+  Matrix operator ||(const Vector& v1, const Matrix& m2)
+  {
+    // Vector und Matrix "nebeneinander stellen" und verknuepfen
+    int i, j;
+
+    if (v1.Size() != m2.rows())
+      {
+	throw IceException(FNAME,M_MATRIXFORMAT);
+      }
+
+    Matrix res(m2.rows(), m2.cols() + 1);
+
+    for (i = 0; i < m2.rows(); i++)
+      {
+        res[i][0] = v1[i];
+
+        for (j = 0; j < m2.cols(); j++)
+          {
+            res[i][j + 1] = m2[i][j];
+          }
+      }
+
+    return res;
+  }
+
+  Matrix operator ||(const Vector& v1, const Vector& v2)
+  {
+    // 2 Vectoren nebeneinanderstellen und verknuepfen
+    int i;
+    Matrix res(v1.Size(), 2);
+
+    if (v1.Size() != v2.Size())
+      {
+	throw IceException(FNAME,M_MATRIXFORMAT);
+      }
+
+    for (i = 0; i < v2.Size(); i++)
+      {
+        res[i][0] = v1[i];
+        res[i][1] = v2[i];
+      }
+
+    return res;
+  }
+#undef FNAME
+#define FNAME "Matrix::operator &&"
   Matrix operator &&(const Matrix& m1, const Matrix& m2)
   {
     // matrizen untereinander stellen und verknuepfen
@@ -888,7 +985,7 @@ namespace ice
 
     if (m1.cols() != m2.cols())
       {
-        ERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows() + m2.rows(), m1.cols());
@@ -909,31 +1006,6 @@ namespace ice
     return res;
   }
 
-  Matrix operator ||(const Matrix& m1, const Vector& v2)
-  {
-    // Vector an Matrix rechts anhaengen
-    int i, j;
-
-    if (m1.rows() != v2.Size())
-      {
-        ERR("operator||", "Format doesn't match", WRONG_PARAM, m1);
-      }
-
-    Matrix res(m1.rows(), m1.cols() + 1);
-
-    for (i = 0; i < m1.rows(); i++)
-      {
-        for (j = 0; j < m1.cols(); j++)
-          {
-            res[i][j] = m1[i][j];
-          }
-
-        res[i][m1.cols()] = v2[i];
-      }
-
-    return res;
-  }
-
   Matrix operator &&(const Matrix& m1, const Vector& v2)
   {
     // Vector an Matrix unten anhaengen
@@ -941,7 +1013,7 @@ namespace ice
 
     if (m1.cols() != v2.Size())
       {
-        ERR("operator&&", "Format doesn't match", WRONG_PARAM, m1);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows() + 1, m1.cols());
@@ -959,53 +1031,6 @@ namespace ice
     return res;
   }
 
-  int Matrix::Append(const Vector& v)
-  {
-    Vector** ndata;
-
-    if (nColumns != v.Size())
-      {
-        ERR("Append", "Wrong nRowsension", WRONG_PARAM, WRONG_PARAM);
-      }
-
-    ndata = (Vector**)realloc(data, (nRows + 1) * sizeof(Vector*));
-
-    if (ndata == nullptr)
-      {
-        ERR("Matrix::Append", M_NO_MEM, NO_MEM, NO_MEM);
-      }
-
-    data = ndata;
-    ndata[nRows] = new Vector(v);
-    nRows++;
-    return OK;
-  }
-
-  Matrix operator ||(const Vector& v1, const Matrix& m2)
-  {
-    // Vector und Matrix "nebeneinander stellen" und verknuepfen
-    int i, j;
-
-    if (v1.Size() != m2.rows())
-      {
-        ERR("operator||", "Format doesn't match", WRONG_PARAM, m2);
-      }
-
-    Matrix res(m2.rows(), m2.cols() + 1);
-
-    for (i = 0; i < m2.rows(); i++)
-      {
-        res[i][0] = v1[i];
-
-        for (j = 0; j < m2.cols(); j++)
-          {
-            res[i][j + 1] = m2[i][j];
-          }
-      }
-
-    return res;
-  }
-
   Matrix operator &&(const Vector& v1, const Matrix& m2)
   {
     // Vector und Matrix untereinander stellen und verkn�pfen
@@ -1013,7 +1038,7 @@ namespace ice
 
     if (v1.Size() != m2.cols())
       {
-        ERR("operator&&", "Format doesn't match", WRONG_PARAM, m2);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     Matrix res(m2.rows() + 1, m2.cols());
@@ -1031,26 +1056,6 @@ namespace ice
     return res;
   }
 
-  Matrix operator ||(const Vector& v1, const Vector& v2)
-  {
-    // 2 Vectoren nebeneinanderstellen und verknuepfen
-    int i;
-    Matrix res(v1.Size(), 2);
-
-    if (v1.Size() != v2.Size())
-      {
-        ERR("operator||", "Format doesn't match", WRONG_PARAM, res);
-      }
-
-    for (i = 0; i < v2.Size(); i++)
-      {
-        res[i][0] = v1[i];
-        res[i][1] = v2[i];
-      }
-
-    return res;
-  }
-
   Matrix operator &&(const Vector& v1, const Vector& v2)
   {
     // 2 Vectoren untereinander stellen und verknuepfen
@@ -1059,7 +1064,7 @@ namespace ice
 
     if (v1.Size() != v2.Size())
       {
-        ERR("operator&&", "Format doesn't match", WRONG_PARAM, res);
+	throw IceException(FNAME,M_MATRIXFORMAT);
       }
 
     for (i = 0; i < v1.Size(); i++)
@@ -1070,6 +1075,25 @@ namespace ice
 
     return res;
   }
+#undef FNAME
+#define FNAME "Matrix::append"
+  int Matrix::append(const Vector& v)
+  {
+    Vector** ndata;
+
+    if (nColumns != v.Size())
+      {
+	throw IceException(FNAME,M_MATRIXFORMAT);
+      }
+
+    ndata = (Vector**)realloc(data, (nRows + 1) * sizeof(Vector*));
+
+    data = ndata;
+    ndata[nRows] = new Vector(v);
+    nRows++;
+    return OK;
+  }
+#undef FNAME
 
   Matrix operator !(const Matrix& m)
   {
@@ -1229,7 +1253,7 @@ namespace ice
             m = Matrix(0, v.Size());
           }
 
-        m.Append(v);
+        m.append(v);
         first = false;
 
         if ((c != ',') && (c != '#') && (c != '>'))
@@ -1277,7 +1301,7 @@ namespace ice
             is.clear(ios::badbit);
           }
 
-        Append(v);
+        append(v);
 
         if ((c != ',') && (c != '#') && (c != '>'))
           {
