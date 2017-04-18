@@ -31,7 +31,7 @@ namespace ice
   {
   public:
     iceSelectRectInteraction(ImageWindow* imageWindow);
-    iceSelectRectInteraction(ImageWindow* imageWindow, const Window& w, wselmode mode);
+    iceSelectRectInteraction(ImageWindow* imageWindow, const Window& w, windowSelectionMode mode);
 
     Window GetSelectedRect() const;
 
@@ -47,7 +47,7 @@ namespace ice
     void OnMiddleMouseButtonUp(wxMouseEvent& MouseEvent);
 
     // Current mode for operation
-    wselmode mode;
+    windowSelectionMode mode;
 
     // The two selected points, that make up the selected rectangle.
     IPoint FirstPoint, SecondPoint;

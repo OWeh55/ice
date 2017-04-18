@@ -190,7 +190,7 @@ namespace ice
     virtual int SelPoint(int Mode, IPoint& p);
 
     // Interactively select a window
-    virtual int SelectWindow(Window& w, wselmode mode = select);
+    virtual int SelectWindow(Window& w, windowSelectionMode mode = select);
 
     // Interactively select line
     virtual int SelectLine(IPoint& p1, IPoint& p2);

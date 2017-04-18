@@ -54,14 +54,14 @@ namespace ice
   typedef int TNum;
 
 #define INFTY 0x7fffffffL
-  typedef enum {True, False} TBoolean;
+  //  typedef enum {True, False} TBoolean;
 
   struct SVertexLeft
   {
     struct SEdge* head;
     struct SVertexRight* mate;
     TNum u;
-    TBoolean f;
+    bool f;
   };
 
   typedef struct SVertexLeft TVertexLeft;
@@ -70,7 +70,7 @@ namespace ice
   {
     struct SVertexLeft* mate;
     TNum v;
-    TBoolean f;
+    bool f;
     TNum pi;
     struct SVertexLeft* parent;
   };
@@ -373,18 +373,18 @@ Label_A:
       {
         if (s[i].mate == nullptr)
           {
-            s[i].f = True;
+            s[i].f = true;
             INSERT(&s[i], SStack::Left);
           }
         else
           {
-            s[i].f = False;
+            s[i].f = false;
           }
       }
 
     for (j = 0; j < n; ++j)
       {
-        t[j].f = False;
+        t[j].f = false;
         t[j].pi = + INFTY;
       }
 
@@ -402,7 +402,7 @@ Label_B:
               {
                 b = p -> right;
 
-                if ((b -> f) == False)
+                if ((b -> f) == false)
                   {
                     z = (a -> u) + (b -> v) - (p -> weight);
 
@@ -413,7 +413,7 @@ Label_B:
 
                         if (z == 0)
                           {
-                            b -> f = True;
+                            b -> f = true;
                             INSERT(b, SStack:: Right);
                           }
                       }
@@ -428,9 +428,9 @@ Label_B:
               {
                 a = b -> mate;
 
-                if (a -> f == False)
+                if (a -> f == false)
                   {
-                    a -> f = True;
+                    a -> f = true;
                     INSERT(a, SStack:: Left);
                   }
               }
@@ -467,7 +467,7 @@ Label_B:
     z = + INFTY;
 
     for (j = 0; j < n; ++j)
-      if (t[j].f == False && t[j].pi < z)
+      if (!t[j].f && t[j].pi < z)
         {
           z = t[j].pi;
         }
@@ -483,12 +483,14 @@ Label_B:
         z = d2;
       }
 
-    for (i = 0; i < m; ++i) if (s[i].f == True)
+    for (i = 0; i < m; ++i)
+      if (s[i].f)
         {
           s[i].u -= z;
         }
 
-    for (j = 0; j < n; ++j) if (t[j].f == True)
+    for (j = 0; j < n; ++j)
+      if (t[j].f)
         {
           t[j].v += z;
         }
@@ -499,13 +501,14 @@ Label_B:
         return;
       }
 
-    for (j = 0; j < n; ++j) if (t[j].f == False && t[j].pi < + INFTY)
+    for (j = 0; j < n; ++j)
+      if (!t[j].f && t[j].pi < + INFTY)
         {
           t[j].pi -= z;
 
           if (t[j].pi == 0)
             {
-              t[j].f = True;
+              t[j].f = true;
               INSERT(&t[j], SStack:: Right);
             }
         }

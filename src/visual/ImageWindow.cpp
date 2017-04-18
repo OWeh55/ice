@@ -862,7 +862,7 @@ namespace ice
     iceSelectPointInteraction interaction(this);
     RunInteraction(interaction);
 
-    MOUSEBUTTON tmp = interaction.Pressed();
+    mouseButtonState tmp = interaction.Pressed();
 
     //     if (tmp == RIGHTMB)
     //     {
@@ -875,13 +875,13 @@ namespace ice
     return tmp;
   }
 
-  int ImageWindow::SelectWindow(Window& w, wselmode mode)
+  int ImageWindow::SelectWindow(Window& w, windowSelectionMode mode)
   {
     // run the interaction and evaluate it's return values
     iceSelectRectInteraction interaction(this, w, mode);
     RunInteraction(interaction);
 
-    MOUSEBUTTON tmp = interaction.Pressed();
+    mouseButtonState tmp = interaction.Pressed();
 
     if (tmp == RIGHTMB)
       {
@@ -898,7 +898,7 @@ namespace ice
 
     RunInteraction(interaction);
 
-    MOUSEBUTTON tmp = interaction.Pressed();
+    mouseButtonState tmp = interaction.Pressed();
 
     if (tmp == RIGHTMB)
       {
@@ -916,7 +916,7 @@ namespace ice
 
     RunInteraction(interaction);
 
-    MOUSEBUTTON tmp = interaction.Pressed();
+    mouseButtonState tmp = interaction.Pressed();
 
     if (tmp == RIGHTMB)
       {

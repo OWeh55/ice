@@ -48,7 +48,7 @@ namespace ice
   }
 
   iceSelectRectInteraction::iceSelectRectInteraction(ImageWindow* imagewindow,
-      const Window& w, wselmode modep)
+      const Window& w, windowSelectionMode modep)
     : InteractionHandler(imagewindow),
       mode(modep),
       FirstPoint(w.XI(), w.YI()),
