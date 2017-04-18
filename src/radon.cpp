@@ -44,7 +44,7 @@ namespace ice
 //-----------------------------------------------------
   static const double sres = 0.3;
 
-  int RadonImg(Image& srcimg, Image& radonimg)
+  void RadonImg(Image& srcimg, Image& radonimg)
   {
     RadonCTrafo tr(srcimg->xsize, srcimg->ysize,
                    radonimg->xsize, radonimg->ysize);
@@ -184,10 +184,9 @@ namespace ice
             }
         }
     }
-    return 0;
   }
 
-  int InvRadonImg(Image& radonimg, Image& resimg, int fmax)
+  void InvRadonImg(Image& radonimg, Image& resimg, int fmax)
   {
     // Invertierung Radon durch gefilterte Rückprojektion
     RadonCTrafo tr(resimg->xsize, resimg->ysize,
@@ -258,7 +257,5 @@ namespace ice
       }
 
     ConvImgDImg(akku, resimg);
-    FreeImgD(akku);
-    return 0;
   }
 }

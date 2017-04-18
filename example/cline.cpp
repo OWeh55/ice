@@ -34,7 +34,6 @@ int main(int argc, char* argv[])
 
   GetChar();
   Display(OFF);
-  FreeImg(img);
   return 0;
 }
 

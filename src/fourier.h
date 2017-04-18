@@ -120,7 +120,7 @@ namespace ice
   // cepstrum of an image
   int CepstrumImgD(ImageD img, ImageD ceps);
   // Magnitude phase spectrum of an image
-  int MPSpectrumImgD(ImageD img, ImageD mag, ImageD phase);
+  void MPSpectrumImgD(ImageD img, ImageD mag, ImageD phase);
 
   // fourier3.cpp
   // convolution in frequency domain

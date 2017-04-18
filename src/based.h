@@ -88,11 +88,6 @@ namespace ice
     return res;
   }
 #undef FNAME
-  /* Freigeben eines Bildes */
-  inline   void FreeImgD(ImageD& img)
-  {
-    img.destroy();
-  }
 
   /* Kopieren Image ---> ImageD */
   int ConvImgImgD(const Image& imgs, ImageD& imgd,

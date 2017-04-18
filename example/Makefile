@@ -217,7 +217,6 @@ valref\
 vectortest\
 vis1\
 vis2\
-vis3\
 visual\
 visualx\
 yuvConvert

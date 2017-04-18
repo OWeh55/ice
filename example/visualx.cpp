@@ -80,8 +80,7 @@ int Main(int argc, char* argv[])
 
   Print("Overlay veraendert \n");
   GetChar();
-  Print("Bild 4 freigeben\n");
-  FreeImg(p[4]);
+
   Print("Bild 4 neu anlegen\n");
   p[4] = NewImg(p[3]);
   invertImg(p[3], p[4]);

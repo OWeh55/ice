@@ -155,8 +155,6 @@ namespace ice
             }
 
         ConvImgDImg(id, imgd);
-
-        FreeImgD(id);
       }
 
     return OK;

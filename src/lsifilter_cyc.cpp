@@ -40,9 +40,9 @@ namespace ice
      * @param offset the value representing 0 (to handle negative results)
      */
   template<typename SrcType, typename DestType>
-  int lsiimgcyc(const Image& src, const Image& dest,
-                int nx, int ny, int* mask,
-                int norm, int offset)
+  void lsiimgcyc(const Image& src, const Image& dest,
+                 int nx, int ny, int* mask,
+                 int norm, int offset)
   {
     Image tmp = src;
 
@@ -138,12 +138,11 @@ namespace ice
 #ifdef CONTROLLED_REFRESH
     dest->needRefresh();
 #endif
-    return OK;
   }
 
-  int lsiimgcyc_std(const Image& src, const Image& dest,
-                    int nx, int ny, int* mask,
-                    int norm, int offset)
+  void lsiimgcyc_std(const Image& src, const Image& dest,
+                     int nx, int ny, int* mask,
+                     int norm, int offset)
   {
     Image tmp = src;
 
@@ -235,7 +234,6 @@ namespace ice
 #ifdef CONTROLLED_REFRESH
     dest->needRefresh();
 #endif
-    return OK;
   }
 
   /**
@@ -249,9 +247,9 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   template<typename SrcType, typename DestType>
-  int lsiimgcyc(const Image& src, const Image& dest,
-                int nx, int ny, double* mask,
-                int offset)
+  void lsiimgcyc(const Image& src, const Image& dest,
+                 int nx, int ny, double* mask,
+                 int offset)
   {
     Image tmp = src;
 
@@ -346,12 +344,11 @@ namespace ice
 #ifdef CONTROLLED_REFRESH
     dest->needRefresh();
 #endif
-    return OK;
   }
 
-  int lsiimgcyc_std(const Image& src, const Image& dest,
-                    int nx, int ny, double* mask,
-                    int offset)
+  void lsiimgcyc_std(const Image& src, const Image& dest,
+                     int nx, int ny, double* mask,
+                     int offset)
   {
     Image tmp = src;
 
@@ -443,61 +440,60 @@ namespace ice
 #ifdef CONTROLLED_REFRESH
     dest->needRefresh();
 #endif
-    return OK;
   }
 #undef FNAME
 
-  int lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, int* mask, int norm, int off)
+  void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, int* mask, int norm, int off)
   {
     switch ((src->ImageType() << 4) + dest->ImageType())
       {
       case 17:
-        return lsiimgcyc<PixelType1, PixelType1>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType1, PixelType1>(src, dest, nx, ny, mask, norm, off);
       case 18:
-        return lsiimgcyc<PixelType1, PixelType2>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType1, PixelType2>(src, dest, nx, ny, mask, norm, off);
       case 19:
-        return lsiimgcyc<PixelType1, PixelType3>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType1, PixelType3>(src, dest, nx, ny, mask, norm, off);
       case 33:
-        return lsiimgcyc<PixelType2, PixelType1>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType2, PixelType1>(src, dest, nx, ny, mask, norm, off);
       case 34:
-        return lsiimgcyc<PixelType2, PixelType2>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType2, PixelType2>(src, dest, nx, ny, mask, norm, off);
       case 35:
-        return lsiimgcyc<PixelType2, PixelType3>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType2, PixelType3>(src, dest, nx, ny, mask, norm, off);
       case 49:
-        return lsiimgcyc<PixelType3, PixelType1>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType3, PixelType1>(src, dest, nx, ny, mask, norm, off);
       case 50:
-        return lsiimgcyc<PixelType3, PixelType2>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType3, PixelType2>(src, dest, nx, ny, mask, norm, off);
       case 51:
-        return lsiimgcyc<PixelType3, PixelType3>(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc<PixelType3, PixelType3>(src, dest, nx, ny, mask, norm, off);
       default:
-        return lsiimgcyc_std(src, dest, nx, ny, mask, norm, off);
+        lsiimgcyc_std(src, dest, nx, ny, mask, norm, off);
       }
   }
 
-  int lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, double* mask, int off)
+  void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, double* mask, int off)
   {
     switch ((src->ImageType() << 4) + dest->ImageType())
       {
       case 17:
-        return lsiimgcyc<PixelType1, PixelType1>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType1, PixelType1>(src, dest, nx, ny, mask, off);
       case 18:
-        return lsiimgcyc<PixelType1, PixelType2>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType1, PixelType2>(src, dest, nx, ny, mask, off);
       case 19:
-        return lsiimgcyc<PixelType1, PixelType3>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType1, PixelType3>(src, dest, nx, ny, mask, off);
       case 33:
-        return lsiimgcyc<PixelType2, PixelType1>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType2, PixelType1>(src, dest, nx, ny, mask, off);
       case 34:
-        return lsiimgcyc<PixelType2, PixelType2>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType2, PixelType2>(src, dest, nx, ny, mask, off);
       case 35:
-        return lsiimgcyc<PixelType2, PixelType3>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType2, PixelType3>(src, dest, nx, ny, mask, off);
       case 49:
-        return lsiimgcyc<PixelType3, PixelType1>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType3, PixelType1>(src, dest, nx, ny, mask, off);
       case 50:
-        return lsiimgcyc<PixelType3, PixelType2>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType3, PixelType2>(src, dest, nx, ny, mask, off);
       case 51:
-        return lsiimgcyc<PixelType3, PixelType3>(src, dest, nx, ny, mask, off);
+        lsiimgcyc<PixelType3, PixelType3>(src, dest, nx, ny, mask, off);
       default:
-        return lsiimgcyc_std(src, dest, nx, ny, mask, off);
+        lsiimgcyc_std(src, dest, nx, ny, mask, off);
       }
   }
 #undef FNAME

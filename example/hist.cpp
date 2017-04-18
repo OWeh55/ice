@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
   for (i = 0; i < 10000; i++)
     h1.add((double)rand() * 220 / (double)RAND_MAX - 110);
 
-  PrintHist(h1);
-  h1.Statistic(n, xm, xs, sk);
+  printHist(h1);
+  h1.getStatistics(n, xm, xs, sk);
   Printf(" n=%d  xm=%9.3f xs=%9.3f sk=%9.3f\n", n, xm, xs, sk);
   GetChar();
   Printf("Histogramm 2: 0...1 / 20 Klassen\n");
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
   for (i = 0; i < 10000; i++)
     h2.add((double)rand() / (double)RAND_MAX);
 
-  PrintHist(h2);
+  printHist(h2);
   GetChar();
   Printf("\n\ngrafische Darstellung mit Hist::Vis\n");
   grw = NewImg(700, 400, 255);
@@ -46,12 +46,10 @@ int main(int argc, char* argv[])
   setImg(mrk, 0);
   Show(OVERLAY, grw, mrk);
   Display(ON);
-  h2.Vis(1, mrk);
+  h2.draw(mrk, 1);
 
   GetChar();
   Display(OFF);
-  FreeImg(grw);
-  FreeImg(mrk);
 
   grw = ReadImg("test_gray.jpg");
 
@@ -72,8 +70,8 @@ int main(int argc, char* argv[])
   Display(ON);
 
   h3 = HistImg(grw, 1);
-  h3.Vis(1, mrk);
-  PrintHist(h3);
+  h3.draw(mrk, 1);
+  printHist(h3);
 
   GetChar();
 
@@ -88,9 +86,5 @@ int main(int argc, char* argv[])
 
   binImg(grw, pglh, grw);
   GetChar();
-
-  FreeImg(grw);
-  FreeImg(mrk);
-  Display(OFF);
-  return (0);
+  return 0;
 };

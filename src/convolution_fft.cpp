@@ -373,9 +373,6 @@ namespace ice
         ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
       }
 
-    FreeImgD(ds1);
-    FreeImgD(ds2);
-    FreeImgD(dd);
     return OK;
   }
 
@@ -404,8 +401,6 @@ namespace ice
 
     InvConvolutionImgD(ds1, ds2, dd, noise, mode);
 
-    FreeImgD(ds1);
-    FreeImgD(ds2);
     return OK;
   }
 #undef FNAME

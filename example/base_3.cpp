@@ -48,7 +48,6 @@ int main(int argc, char* argv[])
     for (int x = 0; x < p[last].xsize; x++)
       PutVal(p[last], x, y, p[last]->maxval - GetVal(p[last], x, y));
   Delay(TIME);
-  FreeImg(p[4]);
   p[4] = NewImg(p[3]);
   invertImg(p[3], p[4]);
   for (int y = 0; y < p[4].ysize; y++)

@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
   Display(ON);
   i1 = ReadImg("pic.jpg");
   i2 = NewImg(i1->xsize / 2, i1->ysize / 2, 255);
-  FreeImg(i1);
+
   ReadImg("pic.jpg", i2);
   GradImg(i2, 1, i2);
   CopyImg(i2, i2);

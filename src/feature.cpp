@@ -228,8 +228,6 @@ namespace ice
             PutValD(ziel, i, j, sum);
           }
       }
-
-    FreeImgD(pic);
     return ziel;
   }
 #undef FNAME

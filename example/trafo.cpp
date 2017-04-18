@@ -122,9 +122,6 @@ int main(int argc, char* argv [])
   Show(OVERLAY, i2, m2);
   MarkContur(c2, 3, m2);
   GetChar();
-  FreeImg(i1);
-  FreeImg(i2);
-  FreeImg(m1);
-  FreeImg(m2);
+
   return 0;
 }

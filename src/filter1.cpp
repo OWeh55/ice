@@ -595,10 +595,6 @@ namespace ice
 
           PutVal(dest, x, y, directionGrayValue);
         }
-
-    FreeImgD(xx);
-    FreeImgD(xy);
-    FreeImgD(yy);
     return 0;
   }
 
@@ -675,8 +671,6 @@ namespace ice
           PutVal(dest, x, y, direction_grv);
         }
 
-    FreeImgD(gx);
-    FreeImgD(gy);
     return 0;
   }
 #undef FNAME

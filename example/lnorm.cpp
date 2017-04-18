@@ -92,7 +92,7 @@ public:
   void Statistic(double& xm, double& xs)
   {
     int s;
-    h.Statistic(s, xm, xs);
+    h.getStatistics(s, xm, xs);
   }
 
 } ;

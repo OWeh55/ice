@@ -135,8 +135,8 @@ namespace ice
   }
 
 #define FNAME "LSIHImg"
-  int LSIHImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
-              int norm, int offset)
+  void LSIHImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
+               int norm, int offset)
   {
     int dx, dy;
     int sx = mask.size();
@@ -149,7 +149,7 @@ namespace ice
     if (pn1->getDataPtr() == pn2->getDataPtr())
       {
         Image src = NewImg(pn1, true);
-        return LSIHImg(src, pn2, mask, norm, offset);
+        LSIHImg(src, pn2, mask, norm, offset);
       }
 
     int typ1 = pn1->ImageType();
@@ -177,12 +177,10 @@ namespace ice
             break;
           }
       }
-
-    return OK;
   }
 
-  int LSIHImg(const Image& pn1, const Image& pn2, const IVector& mask,
-              int norm, int offset)
+  void LSIHImg(const Image& pn1, const Image& pn2, const IVector& mask,
+               int norm, int offset)
   {
     vector<int> vmask;
 
@@ -191,7 +189,7 @@ namespace ice
         vmask.push_back(mask[i]);
       }
 
-    return LSIHImg(pn1, pn2, vmask, norm, offset);
+    LSIHImg(pn1, pn2, vmask, norm, offset);
   }
 
 #undef FNAME
@@ -293,8 +291,8 @@ namespace ice
   }
 
 #define FNAME "LSIVImg"
-  int LSIVImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
-              int norm, int offset)
+  void LSIVImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
+               int norm, int offset)
   {
     int dx, dy;
     int sy = mask.size();
@@ -307,7 +305,7 @@ namespace ice
     if (pn1->getDataPtr() == pn2->getDataPtr())
       {
         Image src = NewImg(pn1, true);
-        return LSIVImg(src, pn2, mask, norm, offset);
+        LSIVImg(src, pn2, mask, norm, offset);
       }
 
     int typ1 = pn1->ImageType();
@@ -335,12 +333,10 @@ namespace ice
             break;
           }
       }
-
-    return OK;
   }
 
-  int LSIVImg(const Image& pn1, const Image& pn2, const IVector& mask,
-              int norm, int offset)
+  void LSIVImg(const Image& pn1, const Image& pn2, const IVector& mask,
+               int norm, int offset)
   {
     vector<int> vmask;
 
@@ -349,7 +345,7 @@ namespace ice
         vmask.push_back(mask[i]);
       }
 
-    return LSIVImg(pn1, pn2, vmask, norm, offset);
+    LSIVImg(pn1, pn2, vmask, norm, offset);
   }
 
 #undef FNAME

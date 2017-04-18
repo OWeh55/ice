@@ -147,7 +147,6 @@ namespace ice
     int i, j, y, sx, sy;
     double h;
     double mx1, my1, my2[3];
-    int has_temp = false;
 
     if (!IsImg(imgss) || !IsImg(imgd))
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -158,15 +157,6 @@ namespace ice
       {
         /*temporaeres Quellbild*/
         imgs = NewImg(imgd, true);
-
-        if (!IsImg(imgs))
-          throw IceException(FNAME, M_0);
-
-        has_temp = true;
-      }
-    else
-      {
-        imgs = imgss;
       }
 
     for (i = 0; i < 3; i++)
@@ -397,7 +387,6 @@ namespace ice
     double* nxx, *nxy, *nyx, *nyy;
     int x, y, sx, sy;
     double ox, oy;
-    int has_temp = false;
 
     normalize(t);
 
@@ -416,31 +405,9 @@ namespace ice
       {
         /*temporaeres Quellbild*/
         imgs = NewImg(imgd, true);
-
-        if (!IsImg(imgs))
-          throw IceException(FNAME, M_0);
-
-        has_temp = true;
-      }
-    else
-      {
-        imgs = imgss;
       }
 
-    //      for (y=0;y<3;y++)
-    //        {
-    //        for (x=0;x<3;x++) Printf("%5.2f ",t[y][x]);
-    //        Printf("\n");
-    //    }
-    //    Printf("\n");
-    InvAffTr(t, tm);                     /*Projektion invertieren*/
-
-    //      for (y=0;y<3;y++)
-    //        {
-    //        for (x=0;x<3;x++) Printf("%5.2f ",tm[y][x]);
-    //        Printf("\n");
-    //        }
-    //    Printf("\n");
+    InvAffTr(t, tm);
 
     sx = imgd.xsize;
     sy = imgd.ysize;

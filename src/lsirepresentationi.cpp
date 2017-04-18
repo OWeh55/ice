@@ -249,29 +249,29 @@ namespace ice
       }
   }
 
-  int LsiRepresentationI::Filter(const Image& src,
-                                 const Image& dest, int offset) const
+  void LsiRepresentationI::Filter(const Image& src,
+                                  const Image& dest, int offset) const
   {
     LsiRepresentationI n = normalized(src.maxval);
 
-    return LSIImg(src, dest,
-                  n.dimx, n.dimy, n.mask,
-                  n.norm,
-                  offset);
+    LSIImg(src, dest,
+           n.dimx, n.dimy, n.mask,
+           n.norm,
+           offset);
   }
 
-  int LsiRepresentationI::Filter(const Image& src, ImageD dest) const
+  void LsiRepresentationI::Filter(const Image& src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask,
-                  norm);
+    LSIImg(src, dest,
+           dimx, dimy, mask,
+           norm);
   }
 
-  int LsiRepresentationI::Filter(ImageD src, ImageD dest) const
+  void LsiRepresentationI::Filter(ImageD src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask,
-                  norm);
+    LSIImg(src, dest,
+           dimx, dimy, mask,
+           norm);
   }
 
 }

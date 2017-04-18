@@ -148,11 +148,6 @@ int main(int argc, char* argv[])
   toint();
   GETCHAR();
 
-  FreeImg(p0);
-  FreeImg(p1);
-  FreeImg(p2);
-  FreeImg(p3);
-  FreeImg(p4);
   FreeImgD(d1);
   FreeImgD(d2);
   Display(OFF);

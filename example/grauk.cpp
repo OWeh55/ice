@@ -32,6 +32,5 @@ int main(int argc, char* argv[])
         else PutVal(img, x, y, img->maxval);
       }
   GetChar();
-  FreeImg(img);                 /* Freigabe des Bildes */
   return 0;
 }

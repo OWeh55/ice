@@ -6,10 +6,10 @@ void Show(const Histogram& h, const Image& mark)
 {
   int n;
   double xm, xs, sk;
-  h.Statistic(n, xm, xs, sk);
+  h.getStatistics(n, xm, xs, sk);
   Printf(" n=%d  xm=%9.3f xs=%9.3f sk=%9.3f\n", n, xm, xs, sk);
   clearImg(mark);
-  h.Vis(1, mark);
+  h.draw(mark, 1);
 }
 
 /* Testprogramm für Histogrammfunktionen */

@@ -135,22 +135,22 @@ namespace ice
     mask = mask2;
   }
 
-  int LsiRepresentationD::Filter(const Image& src, const Image& dest, int offset) const
+  void LsiRepresentationD::Filter(const Image& src, const Image& dest, int offset) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask,
-                  offset);
+    LSIImg(src, dest,
+           dimx, dimy, mask,
+           offset);
   }
 
-  int LsiRepresentationD::Filter(const Image& src, ImageD dest) const
+  void LsiRepresentationD::Filter(const Image& src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask);
+    LSIImg(src, dest,
+           dimx, dimy, mask);
   }
 
-  int LsiRepresentationD::Filter(ImageD src, ImageD dest) const
+  void LsiRepresentationD::Filter(ImageD src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask);
+    LSIImg(src, dest,
+           dimx, dimy, mask);
   }
 }

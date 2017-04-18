@@ -2,8 +2,8 @@
 
 int main(int argc, char* argv[])
 {
-  const int nCols=3;
-  const int nPoints=nCols*nCols;
+  const int nCols = 3;
+  const int nPoints = nCols * nCols;
   const double noise = 4;
 
   Matrix p1(nPoints, 2), p2(nPoints, 2), p3(nPoints, 2);
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
   // zufällige fehler einbauen
   for (int i = 0; i < nPoints; i++)
     {
-      p2[i][0] += (drand48()-0.5) * noise;
+      p2[i][0] += (drand48() - 0.5) * noise;
     }
 
   // Transformationen schätzen

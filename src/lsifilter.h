@@ -68,9 +68,9 @@ namespace ice
     virtual void sumPlusSumMinus(double& sump, double& summ) const = 0;
     virtual void normalize() = 0;
 
-    virtual int Filter(const Image& src, const Image& dst, int offset) const = 0;
-    virtual int Filter(const Image& src, ImageD dst) const = 0;
-    virtual int Filter(ImageD src, ImageD dst) const = 0;
+    virtual void Filter(const Image& src, const Image& dst, int offset) const = 0;
+    virtual void Filter(const Image& src, ImageD dst) const = 0;
+    virtual void Filter(ImageD src, ImageD dst) const = 0;
 
     virtual double getMask(int i, int j) const = 0;
     virtual void getMask(matrix<double>& m) const = 0;
@@ -102,9 +102,9 @@ namespace ice
     virtual void normalize();
     virtual void reflectMask();
 
-    virtual int Filter(const Image& src, const Image& dst, int offset) const;
-    virtual int Filter(const Image& src, ImageD dst) const;
-    virtual int Filter(ImageD src, ImageD dst) const;
+    virtual void Filter(const Image& src, const Image& dst, int offset) const;
+    virtual void Filter(const Image& src, ImageD dst) const;
+    virtual void Filter(ImageD src, ImageD dst) const;
 
     virtual ~LsiRepresentationI()
     {
@@ -149,9 +149,9 @@ namespace ice
     virtual void normalize();
     virtual void reflectMask();
 
-    virtual int Filter(const Image& src, const Image& dst, int offset) const;
-    virtual int Filter(const Image& src, ImageD dst) const;
-    virtual int Filter(ImageD src, ImageD dst) const;
+    virtual void Filter(const Image& src, const Image& dst, int offset) const;
+    virtual void Filter(const Image& src, ImageD dst) const;
+    virtual void Filter(ImageD src, ImageD dst) const;
 
     virtual ~LsiRepresentationD()
     {
@@ -255,17 +255,17 @@ namespace ice
       delete rep;
     }
 
-    virtual int Filter(const Image& src, const Image& dst, int offset/*=0*/) const
+    virtual void Filter(const Image& src, const Image& dst, int offset/*=0*/) const
     {
-      return rep->Filter(src, dst, offset);
+      rep->Filter(src, dst, offset);
     }
-    virtual int Filter(const Image& src, ImageD dst) const
+    virtual void Filter(const Image& src, ImageD dst) const
     {
-      return rep->Filter(src, dst);
+      rep->Filter(src, dst);
     }
-    virtual int Filter(ImageD src, ImageD dst) const
+    virtual void Filter(ImageD src, ImageD dst) const
     {
-      return rep->Filter(src, dst);
+      rep->Filter(src, dst);
     }
 
     virtual double getMask(int x, int y) const
@@ -301,88 +301,88 @@ namespace ice
 
   // basic implementation functions - lsifilter0.cpp
   // not for public use, no parameter check
-  int lsiimg(const Image& src, const Image& dest,
-             int nx, int ny, int* mask, int norm, int off);
-  int lsiimg(const Image& src, const Image& dest,
-             int nx, int ny, double* mask, int off);
+  void lsiimg(const Image& src, const Image& dest,
+              int nx, int ny, int* mask, int norm, int off);
+  void lsiimg(const Image& src, const Image& dest,
+              int nx, int ny, double* mask, int off);
 
-  int lsiimg(const Image& src, ImageD dest,
-             int nx, int ny, int* mask, int norm);
-  int lsiimg(const Image& src, ImageD dest,
-             int nx, int ny, double* mask);
+  void lsiimg(const Image& src, ImageD dest,
+              int nx, int ny, int* mask, int norm);
+  void lsiimg(const Image& src, ImageD dest,
+              int nx, int ny, double* mask);
 
-  int lsiimg(ImageD src, ImageD dest, int nx, int ny,
-             int* mask, int norm);
-  int lsiimg(ImageD src, ImageD dest,
-             int nx, int ny, double* mask);
+  void lsiimg(ImageD src, ImageD dest, int nx, int ny,
+              int* mask, int norm);
+  void lsiimg(ImageD src, ImageD dest,
+              int nx, int ny, double* mask);
 
-  int lsiimgcyc(const Image& src, const Image& dest,
-                int nx, int ny, int* mask, int norm, int off);
-  int lsiimgcyc(const Image& src, const Image& dest,
-                int nx, int ny, double* mask, int off);
+  void lsiimgcyc(const Image& src, const Image& dest,
+                 int nx, int ny, int* mask, int norm, int off);
+  void lsiimgcyc(const Image& src, const Image& dest,
+                 int nx, int ny, double* mask, int off);
 
   // second level function - with parameter check
   // use not recommended
-  int LSIImg(const Image& src, const Image& dst,
-             int nx, int ny, int* mask, int norm, int off);
-  int LSIImg(const Image& src, const Image& dst,
-             int nx, int ny, double* mask, int off);
+  void LSIImg(const Image& src, const Image& dst,
+              int nx, int ny, int* mask, int norm, int off);
+  void LSIImg(const Image& src, const Image& dst,
+              int nx, int ny, double* mask, int off);
 
-  int LSIImg(const Image& src, ImageD dst,
-             int nx, int ny, int* mask, int norm = 1);
-  int LSIImg(const Image& src, ImageD dst,
-             int nx, int ny, double* mask);
+  void LSIImg(const Image& src, ImageD dst,
+              int nx, int ny, int* mask, int norm = 1);
+  void LSIImg(const Image& src, ImageD dst,
+              int nx, int ny, double* mask);
 
-  int LSIImg(ImageD src, ImageD dst,
-             int nx, int ny, int* mask, int norm = 1);
-  int LSIImg(ImageD src, ImageD dst,
-             int nx, int ny, double* mask);
+  void LSIImg(ImageD src, ImageD dst,
+              int nx, int ny, int* mask, int norm = 1);
+  void LSIImg(ImageD src, ImageD dst,
+              int nx, int ny, double* mask);
 
   // different parameter order (for compatibility)
-  int LSIImg(const Image& imgs,
-             int nx, int ny, int* mask, int norm,
-             int off, const Image& imgd);
-  int LSIImg(const Image& imgs,
-             int nx, int ny, double* mask,
-             int off, const Image& imgd);
+  void LSIImg(const Image& imgs,
+              int nx, int ny, int* mask, int norm,
+              int off, const Image& imgd);
+  void LSIImg(const Image& imgs,
+              int nx, int ny, double* mask,
+              int off, const Image& imgd);
 
 // variants with "cyclic" interpretation of values (like hue or angles)
-  int LSIImgCyc(const Image&, const Image&,
-                int nx, int ny, int* mask, int norm, int off);
-  int LSIImgCyc(const Image&, const Image&,
-                int nx, int ny, double* mask, int off);
+  void LSIImgCyc(const Image&, const Image&,
+                 int nx, int ny, int* mask, int norm, int off);
+  void LSIImgCyc(const Image&, const Image&,
+                 int nx, int ny, double* mask, int off);
 
   // special access to pixel value through filter
   int GetVal(const Image& img, int x, int y, const LSIFilter& f);
   int GetVal(const Image& img, IPoint p, const LSIFilter& f);
 
   // Filtering with mask given as matrix
-  int LSIImg(const Image&, const Image&,
-             const IMatrix& m, int norm, int off);
-  int LSIImg(const Image&, const Image&,
-             const Matrix& m, int off);
+  void LSIImg(const Image&, const Image&,
+              const IMatrix& m, int norm, int off);
+  void LSIImg(const Image&, const Image&,
+              const Matrix& m, int off);
   // different parameter order (for compatibility)
-  int LSIImg(const Image& imgs, const IMatrix& m, int norm, int off, const Image& imgd);
-  int LSIImg(const Image& imgs, const Matrix& m, int off, const Image& imgd);
+  void LSIImg(const Image& imgs, const IMatrix& m, int norm, int off, const Image& imgd);
+  void LSIImg(const Image& imgs, const Matrix& m, int off, const Image& imgd);
 
   // !! Preferred filter function with LSIFilter class parameter
   // equivalent to f.Filter(src,dest)
-  int LSIImg(const Image& src, const Image& dest,
-             const LSIFilter& f, int offset);
+  void LSIImg(const Image& src, const Image& dest,
+              const LSIFilter& f, int offset);
 
   // filtering for double images
-  int LSIImg(ImageD imgs, ImageD imgd,
-             const Matrix& m);
+  void LSIImg(ImageD imgs, ImageD imgd,
+              const Matrix& m);
 
   // special implementations for row or column vector
-  int LSIHImg(const Image& pn1, const Image& pn2, const std::vector<int>& mask,
-              int norm, int offset/*=0*/);
-  int LSIHImg(const Image& pn1, const Image& pn2, const IVector& mask,
-              int norm, int offset/*=0*/);
-  int LSIVImg(const Image& pn1, const Image& pn2, const std::vector<int>& mask,
-              int norm, int offset/*=0*/);
-  int LSIVImg(const Image& pn1, const Image& pn2, const IVector& mask,
-              int norm, int offset/*=0*/);
+  void LSIHImg(const Image& pn1, const Image& pn2, const std::vector<int>& mask,
+               int norm, int offset/*=0*/);
+  void LSIHImg(const Image& pn1, const Image& pn2, const IVector& mask,
+               int norm, int offset/*=0*/);
+  void LSIVImg(const Image& pn1, const Image& pn2, const std::vector<int>& mask,
+               int norm, int offset/*=0*/);
+  void LSIVImg(const Image& pn1, const Image& pn2, const IVector& mask,
+               int norm, int offset/*=0*/);
 
 // functions for generation of LSIFilters
   LSIFilter makeOrientedSmearFilter(int n, double dir, double len, double width);
