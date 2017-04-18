@@ -92,7 +92,7 @@ namespace ice
 
 #define FNAME "project_point"
 // Projektion eines Punktes aus der Welt in das Bild
-  void project_point(const double world[], const CameraParameters &cp, double image[])
+  void project_point(const double world[], const CameraParameters& cp, double image[])
   {
     double cc[3];
     cc[0] = world[0] * cp.R[0][0] + world[1] * cp.R[0][1] + world[2] * cp.R[0][2] + cp.t[0];
@@ -426,7 +426,7 @@ namespace ice
     dimy   = image->ysize;
     dimmax = dimx < dimy ? dimy : dimx;
 
-    int max_gw = image->maxval;
+    int max_gw = image.maxval;
 
     int number_of_found_objects;
     int number_of_searched_objects = CPOINTS;
@@ -771,9 +771,6 @@ namespace ice
         }
     }
 #endif
-
-    FreeImg(pic1);
-    FreeImg(mark1);
 
     if (number_of_found_objects != number_of_searched_objects)
       {

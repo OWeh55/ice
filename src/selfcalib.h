@@ -85,7 +85,7 @@ namespace ice
     ice::Vector t;
     ice::Matrix K;
   };
-  
+
 // Eckpunkte der Quadrate - genau 50 Objekte im Muster
   const double pattern[50][8] =
   {

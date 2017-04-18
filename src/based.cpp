@@ -145,12 +145,12 @@ namespace ice
 
     if (sign == SIGNED)
       {
-        goff = (inp->maxval + 1) / 2;
+        goff = (inp.maxval + 1) / 2;
       }
 
     if (modus == NORMALIZED)
       {
-        factor = 4.0 / (inp->maxval + 1);
+        factor = 4.0 / (inp.maxval + 1);
       }
 
     sx = Min(sx, out.xsize);
@@ -188,7 +188,7 @@ namespace ice
     if (!IsImg(out))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    outmaxval = out->maxval;
+    outmaxval = out.maxval;
 
     ImageD inp(input); // copy to allow modification of limits
 

@@ -186,7 +186,6 @@ int GetFeatureHist::get_feature(const Image& pic,
   // aufräumen
   FreePointList(pl1);
   FreePointList(pl2);
-  FreeImg(temp);
 
   delete [] r_feature;
   delete [] i_feature;

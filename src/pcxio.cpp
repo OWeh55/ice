@@ -46,7 +46,6 @@ namespace ice
     unsigned char Shift, Shift1, Shift2;
     int i, j, ii;
     int Count, MaxVal, val;
-    int newimg;
     int sizex, sizey, xmax, ymax;
     int PixelPerByte;
     int ByteNbr, PosInByte;
@@ -94,19 +93,9 @@ namespace ice
     sizex = Header.MaxX - Header.MinX + 1;
     sizey = Header.MaxY - Header.MinY + 1;
 
-    newimg = false;
-
     if (!IsImg(img))
       {
-        img = NewImg(sizex, sizey, MaxVal);
-
-        if (!IsImg(img))
-          {
-            fclose(fd);
-            throw IceException(FNAME, M_NO_MEM);
-          }
-
-        newimg = true; /* merken dass Bild neu angefordert */
+        img.create(sizex, sizey, MaxVal);
       }
 
     xmax = min(sizex, img->xsize);
@@ -125,11 +114,6 @@ namespace ice
               {
                 fclose(fd);
 
-                if (newimg)
-                  {
-                    FreeImg(img);
-                  }
-
                 free(PCXLine);
                 throw IceException(FNAME, M_WRONG_FILE);
               }
@@ -143,11 +127,6 @@ namespace ice
                   {
                     fclose(fd);
 
-                    if (newimg)
-                      {
-                        FreeImg(img);
-                      }
-
                     free(PCXLine);
                     throw IceException(FNAME, M_WRONG_FILE);
                   }
@@ -159,11 +138,6 @@ namespace ice
                     if (i > Header.BytesPerLine)
                       {
                         fclose(fd);
-
-                        if (newimg)
-                          {
-                            FreeImg(img);
-                          }
 
                         free(PCXLine);
                         throw IceException(FNAME, M_WRONG_FILE);
@@ -183,7 +157,7 @@ namespace ice
             PosInByte = PixelPerByte - 1 - (i % PixelPerByte);
             Shift = (PosInByte << Shift1);
             val = (PCXLine[ByteNbr] & (MaxVal << Shift)) >> Shift;
-            val = img->maxval - val * img->maxval / MaxVal;
+            val = img.maxval - val * img.maxval / MaxVal;
             PutVal(img, i, j, val);
           }
       }
@@ -223,19 +197,19 @@ namespace ice
 
     /* Bits pro Bildpunkt */
 
-    if (img->maxval < 2)
+    if (img.maxval < 2)
       {
         Header.BitsPerPixel = 1;
         Shift1 = 0;
         MaxVal = 1;
       }
-    else if (img->maxval < 4)
+    else if (img.maxval < 4)
       {
         Header.BitsPerPixel = 2;
         Shift1 = 1;
         MaxVal = 3;
       }
-    else if (img->maxval < 16)
+    else if (img.maxval < 16)
       {
         Header.BitsPerPixel = 4;
         Shift1 = 2;
@@ -310,7 +284,7 @@ namespace ice
 
         for (i = 0; i < img->xsize; i++)
           {
-            val = MaxVal - GetVal(img, i, j) * MaxVal / img->maxval;
+            val = MaxVal - GetVal(img, i, j) * MaxVal / img.maxval;
             PosInByte = i % PixelPerByte;
             valh = val << (7 - (PosInByte << Shift1) - ((1 << Shift1) - 1));
             PCXLine[i / PixelPerByte] = PCXLine[i / PixelPerByte] | valh;

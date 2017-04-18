@@ -123,7 +123,7 @@ namespace ice
 
         if (PointCount > 1)
           {
-            stat.Statistic(count, mean, std);
+            stat.getStatistics(count, mean, std);
           }
         else
           {

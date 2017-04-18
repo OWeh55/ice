@@ -175,9 +175,9 @@ namespace ice
 
               sum *= sres;
 
-              if (sum > radonimg->maxval)
+              if (sum > radonimg.maxval)
                 {
-                  sum = radonimg->maxval;
+                  sum = radonimg.maxval;
                 }
 
               PutVal(radonimg, x, y, RoundInt(sum));

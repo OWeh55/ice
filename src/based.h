@@ -78,8 +78,8 @@ namespace ice
 
     if (copy)
       {
-        for (int y = 0; y < img->ysize; y++)
-          for (int x = 0; x < img->xsize; x++)
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
             {
               res.setPixelUnchecked(x, y, img.getPixelUnchecked(x, y));
             }

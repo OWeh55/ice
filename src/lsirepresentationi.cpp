@@ -252,7 +252,7 @@ namespace ice
   int LsiRepresentationI::Filter(const Image& src,
                                  const Image& dest, int offset) const
   {
-    LsiRepresentationI n = normalized(src->maxval);
+    LsiRepresentationI n = normalized(src.maxval);
 
     return LSIImg(src, dest,
                   n.dimx, n.dimy, n.mask,

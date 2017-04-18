@@ -54,6 +54,9 @@ namespace ice
         freeimg();
       }
 
+    if (SizeX < 1 || SizeY < 1 || MaxValue < 1)
+      throw IceException(FNAME, M_WRONG_PARAM);
+
     xsize = SizeX;
     ysize = SizeY;
     maxval = MaxValue;
@@ -174,12 +177,7 @@ namespace ice
 #define FNAME "NewImg"
   Image NewImg(int sizeX, int sizeY, int maxValue, const std::string& title)
   {
-    if (sizeX <= 0 || sizeY <= 0 || maxValue <= 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    Image Img;
-    Img.create(sizeX, sizeY, maxValue, title);
-    return Img;
+    return Image::createImage(sizeX, sizeY, maxValue, title);
   }
 
   Image NewImg(const ice::Image& Img, bool ShallCopyContents, const std::string& title)
@@ -208,15 +206,6 @@ namespace ice
     Image result(imgp, w, title);
 
     return result;
-  }
-#undef FNAME
-#define FNAME "FreeImg"
-  void FreeImg(Image& img)
-  {
-    if (!IsImg(img))
-      throw IceException(FNAME, M_WRONG_IMAGE);
-
-    img.destroy();
   }
 #undef FNAME
 #define FNAME "Image::write"

@@ -59,7 +59,7 @@ namespace ice
                 sum2 += g * mask[l + 1][k + 1];
               }
 
-          g = Min(imgd->maxval, Max(0, (int)(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0))));
+          g = Min(imgd.maxval, Max(0, (int)(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0))));
 
           if (gradmax < g)
             {
@@ -80,7 +80,7 @@ namespace ice
                 sum2 += g * mask[l + 1][k + 1];
               }
 
-          PutVal(imgd, x, y, Min(imgd->maxval, Max(0, (int)(imgd->maxval * sqrt(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0)) / gradmax))));
+          PutVal(imgd, x, y, Min(imgd.maxval, Max(0, (int)(imgd.maxval * sqrt(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0)) / gradmax))));
         }
 
     gmean /= (img->xsize * img->ysize);
@@ -106,39 +106,24 @@ namespace ice
   {
     int dx, dy;
     RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, dx, dy));
-    int   newimg = false;
+
     Image imgd = img2;
     Image imgs = img1;
 
     if (img2 == img1)
       {
         imgs = NewImg(img1, true); // Kopie als Quelle erzeugen
-
-        if (!IsImg(imgs))
-          throw IceException(FNAME, M_NO_MEM);
-
-        newimg = true;
       }
 
     double gmean = 0.0; // avoid warning
     Image temp = MyGradImg(imgs, gmean);
 
-    if (!IsImg(temp))
-      {
-        if (newimg)
-          {
-            FreeImg(imgs);
-          }
-
-        return NO_MEM;
-      }
-
-    int x, y, max = 0, g;
+    int max = 0, g;
     double maxgauss = Gauss2D(0, 0, 0, 0, (img1->xsize) / 3.5, (img1->ysize) / 3.5, 0);
 
-    for (y = 0; y < imgs->ysize; y++)
+    for (int y = 0; y < imgs->ysize; y++)
       {
-        for (x = 0; x < imgs->xsize; x++)
+        for (int x = 0; x < imgs->xsize; x++)
           {
             g = GetVal(temp, x, y);
             g = (int)(g * (Gauss2D(x, y, (imgs->xsize) / 2, (imgs->ysize) / 2, (imgs->xsize) / 3.5, (imgs->ysize) / 3.5, 0) / maxgauss));
@@ -153,8 +138,8 @@ namespace ice
 
     if (max == 0)
       {
-        for (y = 0; y < imgs->ysize; y++)
-          for (x = 0; x < imgs->xsize; x++)
+        for (int y = 0; y < imgs->ysize; y++)
+          for (int x = 0; x < imgs->xsize; x++)
             {
               PutVal(imgd, x, y, GetVal(imgs, x, y));
             }
@@ -163,8 +148,8 @@ namespace ice
       {
         ImageD id = NewImgD(imgd->xsize, imgd->ysize, -DBL_MAX, DBL_MAX);
 
-        for (y = 0; y < imgs->ysize; y++)
-          for (x = 0; x < imgs->xsize; x++)
+        for (int y = 0; y < imgs->ysize; y++)
+          for (int x = 0; x < imgs->xsize; x++)
             {
               PutValD(id, x, y, ((GetVal(imgs, x, y) - gmean) * (20 * sqrt(double(GetVal(temp, x, y)) / double(max)) + 1.0) / 21.0));
             }
@@ -172,13 +157,6 @@ namespace ice
         ConvImgDImg(id, imgd);
 
         FreeImgD(id);
-      }
-
-    FreeImg(temp);
-
-    if (newimg)
-      {
-        FreeImg(imgs);
       }
 
     return OK;

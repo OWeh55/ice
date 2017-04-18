@@ -40,12 +40,12 @@ namespace ice
                             int mode, double limit)
   {
     int code = 0;
-    
+
     /*
     for (int i=0;i<pl1->lng;i++)
       {
-	cout << pl1->xptr[i] << " " << pl1->yptr[i] << endl;
-	cout << " " << pl2->xptr[i] << " " << pl2->yptr[i] << endl;
+    cout << pl1->xptr[i] << " " << pl1->yptr[i] << endl;
+    cout << " " << pl2->xptr[i] << " " << pl2->yptr[i] << endl;
       }
     */
     if (pl1 == NULL || pl2 == NULL)

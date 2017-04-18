@@ -39,9 +39,9 @@ namespace ice
     if (ms == nullptr)
       throw IceException(FNAME, M_NO_MEM);
 
-    ms->grwanz = img->maxval + 1;
+    ms->grwanz = img.maxval + 1;
     ms->amin = ms->areaanz = img->xsize;
-    ms->lastgrw = img->maxval;
+    ms->lastgrw = img.maxval;
     ms->amax = 0;
 
     int a, aa, x, y, g;

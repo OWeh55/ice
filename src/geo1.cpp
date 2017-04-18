@@ -517,8 +517,8 @@ namespace ice
 
         MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
 
-	FreePointList(pl1);
-	FreePointList(pl2);
+        FreePointList(pl1);
+        FreePointList(pl2);
 
         for (int i = 0; i < 3; i++)
           for (int j = 0; j < 3; j++)
@@ -539,7 +539,7 @@ namespace ice
       {
         weights[i] = 1.0;
       }
-    
+
     return MatchPointlistsLinOpt(p1, p2, mode, weights);
   }
 

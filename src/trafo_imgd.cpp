@@ -66,7 +66,7 @@ namespace ice
 
         bool projective = true;
 
-	const matrix<double> &tMatrix=tri.getMatrix();
+        const matrix<double>& tMatrix = tri.getMatrix();
         double m00 = tMatrix[0][0];
         double m01 = tMatrix[0][1];
         double m02 = tMatrix[0][2];

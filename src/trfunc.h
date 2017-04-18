@@ -131,7 +131,7 @@ namespace ice
     {
       Function2dModifier::getCoefficient(v);
 
-      const matrix<double> &tm=tr.getMatrix();
+      const matrix<double>& tm = tr.getMatrix();
 
       for (int i = 0; i < 2; i++)
         for (int k = 0; k < 3; k++)

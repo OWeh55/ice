@@ -130,7 +130,7 @@ namespace ice
         xs = img->xsize;
         ys = img->ysize;
         himg = img;
-        norm = (img->maxval != ib.maxval);
+        norm = (img.maxval != ib.maxval);
       }
     else
       {
@@ -185,7 +185,7 @@ namespace ice
 
                 if (norm)
                   {
-                    PutVal(himg, x, y, MulDiv(val, img->maxval, ib.maxval));
+                    PutVal(himg, x, y, MulDiv(val, img.maxval, ib.maxval));
                   }
                 else
                   {
@@ -248,7 +248,7 @@ namespace ice
                 if (norm)
                   {
                     PutVal(himg, x, y,
-                           MulDiv(val, img->maxval, ib.maxval));
+                           MulDiv(val, img.maxval, ib.maxval));
                   }
                 else
                   {
@@ -388,7 +388,7 @@ namespace ice
 #endif
     RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
 
-    if ((imgr->maxval != imgg->maxval) || (imgr->maxval != imgb->maxval))
+    if ((imgr.maxval != imgg.maxval) || (imgr.maxval != imgb.maxval))
       {
         throw IceException(FNAME, M_WRONG_IMAGE);
 
@@ -400,7 +400,7 @@ namespace ice
         return WRONG_PARAM;
       }
 
-    norm = (imgr->maxval != ib.maxval);
+    norm = (imgr.maxval != ib.maxval);
 
     if (flags & IB_SCALE)
       {
@@ -478,14 +478,14 @@ namespace ice
 
                 if (norm)
                   {
-                    valr = MulDiv(valr, imgr->maxval, ib.maxval);
-                    valg = MulDiv(valg, imgg->maxval, ib.maxval);
-                    valb = MulDiv(valb, imgb->maxval, ib.maxval);
+                    valr = MulDiv(valr, imgr.maxval, ib.maxval);
+                    valg = MulDiv(valg, imgg.maxval, ib.maxval);
+                    valb = MulDiv(valb, imgb.maxval, ib.maxval);
                   }
 
-                PutVal(imgr, x, y, Min(imgr->maxval, Max(0, valr)));
-                PutVal(imgg, x, y, Min(imgg->maxval, Max(0, valg)));
-                PutVal(imgb, x, y, Min(imgb->maxval, Max(0, valb)));
+                PutVal(imgr, x, y, Min(imgr.maxval, Max(0, valr)));
+                PutVal(imgg, x, y, Min(imgg.maxval, Max(0, valg)));
+                PutVal(imgb, x, y, Min(imgb.maxval, Max(0, valb)));
 
                 switch (ib.packmethod)
                   {
@@ -770,7 +770,7 @@ namespace ice
     ib.width = img->xsize;
     ib.height = img->ysize;
     ib.planes = 1;
-    ib.maxval = img->maxval;
+    ib.maxval = img.maxval;
 
     ib.valuesize = img->getBytesPerPoint();
     ib.linelength = img->xsize * ib.valuesize;
@@ -818,14 +818,14 @@ namespace ice
     // some more consistency checks
     if (RedImage->xsize != GreenImage->xsize || RedImage->ysize != GreenImage->ysize ||
         RedImage->xsize != BlueImage->xsize  || RedImage->ysize != BlueImage->ysize ||
-        RedImage->maxval != GreenImage->maxval || RedImage->maxval != BlueImage->maxval)
+        RedImage.maxval != GreenImage.maxval || RedImage.maxval != BlueImage.maxval)
       throw IceException(FNAME, M_WRONG_PARAM);
 
     // copy values from the image to the image buffer
     ImageBuffer.width = RedImage->xsize;
     ImageBuffer.height = RedImage->ysize;
     ImageBuffer.planes = 3;
-    ImageBuffer.maxval = RedImage->maxval;
+    ImageBuffer.maxval = RedImage.maxval;
 
     ImageBuffer.valuesize = RedImage->getBytesPerPoint();
     ImageBuffer.linelength = RedImage->xsize * ImageBuffer.valuesize * 3;

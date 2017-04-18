@@ -76,8 +76,8 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = pn1->maxval + pn2->maxval; /*maximaler wert bei addition */
-    gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
+    gmax1 = pn1.maxval + pn2.maxval; /*maximaler wert bei addition */
+    gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     // jetzt addieren
     if (gmax == gmax1)   /* keine Normierung noetig */
@@ -122,7 +122,7 @@ namespace ice
 //  smode   rechnung
 //  SMD_ABSOLUTE:  pn3=abs(pn1-pn2)
 //  SMD_POSITIVE:  pn3=max(pn1-pn2,0)
-//  SMD_SHIFT:     pn3=pn1-pn2+pn2->maxval
+//  SMD_SHIFT:     pn3=pn1-pn2+pn2.maxval
 //
   {
     int dx, dy;
@@ -134,25 +134,25 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     /* maximalwerte des Ergebnisses ermitteln */
-    gzahl = pn3->maxval + 1;
+    gzahl = pn3.maxval + 1;
     gnull = gzahl / 2;
 
     switch (smode)
       {
       case SMD_ABSOLUTE:
-        gmax1 = Max(pn1->maxval, pn2->maxval);
+        gmax1 = Max(pn1.maxval, pn2.maxval);
         break;
       case SMD_POSITIVE:
-        gmax1 = pn1->maxval;
+        gmax1 = pn1.maxval;
         break;
       case SMD_SHIFT:
-        gmax1 = Max(pn1->maxval, pn2->maxval) * 2 + 1;
+        gmax1 = Max(pn1.maxval, pn2.maxval) * 2 + 1;
         break;
       default:
         throw IceException(FNAME, M_WRONG_MODE);
       }
 
-    gmax = pn3->maxval;
+    gmax = pn3.maxval;
 
     //
     // jetzt subtrahieren
@@ -168,7 +168,7 @@ namespace ice
             LOOP { PutVal(pn3, x, y, Max(VAL1 - VAL2, 0)); };
             break;
           case SMD_SHIFT:
-            LOOP { PutVal(pn3, x, y, VAL1 - VAL2 + pn2->maxval); };
+            LOOP { PutVal(pn3, x, y, VAL1 - VAL2 + pn2.maxval); };
             break;
           }/*switch (mode) */
       }/*if*/
@@ -197,7 +197,7 @@ namespace ice
 
               if (mode == MD_NORMALIZE)
                 {
-                  val = val + pn2->maxval;
+                  val = val + pn2.maxval;
                 }
               else
                 {
@@ -253,8 +253,8 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = Max(pn1->maxval, pn2->maxval); /*maximaler wert*/
-    gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
+    gmax1 = Max(pn1.maxval, pn2.maxval); /*maximaler wert*/
+    gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Maximum-Bild erzeugen */
     if (gmax == gmax1)   /* keine Normierung noetig */
@@ -301,8 +301,8 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = Min(pn1->maxval, pn2->maxval); /*maximaler wert*/
-    gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
+    gmax1 = Min(pn1.maxval, pn2.maxval); /*maximaler wert*/
+    gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Minimum-Bild erzeugen */
     if (gmax == gmax1)   /* keine Normierung noetig */
@@ -350,11 +350,11 @@ namespace ice
 
     nx = dest->xsize;
     ny = dest->ysize;
-    nv = dest->maxval;
+    nv = dest.maxval;
 
     ax = p->xsize;
     ay = p->ysize;
-    av = p->maxval;
+    av = p.maxval;
 
     for (int y = 0; y < dest.ysize; y++)
       for (int x = 0; x < dest.xsize; x++)
@@ -371,8 +371,8 @@ namespace ice
 #define FNAME "invertImg"
   static void invertImg_core_std(const Image& pn1, const Image& pn2)
   {
-    int gmax1 = pn1->maxval; /*maximaler wert*/
-    int gmax2 = pn2->maxval;  /* maximalwert aus Zielbild ermitteln */
+    int gmax1 = pn1.maxval; /*maximaler wert*/
+    int gmax2 = pn2.maxval;  /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt inverses Bild erzeugen */
     if (gmax1 == gmax2)   /* keine Normierung noetig */
@@ -398,7 +398,7 @@ namespace ice
   template<class T>
   void invertImg_core(const Image& pn1, const Image& pn2)
   {
-    int gmax = pn1->maxval; /*maximaler wert*/
+    int gmax = pn1.maxval; /*maximaler wert*/
 
     T** dp1 = (T**)pn1->getDataPtr();
     T** dp2 = (T**)pn2->getDataPtr();
@@ -417,8 +417,8 @@ namespace ice
   {
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2));
 
-    int gmax1 = pn1->maxval; /* maximalwert Quellbild */
-    int gmax2 = pn2->maxval; /* maximalwert Zielbild */
+    int gmax1 = pn1.maxval; /* maximalwert Quellbild */
+    int gmax2 = pn2.maxval; /* maximalwert Zielbild */
 
     if (gmax1 != gmax2)
       {
@@ -506,10 +506,10 @@ namespace ice
 
     if (val < 0)
       {
-        val = dest->maxval;
+        val = dest.maxval;
       }
 
-    if ((bin < 1) || (bin > src->maxval) || (val < 0) || (val > dest->maxval))
+    if ((bin < 1) || (bin > src.maxval) || (val < 0) || (val > dest.maxval))
       throw IceException(FNAME, M_WRONG_PARAM);
 
     switch ((src->ImageType() << 4) + dest->ImageType())
@@ -569,7 +569,7 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
-    int gmax = pn2->maxval; /* maximalwert aus Zielbild ermitteln */
+    int gmax = pn2.maxval; /* maximalwert aus Zielbild ermitteln */
 
     for (int y = 0; y < dy; y++)      \
       for (int x = 0; x < dx; x++)
@@ -704,7 +704,7 @@ namespace ice
     if (! IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    tmp = img->maxval + 1;
+    tmp = img.maxval + 1;
     int xSize = img->xsize;
     int ySize = img->ysize;
 

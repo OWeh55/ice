@@ -380,7 +380,7 @@ namespace ice
     wxi = wxa = xp;
     wyi = wya = yp;
     c_frame = 0;
-    xmin = orig->maxval;
+    xmin = orig.maxval;
 
     PutVal(mask, xp, yp, 1);
 
@@ -1269,16 +1269,14 @@ namespace ice
     PeakList pl = nullptr, plseg, next, prev;
     int ii;
 
-    PeakList* index = new PeakList[img->maxval + 1];
+    PeakList* index = new PeakList[img.maxval + 1];
 
     if (index == nullptr)
       {
         throw IceException(FNAME, M_NO_MEM);
-        FreeImg(mask1);
-        return nullptr;
       }
 
-    for (ii = 0; ii <= img->maxval; ii++)
+    for (ii = 0; ii <= img.maxval; ii++)
       {
         index[ii] = nullptr;
       }
@@ -1293,7 +1291,6 @@ namespace ice
               if (plseg == nullptr)
                 {
                   FreePeakList(pl);
-                  FreeImg(mask1);
                   delete []index;
                   return nullptr;
                 }
@@ -1362,8 +1359,6 @@ namespace ice
         }
 
     delete []index;
-    FreeImg(mask1);
-
     return pl;
   }
 
@@ -1384,7 +1379,7 @@ namespace ice
   {
 
     if (!IsImg(img) || maxanz < 0 || mingrw < 0 || noise < 0 ||
-        mingrw > img->maxval ||
+        mingrw > img.maxval ||
         (IsImg(global_mark) && (img->xsize != global_mark->xsize ||
                                 img->ysize != global_mark->ysize)))
       throw IceException(FNAME, M_WRONG_PARAM);

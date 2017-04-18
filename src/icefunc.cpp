@@ -205,7 +205,7 @@ namespace ice
 
               if (GetVal(imgs, x, y) > 0)
                 {
-                  int val = imgs->maxval;
+                  int val = imgs.maxval;
 
                   if ((neighbors = GetEnviron(imgs, x, y, 3, 3, &m[0][0])) > 1)
                     {
@@ -269,7 +269,7 @@ namespace ice
 
         if (typ != RI_180GRAD)
           {
-            img2 = NewImg(img->ysize, img->xsize, img->maxval);
+            img2 = NewImg(img->ysize, img->xsize, img.maxval);
 
             if (!IsImg(img2))
               throw IceException(FNAME, M_NO_MEM);
@@ -336,7 +336,7 @@ namespace ice
     // Parameter pruefen
     if (!IsImg(img) ||
         (fabs(diff) >= 1) ||
-        (thresh < 0 || thresh >= img->maxval) ||
+        (thresh < 0 || thresh >= img.maxval) ||
         (mode != ALL_EXTREMA && mode != FIRST_EXTREMA && mode != LAST_EXTREMA && mode != MID_EXTREMA && mode != NO_EXTREMA) ||
         (mode2 != ALL_EXTREMA && mode2 != FIRST_EXTREMA && mode2 != LAST_EXTREMA && mode2 != MID_EXTREMA && mode2 != NO_EXTREMA) ||
         (mode == NO_EXTREMA && mode2 == NO_EXTREMA))
@@ -344,7 +344,7 @@ namespace ice
 
     // Initalisierung
 
-    if (!IsImg(imgd) || imgd->maxval != 1 || imgd->xsize != img->xsize || imgd->ysize != img->ysize)
+    if (!IsImg(imgd) || imgd.maxval != 1 || imgd->xsize != img->xsize || imgd->ysize != img->ysize)
       throw IceException(FNAME, M_WRONG_PARAM);
 
     clearImg(imgd);
@@ -1077,32 +1077,16 @@ namespace ice
 
     if (!flag)
       {
-
-        Image temp, temp2;
-
-        temp = NewImg(img, true);
-
-        if (!IsImg(temp))
-          throw IceException(FNAME, M_NO_MEM);
-
-        temp2 = NewImg(temp);
-
-        if (!IsImg(temp2))
-          {
-            FreeImg(temp);
-            throw IceException(FNAME, M_NO_MEM);
-          }
+        Image temp = NewImg(img, true);
+        Image temp2 = NewImg(temp);
 
         RotateImg(temp, RI_180GRAD);
 
         Skeleton(temp, (mode == FIRST_EXTREMA) ? LAST_EXTREMA : (mode == LAST_EXTREMA) ? FIRST_EXTREMA : mode, (mode2 == FIRST_EXTREMA) ? LAST_EXTREMA : (mode2 == LAST_EXTREMA) ? FIRST_EXTREMA : mode2, HORZ_VERT + mode3, thresh, diff, temp2);
 
-        FreeImg(temp);
-
         RotateImg(temp2, RI_180GRAD);
 
         maxImg(imgd, temp2, imgd);
-        FreeImg(temp2);
       }
   }
 
@@ -1125,12 +1109,12 @@ namespace ice
 
         Histogram h(img);
 
-        vector<int> histx(img->maxval + 1);
+        vector<int> histx(img.maxval + 1);
 
-        double maxval = double(imgd->maxval) / img->xsize / img->ysize;
+        double maxval = double(imgd.maxval) / img->xsize / img->ysize;
         int sum = 0;
 
-        for (int i = 0; i <= img->maxval; i++)
+        for (int i = 0; i <= img.maxval; i++)
           {
             sum += h.getCount(i);
             histx[i] = RoundInt(sum * maxval);
@@ -1172,7 +1156,7 @@ namespace ice
     int xa = min(x + se, img->xsize - 1);
     int ya = min(y + se, img->ysize - 1);
     maxi = 0;
-    mini = img->maxval;
+    mini = img.maxval;
 
     for (int xx = xi; xx <= xa; xx++)
       for (int yy = yi; yy <= ya; yy++)

@@ -55,7 +55,7 @@ namespace ice
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
-    int maxVal = dest->maxval;
+    int maxVal = dest.maxval;
     int maxVal1 = maxVal + 1;
 
     // the border of width nx/2 and height ny/2 around
@@ -156,11 +156,11 @@ namespace ice
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
-    int maxVal = dest->maxval;
+    int maxVal = dest.maxval;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
-    setborder(dest, nx2, ny2, (dest->maxval + 1) / 2);
+    setborder(dest, nx2, ny2, (dest.maxval + 1) / 2);
 
     for (int y = 0; y < src->ysize - (ny2 + 1); y++)
       {
@@ -264,11 +264,11 @@ namespace ice
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
-    int maxVal = dest->maxval;
+    int maxVal = dest.maxval;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
-    setborder(dest, nx2, ny2, (dest->maxval + 1) / 2);
+    setborder(dest, nx2, ny2, (dest.maxval + 1) / 2);
 
     const SrcType** Pixels = (const SrcType**)tmp->getDataPtr();
     DestType** Pixeld = (DestType**)dest->getDataPtr();
@@ -364,11 +364,11 @@ namespace ice
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
-    int maxVal = dest->maxval;
+    int maxVal = dest.maxval;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
-    setborder(dest, nx2, ny2, (dest->maxval + 1) / 2);
+    setborder(dest, nx2, ny2, (dest.maxval + 1) / 2);
 
     for (int y = 0; y < src->ysize - (ny2 + 1); y++)
       {

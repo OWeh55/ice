@@ -200,7 +200,7 @@ namespace ice
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || (val > img->maxval))
+    if ((val < 0) || (val > img.maxval))
       throw IceException(FNAME, M_VALTOOSMALL);
 
     if (img.inside(x1, y1) && img.inside(x2, y2))   // keine weitere Umrechnungen

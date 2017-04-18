@@ -62,11 +62,11 @@ namespace ice
     head[20] = width / 256;
     head[21] = width % 256;
 
-    if (img->maxval < 256)
+    if (img.maxval < 256)
       {
         head[23] = 8;
       }
-    else if (img->maxval < 256 * 256)
+    else if (img.maxval < 256 * 256)
       {
         head[23] = 16;
       }
@@ -132,16 +132,16 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, width, height));
 
-    int maxval = imgr->maxval;
+    int maxval = imgr.maxval;
 
-    if (imgg->maxval > maxval)
+    if (imgg.maxval > maxval)
       {
-        maxval = imgg->maxval;
+        maxval = imgg.maxval;
       }
 
-    if (imgb->maxval > maxval)
+    if (imgb.maxval > maxval)
       {
-        maxval = imgb->maxval;
+        maxval = imgb.maxval;
       }
 
     FILE* ofp = fopen(filename.c_str(), FWMODUS);

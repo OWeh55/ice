@@ -131,10 +131,10 @@ namespace ice
 
   // neues bild als SubImage eines gegebenen Bildes
   template<typename ValueType>
-  inline iceImage<ValueType>::iceImage(iceImage<ValueType>* img,
+  inline iceImage<ValueType>::iceImage(iceImage<ValueType>* imgPtr,
                                        const Window& w,
                                        const std::string& titleP)
-    : ImageBase(w.Width(), w.Height(), img->maxval, titleP, img)
+    : ImageBase(w.Width(), w.Height(), imgPtr->maxval, titleP, imgPtr)
   {
     Pixel = new ValueType*[ysize];
     Pixelarray = nullptr;
@@ -142,7 +142,7 @@ namespace ice
 
     for (int y = 0; y < ysize; y++)
       {
-        Pixel[y] = img->PixelAddress(w.p1.x, w.p1.y + y);
+        Pixel[y] = imgPtr->PixelAddress(w.p1.x, w.p1.y + y);
       }
   }
 

@@ -116,7 +116,7 @@ namespace ice
 
     if ((oimg->xsize != source->xsize) ||
         (oimg->ysize != source->ysize) ||
-        (oimg->maxval < 2)
+        (oimg.maxval < 2)
        )
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
@@ -124,7 +124,7 @@ namespace ice
       {
         int xs = source->xsize;
         int ys = source->ysize;
-        int mv = source->maxval;
+        int mv = source.maxval;
 
         Image minimg = NewImg(xs, ys, mv);
         Image maximg = NewImg(xs, ys, mv);
@@ -174,7 +174,7 @@ namespace ice
 
     if ((oimg->xsize != source->xsize) ||
         (oimg->ysize != source->ysize) ||
-        (oimg->maxval < 4)
+        (oimg.maxval < 4)
        )
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
@@ -182,7 +182,7 @@ namespace ice
       {
         int xs = source->xsize;
         int ys = source->ysize;
-        int mv = source->maxval;
+        int mv = source.maxval;
 
         Image minimg = NewImg(xs, ys, mv);
         Image maximg = NewImg(xs, ys, mv);

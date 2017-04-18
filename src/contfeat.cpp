@@ -50,7 +50,7 @@ namespace ice
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || val > img->maxval)
+    if ((val < 0) || val > img.maxval)
       throw IceException(FNAME, M_WRONG_VAL);
 
     xx = c.StartX();
@@ -77,7 +77,7 @@ namespace ice
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || val > img->maxval)
+    if ((val < 0) || val > img.maxval)
       throw IceException(FNAME, M_WRONG_VAL);
 
     if (!c.isClosed())

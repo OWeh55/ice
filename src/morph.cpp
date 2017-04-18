@@ -388,11 +388,6 @@ namespace ice
           }
       }
 
-    if (need_temp)
-      {
-        FreeImg(imgs);
-      }
-
     delete [] linebuffer;
     return OK;
   }
@@ -405,7 +400,6 @@ namespace ice
   {
     Image imgs = sourceImage;
     Image imgh;
-    int needs_temp = false;
     int dx, dy;
 
     if (mask == NULL)
@@ -420,7 +414,6 @@ namespace ice
       {
         imgh = NewImg(imgs, true);
         imgs = imgh;
-        needs_temp = true;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
@@ -476,11 +469,6 @@ namespace ice
           }
       }
 
-    if (needs_temp)
-      {
-        FreeImg(imgh);
-      }
-
     return OK;
   }
 
@@ -499,7 +487,6 @@ namespace ice
   {
     Image imgs = sourceImage;
     Image imgh;
-    int needs_temp = false;
     int dx, dy;
 
     if (mask == NULL)
@@ -514,7 +501,6 @@ namespace ice
       {
         imgh = NewImg(imgs, true);
         imgs = imgh;
-        needs_temp = true;
       }
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
@@ -548,7 +534,7 @@ namespace ice
               {
                 x2 = dx - 1;
               }
-            int val = imgs->maxval;
+            int val = imgs.maxval;
             for (int yy = y1 ; yy <= y2; yy++)
               {
                 int my = yy - y + ny2;
@@ -568,11 +554,6 @@ namespace ice
               }
             PutValUnchecked(destinationImage, x, y, val);
           }
-      }
-
-    if (needs_temp)
-      {
-        FreeImg(imgh);
       }
 
     return OK;
@@ -868,11 +849,6 @@ namespace ice
           {
             PutVal(destinationImage, x, y, buffer[y]);
           }
-      }
-
-    if (need_temp)
-      {
-        FreeImg(imgs);
       }
 
     delete [] buffer;
@@ -1313,7 +1289,7 @@ namespace ice
     // optimized with incremental calculation of max/min with histogram
     int dx, dy;
 
-    if (pn1->maxval >= MHISTSIZE)
+    if (pn1.maxval >= MHISTSIZE)
       throw IceException(FNAME, M_WRONG_PARAM);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
@@ -1323,8 +1299,8 @@ namespace ice
         (sx >= dx) || (sy >= dy))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    if ((pn1->maxval != pn2->maxval) ||
-        (pn2->maxval != pn3->maxval))
+    if ((pn1.maxval != pn2.maxval) ||
+        (pn2.maxval != pn3.maxval))
       throw IceException(FNAME, M_WRONG_PARAM);
 
     int sx1 = sx / 2;

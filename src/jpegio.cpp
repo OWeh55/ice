@@ -103,12 +103,12 @@ namespace ice
 
     xs = ir->xsize;
     ys = ir->ysize;
-    gm = ir->maxval;
+    gm = ir.maxval;
 
     if (
       (xs != ig->xsize) || (xs != ib->xsize) ||
       (ys != ig->ysize) || (ys != ib->ysize) ||
-      (gm != ig->maxval) || (gm != ib->maxval)
+      (gm != ig.maxval) || (gm != ib.maxval)
     )
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
@@ -210,7 +210,7 @@ namespace ice
 
     xs = img->xsize;
     ys = img->ysize;
-    gm = img->maxval;
+    gm = img.maxval;
 
     /* Select the output file.
      */

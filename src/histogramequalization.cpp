@@ -174,7 +174,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
 
     vector<int> histx;
-    HistogramEqualizationLUT(img, histx, imgd->maxval, reg);
+    HistogramEqualizationLUT(img, histx, imgd.maxval, reg);
 
     WindowWalker w(imgd);
     for (w.init(); !w.ready(); w.next())

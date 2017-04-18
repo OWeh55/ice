@@ -284,7 +284,7 @@ namespace ice
 #undef FNAME
 
 #define FNAME "Hist::Statistic"
-  int Hist::Statistic(int& n, double& xm, double& xs, double& skew) const
+  void Hist::getStatistics(int& n, double& xm, double& xs, double& skew) const
   {
     double sumx, sumx2, sumx3, aktw;
     int i;
@@ -309,23 +309,20 @@ namespace ice
     xm = sumx / sum;
     xs = sqrt(sumx2 / sum - xm * xm);
     skew = sumx3 - 3 * xm * sumx2 + xm * xm * 3 * sumx - xm * xm * xm * sum;
-    return OK;
   };
 
-  int Hist::Statistic(int& n, double& xm, double& xs) const
+  void Hist::getStatistics(int& n, double& xm, double& xs) const
   {
     double dummy;
-    RETURN_ERROR_IF_FAILED(Statistic(n, xm, xs, dummy));
-    return OK;
+    getStatistics(n, xm, xs, dummy);
   };
 
-  int Hist::Statistic(int& n) const
+  void Hist::getStatistics(int& n) const
   {
     if (!isInit)
       throw IceException(FNAME, M_NOT_INITIALISED);
 
     n = sum;
-    return OK;
   };
 #undef FNAME
 
@@ -333,17 +330,15 @@ namespace ice
 //    Visualization of histogramm
 //    Steffen Abraham
 //    25.09.92/13.03.93
-//    Wolfgang Ortmann, 11/99
+//    Wolfgang Ortmann, 11/99, 04/17
 //
 
-#define _GETX(x) RoundInt(((double)(x))*(double)dx/100+(double)x1)
-#define _GETY(y) RoundInt(((double)(y))*(double)dy/100+(double)y1)
+#define _GETX(x) RoundInt(((double)(x))*(double)dx/100)
+#define _GETY(y) RoundInt(((double)(y))*(double)dy/100)
 
 #define FNAME "Hist::Vis"
-  int Hist::Vis(int grw, const Image& b) const
+  void Hist::draw(const Image& b, int grw) const
   {
-    int dx, dy;
-    int x1, y1, x2, y2;
     std::string fmt;
     unsigned int maxn;
     int i, txtsize;
@@ -356,13 +351,8 @@ namespace ice
     if (!IsImg(b))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    x1 = 0;
-    y1 = 0;
-    x2 = b->xsize - 1;
-    y2 = b->ysize - 1;
-
-    dx = x2 - x1;
-    dy = y2 - y1;
+    int dx = b.xsize - 1;
+    int dy = b.ysize - 1;
 
     Line(_GETX(9), _GETY(90), _GETX(96), _GETY(90), grw, 0, b);
     Line(_GETX(10), _GETY(1), _GETX(10), _GETY(91), grw, 0, b);
@@ -435,7 +425,6 @@ namespace ice
           }
       }
 
-    return OK;
   }
 #undef FNAME
 //
@@ -461,7 +450,7 @@ namespace ice
     if ((diff > b->xsize) || (diff > (b->ysize)) || diff < 1)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    h.reset((b->maxval + 1 + (klbr - 1)) / klbr, klbr, 0);
+    h.reset((b.maxval + 1 + (klbr - 1)) / klbr, klbr, 0);
 
     for (y = 0; y < b->ysize; y += diff)
       for (x = 0; x < b->xsize; x += diff)

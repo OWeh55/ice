@@ -147,12 +147,12 @@ namespace ice
 
     if (sign == SIGNED)
       {
-        goff = (img->maxval + 1) / 2;
+        goff = (img.maxval + 1) / 2;
       }
 
     if (mode == NORMALIZED)
       {
-        factor = 4.0 / (img->maxval + 1);
+        factor = 4.0 / (img.maxval + 1);
       }
 
     for (int i = 0; i < nColumns; i++)
@@ -235,17 +235,17 @@ namespace ice
   {
     nRows = m.rows();
     nColumns = m.cols();
-    
+
     if (nRows > 0)
       {
         data = new Vector* [nRows];
       }
-    
+
     for (int i = 0; i < nRows; i++)
       {
         data[i] = new Vector(nColumns);
       }
-    
+
     for (int i = 0; i < nRows; i++)
       for (int j = 0; j < nColumns; j++)
         {
@@ -371,7 +371,7 @@ namespace ice
   {
     if ((i < 0) || (i >= nRows))
       {
-	throw IceException(FNAME,M_WRONG_INDEX);
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
 
     return *data[i];
@@ -381,7 +381,7 @@ namespace ice
   {
     if ((i < 0) || (i >= nRows))
       {
-	throw IceException(FNAME,M_WRONG_INDEX);
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
 
     return *data[i];
@@ -397,7 +397,7 @@ namespace ice
       (j1 < 0) || (j1 > j2 + 1) || (j2 >= nColumns)
     )
       {
-	throw IceException(FNAME,M_WRONG_INDEX);
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
 
     Matrix tm(i2 - i1 + 1, j2 - j1 + 1);
@@ -417,7 +417,7 @@ namespace ice
 
     if ((i1 < 0) || (i1 >= nRows) || (i2 < 0) || (i2 >= nRows))
       {
-	throw IceException(FNAME,M_WRONG_INDEX);
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
 
     h = data[i1];
@@ -433,7 +433,7 @@ namespace ice
 
     if ((i1 < 0) || (i1 >= nColumns) || (i2 < 0) || (i2 >= nColumns))
       {
-	throw IceException(FNAME,M_WRONG_INDEX);
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
 
     for (j = 0; j < nRows; j++)
@@ -611,7 +611,7 @@ namespace ice
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     for (i = 0; i < m1.rows(); i++)
@@ -630,7 +630,7 @@ namespace ice
 
     if ((m1.rows() != m2.rows()) || (m1.cols() != m2.cols()))
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     for (i = 0; i < m1.rows(); i++)
@@ -689,7 +689,7 @@ namespace ice
 
     if (m1.cols() != m2.rows())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows(), m2.cols());
@@ -759,7 +759,7 @@ namespace ice
 
     if (rows() != m2.rows())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
 #if 0
@@ -829,7 +829,7 @@ namespace ice
 
     if (m.rows() != v.Size())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Vector res(m.cols());
@@ -858,7 +858,7 @@ namespace ice
 
     if (m.cols() != v.Size())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Vector res(m.rows());
@@ -886,7 +886,7 @@ namespace ice
 
     if (m1.rows() != m2.rows())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows(), m1.cols() + m2.cols());
@@ -914,7 +914,7 @@ namespace ice
 
     if (m1.rows() != v2.Size())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows(), m1.cols() + 1);
@@ -939,7 +939,7 @@ namespace ice
 
     if (v1.Size() != m2.rows())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix res(m2.rows(), m2.cols() + 1);
@@ -965,7 +965,7 @@ namespace ice
 
     if (v1.Size() != v2.Size())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     for (i = 0; i < v2.Size(); i++)
@@ -985,7 +985,7 @@ namespace ice
 
     if (m1.cols() != m2.cols())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows() + m2.rows(), m1.cols());
@@ -1013,7 +1013,7 @@ namespace ice
 
     if (m1.cols() != v2.Size())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix res(m1.rows() + 1, m1.cols());
@@ -1038,7 +1038,7 @@ namespace ice
 
     if (v1.Size() != m2.cols())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix res(m2.rows() + 1, m2.cols());
@@ -1064,7 +1064,7 @@ namespace ice
 
     if (v1.Size() != v2.Size())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     for (i = 0; i < v1.Size(); i++)
@@ -1083,7 +1083,7 @@ namespace ice
 
     if (nColumns != v.Size())
       {
-	throw IceException(FNAME,M_MATRIXFORMAT);
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     ndata = (Vector**)realloc(data, (nRows + 1) * sizeof(Vector*));
@@ -1431,15 +1431,15 @@ namespace ice
           {
           case ADAPTIVE:
             inmaxval = Max(maxv, -minv);
-            factor = (img->maxval / 2) / inmaxval;
-            offset = (img->maxval + 1) / factor / 2.0;
+            factor = (img.maxval / 2) / inmaxval;
+            offset = (img.maxval + 1) / factor / 2.0;
             break;
           case RAW:
             factor = 1.0;
-            offset = (img->maxval + 1) / 2.0;
+            offset = (img.maxval + 1) / 2.0;
             break;
           case NORMALIZED:
-            factor = (img->maxval + 1) / 4.0;
+            factor = (img.maxval + 1) / 4.0;
             offset = 2.0;
             break;
           }
@@ -1450,14 +1450,14 @@ namespace ice
           {
           case ADAPTIVE:
             offset = -minv;
-            factor = img->maxval / (maxv - minv);
+            factor = img.maxval / (maxv - minv);
             break;
           case RAW:
             factor = 1.0;
             offset = 0.0;
             break;
           case NORMALIZED:
-            factor = (img->maxval + 1) / 4.0;
+            factor = (img.maxval + 1) / 4.0;
             offset = 0;
             break;
           }
@@ -1469,7 +1469,7 @@ namespace ice
       for (int x = 0; x < sx; x++)
         {
           ival = RoundInt((m[y][x] + offset) * factor);
-          ival = Min(Max(0, ival), img->maxval);
+          ival = Min(Max(0, ival), img.maxval);
           PutVal(img, x, y, ival);
         }
   }

@@ -44,7 +44,7 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sx = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sx1 = sx / 2;
 
     for (int y = 0; y < dy; y++)   // alle zeilen
@@ -91,7 +91,7 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sx = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sx1 = sx / 2;
 
     const T** p1 = (const T**)pn1->getDataPtr();
@@ -203,7 +203,7 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sy = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sy1 = sy / 2;
 
     for (int x = 0; x < dx; x++)   // alle spalten
@@ -250,7 +250,7 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sy = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sy1 = sy / 2;
 
     const T** p1 = (const T**)pn1->getDataPtr();

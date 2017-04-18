@@ -160,11 +160,11 @@ namespace ice
     if (diff == 0)
       {
         a1 = 0;
-        a0 = tgt->maxval;
+        a0 = tgt.maxval;
       }
     else
       {
-        a1 = (tgt->maxval + 1) / diff;
+        a1 = (tgt.maxval + 1) / diff;
         a0 = -min * a1;
       }
 

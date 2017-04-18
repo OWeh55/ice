@@ -70,6 +70,7 @@ namespace ice
      */
     const int maxval;
 
+  public:
     /**
      * get the title of the image.
      * The title is a string and used for display

@@ -132,11 +132,11 @@ namespace ice
                   {
                     for (int y = 0; y < img.ysize; y++)
                       for (int x = 0; x < img.xsize; x++)
-                        PutVal(img, x, y, int((GetValD(imgd, x, y) - gmin) * ((img->maxval - 1) / 2) / (gmax - gmin)) + (img->maxval + 1) / 2);
+                        PutVal(img, x, y, int((GetValD(imgd, x, y) - gmin) * ((img.maxval - 1) / 2) / (gmax - gmin)) + (img.maxval + 1) / 2);
                   }
                 else
                   {
-                    setImg(img, (img->maxval + 1) / 2);
+                    setImg(img, (img.maxval + 1) / 2);
                   }
               }
             else
@@ -144,12 +144,12 @@ namespace ice
                 gmaxabs += gmaxabs;
                 for (int y = 0; y < img.ysize; y++)
                   for (int x = 0; x < img.xsize; x++)
-                    PutVal(img, x, y, int(GetValD(imgd, x, y) / gmaxabs * (img->maxval - 1) / 2) + (img->maxval + 1) / 2);
+                    PutVal(img, x, y, int(GetValD(imgd, x, y) / gmaxabs * (img.maxval - 1) / 2) + (img.maxval + 1) / 2);
               }
           }
         else
           {
-            setImg(img, (img->maxval + 1) / 2);
+            setImg(img, (img.maxval + 1) / 2);
           }
       }
     RETHROW;

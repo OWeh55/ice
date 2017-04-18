@@ -82,11 +82,11 @@ namespace ice
     int getLimits(int& min, int& max) const;
     int getLimits(int& min, int& max, double quantil) const;
 
-    int Statistic(int& n) const ;
-    int Statistic(int& n, double& xm, double& xs) const;
-    int Statistic(int& n, double& xm, double& xs, double& skew) const;
+    void getStatistics(int& n) const ;
+    void getStatistics(int& n, double& xm, double& xs) const;
+    void getStatistics(int& n, double& xm, double& xs, double& skew) const;
 
-    int Vis(int val, const Image& img) const;
+    void draw(const Image& img, int val) const;
 
     int operator[](int nr) const;
 

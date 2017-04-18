@@ -70,7 +70,7 @@ namespace ice
 
         bool projective = true;
 
-	const matrix<double> &tMatrix=tri.getMatrix();
+        const matrix<double>& tMatrix = tri.getMatrix();
         double m00 = tMatrix[0][0];
         double m01 = tMatrix[0][1];
         double m02 = tMatrix[0][2];
@@ -88,8 +88,8 @@ namespace ice
           }
 
         // max. values for grayvalue
-        mv1 = tsimg->maxval + 1;
-        mv2 = dimg->maxval + 1;
+        mv1 = tsimg.maxval + 1;
+        mv2 = dimg.maxval + 1;
 
         if (mode != INTERPOL)
           {
@@ -205,7 +205,7 @@ namespace ice
               }
             else
               {
-                double gfak = ((double)dimg->maxval) / ((double)tsimg->maxval);
+                double gfak = ((double)dimg.maxval) / ((double)tsimg.maxval);
                 for (y = 0; y < dimg.ysize; y++)
                   for (x = 0; x < dimg.xsize; x++)
                     {

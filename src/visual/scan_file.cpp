@@ -136,15 +136,11 @@ namespace ice
       {
         RETURN_ERROR_IF_FAILED(pi = ReadImg(DD(ch)->filename, pi));
         Image2Buffer(pi, ib);
-        FreeImg(pi);
       }
     else
       {
         RETURN_ERROR_IF_FAILED(ReadImg(DD(ch)->filename, pi, pig, pib));
         Image2Buffer(pi, pig, pib, ib);
-        FreeImg(pi);
-        FreeImg(pig);
-        FreeImg(pib);
       }
     return OK;
   }

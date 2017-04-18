@@ -40,7 +40,7 @@ namespace ice
 //  Wolfgang Ortmann 11/99
 //
 #define FNAME "PrintHist"
-  int PrintHist(const Hist& h)
+  void printHist(const Hist& h)
   {
     int i;
     double kgrenzeneu = 0, kgrenzealt;
@@ -61,7 +61,6 @@ namespace ice
            kgrenzeneu, h.klasse[h.nClasses + 1]);
     Printf(" min     :  %9.3e \n", h.min);
     Printf(" max     :  %9.3e \n", h.max);
-    return OK;
   };
 #undef FNAME
 }

@@ -61,10 +61,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = 1;
@@ -127,10 +127,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = 1;
@@ -199,10 +199,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = +1;
@@ -265,10 +265,10 @@ namespace ice
         tmp.copy(dest);
       }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = +1;
@@ -338,10 +338,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 16;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 16;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 = + 1;
@@ -406,10 +406,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 16;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 16;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 =  + 1;

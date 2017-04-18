@@ -237,9 +237,9 @@ namespace ice
       throw IceException(FNAME, M_NOT_OPEN);
     try
       {
-        Image r = NewImg(img->xsize, img->ysize, img->maxval);
-        Image g = NewImg(img->xsize, img->ysize, img->maxval);
-        Image b = NewImg(img->xsize, img->ysize, img->maxval);
+        Image r = NewImg(img->xsize, img->ysize, img.maxval);
+        Image g = NewImg(img->xsize, img->ysize, img.maxval);
+        Image b = NewImg(img->xsize, img->ysize, img.maxval);
 
         bool ok = reader->read(r, g, b);
         if (!ok)

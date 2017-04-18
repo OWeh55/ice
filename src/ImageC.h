@@ -748,10 +748,5 @@ namespace ice
                const Window& w,
                const std::string& title = "");
 
-  /**
-   * Release the data of img.
-   * After this img is invalid.
-   */
-  void FreeImg(Image& img);
 }
 #endif // #ifndef __IMAGEC_H

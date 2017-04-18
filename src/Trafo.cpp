@@ -552,21 +552,23 @@ namespace ice
   {
     if (dimSource != dimTarget)
       throw IceException(FNAME, M_WRONG_DIM);
-    try {
-      m = ice::Inverse(m);
-      normalize();
-    }
+    try
+      {
+        m = ice::Inverse(m);
+        normalize();
+      }
     RETHROW;
   }
 #undef FNAME
 #define FNAME "Trafo::inverse"
   Trafo Trafo::inverse() const
   {
-    try {
-      Trafo res(*this);
-      res.invert();
-      return res;
-    }
+    try
+      {
+        Trafo res(*this);
+        res.invert();
+        return res;
+      }
     RETHROW;
   }
 #undef FNAME

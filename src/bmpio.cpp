@@ -952,9 +952,9 @@ namespace ice
 
         for (i = 0; i < w; i++)
           {
-            *(pp++) = (GetVal(ir, i, j) * 255 / ir->maxval) ^ 255;
-            *(pp++) = (GetVal(ig, i, j) * 255 / ig->maxval) ^ 255;
-            *(pp++) = (GetVal(ib, i, j) * 255 / ib->maxval) ^ 255;
+            *(pp++) = (GetVal(ir, i, j) * 255 / ir.maxval) ^ 255;
+            *(pp++) = (GetVal(ig, i, j) * 255 / ig.maxval) ^ 255;
+            *(pp++) = (GetVal(ib, i, j) * 255 / ib.maxval) ^ 255;
           }
       }
 
@@ -986,7 +986,7 @@ namespace ice
 
     w = img->xsize;
     h = img->ysize;
-    graymax = img->maxval;
+    graymax = img.maxval;
 
     if ((fp = fopen(hname.c_str(), FWMODUS)) == NULL)
       throw IceException(FNAME, M_FILE_OPEN);

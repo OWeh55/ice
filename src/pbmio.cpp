@@ -136,7 +136,7 @@ namespace ice
     if ((fd = fopen(fname.c_str(), FWMODUS)) == nullptr)
       throw IceException(FNAME, M_FILE_OPEN);
 
-    maxval = img->maxval;
+    maxval = img.maxval;
     fprintf(fd, "P5\n%d %d %d\n", img->xsize, img->ysize, maxval);
 
     if (maxval < 256)

@@ -47,7 +47,7 @@ namespace ice
 
         MatchImg(img, marker, dx, dy);
 
-        if (marker->maxval < minrange)
+        if (marker.maxval < minrange)
           throw IceException(FNAME, M_LOWRANGE);
 
         if (!Inside(img, start))

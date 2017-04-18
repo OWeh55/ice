@@ -269,7 +269,7 @@ namespace ice
   {
     int x, y;
     int xs, ys;
-    int gs = img->maxval + 1;
+    int gs = img.maxval + 1;
     xs = img->xsize;
 
     if (w < xs)
@@ -295,7 +295,7 @@ namespace ice
   {
     int x, y;
     int xs, ys;
-    int gs = img->maxval + 1;
+    int gs = img.maxval + 1;
     xs = img->xsize;
 
     if (w < xs)

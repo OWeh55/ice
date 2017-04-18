@@ -53,7 +53,7 @@ namespace ice
     int i, j;
     int xx, yy, xf, yf;
     smax = -1;
-    smin = img->maxval * 3;
+    smin = img.maxval * 3;
 
     for (dir1 = (dir + 7) & 7, i = 0; i < 3; i++, dir1 = (dir1 + 1) & 7)
       {
@@ -107,9 +107,9 @@ namespace ice
       throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     wxi = BOFF;
-    wxa = min(imgv->xsize, imgo->xsize) - 1 - BOFF;
+    wxa = min(imgv.xsize, imgo.xsize) - 1 - BOFF;
     wyi = BOFF;
-    wya = min(imgv->ysize, imgo->ysize) - 1 - BOFF;
+    wya = min(imgv.ysize, imgo.ysize) - 1 - BOFF;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
       throw IceException(FNAME, M_WRONG_WINDOW2);
@@ -134,7 +134,7 @@ namespace ice
           }
         else
           {
-            return (NOT_FOUND);
+            return NOT_FOUND;
           }
       }
 

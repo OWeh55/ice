@@ -76,7 +76,7 @@ namespace ice
 
     int sourcetype = SourceImage->ImageType();
 
-    if (SourceImage->maxval == DestinationImage->maxval &&
+    if (SourceImage.maxval == DestinationImage.maxval &&
         sourcetype > 0 && sourcetype < 4 &&
         sourcetype == DestinationImage->ImageType())
       {
@@ -87,8 +87,8 @@ namespace ice
       }
     else
       {
-        int MaxSelf = SourceImage->maxval;
-        int MaxDest = DestinationImage->maxval;
+        int MaxSelf = SourceImage.maxval;
+        int MaxDest = DestinationImage.maxval;
 
         // Copy the contents. But first check, if we have to adjust the color intensities
         // in >Destination<. If >Destination< has the same maximum grayvalue as this,

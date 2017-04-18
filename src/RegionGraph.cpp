@@ -797,7 +797,7 @@ ende:
     // aktuellen Start-Pixel zur RegionPixelliste hinzufuegen
     currReg->RegionPixel.push_back(temp);
     // Pixel als bearbeitet markieren
-    PutVal(workImg, x, y, workImg->maxval);
+    PutVal(workImg, x, y, workImg.maxval);
     // Grauwertsumme initialisieren
     currReg->GrwSum = 0;
     currReg->PixelAnz++;// Pixelanzahl erhoehen
@@ -858,7 +858,7 @@ ende:
                     // Punkt in RegionPixel aufnehmen
                     currReg->RegionPixel.push_back(temp2);
                     // Punkt als verarbeitet markieren und Gesamtpixelanzahl erhoehen
-                    PutVal(workImg, xn, yn, workImg->maxval);
+                    PutVal(workImg, xn, yn, workImg.maxval);
                     currReg->PixelAnz++;
                   }
                 else
@@ -922,7 +922,7 @@ ende:
             }
         }
 
-    WorkingImg.set(WorkingImg->maxval);
+    WorkingImg.set(WorkingImg.maxval);
 
     if (!WShedPixels.empty())
 

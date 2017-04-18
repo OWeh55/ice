@@ -62,7 +62,7 @@ namespace ice
       OFunc object, int pgl,
       int x, int y)
   {
-    if ((x < 0) || (x >= imgv->xsize) || (y < 0) || (y >= imgv->ysize))
+    if ((x < 0) || (x >= imgv.xsize) || (y < 0) || (y >= imgv.ysize))
       {
         return isunknown;
       }
@@ -75,7 +75,7 @@ namespace ice
       int x, int y,
       object_rc marked, object_rc outside)
   {
-    if ((x < 0) || (x >= imgv->xsize) || (y < 0) || (y >= imgv->ysize))
+    if ((x < 0) || (x >= imgv.xsize) || (y < 0) || (y >= imgv.ysize))
       {
         return outside;
       }

@@ -123,7 +123,7 @@ namespace ice
     // pro Hoehenstufe ein Vektor fuer Punkte
     // nach Durchfuehren von Bucket-Sort:
     //    schneller Zugriff auf alle Punkte eines Hoehenlevels
-    PointVECTOR* b2 = new PointVECTOR[i->maxval + 1];
+    PointVECTOR* b2 = new PointVECTOR[i.maxval + 1];
     // FIFO-Punkt-Schlange
     FIFOList Q;
 
@@ -381,12 +381,10 @@ ende:
     cout << current_label << endl;
 
     // Test, ob Regionenzahl in Zielbild passt
-    if (ret->maxval < current_label)
+    if (ret.maxval < current_label)
       {
-        throw IceException(FNAME, M_LOWRANGE);
-        FreeImg(m3);
         ddelete(m1, xsize, ysize);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_LOWRANGE);
       }
 
     // Markierungsarray m1 in Bild uebertragen
@@ -397,8 +395,6 @@ ende:
     setborder(ret, 0);    // Rahmen um Ausgangsbild setzen. Bildrand als Regionengrenzen markieren
 
     ddelete(m1, xsize, ysize);
-    FreeImg(m3);
-
     Q.clear();
     return OK;
   }
@@ -461,7 +457,7 @@ ende:
     // nach Durchfuehren von Bucket-Sort: schneller Zugriff auf alle Punkte eines Hoehenlevelctor
 
     vector <PointVECTOR> b2;
-    b2.resize(i->maxval + 1);
+    b2.resize(i.maxval + 1);
 
     int xpos = 0, ypos = 0;
     //    int gr = 0;
@@ -703,7 +699,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
         }
 
     // Rueckgabebild
-    if (ret->maxval < curlab)
+    if (ret.maxval < curlab)
       throw IceException(FNAME, M_LOWRANGE);
 
     for (int y = 0; y < ret.ysize; y++)
@@ -759,7 +755,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     int ymax = i->ysize;
     int gp = GetVal(i, x, y); // Wert des Pixels
     int gh;
-    int second = i->maxval; // Kleinster Wert in der Umgebung
+    int second = i.maxval; // Kleinster Wert in der Umgebung
     //                     = Zweitkleinster Wert, falls (x,y) Minimum ist
 
     // erste Spalte (links)
@@ -1047,7 +1043,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
                 {
                   for (int n = 0; n < int(PQ.size()); n++)
                     {
-                      PutVal(i1, PQ[n].x, PQ[n].y, i1->maxval);
+                      PutVal(i1, PQ[n].x, PQ[n].y, i1.maxval);
                     }
                 }
             }
@@ -1120,7 +1116,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
         throw IceException(FNAME, M_WRONG_PARAM);
       }
 
-    int maxval = WSImg->maxval;
+    int maxval = WSImg.maxval;
 
     vector<long> regGrw(maxval + 1);
     vector<int> regPix(maxval + 1);

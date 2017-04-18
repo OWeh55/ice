@@ -61,9 +61,9 @@ namespace ice
         tmp = NewImg(dest, true);
       }
 
-    int gmax1 = src->maxval * 9;
-    int gmax2 = dest->maxval;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 9;
+    int gmax2 = dest.maxval;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 = 1;
@@ -125,9 +125,9 @@ namespace ice
         tmp = NewImg(dest, true);
       }
 
-    int gmax1 = src->maxval * 9;
-    int gmax2 = dest->maxval;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 9;
+    int gmax2 = dest.maxval;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 = + 1;
@@ -209,12 +209,12 @@ namespace ice
 
   static void smear_core_std(const Image& pn1, const Image& pn2, int sx, int sy)
   {
-    int dx = pn1->xsize;
-    int dy = pn1->ysize;
+    int dx = pn1.xsize;
+    int dy = pn1.ysize;
     int sx1 = sx / 2;
     int sy1 = sy / 2;
 
-    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1->maxval);
+    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1.maxval);
 
     // horizontale Filterung
     for (int y = 0; y < dy; y++)   // alle zeilen
@@ -289,8 +289,6 @@ namespace ice
         {
           PutValUnchecked(pn2, x, y, 0);
         }
-
-    FreeImg(tmp);
   }
 
   template<class T>
@@ -453,9 +451,9 @@ namespace ice
     int dy = pn1->ysize;
     int sx1 = sx / 2;
     int sy1 = sy / 2;
-    int mv = pn2->maxval;
+    int mv = pn2.maxval;
 
-    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1->maxval);
+    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1.maxval);
 
     // horizontale Filterung
     for (int y = 0; y < dy; y++)   // alle zeilen
@@ -528,8 +526,6 @@ namespace ice
         {
           PutValUnchecked(pn2, x, y, 0);
         }
-
-    FreeImg(tmp);
   }
 
   template<class T1, class T2>
@@ -543,7 +539,7 @@ namespace ice
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
-    int mv = pn2->maxval;
+    int mv = pn2.maxval;
 
     int hx = dx - sx + 1;
     int** tmp = new int* [hx];
@@ -712,8 +708,8 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PARAM);
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
-    Image box1 = NewImg(dx, dy, imgs->maxval);
-    Image box2 = NewImg(dx, dy, imgs->maxval);
+    Image box1 = NewImg(dx, dy, imgs.maxval);
+    Image box2 = NewImg(dx, dy, imgs.maxval);
     RETURN_ERROR_IF_FAILED(smearImg(imgs, box1, n1));
     RETURN_ERROR_IF_FAILED(smearImg(imgs, box2, n2));
     RETURN_ERROR_IF_FAILED(subImg(box1, box2, imgd, mode));
@@ -739,7 +735,7 @@ namespace ice
 
     Image imgs_wide = NewImg(dx + 2 * boundary_x,
                              dy + 2 * boundary_y,
-                             imgs->maxval);
+                             imgs.maxval);
 
     for (int y = 0; y < imgs_wide.ysize; y++)
       for (int x = 0; x < imgs_wide.xsize; x++)
@@ -789,7 +785,7 @@ namespace ice
             if (it == smearimgs.end())
               {
                 Image smearresult = NewImg(imgs_wide->xsize,
-                                           imgs_wide->ysize, imgs_wide->maxval);
+                                           imgs_wide->ysize, imgs_wide.maxval);
                 clearImg(smearresult);
 
                 if (use_gauss_filter)
@@ -831,7 +827,7 @@ namespace ice
               long int box1v = GetValUnchecked(box1, xn, yn);
               long int box2v = GetValUnchecked(box2, xn, yn);
               long int diff = box1v - box2v;
-              long int v = imgs->maxval;
+              long int v = imgs.maxval;
 
               if (diff > 0)
                 {
@@ -840,7 +836,7 @@ namespace ice
                   if (scalef != 0.0)
                     {
                       long int box1_s = box1v + scalef;
-                      v    = (diff * (box1_s + imgs->maxval)) / (diff + box1_s);
+                      v    = (diff * (box1_s + imgs.maxval)) / (diff + box1_s);
 
                       if (v > current_val)
                         {
@@ -1028,7 +1024,7 @@ namespace ice
   {
     LSIFilter f;
     RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
-    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2, img2->maxval / 2));
+    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2, img2.maxval / 2));
     return OK;
   }
 

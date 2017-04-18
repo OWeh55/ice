@@ -147,7 +147,6 @@ namespace ice
         RETURN_ERROR_IF_FAILED(pi = ReadImg(DD(ch)->filename, pi));
         unlink(DD(ch)->filename.c_str());
         Image2Buffer(pi, ib);
-        FreeImg(pi);
       }
     else
       {
@@ -161,9 +160,6 @@ namespace ice
         //      cout << "3" << endl;
         Image2Buffer(pir, pig, pib, ib);
         //      cout << "4" << endl;
-        FreeImg(pir);
-        FreeImg(pig);
-        FreeImg(pib);
       }
     return OK;
   }

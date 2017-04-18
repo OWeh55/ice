@@ -64,7 +64,7 @@ namespace ice
   {
     Contur c;
 
-    if ((val1 < 0) || (val2 < 0) || (val1 > img->maxval) || (val2 > img->maxval))
+    if ((val1 < 0) || (val2 < 0) || (val1 > img.maxval) || (val2 > img.maxval))
       throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
@@ -97,7 +97,7 @@ namespace ice
     Contur c;
 
     if ((val1 < 0) || (val2 < 0) ||
-        (val1 > img->maxval) || (val2 > img->maxval))
+        (val1 > img.maxval) || (val2 > img.maxval))
       throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
@@ -158,11 +158,9 @@ namespace ice
 
     if (ast == 0)
       {
-        FreeImg(imgh);
         return NO_EXIST;
       }
 
-    FreeImg(imgh);
     return OK;
   }
 #undef FNAME

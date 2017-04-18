@@ -41,7 +41,7 @@ namespace ice
         int dimx, dimy;
         checkSizes(pic, dir, dest, dimx, dimy);
 
-        int dirsteps = dir->maxval + 1;
+        int dirsteps = dir.maxval + 1;
         double dirfac = M_PI / dirsteps;
 
         // Filter-Bank Smear
@@ -94,7 +94,7 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
 
-    int dirsteps = dir->maxval + 1;
+    int dirsteps = dir.maxval + 1;
     double dirfac = 2 * M_PI / dirsteps;
 
     // Filter-Bank Smear
@@ -114,7 +114,7 @@ namespace ice
       for (int x = 0; x < dimx; x++)
         {
           int richtungs_index = GetVal(dir, x, y);
-          int g = GetVal(pic, x, y, fedge[richtungs_index]) + dest->maxval / 2;
+          int g = GetVal(pic, x, y, fedge[richtungs_index]) + dest.maxval / 2;
           PutVal(dest, x, y, limited(g, dest));
         }
 
@@ -145,7 +145,7 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
 
-    int dirsteps = dir->maxval + 1;
+    int dirsteps = dir.maxval + 1;
     double dirfac = M_PI / dirsteps;
 
     // Filter-Bank DoB
@@ -165,7 +165,7 @@ namespace ice
       for (int x = 0; x < dimx; x++)
         {
           int richtungs_index = GetVal(dir, x, y);
-          int g = GetVal(pic, x, y, fdob[richtungs_index]) + dest->maxval / 2;
+          int g = GetVal(pic, x, y, fdob[richtungs_index]) + dest.maxval / 2;
           PutVal(dest, x, y, limited(g, dest));
         }
 

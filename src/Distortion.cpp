@@ -131,7 +131,7 @@ namespace ice
     if (!IsImg(source) || !IsImg(dest))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if (dest->maxval != source->maxval)
+    if (dest.maxval != source.maxval)
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (source == dest)

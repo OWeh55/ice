@@ -49,10 +49,10 @@ namespace ice
     double ct;
     int topt;
 
-    if (!hist.valid())
+    if (!hist.isValid())
       throw IceException(FNAME, M_NOT_INITIALISED);
 
-    int n = hist.classes();
+    int n = hist.getNClasses();
 
     double m2 = 0;
     double s2 = 0;
@@ -477,7 +477,7 @@ namespace ice
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;
 
-    h.reset((int)ceil((img->maxval + 1) * 1.415)); /* max. Grad: sqrt(2)*maxval */
+    h.reset((int)ceil((img.maxval + 1) * 1.415)); /* max. Grad: sqrt(2)*maxval */
 
     for (y = yi; y <= ya; y += diffy)
       {
@@ -527,7 +527,7 @@ namespace ice
 
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;
-    hist.reset((img->maxval + 1) * 6);
+    hist.reset((img.maxval + 1) * 6);
 
     for (y = yi; y <= ya; y += diffy)
       {

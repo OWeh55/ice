@@ -192,8 +192,5 @@ GetFeatureStandard::get_feature(const Image& pic, Vector& feature) const
         }
     }
 
-  FreeImg(temp);
-  FreeImg(normalized);
-
   return 0;
 }

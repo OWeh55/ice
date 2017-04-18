@@ -106,8 +106,8 @@ namespace ice
           }
         else
           {
-            x0 = imgo->xsize / 2;
-            y0 = imgo->ysize / 2;
+            x0 = imgo.xsize / 2;
+            y0 = imgo.ysize / 2;
           }
       }
 
@@ -228,7 +228,7 @@ namespace ice
 
     if (
       (!IsImg(img)) || (!IsImg(dest)) ||
-      dy >= img->xsize / 2 || dy >= img->ysize / 2 ||
+      dy >= img.xsize / 2 || dy >= img.ysize / 2 ||
       dx < 0 || dy < 0
     )
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -243,7 +243,7 @@ namespace ice
       {
         for (int y = 0; y < dest.ysize; y++)
           for (int x = 0; x < dest.xsize; x++)
-            PutVal(dest, x, y, GetVal(img, x - dest->xsize / 2 + img->xsize / 2, y - dest->ysize / 2 + img->ysize / 2));
+            PutVal(dest, x, y, GetVal(img, x - dest.xsize / 2 + img.xsize / 2, y - dest.ysize / 2 + img.ysize / 2));
       }
     else
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -269,7 +269,7 @@ namespace ice
 
     Hist h = HistImg(img);
 
-    for (i = 1; i <= h.classes(); i++)
+    for (i = 1; i <= h.getNClasses(); i++)
       {
         p = h.Rel(i);
 
@@ -347,12 +347,12 @@ namespace ice
 
     ConturList clist;
 
-    if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img->xsize || sy >= img->ysize)
+    if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img.xsize || sy >= img.ysize)
       throw IceException(FNAME, M_WRONG_PARAM);
 
     int weiter = true;
 
-    Image mark = NewImg(img->xsize, img->ysize, 1);
+    Image mark = NewImg(img.xsize, img.ysize, 1);
 
     if (!IsImg(mark))
       throw IceException(FNAME, M_NO_MEM);
@@ -473,7 +473,6 @@ namespace ice
       }
     while (weiter);
 
-    FreeImg(mark);
     return clist;
   }
 }

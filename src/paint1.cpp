@@ -67,7 +67,7 @@ namespace ice
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || (val > img->maxval) || (size < 2))
+    if ((val < 0) || (val > img.maxval) || (size < 2))
       throw IceException(FNAME, M_WRONG_VAL);
 
     if ((x < 0) || (y < 0) || (x >= img->xsize) || (y >= img->ysize))
@@ -152,8 +152,8 @@ namespace ice
     Contur c;
 
     if (
-      (val1 < 0) || (val2 > img->maxval) ||
-      (val2 < 0) || (val2 > img->maxval)
+      (val1 < 0) || (val2 > img.maxval) ||
+      (val2 < 0) || (val2 > img.maxval)
     )
       throw IceException(FNAME, M_WRONG_VAL);
 
@@ -182,7 +182,7 @@ namespace ice
   {
     Contur c;
 
-    if ((val1 < 0) || (val2 < 0) || (val2 > img->maxval))
+    if ((val1 < 0) || (val2 < 0) || (val2 > img.maxval))
       throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
@@ -217,7 +217,7 @@ namespace ice
     double xs, ys, xs1, ys1;
     double z1u, z1o;
 
-    if ((val < 0) || val > pic->maxval)
+    if ((val < 0) || val > pic.maxval)
       throw IceException(FNAME, M_WRONG_VAL);
 
     for (j = 0; j < dimy; ++j)

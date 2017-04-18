@@ -404,9 +404,9 @@ namespace ice
       {
         for (x = 0; x < r->xsize; x++)
           {
-            rr = 255 - (GetVal(r, x, y) * 255 / r->maxval);
-            gg = 255 - (GetVal(g, x, y) * 255 / g->maxval);
-            bb = 255 - (GetVal(b, x, y) * 255 / b->maxval);
+            rr = 255 - (GetVal(r, x, y) * 255 / r.maxval);
+            gg = 255 - (GetVal(g, x, y) * 255 / g.maxval);
+            bb = 255 - (GetVal(b, x, y) * 255 / b.maxval);
             tga_bwrite(fd, bb);
             tga_bwrite(fd, gg);
             tga_bwrite(fd, rr);

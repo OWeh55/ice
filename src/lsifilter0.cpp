@@ -50,7 +50,7 @@ namespace ice
     int offset_dest_x = nx / 2;
     int offset_dest_y = ny / 2;
 
-    int dmax = dest->maxval;
+    int dmax = dest.maxval;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
@@ -124,7 +124,7 @@ namespace ice
   {
     int offset_dest_x = nx / 2;
     int offset_dest_y = ny / 2;
-    int dmax = dest->maxval;
+    int dmax = dest.maxval;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
@@ -167,7 +167,7 @@ namespace ice
   {
     int nx2 = nx / 2;
     int ny2 = ny / 2;
-    int dmax = dest->maxval;
+    int dmax = dest.maxval;
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with offset
     setborder(dest, nx2, ny2, offset);
@@ -205,7 +205,7 @@ namespace ice
     int ny2 = ny / 2;
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
-    setborder(dest, nx2, ny2, (dest->maxval + 1) / 2);
+    setborder(dest, nx2, ny2, (dest.maxval + 1) / 2);
 
     for (int y = 0; y < src->ysize + 1 - ny; y++)
       {

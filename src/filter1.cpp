@@ -56,10 +56,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyam1 = src->ysize - 2;
     int srcwxa1 = src->xsize;
 
@@ -110,12 +110,12 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
-    int srcwyam1 = src->ysize - 2;
-    int srcwxa1 = src->xsize;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
+    int srcwyam1 = src.ysize - 2;
+    int srcwxa1 = src.xsize;
 
     // the border of width 1 around the image will be filled with offset
     setborder(dest, 1, offset);
@@ -172,10 +172,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwya = src->ysize - 1;
     int srcwxa = src->xsize - 1;
 
@@ -226,10 +226,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int xmax = dest->xsize;
     int ymax = dest->ysize;
 
@@ -283,10 +283,10 @@ namespace ice
         tmp.copy(src);
       }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
 
     int srcwyi = 0;
     int srcwya1 = src->ysize;
@@ -404,7 +404,6 @@ namespace ice
   {
     int x, y, dx, dy, gmax1, gmax2, val;
     int vy1, vy2, vy3, vx, vy, xoff, yoff;
-    char has_temp;
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
 
@@ -413,15 +412,10 @@ namespace ice
     if (pn2 == pn1)   /*Quellbild=Zielbild*/
       {
         pn1 = NewImg(pn2, true);  /*temporaeres Bild anlegen*/
-        has_temp = 1;
-      }
-    else
-      {
-        has_temp = 0;
       }
 
-    gmax1 = pn1->maxval * 6;
-    gmax2 = pn2->maxval * norm;
+    gmax1 = pn1.maxval * 6;
+    gmax2 = pn2.maxval * norm;
 
     setborder(pn2, 1, 0);
 
@@ -470,11 +464,6 @@ namespace ice
           }
       }
 
-    if (has_temp == 1)
-      {
-        FreeImg(pn1);
-      }
-
     return OK;
   }
 #undef FNAME
@@ -494,7 +483,7 @@ namespace ice
     int dimx = pic->xsize;
     int dimy = pic->ysize;
 
-    int maxval = pic->maxval;
+    int maxval = pic.maxval;
     int maxval_d = maxval * 6; // maxval für Gradienten
 
     int detection_rad = detectionsize / 2;
@@ -602,7 +591,7 @@ namespace ice
           // calculate angle
           double direction = eigen.phi();
           // normlisiert auf maximalen Grauwert in Ergebnisbild eintragen
-          int directionGrayValue = Mod(RoundInt(direction * (dest->maxval + 1) / M_PI), (dest->maxval + 1));
+          int directionGrayValue = Mod(RoundInt(direction * (dest.maxval + 1) / M_PI), (dest.maxval + 1));
 
           PutVal(dest, x, y, directionGrayValue);
         }
@@ -627,7 +616,7 @@ namespace ice
     int dimx = pic->xsize;
     int dimy = pic->ysize;
 
-    int maxval = pic->maxval;
+    int maxval = pic.maxval;
     int maxval_d = maxval * 6; // maxval für Gradienten
 
     int detection_rad = detectionsize / 2;
@@ -681,7 +670,7 @@ namespace ice
           // Jetzt Winkel  bestimmen !
           double direction = atan2(gyv, gxv);
           // normlisiert auf maximalen Grauwert in Ergebnisbild eintragen
-          int direction_grv = Mod(RoundInt(direction * (dest->maxval + 1) / M_PI / 2.0), (dest->maxval + 1));
+          int direction_grv = Mod(RoundInt(direction * (dest.maxval + 1) / M_PI / 2.0), (dest.maxval + 1));
 
           PutVal(dest, x, y, direction_grv);
         }
@@ -697,11 +686,10 @@ namespace ice
   {
     int x, y, dx, dy, val, Direction;
     int vy1, vy2, vy3, vx, vy, xoff, yoff;
-    char has_temp;
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
 
-    if ((pn2->maxval < 7))
+    if ((pn2.maxval < 7))
       throw IceException(FNAME, M_WRONG_PARAM);
 
     Image pn1 = pn1p;
@@ -709,11 +697,6 @@ namespace ice
     if (pn2 == pn1)   /*Quellbild=Zielbild*/
       {
         pn1 = NewImg(pn2, true);  /*temporaeres Quellbild anlegen*/
-        has_temp = 1;
-      }
-    else
-      {
-        has_temp = 0;
       }
 
     for (x = 0; x < dx; x++)
@@ -850,11 +833,6 @@ namespace ice
 
             PutValUnchecked(pn2, x + xoff, y + yoff, Direction);
           }
-      }
-
-    if (has_temp == 1)
-      {
-        FreeImg(pn1);
       }
 
     return OK;

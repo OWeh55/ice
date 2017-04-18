@@ -73,9 +73,9 @@ namespace ice
         return 0;
       }
 
-    if (v > p->maxval)
+    if (v > p.maxval)
       {
-        return p->maxval;
+        return p.maxval;
       }
 
     return v;

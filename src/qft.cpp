@@ -147,7 +147,7 @@ namespace ice
     if (!(mode == CENTER || mode == NOCENTER))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    int maxcolor = output->maxval;
+    int maxcolor = output.maxval;
     int i, j;
     int X = input.getColumns();
     int Y = input.getRows();
@@ -248,13 +248,13 @@ namespace ice
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
       throw IceException(FNAME, M_SIZES_DIFFER);
 
-    if (r->maxval != g->maxval || r->maxval != b->maxval)
+    if (r.maxval != g.maxval || r.maxval != b.maxval)
       throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    int maxcolor = r->maxval;
+    int maxcolor = r.maxval;
     int i, j;
     int X = input.getColumns();
     int Y = input.getRows();
@@ -342,13 +342,13 @@ namespace ice
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
       throw IceException(FNAME, M_SIZES_DIFFER);
 
-    if (r->maxval != g->maxval || r->maxval != b->maxval)
+    if (r.maxval != g.maxval || r.maxval != b.maxval)
       throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    int maxcolor = r->maxval;
+    int maxcolor = r.maxval;
     int i, j;
     int X = input.getColumns();
     int Y = input.getRows();
@@ -474,17 +474,17 @@ namespace ice
               }
             catch (IceException& ex)
               {
-                a = alpha->maxval;
-                b = beta->maxval;
-                d = delta->maxval;
+                a = alpha.maxval;
+                b = beta.maxval;
+                d = delta.maxval;
                 ok = false;
               }
 
             if (ok)
               {
-                a = alpha->maxval / 2 + phases.x * (alpha->maxval) / (2 * M_PI);
-                b = beta->maxval / 2 + phases.y * (beta->maxval) / M_PI;
-                d = (delta->maxval - 1) / 2 + phases.z * 4 * ((delta->maxval - 1) / 2) / M_PI;
+                a = alpha.maxval / 2 + phases.x * (alpha.maxval) / (2 * M_PI);
+                b = beta.maxval / 2 + phases.y * (beta.maxval) / M_PI;
+                d = (delta.maxval - 1) / 2 + phases.z * 4 * ((delta.maxval - 1) / 2) / M_PI;
               }
 
             PutVal(alpha, xs, ys, int(a));

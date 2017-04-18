@@ -264,11 +264,6 @@ namespace ice
     free(nx);
     free(ny);
 
-    if (has_temp)
-      {
-        FreeImg(imgs);
-      }
-
     return OK;
   }
 #undef FNAME
@@ -508,11 +503,6 @@ namespace ice
     delete [] nyx;
     delete [] nxy;
     delete [] nyy;
-
-    if (has_temp)
-      {
-        FreeImg(imgs);
-      }
 
     return OK;
   }

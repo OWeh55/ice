@@ -192,8 +192,8 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PARAM);
 
     n = n / 2; // Umgebungsgröße -> Abstandswert
-    nx = quelle->xsize;
-    ny = quelle->ysize;
+    nx = quelle.xsize;
+    ny = quelle.ysize;
     pic = NewImgD(nx, ny, -1., +1.);
     mmask(p, n, mask);  /* Momentenmaske berechnen  */
     /* Momentenbild fuer x-Richtung */

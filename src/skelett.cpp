@@ -207,7 +207,7 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
 
-    int maxv = skelett->maxval;
+    int maxv = skelett.maxval;
 
     if (maxv < 2)
       throw IceException(FNAME, M_LOWRANGE);
@@ -291,7 +291,7 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
 
-    int maxv = skelett->maxval;
+    int maxv = skelett.maxval;
 
     Image timg = NewImg(dimx, dimy, 3);
 

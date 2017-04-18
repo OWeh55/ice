@@ -27,26 +27,28 @@ namespace ice
 #define FNAME "BinImg"
   template<typename T>
   void binImg(const Image3d<T>& source, const Image3d<T>& dest,
-	      typename T::ValueType threshold = 1, typename T::ValueType value = -1)
+              typename T::ValueType threshold = 1, typename T::ValueType value = -1)
   {
-    try {
-      for (int z = 0; z < source.zsize; z++)
-	{
-	  binImg(source[z], dest[z], threshold, value);
-	}
-    }
+    try
+      {
+        for (int z = 0; z < source.zsize; z++)
+          {
+            binImg(source[z], dest[z], threshold, value);
+          }
+      }
     RETHROW;
   }
-  
+
   template<typename T>
   void binImg(const Image3d<T>& image, typename T::ValueType threshold = 1)
   {
-    try {
-    for (int z = 0; z < image.zsize; z++)
+    try
       {
-        binImg(image[z], threshold);
+        for (int z = 0; z < image.zsize; z++)
+          {
+            binImg(image[z], threshold);
+          }
       }
-    }
     RETHROW;
   }
 #undef FNAME
@@ -54,24 +56,26 @@ namespace ice
   template<typename T>
   void invertImg(const Image3d<T>& source, const Image3d<T>& dest)
   {
-    try {
-    for (int z = 0; z < source.zsize; z++)
+    try
       {
-        invertImg(source[z], dest[z]);
+        for (int z = 0; z < source.zsize; z++)
+          {
+            invertImg(source[z], dest[z]);
+          }
       }
-    }
     RETHROW;
   }
 
   template<typename T>
   void invertImg(const Image3d<T>& image)
   {
-    try {
-    for (int z = 0; z < image.zsize; z++)
+    try
       {
-        invertImg(image[z]);
+        for (int z = 0; z < image.zsize; z++)
+          {
+            invertImg(image[z]);
+          }
       }
-    }
     RETHROW;
   }
 #undef FNAME

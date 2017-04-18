@@ -48,10 +48,10 @@ namespace ice
     return pnr;
   }
 
-  void Neuerpunkt(vector<IPoint>& la, int x, int y,
-                  const Image& inr, int rindex,
-                  const Image& dist, int dist2, int step2, double fac,
-                  Image& dir, Freeman freeman)
+  void newPoint(vector<IPoint>& la, int x, int y,
+                const Image& inr, int rindex,
+                const Image& dist, int dist2, int step2, double fac,
+                Image& dir, Freeman freeman)
   {
     if (GetVal(inr, x, y) == 0)
       {
@@ -61,21 +61,21 @@ namespace ice
         PutVal(inr, x, y, rindex);
 
         if (step2 == 0) PutVal(dist, x + x0, y + y0,
-                                 Min(RoundInt(sqrt((double)dist2)*fac), dist->maxval));
+                                 Min(RoundInt(sqrt((double)dist2)*fac), dist.maxval));
         else
           {
             if (step2 < 0)
               {
                 if (dist2 <= -step2)
                   {
-                    PutVal(dist, x + x0, y + y0, dist->maxval);
+                    PutVal(dist, x + x0, y + y0, dist.maxval);
                   }
               }
             else
               {
                 if (dist2 > step2)
                   {
-                    PutVal(dist, x + x0, y + y0, dist->maxval);
+                    PutVal(dist, x + x0, y + y0, dist.maxval);
                   }
               }
           }
@@ -110,7 +110,7 @@ namespace ice
 
     if (fac <= 0.0)
       {
-        fac = dist->maxval / maxdist;
+        fac = dist.maxval / maxdist;
       }
 
     if ((mode < 1) || (mode > 2))
@@ -133,10 +133,10 @@ namespace ice
 
     if (pegl == -1)
       {
-        pegl = (orig->maxval + 1) / 2;
+        pegl = (orig.maxval + 1) / 2;
       }
 
-    if ((pegl < 0) || (pegl > orig->maxval))
+    if ((pegl < 0) || (pegl > orig.maxval))
       throw IceException(FNAME, M_WRONG_PARAM);
 
     if (IsImg(dir))
@@ -147,23 +147,13 @@ namespace ice
         if ((orig == dir) || (dist == dir))
           throw IceException(FNAME, M_SAME_IMAGE);
 
-        if (dir->maxval < 8)
+        if (dir.maxval < 8)
           throw IceException(FNAME, M_LOWRANGE);
       }
 
     Image ibin, inr;
     ibin = NewImg(xs, ys, 2);
-
-    if (!IsImg(ibin))
-      throw IceException(FNAME, M_NO_MEM);
-
     inr = NewImg(xs, ys, xs * ys / 2);
-
-    if (!IsImg(inr))
-      {
-        FreeImg(ibin);
-        throw IceException(FNAME, M_NO_MEM);
-      }
 
     int io, iu;
 
@@ -206,7 +196,7 @@ namespace ice
             {
               if (ibin.getPixel(x, y) == 0)
                 {
-                  dist.setPixel(x, y, dist->maxval);
+                  dist.setPixel(x, y, dist.maxval);
                 }
             }
       }
@@ -230,18 +220,18 @@ namespace ice
                 if (b1 == 0)
                   {
                     ind = Randpunkt(inr, rp, x - 1, y);
-                    Neuerpunkt(aplist, x, y,
-                               inr, ind,
-                               dist, 1, step2, fac,
-                               dir, 4);
+                    newPoint(aplist, x, y,
+                             inr, ind,
+                             dist, 1, step2, fac,
+                             dir, 4);
                   }
                 else
                   {
                     ind = Randpunkt(inr, rp, x, y);
-                    Neuerpunkt(aplist, x - 1, y,
-                               inr, ind,
-                               dist, 1, step2, fac,
-                               dir, 0);
+                    newPoint(aplist, x - 1, y,
+                             inr, ind,
+                             dist, 1, step2, fac,
+                             dir, 0);
                   }
               }
 
@@ -262,18 +252,18 @@ namespace ice
                 if (b1 == 0)
                   {
                     ind = Randpunkt(inr, rp, x, y - 1);
-                    Neuerpunkt(aplist, x, y,
-                               inr, ind,
-                               dist, 1, step2, fac,
-                               dir, 6);
+                    newPoint(aplist, x, y,
+                             inr, ind,
+                             dist, 1, step2, fac,
+                             dir, 6);
                   }
                 else
                   {
                     ind = Randpunkt(inr, rp, x, y);
-                    Neuerpunkt(aplist, x, y - 1,
-                               inr, ind,
-                               dist, 1, step2, fac,
-                               dir, 2);
+                    newPoint(aplist, x, y - 1,
+                             inr, ind,
+                             dist, 1, step2, fac,
+                             dir, 2);
                   }
               }
 
@@ -346,17 +336,17 @@ namespace ice
 
                       if (mindist == adist)   // abstand nicht vergrößert
                         {
-                          Neuerpunkt(aplist, xt, yt,
-                                     inr, minindex,
-                                     dist, mindist2, step2, fac,
-                                     dir, mindir);
+                          newPoint(aplist, xt, yt,
+                                   inr, minindex,
+                                   dist, mindist2, step2, fac,
+                                   dir, mindir);
                         }
                       else
                         {
-                          Neuerpunkt(aqlist, xt, yt,
-                                     inr, minindex,
-                                     dist, mindist2, step2, fac,
-                                     dir, mindir);
+                          newPoint(aqlist, xt, yt,
+                                   inr, minindex,
+                                   dist, mindist2, step2, fac,
+                                   dir, mindir);
                         }
                     }
 
@@ -371,8 +361,6 @@ namespace ice
         aqlist.clear();
       }
 
-    FreeImg(inr);
-    FreeImg(ibin);
     return OK;
   }
 #undef FNAME

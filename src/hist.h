@@ -32,7 +32,7 @@ namespace ice
   /* Klasse  Histogramm */
   class Hist
   {
-    friend int PrintHist(const Hist& h);
+    friend void printHist(const Hist& h);
 
   public:
     Hist();
@@ -40,25 +40,22 @@ namespace ice
     Hist(int number, double diff = 1.0, double minval = -0.5);
     ~Hist();
 
-    //      const int &number;
-
-    //      const double &minval;
-    //      const double &diff;
-    //      const int &valid;
-
     double minValue() const
     {
       return lowerLimit;
     }
+
     double classWidth() const
     {
       return classwidth;
     }
-    bool valid() const
+
+    bool isValid() const
     {
       return isInit;
     }
-    int classes() const
+
+    int getNClasses() const
     {
       return nClasses;
     }
@@ -77,11 +74,11 @@ namespace ice
     int Limits(double& min, double& max) const;
     int Limits(double& min, double& max, double quantil) const;
 
-    int Statistic(int& n) const ;
-    int Statistic(int& n, double& xm, double& xs) const;
-    int Statistic(int& n, double& xm, double& xs, double& skew) const;
+    void getStatistics(int& n) const ;
+    void getStatistics(int& n, double& xm, double& xs) const;
+    void getStatistics(int& n, double& xm, double& xs, double& skew) const;
 
-    int Vis(int val, const Image& img) const;
+    void draw(const Image& img, int value) const;
 
     Hist& operator=(const Hist& h);
 

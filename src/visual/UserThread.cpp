@@ -41,7 +41,7 @@ namespace ice
   {
     // convert commandline parameters from wxwidgets to classic C (for Main)
     int argc = wxGetApp().argc;
-    
+
     char** argv = new char* [argc];
 
     for (int i = 0; i < argc; i++)
@@ -61,7 +61,7 @@ namespace ice
     catch (const exception& ex)
       {
         cout << "Unhandled exception: " << ex.what() << endl;
-	exitcode = (wxThread::ExitCode)1;
+        exitcode = (wxThread::ExitCode)1;
       }
 
     // tell the application that it can finish

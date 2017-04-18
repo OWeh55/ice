@@ -968,8 +968,6 @@ namespace ice
     GaussImg(img1, puffer2, size, sigma2);
     subImg(puffer1, puffer2, 1, img2);
     pivRenormImg(img2, img2);
-    FreeImg(puffer1);
-    FreeImg(puffer2);
     return img2;
   }
 
