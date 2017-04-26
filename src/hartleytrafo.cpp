@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "darith.h"
@@ -43,23 +43,17 @@ namespace ice
   //---------------------------
 
 #define FNAME "HartleyD"
-  int HartleyD(const double* src, int n, double* res)
+  void HartleyD(const double* src, int n, double* res)
   {
     double* im;
     double* re;
     int i;
 
     if (n < 2)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (src == NULL || res == NULL)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((n & 1) == 0)
       {
@@ -94,8 +88,14 @@ namespace ice
 
         for (i = 0; i < n2; i++)
           {
-            if (i == 0) hn = 0;
-            else hn = n2 - i;
+            if (i == 0)
+              {
+                hn = 0;
+              }
+            else
+              {
+                hn = n2 - i;
+              }
 
             // reconstruction of FFT of even and odd part
             // from combined fft
@@ -147,31 +147,27 @@ namespace ice
         delete [] im;
         delete [] re;
       }
-
-    return OK;
   }
 #undef FNAME
 
 #define FNAME "Hartley"
-  int Hartley(const Vector& src, Vector& dst)
+  void Hartley(const Vector& src, Vector& dst)
   {
-    dst.Resize(src.Size());
-    const double* s = src.getDataPointer();
-    double* d = dst.getDataPointer();
+    try
+      {
+        dst.Resize(src.Size());
+        const double* s = src.getDataPointer();
+        double* d = dst.getDataPointer();
 
-    int n = src.Size();
-    IF_FAILED(HartleyD(s, n, d))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-    return OK;
+        int n = src.Size();
+        HartleyD(s, n, d);
+      }
+    RETHROW;
   }
 
-  int Hartley(Vector& vec)
+  void Hartley(Vector& vec)
   {
-    RETURN_ERROR_IF_FAILED(Hartley(vec, vec));
-    return OK;
+    Hartley(vec, vec);
   }
 #undef FNAME
 }

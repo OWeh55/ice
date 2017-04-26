@@ -22,7 +22,7 @@
 #include <fstream>
 #include <string>
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "ClassifierNormal.h"
@@ -35,10 +35,11 @@ namespace ice
   ClassifierNormal::ClassifierNormal(int classes, int dimension):
     Classifier(classes, dimension)
   {
-    IF_FAILED(Init(classes, dimension))
-    {
-      Message(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        Init(classes, dimension);
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -121,7 +122,9 @@ namespace ice
   void ClassifierNormal::doNormalization(int mode)
   {
     if (mode & normalizeIsotropic)
-      mode |= normalizeScaling;
+      {
+        mode |= normalizeScaling;
+      }
     normalizationMode = mode;
 
     int nSamples = samples.size();
@@ -131,13 +134,17 @@ namespace ice
     for (int i = 0; i < nSamples; ++i)
       {
         for (int k = 0; k < nFeatures; ++k)
-          sum[k] += samples[i].features[k];
+          {
+            sum[k] += samples[i].features[k];
+          }
       }
 
     featureMean.resize(nFeatures);
 
     for (int k = 0; k < nFeatures; ++k)
-      featureMean[k] = sum[k] / nSamples;
+      {
+        featureMean[k] = sum[k] / nSamples;
+      }
 
     // calculate standard deviation SD
     vector<double> sum2(nFeatures, 0.0);
@@ -164,26 +171,38 @@ namespace ice
           {
             double sum = 0.0;
             for (int i = 0; i < nFeatures; ++i)
-              sum += featureSD[i] * featureSD[i];
+              {
+                sum += featureSD[i] * featureSD[i];
+              }
             double factor = 1.0 / sqrt(sum / nFeatures);
-            if (factor == 0.0) // do nothing
-              factor = 1.0;
+            if (factor == 0.0)   // do nothing
+              {
+                factor = 1.0;
+              }
             for (int i = 0; i < nFeatures; ++i)
-              scaleFactor[i] = factor;
+              {
+                scaleFactor[i] = factor;
+              }
           }
         else
           {
             for (int i = 0; i < nFeatures; ++i)
               {
                 if (featureSD[i] != 0.0)
-                  scaleFactor[i] = 1.0 / featureSD[i];
+                  {
+                    scaleFactor[i] = 1.0 / featureSD[i];
+                  }
                 else
-                  scaleFactor[i] = 1.0;
+                  {
+                    scaleFactor[i] = 1.0;
+                  }
               }
           }
       }
 
     for (int i = 0; i < nSamples; ++i)
-      normalize(samples[i].features);
+      {
+        normalize(samples[i].features);
+      }
   }
 }

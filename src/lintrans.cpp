@@ -26,7 +26,7 @@
 
 #include "base.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "histogram.h"
 #include "drawline.h"
 #include "WindowWalker.h"
@@ -41,10 +41,7 @@ namespace ice
                             double quantile)
   {
     if (quantile < 0 || quantile >= 0.5)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int len = hi.size();
     double alq = 0;
@@ -89,17 +86,16 @@ namespace ice
                     double quantile)
   {
     if (!h.isValid())
-      {
-        Message(FNAME, M_INVALID_STRUCT, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_INVALID_STRUCT);
 
     int len = h.nClasses();
     vector<double> hi(len);
 
     //rel. Häuf. in Array schreiben
     for (int y = 0; y < len; y++)
-      hi[y] = h.getRelative(y);
+      {
+        hi[y] = h.getRelative(y);
+      }
 
     if (mode == GV_QUANTILE)
       {
@@ -110,23 +106,16 @@ namespace ice
         return getGrayLimitsMean(hi, l, r);
       }
     else
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     return OK;
   }
-
 
   int GetGrayLimits(const Image& img, int& l, int& r, int mode,
                     double quantile)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Histogram h(img);
 
@@ -141,10 +130,7 @@ namespace ice
   {
     if (MatchImg(src, tgt) != OK)
 
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     WindowWalker w(src);
 
@@ -167,21 +153,18 @@ namespace ice
   int GrayTransformLimits(const Image& src, const Image& tgt, int min, int max)
   {
     if (max < min)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double diff = max - min;
     double a1, a0;
     if (diff == 0)
       {
         a1 = 0;
-        a0 = tgt->maxval;
+        a0 = tgt.maxval;
       }
     else
       {
-        a1 = (tgt->maxval + 1) / diff;
+        a1 = (tgt.maxval + 1) / diff;
         a0 = -min * a1;
       }
 

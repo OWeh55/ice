@@ -31,7 +31,7 @@
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Contur.h"
@@ -62,10 +62,7 @@ namespace ice
     int dy = ys - y;
 
     if (abs(dy) > 1 || abs(dx) > 1 || (dx == 0 && dy == 0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return FC[dx + 1][dy + 1];
   }

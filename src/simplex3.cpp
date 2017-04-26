@@ -270,7 +270,10 @@ namespace ice
 
     lnzbnd = 0;
 
-    for (i = 0; i < m; i++) lnzbnd += degB[i];
+    for (i = 0; i < m; i++)
+      {
+        lnzbnd += degB[i];
+      }
 
     lnzbnd = lnzbnd / 2;
     unzbnd   = lnzbnd;
@@ -408,10 +411,19 @@ namespace ice
 
     for (j = 0; j < m; j++)
       {
-        if (method == MD) hkey[j] = degB[j];
-        else              hkey[j] = j;
+        if (method == MD)
+          {
+            hkey[j] = degB[j];
+          }
+        else
+          {
+            hkey[j] = j;
+          }
 
-        if (hkey[j] == 0) hkey[j] = m + 1;
+        if (hkey[j] == 0)
+          {
+            hkey[j] = m + 1;
+          }
       }
 
     /*---------------------------------------------------------+
@@ -592,7 +604,9 @@ again:
         heapnum--;
 
         if (okey < hkey[heap[1]])
-          hfall(heapnum, hkey, iheap, heap, 1);
+          {
+            hfall(heapnum, hkey, iheap, heap, 1);
+          }
 
         /*------------------------------------------------+
           |  generate fillin and update elements           */
@@ -673,7 +687,10 @@ again:
                 hkey[col2] = col2;
               }
 
-            if (hkey[col2] == 0) hkey[col2] = m + 1;
+            if (hkey[col2] == 0)
+              {
+                hkey[col2] = m + 1;
+              }
 
             hrise(hkey, iheap, heap, iheap[col2]);
             hfall(heapnum, hkey, iheap, heap, iheap[col2]);
@@ -746,9 +763,15 @@ end:
     /*------------------------------------------------+
       |  update "i" arrays to new indices              */
 
-    for (k = 0; k < si3_kL[m]; k++) si3_iL[k] = si3_irowperm[si3_iL[k]];
+    for (k = 0; k < si3_kL[m]; k++)
+      {
+        si3_iL[k] = si3_irowperm[si3_iL[k]];
+      }
 
-    for (k = 0; k < si3_kUt[m]; k++) si3_iUt[k] = si3_icolperm[si3_iUt[k]];
+    for (k = 0; k < si3_kUt[m]; k++)
+      {
+        si3_iUt[k] = si3_icolperm[si3_iUt[k]];
+      }
 
     /*------------------------------------------------+
       |  divide each column of L by diagonal           */
@@ -901,9 +924,15 @@ end:
 
     starttime = (double) clock();
 
-    if (bsolve_y  == nullptr) CALLOC(bsolve_y, m,   double);
+    if (bsolve_y  == nullptr)
+      {
+        CALLOC(bsolve_y, m,   double);
+      }
 
-    if (bsolve_tag  == nullptr) CALLOC(bsolve_tag, m,   int);
+    if (bsolve_tag  == nullptr)
+      {
+        CALLOC(bsolve_tag, m,   int);
+      }
 
     for (k = 0; k < ny; k++)
       {
@@ -913,7 +942,10 @@ end:
         addtree(i);
       }
 
-    if (si3_rank < m) eps = EPSSOL * maxv(sy, ny);
+    if (si3_rank < m)
+      {
+        eps = EPSSOL * maxv(sy, ny);
+      }
 
     /*------------------------------------------------------+
     |               -1                                      |
@@ -944,7 +976,10 @@ end:
 
     for (i = getlast(); i >= si3_rank && i != -1; i = getprev())
       {
-        if (Abs(bsolve_y[i]) > eps) consistent = false;
+        if (Abs(bsolve_y[i]) > eps)
+          {
+            consistent = false;
+          }
 
         bsolve_y[i] = 0.0;
       }
@@ -1052,9 +1087,15 @@ end:
 
     starttime = (double) clock();
 
-    if (btsolve_y == nullptr) CALLOC(btsolve_y, m, double);
+    if (btsolve_y == nullptr)
+      {
+        CALLOC(btsolve_y, m, double);
+      }
 
-    if (btsolve_tag == nullptr) CALLOC(btsolve_tag, m, int);
+    if (btsolve_tag == nullptr)
+      {
+        CALLOC(btsolve_tag, m, int);
+      }
 
 
 
@@ -1072,7 +1113,10 @@ end:
         addtree(i);
       }
 
-    if (si3_rank < m) eps = EPSSOL * maxv(sy, ny);
+    if (si3_rank < m)
+      {
+        eps = EPSSOL * maxv(sy, ny);
+      }
 
     /*------------------------------------------------------+
     |               -T                                      |
@@ -1101,7 +1145,10 @@ end:
 
     for (i = getlast(); i >= si3_rank && i != -1; i = getprev())
       {
-        if (Abs(btsolve_y[i]) > eps) consistent = false;
+        if (Abs(btsolve_y[i]) > eps)
+          {
+            consistent = false;
+          }
 
         btsolve_y[i] = 0.0;
       }
@@ -1206,11 +1253,20 @@ end:
 
     MALLOC(dwork, m, double);
 
-    if (si3_rank < m) eps = EPSSOL * maxv(y, m);
+    if (si3_rank < m)
+      {
+        eps = EPSSOL * maxv(y, m);
+      }
 
-    for (i = 0; i < m; i++) dwork[i] = y[i];
+    for (i = 0; i < m; i++)
+      {
+        dwork[i] = y[i];
+      }
 
-    for (i = 0; i < m; i++) y[si3_irowperm[i]] = dwork[i];
+    for (i = 0; i < m; i++)
+      {
+        y[si3_irowperm[i]] = dwork[i];
+      }
 
     /*------------------------------------------------------+
     |               -1                                      |
@@ -1233,7 +1289,10 @@ end:
 
     for (i = m - 1; i >= si3_rank; i--)
       {
-        if (Abs(y[i]) > eps) consistent = false;
+        if (Abs(y[i]) > eps)
+          {
+            consistent = false;
+          }
 
         y[i] = 0.0;
       }
@@ -1250,9 +1309,15 @@ end:
         y[i] = beta / si3_diagU[i];
       }
 
-    for (i = 0; i < m; i++) dwork[i] = y[i];
+    for (i = 0; i < m; i++)
+      {
+        dwork[i] = y[i];
+      }
 
-    for (i = 0; i < m; i++) y[si3_colperm[i]] = dwork[i];
+    for (i = 0; i < m; i++)
+      {
+        y[si3_colperm[i]] = dwork[i];
+      }
 
     FREE(dwork);
 
@@ -1282,9 +1347,15 @@ end:
     extern int* Gauss_Eta_link;
     extern int  Gauss_Eta_currtag;
 
-    if (Gauss_Eta_a  == nullptr) CALLOC(Gauss_Eta_a,  m,   double);
+    if (Gauss_Eta_a  == nullptr)
+      {
+        CALLOC(Gauss_Eta_a,  m,   double);
+      }
 
-    if (Gauss_Eta_tag == nullptr) CALLOC(Gauss_Eta_tag, m,   int);
+    if (Gauss_Eta_tag == nullptr)
+      {
+        CALLOC(Gauss_Eta_tag, m,   int);
+      }
 
     if (Gauss_Eta_link == nullptr)
       {
@@ -1292,7 +1363,10 @@ end:
         Gauss_Eta_link++;
       }
 
-    if (si3_e_iter <= 0) return;
+    if (si3_e_iter <= 0)
+      {
+        return;
+      }
 
     ii = -1;
 
@@ -1321,7 +1395,10 @@ end:
                 ii = i;
               }
 
-            if (i == col) kcol = k;
+            if (i == col)
+              {
+                kcol = k;
+              }
           }
 
         temp = Gauss_Eta_a[col] / si3_E[kcol];
@@ -1381,9 +1458,15 @@ end:
     extern int*  Gauss_Eta_T_tag;
     extern int  Gauss_Eta_T_currtag;
 
-    if (Gauss_Eta_T_a   == nullptr) CALLOC(Gauss_Eta_T_a,   m,   double);
+    if (Gauss_Eta_T_a   == nullptr)
+      {
+        CALLOC(Gauss_Eta_T_a,   m,   double);
+      }
 
-    if (Gauss_Eta_T_tag == nullptr) CALLOC(Gauss_Eta_T_tag, m,   int);
+    if (Gauss_Eta_T_tag == nullptr)
+      {
+        CALLOC(Gauss_Eta_T_tag, m,   int);
+      }
 
     for (j = si3_e_iter - 1; j >= 0; j--)
       {
@@ -1393,7 +1476,10 @@ end:
           {
             i = ivec[k];
 
-            if (i == col) kk = k;
+            if (i == col)
+              {
+                kk = k;
+              }
 
             Gauss_Eta_T_a[i] = vec[k];
             Gauss_Eta_T_tag[i] = Gauss_Eta_T_currtag;
@@ -1415,7 +1501,10 @@ end:
           {
             i = si3_iE[k];
 
-            if (i == col) kkk = k;
+            if (i == col)
+              {
+                kkk = k;
+              }
 
             if (Gauss_Eta_T_tag[i] == Gauss_Eta_T_currtag)
               {

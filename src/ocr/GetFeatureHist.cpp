@@ -46,7 +46,9 @@ int GetFeatureHist::get_feature(const Image& pic,
     {
       if (get_quantil_border(pic, c,
                              threshold, win, 0, 0, x_position) != 0)
-        return 0;
+        {
+          return 0;
+        }
     }
 
 
@@ -72,38 +74,38 @@ int GetFeatureHist::get_feature(const Image& pic,
   double phi_1 = 0;
 
   pl1 = ConturPointList(c, 1);
-  SetOk();
-  if (pl1 == NULL)
-    {
-      return 100;
-    }
-  SetOk();
   pl2 = NewPointList(pl1->lng);
-  if (pl2 == NULL)
-    {
-      return 100;
-    }
 
   FourierD(pl1->xptr, pl1->yptr, pl1->lng, NORMAL, pl2->xptr, pl2->yptr); // Fourierdeskriptoren berechnen
 
   if (fabs(pl2->xptr[1]) < 1.0e-12)
     {
       if (pl2->yptr[1] > 0)
-        phi_1 = M_PI / 2.0;
+        {
+          phi_1 = M_PI / 2.0;
+        }
       if (pl2->yptr[1] < 0)
-        phi_1 = -M_PI / 2.0;
+        {
+          phi_1 = -M_PI / 2.0;
+        }
       if (fabs(pl2->yptr[1]) < 1.0e-12)
         {
           return 3;
         }
     }
   else
-    phi_1 = atan(pl2->yptr[1] / pl2->xptr[1]);  // Phase des 1. FK
+    {
+      phi_1 = atan(pl2->yptr[1] / pl2->xptr[1]);  // Phase des 1. FK
+    }
 
   if (pl2->xptr[1] < 0 && pl2->yptr[1] < 0)
-    phi_1 += M_PI;
+    {
+      phi_1 += M_PI;
+    }
   if (pl2->xptr[1] < 0 && pl2->yptr[1] > 0)
-    phi_1 += M_PI;
+    {
+      phi_1 += M_PI;
+    }
 
   // die ersten 2*fd-2 Merkmale berechnen
   for (i = 0; i < fd / 2; ++i)
@@ -184,7 +186,6 @@ int GetFeatureHist::get_feature(const Image& pic,
   // aufräumen
   FreePointList(pl1);
   FreePointList(pl2);
-  FreeImg(temp);
 
   delete [] r_feature;
   delete [] i_feature;

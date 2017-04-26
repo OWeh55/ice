@@ -63,7 +63,9 @@ namespace ice
   void iceSelectLineInteraction::DrawSelectedLine()
   {
     if (!FirstSelectedFlag)
-      return;
+      {
+        return;
+      }
 
     // We use logical function wxXOR (see explanation at iceSelectPointInteraction::DrawCursor).
     wxClientDC ClientDC(imageWindow);
@@ -100,14 +102,18 @@ namespace ice
     // cout << currentPoint.x << " " << currentPoint.y << endl;
     // we only draw the selection if the first corner has already been selected
     if (!FirstSelectedFlag)
-      return;
+      {
+        return;
+      }
 
 
     //    IPoint currentPoint = ImageWindow->TranslateWin2ImagePos(MouseEvent.GetPosition());
 
     // paint the new position only if it lies within the image
     if (!window.inside(currentPoint))
-      return;
+      {
+        return;
+      }
 
     currentPoint = makeValid(currentPoint);
 
@@ -201,7 +207,9 @@ namespace ice
 
     // delete the selected line from the window, if it has been painted
     if (FirstSelectedFlag)
-      DrawSelectedLine();
+      {
+        DrawSelectedLine();
+      }
 
     // call base class cleanup (see class specification)
     DrawSelectedLine();

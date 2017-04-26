@@ -51,13 +51,22 @@ namespace ice
 
     cgrad = cos(rad = Arcus(grad));
 
-    if (b == 0) return -10000;
+    if (b == 0)
+      {
+        return -10000;
+      }
 
     ergebnis = atan(a * tan(rad) / b);
 
-    if (cgrad < 0) ergebnis += M_PI;
+    if (cgrad < 0)
+      {
+        ergebnis += M_PI;
+      }
 
-    if (ergebnis < 0)  ergebnis += 2 * M_PI;
+    if (ergebnis < 0)
+      {
+        ergebnis += 2 * M_PI;
+      }
 
     return Degree(ergebnis);
   }

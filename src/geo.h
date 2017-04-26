@@ -31,9 +31,9 @@
 
 namespace ice
 {
-  Contur Transform(const Trafo& tr, const Contur& c);
-  int TransformList(const Trafo& tr, Matrix& m);
-  int TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2);
+  Contur transform(const Trafo& tr, const Contur& c);
+  void transformList(const Trafo& tr, Matrix& m);
+  void transformList(const Trafo& tr, const Matrix& m1, Matrix& m2);
 
   Trafo MatchPano(const Matrix& p1, const Matrix& p2, int mode);
   Trafo MatchPano(const Matrix& p1, const Matrix& p2, int mode, const Vector& weight);

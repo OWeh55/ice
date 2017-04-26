@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "momente.h"
 #include "lists.h"
@@ -35,7 +35,9 @@ namespace ice
   Moments::Moments(double m[15])
   {
     for (int i = 0; i < 15; i++)
-      mom[i] = m[i];
+      {
+        mom[i] = m[i];
+      }
   }
 
   Moments::Moments(const Region& r)
@@ -82,12 +84,16 @@ namespace ice
     if (mom[0] < 0)
       {
         for (int i = 0; i < 15; i++)
-          res.mom[i] = -mom[i];
+          {
+            res.mom[i] = -mom[i];
+          }
       }
     else
       {
         for (int i = 0; i < 15; i++)
-          res.mom[i] = mom[i];
+          {
+            res.mom[i] = mom[i];
+          }
       }
 
     return res;
@@ -97,10 +103,7 @@ namespace ice
   Point Moments::Centre() const
   {
     if (mom[i00] == 0.0)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return Point(0, 0);
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     return Point(mom[i10] / mom[i00], mom[i01] / mom[i00]);
   }
@@ -112,10 +115,7 @@ namespace ice
     int os[] = {0, 1, 3, 6, 10};
 
     if ((xi < 0) || (yi < 0) || (s > 4))
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return mom[i00];
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return mom[os[s] + yi];
   }
@@ -126,36 +126,37 @@ namespace ice
     int os[] = {0, 1, 3, 6, 10};
 
     if ((xi < 0) || (yi < 0) || (s > 4))
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return mom[i00];
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return mom[os[s] + yi];
   }
 #undef FNAME
 #define FNAME "Moments::Add"
-  int Moments::Add(const Moments& m)
+  int Moments::add(const Moments& m)
   {
     int i;
 
     for (i = 0; i < 15; i++)
-      mom[i] += m.mom[i];
+      {
+        mom[i] += m.mom[i];
+      }
 
     return OK;
   }
 
-  int Moments::Add(double m[15])
+  int Moments::add(double m[15])
   {
     int i;
 
     for (i = 0; i < 15; i++)
-      mom[i] += m[i];
+      {
+        mom[i] += m[i];
+      }
 
     return OK;
   }
 
-  int Moments::Add(Point p, double val)
+  int Moments::add(Point p, double val)
   {
     double x1 = p.x;
     double x2 = x1 * x1;
@@ -189,7 +190,7 @@ namespace ice
     return OK;
   }
 
-  int Moments::Add(int y, int px1, int px2)
+  int Moments::add(int y, int px1, int px2)
   {
     // Zeilen-Segment zu Momenten hinzufügen
 
@@ -247,57 +248,61 @@ namespace ice
     return OK;
   }
 
-  int Moments::Add(const Region& reg)
+  int Moments::add(const Region& reg)
   {
     return reg.calcMoments(*this);
   }
 
-  int Moments::Add(const Contur& c)
+  int Moments::add(const Contur& c)
   {
     double s[2];
     double m[15];
     MomentRegion(c, m, s);
-    return Add(m);
+    return add(m);
   }
 
-  int Moments::Add(const Matrix& p)
+  int Moments::add(const Matrix& p)
   {
     double s[2];
     double m[15];
     MomentPolygon(p, m, s);
-    return Add(m);
+    return add(m);
   }
 
-  int Moments::Add(const std::vector<Point>& pl)
+  int Moments::add(const std::vector<Point>& pl)
   {
     double s[2];
     double m[15];
     MomentPolygon(pl, m, s);
-    return Add(m);
+    return add(m);
   }
 
-  int Moments::Add(PointList p)
+  int Moments::add(PointList p)
   {
     double s[2];
     double m[15];
     MomentPolygon(p, m, s);
-    return Add(m);
+    return add(m);
   }
 
-  int Moments::Add(PointList pl, int a1, int a2)
+  int Moments::add(PointList pl, int a1, int a2)
   {
     double s[2];
     double m[15];
     PointListMoment(pl, a1, a2, m, s);
-    return Add(m);
+    return add(m);
   }
 #undef FNAME
 #define FNAME "Moments::CentralMoments"
   Moments Moments::CentralMoments() const
   {
-    double res[15];
-    RETURN_IF_FAILED(CalcCentralMoments(mom, res), Moments());
-    return Moments(res);
+    try
+      {
+        double res[15];
+        CalcCentralMoments(mom, res);
+        return Moments(res);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::XShear"
@@ -369,7 +374,9 @@ namespace ice
     int i;
 
     for (i = 0; i < 4; i++)
-      res[i] = flu[i];
+      {
+        res[i] = flu[i];
+      }
 
     return res;
   }
@@ -382,7 +389,9 @@ namespace ice
     ice::HuInvariants(mom, hu);
 
     for (int i = 0; i < 7; i++)
-      res[i] = hu[i];
+      {
+        res[i] = hu[i];
+      }
 
     return res;
   }
@@ -396,7 +405,9 @@ namespace ice
     int i;
 
     for (i = 0; i < 7; i++)
-      res[i] = hu[i];
+      {
+        res[i] = hu[i];
+      }
 
     return res;
   }
@@ -410,13 +421,13 @@ namespace ice
 
   Moments Moments::NormalizeTranslation(double& x, double& y) const
   {
-    double momres[15];
-    IF_FAILED(NormalizeMomentsTranslation(mom, momres, x, y))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Moments();
-    }
-    return Moments(momres);
+    try
+      {
+        double momres[15];
+        NormalizeMomentsTranslation(mom, momres, x, y);
+        return Moments(momres);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::NormalizeXShearing"
@@ -429,11 +440,7 @@ namespace ice
   Moments Moments::NormalizeXShearing(double& beta) const
   {
     double momres[15];
-    IF_FAILED(NormalizeMomentsXShearing(mom, momres, beta))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsXShearing(mom, momres, beta);
     return Moments(momres);
   }
 #undef FNAME
@@ -447,11 +454,7 @@ namespace ice
   Moments Moments::NormalizeYShearing(double& beta) const
   {
     double momres[15];
-    IF_FAILED(NormalizeMomentsYShearing(mom, momres, beta))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Moments();
-    }
+    NormalizeMomentsYShearing(mom, momres, beta);
     return Moments(momres);
   }
 #undef FNAME
@@ -468,35 +471,30 @@ namespace ice
       case anisotropic:
         return NormalizeScaling(alpha, beta);
       default:
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return *this;
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
   }
 
   Moments Moments::NormalizeScaling(double& alpha) const
   {
-    //  std::cout << "***************1"<<std::endl;
-    double momres[15];
-    IF_FAILED(NormalizeMomentsArea(mom, momres, alpha))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Moments();
-    }
-    return Moments(momres);
+    try
+      {
+        double momres[15];
+        NormalizeMomentsArea(mom, momres, alpha);
+        return Moments(momres);
+      }
+    RETHROW;
   }
 
   Moments Moments::NormalizeScaling(double& alpha, double& beta) const
   {
-    // std::cout << "***************2"<<std::endl;
-//    for (int i=0;i<15;i++)
-//      std::cout << i << ": " << mom[i] << std::endl;
-    double momres[15];
-    IF_FAILED(NormalizeMomentsScaling(mom, momres, alpha, beta))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Moments();
-    }
-    return Moments(momres);
+    try
+      {
+        double momres[15];
+        NormalizeMomentsScaling(mom, momres, alpha, beta);
+        return Moments(momres);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::NormalizeRotation"
@@ -508,26 +506,26 @@ namespace ice
 
   Moments Moments::NormalizeRotation(double& phi) const
   {
-    double momres[15];
-    double c, s;
-    IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Moments();
-    }
-    phi = atan2(s, c);
-    return Moments(momres);
+    try
+      {
+        double momres[15];
+        double c, s;
+        NormalizeMomentsRotation(mom, momres, c, s);
+        phi = atan2(s, c);
+        return Moments(momres);
+      }
+    RETHROW;
   }
 
   Moments Moments::NormalizeRotation(double& c, double& s) const
   {
-    double momres[15];
-    IF_FAILED(NormalizeMomentsRotation(mom, momres, c, s))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Moments();
-    }
-    return Moments(momres);
+    try
+      {
+        double momres[15];
+        NormalizeMomentsRotation(mom, momres, c, s);
+        return Moments(momres);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Moments::Normalize"
@@ -535,8 +533,6 @@ namespace ice
   {
     double trd[3][3];
     double resd[15];
-
-    OffMessage();
 
     switch (mode)
       {
@@ -550,17 +546,7 @@ namespace ice
         AffinIterateMoments(mom, resd, trd);
         break;
       default:
-        OnMessage();
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return Moments();
-      }
-
-    OnMessage();
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, ERROR); // Fehlermeldung weiterreichen
-        return Moments();          // Rückkehr mit leeren Momenten
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     Matrix trm(3, 3);
@@ -568,7 +554,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trm[i][j] = trd[i][j];
+        {
+          trm[i][j] = trd[i][j];
+        }
 
     tr = Trafo(trm);
     return Moments(resd);
@@ -584,25 +572,21 @@ namespace ice
   Moments Moments::AffineTransform(const Trafo& tr) const
   {
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return Moments();
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
-    Matrix trm = tr.Tmatrix();
+    Matrix trm = tr.getMatrix();
 
     if (fabs(trm[2][0]) + fabs(trm[2][1]) > EPSILON)
-      {
-        Message(FNAME, M_TRAFO_NOTAFFINE, WRONG_PARAM);
-        return Moments();
-      }
+      throw IceException(FNAME, M_TRAFO_NOTAFFINE);
 
     double trd[3][3];
     int i, j;
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trd[i][j] = trm[i][j];
+        {
+          trd[i][j] = trm[i][j];
+        }
 
     double resd[15];
     AffinTransMoments(mom, trd, resd);

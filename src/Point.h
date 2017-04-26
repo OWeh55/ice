@@ -86,9 +86,13 @@ namespace ice
     bool operator<(const pointT& s) const
     {
       if (x == s.x)
-        return y < s.y;
+        {
+          return y < s.y;
+        }
       else
-        return x < s.x;
+        {
+          return x < s.x;
+        }
     }
 
     friend void swap(pointT<T>& first, pointT<T>& second)
@@ -188,7 +192,10 @@ namespace ice
       pointT res = *this;
       double l = x * x + y * y;
 
-      if (l == 0) return res;
+      if (l == 0)
+        {
+          return res;
+        }
 
       l = sqrt(l);
       return res / l;

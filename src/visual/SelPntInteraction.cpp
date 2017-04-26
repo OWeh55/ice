@@ -60,7 +60,9 @@ namespace ice
     // paint the new position only if it lies within the accepted window
     IPoint MousePos = imageWindow->translateWin2ImagePos(MouseEvent.GetPosition());
     if (!window.inside(MousePos))
-      return;
+      {
+        return;
+      }
 
     IPoint currentPoint = makeValid(MousePos);
 

@@ -43,7 +43,9 @@ namespace ice
     try
       {
         if (size < 2)
-          throw 6;
+          {
+            throw 6;
+          }
 
         videofile = new VideoFile(fn);
         int xs, ys, mv, fps;
@@ -52,37 +54,39 @@ namespace ice
         for (int i = 0; i < size; i++)
           {
             vr[i] = NewImg(xs, ys, mv);
-            SetImg(vr[i], mv);
+            setImg(vr[i], mv);
             vg[i] = NewImg(xs, ys, mv);
-            ClearImg(vg[i]);
+            clearImg(vg[i]);
             vb[i] = NewImg(xs, ys, mv);
-            SetImg(vb[i], mv);
+            setImg(vb[i], mv);
           }
 
         // ersten Frame lesen
         if (!videofile->read(vr[0], vg[0], vb[0]))
-          throw 3;
+          {
+            throw 3;
+          }
       }
     catch (int error)
       {
         switch (error)
           {
           case 1:
-            Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, fn);
             break;
           case 2:
           case 3:
-            Message(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILETYPE, fn);
             break;
           case 4:
           case 5:
-            Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+            throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
             break;
           case 6:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           default:
-            Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, fn);
           }
 
         videofile = nullptr;
@@ -96,7 +100,10 @@ namespace ice
 
   VideoFileCached::~VideoFileCached()
   {
-    if (videofile) delete videofile;
+    if (videofile)
+      {
+        delete videofile;
+      }
   }
 
   void VideoFileCached::fillbuffer(int frame_nr)
@@ -106,7 +113,9 @@ namespace ice
       {
         // cout << ">" << end_bidx << endl;
         if (!videofile->read(vr[end_bidx], vg[end_bidx], vb[end_bidx]))
-          error = past_eof;
+          {
+            error = past_eof;
+          }
         else
           {
             last_frame++;
@@ -128,17 +137,18 @@ namespace ice
                              const Image& imgb, int frame)
   {
     if (!videofile)
-      {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
 
     error = no_error;
 
     if (frame == next)
-      frame = framenr + 1;
+      {
+        frame = framenr + 1;
+      }
     else if (frame == prev)
-      frame = framenr - 1;
+      {
+        frame = framenr - 1;
+      }
 
     if (frame < first_frame)
       {
@@ -149,7 +159,9 @@ namespace ice
     //    cout << "read " << frame << "  " << first_frame << ".." << last_frame << endl;
 
     if (frame > last_frame)
-      fillbuffer(frame);
+      {
+        fillbuffer(frame);
+      }
 
     if (error == no_error)
       {
@@ -170,9 +182,7 @@ namespace ice
   void VideoFileCached::getPara(int& xsize, int& ysize, int& maxval, int& fpsp) const
   {
     if (!videofile)
-      {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
 
     videofile->getPara(xsize, ysize, maxval, fpsp);
   }

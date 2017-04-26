@@ -23,7 +23,7 @@
 #include <fstream>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matrix_function.h"
 #include "numbase.h"
@@ -48,10 +48,7 @@ namespace ice
     Matrix h(m);
 
     if (dim != m.rows())
-      {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return h;
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     double max, s, q, pivot;
     vector<int> p_k(dim);
@@ -66,10 +63,18 @@ namespace ice
             s = 0;
 
             for (int j = k; j < dim; j++)
-              s = s + fabs(h[i][j]);
+              {
+                s = s + fabs(h[i][j]);
+              }
 
-            if (s != 0) q = fabs(h[i][k]) / s;
-            else q = 0;
+            if (s != 0)
+              {
+                q = fabs(h[i][k]) / s;
+              }
+            else
+              {
+                q = 0;
+              }
 
             if (q > max)
               {
@@ -79,10 +84,7 @@ namespace ice
           }
 
         if (max == 0)
-          {
-            Message(FNAME, M_NO_INVERSE, NO_SOLUTION);
-            return h;
-          }
+          throw IceException(FNAME, M_NO_INVERSE);
 
         if (p_k[k] != k)
           {
@@ -132,7 +134,6 @@ namespace ice
     return h;
   }
 
-
 #define FNAME "Inverse"
   matrix<double> Inverse(const matrix<double>& m)
   {
@@ -141,10 +142,7 @@ namespace ice
     matrix<double> h(m);
 
     if (dim != m.rows())
-      {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return h;
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     double max, s, q, pivot;
     vector<int> p_k(dim);
@@ -159,10 +157,18 @@ namespace ice
             s = 0;
 
             for (int j = k; j < dim; j++)
-              s = s + fabs(h[i][j]);
+              {
+                s = s + fabs(h[i][j]);
+              }
 
-            if (s != 0) q = fabs(h[i][k]) / s;
-            else q = 0;
+            if (s != 0)
+              {
+                q = fabs(h[i][k]) / s;
+              }
+            else
+              {
+                q = 0;
+              }
 
             if (q > max)
               {
@@ -172,10 +178,7 @@ namespace ice
           }
 
         if (max == 0)
-          {
-            Message(FNAME, M_NO_INVERSE, NO_SOLUTION);
-            return h;
-          }
+          throw IceException(FNAME, M_NO_INVERSE);
 
         if (p_k[k] != k)
           {
@@ -225,6 +228,5 @@ namespace ice
     return h;
   }
 #undef FNAME
-
 
 }

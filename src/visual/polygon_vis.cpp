@@ -40,32 +40,29 @@ namespace ice
 #define FNAME "SelLine"
   int SelLine(const Image& img, IPoint& p1, IPoint& p2)
   {
-    Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
-    if (v == NULL)
+    try
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
+        Visual v = GetVisual(img);
+        return v->SelectLine(p1, p2);
       }
-    return v->SelectLine(p1, p2);
+    RETHROW;
   }
 
   int SelLineFromStart(const Image& img, const IPoint& p1, IPoint& p2)
   {
-    Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
-    if (v == NULL)
+    try
       {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
+        Visual v = GetVisual(img);
+        v->SelectLineFromStart(p1, p2);
+        return OK;
       }
-    return v->SelectLineFromStart(p1, p2);
+    RETHROW;
   }
 
   LineSeg SelLine(const Image& img)
   {
     IPoint p1, p2;
-    RETURN_IF_FAILED(SelLine(img, p1, p2), LineSeg());
+    SelLine(img, p1, p2);
     return LineSeg(p1, p2);
   }
 #undef FNAME
@@ -79,10 +76,7 @@ namespace ice
     int maxp = 100;
     p = (int*)malloc(maxp * 2 * sizeof(int));
     if (p == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return (NULL);
-      }
+      throw IceException(FNAME, M_NO_MEM);
     /* let pp1 point to p */
     pp1 = p;
 
@@ -105,7 +99,10 @@ namespace ice
         /* now draw all lines beginning from p ending at pp2 that was
          * given on in SelLine() above
          */
-        for (p1 = p, p2 = p + 2; p2 <= pp2; p1 += 2, p2 += 2) Line(p1[0], p1[1], p2[0], p2[1], 1, 0, img);
+        for (p1 = p, p2 = p + 2; p2 <= pp2; p1 += 2, p2 += 2)
+          {
+            Line(p1[0], p1[1], p2[0], p2[1], 1, 0, img);
+          }
         i++;
 
         /* now let pp1 be the latest point and have pp2 point to the next point's adress */
@@ -118,10 +115,7 @@ namespace ice
             maxp += 100;
             p = (int*)realloc(p, maxp * 2 * sizeof(int));
             if (p == NULL)
-              {
-                Message(FNAME, M_NO_MEM, NO_MEM);
-                return (NULL);
-              }
+              throw IceException(FNAME, M_NO_MEM);
             pp2 = p + i * 2;
             pp1 = pp2 - 2;
           }
@@ -129,7 +123,9 @@ namespace ice
 
     /* dont let it run to pp2, because SelLine() returns nothing right */
     for (p1 = p, p2 = p + 2; p2 <= pp1; p1 += 2, p2 += 2)
-      Line(p1[0], p1[1], p2[0], p2[1], 0, 0, img);
+      {
+        Line(p1[0], p1[1], p2[0], p2[1], 0, 0, img);
+      }
 
     pl = NewPointList(i);
     pp1 = p;
@@ -154,7 +150,7 @@ namespace ice
     /* let pp1 (and therefore p) point to the first point */
     p = SelPoint(img, rc);
 
-    if (rc < 0) // Abbruch
+    if (rc < 0)   // Abbruch
       {
         return pl;
       }
@@ -171,7 +167,9 @@ namespace ice
          */
         pp.push_back(p2);
         for (unsigned int i = 1; i < pp.size(); i++)
-          Line(pp[i - 1], pp[i], 1, img);
+          {
+            Line(pp[i - 1], pp[i], 1, img);
+          }
 
         p = p2;
       } // while SelLine
@@ -179,7 +177,9 @@ namespace ice
     pl.Reset(pp[0]);
 
     for (unsigned int i = 1; i < pp.size(); i++)
-      pl.Add(pp[i]);
+      {
+        pl.add(pp[i]);
+      }
 
     return pl;
   }

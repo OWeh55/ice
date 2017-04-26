@@ -16,13 +16,13 @@ ImageD d1, d2;
 void toimag()
 {
   CopyImg(p1, p2);
-  SetImg(p1, p1->maxval / 2);
+  setImg(p1, p1->maxval / 2);
 }
 
 void toreal()
 {
   CopyImg(p2, p1);
-  SetImg(p2, p2->maxval / 2);
+  setImg(p2, p2->maxval / 2);
 }
 
 void todouble()
@@ -72,11 +72,11 @@ int main(int argc, char* argv[])
 
   Printf("Konvertiere Original\n");
   p1 = NewImg(dx, dy, 255);
-  RenormImg(p0, p1);
+  renormImg(p0, p1);
 
   Printf("Lege Imaginärteil an\n");
   p2 = NewImg(dx, dy, 255);
-  SetImg(p2, p2->maxval / 2);
+  setImg(p2, p2->maxval / 2);
 
   p3 = NewImg(dx, dy, 255);
   p4 = NewImg(dx, dy, 255);
@@ -148,11 +148,6 @@ int main(int argc, char* argv[])
   toint();
   GETCHAR();
 
-  FreeImg(p0);
-  FreeImg(p1);
-  FreeImg(p2);
-  FreeImg(p3);
-  FreeImg(p4);
   FreeImgD(d1);
   FreeImgD(d2);
   Display(OFF);

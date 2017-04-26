@@ -21,7 +21,7 @@
 
 #include <set>
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "vectortools.h"
 #include "ClassifierRandomForest.h"
 
@@ -42,17 +42,20 @@ namespace ice
                                     int depth,
                                     int nUsep)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
-    this->nTrees = nTrees;
-    classifiers.resize(nTrees);
-    nUse = nUsep;
-    if (nUse > nTrees)
+    try
       {
-        Message(FNAME, M_WRONG_PARAMETER, WRONG_PARAM);
-        return;
+        Classifier::Init(classes, dimension);
+        this->nTrees = nTrees;
+        classifiers.resize(nTrees);
+        nUse = nUsep;
+        if (nUse > nTrees)
+          throw IceException(FNAME, M_WRONG_PARAMETER);
+        for (unsigned int i = 0; i < classifiers.size(); ++i)
+          {
+            classifiers[i].Init(classes, dimension, depth);
+          }
       }
-    for (unsigned int i = 0; i < classifiers.size(); ++i)
-      classifiers[i].Init(classes, dimension, depth);
+    RETHROW;
   }
 
   void ClassifierRandomForest::Init(int classes, int dimension)
@@ -65,7 +68,9 @@ namespace ice
   {
     std::set<int> useTrees;
     while ((int)useTrees.size() < nUse)
-      useTrees.insert(rand() % nTrees);
+      {
+        useTrees.insert(rand() % nTrees);
+      }
     for (int n : useTrees)
       {
         classifiers[n].Train(s);
@@ -79,7 +84,9 @@ namespace ice
     for (int n = 0; finishOk && n < nTrees; ++n)
       {
         if (classifiers[n].Finish() != OK)
-          finishOk = false;
+          {
+            finishOk = false;
+          }
       }
 
     return finishOk;
@@ -101,7 +108,9 @@ namespace ice
       }
 
     for (int i = 0; i < nClasses; ++i)
-      prob[i] /= ct;
+      {
+        prob[i] /= ct;
+      }
     return maxIndex(prob);
   }
 }

@@ -25,7 +25,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fouriertrafo.h"
@@ -43,10 +43,7 @@ namespace ice
   {
     int dim = re.size();
     if (dim != (int)im.size())
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     vector<double> real(dim);
     vector<double> imag(dim);
@@ -81,20 +78,23 @@ namespace ice
   int Fourier(const Matrix& ms, int option, Matrix& md)
   {
     if ((ms.rows() != 2) && (ms.cols() != 2))
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (ms.rows() != 2)
-      md = !ms;
+      {
+        md = !ms;
+      }
     else
-      md = ms;
+      {
+        md = ms;
+      }
 
     RETURN_ERROR_IF_FAILED(Fourier(md[0], md[1], option));
 
     if (ms.rows() != 2)
-      md = !md;
+      {
+        md = !md;
+      }
 
     return OK;
   }

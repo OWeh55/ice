@@ -21,7 +21,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "root.h"
 #include "momente.h"
@@ -47,13 +47,15 @@ namespace ice
   static double  fkt_3(double moment[15], double x);
   static double  fkt_4(double moment[15], double x);
 
-  static int NewtonRaphson(double moment[15], double x0, double eps, double(*f)(double*, double), double(*f_strich)(double*, double), double& root);
+  static int NewtonRaphson(double moment[15],
+                           double x0, double eps,
+                           double(*f)(double*, double),
+                           double(*f_strich)(double*, double), double& root);
 
   static double f3(double m[15], double x);
   static double f3_strich(double m[15], double x);
   static double f4(double m[15], double x);
   static double f4_strich(double m[15], double x);
-
 
 #define FNAME "FitCircleMoments"
   int FitCircleMoments(const double mp[15],
@@ -73,10 +75,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return -1;
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     double xs, ys;
     RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(mx, mtrans, xs, ys));
@@ -137,10 +136,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return -1;
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     double sx, sy;
 
@@ -158,10 +154,7 @@ namespace ice
     FeatureQuadrFunc(ell_koef, ell_par, &type);
 
     if (type != ELLIPSE)
-      {
-        Message(FNAME, M_NO_ELLIPSE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NO_ELLIPSE);
 
     ell_par[0] = -sx;
     ell_par[1] = -sy;
@@ -181,10 +174,7 @@ namespace ice
     PosSign(moments_object, mom);
 
     if (mom[0] == 0.0)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     /****************************************************************/
     /*  Fitting eines Ellipsensegmentes an ein Objekt                */
@@ -242,7 +232,10 @@ namespace ice
           {
             hilfe = norm_moments[i] - moments_aff[i];
 
-            if (i == 0) hilfe = hilfe / 10.0;
+            if (i == 0)
+              {
+                hilfe = hilfe / 10.0;
+              }
 
             sum += hilfe * hilfe;
           }
@@ -289,13 +282,17 @@ namespace ice
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        M1->data[i][j] = atr[i][j];
+        {
+          M1->data[i][j] = atr[i][j];
+        }
 
     InvertMat(M1, M2);
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        atr_inv[i][j] = M2->data[i][j];
+        {
+          atr_inv[i][j] = M2->data[i][j];
+        }
 
     TransPoint(p1, atr_inv, seg_par1);
     TransPoint(p2, atr_inv, seg_par2);
@@ -431,10 +428,7 @@ namespace ice
     PosSign(moments, mom);
 
     if (mom[0] == 0.0)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     /****************************************************************/
     /*  Fitting eines Kreissegmentes an ein Objekt                */
@@ -579,13 +573,17 @@ namespace ice
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        M1->data[i][j] = ctr[i][j];
+        {
+          M1->data[i][j] = ctr[i][j];
+        }
 
     InvertMat(M1, M2);
 
     for (i = 0; i < 3; ++i)
       for (j = 0; j < 3; ++j)
-        ctr_inv[i][j] = M2->data[i][j];
+        {
+          ctr_inv[i][j] = M2->data[i][j];
+        }
 
     TransPoint(p1, ctr_inv, seg_par1);
     TransPoint(p2, ctr_inv, seg_par2);
@@ -601,12 +599,14 @@ namespace ice
 
   static int S_Sim_Moments(double s, double* norm_moments, double* p_b, double* p_c)
   {
-    /* Berechnung der normierten Momente bez. Ähnlichkeits. Transf.
+    /*
+       Berechnung der normierten Momente bez. Ähnlichkeits. Transf.
        mit der Normierung
        m10=m01=0 für Translation
        m11=0     für Rotation
        m00=1     für isotrope Skalierung
-       fuer vorgegebenes Kreissegment mit dem Parameter s */
+       fuer vorgegebenes Kreissegment mit dem Parameter s
+    */
     double xs, phi, xc, yc, b, c;
     double M00, M10, M01, M20, M11, M02, M30, M21, M12, M03, M40, M31, M22, M13, M04;
     double MS00, MS10, MS01, MS20, MS11, MS02, MS30, MS21, MS12, MS03, MS40, MS31, MS22, MS13, MS04;
@@ -721,10 +721,7 @@ namespace ice
     PosSign(moments, mom);
 
     if (mom[0] == 0.0)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     int i, j;
     double c, s, h, s1_opt, s2_opt;
@@ -837,10 +834,7 @@ namespace ice
     if (mom[0] == 0.0 || mom[3] <= 0.0 ||
         mom[5] <= 0.0 || mom[10] <= 0.0 ||
         mom[12] <= 0.0 || mom[14] <= 0.0)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return (-1);
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     xs = mom[1] / mom[0];
     ys = mom[2] / mom[0];
@@ -861,7 +855,10 @@ namespace ice
         tan2phi = 2 * moment_t[4] / (moment_t[3] - moment_t[5]);
         phi1 = atan(tan2phi) / 2.0;
 
-        if (phi1 < 0.0) phi1 += M_PI / 2.0;
+        if (phi1 < 0.0)
+          {
+            phi1 += M_PI / 2.0;
+          }
 
         wert1 = moment_t[3] * cos(phi1) * cos(phi1);
         wert1 += 2.0 * moment_t[4] * cos(phi1) * sin(phi1);
@@ -950,11 +947,17 @@ namespace ice
     tan_phi = tan(phi_3);
     NewtonRaphson(moment, tan_phi, 1.0e-10, f3, f3_strich, root_tan);
 
-    if (root_tan < 0) root_tan = -root_tan;
+    if (root_tan < 0)
+      {
+        root_tan = -root_tan;
+      }
 
     h = atan(root_tan);
 
-    if (fabs((h - phi_3) / M_PI * 180.0) < 1.0) phi_3 = h;
+    if (fabs((h - phi_3) / M_PI * 180.0) < 1.0)
+      {
+        phi_3 = h;
+      }
 
     return 0;
   }
@@ -986,12 +989,17 @@ namespace ice
     tan_phi = tan(phi_4);
     NewtonRaphson(moment, tan_phi, 1.0e-10, f4, f4_strich, root_tan);
 
-    if (root_tan < 0) root_tan = -root_tan;
+    if (root_tan < 0)
+      {
+        root_tan = -root_tan;
+      }
 
     h = atan(root_tan);
 
-    if (fabs((h - phi_4) / M_PI * 180.0) < 0.5) phi_4 = h;
-
+    if (fabs((h - phi_4) / M_PI * 180.0) < 0.5)
+      {
+        phi_4 = h;
+      }
 
     return 0;
   }

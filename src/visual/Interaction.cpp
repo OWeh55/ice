@@ -37,10 +37,22 @@ namespace ice
   {
     if (!window.inside(p))
       {
-        if (p.x < window.YI()) p.x = window.XI();
-        if (p.y < window.YI()) p.y = window.YI();
-        if (p.x > window.XA()) p.x = window.XA();
-        if (p.y > window.YA()) p.y = window.YA();
+        if (p.x < window.YI())
+          {
+            p.x = window.XI();
+          }
+        if (p.y < window.YI())
+          {
+            p.y = window.YI();
+          }
+        if (p.x > window.XA())
+          {
+            p.x = window.XA();
+          }
+        if (p.y > window.YA())
+          {
+            p.y = window.YA();
+          }
       }
     return p;
   }

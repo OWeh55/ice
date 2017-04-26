@@ -31,7 +31,7 @@
 using namespace std;
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "Vector.h"
 
 #include "lmdif.h"
@@ -59,7 +59,10 @@ namespace ice
     (*functor)(*funcresult);
 
     // return distances as double[]
-    for (i = 0; i < m; i++) fva[i] = (*funcresult)[i];
+    for (i = 0; i < m; i++)
+      {
+        fva[i] = (*funcresult)[i];
+      }
 
     return 0;
   }
@@ -71,19 +74,13 @@ namespace ice
     int i;
 
     if (running)
-      {
-        Message(FNAME, M_NOT_NESTED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_NESTED);
 
     int onr = refvecp.size();
     int funcdim = fcn.funcdim();
 
     if ((onr < 1) || (funcdim < onr))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     running = true;
 
@@ -96,7 +93,9 @@ namespace ice
     double* x = new double[onr];
 
     for (i = 0; i < onr; i++)
-      x[i] = *refvecp[i];
+      {
+        x[i] = *refvecp[i];
+      }
 
     // Funktor merken für Fehlerfunktion
     functor = &fcn;
@@ -111,12 +110,14 @@ namespace ice
     if (info == 0)
       {
         /* Fehler sollte nicht auftreten, da vorher getestet */
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Fehler melden
+        throw IceException(FNAME, M_WRONG_PARAM);
         info = ERROR; // Rückgabewert vorbereiten
       }
 
     for (i = 0; i < onr; i++)
-      *refvecp[i] = x[i];
+      {
+        *refvecp[i] = x[i];
+      }
 
     delete funcresult;
     delete [] x;

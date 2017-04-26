@@ -30,24 +30,18 @@ namespace ice
   MaxSearch NewMaxSearch(Image img)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     // Struktur initialisieren
 
     MaxSearch ms = new MaxSearch_;
 
     if (ms == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
-    ms->grwanz = img->maxval + 1;
+    ms->grwanz = img.maxval + 1;
     ms->amin = ms->areaanz = img->xsize;
-    ms->lastgrw = img->maxval;
+    ms->lastgrw = img.maxval;
     ms->amax = 0;
 
     int a, aa, x, y, g;
@@ -56,7 +50,7 @@ namespace ice
 
     if (ms->hists == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         delete ms;
         return nullptr;
       }
@@ -67,9 +61,12 @@ namespace ice
 
         if (ms->hists[a] == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
 
-            for (aa = 0; aa < a; aa++) delete [](ms->hists[aa]);
+            for (aa = 0; aa < a; aa++)
+              {
+                delete [](ms->hists[aa]);
+              }
 
             delete [](ms->hists);
             delete ms;
@@ -88,9 +85,12 @@ namespace ice
 
     if (ms->allhist == nullptr)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
 
-        for (aa = 0; aa < ms->areaanz; aa++) delete [](ms->hists[aa]);
+        for (aa = 0; aa < ms->areaanz; aa++)
+          {
+            delete [](ms->hists[aa]);
+          }
 
         delete [](ms->hists);
         delete ms;
@@ -123,7 +123,7 @@ namespace ice
 
         for (x = 0; x < ms->areaanz; x++)
           {
-            if (ms->hists[x][g].hfkt > 0) // in der Spalte x kommt der Grauwert g vor
+            if (ms->hists[x][g].hfkt > 0)   // in der Spalte x kommt der Grauwert g vor
               {
                 ms->hists[x][g].prev_area = prev;
                 prev->next_area = &(ms->hists[x][g]);
@@ -142,15 +142,14 @@ namespace ice
   void FreeMaxSearch(MaxSearch ms)
   {
     if (ms == nullptr)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     delete [](ms->allhist);
 
     for (int a = 0; a < ms->areaanz; a++)
-      delete [](ms->hists[a]);
+      {
+        delete [](ms->hists[a]);
+      }
 
     delete [](ms->hists);
     delete ms;
@@ -163,16 +162,16 @@ namespace ice
   {
 
     if (ms == nullptr || !IsImg(img) || !IsImg(imgo))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     while (ms->allhist[ms->lastgrw].next_area == nullptr)
       {
         ms->lastgrw--;
 
-        if (ms->lastgrw < 0) return false;
+        if (ms->lastgrw < 0)
+          {
+            return false;
+          }
       }
 
     x = ms->allhist[(grw = ms->lastgrw)].next_area->area_num;
@@ -180,7 +179,10 @@ namespace ice
     for (y = 0; y < img->ysize; y++)
       {
         if (GetVal(img, x, y) == grw &&
-            (!IsImg(imgo) || GetVal(imgo, x, y) == 0)) return true;
+            (!IsImg(imgo) || GetVal(imgo, x, y) == 0))
+          {
+            return true;
+          }
       }
 
 //!!! Fehler, dieser punkt sollte wohl nicht erreicht werden, wird aber

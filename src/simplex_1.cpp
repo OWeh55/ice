@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "message.h"
+#include "IceException.h"
 #include "fit.h"
 
 #include "simplex.h"
@@ -29,46 +29,36 @@
 #include "simplex_glbl.h"
 #include "simplex4.h"
 
-#ifdef DEBUG
-#include "screen.h"
-#include "xio.h"
-#endif
-
-
+using namespace std;
 // Aus 2 gegebenen Listen wird eine Transformation
 // mittels linearer Optimierung berechnet
+
 namespace ice
 {
-
 #define FNAME "MatchPointListsLinOpt"
   int MatchPointlistsLinOpt(PointList pl1, PointList pl2, double tr[][3],
                             int mode, double limit)
   {
     int code = 0;
 
-    if (pl1 == NULL || pl2 == NULL)
+    /*
+    for (int i=0;i<pl1->lng;i++)
       {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
+    cout << pl1->xptr[i] << " " << pl1->yptr[i] << endl;
+    cout << " " << pl2->xptr[i] << " " << pl2->yptr[i] << endl;
       }
+    */
+    if (pl1 == NULL || pl2 == NULL)
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (pl1->lng != pl2->lng)
-      {
-        Message(FNAME, M_DIFFERENT_LISTSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     if (limit < 0.0)
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (pl1->lng > MAXMATCHPOINTSLINOPT)
-      {
-        Message(FNAME, M_TOO_MUCH_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_TOO_MUCH_POINTS);
 
 #include "simplex_init.inc"
 
@@ -87,8 +77,7 @@ namespace ice
         code = FitProjectiveLinOpt(pl1, pl2, tr, limit);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
 #include "simplex_free.inc"
@@ -153,14 +142,17 @@ namespace ice
 
     gew[2 * N] = 0.0;
 
-
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 12; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 12; i < n; ++i)
-      c[i] = -gew[i - 12];
+      {
+        c[i] = -gew[i - 12];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -184,11 +176,14 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 13; ++i)
-      ka[i] = i * (N + 1);
+      {
+        ka[i] = i * (N + 1);
+      }
 
     for (i = 13; i < 13 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
-
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // Speziell: Füllen von ia
     for (j = 0; j < 6; ++j)
@@ -229,7 +224,9 @@ namespace ice
     // Speziell: Füllen von a
 
     for (i = 0; i < NN - 1; ++i)
-      a[i] = pl1->xptr[i];
+      {
+        a[i] = pl1->xptr[i];
+      }
 
     a[NN - 1] = 1.0;
     k = 0;
@@ -261,10 +258,14 @@ namespace ice
     a[4 * NN - 1] = 1.0;
 
     for (i = 4 * NN; i < 5 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 5 * NN; i < 6 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[6 * NN - 1] = 1.0;
 
@@ -306,10 +307,14 @@ namespace ice
     a[10 * NN - 1] = 1.0;
 
     for (i = 10 * NN; i < 11 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 11 * NN; i < 12 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[12 * NN - 1] = 1.0;
 
@@ -318,52 +323,6 @@ namespace ice
         a[i] = -1.0;
         a[i + 1] = 1.0;
       }
-
-    // ************************************
-
-#ifdef DEBUG
-
-    /* some variable names have changed, commenting out */
-
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < (12 * NN + 4 * N); ++i)
-      Printf("%f  ", a[i]);
-
-    Printf("\n");
-    GetChar();
-
-
-#endif
 
     code = simplex_method_modified(
              m,     /* number of constraints */
@@ -405,6 +364,9 @@ namespace ice
     a22 = x[8] - x[9];
     a20 = x[10] - x[11];
 
+    // cout << a11 << "  " << a12 << " " << a10 << endl;
+    // cout << a21 << "  " << a22 << " " << a20 << endl;
+
     tr[0][0] = a11;
     tr[0][1] = a12;
     tr[0][2] = a10;
@@ -414,7 +376,6 @@ namespace ice
     tr[2][0] = 0.0;
     tr[2][1] = 0.0;
     tr[2][2] = 1.0;
-
 
     delete [] ia;
     delete [] ka;
@@ -436,7 +397,6 @@ namespace ice
 
   int FitShiftLinOpt(PointList pl1, PointList pl2, double tr[][3], double limit)
   {
-
 
     // Bezüglich  der Punktlisten pl1 und pl2
     // wird mittels linearer Optimierung
@@ -492,14 +452,17 @@ namespace ice
 
     gew[2 * N] = 0.0;
 
-
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 12; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 12; i < n; ++i)
-      c[i] = -gew[i - 12];
+      {
+        c[i] = -gew[i - 12];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -523,11 +486,14 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 13; ++i)
-      ka[i] = i * (N + 1);
+      {
+        ka[i] = i * (N + 1);
+      }
 
     for (i = 13; i < 13 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
-
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // Speziell: Füllen von ia
     for (j = 0; j < 6; ++j)
@@ -568,7 +534,9 @@ namespace ice
     // Speziell: Füllen von a
 
     for (i = 0; i < NN - 1; ++i)
-      a[i] = 0.0;
+      {
+        a[i] = 0.0;
+      }
 
     a[NN - 1] = 1.0;
     k = 0;
@@ -599,10 +567,14 @@ namespace ice
     a[4 * NN - 1] = 1.0;
 
     for (i = 4 * NN; i < 5 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 5 * NN; i < 6 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[6 * NN - 1] = 1.0;
 
@@ -644,10 +616,14 @@ namespace ice
     a[10 * NN - 1] = 1.0;
 
     for (i = 10 * NN; i < 11 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 11 * NN; i < 12 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[12 * NN - 1] = 1.0;
 
@@ -656,52 +632,6 @@ namespace ice
         a[i] = -1.0;
         a[i + 1] = 1.0;
       }
-
-    // ************************************
-
-
-
-#ifdef DEBUG
-
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < (12 * NN + 4 * N); ++i)
-      Printf("%f  ", a[i]);
-
-    Printf("\n");
-    GetChar();
-
-
-#endif
 
     code = simplex_method_modified(
              m,   /* number of constraints */
@@ -736,7 +666,6 @@ namespace ice
         return code;
       }
 
-
     a10 = x[4] - x[5];
 
     a20 = x[10] - x[11];
@@ -750,7 +679,6 @@ namespace ice
     tr[2][0] = 0.0;
     tr[2][1] = 0.0;
     tr[2][2] = 1.0;
-
 
     delete [] ia;
     delete [] ka;
@@ -829,14 +757,17 @@ namespace ice
 
     gew[2 * N] = 0.0;
 
-
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 8; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 8; i < n; ++i)
-      c[i] = -gew[i - 8];
+      {
+        c[i] = -gew[i - 8];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -860,13 +791,19 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 5; ++i)
-      ka[i] = i * (2 * N + 1);
+      {
+        ka[i] = i * (2 * N + 1);
+      }
 
     for (i = 5; i < 9; ++i)
-      ka[i] = ka[i - 1] + NN;
+      {
+        ka[i] = ka[i - 1] + NN;
+      }
 
     for (i = 9; i < 9 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // **********************
 
@@ -968,21 +905,28 @@ namespace ice
     l = 4 * N2_1;
 
     for (i = l; i < l + NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = l + NN; i < l + 2 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[l + 2 * NN - 1] = 1.0;
 
     for (i = l + 2 * NN; i < l + 3 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = l + 3 * NN; i < l + 4 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[l + 4 * NN - 1] = 1.0;
-
 
     for (i = l + 4 * NN; i < l + 4 * NN + 4 * N; i = i + 2)
       {
@@ -991,48 +935,6 @@ namespace ice
       }
 
     // ************************************
-
-#ifdef DEBUG
-
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < nz ; ++i)
-      Printf("%f  ", a[i]);
-
-    Printf("\n");
-    GetChar();
-
-
-#endif
 
     code = simplex_method_modified(
              m,   /* number of constraints */
@@ -1084,7 +986,6 @@ namespace ice
     tr[2][1] = 0.0;
     tr[2][2] = 1.0;
 
-
     delete [] ia;
     delete [] ka;
     delete []  a;
@@ -1098,7 +999,6 @@ namespace ice
 
     return 0;
   }
-
 
   int FitProjectiveLinOpt(PointList pl1, PointList pl2,
                           double tr[][3], double limit)
@@ -1159,14 +1059,17 @@ namespace ice
 
     gew[2 * N] = 0.0;
 
-
     // ******************************
     // Füllen der Zielfunktion
     for (i = 0; i < 16; ++i)
-      c[i] = 0.0;
+      {
+        c[i] = 0.0;
+      }
 
     for (i = 16; i < n; ++i)
-      c[i] = -gew[i - 16];
+      {
+        c[i] = -gew[i - 16];
+      }
 
     // *****************************
     // Füllen der rechten Seite
@@ -1190,14 +1093,19 @@ namespace ice
     // Summe aller Elemente (aller Spalten bis zu dieser Spalte)
     // abgelegt, deshalb der Beginn mit Null
     for (i = 0; i < 13; ++i)
-      ka[i] = i * (N + 1);
+      {
+        ka[i] = i * (N + 1);
+      }
 
     for (i = 13; i < 17; ++i)
-      ka[i] = ka[i - 1] + N2_1;
+      {
+        ka[i] = ka[i - 1] + N2_1;
+      }
 
     for (i = 17; i < 17 + 2 * N; ++i)
-      ka[i] = ka[i - 1] + 2;
-
+      {
+        ka[i] = ka[i - 1] + 2;
+      }
 
     // Speziell: Füllen von ia
     for (j = 0; j < 6; ++j)
@@ -1254,7 +1162,9 @@ namespace ice
     // Speziell: Füllen von a *****************************
 
     for (i = 0; i < NN - 1; ++i)
-      a[i] = pl1->xptr[i];
+      {
+        a[i] = pl1->xptr[i];
+      }
 
     a[NN - 1] = 1.0;
     k = 0;
@@ -1286,10 +1196,14 @@ namespace ice
     a[4 * NN - 1] = 1.0;
 
     for (i = 4 * NN; i < 5 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 5 * NN; i < 6 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[6 * NN - 1] = 1.0;
 
@@ -1331,10 +1245,14 @@ namespace ice
     a[10 * NN - 1] = 1.0;
 
     for (i = 10 * NN; i < 11 * NN; ++i)
-      a[i] = 1.0;
+      {
+        a[i] = 1.0;
+      }
 
     for (i = 11 * NN; i < 12 * NN - 1; ++i)
-      a[i] = -1.0;
+      {
+        a[i] = -1.0;
+      }
 
     a[12 * NN - 1] = 1.0;
     l = 12 * NN;
@@ -1391,50 +1309,6 @@ namespace ice
 
     // ************************************
 
-
-
-#ifdef DEBUG
-
-
-    // Anzeige der Eingabedaten
-    Printf("Zielfunktion \n");
-
-    for (i = 0; i < n; ++i)
-      Printf("%f  ", c[i]);
-
-    GetChar();
-    Printf("\n Rechte Seite \n");
-
-    for (i = 0; i < m; ++i)
-      Printf("%f  ", b[i]);
-
-    GetChar();
-    Printf("Matrix: \n\n");
-    Printf("Indexarray ka\n");
-
-    for (i = 0; i < n + 1; ++i)
-      Printf("%d  ", ka[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Indexarray ia\n");
-
-    for (i = 0; i < nz; ++i)
-      Printf("%d  ", ia[i]);
-
-    Printf("\n");
-    GetChar();
-    Printf("Datenfeld a\n");
-
-    for (i = 0; i < (nz); ++i)
-      Printf("%f  ", a[i]);
-
-    Printf("\n");
-    GetChar();
-
-
-#endif
-
     code = simplex_method_modified(
              m,   /* number of constraints */
              n,   /* number of variables */
@@ -1486,7 +1360,6 @@ namespace ice
     tr[2][0] = a31;
     tr[2][1] = a32;
     tr[2][2] = 1.0;
-
 
     delete [] ia;
     delete [] ka;

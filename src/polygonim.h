@@ -41,10 +41,10 @@ namespace ice
   Contur PolygonContur(PointList pl);
   Contur PolygonContur(const Matrix& pl);
 
-  bool InsidePolygon(double p[2], PointList pl);
-  bool InsidePolygon(const Matrix& m, const Point& p);
+  bool insidePolygon(double p[2], PointList pl);
+  bool insidePolygon(const Matrix& m, const Point& p);
 
-  bool IsPolygon(PointList pl);
+  bool isPolygon(PointList pl);
   bool isPolygon(const Matrix& m);
 
   PointList* ClipPolygon(PointList pl1, PointList pl2, int* n);

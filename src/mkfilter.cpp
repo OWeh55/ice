@@ -27,29 +27,39 @@ namespace ice
 {
 // functions for generation of LSIFilters
 
-#define FNAME "mkPolynomFilter"
+#define FNAME "makePolynomFilter"
 #if 0
   static int powi(int b, int e)
   {
     int p = 1;
 
     for (int i = 0; i < e; i++)
-      p *= b;
+      {
+        p *= b;
+      }
 
     return p;
   }
 #else
   static int powi(int b, int e)
   {
-    if (e < 1) return 1;
+    if (e < 1)
+      {
+        return 1;
+      }
     else
       {
         int p = powi(b, e / 2);
         p = p * p;
 
-        if (e % 2 == 0) return p;
+        if (e % 2 == 0)
+          {
+            return p;
+          }
         else
-          return b * p;
+          {
+            return b * p;
+          }
       }
   }
 #endif
@@ -65,7 +75,7 @@ namespace ice
     return idx + i;
   }
 
-  LSIFilter mkPolynomFilter(int size, int grad, int ii, int jj)
+  LSIFilter makePolynomFilter(int size, int grad, int ii, int jj)
   {
     // Parametertest
     if (
@@ -75,10 +85,7 @@ namespace ice
       (ii < 0) ||
       (jj < 0)
     )
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return LSIFilter();
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int m = size;
     Matrix f(m * m, (grad + 1) * (grad + 2) / 2);
@@ -96,23 +103,21 @@ namespace ice
         }
 
     Matrix ft = !f;
-    //  cout << ft;
     Matrix ftf = ft * f;
-    // cout << ftf;
     Matrix iftf = Inverse(ftf);
-    // cout << iftf;
     Matrix az = iftf * ft;
     int zidx = kidx(grad, ii, jj);
     Matrix mask(m, m);
 
     for (int j = 0; j < m; j++)
       for (int i = 0; i < m; i++)
-        mask[i][j] = az[zidx][j * m + i];
+        {
+          mask[i][j] = az[zidx][j * m + i];
+        }
 
     return LSIFilter(mask);
   }
 #undef FNAME
-
 
 // these filters generate a (quasi boolean) huge matrix and
 // reduce size later by combining elements by "counting"
@@ -133,17 +138,16 @@ namespace ice
 
             for (int xyi = yi * xfak; xyi < (yi + 1)*xfak; xyi++)
               for (int xxi = xi * xfak; xxi < (xi + 1)*xfak; xxi++)
-                sum += huge[xyi][xxi];
+                {
+                  sum += huge[xyi][xxi];
+                }
 
             small[yi][xi] = sum;
-            //      cout << sum << " ";
           }
-
-        //  cout << endl;
       }
   }
 
-  LSIFilter mkOrientedSmearFilter(int size, double dir, double len, double width)
+  LSIFilter makeOrientedSmearFilter(int size, double dir, double len, double width)
   {
     // generate huge (int-)matrix (quasi boolean)
     int xsize = xfak * size;
@@ -186,7 +190,7 @@ namespace ice
     return LSIFilter(mask, ct);
   }
 
-  LSIFilter mkOrientedDoBFilter(int size, double dir, double len, double width)
+  LSIFilter makeOrientedDoBFilter(int size, double dir, double len, double width)
   {
     // generate huge (int-)matrix (quasi boolean)
     int xsize = xfak * size;
@@ -240,7 +244,7 @@ namespace ice
     return LSIFilter(mask, ct * size2);
   }
 
-  LSIFilter mkOrientedEdgeFilter(int size, double dir, double rad)
+  LSIFilter makeOrientedEdgeFilter(int size, double dir, double rad)
   {
     int xsize = xfak * size;
     double xrad = 0.5 * rad * xfak;
@@ -270,28 +274,22 @@ namespace ice
 
                 if (xrot < 0)
                   {
-                    //        cout << "-";
                     hm[yi][xi] = -1;
                   }
                 else if (xrot > 0)
                   {
-                    //          cout << "+";
                     hm[yi][xi] = 1;
                   }
                 else
                   {
-                    //          cout << ".";
                     hm[yi][xi] = 0;
                   }
               }
             else
               {
                 hm[yi][xi] = 0;
-                //    cout << "." ;
               }
           }
-
-        //  cout << endl;
       }
 
     matrix<int> mask(size, size);

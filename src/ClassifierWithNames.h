@@ -27,7 +27,9 @@ namespace ice
     {
       auto classIt = clIndex.find(classname);
       if (classIt != clIndex.end())
-        return classIt->second;
+        {
+          return classIt->second;
+        }
       std::cout << "undefined classname " << classname << std::endl;
       throw ("undefined classname");
     }
@@ -35,7 +37,9 @@ namespace ice
     virtual Tlabel className(int i) const
     {
       if (i >= 0 && i < clName.size())
-        return clName[i];
+        {
+          return clName[i];
+        }
       throw ("undefined class");
     }
 
@@ -54,7 +58,9 @@ namespace ice
       cl(), nLabels(0), nFeatures(nFeatures), initialized(false)
     {
       for (Tlabel n : classnames)
-        addClass(n);
+        {
+          addClass(n);
+        }
     }
 
     virtual ~ClassifierWithNames() {};
@@ -63,9 +69,7 @@ namespace ice
     virtual void addClass(Tlabel cln)
     {
       if (initialized)
-        {
-          Message(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
-        }
+        throw IceException(FNAME, M_ALREADY_INITIALIZED);
       clIndex[cln] = nLabels;
       clName.push_back(cln);
       nLabels++;
@@ -74,9 +78,7 @@ namespace ice
     void addClass(Tlabel cln1, Tlabel cln2)
     {
       if (initialized)
-        {
-          Message(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
-        }
+        throw IceException(FNAME, M_ALREADY_INITIALIZED);
 
       for (Tlabel i = cln1; i < cln2; i++)
         {
@@ -87,18 +89,20 @@ namespace ice
     void addClass(const std::vector<Tlabel>& nl)
     {
       if (initialized)
-        {
-          Message(FNAME, M_ALREADY_INITIALIZED, INVALID_CALL);
-        }
+        throw IceException(FNAME, M_ALREADY_INITIALIZED);
 
       for (Tlabel d : nl)
-        addClass(d);
+        {
+          addClass(d);
+        }
     }
 #undef FNAME
     virtual int Train(Tlabel clname, const ice::Vector& feat)
     {
       if (!initialized)
-        init();
+        {
+          init();
+        }
 
       return cl.Train(classNr(clname), feat);
     }
@@ -106,12 +110,16 @@ namespace ice
     virtual int Train(const Matrix& features, const std::vector<Tlabel>& classn)
     {
       if (!initialized)
-        init();
+        {
+          init();
+        }
 
       IVector clnr;
 
       for (unsigned int i = 0; i < classn.size(); i++)
-        clnr.Append(classNr(classn[i]));
+        {
+          clnr.Append(classNr(classn[i]));
+        }
 
       return cl.Train(features, clnr);
     }
@@ -120,12 +128,16 @@ namespace ice
     virtual double Test(const Matrix& m, const std::vector<Tlabel>& classname)
     {
       if (!initialized)
-        init();
+        {
+          init();
+        }
 
       IVector clnr;
 
       for (unsigned int i = 0; i < classname.size(); i++)
-        clnr.Append(classNr(classname[i]));
+        {
+          clnr.Append(classNr(classname[i]));
+        }
 
       return cl.Test(m, clnr);
     }
@@ -133,7 +145,10 @@ namespace ice
     // classify single feature vector
     virtual Tlabel Classify(const ice::Vector& feat)
     {
-      if (!initialized) init();
+      if (!initialized)
+        {
+          init();
+        }
 
       return className(cl.Classify(feat));
     }
@@ -141,7 +156,9 @@ namespace ice
     virtual Tlabel Classify(const std::vector<double>& feat)
     {
       if (!initialized)
-        init();
+        {
+          init();
+        }
 
       return className(cl.Classify(feat));
     }
@@ -150,14 +167,18 @@ namespace ice
     virtual int Classify(const Matrix& m, std::vector<Tlabel>& cln)
     {
       if (!initialized)
-        init();
+        {
+          init();
+        }
 
       IVector clnr;
       int rc = cl.Classify(m, clnr);
       cln.resize(clnr.size());
 
       for (unsigned int i = 0; i < clnr.size(); i++)
-        cln[i] = className(clnr[i]);
+        {
+          cln[i] = className(clnr[i]);
+        }
 
       return rc;
     }

@@ -24,7 +24,7 @@
 //
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Matrix.h"
@@ -36,11 +36,11 @@
 namespace ice
 {
 #define FNAME "LSIImg"
-  int LSIImg(ImageD pn1, ImageD pn2,
-             const Matrix& m)
+  void LSIImg(ImageD pn1, ImageD pn2,
+              const Matrix& m)
   {
     LSIFilter lsif(m);
-    return lsif.Filter(pn1, pn2);
+    lsif.Filter(pn1, pn2);
   }
 #undef FNAME
 }

@@ -25,7 +25,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "based.h"
 #include "util.h"
 
@@ -38,19 +38,13 @@ namespace ice
   int MatchImgD(const ImageD& i1, const ImageD& i2, int& xs, int& ys)
   {
     if (! i1.isValid() || ! i2.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     xs = i1.xsize;
     ys = i1.ysize;
 
     if ((xs != i2.xsize) || (ys != i2.ysize))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     return OK;
   }
@@ -58,20 +52,14 @@ namespace ice
   int MatchImgD(const ImageD& i1, const ImageD& i2, const ImageD& i3, int& xs, int& ys)
   {
     if (! i1.isValid() || ! i2.isValid() || ! i3.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     xs = i1.xsize;
     ys = i1.ysize;
 
     if ((xs != i2.xsize) || (ys != i2.ysize) ||
         (xs != i3.xsize) || (ys != i3.ysize))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     return OK;
   }
@@ -101,10 +89,7 @@ namespace ice
     double max, min, val;
 
     if (!img.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     max = img.getPixelUnchecked(0, 0);
     min = max;
@@ -113,8 +98,14 @@ namespace ice
       for (int x = 0; x < img.xsize; ++x)
         {
           val = img.getPixelUnchecked(x, y);
-          if (max < val) max = val;
-          if (min > val) min = val;
+          if (max < val)
+            {
+              max = val;
+            }
+          if (min > val)
+            {
+              min = val;
+            }
         }
 
     if (min == max)
@@ -141,31 +132,26 @@ namespace ice
     double factor = 1;
 
     if (!inp.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!out.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     sx = inp.xsize;
     sy = inp.ysize;
 
     if (!(out.xsize == sx && out.ysize == sy))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (sign == SIGNED)
-      goff = (inp->maxval + 1) / 2;
+      {
+        goff = (inp.maxval + 1) / 2;
+      }
 
     if (modus == NORMALIZED)
-      factor = 4.0 / (inp->maxval + 1);
+      {
+        factor = 4.0 / (inp.maxval + 1);
+      }
 
     sx = Min(sx, out.xsize);
     sy = Min(sy, out.ysize);
@@ -197,23 +183,19 @@ namespace ice
     double factor = 1.0, offset = 0.0;
 
     if (!IsImgD(input))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (!IsImg(out))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
-    outmaxval = out->maxval;
+    outmaxval = out.maxval;
 
     ImageD inp(input); // copy to allow modification of limits
 
     if (modus == ADAPTIVE)
-      UpdateLimitImgD(inp);
+      {
+        UpdateLimitImgD(inp);
+      }
 
     if (sign == SIGNED)
       {
@@ -257,10 +239,7 @@ namespace ice
     ys = inp.ysize;
 
     if (!(out.xsize == xs && out.ysize == ys))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     for (int y = 0; y < ys; ++y)
       {
@@ -281,18 +260,21 @@ namespace ice
     int xs, ys;
 
     if (! MatchImgD(src, dst, xs, ys))
-      {
-        Message(FNAME, M_0, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_0);
 
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
         {
           PixelFloatType v = src.getPixel(x, y);
 
-          if (v != 0.0) v = log10(v);
-          else v = -1e12;
+          if (v != 0.0)
+            {
+              v = log10(v);
+            }
+          else
+            {
+              v = -1e12;
+            }
 
           dst.setPixel(x, y, v);
         }
@@ -305,7 +287,9 @@ namespace ice
   {
     // if x and y are to far outside the image border, we simply return zero
     if (x < -0.5 || y < -0.5)
-      return 0;
+      {
+        return 0;
+      }
 
     // Determine the local neighborhood of point (x, y), that means the 4 pixel positions
     // (xi, yi), (xi + 1, yi), (xi + 1, yi + 1), and (xi, yi + 1), that enclose (x, y)
@@ -319,10 +303,14 @@ namespace ice
     // check
 
     if ((xi >= img.xsize) || (yi >= img.ysize))
-      return 0.0;
+      {
+        return 0.0;
+      }
 
     if ((xi1 == img.xsize) || (yi1 == img.ysize))
-      return GetValD(img, xi, yi); // rechter/unterer Rand
+      {
+        return GetValD(img, xi, yi);  // rechter/unterer Rand
+      }
 
     double dx  = x - (double) xi;
     double dx1 = 1.0 - dx;
@@ -341,7 +329,9 @@ namespace ice
 
     // if x and y are to far outside the image border, we simply return false
     if (x < -0.5 || y < -0.5)
-      return false;
+      {
+        return false;
+      }
 
     // Determine the local neighborhood of point (x, y), that means the 4 pixel positions
     // (xi, yi), (xi + 1, yi), (xi + 1, yi + 1), and (xi, yi + 1), that enclose (x, y)
@@ -353,10 +343,14 @@ namespace ice
     int yi1 = yi + 1;
 
     if ((xi >= img.xsize) || (yi >= img.ysize))
-      return 0.0;
+      {
+        return 0.0;
+      }
 
     if ((xi1 == img.xsize) || (yi1 == img.ysize))
-      return GetValD(img, xi, yi); // rechter/unterer Rand
+      {
+        return GetValD(img, xi, yi);  // rechter/unterer Rand
+      }
 
     double dx  = x - (double) xi;
     double dx1 = 1.0 - dx;
@@ -373,10 +367,7 @@ namespace ice
   bool Inside(const ImageD& img, int x, int y)
   {
     if (!IsImgD(img))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return false;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
     return img.inside(x, y);
   }
 

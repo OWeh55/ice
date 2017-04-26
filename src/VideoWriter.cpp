@@ -22,10 +22,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include <stdexcept>
 
 #include "defs.h"
-#include "macro.h"
+#include "IceException.h"
+
 #include "pbmio.h"
 
 #include "VideoWriter.h"
@@ -49,7 +49,9 @@ namespace ice
   bool VideoWriter::close()
   {
     if (fd.fd != nullptr)
-      exclose(fd);
+      {
+        exclose(fd);
+      }
     fd.fd = nullptr;
     framenr = 0;
     return true;
@@ -74,9 +76,13 @@ namespace ice
     ysize = ys;
     // ignore mv for the moment
     if (fps > 0)
-      frate = fps;
+      {
+        frate = fps;
+      }
     if (bratep > 0)
-      brate = bratep;
+      {
+        brate = bratep;
+      }
     return true;
   }
 
@@ -84,37 +90,53 @@ namespace ice
   {
     string cmdline = "|ffmpeg -y -v error -f image2pipe -codec:v ppm ";
     if (frate > 0)
-      cmdline += " -r " + std::to_string(frate);
+      {
+        cmdline += " -r " + std::to_string(frate);
+      }
     cmdline += " -i -";
     if (brate > 0)
-      cmdline += " -b:v " + std::to_string(brate);
+      {
+        cmdline += " -b:v " + std::to_string(brate);
+      }
     if (!format.empty())
-      cmdline += " " + format + " ";
+      {
+        cmdline += " " + format + " ";
+      }
     cmdline += " \'" + filename + "\'";
 
     // cout << cmdline << endl;
 
     fd = exopen(cmdline, FWMODUS);
     if (fd.fd == nullptr)
-      throw runtime_error("VideoWriter - Cannot open file");
+      {
+        throw IceException("VideoWriter::init", M_FILE_OPEN);
+      }
     return true;
   }
 
 #define FNAME "VideoWriter::write"
   bool VideoWriter::write(const Image& ir, const Image& ig, const Image& ib)
   {
-    int xa, ya;
-    RETURN_IF_FAILED(MatchImg(ir, ig, ib, xa, ya), false);
+    try
+      {
+        int xa, ya;
+        MatchImg(ir, ig, ib, xa, ya);
 
-    if (xsize == 0) // image size already set ?
-      setPara(xa, ya, 255, 0 , 0);
+        if (xsize == 0)   // image size already set ?
+          {
+            setPara(xa, ya, 255, 0 , 0);
+          }
 
-    if (framenr == 0) // first frame
-      init();
+        if (framenr == 0)   // first frame
+          {
+            init();
+          }
 
-    WritePBMImg(ir, ig, ib, fd);
+        WritePBMImg(ir, ig, ib, fd);
 
-    framenr++;
+        framenr++;
+      }
+    RETHROW;
     return true;
   }
 #undef FNAME

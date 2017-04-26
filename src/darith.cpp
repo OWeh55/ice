@@ -24,7 +24,7 @@
 #include <float.h>
 #include <limits.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 #include "WindowWalker.h"
@@ -39,11 +39,10 @@ namespace ice
   /********************************************************************/
   /* Bild loeschen                            */
   /********************************************************************/
-#define FNAME "ClearImgD"
-  int ClearImgD(ImageD p)
+#define FNAME "clearImgD"
+  void clearImgD(ImageD p)
   {
-    RETURN_ERROR_IF_FAILED(SetImgD(p, 0));
-    return OK;
+    setImgD(p, 0);
   }
 #undef FNAME
 
@@ -51,24 +50,21 @@ namespace ice
   /* Bild definiert setzten                                     */
   /********************************************************************/
 
-#define FNAME "SetImgD"
-  int SetImgD(ImageD p, double val)
+#define FNAME "setImgD"
+  void setImgD(ImageD p, double val)
   {
     if (!p.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
     for (int y = 0; y < p.ysize; ++y)
       for (int x = 0; x < p.xsize; ++x)
-        PutValD(p, x, y, val);
-    return OK;
+        {
+          PutValD(p, x, y, val);
+        }
   }
 #undef FNAME
 
 #define FNAME "SmearImgD"
-
-  int SmearImgD(ImageD pn1, ImageD pn2, int sx, int sy)
+  void smearImgD(ImageD pn1, ImageD pn2, int sx, int sy)
   {
 
     int dx, dy;
@@ -80,7 +76,7 @@ namespace ice
     ImageD tmp = NewImgD(dx - sx + 1, dy);
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int y1 = y;
         int x1 = 0, x2 = 0;
@@ -105,9 +101,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        PutValD(pn2, x, y, 0);
+        {
+          PutValD(pn2, x, y, 0);
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0;
         int yt = 0;
@@ -144,15 +142,14 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        PutValD(pn2, x, y, 0);
-
-    //    FreeImgD(tmp);
-    return OK;
+        {
+          PutValD(pn2, x, y, 0);
+        }
   }
 
-  int SmearImgD(const ImageD src, ImageD dest, int nx)
+  void smearImgD(const ImageD src, ImageD dest, int nx)
   {
-    return SmearImgD(src, dest, nx, nx);
+    return smearImgD(src, dest, nx, nx);
   }
 
 #undef FNAME
@@ -160,24 +157,21 @@ namespace ice
   /*********************************************************************/
   /* Bildaddition                  */
   /*********************************************************************/
-#define FNAME "AddImgD"
-  int AddImgD(ImageD pn1, ImageD pn2, ImageD pn3)
+#define FNAME "addImgD"
+  void addImgD(ImageD pn1, ImageD pn2, ImageD pn3)
   {
     int i, j, hx, hy;
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
-        PutValD(pn3, i, j, GetValD(pn1, i, j) + GetValD(pn2, i, j));
-
-    return OK;
+        {
+          PutValD(pn3, i, j, GetValD(pn1, i, j) + GetValD(pn2, i, j));
+        }
   }
 #undef FNAME
 
@@ -185,23 +179,20 @@ namespace ice
   /* BildMultiplikation                */
   /*********************************************************************/
 #define FNAME "MulImgD"
-  int MulImgD(ImageD pn1, ImageD pn2, ImageD pn3)
+  void mulImgD(ImageD pn1, ImageD pn2, ImageD pn3)
   {
     int i, j, hx, hy;
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
-        PutValD(pn3, i, j, GetValD(pn1, i, j)*GetValD(pn2, i, j));
-
-    return OK;
+        {
+          PutValD(pn3, i, j, GetValD(pn1, i, j)*GetValD(pn2, i, j));
+        }
   }
 #undef FNAME
 
@@ -214,16 +205,15 @@ namespace ice
     int i, j, hx, hy;
 
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, hx, hy));
 
     for (i = 0; i < hx; i++)
       for (j = 0; j < hy; j++)
-        PutValD(pn2, i, j, GetValD(pn1, i, j));
+        {
+          PutValD(pn2, i, j, GetValD(pn1, i, j));
+        }
 
     return OK;
   }
@@ -233,10 +223,7 @@ namespace ice
   double findMax(const ImageD& img, int& PosX, int& PosY)
   {
     if (! IsImgD(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return 0;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xSize = img.xsize;
     int ySize = img.ysize;
@@ -261,18 +248,14 @@ namespace ice
   {
     IPoint res(-1, -1); // point outside == not found
     if (! IsImgD(imgD) || ! IsImg(mark))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xSize = imgD.xsize;
     int ySize = imgD.ysize;
 
     if (xSize != mark.xsize || ySize != mark.ysize)
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return res;
+        throw IceException(FNAME, M_WRONG_IMAGE);
 
       }
 
@@ -310,10 +293,7 @@ namespace ice
   double findMin(const ImageD& img, int& PosX, int& PosY)
   {
     if (! IsImgD(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return 0;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xSize = img.xsize;
     int ySize = img.ysize;
@@ -358,16 +338,10 @@ namespace ice
     double rfac;
 
     if ((!IsImgD(imgs)) || (!IsImgD(imgd)))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -395,9 +369,13 @@ namespace ice
           ys = p[1] + y0;
 
           if (imgs.inside(xs, ys))
-            PutValD(imgd, x, y, GetInterpolValD(imgs, xs, ys));
+            {
+              PutValD(imgd, x, y, GetInterpolValD(imgs, xs, ys));
+            }
           else
-            PutValD(imgd, x, y, 0.0);
+            {
+              PutValD(imgd, x, y, 0.0);
+            }
         }
     return OK;
   }
@@ -415,16 +393,10 @@ namespace ice
     double rfac;
 
     if (!IsImg(imgs))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -433,10 +405,7 @@ namespace ice
     y0 = (hy) / 2;
 
     if (!IsImg(imgd))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     himgd = imgd;
 
@@ -463,8 +432,13 @@ namespace ice
             (xs >= 0) && (xs < imgs->xsize) &&
             (ys >= 0) && (ys < imgs->ysize)
           )
-            PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
-          else PutVal(himgd, x, y, 0);
+            {
+              PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
+            }
+          else
+            {
+              PutVal(himgd, x, y, 0);
+            }
         }
     return OK;
   }
@@ -481,31 +455,19 @@ namespace ice
       {
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
-          {
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
       }
     else
       {
         if (!IsImgD(imgs))
-          {
-            Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-            return WRONG_POINTER;
-          }
+          throw IceException(FNAME, M_WRONG_IMAGED);
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImgD(imgd))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (r2 == 0)
       {
@@ -536,16 +498,10 @@ namespace ice
     double rfac;
 
     if (!IsImgD(imgs))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return himgd;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return himgd;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -586,8 +542,13 @@ namespace ice
             (xs >= 0) && (xs < imgs.xsize) &&
             (ys >= 0) && (ys < imgs.ysize)
           )
-            PutValD(himgd, x, y, GetInterpolValD(imgs, xs, ys));
-          else PutValD(himgd, x, y, 0.0);
+            {
+              PutValD(himgd, x, y, GetInterpolValD(imgs, xs, ys));
+            }
+          else
+            {
+              PutValD(himgd, x, y, 0.0);
+            }
         }
     return himgd;
   }
@@ -597,7 +558,7 @@ namespace ice
                double r1, double r2, int sym)
   {
     Image himgd;
-    int x, y, hx, hy;
+    int hx, hy;
     double xs, ys;
     int dsx, dsy;
     int x0, y0;
@@ -605,16 +566,10 @@ namespace ice
     double rfac;
 
     if (!IsImg(imgs))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     hx = imgs->xsize;
     hy = imgs->ysize;
@@ -623,10 +578,7 @@ namespace ice
     y0 = hy / 2;
 
     if (!IsImg(imgd))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     himgd = imgd;
 
@@ -640,21 +592,27 @@ namespace ice
 
     rfac = (r2 - r1) / dsy;
 
-    wloop(himgd, x, y)
-    {
-      fi = (x) * M_PI * 2 / sym / dsx;
-      r = (y) * rfac + r1;
-      ConvPolarCartes(r, fi, p);
-      xs = p[0] + x0;
-      ys = p[1] + y0;
+    for (int y = 0; y < himgd.ysize; y++)
+      for (int x = 0; x < himgd.xsize; x++)
+        {
+          fi = (x) * M_PI * 2 / sym / dsx;
+          r = (y) * rfac + r1;
+          ConvPolarCartes(r, fi, p);
+          xs = p[0] + x0;
+          ys = p[1] + y0;
 
-      if (
-        (xs >= 0) && (xs < imgs->xsize) &&
-        (ys >= 0) && (ys < imgs->ysize)
-      )
-        PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
-      else PutVal(himgd, x, y, 0);
-    }
+          if (
+            (xs >= 0) && (xs < imgs->xsize) &&
+            (ys >= 0) && (ys < imgs->ysize)
+          )
+            {
+              PutVal(himgd, x, y, (int)GetInterpolVal(imgs, xs, ys));
+            }
+          else
+            {
+              PutVal(himgd, x, y, 0);
+            }
+        }
     return OK;
   }
 #undef FNAME
@@ -670,23 +628,14 @@ namespace ice
       {
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
-          {
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
+          throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImgD(imgd))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (r2 == 0)
       {

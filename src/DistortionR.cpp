@@ -72,9 +72,13 @@ namespace ice
             double fs = frs(rs); // f'(rs)
 
             if (fs != 0.0)
-              rs -= afr / fs;    // Newton
+              {
+                rs -= afr / fs;  // Newton
+              }
             else
-              rs -= 1.0; // weiss nichts besseres
+              {
+                rs -= 1.0;  // weiss nichts besseres
+              }
 
             ct++;
           }

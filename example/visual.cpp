@@ -65,12 +65,10 @@ int Main(int argc, char* argv[])
     m.setPixel(ww, m.getPixel(ww) / FAK / 8);
   Print("Overlay verändert \n");
   GetChar();
-  Print("Bild 4 freigeben\n");
-//  Show(OFF,p[4]);
-  FreeImg(p[4]);
+
   Print("Bild 4 neu anlegen\n");
   p[4] = NewImg(p[3]);
-  InvertImg(p[3], p[4]);
+  invertImg(p[3], p[4]);
 
   WindowWalker wwp(p[4]);
   for (wwp.init(); !wwp.ready(); wwp.next())
@@ -94,15 +92,6 @@ int Main(int argc, char* argv[])
     }
 
   GetChar();
-  Print("Alle Bilder freigeben\n");
-
-  for (int z = 0; z < PZAHL; z++)
-    {
-      FreeImg(p[z]);
-      Delay(0.11);
-    }
-
-  FreeImg(m);
 
   ImageD imgd;
   imgd.create(777, 666, 100, 1000);

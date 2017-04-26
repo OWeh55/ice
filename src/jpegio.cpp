@@ -33,7 +33,7 @@ extern "C" {
 #include "defs.h"
 #include "base.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "exfile.h"
 #include "picio.h"
 
@@ -99,24 +99,18 @@ namespace ice
     int gm;
 
     if (!(IsImg(ir) && IsImg(ig) && IsImg(ib)))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     xs = ir->xsize;
     ys = ir->ysize;
-    gm = ir->maxval;
+    gm = ir.maxval;
 
     if (
       (xs != ig->xsize) || (xs != ib->xsize) ||
       (ys != ig->ysize) || (ys != ib->ysize) ||
-      (gm != ig->maxval) || (gm != ib->maxval)
+      (gm != ig.maxval) || (gm != ib.maxval)
     )
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     /* Select the output file.
      */
@@ -124,10 +118,7 @@ namespace ice
     FILE* output_file;
 
     if ((output_file = fopen(fname.c_str(), FWMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // create data structures
     struct jpeg_compress_struct cinfo;
@@ -144,8 +135,7 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_compress(&cinfo);
@@ -216,14 +206,11 @@ namespace ice
     int gm;
 
     if (! IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     xs = img->xsize;
     ys = img->ysize;
-    gm = img->maxval;
+    gm = img.maxval;
 
     /* Select the output file.
      */
@@ -231,10 +218,7 @@ namespace ice
     FILE* output_file;
 
     if ((output_file = fopen(fname.c_str(), FWMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // create data structures
     struct jpeg_compress_struct cinfo;
@@ -251,12 +235,10 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_compress(&cinfo);
-
 
     jpeg_stdio_dest(&cinfo, output_file);
 
@@ -316,10 +298,7 @@ namespace ice
     FILE* infile;
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     struct jpeg_decompress_struct cinfo;
 
@@ -337,8 +316,7 @@ namespace ice
          */
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_decompress(&cinfo);
@@ -351,8 +329,14 @@ namespace ice
     ysize = cinfo.image_height;
     maxval = (1 << BITS_IN_JSAMPLE) - 1;
 
-    if (cinfo.num_components == 1) nr = 1;
-    else nr = 3;
+    if (cinfo.num_components == 1)
+      {
+        nr = 1;
+      }
+    else
+      {
+        nr = 3;
+      }
 
     fclose(infile);
     jpeg_destroy_decompress(&cinfo);
@@ -370,10 +354,7 @@ namespace ice
     FILE* infile;
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     struct jpeg_decompress_struct cinfo;
 
@@ -392,10 +373,12 @@ namespace ice
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
 
-        if (ib.data != nullptr) free(ib.data);
+        if (ib.data != nullptr)
+          {
+            free(ib.data);
+          }
 
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_decompress(&cinfo);
@@ -410,8 +393,14 @@ namespace ice
 
     ib.planes = cinfo.num_components;
 
-    if (ib.maxval > 255) ib.valuesize = sizeof(int);
-    else ib.valuesize = 1;
+    if (ib.maxval > 255)
+      {
+        ib.valuesize = sizeof(int);
+      }
+    else
+      {
+        ib.valuesize = 1;
+      }
 
     ib.byteorder = IB_LSB_FIRST;
     ib.linelength = ib.planes * ib.width * ib.valuesize;
@@ -433,17 +422,19 @@ namespace ice
     jpeg_destroy_decompress(&cinfo);
 
     if (!IsImg(imgr))
-      imgr = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgr = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(imgg))
-      imgb = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgb = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(imgb))
-      imgb = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        imgb = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
-    IF_FAILED(Buffer2Image(ib, imgr, imgg, imgb, flag))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    };
+    Buffer2Image(ib, imgr, imgg, imgb, flag);
     return OK;
   }
 
@@ -455,10 +446,7 @@ namespace ice
     FILE* infile;
 
     if ((infile = fopen(fname.c_str(), FRMODUS)) == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     struct jpeg_decompress_struct cinfo;
 
@@ -477,10 +465,12 @@ namespace ice
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
 
-        if (ib.data != nullptr) free(ib.data);
+        if (ib.data != nullptr)
+          {
+            free(ib.data);
+          }
 
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return Image();
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     jpeg_create_decompress(&cinfo);
@@ -497,9 +487,13 @@ namespace ice
     ib.planes = 1;
 
     if (ib.maxval > 255)
-      ib.valuesize = sizeof(int);
+      {
+        ib.valuesize = sizeof(int);
+      }
     else
-      ib.valuesize = 1;
+      {
+        ib.valuesize = 1;
+      }
 
     ib.byteorder = IB_LSB_FIRST;
     ib.linelength = ib.planes * ib.width * ib.valuesize;
@@ -522,13 +516,11 @@ namespace ice
     jpeg_destroy_decompress(&cinfo);
 
     if (!IsImg(img))
-      img = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        img = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
-    IF_FAILED(img = Buffer2Image(ib, img, flag))
-    {
-      Message(FNAME, M_0, ERROR);
-      return Image();
-    };
+    img = Buffer2Image(ib, img, flag);
     return img;
   }
 

@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
   Image i1 = ReadImg(fn);
 
   Image i2 = NewImg(i1->xsize, i1->ysize, 15);
-  ClearImg(i2);
+  clearImg(i2);
   Display(ON);
   Show(OVERLAY, i1, i2);
   int co = 1;

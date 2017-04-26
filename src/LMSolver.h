@@ -61,13 +61,21 @@ namespace ice
     void setStopConditions(double ftol, double xtol, double gtolp, int maxIter)
     {
       if (ftol > 0)
-        ftol2 = ftol * ftol;
+        {
+          ftol2 = ftol * ftol;
+        }
       if (xtol > 0)
-        xtol2 = xtol * xtol;
+        {
+          xtol2 = xtol * xtol;
+        }
       if (gtolp > 0)
-        gtol = gtolp;
+        {
+          gtol = gtolp;
+        }
       if (maxIter > 0)
-        maxIterations = maxIter;
+        {
+          maxIterations = maxIter;
+        }
     }
 
     void setEpsilon(double e)

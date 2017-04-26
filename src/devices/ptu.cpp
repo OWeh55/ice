@@ -38,7 +38,10 @@ namespace ice
   {
     bool rc;
     rc = ptcommand(port, "pp" + NumberString(l));
-    if (!rc) return false;
+    if (!rc)
+      {
+        return false;
+      }
     return ptcommand(port, "tp" + NumberString(b));
   }
 
@@ -46,7 +49,10 @@ namespace ice
   {
     int c;
 
-    if (ptcommand(port, "R")) return true;
+    if (ptcommand(port, "R"))
+      {
+        return true;
+      }
 
     // during reset a number of false negative acks have to be ignored
     do

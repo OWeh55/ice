@@ -66,7 +66,9 @@ namespace ice
   iceCursor iceCursor::operator--()
   {
     if (x > 0)
-      x--;
+      {
+        x--;
+      }
     else
       {
         x = SCREEN_XS - 1;
@@ -79,7 +81,9 @@ namespace ice
   {
     iceCursor OldValue(*this);
     if (x > 0)
-      x--;
+      {
+        x--;
+      }
     else
       {
         x = SCREEN_XS - 1;
@@ -92,7 +96,10 @@ namespace ice
   {
     iceCursor res = *this;
     unsigned int j;
-    for (j = 0; j < Steps; j++) res--;
+    for (j = 0; j < Steps; j++)
+      {
+        res--;
+      }
     return res;
   }
 
@@ -100,7 +107,10 @@ namespace ice
   {
     iceCursor res = *this;
     unsigned int j;
-    for (j = 0; j < Steps; j++) res++;
+    for (j = 0; j < Steps; j++)
+      {
+        res++;
+      }
     return res;
   }
 
@@ -131,8 +141,14 @@ namespace ice
   bool iceCursor::Inside() const
   {
     // x is always normalized to 0<=x<SCREEN_XS
-    if (y < 0) return false;
-    if (y > SCREEN_YS) return false;
+    if (y < 0)
+      {
+        return false;
+      }
+    if (y > SCREEN_YS)
+      {
+        return false;
+      }
     return true;
   }
 }

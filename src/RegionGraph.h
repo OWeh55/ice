@@ -92,7 +92,7 @@ namespace ice
     INTVECTOR Nb;   // Nachbarschaftsliste des Knotens
 
     int GetDegree();
-    void SetLabel(int Label);
+    void setLabel(int Label);
 
     bool IsConnected(int NodeNumber);  // Knoten mit Knoten NodeNumber verbunden?
     void AddEdge(int NodeNumber);    // Verbindung zu Knoten NodeNumber hinzufuegen

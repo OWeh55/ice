@@ -36,7 +36,10 @@ namespace ice
 
   LSIFilter& LSIFilter::operator=(const LSIFilter& f)
   {
-    if (&f == this) return *this;
+    if (&f == this)
+      {
+        return *this;
+      }
 
     delete rep;
     typ = f.typ;
@@ -54,7 +57,9 @@ namespace ice
           }
       }
     else
-      rep = nullptr;
+      {
+        rep = nullptr;
+      }
 
     return *this;
   }
@@ -64,14 +69,18 @@ namespace ice
     int n1c = m1.cols();
     int n1r = m1.rows();
     if ((n1c % 2 == 0) || (n1r % 2 == 0))
-      return 1;
+      {
+        return 1;
+      }
     int s1c = n1c / 2;
     int s1r = n1r / 2;
 
     int n2c = m2.cols();
     int n2r = m2.rows();
     if ((n2c % 2 == 0) || (n2r % 2 == 0))
-      return 1;
+      {
+        return 1;
+      }
     int s2c = n2c / 2;
     int s2r = n2r / 2;
 
@@ -102,7 +111,9 @@ namespace ice
     vector<double> res = SolveLinearEquation(A, i);
     for (int r2 = -s2r; r2 <= s2r; ++r2)
       for (int c2 = -s2c; c2 <= s2c; ++c2)
-        m2[r2 + s2r][c2 + s2c] = res[c2 + s2c + n2c * (r2 + s2r)];
+        {
+          m2[r2 + s2r][c2 + s2c] = res[c2 + s2c + n2c * (r2 + s2r)];
+        }
     return 0;
   }
 
@@ -114,10 +125,7 @@ namespace ice
 
     matrix<double> m1(sizex, sizey);
     if (mInvert(m, m1) != 0)
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return LSIFilter();
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
     return LSIFilter(m1);
   }
 #undef FNAME
@@ -139,9 +147,15 @@ namespace ice
     int dx = f.rep->getdx();
     int dy = f.rep->getdy();
 
-    if (!img.inside(x, y)) return 0;
+    if (!img.inside(x, y))
+      {
+        return 0;
+      }
 
-    if (!img.inside(x - dx, y - dy) || !img.inside(x + dx, y + dy)) return 0;
+    if (!img.inside(x - dx, y - dy) || !img.inside(x + dx, y + dy))
+      {
+        return 0;
+      }
 
     int g = 0;
 

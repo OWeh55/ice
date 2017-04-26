@@ -113,7 +113,9 @@ namespace ice
     Pixelarray = new ValueType[xsize * ysize];
 
     for (int y = 0; y < ysize; y++)
-      Pixel[y] = &Pixelarray[y * xsize];
+      {
+        Pixel[y] = &Pixelarray[y * xsize];
+      }
 
     can_delete = true;
   }
@@ -129,17 +131,19 @@ namespace ice
 
   // neues bild als SubImage eines gegebenen Bildes
   template<typename ValueType>
-  inline iceImage<ValueType>::iceImage(iceImage<ValueType>* img,
+  inline iceImage<ValueType>::iceImage(iceImage<ValueType>* imgPtr,
                                        const Window& w,
                                        const std::string& titleP)
-    : ImageBase(w.Width(), w.Height(), img->maxval, titleP, img)
+    : ImageBase(w.Width(), w.Height(), imgPtr->maxval, titleP, imgPtr)
   {
     Pixel = new ValueType*[ysize];
     Pixelarray = nullptr;
     can_delete = false;
 
     for (int y = 0; y < ysize; y++)
-      Pixel[y] = img->PixelAddress(w.p1.x, w.p1.y + y);
+      {
+        Pixel[y] = imgPtr->PixelAddress(w.p1.x, w.p1.y + y);
+      }
   }
 
   template<typename ValueType>
@@ -148,7 +152,9 @@ namespace ice
     destroy();
 
     if (can_delete)
-      delete [] Pixelarray;
+      {
+        delete [] Pixelarray;
+      }
 
     delete [] Pixel;
   }
@@ -188,16 +194,10 @@ namespace ice
   inline ValueType* iceImage<ValueType>::PixelAddress(int PosX, int PosY)
   {
     if ((int)PosX >= (int)xsize)
-      {
-        Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_XTOOLARGE);
 
     if ((int)PosY >= (int)ysize)
-      {
-        Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_YTOOLARGE);
 
     return Pixel[PosY] + PosX;
   }
@@ -210,7 +210,9 @@ namespace ice
     // now we can copy the Pixels line per line
 
     for (int y = 0; y < ysize; y++)
-      memcpy(Pixel[y], ((iceImage<ValueType>*)source)->Pixel[y], sizeof(ValueType)*xsize);
+      {
+        memcpy(Pixel[y], ((iceImage<ValueType>*)source)->Pixel[y], sizeof(ValueType)*xsize);
+      }
 
 #ifdef CONTROLLED_REFRESH
     needRefresh();
@@ -225,7 +227,9 @@ namespace ice
         ValueType* pptr = Pixel[y];
 
         for (int x = 0; x < xsize; x++)
-          *(pptr++) = val;
+          {
+            *(pptr++) = val;
+          }
       }
 
 #ifdef CONTROLLED_REFRESH

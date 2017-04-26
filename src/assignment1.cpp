@@ -35,7 +35,6 @@
 // RC: 1       Alles O.K., aber Referenzpaare < min(m,n)
 // *************************************************************************
 
-
 #include <limits.h>
 #include <limits>
 
@@ -43,7 +42,7 @@
 #include <malloc.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "assignment.h"
 #include "numbase.h"
 #include "Matrix.h"
@@ -55,14 +54,14 @@ namespace ice
   typedef int TNum;
 
 #define INFTY 0x7fffffffL
-  typedef enum {True, False} TBoolean;
+  //  typedef enum {True, False} TBoolean;
 
   struct SVertexLeft
   {
     struct SEdge* head;
     struct SVertexRight* mate;
     TNum u;
-    TBoolean f;
+    bool f;
   };
 
   typedef struct SVertexLeft TVertexLeft;
@@ -71,7 +70,7 @@ namespace ice
   {
     struct SVertexLeft* mate;
     TNum v;
-    TBoolean f;
+    bool f;
     TNum pi;
     struct SVertexLeft* parent;
   };
@@ -110,20 +109,14 @@ namespace ice
     n = cost.cols();
 
     if ((m <= 0) || (n <= 0))
-      {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     anz = m * n;
 
     indices = new int[3 * anz];
 
     if (indices == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     if (mode == 0)
       {
@@ -135,14 +128,13 @@ namespace ice
               double c = cost.at(i).at(j);
 
               if (c < 0.0)
+                throw IceException(FNAME, M_WRONG_PARAM);
+
+              if (c > max)
                 {
-                  Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                  return WRONG_PARAM;
+                  max = c;
                 }
-
-              if (c > max) max = c;
             }
-
 
         double fak = ((double)INT_MAX) / max / 1000;
 
@@ -189,7 +181,6 @@ namespace ice
 
         double fak = new_maxval / max_cost;
 
-
         int k = 0;
 
         for (int i = 0; i < (int)cost.rows(); i++)
@@ -214,10 +205,7 @@ namespace ice
     rc = input_graph(m, n, anz, indices, &s, &t, &e, &w);
 
     if (rc == 1)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     matching(m, s, n, t, w);
 
@@ -225,7 +213,10 @@ namespace ice
 
     for (int i = 0; i < m; i++)
       {
-        if (s[i].mate != nullptr) anz_pairs++;
+        if (s[i].mate != nullptr)
+          {
+            anz_pairs++;
+          }
       }
 
     reference_pairs = IMatrix(anz_pairs, 2); // Anlegen der Referenzpaare-Matrix
@@ -252,7 +243,10 @@ namespace ice
     free(t);
     free(e);
 
-    if (Min(m, n) < anz_pairs) return 1;
+    if (Min(m, n) < anz_pairs)
+      {
+        return 1;
+      }
 
     return 0;
   }
@@ -278,17 +272,29 @@ namespace ice
 
     s = (TVertexLeft*)malloc(m * sizeof(TVertexLeft));
 
-    if (s == nullptr) return 1;
+    if (s == nullptr)
+      {
+        return 1;
+      }
 
     t = (TVertexRight*)malloc(n * sizeof(TVertexRight));
 
-    if (t == nullptr) return 1;
+    if (t == nullptr)
+      {
+        return 1;
+      }
 
     e = (TEdge*)malloc(k * sizeof(TEdge));
 
-    if (e == nullptr) return 1;
+    if (e == nullptr)
+      {
+        return 1;
+      }
 
-    for (i = 0; i < m; ++i) s[i].head = nullptr;
+    for (i = 0; i < m; ++i)
+      {
+        s[i].head = nullptr;
+      }
 
     w = 0;
     kk = 0;
@@ -305,7 +311,10 @@ namespace ice
         s[a].head = e + i;
         e[i].weight = v;
 
-        if (v > w) w = v;
+        if (v > w)
+          {
+            w = v;
+          }
 
         kk = kk + 3;
       }
@@ -334,13 +343,25 @@ namespace ice
 
 #define INSERT(x, y) { st[sp].v = x; st[sp].lr = y; ++sp; }
 
-    for (i = 0; i < m; ++i) s[i].mate = nullptr;
+    for (i = 0; i < m; ++i)
+      {
+        s[i].mate = nullptr;
+      }
 
-    for (j = 0; j < n; ++j) t[j].mate = nullptr;
+    for (j = 0; j < n; ++j)
+      {
+        t[j].mate = nullptr;
+      }
 
-    for (i = 0; i < m; ++i) s[i].u = w;
+    for (i = 0; i < m; ++i)
+      {
+        s[i].u = w;
+      }
 
-    for (j = 0; j < n; ++j) t[j].v = 0;
+    for (j = 0; j < n; ++j)
+      {
+        t[j].v = 0;
+      }
 
     st = (struct SStack*)malloc((m + n) * sizeof(struct SStack));
 
@@ -352,15 +373,18 @@ Label_A:
       {
         if (s[i].mate == nullptr)
           {
-            s[i].f = True;
+            s[i].f = true;
             INSERT(&s[i], SStack::Left);
           }
-        else s[i].f = False;
+        else
+          {
+            s[i].f = false;
+          }
       }
 
     for (j = 0; j < n; ++j)
       {
-        t[j].f = False;
+        t[j].f = false;
         t[j].pi = + INFTY;
       }
 
@@ -378,7 +402,7 @@ Label_B:
               {
                 b = p -> right;
 
-                if ((b -> f) == False)
+                if ((b -> f) == false)
                   {
                     z = (a -> u) + (b -> v) - (p -> weight);
 
@@ -389,7 +413,7 @@ Label_B:
 
                         if (z == 0)
                           {
-                            b -> f = True;
+                            b -> f = true;
                             INSERT(b, SStack:: Right);
                           }
                       }
@@ -404,9 +428,9 @@ Label_B:
               {
                 a = b -> mate;
 
-                if (a -> f == False)
+                if (a -> f == false)
                   {
-                    a -> f = True;
+                    a -> f = true;
                     INSERT(a, SStack:: Left);
                   }
               }
@@ -443,16 +467,33 @@ Label_B:
     z = + INFTY;
 
     for (j = 0; j < n; ++j)
-      if (t[j].f == False && t[j].pi < z) z = t[j].pi;
+      if (!t[j].f && t[j].pi < z)
+        {
+          z = t[j].pi;
+        }
 
     d2 = z;
 
-    if (d1 <= d2) z = d1;
-    else z = d2;
+    if (d1 <= d2)
+      {
+        z = d1;
+      }
+    else
+      {
+        z = d2;
+      }
 
-    for (i = 0; i < m; ++i) if (s[i].f == True) s[i].u -= z;
+    for (i = 0; i < m; ++i)
+      if (s[i].f)
+        {
+          s[i].u -= z;
+        }
 
-    for (j = 0; j < n; ++j) if (t[j].f == True) t[j].v += z;
+    for (j = 0; j < n; ++j)
+      if (t[j].f)
+        {
+          t[j].v += z;
+        }
 
     if (d1 <= d2)
       {
@@ -460,13 +501,14 @@ Label_B:
         return;
       }
 
-    for (j = 0; j < n; ++j) if (t[j].f == False && t[j].pi < + INFTY)
+    for (j = 0; j < n; ++j)
+      if (!t[j].f && t[j].pi < + INFTY)
         {
           t[j].pi -= z;
 
           if (t[j].pi == 0)
             {
-              t[j].f = True;
+              t[j].f = true;
               INSERT(&t[j], SStack:: Right);
             }
         }

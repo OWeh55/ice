@@ -58,14 +58,20 @@ namespace ice
 
   inline void first(p_clip& p)
   {
-    while (p->prev != NULL) p = p->prev;
+    while (p->prev != NULL)
+      {
+        p = p->prev;
+      }
   }
 
   inline p_clip next(p_clip& p)
   {
     p_clip h = p;
 
-    if (h->next != NULL) return h->next;
+    if (h->next != NULL)
+      {
+        return h->next;
+      }
 
     first(p);
     return p;
@@ -75,30 +81,42 @@ namespace ice
   /***interne Funktionen*********************************/
   /******************************************************/
 
-// Hilfsfunktion für InsidePolygon
+// Hilfsfunktion für insidePolygon
   bool handleOneEdge(double xp, double yp,
                      double x1, double y1, double x2, double y2,
                      int& lastdir, int& c)
   {
     if (yp == y1)
       {
-        if (xp == x1) return true;
+        if (xp == x1)
+          {
+            return true;
+          }
 
         if (y1 > y2)
           {
             if (lastdir == -1) // weiter fallend
-              if (x1 < xp) c++;
+              if (x1 < xp)
+                {
+                  c++;
+                }
           }
 
         if (y1 < y2)
           {
             if (lastdir == 1) // weiter steigend
-              if (x1 < xp) c++;
+              if (x1 < xp)
+                {
+                  c++;
+                }
           }
 
         if (y1 == y2)
           {
-            if ((x1 <= xp) && (x2 >= xp)) return true;
+            if ((x1 <= xp) && (x2 >= xp))
+              {
+                return true;
+              }
           }
       }
 
@@ -107,15 +125,27 @@ namespace ice
         double xz = (yp - y1) * (x2 - x1) / (y2 - y1) + x1;
 
         /* Punkt auf dem Polygonzug? */
-        if (xz == xp) return true;
+        if (xz == xp)
+          {
+            return true;
+          }
 
         /* Polygonzug schneidet Scanlinie links vom Punkt? */
-        if (xz < xp) c++;
+        if (xz < xp)
+          {
+            c++;
+          }
       }
 
-    if (y2 > y1) lastdir = 1;
+    if (y2 > y1)
+      {
+        lastdir = 1;
+      }
 
-    if (y2 < y1) lastdir = -1;
+    if (y2 < y1)
+      {
+        lastdir = -1;
+      }
 
     return false;
   }
@@ -130,20 +160,32 @@ namespace ice
 
     for (c0 = cl, c1 = next(cl); c0 != NULL; c0 = c0->next, c1 = next(c1))
       {
-        if (c0->p[1] < c1->p[1]) lastdir = 1;
+        if (c0->p[1] < c1->p[1])
+          {
+            lastdir = 1;
+          }
 
-        if (c0->p[1] > c1->p[1]) lastdir = -1;
+        if (c0->p[1] > c1->p[1])
+          {
+            lastdir = -1;
+          }
       }
 
     for (c0 = cl, c1 = next(cl); c0 != NULL; c0 = c0->next, c1 = next(c1))
       {
         if (handleOneEdge(p[0], p[1],
                           c0->p[0], c0->p[1], c1->p[0], c1->p[1],
-                          lastdir, c)) return 0;
+                          lastdir, c))
+          {
+            return 0;
+          }
 
       }
 
-    if ((c & 1) == 1) return 1;
+    if ((c & 1) == 1)
+      {
+        return 1;
+      }
 
     return -1;
   }
@@ -169,7 +211,10 @@ namespace ice
     ci->next = c->next;
     c->next = ci;
 
-    if (ci->next != nullptr) ci->next->prev = ci;
+    if (ci->next != nullptr)
+      {
+        ci->next->prev = ci;
+      }
 
     return;
   }
@@ -180,20 +225,35 @@ namespace ice
     p_clip c;
 
     /* Rueckgabe des im Zyklus folgenden Punktes*/
-    if (cd == nullptr) return nullptr;
+    if (cd == nullptr)
+      {
+        return nullptr;
+      }
 
-    if (cd->next != nullptr) c = cd->next;
+    if (cd->next != nullptr)
+      {
+        c = cd->next;
+      }
     else
       {
         c = cd;
         first(c);
 
-        if (c == cd) c = nullptr;
+        if (c == cd)
+          {
+            c = nullptr;
+          }
       }
 
-    if (cd->prev != nullptr) cd->prev->next = cd->next;
+    if (cd->prev != nullptr)
+      {
+        cd->prev->next = cd->next;
+      }
 
-    if (cd->next != nullptr) cd->next->prev = cd->prev;
+    if (cd->next != nullptr)
+      {
+        cd->next->prev = cd->prev;
+      }
 
     free(cd);
     return c;
@@ -201,7 +261,10 @@ namespace ice
   /******************************************************/
   void p_Free(p_clip cl)
   {
-    while (cl != nullptr) cl = p_Delete(cl);
+    while (cl != nullptr)
+      {
+        cl = p_Delete(cl);
+      }
   }
   /******************************************************/
   /* verkettete Liste aus Punktliste erzeugen*/
@@ -214,7 +277,10 @@ namespace ice
     /* Polygonfläche berechnen */
     for (i = 0, j = 1, a = 0; i < pl->lng; i++, j++)
       {
-        if (j >= pl->lng) j = 0;
+        if (j >= pl->lng)
+          {
+            j = 0;
+          }
 
         a += pl->xptr[i] * pl->yptr[j] - pl->xptr[j] * pl->yptr[i];
       }
@@ -254,7 +320,10 @@ namespace ice
       {
         cn = c->next;
 
-        if (!cn->valid) return nullptr;
+        if (!cn->valid)
+          {
+            return nullptr;
+          }
       }
     else
       {
@@ -296,9 +365,15 @@ namespace ice
 
     ca = c1;
 
-    while ((!ca->valid) && (ca->next != nullptr)) ca = ca->next;
+    while ((!ca->valid) && (ca->next != nullptr))
+      {
+        ca = ca->next;
+      }
 
-    if (ca->next == nullptr) return nullptr;
+    if (ca->next == nullptr)
+      {
+        return nullptr;
+      }
 
     /* erster Punkt im 2. Polygon? --> Startpunkt für neue Liste */
     if ((h = p_PointInPolygon(ca->p, c2)) >= 0)
@@ -309,10 +384,16 @@ namespace ice
     else
       {
         for (ca = c1; ca != nullptr; ca = ca->next)
-          if ((cr = p_SearchCross(ca, c2)) != nullptr) break;
+          if ((cr = p_SearchCross(ca, c2)) != nullptr)
+            {
+              break;
+            }
 
         /* Polygon 1 vollst. außerhalb von Polygon 2  (aber nicht notw. umgekehrt) */
-        if (ca == nullptr) return nullptr;
+        if (ca == nullptr)
+          {
+            return nullptr;
+          }
 
         ca->valid = false;
         ca = ca->next;
@@ -393,7 +474,10 @@ namespace ice
     c = c1;
     pl = NewPointList(i + 1);
 
-    if (pl == nullptr) return (nullptr);
+    if (pl == nullptr)
+      {
+        return (nullptr);
+      }
 
     for (i = 0; i < pl->lng; i++)
       {
@@ -417,9 +501,15 @@ namespace ice
           {
             c3 = c2->next;
 
-            if (c3 == nullptr) c3 = cl;
+            if (c3 == nullptr)
+              {
+                c3 = cl;
+              }
 
-            if (Intersect(c1->p, c1->next->p, c2->p, c3->p, &l)) return false;
+            if (Intersect(c1->p, c1->next->p, c2->p, c3->p, &l))
+              {
+                return false;
+              }
           }
       }
 
@@ -437,16 +527,10 @@ namespace ice
     pl = nullptr;
 
     if ((pl1 == nullptr) || (pl2 == nullptr))
-      {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((pl1->lng < 3) || (pl2->lng < 3))
-      {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     c1 = p_ClipList(pl1);
     c2 = p_ClipList(pl2);
@@ -454,10 +538,19 @@ namespace ice
     /*Teilpolygone von c1 in c2 suchen und umgekehrt*/
     while ((c = p_ClipPolygon(c1, c2)) != nullptr)
       {
-        if (*i == 0) pl = (PointList*)malloc(sizeof(PointList));
-        else pl = (PointList*)realloc(pl, (*i + 1) * sizeof(PointList));
+        if (*i == 0)
+          {
+            pl = (PointList*)malloc(sizeof(PointList));
+          }
+        else
+          {
+            pl = (PointList*)realloc(pl, (*i + 1) * sizeof(PointList));
+          }
 
-        if (pl == nullptr) return nullptr;
+        if (pl == nullptr)
+          {
+            return nullptr;
+          }
 
         pl[*i] = p_PointList(c);
         p_Free(c);
@@ -466,10 +559,19 @@ namespace ice
 
     while ((c = p_ClipPolygon(c2, c1)) != nullptr)
       {
-        if (*i == 0) pl = (PointList*)malloc(sizeof(PointList));
-        else pl = (PointList*)realloc(pl, (*i + 1) * sizeof(PointList));
+        if (*i == 0)
+          {
+            pl = (PointList*)malloc(sizeof(PointList));
+          }
+        else
+          {
+            pl = (PointList*)realloc(pl, (*i + 1) * sizeof(PointList));
+          }
 
-        if (pl == nullptr) return nullptr;
+        if (pl == nullptr)
+          {
+            return nullptr;
+          }
 
         pl[*i] = p_PointList(c);
         p_Free(c);
@@ -482,20 +584,20 @@ namespace ice
   }
 #undef FNAME
   /******************************************************/
-#define FNAME "IsPolygon"
-  bool IsPolygon(PointList pl)
+#define FNAME "isPolygon"
+  bool isPolygon(PointList pl)
   {
     /* Es wird getestet, ob sich die Kanten eines Polygons schneiden */
     p_clip cl;
     bool flag;
 
     if (pl == nullptr)
+      throw IceException(FNAME, M_WRONG_PARAM);
+
+    if (pl->lng < 2)
       {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
         return false;
       }
-
-    if (pl->lng < 2) return false;
 
     cl = p_ClipList(pl);
     flag = p_IsPolygon(cl);
@@ -514,27 +616,30 @@ namespace ice
     int lastdir = 0;
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
-        return (-1);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pl->lng < 2)
-      {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
-        return (-1);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (i = 0, j = 1; i < pl->lng; i++, j++)
       {
-        if (j >= pl->lng) j = 0;
+        if (j >= pl->lng)
+          {
+            j = 0;
+          }
 
         double y1 = pl->yptr[i];
         double y2 = pl->yptr[j];
 
-        if (y2 > y1) lastdir = 1;
+        if (y2 > y1)
+          {
+            lastdir = 1;
+          }
 
-        if (y2 < y1) lastdir = -1;
+        if (y2 < y1)
+          {
+            lastdir = -1;
+          }
       }
 
     if (lastdir == 0)
@@ -545,14 +650,23 @@ namespace ice
 
     for (i = 0, j = 1; i < pl->lng; i++, j++)
       {
-        if (j >= pl->lng) j = 0;
+        if (j >= pl->lng)
+          {
+            j = 0;
+          }
 
         if (handleOneEdge(xp, yp,
                           pl->xptr[i], pl->yptr[i], pl->xptr[j], pl->yptr[j],
-                          lastdir, c)) return false;
+                          lastdir, c))
+          {
+            return false;
+          }
       }
 
-    if (c & 1) return true;
+    if (c & 1)
+      {
+        return true;
+      }
 
     return false;
   }
@@ -567,19 +681,16 @@ namespace ice
     Contur c;
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
-        return c;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    c.SetStart(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
+    c.setStart(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
 
     for (i = 1; i < pl->lng; i++)
       {
-        c.Add(RoundInt(pl->xptr[i]), RoundInt(pl->yptr[i]));
+        c.add(RoundInt(pl->xptr[i]), RoundInt(pl->yptr[i]));
       }
 
-    c.Add(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
+    c.add(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
     return c;
   }
 
@@ -590,20 +701,17 @@ namespace ice
     int i, j;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, ERROR);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PARAM, ERROR);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (i = 0, j = 1; i < pl->lng; i++, j++)
       {
-        if (j >= pl->lng) j = 0;
+        if (j >= pl->lng)
+          {
+            j = 0;
+          }
 
         Line(RoundInt(pl->xptr[i]), RoundInt(pl->yptr[i]),
              RoundInt(pl->xptr[j]), RoundInt(pl->yptr[j]),

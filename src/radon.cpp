@@ -31,7 +31,7 @@
 #endif
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "distance.h"
@@ -44,7 +44,7 @@ namespace ice
 //-----------------------------------------------------
   static const double sres = 0.3;
 
-  int RadonImg(Image& srcimg, Image& radonimg)
+  void RadonImg(Image& srcimg, Image& radonimg)
   {
     RadonCTrafo tr(srcimg->xsize, srcimg->ysize,
                    radonimg->xsize, radonimg->ysize);
@@ -175,27 +175,30 @@ namespace ice
 
               sum *= sres;
 
-              if (sum > radonimg->maxval)
-                sum = radonimg->maxval;
+              if (sum > radonimg.maxval)
+                {
+                  sum = radonimg.maxval;
+                }
 
               PutVal(radonimg, x, y, RoundInt(sum));
             }
         }
     }
-    return 0;
   }
 
-  int InvRadonImg(Image& radonimg, Image& resimg, int fmax)
+  void InvRadonImg(Image& radonimg, Image& resimg, int fmax)
   {
     // Invertierung Radon durch gefilterte Rückprojektion
     RadonCTrafo tr(resimg->xsize, resimg->ysize,
                    radonimg->xsize, radonimg->ysize);
 
     if (fmax < 0)
-      fmax = radonimg->xsize;
+      {
+        fmax = radonimg->xsize;
+      }
 
     ImageD akku = NewImgD(resimg->xsize, resimg->ysize);
-    SetImgD(akku, 0.0);
+    setImgD(akku, 0.0);
 
     //#pragma omp parallel for firstprivate(tr) schedule(dynamic,20)
     for (int yr = 0; yr < radonimg->ysize; yr++)
@@ -204,7 +207,9 @@ namespace ice
         Vector zeile(radonimg->xsize);
 
         for (int i = 0; i < radonimg->xsize; i++)
-          zeile[i] = GetVal(radonimg, i, yr);
+          {
+            zeile[i] = GetVal(radonimg, i, yr);
+          }
 
         //#pragma omp critical
         {
@@ -215,12 +220,19 @@ namespace ice
             {
               double f = zeile.size() - i;
 
-              if (i < f) f = i;
+              if (i < f)
+                {
+                  f = i;
+                }
 
               if (f <= fmax)
-                zeile[i] = zeile[i] * f;
+                {
+                  zeile[i] = zeile[i] * f;
+                }
               else
-                zeile[i] = 0.0;
+                {
+                  zeile[i] = 0.0;
+                }
             }
 
           //      cout << endl;
@@ -245,7 +257,5 @@ namespace ice
       }
 
     ConvImgDImg(akku, resimg);
-    FreeImgD(akku);
-    return 0;
   }
 }

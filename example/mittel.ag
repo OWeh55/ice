@@ -29,20 +29,16 @@ void filterImg(vector<string>& z)
       string filename = z[i];
       // cout << filename<<endl;
       int xda, yda, mva;
-      IfFailed(InfImgFile(filename, xda, yda, mva))
-      {
-        SetOk();
-      }
-      else
-        {
-          images.push_back(filename);
-          if (xda > xdim)
-            xdim = xda;
-          if (yda > ydim)
-            ydim = yda;
-          if (mva > vmax)
-            vmax = mva;
-        }
+      InfImgFile(filename, xda, yda, mva);
+
+      images.push_back(filename);
+      if (xda > xdim)
+        xdim = xda;
+      if (yda > ydim)
+        ydim = yda;
+      if (mva > vmax)
+        vmax = mva;
+
     }
 
   z = images;
@@ -206,12 +202,17 @@ int main(int argc, char* argv[])
 
   vector<string> files;
 
-  IfFailed(InfImgFile(dir, xdim, ydim, vmax))
-  {
-    // wenn kein Bild, dann könnte es Verzeichnis sein
-    SetOk();
-  }
-  else
+  bool isImageFile = true;
+  try
+    {
+      InfImgFile(dir, xdim, ydim, vmax);
+    }
+  catch (IceException& ex)
+    {
+      // wenn kein Bild, dann könnte es Verzeichnis sein
+      isImageFile = false;
+    }
+  if (isImageFile)
     {
       // Argument ist Datei: Verzeichnis ermitteln
       // conversion win -> unix

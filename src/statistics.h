@@ -64,7 +64,9 @@ namespace ice
           akk[i] = 0.0;
 
           for (int k = 0; k < dim; k++)
-            sakk[i][k] = 0.0;
+            {
+              sakk[i][k] = 0.0;
+            }
         }
     }
 
@@ -73,7 +75,9 @@ namespace ice
       ct++;
 
       for (int i = 0; i < dim; i++)
-        akk[i] += val[i];
+        {
+          akk[i] += val[i];
+        }
 
       for (int i = 0; i < dim; i++)
         {
@@ -92,7 +96,9 @@ namespace ice
       ct++;
 
       for (int i = 0; i < dim; i++)
-        akk[i] += val[i];
+        {
+          akk[i] += val[i];
+        }
 
       for (int i = 0; i < dim; i++)
         {
@@ -109,7 +115,9 @@ namespace ice
     void put(const Matrix& values)
     {
       for (int i = 0; i < values.rows(); i++)
-        put(values[i]);
+        {
+          put(values[i]);
+        }
     }
 
     std::vector<double> getMean() const
@@ -117,7 +125,9 @@ namespace ice
       std::vector<double> res(dim);
 
       for (int i = 0; i < dim; i++)
-        res[i] = akk[i] / ct;
+        {
+          res[i] = akk[i] / ct;
+        }
 
       return res;
     }
@@ -133,7 +143,9 @@ namespace ice
       matrix<double> res(dim, dim);
       for (int i = 0; i < dim; ++i)
         for (int k = 0; k < dim; ++k)
-          res[i][k] = sakk[i][k] / ct - mean[i] * mean[k];
+          {
+            res[i][k] = sakk[i][k] / ct - mean[i] * mean[k];
+          }
       return res;
     }
 
@@ -168,8 +180,8 @@ namespace ice
     friend double Weight(const Statistics& st);
     friend Matrix Covariance(const Statistics& st);
     friend Matrix Correlation(const Statistics& st);
-    friend int Write(const Statistics& st, const std::string& fn);
-    friend int Read(Statistics& st, const std::string& fn);
+    friend void Write(const Statistics& st, const std::string& fn);
+    friend void Read(Statistics& st, const std::string& fn);
 
     friend std::ostream& operator<<(std::ostream&, const Statistics&);
     friend std::istream& operator>>(std::istream&, Statistics&);

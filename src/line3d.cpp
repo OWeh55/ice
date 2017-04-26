@@ -22,7 +22,7 @@
 using namespace std;
 
 #include <math.h>
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "line3d.h"
@@ -51,10 +51,7 @@ namespace ice
   Line3d::Line3d(const Vector& v, int typep) : GeoObject3d(v), type(typep)
   {
     if (v.Size() < 6)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     dp = Vector3d(v[3] - pos.x, v[4] - pos.y, v[5] - pos.z);
     len2 = dp.length2();

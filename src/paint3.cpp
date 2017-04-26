@@ -25,7 +25,7 @@
 #include <float.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "Contur.h"
 #include "contools.h"
@@ -57,18 +57,12 @@ namespace ice
     int i;
 
     if (nbr < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     fi = (FuncImage1D)malloc(sizeof(struct FuncImage1D_));
 
     if (fi == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     fi->nbr = nbr;
     fi->upper = upper;
@@ -80,14 +74,13 @@ namespace ice
     fi->entry = (double*)malloc(nbr * sizeof(double));
 
     if (fi->entry == NULL)
+      throw IceException(FNAME, M_NO_MEM);
+
+    for (i = 0; i < nbr; i++)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        fi->entry[i] = 0;
       }
 
-    for (i = 0; i < nbr; i++) fi->entry[i] = 0;
-
-    SetOk();
     return fi;
   }
 #undef FNAME
@@ -97,10 +90,7 @@ namespace ice
   int PutFuncImage1D(FuncImage1D fi, int i, double val)
   {
     if ((i < 0) || (i > fi->nbr - 1))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     fi->entry[i] = val;
     return OK;
@@ -128,10 +118,7 @@ namespace ice
     int sizey, h;
 
     if (mode != DEFAULT)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return Image();
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     min = HUGE_VAL;
     max = -HUGE_VAL;
@@ -139,9 +126,15 @@ namespace ice
     /* Bestimmung der maximalen und minimalen Einträge */
     for (i = 0; i < fi->nbr; i++)
       {
-        if (fi->entry[i] < min) min = fi->entry[i];
+        if (fi->entry[i] < min)
+          {
+            min = fi->entry[i];
+          }
 
-        if (fi->entry[i] > max) max = fi->entry[i];
+        if (fi->entry[i] > max)
+          {
+            max = fi->entry[i];
+          }
       }
 
     diff = max - min;
@@ -152,7 +145,7 @@ namespace ice
     l = Max(l1, l2);
     sizey = (int)((double)(fi->nbr) * fac);
     img = NewImg(fi->nbr + l * CHARX + 3 * GAPX + LAST + 1, sizey + 4 * CHARY + 6 * GAPY + 1, 255);
-    SetImg(img, 0);
+    img.set(0);
     Line(l * CHARX + 2 * GAPX, 2 * CHARY + 3 * GAPY,
          l * CHARX + 2 * GAPX, 2 * CHARY + 3 * GAPY + LAST + sizey,
          255, DEFAULT, img);
@@ -160,8 +153,14 @@ namespace ice
          l * CHARX + 2 * GAPX + fi->nbr + LAST, 2 * CHARY + 3 * GAPY + LAST + sizey,
          255, DEFAULT, img);
 
-    if (l1 <= l2) Text(smax, GAPX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
-    else Text(smax, GAPX + (l1 - l2)*CHARX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
+    if (l1 <= l2)
+      {
+        Text(smax, GAPX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
+      }
+    else
+      {
+        Text(smax, GAPX + (l1 - l2)*CHARX, 2 * CHARY + 3 * GAPY + LAST - CHARY / 2, 255, 0, img);
+      }
 
     if (l1 < l2) Text(smin, GAPX + (l2 - l1)*CHARX,
                         2 * CHARY + 3 * GAPY + LAST + sizey - CHARY / 2, 255, 0, img);
@@ -198,9 +197,15 @@ namespace ice
 #define FNAME "FreeFuncImage1D"
   int FreeFuncImage1D(FuncImage1D fi)
   {
-    if (fi->entry != NULL) free(fi->entry);
+    if (fi->entry != NULL)
+      {
+        free(fi->entry);
+      }
 
-    if (fi != NULL) free(fi);
+    if (fi != NULL)
+      {
+        free(fi);
+      }
 
     return OK;
   }

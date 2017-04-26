@@ -23,7 +23,7 @@
  * Author: Alexander Lärz, 2005
  */
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
@@ -50,13 +50,12 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return;
+            throw IceException(FNAME, M_NO_MEM);
           }
       }
     else
       {
-        Message(FNAME, M_VECTORDIM, WRONG_VECTOR);
+        throw IceException(FNAME, M_VECTORDIM);
         data = nullptr;
         return;
       }
@@ -79,8 +78,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return;
+            throw IceException(FNAME, M_NO_MEM);
           }
       }
     else
@@ -117,8 +115,7 @@ namespace ice
 
             if (data == nullptr)
               {
-                Message("operator=", M_NO_MEM, NO_MEM);
-                return *this;
+                throw IceException("operator=", M_NO_MEM);
               }
           }
         else
@@ -150,8 +147,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(dimension)))
       {
-        Message("operator[]", "Wrong index", WRONG_PARAM);
-        return data[0];
+        throw IceException("operator[]", "Wrong index");
       }
 
     return data[i];
@@ -168,8 +164,7 @@ namespace ice
 
     if (qv1.dimension != qv2.dimension)
       {
-        Message("Operator+", "Wrong dimension", WRONG_PARAM);
-        return qv1;
+        throw IceException("Operator+", "Wrong dimension");
       }
 
     for (int i = 0; i < int(qv1.dimension); i++)
@@ -186,8 +181,7 @@ namespace ice
 
     if (qv1.dimension != qv2.dimension)
       {
-        Message("Operator+", "Wrong dimension", WRONG_PARAM);
-        return qv1;
+        throw IceException("Operator+", "Wrong dimension");
       }
 
     for (int i = 0; i < int(qv1.dimension); i++)
@@ -248,11 +242,17 @@ namespace ice
 
   bool operator== (const QuatVector& qv1, const QuatVector& qv2)
   {
-    if (qv2.dimension != qv1.dimension) return false;
+    if (qv2.dimension != qv1.dimension)
+      {
+        return false;
+      }
 
     for (int i = 0; i < int(qv1.dimension); i++)
       {
-        if (qv1[i] != qv2[i]) return false;
+        if (qv1[i] != qv2[i])
+          {
+            return false;
+          }
       }
 
     return true;

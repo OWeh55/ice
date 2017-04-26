@@ -78,13 +78,13 @@ namespace ice
 
   Image DrawPattern(int dimx, int dimy);
 
-// interne Kamerastruktur
-  typedef struct _T_campar
+  // interne Kamerastruktur
+  struct CameraParameters
   {
     ice::Matrix R;
     ice::Vector t;
     ice::Matrix K;
-  }* CameraParameters;
+  };
 
 // Eckpunkte der Quadrate - genau 50 Objekte im Muster
   const double pattern[50][8] =

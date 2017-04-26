@@ -30,7 +30,7 @@
 
 #include <math.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "based.h"
 #include "numbase.h"
@@ -54,7 +54,6 @@ namespace ice
   int Invers(int x, int y, int n1, int n2,
              double a, double b, double c, double d, double* xx, double* yy);
 
-
   /*** oeffentliche Funktionen ****************************************/
 
 #define FNAME "TransPoint"
@@ -65,10 +64,7 @@ namespace ice
     double* ptr;
 
     if ((p1 == NULL) || (t == NULL))
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     ph[0] = p1[0];
     ph[1] = p1[1];
@@ -76,23 +72,19 @@ namespace ice
     MulMatrix((double*)t, (double*)ph, 3, 3, 1, (double*)ph);
 
     if (fabs(ph[2]) < 1e-10)
-      {
-        Message(FNAME, M_WRONG_TRANS, WRONG_TRANS);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_TRANS);
 
     if (p2 == NULL)
       {
         ptr = (double*)malloc(2 * sizeof(double));
         ptr[0] = ph[0] / ph[2];
         ptr[1] = ph[1] / ph[2];
-        SetOk();
         return ptr;
       }
 
     p2[0] = ph[0] / ph[2];
     p2[1] = ph[1] / ph[2];
-    SetOk();
+
     return p2;
   }
 #undef FNAME
@@ -107,66 +99,33 @@ namespace ice
     int i;
     int x, y;
     double eps = 1e-15;
-    int rc;
 
     if (t == NULL)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return c2;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (IsMatrixRegular((double*)t, 3, &eps) != true)
-      {
-        Message(FNAME, M_NO_REGULAR, WRONG_TRANS);
-        return c2;
-      }
+      throw IceException(FNAME, M_NO_REGULAR);
 
     ds[0] = c1.StartX();
     ds[1] = c1.StartY();
-    OffMessage();
-    TransPoint(ds, t, dd);
-    rc = GetError();
-    OnMessage();
 
-    if (rc != OK)
-      {
-        Message(FNAME, M_INFINIT_POINT, INFINIT_POINT);
-        return c2;
-      }
+    RETURN_ERROR_IF_FAILED(TransPoint(ds, t, dd));
 
-    c2.SetStart(RoundInt(dd[0]), RoundInt(dd[1]));
+    c2.setStart(RoundInt(dd[0]), RoundInt(dd[1]));
 
     for (i = 1; i <= c1.Number(); i++)
       {
         c1.getPoint(i, x, y);
         ds[0] = x;
         ds[1] = y;
-        OffMessage();
-        TransPoint(ds, t, dd);
-        rc = GetError();
-        OnMessage();
+        RETURN_ERROR_IF_FAILED(TransPoint(ds, t, dd));
 
-        if (rc != OK)
-          {
-            if (rc == WRONG_TRANS)
-              {
-                Message(FNAME, M_INFINIT_POINT, INFINIT_POINT);
-                return c2;
-              }
-            else
-              {
-                Message(FNAME, M_0, INTERN_ERROR);
-                return c2;
-              }
-          }
-
-        c2.Add(RoundInt(dd[0]), RoundInt(dd[1]));
+        c2.add(RoundInt(dd[0]), RoundInt(dd[1]));
       }
 
     return c2;
   }
 #undef FNAME
-#undef DEBUG
 
   /***************************************************************************/
 #define FNAME "TransImg"
@@ -188,13 +147,9 @@ namespace ice
     int i, j, y, sx, sy;
     double h;
     double mx1, my1, my2[3];
-    int has_temp = false;
 
     if (!IsImg(imgss) || !IsImg(imgd))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image imgs;
 
@@ -202,17 +157,7 @@ namespace ice
       {
         /*temporaeres Quellbild*/
         imgs = NewImg(imgd, true);
-
-        if (!IsImg(imgs))
-          {
-            Message(FNAME, M_0, ERROR);
-            return ERROR;
-          }
-
-        has_temp = true;
       }
-    else
-      imgs = imgss;
 
     for (i = 0; i < 3; i++)
       {
@@ -239,26 +184,38 @@ namespace ice
     nx = (double*)malloc(sx * sizeof(double));
     ny = (double*)malloc(sy * sizeof(double));
 
-    for (i = 0; i < sx; i++) /*look-up-tables f. Zeilen bzw Spalten*/
-      nx[i] = (double)i / (double)(sx - i);
+    for (i = 0; i < sx; i++)   /*look-up-tables f. Zeilen bzw Spalten*/
+      {
+        nx[i] = (double)i / (double)(sx - i);
+      }
 
     for (i = 0; i < sy; i++)
-      ny[i] = (double)i / (double)(sy - i);
+      {
+        ny[i] = (double)i / (double)(sy - i);
+      }
 
     mx1 = (pf2[2][0][0] - pf2[1][0][0]) / (pf2[1][0][0] - pf2[0][0][0]);
     my1 = (pf2[0][2][1] - pf2[0][1][1]) / (pf2[0][1][1] - pf2[0][0][1]);
 
     for (i = 0; i < 3; i++)
-      my2[i] = sqrt((Sqr(pf1[i][1][0] - pf1[i][0][0]) + Sqr(pf1[i][1][1] - pf1[i][0][1])) / (Sqr(pf1[i][2][0] - pf1[i][1][0]) + Sqr(pf1[i][2][1] - pf1[i][1][1])));
+      {
+        my2[i] = sqrt((Sqr(pf1[i][1][0] - pf1[i][0][0]) + Sqr(pf1[i][1][1] - pf1[i][0][1])) / (Sqr(pf1[i][2][0] - pf1[i][1][0]) + Sqr(pf1[i][2][1] - pf1[i][1][1])));
+      }
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 2; j++)
-        p[i][j] = pf1[i][0][j];          /*Bezugspunkte erste Zeile*/
+        {
+          p[i][j] = pf1[i][0][j];  /*Bezugspunkte erste Zeile*/
+        }
 
     if (mode == 0)
-      TrLine(imgs, imgd, 0, p, nx, mx1);
+      {
+        TrLine(imgs, imgd, 0, p, nx, mx1);
+      }
     else
-      TrLineI(imgs, imgd, 0, p, nx, mx1);
+      {
+        TrLineI(imgs, imgd, 0, p, nx, mx1);
+      }
 
     for (y = 1; y < sy; y++)
       {
@@ -270,29 +227,36 @@ namespace ice
           }
 
         if (mode == 0)
-          TrLine(imgs, imgd, y, p, nx, mx1);
+          {
+            TrLine(imgs, imgd, y, p, nx, mx1);
+          }
         else
-          TrLineI(imgs, imgd, y, p, nx, mx1);
+          {
+            TrLineI(imgs, imgd, y, p, nx, mx1);
+          }
       }
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 2; j++)
-        p[i][j] = pf1[i][2][j];          /*Bezugspunkte letzte Zeile*/
+        {
+          p[i][j] = pf1[i][2][j];  /*Bezugspunkte letzte Zeile*/
+        }
 
     if (mode == 0)
-      TrLine(imgs, imgd, sy, p, nx, mx1);
+      {
+        TrLine(imgs, imgd, sy, p, nx, mx1);
+      }
     else
-      TrLineI(imgs, imgd, sy, p, nx, mx1);
+      {
+        TrLineI(imgs, imgd, sy, p, nx, mx1);
+      }
 
     free(nx);
     free(ny);
 
-    if (has_temp) FreeImg(imgs);
-
     return OK;
   }
 #undef FNAME
-
 
   /* Nichtöffentliche Funktionen */
 
@@ -311,20 +275,19 @@ namespace ice
     m = mx * sqrt((Sqr(p[1][0] - p[0][0]) + Sqr(p[1][1] - p[0][1])) / (Sqr(p[2][0] - p[1][0]) + Sqr(p[2][1] - p[1][1])));
     hx = m * (p[2][0] - p[0][0]);
     hy = (p[2][1] - p[0][1]) / (p[2][0] - p[0][0]);
-    OffMessage();
-    PutVal(img2, 0, y2, GetVal(img1, (int)(p[0][0] + 0.5), (int)(p[0][1] + 0.5)));
+
+    PutVal(img2, 0, y2, GetValClipped(img1, (int)(p[0][0] + 0.5), (int)(p[0][1] + 0.5)));
 
     for (x2 = 1; x2 < img2.xsize - 1; x2++)
       {
         h = hx * nx[x2] / (1 + m * nx[x2]);
         x1 = (int)(p[0][0] + h + 0.5);
         y1 = (int)(p[0][1] + h * hy + 0.5);
-        PutVal(img2, x2, y2, GetVal(img1, x1, y1));
+        PutVal(img2, x2, y2, GetValClipped(img1, x1, y1));
       }
 
-    PutVal(img2, img2.xsize - 1, y2, GetVal(img1, (int)(p[2][0] + 0.5), (int)(p[2][1] + 0.5)));
-    SetOk();
-    OnMessage();
+    PutVal(img2, img2.xsize - 1, y2, GetValClipped(img1, (int)(p[2][0] + 0.5), (int)(p[2][1] + 0.5)));
+
     return 0;
   }
   /************************************************/
@@ -343,7 +306,7 @@ namespace ice
     m = mx * sqrt((Sqr(p[1][0] - p[0][0]) + Sqr(p[1][1] - p[0][1])) / (Sqr(p[2][0] - p[1][0]) + Sqr(p[2][1] - p[1][1])));
     hx = m * (p[2][0] - p[0][0]);
     hy = (p[2][1] - p[0][1]) / (p[2][0] - p[0][0]);
-    OffMessage();
+
     PutVal(img2, 0, y2, (int)(0.5 + GetInterpolVal(img1, p[0][0], p[0][1])));
 
     for (x2 = 1; x2 < img2.xsize - 1; x2++)
@@ -355,8 +318,6 @@ namespace ice
       }
 
     PutVal(img2, img2.xsize - 1, y2, (int)(0.5 + GetInterpolVal(img1, p[2][0], p[2][1])));
-    SetOk();
-    OnMessage();
     return 0;
   }
   /*************************************************/
@@ -383,7 +344,10 @@ namespace ice
     const double eps = 1e-30;
     double fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
-    if (fac < eps) return ERROR;
+    if (fac < eps)
+      {
+        return ERROR;
+      }
 
     ScaleMatrix((double*)Trans, 3, 3, 1 / sqrt(fac), (double*)Trans);
     return OK;
@@ -423,24 +387,17 @@ namespace ice
     double* nxx, *nxy, *nyx, *nyy;
     int x, y, sx, sy;
     double ox, oy;
-    int has_temp = false;
-
 
     normalize(t);
 
     if ((Abs(t[2][0]) > eps) || (Abs(t[2][1]) > eps) || (Abs(t[2][2] - 1.0) > eps))
       {
         // not an affine transform
-        Message(FNAME, M_WRONG_TRANS, WRONG_TRANS);
-        return WRONG_TRANS;
+        throw IceException(FNAME, M_WRONG_TRANS);
       }
-
 
     if (!IsImg(imgd) || !IsImg(imgss))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image imgs;
 
@@ -448,32 +405,9 @@ namespace ice
       {
         /*temporaeres Quellbild*/
         imgs = NewImg(imgd, true);
-
-        if (!IsImg(imgs))
-          {
-            Message(FNAME, M_0, ERROR);
-            return ERROR;
-          }
-
-        has_temp = true;
       }
-    else
-      imgs = imgss;
 
-    //      for (y=0;y<3;y++)
-    //        {
-    //        for (x=0;x<3;x++) Printf("%5.2f ",t[y][x]);
-    //        Printf("\n");
-    //    }
-    //    Printf("\n");
-    InvAffTr(t, tm);                     /*Projektion invertieren*/
-
-    //      for (y=0;y<3;y++)
-    //        {
-    //        for (x=0;x<3;x++) Printf("%5.2f ",tm[y][x]);
-    //        Printf("\n");
-    //        }
-    //    Printf("\n");
+    InvAffTr(t, tm);
 
     sx = imgd.xsize;
     sy = imgd.ysize;
@@ -483,7 +417,7 @@ namespace ice
     nxy = new double[imgd.ysize];
     nyy = new double[imgd.ysize];
 
-    for (x = 0; x < sx; x++) //look-up-tables f. Zeilen bzw Spalten
+    for (x = 0; x < sx; x++)   //look-up-tables f. Zeilen bzw Spalten
       {
         nxx[x] = tm[0][0] * x;
         nyx[x] = tm[1][0] * x;
@@ -536,8 +470,6 @@ namespace ice
     delete [] nyx;
     delete [] nxy;
     delete [] nyy;
-
-    if (has_temp) FreeImg(imgs);
 
     return OK;
   }

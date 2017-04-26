@@ -26,7 +26,7 @@
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Contur.h"
@@ -56,10 +56,7 @@ namespace ice
     Contur c;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return c;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     lastPoint = IPoint(img->xsize / 2, img->ysize / 2);
     newPoint = lastPoint;
@@ -87,12 +84,14 @@ namespace ice
       }
 
     if ((mstat & M_RIGHT_DOWN) != 0)
-      return c;  // aborted
+      {
+        return c;  // aborted
+      }
 
     lastPoint = newPoint;
 
-    c.SetStart(lastPoint);
-    lastLine.Reset(lastPoint);
+    c.setStart(lastPoint);
+    lastLine.reset(lastPoint);
 
     bool selecting = true;
 
@@ -106,10 +105,10 @@ namespace ice
             if ((mstat & (M_RIGHT_DOWN | M_LEFT_DOWN | M_IN_WINDOW)) == (M_RIGHT_DOWN | M_LEFT_DOWN | M_IN_WINDOW))
               {
                 // Draw(lastLine,img,0);
-                lastLine.Reset(lastPoint);
-                lastLine.Add(c.Start());
+                lastLine.reset(lastPoint);
+                lastLine.add(c.Start());
                 MarkContur(lastLine, img->maxval, img);
-                c.Close();
+                c.close();
                 selecting = false;
               }
             else
@@ -118,11 +117,11 @@ namespace ice
                 MarkContur(lastLine, 0, img);
                 newPoint.x = max<int>(0, min<int> (img->xsize - 1, newPoint.x));
                 newPoint.y = max<int>(0, min<int> (img->ysize - 1, newPoint.y));
-                lastLine.Reset(lastPoint);
-                lastLine.Add(newPoint);
+                lastLine.reset(lastPoint);
+                lastLine.add(newPoint);
                 MarkContur(lastLine, img->maxval, img);
-                c.Add(newPoint);
-                lastLine.Reset(newPoint);
+                c.add(newPoint);
+                lastLine.reset(newPoint);
                 lastPoint = newPoint;
               }
           }
@@ -133,16 +132,16 @@ namespace ice
             if ((mstat & (M_RIGHT_DOWN | M_IN_WINDOW)) == (M_RIGHT_DOWN | M_IN_WINDOW))
               {
                 MarkContur(lastLine, 0, img);
-                lastLine.Reset(lastPoint);
-                lastLine.Add(newPoint);
+                lastLine.reset(lastPoint);
+                lastLine.add(newPoint);
                 MarkContur(lastLine, img->maxval, img);
-                c.Add(newPoint);
+                c.add(newPoint);
                 if (force_close)
                   {
-                    lastLine.Reset(newPoint);
-                    lastLine.Add(c.Start());
+                    lastLine.reset(newPoint);
+                    lastLine.add(c.Start());
                     MarkContur(lastLine, img->maxval, img);
-                    c.Close();
+                    c.close();
                   }
                 selecting = false;
               }
@@ -153,8 +152,8 @@ namespace ice
                     MarkContur(lastLine, 0, img);
                     newPoint.x = max<int>(0, min<int> (img->xsize - 1, newPoint.x));
                     newPoint.y = max<int>(0, min<int> (img->ysize - 1, newPoint.y));
-                    lastLine.Reset(lastPoint);
-                    lastLine.Add(newPoint);
+                    lastLine.reset(lastPoint);
+                    lastLine.add(newPoint);
                     MarkContur(lastLine, img->maxval, img);
                   }
               }

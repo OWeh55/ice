@@ -60,7 +60,10 @@ namespace ice
 
     virtual void setCPara(const std::string& p)
     {
-      if (writer) writer->setCPara(p);
+      if (writer)
+        {
+          writer->setCPara(p);
+        }
     }
 
     virtual bool read(const Image& img, int ch = 3);

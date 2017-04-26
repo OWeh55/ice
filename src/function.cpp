@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "base.h"
@@ -30,22 +30,20 @@
 namespace ice
 {
 #define FNAME "SetImg"
-  int SetImg(const Image& img, const Function2d& fn)
+  void setImg(const Image& img, const Function2d& fn)
   {
-    if (!IsImg(img))
+    try
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return (WRONG_POINTER);
+        checkImage(img);
+
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            {
+              int v = RoundInt(fn(x, y));
+              PutValUnchecked(img, x, y, Max(0, limited(v, img)));
+            }
       }
-
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        {
-          int v = RoundInt(fn(x, y));
-          PutValUnchecked(img, x, y, Max(0, limited(v, img)));
-        }
-
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 }

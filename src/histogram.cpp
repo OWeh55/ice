@@ -32,7 +32,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "paint.h"
 #include "drawline.h"
 #include "vectordistance.h"
@@ -52,69 +52,61 @@ namespace ice
     reset(number);
   }
 
-  void Histogram::AddImg0(const Image& b, int diff)
+  void Histogram::addImg0(const Image& b, int diff)
   {
     for (int y = 0; y < b->ysize; y += diff)
       for (int x = 0; x < b->xsize; x += diff)
-        addValueUnchecked(b.getPixel(x, y));
+        {
+          addValueUnchecked(b.getPixel(x, y));
+        }
   }
 
   template<class T>
-  void Histogram::AddImg(const Image& b, int diff)
+  void Histogram::addImg(const Image& b, int diff)
   {
     T** bp = (T**)b->getDataPtr();
 
     for (int y = 0; y < b->ysize; y += diff)
       for (int x = 0; x < b->xsize; x += diff)
-        addValueUnchecked(bp[y][x]);
+        {
+          addValueUnchecked(bp[y][x]);
+        }
   }
 
   Histogram::Histogram(const Image& b, int diff): isInit(false), nclasses(0), sum(0)
   {
     if (!IsImg(b))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (diff < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
-      }
-    reset(b->maxval + 1);
+      throw IceException(FNAME, M_WRONG_PARAM);
+    reset(b.maxval + 1);
     addImage(b, diff);
   }
 
   int Histogram::addImage(const Image& b, int diff)
   {
     if (!IsImg(b))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (diff < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int typ = b->ImageType();
 
     switch (typ)
       {
       case 1:
-        AddImg<PixelType1>(b, diff);
+        addImg<PixelType1>(b, diff);
         break;
       case 2:
-        AddImg<PixelType2>(b, diff);
+        addImg<PixelType2>(b, diff);
         break;
       case 3:
-        AddImg<PixelType3>(b, diff);
+        addImg<PixelType3>(b, diff);
         break;
       default:
-        AddImg0(b, diff);
+        addImg0(b, diff);
         break;
       }
     return OK;
@@ -124,7 +116,9 @@ namespace ice
   int Histogram::operator [](int n) const
   {
     if ((unsigned int)n >= (unsigned int)nclasses)
-      return 0;
+      {
+        return 0;
+      }
     return classes[n];
   }
 
@@ -135,17 +129,16 @@ namespace ice
     int i;
 
     if (number < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     nclasses = number;
 
     classes.resize(nclasses);
 
     for (i = 0; i < nclasses; i++)
-      classes[i] = 0;
+      {
+        classes[i] = 0;
+      }
 
     sum = 0;
     isInit = true;
@@ -156,10 +149,7 @@ namespace ice
   int Histogram::addValue(int val, int count)
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if ((unsigned int)val < (unsigned int)nclasses)
       {
@@ -181,16 +171,10 @@ namespace ice
   int Histogram::getCount(int index) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return -1;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if ((index < 0) || (index >= nclasses))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return classes[index];
   }
@@ -200,13 +184,12 @@ namespace ice
     vector<int> v(nclasses);
 
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return v;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     for (int i = 0; i < nclasses; i++)
-      v[i] = classes[i];
+      {
+        v[i] = classes[i];
+      }
 
     return v;
   }
@@ -214,15 +197,14 @@ namespace ice
   void Histogram::getCount(vector<int>& v) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     v.resize(nclasses);
 
     for (int i = 0; i < nclasses; i++)
-      v[i] = classes[i];
+      {
+        v[i] = classes[i];
+      }
   }
 
 #undef FNAME
@@ -230,22 +212,13 @@ namespace ice
   double Histogram::getRelative(int index) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return -1.0;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (index < 0 || index >= nclasses)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1.0;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (sum == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return -1.0;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     return (double)classes[index] / (double)sum;
   }
@@ -255,19 +228,15 @@ namespace ice
     vector<double> res(nclasses);
 
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return res;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (sum == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return res;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     for (int i = 0; i < nclasses; i++)
-      res[i] = (double)classes[i] / (double)sum;
+      {
+        res[i] = (double)classes[i] / (double)sum;
+      }
 
     return res;
   }
@@ -275,21 +244,17 @@ namespace ice
   void Histogram::getRelative(vector<double>& v) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (sum == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     v.resize(nclasses);
 
     for (int i = 0; i < nclasses; i++)
-      v[i] = (double)classes[i] / (double)sum;
+      {
+        v[i] = (double)classes[i] / (double)sum;
+      }
 
   }
 #undef FNAME
@@ -298,25 +263,25 @@ namespace ice
   int Histogram::getLimits(int& minv, int& maxv) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (sum == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     int i = 0;
 
-    while (classes[i] == 0) i++;
+    while (classes[i] == 0)
+      {
+        i++;
+      }
 
     minv = i;
     i = nclasses - 1;
 
-    while (classes[i] == 0) i--;
+    while (classes[i] == 0)
+      {
+        i--;
+      }
 
     maxv = i;
 
@@ -326,54 +291,43 @@ namespace ice
   int Histogram::getLimits(int& minv, int& maxv, double q) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if ((q < 0.0) || (q > 0.5))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (sum == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     int qabs = RoundInt(sum * q); // number of values to ignore
 
     int ct = 0;
 
     for (minv = 0; ct <= qabs && minv < nclasses; minv++)
-      ct += classes[minv];
+      {
+        ct += classes[minv];
+      }
 
     ct = 0;
 
     for (maxv = nclasses - 1; ct <= qabs && maxv > 0; maxv--)
-      ct += classes[maxv];
+      {
+        ct += classes[maxv];
+      }
 
     return OK;
   }
 
 #undef FNAME
 
-#define FNAME "Histogram::Statistic"
-  int Histogram::Statistic(int& n, double& xm, double& xs, double& skew) const
+#define FNAME "Histogram::getStatistics"
+  void Histogram::getStatistics(int& n, double& xm, double& xs, double& skew) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (sum == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     double sumx = 0;
     double sumx2 = 0;
@@ -391,80 +345,57 @@ namespace ice
     xm = sumx / sum;
     xs = sqrt(sumx2 / sum - xm * xm);
     skew = sumx3 - 3 * xm * sumx2 + xm * xm * 3 * sumx - xm * xm * xm * sum;
-    return OK;
   };
 
-  int Histogram::Statistic(int& n, double& xm, double& xs) const
+  void Histogram::getStatistics(int& n, double& xm, double& xs) const
   {
     double dummy;
-    RETURN_ERROR_IF_FAILED(Statistic(n, xm, xs, dummy));
-    return OK;
+    getStatistics(n, xm, xs, dummy);
   };
 
-  int Histogram::Statistic(int& n) const
+  void Histogram::getStatistics(int& n) const
   {
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     n = sum;
-    return OK;
   };
 #undef FNAME
 #define FNAME "Distance"
   double Distance(const Histogram& h1, const Histogram& h2)
   {
     if (!h1.isValid() || !h2.isValid() || h1.nClasses() != h2.nClasses())
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     EarthMoverVectorDistance emd;
     return emd(h1.getRelative(), h2.getRelative());
   }
 #undef FNAME
 //
-//    Visualization of histogramm
+//    Visualization of histogram
 //    Steffen Abraham
 //    25.09.92/13.03.93
-//    Wolfgang Ortmann, 11/99,2004,04/12
+//    Wolfgang Ortmann, 11/99, 2004, 04/12, 04/17
 //
 
-#define _GETX(x) RoundInt(((double)(x))*(double)dx/100+(double)x1)
-#define _GETY(y) RoundInt(((double)(y))*(double)dy/100+(double)y1)
+#define _GETX(x) RoundInt(((double)(x))*(double)dx/100)
+#define _GETY(y) RoundInt(((double)(y))*(double)dy/100)
 
-#define FNAME "Vis"
-  int Histogram::Vis(int grw, const Image& b) const
+#define FNAME "Histogram::draw"
+  void Histogram::draw(const Image& b, int grw) const
   {
-    int dx, dy;
-    int x1, y1, x2, y2;
     std::string fmt;
-    int txtsize;
     int rxa, ry, rx, rya;
     char zahlstr[80];
 
     if (!isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (!IsImg(b))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
-    x1 = 0;
-    y1 = 0;
-    x2 = b->xsize - 1;
-    y2 = b->ysize - 1;
-
-    dx = x2 - x1;
-    dy = y2 - y1;
+    int dx = b.xsize - 1;
+    int dy = b.ysize - 1;
 
     Line(_GETX(9), _GETY(90), _GETX(96), _GETY(90), grw, 0, b);
     Line(_GETX(10), _GETY(1), _GETX(10), _GETY(91), grw, 0, b);
@@ -474,7 +405,9 @@ namespace ice
     int maxn = 0;
     for (int i = 0; i < nclasses; i++)
       if (classes[i] > maxn)
-        maxn = classes[i];
+        {
+          maxn = classes[i];
+        }
 
     rxa = _GETX(9);
     rya = _GETY(7);
@@ -482,7 +415,9 @@ namespace ice
     rx = _GETX(11);
 
     for (; rxa <= rx; rxa++)
-      Line(_GETX(10), ry, rxa, rya, grw, 0, b);
+      {
+        Line(_GETX(10), ry, rxa, rya, grw, 0, b);
+      }
 
     rxa = _GETX(96);
     rya = _GETY(88);
@@ -490,12 +425,16 @@ namespace ice
     rx = _GETX(90);
 
     for (; rya <= ry; rya++)
-      Line(rx, rya, rxa, _GETY(90), grw, 0, b);
+      {
+        Line(rx, rya, rxa, _GETY(90), grw, 0, b);
+      }
 
-    txtsize = dx / 600;
+    int txtsize = dx / 600;
 
     if (txtsize < 1)
-      txtsize = 1;
+      {
+        txtsize = 1;
+      }
 
     if (dx >= 100 && txtsize <= 5)
       {
@@ -511,10 +450,11 @@ namespace ice
         rx = _GETX(i * 75.0 / nclasses + 10);
         ry = _GETY(90.0 - classes[i] * 80.0 / maxn);
 
-        for (; rxa <= rx; rxa++) Line(rxa, _GETY(90), rxa, ry, grw, 0, b);
+        for (; rxa <= rx; rxa++)
+          {
+            Line(rxa, _GETY(90), rxa, ry, grw, 0, b);
+          }
       }
-
-    return OK;
   }
 #undef FNAME
 }

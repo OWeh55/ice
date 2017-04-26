@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "util.h"
 #include "base.h"
@@ -32,30 +32,23 @@ using namespace std;
 namespace ice
 {
 #define FNAME "SetImg"
-  int SetImg(const Image& img, int Value)
+  void setImg(const Image& img, int Value)
   {
     if (Value < 0)
-      {
-        Message(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_VALTOOSMALL);
     if (Value > img.maxval)
-      {
-        Message(FNAME, M_VALTOOLARGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-    return img.set(Value);
+      throw IceException(FNAME, M_VALTOOLARGE);
+    img.set(Value);
   }
 #undef FNAME
 
 //
 // Bild löschen
 //
-#define FNAME "ClearImg"
-  int ClearImg(const Image& img)
+#define FNAME "clearImg"
+  void clearImg(const Image& img)
   {
     img.set(0);
-    return OK;
   }
 #undef FNAME
 
@@ -83,7 +76,7 @@ namespace ice
 
     int sourcetype = SourceImage->ImageType();
 
-    if (SourceImage->maxval == DestinationImage->maxval &&
+    if (SourceImage.maxval == DestinationImage.maxval &&
         sourcetype > 0 && sourcetype < 4 &&
         sourcetype == DestinationImage->ImageType())
       {
@@ -94,8 +87,8 @@ namespace ice
       }
     else
       {
-        int MaxSelf = SourceImage->maxval;
-        int MaxDest = DestinationImage->maxval;
+        int MaxSelf = SourceImage.maxval;
+        int MaxDest = DestinationImage.maxval;
 
         // Copy the contents. But first check, if we have to adjust the color intensities
         // in >Destination<. If >Destination< has the same maximum grayvalue as this,
@@ -104,7 +97,9 @@ namespace ice
           {
             for (int y = 0; y < ys; y++)
               for (int x = 0; x < xs; x++)
-                PutValUnchecked(DestinationImage, x, y, GetValUnchecked(SourceImage, x, y));
+                {
+                  PutValUnchecked(DestinationImage, x, y, GetValUnchecked(SourceImage, x, y));
+                }
           }
         else
           {
@@ -145,22 +140,30 @@ namespace ice
     // oberer Rand
     for (int j = 0; j < sy; j++)
       for (int i = 0; i < p->xsize; i++)
-        PutValUnchecked(p, i, j, val);
+        {
+          PutValUnchecked(p, i, j, val);
+        }
 
     // linker/rechter Rand
     for (int i = sy; i < p->ysize - sy; i++)
       {
         for (int j = 0; j < sx; j++)
-          PutValUnchecked(p, j, i, val);
+          {
+            PutValUnchecked(p, j, i, val);
+          }
 
         for (int j = p->xsize - sx; j < p->xsize; j++)
-          PutValUnchecked(p, j, i, val);
+          {
+            PutValUnchecked(p, j, i, val);
+          }
       }
 
     // unterer Rand
     for (int j = p->ysize - sy; j < p->ysize; j++)
       for (int i = 0; i < p->xsize; i++)
-        PutValUnchecked(p, i, j, val);
+        {
+          PutValUnchecked(p, i, j, val);
+        }
 
   }
 
@@ -175,7 +178,9 @@ namespace ice
   void setborder(const Image& p, int val)
   {
     for (int i = 0; i < p->xsize; i++)
-      PutValUnchecked(p, i, 0, val);
+      {
+        PutValUnchecked(p, i, 0, val);
+      }
 
     for (int i = 1; i < p->ysize - 1; i++)
       {
@@ -184,14 +189,15 @@ namespace ice
       }
 
     for (int i = 0; i < p->xsize; i++)
-      PutValUnchecked(p, i, p->ysize - 1, val);
+      {
+        PutValUnchecked(p, i, p->ysize - 1, val);
+      }
   }
-
 
 #define FNAME "MatchImg"
   int MatchImg(const Image& i1, const Image& i2, int& xs, int& ys)
   {
-    RETURN_ERROR_IF_FAILED(i1.match(i2));
+    RETURN_ERROR_IF_FAILED(i1.checkSizes(i2));
 
     xs = i1->xsize;
     ys = i1->ysize;
@@ -201,8 +207,8 @@ namespace ice
 
   int MatchImg(const Image& i1, const Image& i2, const Image& i3, int& xs, int& ys)
   {
-    RETURN_ERROR_IF_FAILED(i1.match(i2));
-    RETURN_ERROR_IF_FAILED(i1.match(i3));
+    RETURN_ERROR_IF_FAILED(i1.checkSizes(i2));
+    RETURN_ERROR_IF_FAILED(i1.checkSizes(i3));
 
     xs = i1->xsize;
     ys = i1->ysize;
@@ -222,6 +228,95 @@ namespace ice
     int xs, ys;
     RETURN_ERROR_IF_FAILED(MatchImg(i1, i2, i3, xs, ys));
     return OK;
+  }
+#undef FNAME
+#define FNAME "checkImage"
+  void checkImage(const Image& i1,
+                  int& xs, int& ys, int& mv)
+  {
+    checkImage(i1);
+    xs = i1.xsize;
+    ys = i1.ysize;
+    mv = i1.maxval;
+  }
+
+  void checkImage(const Image& i1, const Image& i2,
+                  int& xs, int& ys, int& mv)
+  {
+    checkImage(i1, i2);
+    xs = i1.xsize;
+    ys = i1.ysize;
+    mv = i1.maxval;
+  }
+
+  void checkImage(const Image& i1, const Image& i2, const Image& i3,
+                  int& xs, int& ys, int& mv)
+  {
+    checkImage(i1, i2, i3);
+    xs = i1.xsize;
+    ys = i1.ysize;
+    mv = i2.maxval;
+  }
+
+  void checkImage(const Image& i1)
+  {
+    if (!i1.isValid())
+      throw IceException(FNAME, M_INVALID);
+  }
+
+  void checkImage(const Image& i1, const Image& i2)
+  {
+    try
+      {
+        i1.checkImage(i2);
+      }
+    RETHROW;
+  }
+
+  void checkImage(const Image& i1, const Image& i2, const Image& i3)
+  {
+    try
+      {
+        i1.checkImage(i2);
+        i1.checkImage(i3);
+      }
+    RETHROW;
+  }
+#undef FNAME
+#define FNAME "checkSizes"
+  void checkSizes(const Image& i1, const Image& i2,
+                  int& xs, int& ys)
+  {
+    checkSizes(i1, i2);
+    xs = i1.xsize;
+    ys = i1.ysize;
+  }
+
+  void checkSizes(const Image& i1, const Image& i2, const Image& i3,
+                  int& xs, int& ys)
+  {
+    checkSizes(i1, i2, i3);
+    xs = i1.xsize;
+    ys = i1.ysize;
+  }
+
+  void checkSizes(const Image& i1, const Image& i2)
+  {
+    try
+      {
+        i1.checkSizes(i2);
+      }
+    RETHROW;
+  }
+
+  void checkSizes(const Image& i1, const Image& i2, const Image& i3)
+  {
+    try
+      {
+        i1.checkSizes(i2);
+        i1.checkSizes(i3);
+      }
+    RETHROW;
   }
 #undef FNAME
 }

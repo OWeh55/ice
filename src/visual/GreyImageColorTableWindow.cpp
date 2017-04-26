@@ -51,7 +51,9 @@ namespace ice
   {
     int RetVal = colorTable.setColor(Entry, RedValue, GreenValue, BlueValue);
     if (RetVal != ERROR)
-      Refresh();
+      {
+        Refresh();
+      }
     return RetVal;
   }
 
@@ -62,7 +64,9 @@ namespace ice
   {
     int RetVal = colorTable.setColor(Entry, RedValue, GreenValue, BlueValue);
     if (RetVal != ERROR)
-      Refresh();
+      {
+        Refresh();
+      }
     return RetVal;
   }
 
@@ -70,7 +74,9 @@ namespace ice
   {
     int RetVal = colorTable.setLinear(First, Last);
     if (RetVal != ERROR)
-      Refresh();
+      {
+        Refresh();
+      }
     return RetVal;
   }
 

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "util.h"
@@ -52,12 +52,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyam1 = src->ysize - 2;
     int srcwxa1 = src->xsize;
 
@@ -104,14 +106,16 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
-    int srcwyam1 = src->ysize - 2;
-    int srcwxa1 = src->xsize;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
+    int srcwyam1 = src.ysize - 2;
+    int srcwxa1 = src.xsize;
 
     // the border of width 1 around the image will be filled with offset
     setborder(dest, 1, offset);
@@ -164,12 +168,14 @@ namespace ice
     // where we wrote before we need to copy the source image if
     // it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwya = src->ysize - 1;
     int srcwxa = src->xsize - 1;
 
@@ -216,12 +222,14 @@ namespace ice
     // where we wrote before we need to copy the source image if
     // it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int xmax = dest->xsize;
     int ymax = dest->ysize;
 
@@ -271,12 +279,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 6;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 6;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
 
     int srcwyi = 0;
     int srcwya1 = src->ysize;
@@ -394,7 +404,6 @@ namespace ice
   {
     int x, y, dx, dy, gmax1, gmax2, val;
     int vy1, vy2, vy3, vx, vy, xoff, yoff;
-    char has_temp;
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
 
@@ -403,12 +412,10 @@ namespace ice
     if (pn2 == pn1)   /*Quellbild=Zielbild*/
       {
         pn1 = NewImg(pn2, true);  /*temporaeres Bild anlegen*/
-        has_temp = 1;
       }
-    else has_temp = 0;
 
-    gmax1 = pn1->maxval * 6;
-    gmax2 = pn2->maxval * norm;
+    gmax1 = pn1.maxval * 6;
+    gmax2 = pn2.maxval * norm;
 
     setborder(pn2, 1, 0);
 
@@ -457,11 +464,6 @@ namespace ice
           }
       }
 
-    if (has_temp == 1)
-      {
-        FreeImg(pn1);
-      }
-
     return OK;
   }
 #undef FNAME
@@ -476,15 +478,12 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int dimx = pic->xsize;
     int dimy = pic->ysize;
 
-    int maxval = pic->maxval;
+    int maxval = pic.maxval;
     int maxval_d = maxval * 6; // maxval für Gradienten
 
     int detection_rad = detectionsize / 2;
@@ -518,9 +517,9 @@ namespace ice
         }
 
     // Mittelwertbildung
-    SmearImgD(xx, xx, detectionsize, detectionsize);
-    SmearImgD(xy, xy, detectionsize, detectionsize);
-    SmearImgD(yy, yy, detectionsize, detectionsize);
+    smearImgD(xx, xx, detectionsize, detectionsize);
+    smearImgD(xy, xy, detectionsize, detectionsize);
+    smearImgD(yy, yy, detectionsize, detectionsize);
 
     double area = detection_rad * 2 + 1;
     area = area * area;
@@ -580,22 +579,22 @@ namespace ice
 
           // store eigenvalues in ImageD if given
           if (lambda1.isValid())
-            PutValD(lambda1, x, y, lambda_1);
+            {
+              PutValD(lambda1, x, y, lambda_1);
+            }
 
           if (lambda2.isValid())
-            PutValD(lambda2, x, y, lambda_2);
+            {
+              PutValD(lambda2, x, y, lambda_2);
+            }
 
           // calculate angle
           double direction = eigen.phi();
           // normlisiert auf maximalen Grauwert in Ergebnisbild eintragen
-          int directionGrayValue = Mod(RoundInt(direction * (dest->maxval + 1) / M_PI), (dest->maxval + 1));
+          int directionGrayValue = Mod(RoundInt(direction * (dest.maxval + 1) / M_PI), (dest.maxval + 1));
 
           PutVal(dest, x, y, directionGrayValue);
         }
-
-    FreeImgD(xx);
-    FreeImgD(xy);
-    FreeImgD(yy);
     return 0;
   }
 
@@ -608,15 +607,12 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int dimx = pic->xsize;
     int dimy = pic->ysize;
 
-    int maxval = pic->maxval;
+    int maxval = pic.maxval;
     int maxval_d = maxval * 6; // maxval für Gradienten
 
     int detection_rad = detectionsize / 2;
@@ -646,8 +642,8 @@ namespace ice
         }
 
     // Mittelwertbildung
-    SmearImgD(gx, gx, detectionsize, detectionsize);
-    SmearImgD(gy, gy, detectionsize, detectionsize);
+    smearImgD(gx, gx, detectionsize, detectionsize);
+    smearImgD(gy, gy, detectionsize, detectionsize);
 
     double area = detection_rad * 2 + 1;
     area = area * area;
@@ -663,18 +659,18 @@ namespace ice
           double lambda_1 = gxv * gxv + gyv * gyv;
 
           if (lambda1.isValid())
-            PutValD(lambda1, x, y, lambda_1);
+            {
+              PutValD(lambda1, x, y, lambda_1);
+            }
 
           // Jetzt Winkel  bestimmen !
           double direction = atan2(gyv, gxv);
           // normlisiert auf maximalen Grauwert in Ergebnisbild eintragen
-          int direction_grv = Mod(RoundInt(direction * (dest->maxval + 1) / M_PI / 2.0), (dest->maxval + 1));
+          int direction_grv = Mod(RoundInt(direction * (dest.maxval + 1) / M_PI / 2.0), (dest.maxval + 1));
 
           PutVal(dest, x, y, direction_grv);
         }
 
-    FreeImgD(gx);
-    FreeImgD(gy);
     return 0;
   }
 #undef FNAME
@@ -684,24 +680,18 @@ namespace ice
   {
     int x, y, dx, dy, val, Direction;
     int vy1, vy2, vy3, vx, vy, xoff, yoff;
-    char has_temp;
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
 
-    if ((pn2->maxval < 7))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if ((pn2.maxval < 7))
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image pn1 = pn1p;
 
     if (pn2 == pn1)   /*Quellbild=Zielbild*/
       {
         pn1 = NewImg(pn2, true);  /*temporaeres Quellbild anlegen*/
-        has_temp = 1;
       }
-    else   has_temp = 0;
 
     for (x = 0; x < dx; x++)
       {
@@ -738,20 +728,44 @@ namespace ice
         vy = vy3 - vy1;
 
         if (vx == 0)
-          if (vy < 0) Direction = 6;
-          else Direction = 2;
+          if (vy < 0)
+            {
+              Direction = 6;
+            }
+          else
+            {
+              Direction = 2;
+            }
         else
           {
             val = abs(10000 * vy / vx);
 
-            if (val < 4142) Direction = 0;
-            else if (val < 24142) Direction = 1;
-            else Direction = 2;
+            if (val < 4142)
+              {
+                Direction = 0;
+              }
+            else if (val < 24142)
+              {
+                Direction = 1;
+              }
+            else
+              {
+                Direction = 2;
+              }
 
             if (vx < 0)
-              if (vy < 0) Direction = Direction + 4;
-              else Direction = 4 - Direction;
-            else if ((vy < 0) && (Direction > 0)) Direction = 8 - Direction;
+              if (vy < 0)
+                {
+                  Direction = Direction + 4;
+                }
+              else
+                {
+                  Direction = 4 - Direction;
+                }
+            else if ((vy < 0) && (Direction > 0))
+              {
+                Direction = 8 - Direction;
+              }
           }
 
         PutValUnchecked(pn2, x + xoff, 1, Direction);
@@ -771,29 +785,48 @@ namespace ice
             vy = vy3 - vy1;
 
             if (vx == 0)
-              if (vy < 0) Direction = 6;
-              else Direction = 2;
+              if (vy < 0)
+                {
+                  Direction = 6;
+                }
+              else
+                {
+                  Direction = 2;
+                }
             else
               {
                 val = abs(10000 * vy / vx);
 
-                if (val < 4142) Direction = 0;
-                else if (val < 24142) Direction = 1;
-                else Direction = 2;
+                if (val < 4142)
+                  {
+                    Direction = 0;
+                  }
+                else if (val < 24142)
+                  {
+                    Direction = 1;
+                  }
+                else
+                  {
+                    Direction = 2;
+                  }
 
                 if (vx < 0)
-                  if (vy < 0) Direction = Direction + 4;
-                  else Direction = 4 - Direction;
-                else if ((vy < 0) && (Direction > 0)) Direction = 8 - Direction;
+                  if (vy < 0)
+                    {
+                      Direction = Direction + 4;
+                    }
+                  else
+                    {
+                      Direction = 4 - Direction;
+                    }
+                else if ((vy < 0) && (Direction > 0))
+                  {
+                    Direction = 8 - Direction;
+                  }
               }
 
             PutValUnchecked(pn2, x + xoff, y + yoff, Direction);
           }
-      }
-
-    if (has_temp == 1)
-      {
-        FreeImg(pn1);
       }
 
     return OK;

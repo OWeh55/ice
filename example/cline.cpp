@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   c = LineContur(p1, p2);
   p2[0] = 30;
   p2[1] = 70;
-  c.Add(30, 70);
+  c.add(30, 70);
   MarkContur(c, 63, img);
   Show(ON, img);
   Display(ON);
@@ -34,7 +34,6 @@ int main(int argc, char* argv[])
 
   GetChar();
   Display(OFF);
-  FreeImg(img);
   return 0;
 }
 

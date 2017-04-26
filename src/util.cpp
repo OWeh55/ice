@@ -52,9 +52,15 @@ namespace ice
 #if 0
   int limited(int v, int min, int max)
   {
-    if (v < min) return min;
+    if (v < min)
+      {
+        return min;
+      }
 
-    if (v > max) return max;
+    if (v > max)
+      {
+        return max;
+      }
 
     return v;
   }
@@ -62,9 +68,15 @@ namespace ice
 
   int limited(int v, const Image& p)
   {
-    if (v < 0) return 0;
+    if (v < 0)
+      {
+        return 0;
+      }
 
-    if (v > p->maxval) return p->maxval;
+    if (v > p.maxval)
+      {
+        return p.maxval;
+      }
 
     return v;
   }

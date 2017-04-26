@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 
   while (c)
     {
-      ClearImg(img);
+      clearImg(img);
       Printf("Bitte Punkte eingeben, Abbruch mit rechter Maustaste.\n");
 
       vector<Point> pl;
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
         }
       while (!(rc < 0));
 
-      ClearImg(img);
+      clearImg(img);
 
       for (unsigned int i = 0; i < pl.size(); i++)
         Marker(1, pl[i], 4, 15, img);

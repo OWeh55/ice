@@ -28,7 +28,10 @@ namespace ice
                            unsigned char& Red, unsigned char& Green, unsigned char& Blue) const
   {
     // std::cout << Index << " " << MaxIndex << std::endl;
-    if (Index > MaxIndex) return ERROR;
+    if (Index > MaxIndex)
+      {
+        return ERROR;
+      }
 
     Red = RTable[Index];
     Green = GTable[Index];
@@ -38,7 +41,10 @@ namespace ice
 
   int ColorTable::setColor(int Index, unsigned char Red, unsigned char Green, unsigned char Blue)
   {
-    if (Index > MaxIndex) return ERROR;
+    if (Index > MaxIndex)
+      {
+        return ERROR;
+      }
 
     RTable[Index] = Red;
     GTable[Index] = Green;
@@ -67,20 +73,29 @@ namespace ice
     int i;
 
     // catch invalid indices
-    if (FirstIndex > LastIndex || LastIndex > MaxIndex) return ERROR;
+    if (FirstIndex > LastIndex || LastIndex > MaxIndex)
+      {
+        return ERROR;
+      }
 
     // overwrite old colors
 
     int delta = (LastIndex - FirstIndex);
 
     for (i = 0; i < FirstIndex; i++)
-      RTable[i] = GTable[i] = BTable[i] = 255;
+      {
+        RTable[i] = GTable[i] = BTable[i] = 255;
+      }
 
     for (i = LastIndex; i <= MaxIndex; i++)
-      RTable[i] = GTable[i] = BTable[i] = 0;
+      {
+        RTable[i] = GTable[i] = BTable[i] = 0;
+      }
 
     for (i = FirstIndex; i < LastIndex; i++)
-      RTable[i] = GTable[i] = BTable[i] = 255 - ((i - FirstIndex) * 255) / delta;
+      {
+        RTable[i] = GTable[i] = BTable[i] = 255 - ((i - FirstIndex) * 255) / delta;
+      }
 
     return OK;
   }

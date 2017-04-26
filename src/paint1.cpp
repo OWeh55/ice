@@ -31,7 +31,7 @@ Programmmodul zu Zeichnen geometrischer Primitive
 #include <math.h>
 #include <stdlib.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 #include "contools.h"
@@ -65,16 +65,10 @@ namespace ice
     double par[3];
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || (val > img->maxval) || (size < 2))
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if ((val < 0) || (val > img.maxval) || (size < 2))
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if ((x < 0) || (y < 0) || (x >= img->xsize) || (y >= img->ysize))
       {
@@ -84,9 +78,15 @@ namespace ice
 
     h = size / 2;
 
-    if ((mode == 2) && (size < 6)) mode = 4;
+    if ((mode == 2) && (size < 6))
+      {
+        mode = 4;
+      }
 
-    if ((mode == 3) && (size < 6)) mode = 5;
+    if ((mode == 3) && (size < 6))
+      {
+        mode = 5;
+      }
 
     par[0] = x;
     par[1] = y;
@@ -117,7 +117,9 @@ namespace ice
       case 5: /* volles achsparalleles Quadrat */
 
         for (i = y - h; i < y + h; i++)
-          Line(x - h, i, x + h, i, val, DEFAULT, img);
+          {
+            Line(x - h, i, x + h, i, val, DEFAULT, img);
+          }
 
         break;
       case 6: /* leeres schraeges Quadrat */
@@ -127,19 +129,16 @@ namespace ice
         Line(x, y + h, x - h, y, val, DEFAULT, img);
         break;
       case 7: /* volles schraeges Quadrat */
-        c.SetStart(x - h, y);
-        c.Add(x, y - h);
-        c.Add(x + h, y);
-        c.Add(x, y + h);
-        c.Add(x - h, y);
-        OffMessage();
+        c.setStart(x - h, y);
+        c.add(x, y - h);
+        c.add(x + h, y);
+        c.add(x, y + h);
+        c.add(x - h, y);
+
         FillRegion(c, val, img);
-        SetOk();
-        OnMessage();
         break;
       default:
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_VAL);
       }
 
     return OK;
@@ -153,36 +152,26 @@ namespace ice
     Contur c;
 
     if (
-      (val1 < 0) || (val2 > img->maxval) ||
-      (val2 < 0) || (val2 > img->maxval)
+      (val1 < 0) || (val2 > img.maxval) ||
+      (val2 < 0) || (val2 > img.maxval)
     )
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(c = CircleContur(par));
 
-    OffMessage();
+    if (mode == DEFAULT)
+      {
+        FillRegion(c, val2, img);
+      }
 
-    if (mode == DEFAULT) FillRegion(c, val2, img);
-
-    SetOk();
     MarkContur(c, val1, img);
-    SetOk();
-    OnMessage();
+
     return OK;
   }
 #undef FNAME
@@ -193,23 +182,14 @@ namespace ice
   {
     Contur c;
 
-    if ((val1 < 0) || (val2 < 0) || (val2 > img->maxval))
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if ((val1 < 0) || (val2 < 0) || (val2 > img.maxval))
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(c = EllipseContur(par));
 
@@ -220,10 +200,7 @@ namespace ice
             RETURN_ERROR_IF_FAILED(FillRegion(c, val2, img));
           }
 
-        OffMessage();
         MarkContur(c, val1, img);
-        OnMessage();
-        SetOk();
       }
 
     return OK;
@@ -240,12 +217,8 @@ namespace ice
     double xs, ys, xs1, ys1;
     double z1u, z1o;
 
-    if ((val < 0) || val > pic->maxval)
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
+    if ((val < 0) || val > pic.maxval)
+      throw IceException(FNAME, M_WRONG_VAL);
 
     for (j = 0; j < dimy; ++j)
       for (i = 0; i < dimx; ++i)
@@ -261,9 +234,15 @@ namespace ice
           z1u = pow(xs, c) + pow(ys, c) - 1.0;
           z1o = pow(xs1, c) + pow(ys1, c) - 1.0;
 
-          if (z1u <= 0 && z1o >= 0) PutVal(pic, i, j, val);
+          if (z1u <= 0 && z1o >= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
 
-          if (z1u >= 0 && z1o <= 0) PutVal(pic, i, j, val);
+          if (z1u >= 0 && z1o <= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
         }
 
     for (i = 0; i < dimx; ++i)
@@ -280,9 +259,15 @@ namespace ice
           z1u = pow(xs, c) + pow(ys, c) - 1.0;
           z1o = pow(xs1, c) + pow(ys1, c) - 1.0;
 
-          if (z1u <= 0 && z1o >= 0) PutVal(pic, i, j, val);
+          if (z1u <= 0 && z1o >= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
 
-          if (z1u >= 0 && z1o <= 0) PutVal(pic, i, j, val);
+          if (z1u >= 0 && z1o <= 0)
+            {
+              PutVal(pic, i, j, val);
+            }
         }
 
     return 0;

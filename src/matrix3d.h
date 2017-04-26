@@ -21,14 +21,18 @@ namespace ice
       xsize(xs), ysize(ys), zsize(zs), data(new T[xs* ys* zs])
     {
       for (int i = 0; i < xs * ys * zs; i++)
-        data[i] = val;
+        {
+          data[i] = val;
+        }
     }
 
     matrix3d(const matrix3d& src):
       xsize(src.xsize), ysize(src.ysize), zsize(src.zsize), data(new T[xsize* ysize* zsize])
     {
       for (int i = 0; i < xsize * ysize * zsize; i++)
-        data[i] = src.data[i];
+        {
+          data[i] = src.data[i];
+        }
     }
 
     void swap(matrix3d& sec)
@@ -54,7 +58,9 @@ namespace ice
       T min = data[0];
       for (int i = 1; i < xsize * ysize * zsize; i++)
         if (data[i] < min)
-          min = data[i];
+          {
+            min = data[i];
+          }
       return min;
     }
 
@@ -77,7 +83,9 @@ namespace ice
       T max = data[0];
       for (int i = 1; i < xsize * ysize * zsize; i++)
         if (data[i] > max)
-          max = data[i];
+          {
+            max = data[i];
+          }
       return max;
     }
 
@@ -103,9 +111,13 @@ namespace ice
       for (int i = 1; i < xsize * ysize * zsize; i++)
         {
           if (data[i] < min)
-            min = data[i];
+            {
+              min = data[i];
+            }
           if (data[i] > max)
-            max = data[i];
+            {
+              max = data[i];
+            }
         }
     }
 
@@ -194,7 +206,9 @@ namespace ice
     void set(T value)
     {
       for (int i = 0; i < xsize * ysize * zsize; i++)
-        data[i] = value;
+        {
+          data[i] = value;
+        }
     }
 
   private:

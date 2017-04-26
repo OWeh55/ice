@@ -28,7 +28,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "exfile.h"
 #include "picio.h"
@@ -164,7 +164,10 @@ namespace ice
         /* skip ahead to colormap, using biSize */
         c = bmi.iSize - 40;    /* 40 bytes read from biSize to biClrImportant */
 
-        for (i = 0; i < c; i++) getc(fp);
+        for (i = 0; i < c; i++)
+          {
+            getc(fp);
+          }
 
         bPad = bmi.fOffBits - (bmi.iSize + 14);
       }
@@ -189,7 +192,10 @@ namespace ice
               }
           }
 
-        if (FERROR(fp)) return false;
+        if (FERROR(fp))
+          {
+            return false;
+          }
       }
 
     if (bmi.iSize != WIN_OS2_OLD)
@@ -216,14 +222,11 @@ namespace ice
     string hname = fname;
 
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
       {
-        Message(FNAME, Error, WRONG_FILE);
+        throw IceException(FNAME, Error);
         fclose(fp);
         return WRONG_FILE;
       }
@@ -233,8 +236,14 @@ namespace ice
     ysize = bmi.iHeight;
     maxval = 255; /* max. value in Colormap */
 
-    if (bmi.iBitCount == 24) nr = 3;
-    else nr = 1;
+    if (bmi.iBitCount == 24)
+      {
+        nr = 3;
+      }
+    else
+      {
+        nr = 1;
+      }
 
     return BMP;
   }
@@ -258,21 +267,18 @@ namespace ice
     string hname = fname;
 
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return Image();
       }
 
     if (!LoadCMap(fp, bmi))
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return Image();
       }
@@ -283,7 +289,9 @@ namespace ice
         cmaplen = (bmi.iColorsUsed) ? bmi.iColorsUsed : 1 << bmi.iBitCount;
 
         for (unsigned int i = 0; i < cmaplen; ++i)
-          r[i] = GRAYVALUE(r[i], g[i], b[i]);
+          {
+            r[i] = GRAYVALUE(r[i], g[i], b[i]);
+          }
       }
 
     /* create pic8 or pic24 */
@@ -294,7 +302,7 @@ namespace ice
 
         if (!pic24)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return Image();
           }
@@ -305,7 +313,7 @@ namespace ice
 
         if (!pic8)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return Image();
           }
@@ -361,13 +369,12 @@ namespace ice
       }
 
     if (rv)
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return Image();
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     if (!IsImg(img))
-      img = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        img = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, img, flag);
   }
@@ -387,21 +394,18 @@ namespace ice
     string hname = fname;
 
     if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return WRONG_FILE;
       }
 
     if (!LoadCMap(fp, bmi))
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILE);
         fclose(fp);
         return WRONG_FILE;
       }
@@ -413,7 +417,7 @@ namespace ice
 
         if (!pic24)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return NO_MEM;
           }
@@ -424,7 +428,7 @@ namespace ice
 
         if (!pic8)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
             fclose(fp);
             return NO_MEM;
           }
@@ -472,21 +476,23 @@ namespace ice
     fclose(fp);
 
     if (rv)
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     if (!IsImg(red))
-      red = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        red = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(green))
-      green = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        green = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(blue))
-      blue = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        blue = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, red, green, blue, flag);
   }
-
 
   /*******************************************/
   static int loadBMP1(FILE* fp, unsigned char* pic8, u_int w, u_int h)
@@ -503,7 +509,7 @@ namespace ice
 
         for (j = bitnum = 0; j < padw; j++, bitnum++)
           {
-            if ((bitnum & 7) == 0) /* read the next byte */
+            if ((bitnum & 7) == 0)   /* read the next byte */
               {
                 c = getc(fp);
                 bitnum = 0;
@@ -516,20 +522,20 @@ namespace ice
               }
           }
 
-        if (FERROR(fp)) break;
+        if (FERROR(fp))
+          {
+            break;
+          }
       }
 
     return (FERROR(fp));
   }
-
-
 
   /*******************************************/
   static int loadBMP4(FILE* fp, unsigned char* pic8, u_int w, u_int h, u_int comp)
   {
     int   i, j, c, c1, x, y, nybnum, padw, rv;
     unsigned char* pp;
-
 
     rv = 0;
     c = c1 = 0;
@@ -557,7 +563,10 @@ namespace ice
                   }
               }
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }
       }
 
@@ -581,7 +590,9 @@ namespace ice
                 c1 = getc(fp);
 
                 for (i = 0; i < c; i++, x++, pp++)
-                  *pp = (i & 1) ? (c1 & 0x0f) : ((c1 >> 4) & 0x0f);
+                  {
+                    *pp = (i & 1) ? (c1 & 0x0f) : ((c1 >> 4) & 0x0f);
+                  }
               }
 
             else      /* c==0x00  :  escape codes */
@@ -601,7 +612,10 @@ namespace ice
                     pp = pic8 + x + (h - y - 1) * w;
                   }
 
-                else if (c == 0x01) break;               /* end of pic8 */
+                else if (c == 0x01)
+                  {
+                    break;  /* end of pic8 */
+                  }
 
                 else if (c == 0x02)                      /* delta */
                   {
@@ -616,16 +630,25 @@ namespace ice
                   {
                     for (i = 0; i < c; i++, x++, pp++)
                       {
-                        if ((i & 1) == 0) c1 = getc(fp);
+                        if ((i & 1) == 0)
+                          {
+                            c1 = getc(fp);
+                          }
 
                         *pp = (i & 1) ? (c1 & 0x0f) : ((c1 >> 4) & 0x0f);
                       }
 
-                    if (((c & 3) == 1) || ((c & 3) == 2)) getc(fp); /* read pad byte */
+                    if (((c & 3) == 1) || ((c & 3) == 2))
+                      {
+                        getc(fp);  /* read pad byte */
+                      }
                   }
               }  /* escape processing */
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }  /* while */
       }
 
@@ -634,11 +657,13 @@ namespace ice
         fprintf(stderr, "unknown BMP compression type 0x%0x\n", comp);
       }
 
-    if (FERROR(fp)) rv = 1;
+    if (FERROR(fp))
+      {
+        rv = 1;
+      }
 
     return rv;
   }
-
 
   /*******************************************/
   static int loadBMP8(FILE* fp, unsigned char* pic8, u_int w, u_int h, u_int comp)
@@ -661,12 +686,21 @@ namespace ice
               {
                 c = getc(fp);
 
-                if (c == EOF) rv = true;
+                if (c == EOF)
+                  {
+                    rv = true;
+                  }
 
-                if (j < (int) w) *pp++ = c;
+                if (j < (int) w)
+                  {
+                    *pp++ = c;
+                  }
               }
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }
       }
 
@@ -689,7 +723,10 @@ namespace ice
               {
                 c1 = getc(fp);
 
-                for (i = 0; i < c; i++, x++, pp++) *pp = c1;
+                for (i = 0; i < c; i++, x++, pp++)
+                  {
+                    *pp = c1;
+                  }
               }
 
             else      /* c==0x00  :  escape codes */
@@ -709,7 +746,10 @@ namespace ice
                     pp = pic8 + x + (h - y - 1) * w;
                   }
 
-                else if (c == 0x01) break;               /* end of pic8 */
+                else if (c == 0x01)
+                  {
+                    break;  /* end of pic8 */
+                  }
 
                 else if (c == 0x02)                      /* delta */
                   {
@@ -728,11 +768,17 @@ namespace ice
                         *pp = c1;
                       }
 
-                    if (c & 1) getc(fp);  /* odd length run: read an extra pad byte */
+                    if (c & 1)
+                      {
+                        getc(fp);  /* odd length run: read an extra pad byte */
+                      }
                   }
               }  /* escape processing */
 
-            if (FERROR(fp)) break;
+            if (FERROR(fp))
+              {
+                break;
+              }
           }  /* while */
       }
 
@@ -741,7 +787,10 @@ namespace ice
         fprintf(stderr, "unknown BMP compression type 0x%0x\n", comp);
       }
 
-    if (FERROR(fp)) rv = true;
+    if (FERROR(fp))
+      {
+        rv = true;
+      }
 
     return rv;
   }
@@ -768,11 +817,17 @@ namespace ice
             pp += 3;
           }
 
-        for (j = 0; j < padb; j++) getc(fp);
+        for (j = 0; j < padb; j++)
+          {
+            getc(fp);
+          }
 
         rv = (FERROR(fp));
 
-        if (rv) break;
+        if (rv)
+          {
+            break;
+          }
       }
 
     return rv;
@@ -849,20 +904,14 @@ namespace ice
     FILE* fp;
 
     if (!IsImg(ir) || !IsImg(ig) || !IsImg(ib))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(MatchImg(ir, ig, ib, w, h));
 
     bperlin = ((w * 24 + 31) / 32) * 4;   /* # bytes written per line */
 
     if ((fp = fopen(hname.c_str(), FWMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     putc('B', fp);
     putc('M', fp);           /* BMP file magic number */
@@ -884,8 +933,8 @@ namespace ice
     putshort(fp, 24);       /* biBitCount: 1,4,8, or 24 */
     putint(fp, BI_RGB);     /* biCompression:  BI_RGB, BI_RLE8 or BI_RLE4 */
     putint(fp, bperlin * h);/* biSizeImage:  size of raw image data */
-    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39" per meter) */
-    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39" per meter) */
+    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39 inch per meter) */
+    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39 inc per meter) */
     putint(fp, 0);          /* biColorsUsed: # of colors used in cmap */
     putint(fp, 0);          /* biClrImportant: same as above */
 
@@ -894,8 +943,7 @@ namespace ice
     if (rgb == NULL)
       {
         fclose(fp);
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     for (j = 0; j < h; j++)
@@ -904,9 +952,9 @@ namespace ice
 
         for (i = 0; i < w; i++)
           {
-            *(pp++) = (GetVal(ir, i, j) * 255 / ir->maxval) ^ 255;
-            *(pp++) = (GetVal(ig, i, j) * 255 / ig->maxval) ^ 255;
-            *(pp++) = (GetVal(ib, i, j) * 255 / ib->maxval) ^ 255;
+            *(pp++) = (GetVal(ir, i, j) * 255 / ir.maxval) ^ 255;
+            *(pp++) = (GetVal(ig, i, j) * 255 / ig.maxval) ^ 255;
+            *(pp++) = (GetVal(ib, i, j) * 255 / ib.maxval) ^ 255;
           }
       }
 
@@ -917,8 +965,7 @@ namespace ice
     if (FERROR(fp))
       {
         fclose(fp);
-        Message(FNAME, M_WRONG_WRITE, WRONG_FILE);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_WRITE);
       }
 
     fclose(fp);
@@ -935,20 +982,14 @@ namespace ice
     FILE* fp;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     w = img->xsize;
     h = img->ysize;
-    graymax = img->maxval;
+    graymax = img.maxval;
 
     if ((fp = fopen(hname.c_str(), FWMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     nc = graymax + 1;
 
@@ -965,7 +1006,10 @@ namespace ice
         nbits = 8;
       }
 
-    if (nc > 256) nc = 256;
+    if (nc > 256)
+      {
+        nc = 256;
+      }
 
     bperlin = ((w * nbits + 31) / 32) * 4;   /* # bytes written per line */
 
@@ -990,11 +1034,10 @@ namespace ice
     putshort(fp, nbits);    /* biBitCount: 1,4,8, or 24 */
     putint(fp, BI_RGB);     /* biCompression:  BI_RGB, BI_RLE8 or BI_RLE4 */
     putint(fp, bperlin * h);/* biSizeImage:  size of raw image data */
-    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39" per meter) */
-    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39" per meter) */
+    putint(fp, 75 * 39);    /* biXPelsPerMeter: (75dpi * 39 inch per meter) */
+    putint(fp, 75 * 39);    /* biYPelsPerMeter: (75dpi * 39 inch per meter) */
     putint(fp, nc);         /* biColorsUsed: # of colors used in cmap */
     putint(fp, nc);         /* biClrImportant: same as above */
-
 
     /* write out the colormap */
     for (i = 0; i < nc; i++)
@@ -1055,8 +1098,7 @@ namespace ice
     if (FERROR(fp))
       {
         fclose(fp);
-        Message(FNAME, M_WRONG_WRITE, WRONG_FILE);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_WRITE);
       }
 
     fclose(fp);
@@ -1092,8 +1134,6 @@ namespace ice
           }
       }
   }
-
-
 
   /*******************************************/
   static void writeBMP4(FILE* fp, unsigned char* pic8, int w, int h)
@@ -1138,12 +1178,17 @@ namespace ice
       {
         pp = pic8 + (i * w);
 
-        for (j = 0; j < w; j++) putc(*pp++, fp);
+        for (j = 0; j < w; j++)
+          {
+            putc(*pp++, fp);
+          }
 
-        for (; j < padw; j++) putc(0, fp);
+        for (; j < padw; j++)
+          {
+            putc(0, fp);
+          }
       }
   }
-
 
   /*******************************************/
   static void writeBMP24(FILE* fp, unsigned char* pic24, int w, int h)
@@ -1165,7 +1210,10 @@ namespace ice
             pp += 3;
           }
 
-        for (j = 0; j < padb; j++) putc(0, fp);
+        for (j = 0; j < padb; j++)
+          {
+            putc(0, fp);
+          }
       }
   }
 #undef FNAME

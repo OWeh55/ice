@@ -24,7 +24,7 @@
 
 #include "vectortools.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "ClassifierMinimumDistance.h"
 
@@ -35,23 +35,29 @@ namespace ice
 #define FNAME "ClassifierMinimumDistance::ClassifierMinimumDistance()"
   ClassifierMinimumDistance::ClassifierMinimumDistance(int classes, int dimension)
   {
-    IF_FAILED(Init(classes, dimension))
-    {
-      // if initialisation fails
-      Message(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        Init(classes, dimension);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "ClassifierMinimumDistance::Init"
   void ClassifierMinimumDistance::Init(int classes, int dimension)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
+    try
+      {
+        Classifier::Init(classes, dimension);
 
-    par = Matrix(nClasses, nFeatures + 2);
+        par = Matrix(nClasses, nFeatures + 2);
 
-    for (int i = 0; i < nClasses; i++)
-      par[i][nFeatures] = 0.0;
+        for (int i = 0; i < nClasses; i++)
+          {
+            par[i][nFeatures] = 0.0;
+          }
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Train"
@@ -120,10 +126,7 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierMinimumDistance")
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     source >> nFeatures >> nClasses;
 
@@ -146,22 +149,13 @@ namespace ice
     Vector ret(nFeatures);
 
     if ((cl < 0) || (cl >= nClasses))
-      {
-        Message(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
-        return ret;
-      }
+      throw IceException(FNAME, M_INVALID_CLASSNUMBER);
 
     if (nClasses == 0)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ret;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (par[cl][nFeatures] == 0)
-      {
-        Message(FNAME, M_NOT_TRAINED, WRONG_PARAM);
-        return ret;
-      }
+      throw IceException(FNAME, M_NOT_TRAINED);
 
     return par[cl](0, nFeatures - 1);
   }
@@ -175,7 +169,9 @@ namespace ice
         double sum = 0;
 
         for (int j = 0; j < nFeatures; j++)
-          sum = sum + par[i][j] * par[i][j];
+          {
+            sum = sum + par[i][j] * par[i][j];
+          }
 
         par[i][nFeatures + 1] = -sum / 2.0;
       }

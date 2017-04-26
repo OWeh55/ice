@@ -20,7 +20,7 @@
  */
 #include <math.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -91,10 +91,7 @@ namespace ice
   Ellipse::Ellipse(const Vector& v) : Circle(v)
   {
     if (v.Size() < 5)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     r2 = v[3];
     phi = v[4];
@@ -113,10 +110,7 @@ namespace ice
   int Ellipse::setR2(double rv)
   {
     if (rv < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     r2 = rv;
     normalize();
@@ -174,13 +168,17 @@ namespace ice
     phi2 = FMod(phi2, 2 * M_PI);
 
     if (phi2 < phi1)
-      phi2 += 2 * M_PI;
+      {
+        phi2 += 2 * M_PI;
+      }
 
     phi1a = FMod(phi1 + phi, 2 * M_PI);
     phi2a = FMod(phi2 + phi, 2 * M_PI);
 
     if (phi2a < phi1a)
-      phi2a += 2 * M_PI;
+      {
+        phi2a += 2 * M_PI;
+      }
 
     cc = cos(phi);
     ss = sin(phi);
@@ -216,10 +214,7 @@ namespace ice
   EllipseSeg::EllipseSeg(const Vector& v) : Ellipse(v)
   {
     if (v.Size() < 7)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     phi1 = v[5];
     phi2 = v[6];
@@ -253,7 +248,10 @@ namespace ice
 
     double fi = atan2(yr, xr);
 
-    if (fi < phi1a) fi += 2 * M_PI;
+    if (fi < phi1a)
+      {
+        fi += 2 * M_PI;
+      }
 
     if (fi > phi2a)
       {

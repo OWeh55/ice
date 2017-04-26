@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
   Show(ON, p2);
   GetChar();
   Show(OFF, p2);
-  FreeImg(p2);
+
 #if 0
   p2 = NewImg(210, 210, 255); /* Bild mit anderen Abmessungen */
   Show(ON, p2);

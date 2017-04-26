@@ -23,7 +23,7 @@
 #include <stddef.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "arith.h"
@@ -57,12 +57,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = 1;
@@ -121,12 +123,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = 1;
@@ -191,12 +195,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = +1;
@@ -255,12 +261,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(dest);
+      {
+        tmp.copy(dest);
+      }
 
-    int gmax1 = src->maxval * 12;
-    int gmax2 = dest->maxval * norm;
-    int offset = (dest->maxval + 1) / 2;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 12;
+    int gmax2 = dest.maxval * norm;
+    int offset = (dest.maxval + 1) / 2;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int destwyi1 = +1;
@@ -326,12 +334,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 16;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 16;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 = + 1;
@@ -392,12 +402,14 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp.copy(src);
+      {
+        tmp.copy(src);
+      }
 
-    int gmax1 = src->maxval * 16;
-    int gmax2 = dest->maxval * norm;
-    int dmax = dest->maxval;
-    int offset = (dest->maxval + 1) / 2;
+    int gmax1 = src.maxval * 16;
+    int gmax2 = dest.maxval * norm;
+    int dmax = dest.maxval;
+    int offset = (dest.maxval + 1) / 2;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 =  + 1;

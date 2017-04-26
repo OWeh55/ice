@@ -31,7 +31,6 @@
 namespace ice
 {
 
-
   Node::Node()
   {
 
@@ -99,7 +98,10 @@ namespace ice
     int i;
 
     if (!Nb.empty())
-      for (i = 0; i < int(Nb.size()); i++) if (Nb[i] == NodeNumber) return true;
+      for (i = 0; i < int(Nb.size()); i++) if (Nb[i] == NodeNumber)
+          {
+            return true;
+          }
 
     return false;
   }
@@ -112,12 +114,11 @@ namespace ice
   }
 
 // Knotennummer vergeben
-  void Node::SetLabel(int number)
+  void Node::setLabel(int number)
   {
 
     Label = number;
   }
-
 
 // ------------------- Anfang der Funktionen, die die NodeList veraendern --------------
 
@@ -130,7 +131,10 @@ namespace ice
     if (NodeNumber != -1)
       {
         if (!Nb.empty())
-          for (IntIter = Nb.begin(); IntIter != Nb.end(); ++IntIter) if (*IntIter == NodeNumber) return;
+          for (IntIter = Nb.begin(); IntIter != Nb.end(); ++IntIter) if (*IntIter == NodeNumber)
+              {
+                return;
+              }
 
         Nb.push_back(NodeNumber);
         Degree = Nb.size(); // Knotengrad erhoehen
@@ -154,7 +158,10 @@ namespace ice
 
         return true;
       }
-    else return false;
+    else
+      {
+        return false;
+      }
 
     return true;
   }
@@ -173,14 +180,19 @@ namespace ice
         }
   }
 
-
 // ------------------- Ende der Funktionen, die die NodeList veraendern --------------
 
 // durchschnittlichen Grauwert der Region berechnen
   void RegionNode::CompGRWMW()
   {
-    if (PixelAnz == 0) GrwMw = 0;
-    else GrwMw = GrwSum / PixelAnz;
+    if (PixelAnz == 0)
+      {
+        GrwMw = 0;
+      }
+    else
+      {
+        GrwMw = GrwSum / PixelAnz;
+      }
   }
 
 // Varianz der Grauwerte der Region berechnen
@@ -198,9 +210,13 @@ namespace ice
         }
 
     if (PixelAnz == 1 || PixelAnz == 0)
-      GrwVar = 0; // bei nur einem Pixel, ist Varianz Null
+      {
+        GrwVar = 0;  // bei nur einem Pixel, ist Varianz Null
+      }
     else
-      GrwVar = sqrt((float)1 / (PixelAnz - 1) * GrwQuadSum);
+      {
+        GrwVar = sqrt((float)1 / (PixelAnz - 1) * GrwQuadSum);
+      }
   }
 
 // Regionenpixel in working-Bild einzeichnen
@@ -295,7 +311,6 @@ namespace ice
     RegNodeCount = 0;
   }
 
-
 // Regionengraph mit Bilder initialisieren
 #define FNAME "RegionGraph()"
   RegionGraph::RegionGraph(Image source, Image labImg, Image& retImg)
@@ -306,7 +321,7 @@ namespace ice
     if (!IsImg(source) || !IsImg(labImg) || !IsImg(retImg))
       {
         // Eingabebilder gültig?
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     CopiedLabImg = NewImg(labImg, true);  //CopyImg(labImg,CopiedLabImg);
@@ -314,7 +329,7 @@ namespace ice
     CopiedSourceImg = NewImg(source, true); //CopyImg(source,CopiedSourceImg);
 
     WorkingImg = NewImg(labImg);
-    SetImg(WorkingImg, 0);
+    WorkingImg.set(0);
 
     BuildGraph(retImg);
   }
@@ -351,7 +366,9 @@ namespace ice
   void RegionGraph::DeleteRegion(int RegNumber)
   {
     if (regions[RegNumber])
-      regions[RegNumber] = nullptr;
+      {
+        regions[RegNumber] = nullptr;
+      }
   }
 
   int EdgeGraph::getIndex(int r1, int r2)
@@ -526,11 +543,15 @@ namespace ice
 
         for (j = EG->RegionAccessLUT[r1]; j < EG->RegionAccessLUT[r1 + 1]; j++)
           if (EG->EdgeNodeAccessLUT[j].to != r2)
-            en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            {
+              en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            }
 
         for (j = EG->RegionAccessLUT[r2]; j < EG->RegionAccessLUT[r2 + 1]; j++)
           if (EG->EdgeNodeAccessLUT[j].to != r1)
-            en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            {
+              en->AddEdge(EG->EdgeNodeAccessLUT[j].IndexNbr);
+            }
 
         EG->Sorted[en->GRWWert].push_back(i);
       }
@@ -550,7 +571,10 @@ namespace ice
         int nb = edges[node]->Nb[n];
 
         // Knoten hat Wasserscheiden oder Becken als Nachbar?
-        if (edges[nb]->Status == -3 || edges[nb]->Status > 0) return true;
+        if (edges[nb]->Status == -3 || edges[nb]->Status > 0)
+          {
+            return true;
+          }
       }
 
     return false;
@@ -577,8 +601,10 @@ namespace ice
                 // Knoten noch nicht verarbeitet oder Wasserscheide
                 if ((edges[node]->Status == -1) || (edges[node]->Status == -3 && WshedNb))
                   // Nachbarknoten ist Becken zugehoerig, Knoten mit selbem Label versehen
-                  edges[node]->Status = edges[nb]->Status;
-                else  // 2 Becken treffen aufeinander
+                  {
+                    edges[node]->Status = edges[nb]->Status;
+                  }
+                else   // 2 Becken treffen aufeinander
                   if (edges[nb]->Status != edges[node]->Status)
                     {
                       edges[node]->Status = -3;
@@ -623,7 +649,6 @@ namespace ice
 
     return true;
   }
-
 
 // Wasserscheidentransformation auf Kantengraph anwenden
   void EdgeGraph::ComputeWatershedTrans()
@@ -723,14 +748,15 @@ ende:
   {
 
     int k, i;
-    SetImg(i1, i1->maxval);
+    i1.set(i1.maxval);
 
     for (k = 0; k < 256; k++)
       for (i = 0; i < int(Sorted[k].size()); i++)
 
-        edges[Sorted[k][i]]->drawWSHDPixel(i1, 0);
+        {
+          edges[Sorted[k][i]]->drawWSHDPixel(i1, 0);
+        }
   }
-
 
 // Wasserscheidenlinien einzeichnen, die nach der Wasserscheidentransformation
 // auf dem Kantengraphen uebriggeblieben sind
@@ -738,9 +764,9 @@ ende:
   {
 
     int k, i;
-    SetImg(i1, i1->maxval);
+    i1.set(i1.maxval);
     wsheds = NewImg(i1);
-    SetImg(wsheds, i1->maxval);
+    wsheds.set(i1.maxval);
 
     for (k = 0; k < 256; k++)
       for (i = 0; i < int(Sorted[k].size()); i++)
@@ -756,10 +782,11 @@ ende:
           // Wasserscheidenlinie einzeichnen, wenn Grauwertdifferenz zwischen den Regionen
           // groesser als der "tresh"-Schwellwert ist
           if (edges[Sorted[k][i]]->GRWWert > tresh)
-            edges[Sorted[k][i]]->drawWSHDPixel(wsheds, 0);
+            {
+              edges[Sorted[k][i]]->drawWSHDPixel(wsheds, 0);
+            }
 
   }
-
 
   void RegionGraph::CompRegion4(Image sourceImg, Image labImg, Image workImg, int x, int y, int RegionNbr)
   {
@@ -770,7 +797,7 @@ ende:
     // aktuellen Start-Pixel zur RegionPixelliste hinzufuegen
     currReg->RegionPixel.push_back(temp);
     // Pixel als bearbeitet markieren
-    PutVal(workImg, x, y, workImg->maxval);
+    PutVal(workImg, x, y, workImg.maxval);
     // Grauwertsumme initialisieren
     currReg->GrwSum = 0;
     currReg->PixelAnz++;// Pixelanzahl erhoehen
@@ -798,9 +825,15 @@ ende:
           int grw = GetVal(sourceImg, xpos, ypos);
 
           // minimalen und maximalen Grauwert der Region ermitteln
-          if (currReg->GrwMin < grw) currReg->GrwMin = grw;
+          if (currReg->GrwMin < grw)
+            {
+              currReg->GrwMin = grw;
+            }
 
-          if (currReg->GrwMax > grw) currReg->GrwMax = grw;
+          if (currReg->GrwMax > grw)
+            {
+              currReg->GrwMax = grw;
+            }
 
           // Grauwert des Pixel zur Mittelwertsumme addieren
           currReg->GrwSum += grw;
@@ -813,7 +846,7 @@ ende:
             if ((GetVal(workImg, xn, yn) == 0))
               {
                 // Punkt ist Regionenpixel?
-                if (GetVal(labImg, xn, yn) != 0) // Pixel != Wasserscheide?
+                if (GetVal(labImg, xn, yn) != 0)   // Pixel != Wasserscheide?
                   {
 
                     grwNb = GetVal(sourceImg, xn, yn);
@@ -825,7 +858,7 @@ ende:
                     // Punkt in RegionPixel aufnehmen
                     currReg->RegionPixel.push_back(temp2);
                     // Punkt als verarbeitet markieren und Gesamtpixelanzahl erhoehen
-                    PutVal(workImg, xn, yn, workImg->maxval);
+                    PutVal(workImg, xn, yn, workImg.maxval);
                     currReg->PixelAnz++;
                   }
                 else
@@ -849,52 +882,47 @@ ende:
 #define FNAME "BuildGraph"
   int RegionGraph::BuildGraph(Image& retImg)
   {
-
-    int xw, yw;
-    int i;
     // WorkingImg initialisieren
-    SetImg(WorkingImg, 0);
+    WorkingImg.set(0);
     RegNodeCount = 0;
 
     if (!IsImg(retImg))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    wloop(CopiedSourceImg, xw, yw)
-    {
-      // Pixel (=Region) noch nicht bearbeitet
-      if (GetVal(CopiedLabImg, xw, yw) != 0)
+    for (int yw = 0; yw < CopiedSourceImg.ysize; yw++)
+      for (int xw = 0; xw < CopiedSourceImg.xsize; xw++)
         {
-          // Pixel ist keine Wasserscheide
-          if (GetVal(WorkingImg, xw, yw) == 0)
+          // Pixel (=Region) noch nicht bearbeitet
+          if (GetVal(CopiedLabImg, xw, yw) != 0)
             {
-              // neue Region einfuegen
-              regions.push_back(new RegionNode());
-              // alle Punkte berechnen, die in der Region liegen
-              CompRegion4(CopiedSourceImg, CopiedLabImg, WorkingImg, xw, yw, RegNodeCount);
-              // Regionenknoten etikettieren
-              regions[RegNodeCount]->SetLabel(RegNodeCount + 1);
-              // durchschnittlichen Grauwert und Grauwertvarianz der Punkte der Regione berechnen
-              regions[RegNodeCount]->CompGRWMW();
-              regions[RegNodeCount]->CompGRWVAR();
-              // Wasserscheidenpixel einzeichnen
-              regions[RegNodeCount]->drawWSHDPixel(WorkingImg, 0);
-              // Regionenzaehler erhoehen
-              RegNodeCount++;
+              // Pixel ist keine Wasserscheide
+              if (GetVal(WorkingImg, xw, yw) == 0)
+                {
+                  // neue Region einfuegen
+                  regions.push_back(new RegionNode());
+                  // alle Punkte berechnen, die in der Region liegen
+                  CompRegion4(CopiedSourceImg, CopiedLabImg, WorkingImg, xw, yw, RegNodeCount);
+                  // Regionenknoten etikettieren
+                  regions[RegNodeCount]->setLabel(RegNodeCount + 1);
+                  // durchschnittlichen Grauwert und Grauwertvarianz der Punkte der Regione berechnen
+                  regions[RegNodeCount]->CompGRWMW();
+                  regions[RegNodeCount]->CompGRWVAR();
+                  // Wasserscheidenpixel einzeichnen
+                  regions[RegNodeCount]->drawWSHDPixel(WorkingImg, 0);
+                  // Regionenzaehler erhoehen
+                  RegNodeCount++;
+                }
+            }
+          else        // Pixel ist Wasserscheide
+            {
+              struct STPoint temp = {xw, yw, 0};
+              // zu Wasserscheidenpixeln hinzufuegen
+              WShedPixels.push_back(temp);
+
             }
         }
-      else        // Pixel ist Wasserscheide
-        {
-          struct STPoint temp = {xw, yw, 0};
-          // zu Wasserscheidenpixeln hinzufuegen
-          WShedPixels.push_back(temp);
 
-        }
-    }
-
-    SetImg(WorkingImg, WorkingImg->maxval);
+    WorkingImg.set(WorkingImg.maxval);
 
     if (!WShedPixels.empty())
 
@@ -906,16 +934,16 @@ ende:
         }
 
     WorkingImg = NewImg(WorkingImg->xsize, WorkingImg->ysize, RegNodeCount + 1);
-    SetImg(WorkingImg, 0); //WorkingImg->maxval);
+    WorkingImg.set(0);
 
-    for (i = 0;   i < RegNodeCount; i++)
+    for (int i = 0;   i < RegNodeCount; i++)
       {
         regions[i]->drawRegion(WorkingImg, regions[i]->Label); // und Label ist RegNodeCount+1!!!!! //->GrwMw);
         regions[i]->drawWSHDPixel(WorkingImg, 0);
       }
 
     // Nachbarschaften der Regionen berechnen
-    for (i = 0;   i < RegNodeCount; i++)
+    for (int i = 0;   i < RegNodeCount; i++)
       {
         regions[i]->CompNeighborRegions8(WorkingImg);
       }
@@ -931,67 +959,68 @@ ende:
   {
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image mark = NewImg(Original->xsize, Original->ysize, 2);
 
-    SetImg(GrwImg, 0);
-    SetImg(mark, 0);
+    setImg(GrwImg, 0);
+    setImg(mark, 0);
 
     int grw, grwsum;
-    int x, y, xn, yn, xkoor, ykoor;
+    int xn, yn, xkoor, ykoor;
     int n;
 
     FIFOList PQ;
-    wloop(Original, x, y)
-    {
-
-      if (GetVal(WSImg, x, y) == 0) PutVal(mark, x, y, 1);
-      else if (GetVal(mark, x, y) == 0)
+    for (int y = 0; y < WSImg.ysize; y++)
+      for (int x = 0; x < WSImg.xsize; x++)
         {
 
-          PQ.clear();
-
-          struct STPoint p = {x, y, 0};
-          grwsum = GetVal(Original, x, y);
-
-          PQ.push_back(p);
-
-          if (!PQ.empty())
+          if (GetVal(WSImg, x, y) == 0)
             {
-              for (n = 0; n < int(PQ.size()); n++)
-                {
-                  p = PQ[n];
-                  xkoor = p.x;
-                  ykoor = p.y;
+              PutVal(mark, x, y, 1);
+            }
+          else if (GetVal(mark, x, y) == 0)
+            {
 
-                  ForAll4Nbrs(Original, xkoor, ykoor, xn, yn,
-                  {
-                    if (GetVal(mark, xn, yn) == 0 && GetVal(WSImg, xn, yn) != 0)
+              PQ.clear();
+
+              struct STPoint p = {x, y, 0};
+              grwsum = GetVal(Original, x, y);
+
+              PQ.push_back(p);
+
+              if (!PQ.empty())
+                {
+                  for (n = 0; n < int(PQ.size()); n++)
+                    {
+                      p = PQ[n];
+                      xkoor = p.x;
+                      ykoor = p.y;
+
+                      ForAll4Nbrs(Original, xkoor, ykoor, xn, yn,
                       {
-                        PutVal(mark, xn, yn, 1);
-                        grwsum += GetVal(Original, xn, yn);
-                        struct STPoint p2 = p;
-                        p2.x = xn;
-                        p2.y = yn;
-                        p2.grw = 0;
-                        PQ.push_back(p2);
-                      }
-                  };)
-                }
+                        if (GetVal(mark, xn, yn) == 0 && GetVal(WSImg, xn, yn) != 0)
+                          {
+                            PutVal(mark, xn, yn, 1);
+                            grwsum += GetVal(Original, xn, yn);
+                            struct STPoint p2 = p;
+                            p2.x = xn;
+                            p2.y = yn;
+                            p2.grw = 0;
+                            PQ.push_back(p2);
+                          }
+                      };)
+                    }
 
-              grw = grwsum / n;
+                  grw = grwsum / n;
 
-              for (n = 0; n < int(PQ.size()); n++)
-                {
-                  PutVal(GrwImg, PQ[n].x, PQ[n].y, grw);
-                }
-            } // ! empty
+                  for (n = 0; n < int(PQ.size()); n++)
+                    {
+                      PutVal(GrwImg, PQ[n].x, PQ[n].y, grw);
+                    }
+                } // ! empty
+            }
         }
-    }
     return OK;
   }
 #undef FNAME
@@ -1008,12 +1037,9 @@ ende:
   {
     // Bilder initialisert und Schwellwert fuer Wasserscheidenlinien groesser 0 ?
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg) || Treshold < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    SetImg(GrwImg, 255);
+    setImg(GrwImg, 255);
     Image BlWh = NewImg(WSImg);
     RegionGraph RG;
     EdgeGraph* EG;
@@ -1021,10 +1047,7 @@ ende:
     EG = RG.ComputeEdgeGraph();   // Kantengraph berechnen
 
     if (EG == nullptr)
-      {
-        Message(FNAME, M_NOT_INITIALISED , WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     EG->ComputeWatershedTrans();  // WST auf Kantengraph ausfuehren
 

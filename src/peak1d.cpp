@@ -23,7 +23,7 @@
 #include "macro.h"
 #include "float.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "peak1d.h"
 
@@ -89,12 +89,16 @@ namespace ice
                 min = values[pos];
               }
             else if (values[pos] > noise + min)
-              minFound = true;
+              {
+                minFound = true;
+              }
           }
       }
 
     for (int i = index; i != minpos; i = (i + step + nValues) % nValues)
-      mark[i] = true;
+      {
+        mark[i] = true;
+      }
 
     mark[minpos] = true;
   }
@@ -108,10 +112,14 @@ namespace ice
     int value = values[index];
 
     while (values[(start + nValues - 1) % nValues] == value)
-      start--;
+      {
+        start--;
+      }
 
     while (values[(end + nValues + 1) % nValues] == value)
-      end++;
+      {
+        end++;
+      }
 
     return ((start + end) / 2 + nValues) % nValues;
   }
@@ -130,7 +138,9 @@ namespace ice
     int nValues = values.size();
 
     if (nValues == 0)
-      return result;
+      {
+        return result;
+      }
 
     vector<bool> mark(nValues, false);
 
@@ -150,7 +160,7 @@ namespace ice
 
     int index;
 
-    while ((index = getMax1D(values, mark)) >= 0) // max found?
+    while ((index = getMax1D(values, mark)) >= 0)   // max found?
       {
         follow(values, mark, index, -1, cyclic, noise);
         follow(values, mark, index, 1, cyclic, noise);
@@ -162,24 +172,28 @@ namespace ice
 
   IVector peak1d(const Vector& v, bool cyclic, double noise)
   {
-    IVector ret;
-    std::vector<double> vv(v.size());
+    try
+      {
+        IVector ret;
+        std::vector<double> vv(v.size());
 
-    for (unsigned int i = 0; i < v.size(); i++)
-      vv[i] = v[i];
+        for (unsigned int i = 0; i < v.size(); i++)
+          {
+            vv[i] = v[i];
+          }
 
-    std::vector<int> ip;
-    IF_FAILED(ip = peak1d(vv, cyclic, noise))
-    {
-      return ret;
-    }
+        std::vector<int> ip = peak1d(vv, cyclic, noise);
 
-    ret.Resize(ip.size());
+        ret.Resize(ip.size());
 
-    for (unsigned int i = 0; i < ip.size(); i++)
-      ret[i] = ip[i];
+        for (unsigned int i = 0; i < ip.size(); i++)
+          {
+            ret[i] = ip[i];
+          }
 
-    return ret;
+        return ret;
+      }
+    RETHROW;
   }
 #undef FNAME
 }

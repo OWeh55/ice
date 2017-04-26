@@ -23,7 +23,7 @@
 
 #include "Vector.h"
 
-#define vERR(f,m,r,ret) { Message("VectorT::" f,m,r); return ret; }
+#define vERR(f,m,r,ret) { throw IceException("VectorT::" f,m); }
 
 namespace ice
 {
@@ -43,7 +43,10 @@ namespace ice
   template<typename T>
   T Median(const VectorT<T>& v)
   {
-    if (v.size() < 3) return v[0];
+    if (v.size() < 3)
+      {
+        return v[0];
+      }
 
     VectorT<T> iv(v);
 
@@ -58,7 +61,10 @@ namespace ice
 
     for (unsigned int i = 1; i < v.size(); i++)
       {
-        if (v[i] < min) min = v[i];
+        if (v[i] < min)
+          {
+            min = v[i];
+          }
       }
 
     return min;
@@ -71,7 +77,10 @@ namespace ice
 
     for (unsigned int i = 1; i < v.size(); i++)
       {
-        if (v[i] > max) max = v[i];
+        if (v[i] > max)
+          {
+            max = v[i];
+          }
       }
 
     return max;
@@ -85,15 +94,21 @@ namespace ice
     T l = 0;
 
     for (unsigned int i = 0; i < z.size(); i++)
-      l += z.data[i] * z.data[i];
+      {
+        l += z.data[i] * z.data[i];
+      }
 
     l = sqrt(l);
 
     if (l == 0)
-      vERR("Normalize", "Can't normalize", WRONG_PARAM, z);
+      {
+        vERR("Normalize", "Can't normalize", WRONG_PARAM, z);
+      }
 
     for (unsigned int i = 0; i < z.size(); i++)
-      z.data[i] /= l;
+      {
+        z.data[i] /= l;
+      }
 
     return z;
   }
@@ -105,7 +120,9 @@ namespace ice
     VectorT<T> z(3);
 
     if ((u.dim != 3) || (v.dim != 3))
-      vERR(FNAME, M_WRONG_DIM, WRONG_PARAM, z);
+      {
+        vERR(FNAME, M_WRONG_DIM, WRONG_PARAM, z);
+      }
 
     z.data[0] = u.data[1] * v.data[2] - v.data[1] * u.data[2];
     z.data[1] = u.data[2] * v.data[0] - v.data[2] * u.data[0];

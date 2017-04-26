@@ -55,7 +55,9 @@ namespace ice
     Moments3d()
     {
       for (auto& m : moments)
-        m = 0.0;
+        {
+          m = 0.0;
+        }
     }
 
     explicit Moments3d(const std::vector<Vector3d>& pointList);

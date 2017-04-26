@@ -70,6 +70,7 @@ namespace ice
      */
     const int maxval;
 
+  public:
     /**
      * get the title of the image.
      * The title is a string and used for display
@@ -234,14 +235,18 @@ namespace ice
       VisNumber++;
 
       if (VisNumber == 0)
-        dfp = nullptr;
+        {
+          dfp = nullptr;
+        }
     }
 
     /* does the callback */
     virtual void destroy()
     {
       if (dfp != nullptr)
-        (*dfp)(this);
+        {
+          (*dfp)(this);
+        }
 
       dfp = nullptr;
       VisNumber = 0;

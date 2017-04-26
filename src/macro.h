@@ -18,38 +18,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/*****************************************************************************/
-/* Macro.h                                                                   */
-/* Funktion: Hilfsmakros                                                     */
-/*****************************************************************************/
+/*
+* macro.h
+* macro for error handling, obsolete
+*/
+#ifndef _MACRO_H // include guard
+#define _MACRO_H
 
-#ifndef _MACRO_H  /* verhindern mehrfacher Verarbeitung in einem */
-#define _MACRO_H  /* Programm */
-
-#include "message.h"
-#include "numbase.h"
-#include "defs.h"
+#include "IceException.h"
 
 namespace ice
 {
-// Let x and y go through every point inside the active area of Img, where Img
-// could be of type Image or ImageD
+  // Fehlerbehandlung in Prozeduren
+  // these macros should be removed!!
 
-#define wloop(Img, x, y) \
-  for (y = 0; y < (Img).ysize; y++) \
-  for (x = 0; x < (Img).xsize; x++)
-
-// Fehlerbehandlung in Prozeduren
-#define IF_FAILED(action) OffMessage(); action; OnMessage(); if(GetError()!=OK)
-
-#define RETURN_IF_FAILED(action,ret) { IF_FAILED(action) \
-{ Message(FNAME,M_0,ERROR); return ret; }}
-
-#define RETURN_VOID_IF_FAILED(action) { IF_FAILED(action) \
-{ Message(FNAME,M_0,ERROR); return; }}
-
-#define RETURN_NULL_IF_FAILED(action) { RETURN_IF_FAILED(action,NULL) }
-#define RETURN_ERROR_IF_FAILED(action) { RETURN_IF_FAILED(action,GetError()) }
+#define RETURN_ERROR_IF_FAILED(action) try { action; } catch(IceException &ex) { throw IceException(ex, FNAME); }
+#define RETURN_NULL_IF_FAILED(action) RETURN_ERROR_IF_FAILED(action)
 }
 
 #endif /*IFDEF _MACRO_H */

@@ -26,7 +26,7 @@
 #include "defs.h"
 #include "base.h"
 #include "based.h"
-#include "message.h"
+#include "IceException.h"
 #include "Contur.h"
 #include "contlist.h"
 #include "contools.h"

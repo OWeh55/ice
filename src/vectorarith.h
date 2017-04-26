@@ -25,7 +25,7 @@
 #include <iomanip>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 namespace ice
@@ -35,7 +35,9 @@ namespace ice
   {
     std::vector<T> result(v1);
     for (unsigned int i = 0; i < v2.size(); ++i)
-      result[i] += v2[i];
+      {
+        result[i] += v2[i];
+      }
     return result;
   }
 
@@ -44,7 +46,9 @@ namespace ice
   {
     std::vector<T> result(v1);
     for (unsigned int i = 0; i < v2.size(); ++i)
-      result[i] -= v2[i];
+      {
+        result[i] -= v2[i];
+      }
     return result;
   }
 
@@ -53,7 +57,9 @@ namespace ice
   {
     double sum2 = 0.0;
     for (unsigned int i = 0; i < v.size(); ++i)
-      sum2 += v[i] * v[i];
+      {
+        sum2 += v[i] * v[i];
+      }
     return sum2;
   }
 

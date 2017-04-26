@@ -47,13 +47,15 @@ int GetFeatureStandard::get_feature(const Image& pic,
     {
       if (get_quantil_border(pic, c, threshold, win, 0, 0,
                              x_position) != 0)
-        return 0;
+        {
+          return 0;
+        }
     }
 
   Image temp = NewImg(win.Width(), win.Height(), 255);
 
   Image normalized = NewImg(gitter1 * 5, gitter2 * 5, 255);
-  ClearImg(normalized);
+  clearImg(normalized);
   //FIXME gibt es hier einen besseren Weg das Fenster in einem Bild zu speichern?
   int top = win.YI();
   int left = win.XI();
@@ -69,7 +71,9 @@ int GetFeatureStandard::get_feature(const Image& pic,
     }
 
   if (temp->xsize > 1 && temp->ysize > 5)
-    normalizeSeg(temp, normalized, gitter1, gitter2);
+    {
+      normalizeSeg(temp, normalized, gitter1, gitter2);
+    }
   double breite = (double) normalized->xsize;
   double hoehe = (double) normalized->ysize;
   int k = 0;
@@ -145,7 +149,7 @@ GetFeatureStandard::get_feature(const Image& pic, Vector& feature) const
     }
 
   Image normalized = NewImg(gitter1 * 5, gitter2 * 5, 255);
-  ClearImg(normalized);
+  clearImg(normalized);
   if (temp->xsize > 1 && temp->ysize > 5)
     {
       normalizeSeg(temp, normalized, gitter1, gitter2);
@@ -187,9 +191,6 @@ GetFeatureStandard::get_feature(const Image& pic, Vector& feature) const
             (anz_gesamt == 0) ? 0 : summe / double(anz_gesamt);
         }
     }
-
-  FreeImg(temp);
-  FreeImg(normalized);
 
   return 0;
 }

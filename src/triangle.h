@@ -66,8 +66,7 @@ namespace ice
         case 2:
           return p3;
         default:
-          Message(FNAME, M_WRONG_INDEX, WRONG_PARAMETER);
-          return p1;
+          throw IceException(FNAME, M_WRONG_INDEX);
         }
     }
 #undef FNAME

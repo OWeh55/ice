@@ -49,12 +49,12 @@ int main(int argc, char* argv[])
 
   imgl = NewImg(img->xsize, img->ysize, 3);
 
-  ClearImg(imgm);
-  ClearImg(imgm2);
+  clearImg(imgm);
+  clearImg(imgm2);
 
   if (fn.empty())
     {
-      ClearImg(img);
+      clearImg(img);
       Circle circle(100, 100, 80);
       draw(circle, img, 222, 222);
 

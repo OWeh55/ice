@@ -22,7 +22,7 @@
 #include <string.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "DPList.h"
 
@@ -39,18 +39,14 @@ namespace ice
     DPointList pl = new DPointList_;
 
     if (pl == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->xptr = new int[BLOCKSIZE];
 
     if (pl->xptr == NULL)
       {
         delete pl;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     pl->yptr = new int[BLOCKSIZE];
@@ -59,8 +55,7 @@ namespace ice
       {
         delete [](pl->xptr);
         delete pl;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     pl->wptr = new int[BLOCKSIZE];
@@ -70,8 +65,7 @@ namespace ice
         delete [](pl->xptr);
         delete [](pl->yptr);
         delete pl;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     pl->lng = 0;
@@ -90,10 +84,7 @@ namespace ice
   {
 
     if (pl == NULL)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pl->aktlng == pl->lng)
       {
@@ -101,30 +92,30 @@ namespace ice
         pl->aktlng += BLOCKSIZE;
         int* ptr = (int*)realloc(pl->xptr, pl->aktlng * sizeof(int));
 
-        if (ptr) pl->xptr = ptr;
-        else
+        if (ptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return false;
+            pl->xptr = ptr;
           }
+        else
+          throw IceException(FNAME, M_NO_MEM);
 
         ptr = (int*)realloc(pl->yptr, pl->aktlng * sizeof(int));
 
-        if (ptr) pl->yptr = ptr;
-        else
+        if (ptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return false;
+            pl->yptr = ptr;
           }
+        else
+          throw IceException(FNAME, M_NO_MEM);
 
         ptr = (int*)realloc(pl->wptr, pl->aktlng * sizeof(int));
 
-        if (ptr) pl->wptr = ptr;
-        else
+        if (ptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return false;
+            pl->wptr = ptr;
           }
+        else
+          throw IceException(FNAME, M_NO_MEM);
       }
 
     pl->xptr[pl->lng] = pl->x = x;
@@ -144,10 +135,7 @@ namespace ice
   {
 
     if (pl == NULL || num >= pl->lng)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     pl->lng--;
     int anz = (pl->lng - num) * sizeof(int);
@@ -176,10 +164,7 @@ namespace ice
   {
 
     if (pl == NULL)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return false;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     delete [](pl->xptr);
     delete [](pl->yptr);

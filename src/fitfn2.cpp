@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -38,15 +38,14 @@ namespace ice
     int i;
 
     if (m.cols() < 3)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     FitInit();
 
     for (i = 0; i < samples; i++)
-      FitVal(m[i][0], m[i][1], m[i][2]);
+      {
+        FitVal(m[i][0], m[i][1], m[i][2]);
+      }
 
     FitFinish();
     return OK;
@@ -55,10 +54,7 @@ namespace ice
   int Function2dWithFitting::Fit(const Image& img)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     FitInit();
     for (int y = 0; y < img.ysize; ++y)
@@ -73,10 +69,7 @@ namespace ice
   int Function2dWithFitting::Fit(ImageD img)
   {
     if (!IsImgD(img))
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     FitInit();
     for (int y = 0; y < img.ysize; ++y)
@@ -93,9 +86,7 @@ namespace ice
   Constant2d::Constant2d(const Vector& v): Function2dWithFittingG(1)
   {
     if (v.Size() < 1)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     co[0] = v[0];
   }
@@ -125,9 +116,7 @@ namespace ice
   Polynom2d1o::Polynom2d1o(const Vector& v): Function2dWithFittingG(3)
   {
     if (v.Size() < 3)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     co[0] = v[0];
     co[1] = v[1];
@@ -165,11 +154,12 @@ namespace ice
     int i;
 
     if (v.Size() < 6)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
-    for (i = 0; i < 6; i++) co[i] = v[i];
+    for (i = 0; i < 6; i++)
+      {
+        co[i] = v[i];
+      }
   }
 #undef FNAME
 
@@ -264,9 +254,7 @@ namespace ice
   Polynom2d2o::Polynom2d2o(Vector v)
   {
     if (v.Size() < 6)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     init(v[0], v[1], v[2], v[3], v[4], v[5]);
   }
@@ -323,10 +311,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return 0;
-        }
+        throw IceException(FNAME, M_0);
       }
 
     x2 = x * x;
@@ -340,10 +325,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return Vector(0);
-        }
+        throw IceException(FNAME, M_0);
       }
 
     return Vector(a, b, c, d, e, f);
@@ -355,10 +337,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return ERROR;
-        }
+        throw IceException(FNAME, M_0);
       }
 
     pa = a;
@@ -378,10 +357,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return ERROR;
-        }
+        throw IceException(FNAME, M_0);
       }
 
     var = a * a * s + 2 * a * b * sx + 2 * a * c * sy;
@@ -401,10 +377,7 @@ namespace ice
     Vector y;
 
     if (s < 6)
-      {
-        Message(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_TOO_LESS_VALUES);
 
     A = Vector(sx4, sx3y, sx2y2, sx3, sx2y, sx2) &&
         Vector(sx3y, sx2y2, sxy3, sx2y, sxy2, sxy) &&
@@ -468,9 +441,7 @@ namespace ice
   Polynom2d1o::Polynom2d1o(Vector v)
   {
     if (v.Size() < 3)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     init(v[0], v[1], v[2]);
   }
@@ -513,10 +484,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return 0;
-        }
+        throw IceException(FNAME, M_0);
       }
 
     return a + b * x + c * y;
@@ -528,10 +496,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return ERROR;
-        }
+        throw IceException(FNAME, M_0);
       }
 
     pa = a;
@@ -545,10 +510,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return Vector(0);
-        }
+        throw IceException(FNAME, M_0);
       }
 
     return Vector(a, b, c);
@@ -563,10 +525,7 @@ namespace ice
     if (!c_valid)
       {
         IfFailed(calc_c())
-        {
-          Message(FNAME, M_0, ERROR);
-          return ERROR;
-        }
+        throw IceException(FNAME, M_0);
       }
 
     var = a * a * s + 2 * a * b * sx + 2 * a * c * sy + b * b * sx2 + 2 * b * c * sxy + c * c * sy2;
@@ -584,10 +543,7 @@ namespace ice
     Vector y;
 
     if (s < 6)
-      {
-        Message(FNAME, M_TOO_LESS_VALUES, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_TOO_LESS_VALUES);
 
     A = Vector(sx2, sxy, sx) &&
         Vector(sxy, sy2, sy) &&

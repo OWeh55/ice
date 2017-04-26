@@ -47,7 +47,9 @@ namespace ice
       try
         {
           if (csize < 2)
-            throw 1;
+            {
+              throw 1;
+            }
 
           for (int i = 0; i < csize; i++)
             {
@@ -58,17 +60,19 @@ namespace ice
 
           // ersten Frame lesen
           if (!reader.read(vr[0], vg[0], vb[0]))
-            throw 2;
+            {
+              throw 2;
+            }
         }
       catch (int error)
         {
           switch (error)
             {
             case 1:
-              Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAM);
               break;
             case 2:
-              Message(FNAME, M_FILE_OPEN, WRONG_FILE);
+              throw IceException(FNAME, M_FILE_OPEN);
             }
         }
       catch (...)
@@ -88,9 +92,13 @@ namespace ice
       error = no_error;
 
       if (frame == next)
-        frame = framenr + 1;
+        {
+          frame = framenr + 1;
+        }
       else if (frame == prev)
-        frame = framenr - 1;
+        {
+          frame = framenr - 1;
+        }
 
       if (frame < first_frame)
         {
@@ -99,7 +107,9 @@ namespace ice
         }
 
       if (frame > last_frame)
-        fillbuffer(frame);
+        {
+          fillbuffer(frame);
+        }
 
       if (error == no_error)
         {
@@ -158,7 +168,9 @@ namespace ice
       while (error == no_error && last_frame < frame_nr)
         {
           if (!reader.read(vr[end_bidx], vg[end_bidx], vb[end_bidx]))
-            error = past_eof;
+            {
+              error = past_eof;
+            }
           else
             {
               last_frame++;
@@ -198,7 +210,9 @@ namespace ice
       try
         {
           if (csize < 2)
-            throw 1;
+            {
+              throw 1;
+            }
 
           for (int i = 0; i < csize; i++)
             {
@@ -207,17 +221,19 @@ namespace ice
 
           // ersten Frame lesen
           if (!reader.Read(buffer[0]))
-            throw 2;
+            {
+              throw 2;
+            }
         }
       catch (int error)
         {
           switch (error)
             {
             case 1:
-              Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAM);
               break;
             case 2:
-              Message(FNAME, M_FILE_OPEN, WRONG_FILE);
+              throw IceException(FNAME, M_FILE_OPEN);
             }
         }
       catch (...)
@@ -235,9 +251,13 @@ namespace ice
       error = no_error;
 
       if (frame == next)
-        frame = framenr + 1;
+        {
+          frame = framenr + 1;
+        }
       else if (frame == prev)
-        frame = framenr - 1;
+        {
+          frame = framenr - 1;
+        }
 
       if (frame < first_frame)
         {
@@ -246,7 +266,9 @@ namespace ice
         }
 
       if (frame > last_frame)
-        fillbuffer(frame);
+        {
+          fillbuffer(frame);
+        }
 
       if (error == no_error)
         {
@@ -296,7 +318,9 @@ namespace ice
       while (error == no_error && last_frame < frame_nr)
         {
           if (!reader.Read(buffer[end_bidx]))
-            error = past_eof;
+            {
+              error = past_eof;
+            }
           else
             {
               last_frame++;

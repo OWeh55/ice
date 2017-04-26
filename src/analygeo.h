@@ -66,10 +66,7 @@ namespace ice
     double dd = sqrt(dx * dx + dy * dy);
 
     if (dd < EPSILON)
-      {
-        Message(FNAME, M_POINT_IDENTIC, POINT_IDENTIC);
-        return (POINT_IDENTIC);
-      }
+      throw IceException(FNAME, M_POINT_IDENTIC);
 
     p = (p1.x * dy - p1.y * dx) / dd;
 

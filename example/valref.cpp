@@ -36,26 +36,34 @@ int main(int argc, char* argv[])
   img.create(5120, 5120, 255);
   int x, y;
 
-  wloop(img, x, y)
-  {
-    PutVal(img, x, y, 0);
-  }
+  img.set(0);
 
   double ta;
   Print("Teste..\n");
   start(ta);
-  wloop(img, x, y) wert(img, x, y);
+
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      wert(img, x, y);
   PrintT(ta, "Wert: ");
   start(ta);
-  wloop(img, x, y) ref(img, x, y);
+
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      ref(img, x, y);
+
   PrintT(ta, "Referenz: ");
 //  GetChar();
   Print("Teste..\n");
   start(ta);
-  wloop(img, x, y) wert(img, x, y);
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      wert(img, x, y);
   PrintT(ta, "Wert: ");
   start(ta);
-  wloop(img, x, y) ref(img, x, y);
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      ref(img, x, y);
   PrintT(ta, "Referenz: ");
   GetChar();
   return OK;

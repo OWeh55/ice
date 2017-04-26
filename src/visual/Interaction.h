@@ -32,7 +32,7 @@ namespace ice
   /*! An interaction is  used by mouse activity only at the moment. Therefore we provide
    * an enumeration with the return values -1,0,1 for RightMB,MiddleMB,LeftMB as it was used
    * in the old ICE-Library. */
-  enum MOUSEBUTTON { NOPRESS = -255, RIGHTMB = -1, MIDDLEMB, LEFTMB };
+  enum mouseButtonState { NOPRESS = -255, RIGHTMB = -1, MIDDLEMB, LEFTMB };
 
   /*! Interactions define the behaviour of an image window during an input operation.
     For example if the user shall select an rectanle inside the image window we have to
@@ -57,7 +57,7 @@ namespace ice
     //bool IsSuccessful () const;
 
     //! Return the corresponding button that was pressed (or NOPRESS if nothing was pressed)
-    MOUSEBUTTON Pressed() const;
+    mouseButtonState Pressed() const;
 
   protected:
     //! The window that hosts this interaction.
@@ -75,7 +75,7 @@ namespace ice
     //! This flag tells us, whether this interaction has been finished successfully.
     //bool SuccessFlag;
 
-    MOUSEBUTTON Button;
+    mouseButtonState Button;
   };
 
 
@@ -91,7 +91,7 @@ namespace ice
     return SuccessFlag;
     }*/
 
-  inline MOUSEBUTTON InteractionHandler::Pressed() const
+  inline mouseButtonState InteractionHandler::Pressed() const
   {
     return Button;
   }

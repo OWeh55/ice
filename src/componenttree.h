@@ -49,7 +49,9 @@ namespace ice
     VIRTUAL ~ComponentTreeNode()
     {
       for (auto it = children.begin(); it != children.end(); it++)
-        delete *it;
+        {
+          delete *it;
+        }
       delete region;
     }
 
@@ -62,7 +64,9 @@ namespace ice
     VIRTUAL void addChilds(const ComponentTreeNode& ch)
     {
       for (auto it = ch.children.begin(); it != ch.children.end(); it++)
-        children.push_back(*it);
+        {
+          children.push_back(*it);
+        }
     }
 
   public:
@@ -87,14 +91,18 @@ namespace ice
     VIRTUAL Region& getRegion()
     {
       if (region == nullptr)
-        region = new Region;
+        {
+          region = new Region;
+        }
       return *region;
     }
 
     VIRTUAL const Region& getRegion() const
     {
       if (region == nullptr)
-        region = new Region;
+        {
+          region = new Region;
+        }
       return *region;
     }
 

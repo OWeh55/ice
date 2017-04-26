@@ -70,12 +70,12 @@ namespace ice
 
     virtual void setPos(Point pp);
 
-    virtual void Add(Point p)
+    virtual void add(Point p)
     {
       pl.push_back(p);
     }
 
-    virtual void Add(double x, double y)
+    virtual void add(double x, double y)
     {
       pl.push_back(Point(x, y));
     }
@@ -103,18 +103,24 @@ namespace ice
 
     virtual double getArea() const
     {
-      if (!closed) return 0;
+      if (!closed)
+        {
+          return 0;
+        }
       double area2 = 0.0;
       for (int i = 0; i < (int)pl.size(); i++)
         {
           int i1 = i + 1;
-          if (i1 > (int)pl.size()) i1 = 0;
+          if (i1 > (int)pl.size())
+            {
+              i1 = 0;
+            }
           area2 += (pl[i].x - pl[i1].x) * (pl[i].y + pl[i1].y);
         }
       return fabs(area2 * 0.5);
     }
 
-    virtual Contur MakeContur() const;
+    virtual Contur makeContur() const;
 
     virtual int getClosestCorner(Point p) const;
     virtual int getClosestEdge(Point p) const;

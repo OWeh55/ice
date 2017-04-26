@@ -19,7 +19,7 @@
  */
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "macro.h"
@@ -50,7 +50,9 @@ namespace ice
     for (int i = 0; i < p && ok; i++)
       {
         if (n % 2 != 0)
-          ok = false;
+          {
+            ok = false;
+          }
 
         n /= 2;
       }
@@ -60,10 +62,7 @@ namespace ice
   int HaarImg(const Image& pic1, Image& pic2, int depth, int mode)
   {
     if (depth < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int nx = pic1.xsize;
     int ny = pic1.ysize;
@@ -72,21 +71,19 @@ namespace ice
     // n? =  2 ^ depth * k?
 
     if (!check2p(nx, depth) || !check2p(ny, depth))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return (WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (mode != NORMAL && mode != INVERS)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (mode == NORMAL)
-      Haar(pic1, pic2, depth);
+      {
+        Haar(pic1, pic2, depth);
+      }
     else
-      HaarInv(pic1, pic2, depth);
+      {
+        HaarInv(pic1, pic2, depth);
+      }
 
     return OK;
   }
@@ -121,7 +118,6 @@ namespace ice
         setColumn(pic2, j, hCol);
       }
 
-
     //Jetzt zeilenweise transformieren
     for (int i = 0; i < pic1.ysize; i++)
       {
@@ -143,7 +139,9 @@ namespace ice
   {
     int hsize = v.size();
     for (int i = 0; i < steps; i++)
-      hsize /= 2;
+      {
+        hsize /= 2;
+      }
 
     for (int i = 0; i < steps; i++)
       {

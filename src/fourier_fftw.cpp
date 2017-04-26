@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fourier.h"
@@ -53,31 +53,28 @@ namespace ice
                double* re, double* im)
   {
     if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (option != NORMAL && option != INVERS)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     bool forward = option == NORMAL;
 
     if (n < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((n != fftw_size) || (forward != isforward))
       {
         // altes array freigeben
-        if (in != NULL) fftw_free(in);
+        if (in != NULL)
+          {
+            fftw_free(in);
+          }
 
-        if (out != NULL) fftw_free(out);
+        if (out != NULL)
+          {
+            fftw_free(out);
+          }
 
         // plan freigeben
         fftw_destroy_plan(fftw_p);
@@ -119,24 +116,24 @@ namespace ice
     int dim = srcre.size();
 
     if (dim < 1 || dim != (int)srcim.size())
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (option != NORMAL && option != INVERS)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     bool forward = option == NORMAL;
 
     if ((dim != fftw_size) || (forward != isforward))
       {
         // altes array freigeben
-        if (in != NULL) fftw_free(in);
-        if (out != NULL) fftw_free(out);
+        if (in != NULL)
+          {
+            fftw_free(in);
+          }
+        if (out != NULL)
+          {
+            fftw_free(out);
+          }
 
         // plan freigeben
         fftw_destroy_plan(fftw_p);
@@ -177,24 +174,24 @@ namespace ice
     int dim = re.size();
 
     if (dim < 1 || dim != (int)im.size())
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (option != NORMAL && option != INVERS)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     bool forward = option == NORMAL;
 
     if ((dim != fftw_size) || (forward != isforward))
       {
         // altes array freigeben
-        if (in != NULL) fftw_free(in);
-        if (out != NULL) fftw_free(out);
+        if (in != NULL)
+          {
+            fftw_free(in);
+          }
+        if (out != NULL)
+          {
+            fftw_free(out);
+          }
 
         // plan freigeben
         fftw_destroy_plan(fftw_p);

@@ -21,7 +21,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "numbase.h"
@@ -41,10 +41,7 @@ namespace ice
   Circle::Circle(const Vector& v) : GeoObject(v)
   {
     if (v.Size() < 3)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     setR(v[2]);
   }
@@ -59,10 +56,7 @@ namespace ice
   int Circle::setR(double vr)
   {
     if (vr < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     r = vr;
     return OK;

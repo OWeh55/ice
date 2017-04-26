@@ -25,7 +25,7 @@
 
 #include "pointvalue.h"
 #include "PointListWalker.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 // --------------------------------------------------------------------------
@@ -93,11 +93,8 @@ namespace ice
     Region Res;
 
     if ((!orig.inside(p)) || (maxSize <= 0) ||
-        (stdmax <= 0)) // Parametertestung
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig -> Fehlermeldung
-        return Region();
-      }
+        (stdmax <= 0))   // Parametertestung
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Histogram stat(orig.maxval + 1);
 
@@ -109,7 +106,7 @@ namespace ice
     Image i;
     i.create(orig.xsize, orig.ysize, 1);
 
-    ClearImg(i);
+    clearImg(i);
     i.setPixel(p, 1);
 
     int PointCount = 0;
@@ -126,10 +123,12 @@ namespace ice
 
         if (PointCount > 1)
           {
-            stat.Statistic(count, mean, std);
+            stat.getStatistics(count, mean, std);
           }
         else
-          std = 0.0;
+          {
+            std = 0.0;
+          }
 
         if (std < stdmax)
           {
@@ -140,11 +139,16 @@ namespace ice
             Neighbor4Walker nw(pn);
             for (nw.init(); !nw.ready(); nw.next())
               // insert unhandled point in queue
-              Collect(orig, i, nw, refgrw, PQ);
+              {
+                Collect(orig, i, nw, refgrw, PQ);
+              }
           }  // (std<stdmax)
         else
           {
-            while (!PQ.empty()) PQ.pop();
+            while (!PQ.empty())
+              {
+                PQ.pop();
+              }
           }
       } // while
 
@@ -194,15 +198,12 @@ namespace ice
   {
     Region res;
 
-    if ((!orig.inside(p)) || (MaxSize <= 0)) // Parametertestung
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Parameterwerte ungültig
-        return res;
-      }
+    if ((!orig.inside(p)) || (MaxSize <= 0))   // Parametertestung
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     Image himg;
     himg.create(orig.xsize, orig.ysize, 1);
-    ClearImg(himg);
+    clearImg(himg);
 
     vector<IPoint> collectedPoints;
 
@@ -210,7 +211,9 @@ namespace ice
     int startval = orig.getPixel(p);
 
     if (refval < 0)
-      refval = startval;
+      {
+        refval = startval;
+      }
 
     double GrwSumRegion = 0;
     // startpunkt ist erster Kandidat
@@ -243,7 +246,9 @@ namespace ice
         Neighbor4Walker nw(pn);
         for (nw.init(); !nw.ready(); nw.next())
           // insert unhandled point in queue
-          Collect(orig, himg, nw, refval, Candidates, GrwSumCandidates);
+          {
+            Collect(orig, himg, nw, refval, Candidates, GrwSumCandidates);
+          }
 
         if (Candidates.size() > 2)
           {
@@ -262,7 +267,9 @@ namespace ice
       }
 
     for (int j = 0; j < Maxj; j++)
-      res.add(collectedPoints[j]);
+      {
+        res.add(collectedPoints[j]);
+      }
 
     return res;
   }

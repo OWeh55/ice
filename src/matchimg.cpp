@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "base.h"
 #include "convolution_fft.h"
@@ -36,33 +36,23 @@ namespace ice
                   double& dx, double& dy, double& val,
                   double beta)
   {
-    int sx, sy;
-    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, sx, sy));
-
-    Image imgr;
-    imgr.create(sx, sy, 255);
-
-    if (!IsImg(imgr))
+    try
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
+        int sx, sy;
+        MatchImg(img1, img2, sx, sy);
+
+        Image imgr;
+        imgr.create(sx, sy, 255);
+
+        InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS);
+
+        val = PeakValuation(imgr, Image(), dx, dy);
+
+        dx -= sx / 2;
+        dy -= sy / 2; // Peak coordinates -> Shift (of windows)
+        return OK;
       }
-
-    IF_FAILED(InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-
-    IF_FAILED(val = PeakValuation(imgr, Image(), dx, dy))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-
-    dx -= sx / 2;
-    dy -= sy / 2; // Peak coordinates -> Shift (of windows)
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 
@@ -73,7 +63,7 @@ namespace ice
   int inside(const Image& img, const Trafo& tr, IPoint p)
   {
     Point dp = p;
-    Transform(tr, dp);
+    transform(tr, dp);
     return img.inside(p);
   }
 
@@ -143,18 +133,20 @@ namespace ice
 
         if (val < MINVAL)
           {
-            Message(FNAME, "Can't detect global shift", ERROR);
-            return ERROR;
+            throw IceException(FNAME, "Can't detect global shift");
           }
 
-        tr.Shift(dx, dy);
+        tr.shift(dx, dy);
       }
 
     int bs = Min(sx, sy) / 5;
 
     int blocksize = 32; // kleinste Blockgröße
 
-    while (blocksize * 2 <= bs) blocksize = blocksize + blocksize;
+    while (blocksize * 2 <= bs)
+      {
+        blocksize = blocksize + blocksize;
+      }
 
     int count = 0;
 
@@ -162,7 +154,7 @@ namespace ice
       {
         Transform(tr, img1, himg, INTERPOL);
         tri = tr;
-        tri.Invert();
+        tri.invert();
         int xi = sx / blocksize;
         int yi = sy / blocksize;
 
@@ -199,9 +191,13 @@ namespace ice
             if (pl1.rows() > 4)
               {
                 if (count < 3)
-                  trd = MatchPointlists(pl1, pl2); // erste iterationen nur affin
+                  {
+                    trd = MatchPointlists(pl1, pl2);  // erste iterationen nur affin
+                  }
                 else
-                  trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE); // ..dann projektiv zulassen
+                  {
+                    trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);  // ..dann projektiv zulassen
+                  }
 
                 tr = tr * trd;
               }
@@ -218,13 +214,7 @@ namespace ice
                   int mode)
   {
     Image himg = NewImg(img2);
-    IF_FAILED(DetectTrafo(img1, img2, himg, tr, beta, ct, mode))
-    {
-      FreeImg(himg);
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-    return OK;
+    return DetectTrafo(img1, img2, himg, tr, beta, ct, mode);
   }
 
 #undef FNAME

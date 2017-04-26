@@ -24,7 +24,7 @@
 #include <math.h>
 #include <string>
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "MatrixAlgebra.h"
@@ -46,51 +46,59 @@ namespace ice
     Classifier(classes, dimension), rejection(rejectionp), diagonal(_diagonal),
     apm(apmp)
   {
-    IF_FAILED(Init(classes, dimension))
-    {
-      // if initialisation fails
-      Message(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        Init(classes, dimension);
+      }
+    RETHROW;
   }
 
   ClassifierBayes::ClassifierBayes(int nClasses, int dim,
                                    const vector<double>& app, bool rejection):
     Classifier(nClasses, dim), rejection(rejection), apm(APM_CONSTRUCTOR)
   {
-    p_k = app;
-    IF_FAILED(Init(nClasses, dim))
-    {
-      // if initialisation fails
-      Message(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        p_k = app;
+        Init(nClasses, dim);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "ClassifierBayes::Init"
   void ClassifierBayes::Init(int classnr, int dimension)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classnr, dimension));
-
-    int classes = nClasses;
-    if (rejection)                          // add rejection class when needed
-      classes++;
-
-    stat_k.resize(classes);          // statistics per class
-    p_k.resize(classes);             // probability per class
-    mue_k.resize(classes * nFeatures); // mean vectors
-    sigma_k_inv.resize(classes * nFeatures * nFeatures);
-    u_constant.resize(classes);
-    u_k.resize(classes);
-
-    for (int i = 0; i < classes; i++)
+    try
       {
-        stat_k[i].Init(nFeatures);
+        Classifier::Init(classnr, dimension);
+
+        int classes = nClasses;
+        if (rejection)                          // add rejection class when needed
+          {
+            classes++;
+          }
+
+        stat_k.resize(classes);          // statistics per class
+        p_k.resize(classes);             // probability per class
+        mue_k.resize(classes * nFeatures); // mean vectors
+        sigma_k_inv.resize(classes * nFeatures * nFeatures);
+        u_constant.resize(classes);
+        u_k.resize(classes);
+
+        for (int i = 0; i < classes; i++)
+          {
+            stat_k[i].Init(nFeatures);
+          }
+
+        for (unsigned int i = 0; i < p_k.size(); i++)
+          {
+            p_k[i] = 1.0 / classes;
+          }
+
+        nSamples = 0;
       }
-
-    for (unsigned int i = 0; i < p_k.size(); i++)
-      p_k[i] = 1.0 / classes;
-
-    nSamples = 0;
+    RETHROW;
   }
 
 #undef FNAME
@@ -103,7 +111,9 @@ namespace ice
 
     // class independed statics is used for rejection
     if (rejection)
-      Put(stat_k[nClasses], s.features);
+      {
+        Put(stat_k[nClasses], s.features);
+      }
 
     nSamples++;
     return OK;
@@ -119,7 +129,9 @@ namespace ice
 
     int classes = nClasses;
     if (rejection)
-      classes++; // zusätzlich Rückweisungsklasse
+      {
+        classes++;  // zusätzlich Rückweisungsklasse
+      }
 
     u_constant.resize(classes);
 
@@ -136,7 +148,9 @@ namespace ice
           }
 
         if (apm == APM_TRAIN)
-          p_k[i] = Weight(stat_k[i]) / nSamples;
+          {
+            p_k[i] = Weight(stat_k[i]) / nSamples;
+          }
 
         Matrix sigma_k = Covariance(stat_k[i]);
 
@@ -145,7 +159,10 @@ namespace ice
             // zero elements outside diagonale
             for (int i = 0; i < sigma_k.rows(); i++)
               for (int j = 0 ; j < sigma_k.cols() ; j++)
-                if (i != j) sigma_k[i][j] = 0.0;
+                if (i != j)
+                  {
+                    sigma_k[i][j] = 0.0;
+                  }
           }
 
         double min = -1.0;
@@ -155,10 +172,14 @@ namespace ice
           {
             if (sigma_k[j][j] > 0)
               {
-                if (min < 0.0) // first positive element
-                  min = sigma_k[j][j];
+                if (min < 0.0)   // first positive element
+                  {
+                    min = sigma_k[j][j];
+                  }
                 else if (sigma_k[j][j] < min)
-                  min = sigma_k[j][j];
+                  {
+                    min = sigma_k[j][j];
+                  }
               }
           }
 
@@ -172,21 +193,33 @@ namespace ice
           }
 
         double det = 0.0;
+        bool ok = true;
 
-        OffMessage();
-        det = CholeskyDeterminant(sigma_k);
-        OnMessage();
-
-        while ((GetError() != OK) || (fabs(det) < epsilonNumerics))
+        try
           {
-            SetOk();
-
-            for (int k = 0; k < nFeatures; k++)
-              sigma_k[k][k] += epsilon;
-
-            OffMessage();
             det = CholeskyDeterminant(sigma_k);
-            OnMessage();
+          }
+        catch (IceException& ex)
+          {
+            ok = false;
+          }
+
+        while (!ok || (fabs(det) < epsilonNumerics))
+          {
+            for (int k = 0; k < nFeatures; k++)
+              {
+                sigma_k[k][k] += epsilon;
+              }
+
+            ok = true;
+            try
+              {
+                det = CholeskyDeterminant(sigma_k);
+              }
+            catch (IceException& ex)
+              {
+                ok = false;
+              }
           }
 
         Matrix Inverse = CholeskyInverse(sigma_k);
@@ -195,9 +228,13 @@ namespace ice
           for (int j = k; j < Inverse.cols(); j++)
             {
               if (k == j)
-                *sip = Inverse[k][j];
+                {
+                  *sip = Inverse[k][j];
+                }
               else
-                *sip = (Inverse[k][j] + Inverse[j][k]);
+                {
+                  *sip = (Inverse[k][j] + Inverse[j][k]);
+                }
 
               sip++;
             }
@@ -236,9 +273,11 @@ namespace ice
 
     int classes = nClasses;
     if (rejection)
-      classes++;
+      {
+        classes++;
+      }
 
-    if (!prob.empty()) // probabilities needed ?
+    if (!prob.empty())   // probabilities needed ?
       {
         // Wahrscheinlichkeiten fuer jede Klasse
         double sum = 0.0;
@@ -260,9 +299,13 @@ namespace ice
                 double d = u_k[i] - u_constant[mc]; // Mahalanobis-Distanz
 
                 if (fabs(d) < epsilonNumerics)
-                  u_k[i] = 1e20;
+                  {
+                    u_k[i] = 1e20;
+                  }
                 else
-                  u_k[i] = 1.0 / d;
+                  {
+                    u_k[i] = 1.0 / d;
+                  }
 
                 break;
               }
@@ -271,8 +314,7 @@ namespace ice
                 break;
 
               default:
-                Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-                return WRONG_PARAM;
+                throw IceException(FNAME, M_WRONG_MODE);
               }
 
             sum += u_k[i]; // Summenwerte für Normierung
@@ -290,9 +332,13 @@ namespace ice
           }
       }
     if (rejected)
-      return -1;
+      {
+        return -1;
+      }
     else
-      return mc;
+      {
+        return mc;
+      }
   }
 
 #undef FNAME
@@ -394,12 +440,16 @@ namespace ice
     dest << nFeatures << " " << nClasses << " ";
     dest << rejection << endl;
     if (rejection)
-      dest << epsilonRejection << endl;
+      {
+        dest << epsilonRejection << endl;
+      }
 
     int classes = nClasses;
 
     if (rejection)
-      classes++;
+      {
+        classes++;
+      }
 
     for (int i = 0; i < classes; i++)
       {
@@ -407,7 +457,9 @@ namespace ice
       }
 
     for (int i = 0; i < classes; i++)
-      dest << p_k[i] << endl;
+      {
+        dest << p_k[i] << endl;
+      }
 
     dest << apm << endl;
 
@@ -415,17 +467,23 @@ namespace ice
 
     for (int k = 0; k < classes; k++)
       for (int d = 0; d < nFeatures; d++)
-        dest << *(mp++) << endl;
+        {
+          dest << *(mp++) << endl;
+        }
 
     vector<double>::const_iterator sp = sigma_k_inv.begin();
 
     for (int k = 0; k < classes; k++)
       for (int i = 0; i < nFeatures; i++)
         for (int j = i; j < nFeatures; j++)
-          dest << *(sp++) << endl;
+          {
+            dest << *(sp++) << endl;
+          }
 
     for (int k = 0; k < classes; k++)
-      dest << u_constant[k] << endl;
+      {
+        dest << u_constant[k] << endl;
+      }
 
     return OK;
   }
@@ -438,23 +496,25 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierBayes")
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     source >> nFeatures;
     source >> nClasses;
     source >> rejection;
 
     if (rejection)
-      source >> epsilonRejection;
+      {
+        source >> epsilonRejection;
+      }
 
     Init(nClasses, nFeatures);
 
     int classes = nClasses;
 
-    if (rejection) classes++;
+    if (rejection)
+      {
+        classes++;
+      }
 
     nSamples = 0;
 
@@ -465,11 +525,15 @@ namespace ice
 
         if (i < nClasses)
           if (Weight(stat_k[i]) > 0)
-            classTrained[i] = (int)Weight(stat_k[i]);
+            {
+              classTrained[i] = (int)Weight(stat_k[i]);
+            }
       }
 
     for (int i = 0; i < classes; i++)
-      source >> p_k[i];
+      {
+        source >> p_k[i];
+      }
 
     source >> apm;
 
@@ -477,25 +541,28 @@ namespace ice
 
     for (int k = 0; k < classes; k++)
       for (int d = 0; d < nFeatures; d++)
-        source >> *(mp++);
+        {
+          source >> *(mp++);
+        }
 
     vector<double>::iterator sp = sigma_k_inv.begin();
 
     for (int k = 0; k < classes; k++)
       for (int i = 0; i < nFeatures; i++)
         for (int j = i; j < nFeatures; j++)
-          source >> *(sp++);
+          {
+            source >> *(sp++);
+          }
 
     u_constant = vector<double>(classes);
 
     for (int k = 0; k < classes; k++)
-      source >> u_constant[k];
+      {
+        source >> u_constant[k];
+      }
 
     if (source.fail() || source.bad())
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
     state = ready;
     return OK;
   }

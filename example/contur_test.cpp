@@ -22,8 +22,8 @@ int main(int argc, char** argv)
   Alpha(ON);
 
   ClearAlpha();
-  ClearImg(g1);
-  ClearImg(m1);
+  m1.set(0);
+  g1.set(0);
 //  Zoom(g1,0,0,0);
 //  DrawCircle(circle,255,255,DEFAULT,g1);
 //  DrawCircle(circleM,2,2,DEFAULT,m1);

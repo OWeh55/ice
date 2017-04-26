@@ -38,100 +38,101 @@ namespace ice
 #define FNAME "Dijkstra"
   Contur Dijkstra(const Image& img, IPoint start, Image& marker)
   {
-    Contur res;
-    priority_queue<PointX> heap;
-
-    int dx, dy;
-
-    RETURN_IF_FAILED(MatchImg(img, marker, dx, dy), res);
-
-    if (marker->maxval < minrange)
+    try
       {
-        Message(FNAME, M_LOWRANGE, WRONG_PARAM);
-        return res;
-      }
+        Contur res;
+        priority_queue<PointX> heap;
 
-    if (!Inside(img, start))
-      {
-        Message(FNAME, M_OUTSIDE, WRONG_PARAM);
-        return res;
-      }
+        int dx, dy;
 
-    // prepare marker image:
-    // 0           => 0 - unhandled
-    // all markers => 1 - destination
-    //
-    BinImg(marker, marker, 1, 1);
+        MatchImg(img, marker, dx, dy);
 
-    if (GetVal(marker, start.x, start.y) != 0)
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_PARAM);
-        return res;
-      }
+        if (marker.maxval < minrange)
+          throw IceException(FNAME, M_LOWRANGE);
 
-    PointX ap(start, 0, 0);
-    heap.push(ap);
+        if (!Inside(img, start))
+          throw IceException(FNAME, M_OUTSIDE);
 
-    bool ready = false;
+        // prepare marker image:
+        // 0           => 0 - unhandled
+        // all markers => 1 - destination
+        //
+        binImg(marker, marker, 1, 1);
 
-    while (!ready && heap.size() > 0)
-      {
-        ap = heap.top();
-        heap.pop();
-        int state = GetVal(marker, ap);
+        if (GetVal(marker, start.x, start.y) != 0)
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
-        if (state == 1) // reached destination
-          ready = true;
+        PointX ap(start, 0, 0);
+        heap.push(ap);
 
-        if (state < 2) // point unhandled
+        bool ready = false;
+
+        while (!ready && heap.size() > 0)
           {
-            PutVal(marker, ap, ap.dir.Int() + 2);
+            ap = heap.top();
+            heap.pop();
+            int state = GetVal(marker, ap);
 
-            if (!ready)
+            if (state == 1)   // reached destination
               {
-                for (int dir = 0; dir < 8 && !ready; dir++)
+                ready = true;
+              }
+
+            if (state < 2)   // point unhandled
+              {
+                PutVal(marker, ap, ap.dir.Int() + 2);
+
+                if (!ready)
                   {
-                    PointX np(ap);
-                    Freeman(dir).move(np);
-
-                    if (Inside(marker, np))
+                    for (int dir = 0; dir < 8 && !ready; dir++)
                       {
-                        int mrk = GetVal(marker, np);
+                        PointX np(ap);
+                        Freeman(dir).move(np);
 
-                        if (mrk < 2) // unbehandelt
+                        if (Inside(marker, np))
                           {
-                            if (dir & 1)
-                              np.val += cf(img, np) * 1.414;
-                            else
-                              np.val += cf(img, np);
+                            int mrk = GetVal(marker, np);
 
-                            np.dir = dir;
-                            heap.push(np);
+                            if (mrk < 2)   // unbehandelt
+                              {
+                                if (dir & 1)
+                                  {
+                                    np.val += cf(img, np) * 1.414;
+                                  }
+                                else
+                                  {
+                                    np.val += cf(img, np);
+                                  }
+
+                                np.dir = dir;
+                                heap.push(np);
+                              }
                           }
                       }
                   }
               }
           }
+
+        res.setStart(ap.x, ap.y);
+
+        while (!(ap == start))
+          {
+            res.add(ap.x, ap.y);
+            int dir = (GetVal(marker, ap) - 2 + 4) % 8;
+            Freeman(dir).move(ap);
+          }
+
+        res.add(start);
+        res.invertDir();
+        return res;
       }
-
-    res.SetStart(ap.x, ap.y);
-
-    while (!(ap == start))
-      {
-        res.Add(ap.x, ap.y);
-        int dir = (GetVal(marker, ap) - 2 + 4) % 8;
-        Freeman(dir).move(ap);
-      }
-
-    res.Add(start);
-    res.InvDir();
-    return res;
+    RETHROW;
   }
 
   Contur Dijkstra(const Image& img, IPoint start, IPoint end)
   {
     Image mark = NewImg(img->xsize, img->ysize, minrange);
-    ClearImg(mark);
+    clearImg(mark);
     PutVal(mark, end, 1);
     return Dijkstra(img, start, mark);
   }

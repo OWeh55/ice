@@ -1,9 +1,6 @@
-/*****************************************************************************
-
- Testprogramm fÅr Berechnung der inversen Matrix
-
-*******************************************************************************/
-
+/*
+ * Testprogramm fuer Berechnung der inversen Matrix
+ */
 
 #include <math.h>
 #include <stdio.h>
@@ -11,8 +8,6 @@
 #include <image_nonvis.h>
 
 void printmat(int, int, double*);
-
-
 
 /********************************************************************
 Multiplikation von zwei Matrizen
@@ -80,20 +75,14 @@ int main(int argc, char* argv[])
   b = (double*)malloc(RANG * RANG * sizeof(double));
   c = (double*)malloc(RANG * RANG * sizeof(double));
 
-  if (a == NULL || b == NULL || c == NULL)
-    {
-      Message("Testprogramm Matinv", "nicht gen¸end Speicher ", NO_MEM);
-      return 1;
-    }
-
-  printf("FÅlle Matrix mit Zufallszahlen \n");
+  printf("Fuelle Matrix mit Zufallszahlen \n");
 
   for (i = 0; i < RANG; i++)
     for (j = 0; j < RANG; j++) a[i * RANG + j] = ((double)rand()) / 20 - 700;
 
   printf("Invertiere Matrix vom Rang %d\n", RANG);
 
-  if (InvertMatrix(a, RANG, b) != OK) return 1;
+  InvertMatrix(a, RANG, b);
 
   printf("Multipliziere Inverse Matrix mit Originalmatrix\n");
   mat_mult(RANG, RANG, RANG, a, b, c);
@@ -102,15 +91,17 @@ int main(int argc, char* argv[])
   for (i = 0; i < RANG; i++)
     for (j = 0; j < RANG; j++)
       {
-        if (i == j)  f = fabs(1 - c[RANG * i + j]);
-        else  f = fabs(c[RANG * i + j]);
+        if (i == j)
+          f = fabs(1 - c[RANG * i + j]);
+        else
+          f = fabs(c[RANG * i + j]);
 
         if (f > maxf) maxf = f;
       }
 
-  printf("Fehler bei der R¸ckmultiplikation :%9.3e\n", maxf);
+  printf("Fehler bei der Rueckmultiplikation :%9.3e\n", maxf);
 
-  if (RANG < 7)
+  if (RANG < 14)
     {
       printmat(RANG, RANG, a);
       printf("\nOriginalmatrix");

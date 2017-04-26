@@ -21,7 +21,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "Trafo.h"
 #include "contools.h"
@@ -40,69 +40,51 @@ namespace ice
 #define FNAME "Transform"
   Contur Transform(const Trafo& tr, const Contur& c)
   {
-    //double hf, x, y, xt, yt;
-    int i;
-
-    Contur res;
-
-    if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
+    try
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
+
+        Contur res;
+
+        if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
+          throw IceException(FNAME, M_WRONG_DIM);
+
+        IMatrix m = ConturPointlist(c);
+
+        for (int i = 0; i < m.rows(); i++)
+          {
+            transformAndRound(tr, m[i][0], m[i][1]);
+          }
+
+        return PointlistContur(m, true);
       }
-
-    IMatrix m;
-    IF_FAILED(m = ConturPointlist(c))
-    {
-      Message(FNAME, M_0, ERROR);
-      return res;
-    }
-
-    for (i = 0; i < m.rows(); i++)
-      {
-        TransformAndRound(tr, m[i][0], m[i][1]);
-        /*
-        x=m[i][0]; y=m[i][1];
-        hf=x*tr.m[2][0]+y*tr.m[2][1]+tr.m[2][2];
-        xt=(x*tr.m[0][0]+y*tr.m[0][1]+tr.m[0][2])/hf;
-        yt=(x*tr.m[1][0]+y*tr.m[1][1]+tr.m[1][2])/hf;
-        m[i][0]=RoundInt(xt); m[i][1]=RoundInt(yt);
-        */
-      }
-
-    return PointlistContur(m, true);
+    RETHROW;
   }
 #undef FNAME
-#define FNAME "TransformList"
-  int TransformList(const Trafo& tr, Matrix& m)
+#define FNAME "transformList"
+  void transformList(const Trafo& tr, Matrix& m)
   {
     Matrix temp;
-    RETURN_ERROR_IF_FAILED(TransformList(tr, m, temp));
+    transformList(tr, m, temp);
     m = temp;
-    return OK;
   }
 
-  int TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2)
+  void transformList(const Trafo& tr, const Matrix& m1, Matrix& m2)
   {
     if (&m1 == &m2)
-      return TransformList(tr, m2);
-
-    if (tr.dimSource > m1.cols())
       {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
+        return transformList(tr, m2);
       }
 
-    m2 = Matrix(m1.rows(), tr.dimTarget);
-    int i;
+    if (tr.dimSource > m1.cols())
+      throw IceException(FNAME, M_WRONG_DIM);
 
-    for (i = 0; i < m1.rows(); i++)
+    m2 = Matrix(m1.rows(), tr.dimTarget);
+
+    for (int i = 0; i < m1.rows(); i++)
       {
         Vector v = m1[i](0, tr.dimSource - 1);
         m2[i] = tr * v;
       }
-
-    return OK;
   }
 #undef FNAME
 }

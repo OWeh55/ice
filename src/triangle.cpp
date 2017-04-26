@@ -29,7 +29,9 @@ namespace ice
   bool Triangle::inside_(Point pp) const
   {
     if (!nonDegenerate)
-      return false;
+      {
+        return false;
+      }
     // Compute vectors
     Point v0 = p2 - p1;
     Point v1 = p3 - p1;
@@ -55,9 +57,15 @@ namespace ice
   {
     double d = LineSeg(p1, p2).Distance(pp);
     double dh = LineSeg(p2, p3).Distance(pp);
-    if (dh < d) d = dh;
+    if (dh < d)
+      {
+        d = dh;
+      }
     dh = LineSeg(p3, p1).Distance(pp);
-    if (dh < d) d = dh;
+    if (dh < d)
+      {
+        d = dh;
+      }
     return d;
   }
 
@@ -89,7 +97,9 @@ namespace ice
   void Triangle::makeCCW()
   {
     if (!isCCW())
-      swap(p2, p3);
+      {
+        swap(p2, p3);
+      }
   }
 
   static void perpendicularBisector(Point p1, Point p2, Point& m, Point& s)
@@ -128,7 +138,9 @@ namespace ice
   static bool intrange(double v1, double v2, int& i1, int& i2)
   {
     if (v1 > v2)
-      std::swap(v1, v2);
+      {
+        std::swap(v1, v2);
+      }
     i1 = (int) ceil(v1);
     i2 = (int) floor(v2);
     return i2 >= i1;
@@ -141,9 +153,18 @@ namespace ice
     Point p3 = t.P3();
 
     // sort ascending y
-    if (p1.y > p2.y) swap(p1, p2);
-    if (p2.y > p3.y) swap(p2, p3);
-    if (p1.y > p2.y) swap(p1, p2);
+    if (p1.y > p2.y)
+      {
+        swap(p1, p2);
+      }
+    if (p2.y > p3.y)
+      {
+        swap(p2, p3);
+      }
+    if (p1.y > p2.y)
+      {
+        swap(p1, p2);
+      }
 
     // lines as functions x(y) = ay + b
     double a12 = p1.y == p2.y ? 0 : (p2.x - p1.x) / (p2.y - p1.y);
@@ -164,7 +185,9 @@ namespace ice
             double x2 = a13 * y + b13;
             int ix1, ix2;
             if (intrange(x1, x2, ix1, ix2))
-              r.add(ix1, y, ix2, y);
+              {
+                r.add(ix1, y, ix2, y);
+              }
           }
       }
 
@@ -176,7 +199,9 @@ namespace ice
             double x2 = a13 * y + b13;
             int ix1, ix2;
             if (intrange(x1, x2, ix1, ix2))
-              r.add(ix1, y, ix2, y);
+              {
+                r.add(ix1, y, ix2, y);
+              }
           }
       }
   }

@@ -34,9 +34,13 @@ namespace ice
         rc.kind = fk_stdio;
 
         if (mode[0] == 'r')
-          rc.fd = stdin;
+          {
+            rc.fd = stdin;
+          }
         else
-          rc.fd = stdout;
+          {
+            rc.fd = stdout;
+          }
 
         return rc;
       }

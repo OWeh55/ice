@@ -49,9 +49,11 @@
 #include <float.h>
 #include <math.h>
 
-#include "fit.h"
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
+#include "macro.h"
+
+#include "fit.h"
 #include "numbase.h"
 #include "analygeo.h"
 #include "contools.h"
@@ -106,13 +108,10 @@ namespace ice
 #define PARABOLA 1
 #define HYPERBOLA 2
 
-
 #define SMALL 1                                               /* type of arc */
 #define BIG 2
 #define CLOCKWISE 1                 /* direction of arc from start to finish */
 #define ANTICLOCKWISE 2
-
-
 
 #define LOWE_STOP 1
 #define BLATT_STOP 2
@@ -120,7 +119,6 @@ namespace ice
 
 #define MIN_DEV 0.1
 #define MIN_LNG 6
-
 
   /* ***************************************************************************
      get_ratio -  Ermittelt Verhaeltnis  max. Abweichung / Laenge              */
@@ -132,11 +130,13 @@ namespace ice
 
     lng = sqrt(Sqr(pa[0] - pb[0]) + Sqr(pa[1] - pb[1]));
 
-    if (lng == 0) return (1e+37);
+    if (lng == 0)
+      {
+        return (1e+37);
+      }
 
     return (dev / lng);
   }
-
 
   /* ***************************************************************************
      compute_lbreak_pos -                                                      */
@@ -172,7 +172,6 @@ namespace ice
     return (pos_max);
   }
 
-
   /* ***************************************************************************
      determine_line - berechnet Parameter eines Liniensegmentes för die Punkte
                       der Punkliste pl zwischen den Positionen pos_st & pos_fi */
@@ -195,10 +194,7 @@ namespace ice
         p1[1] = pl->yptr[pos_fi - 1];
       }
 
-    OffMessage();
     code =  ConvPointHesse(p0, p1, p, phi);
-    SetOk();
-    OnMessage();
 
     if (code != OK)
       {
@@ -211,11 +207,11 @@ namespace ice
     *pos_break =  compute_lbreak_pos(p0, p1, pos_st, pos_fi, pl, max_dev);
     *ratio = get_ratio(p0, p1, *max_dev);
 
-    if ((pos_fi - pos_st) < 2) *ratio = DBL_MAX; /* soll schlecht bewertet werden */
-
-    SetOk();
+    if ((pos_fi - pos_st) < 2)
+      {
+        *ratio = DBL_MAX;  /* soll schlecht bewertet werden */
+      }
   }
-
 
   /* ***************************************************************************
 
@@ -225,7 +221,6 @@ namespace ice
      21.1.97
 
      ***************************************************************************/
-
 
   /* ***************************************************************************
      angle -                                                                   */
@@ -237,11 +232,13 @@ namespace ice
     w = atan2(y2 - y1, x2 - x1);
     w = fmod(w, M_PI * 2);
 
-    if (w < 0) w = w + M_PI * 2;
+    if (w < 0)
+      {
+        w = w + M_PI * 2;
+      }
 
     return (w);
   }
-
 
   /* ***************************************************************************
      compute_abreak_pos -                                                      */
@@ -271,7 +268,6 @@ namespace ice
     return (pos_max);
   }
 
-
   /* ***************************************************************************
      compute_algt -                                                            */
 
@@ -281,7 +277,10 @@ namespace ice
     double t1, t2;
     double chord, angle;
 
-    if (radius == 0) return (0);
+    if (radius == 0)
+      {
+        return (0);
+      }
 
     t1 = npl->xptr[0] - npl->xptr[npl->lng - 1];
     t1 = t1 * t1;
@@ -290,15 +289,20 @@ namespace ice
     chord = sqrt(t1 + t2);
     t1 = (chord / 2.0) / radius;
 
-    if (t1 > 1.0) t1 = 1;
+    if (t1 > 1.0)
+      {
+        t1 = 1;
+      }
 
     angle = asin(t1) * 2;
 
-    if (arc_size == BIG) angle = 2 * M_PI - angle;
+    if (arc_size == BIG)
+      {
+        angle = 2 * M_PI - angle;
+      }
 
     return (angle * radius);
   }
-
 
   /* ***************************************************************************
      compute_error -                                                           */
@@ -317,14 +321,16 @@ namespace ice
         t = *radius - sqrt((npl->xptr[i] * npl->xptr[i]) +
                            (y_val - npl->yptr[i]) * (y_val - npl->yptr[i]));
 
-        if (t < 0) t = -t;
+        if (t < 0)
+          {
+            t = -t;
+          }
 
         error = error + t;
       }
 
     return (error);
   }
-
 
   /* ***************************************************************************
      gradient -                                                                */
@@ -338,7 +344,6 @@ namespace ice
     error2 = compute_error(pos + direction, npl, &temp);
     return (error1 - error2);
   }
-
 
   /* ***************************************************************************
      search -                                                                  */
@@ -356,9 +361,13 @@ namespace ice
         middle = (start_y + finish_y) / 2;
 
         if (gradient(middle, direction, npl) <= 0)
-          search(start_y, middle, npl, direction, b_r, b_y);
+          {
+            search(start_y, middle, npl, direction, b_r, b_y);
+          }
         else
-          search(middle, finish_y, npl, direction, b_r, b_y);
+          {
+            search(middle, finish_y, npl, direction, b_r, b_y);
+          }
       }
     else
       {
@@ -366,7 +375,6 @@ namespace ice
         compute_error(*b_y, npl, b_r);
       }
   }
-
 
 // function only replaced from another position in this file:
 
@@ -380,7 +388,10 @@ namespace ice
     w = atan2(y2 - y1, x2 - x1);
     w = fmod(w, M_PI * 2);
 
-    if (w < 0) w = w + M_PI * 2;
+    if (w < 0)
+      {
+        w = w + M_PI * 2;
+      }
 
     return (w);
   }
@@ -407,7 +418,10 @@ namespace ice
         a1t = a1 = a2;
         a2t = a2 = angle(x_cent, y_cent, pl->xptr[i], pl->yptr[i]);
 
-        if (a2t < a1t) a2t += (M_PI + M_PI);
+        if (a2t < a1t)
+          {
+            a2t += (M_PI + M_PI);
+          }
 
         if (a2t - a1t < M_PI)
           {
@@ -419,7 +433,10 @@ namespace ice
           {
             a2t = a2;
 
-            if (a1t < a2t) a1t += (M_PI + M_PI);
+            if (a1t < a2t)
+              {
+                a1t += (M_PI + M_PI);
+              }
 
             if (a1t - a2t < M_PI)
               {
@@ -487,10 +504,8 @@ namespace ice
     *y_cent = 0;
     *psi1   = 0;
     *psi2   = 0;
-    OffMessage();
+
     npl = NewPointList(pos_fi - pos_st + 1);
-    SetOk();
-    OnMessage();
 
     if (npl == nullptr)
       {
@@ -513,9 +528,13 @@ namespace ice
     yt = pl->yptr[pos_fi] - pl->yptr[pos_st];
 
     if (xt != 0)
-      winkel = -atan(yt / xt);
+      {
+        winkel = -atan(yt / xt);
+      }
     else
-      winkel = M_PI / 2.0;
+      {
+        winkel = M_PI / 2.0;
+      }
 
     w_sin = sin(winkel);
     w_cos = cos(winkel);
@@ -536,25 +555,39 @@ namespace ice
 
 // endvalue of i incremented by Baumbach
 
-    for (i = 1; i < npl->lng; i++) sum = sum + npl->yptr[i];
+    for (i = 1; i < npl->lng; i++)
+      {
+        sum = sum + npl->yptr[i];
+      }
 
     temp = error_pos - error_neg;
 
-    if (temp < 0) temp = -temp;
+    if (temp < 0)
+      {
+        temp = -temp;
+      }
 
     if (temp < 0.0000001)
       {
         if (sum < 0)
-          direction = 1;
+          {
+            direction = 1;
+          }
         else
-          direction = -1;
+          {
+            direction = -1;
+          }
       }
     else
       {
         if (error_pos < error_neg)
-          direction = -1;
+          {
+            direction = -1;
+          }
         else
-          direction = 1;
+          {
+            direction = 1;
+          }
       }
 
     if (((direction == 1) && (sum < 0)) || ((direction == -1) && (sum > 0)))
@@ -563,9 +596,13 @@ namespace ice
         start_y = 0;
 
         if (direction == 1)
-          finish_y = 16384;
+          {
+            finish_y = 16384;
+          }
         else
-          finish_y = -16384;
+          {
+            finish_y = -16384;
+          }
       }
     else
       {
@@ -576,11 +613,17 @@ namespace ice
         for (i = 1; i < npl->lng - 1; i++)
           if (direction == 1)
             {
-              if (npl->yptr[i] > finish_y) finish_y = (int)npl->yptr[i];
+              if (npl->yptr[i] > finish_y)
+                {
+                  finish_y = (int)npl->yptr[i];
+                }
             }
           else
             {
-              if (npl->yptr[i] < finish_y) finish_y = (int)npl->yptr[i];
+              if (npl->yptr[i] < finish_y)
+                {
+                  finish_y = (int)npl->yptr[i];
+                }
             }
       }
 
@@ -641,11 +684,18 @@ namespace ice
                                     *x_cent, *y_cent, *radius, max_dev);
 
     if (arc_lng != 0)
-      *ratio = *max_dev / arc_lng;
+      {
+        *ratio = *max_dev / arc_lng;
+      }
     else
-      *ratio = DBL_MAX;
+      {
+        *ratio = DBL_MAX;
+      }
 
-    if (*radius > 1000) *ratio = *ratio * (*radius / 1000);
+    if (*radius > 1000)
+      {
+        *ratio = *ratio * (*radius / 1000);
+      }
 
     // calculation of psi1 & psi2 replaced by the call to compute_st_fi:
 
@@ -654,7 +704,9 @@ namespace ice
     if (*psi1 < 0 || *psi2 < 0)
       // entartetes Verhaeltnis Punktliste zu Kreis
       // (neu in compute_st_fi mit Release 10.06.97 implementiert)
-      *ratio = DBL_MAX;
+      {
+        *ratio = DBL_MAX;
+      }
 
     if (*ratio > DBL_MAX / 2 && *psi1 >= 0 && *psi2 >= 0)
       {
@@ -662,7 +714,6 @@ namespace ice
         *psi1 = -*psi2;
         *psi2 = -temp;
       }
-
 
     /*
 
@@ -678,11 +729,7 @@ namespace ice
     }
     */
 
-    SetOk();
-    OffMessage();
     FreePointList(npl);
-    SetOk();
-    OnMessage();
   }
 
   /* ***************************************************************************
@@ -694,8 +741,6 @@ namespace ice
 
      ***************************************************************************/
 
-
-
   /* ***************************************************************************
      distance                                                                  */
 
@@ -704,7 +749,6 @@ namespace ice
   {
     return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
   }
-
 
   /* ***************************************************************************
      find_conic_type                                                           */
@@ -718,17 +762,22 @@ namespace ice
     fx = c1 * c3 - c2 * c2 / 4;
 
     if (fx > 0)
-      temp = ELLIPSES;
+      {
+        temp = ELLIPSES;
+      }
 
     if (fx < 0)
-      temp = HYPERBOLA;
+      {
+        temp = HYPERBOLA;
+      }
 
     if (fx == 0)
-      temp = PARABOLA;
+      {
+        temp = PARABOLA;
+      }
 
     return (temp);
   }
-
 
   /* ***************************************************************************
      ludcmp                                                                    */
@@ -747,7 +796,10 @@ namespace ice
         big = 0.0;
 
         for (j = i; j <= n; j++)
-          if ((temp = fabs(a[i][j])) > big) big = temp;
+          if ((temp = fabs(a[i][j])) > big)
+            {
+              big = temp;
+            }
 
         if (big == 0.0)
           {
@@ -764,7 +816,10 @@ namespace ice
           {
             sum = a[i][j];
 
-            for (k = 1; k < i; k++) sum -= a[i][k] * a[k][j];
+            for (k = 1; k < i; k++)
+              {
+                sum -= a[i][k] * a[k][j];
+              }
 
             a[i][j] = sum;
           }
@@ -775,7 +830,10 @@ namespace ice
           {
             sum = a[i][j];
 
-            for (k = 1; k < j; k++) sum -= a[i][k] * a[k][j];
+            for (k = 1; k < j; k++)
+              {
+                sum -= a[i][k] * a[k][j];
+              }
 
             a[i][j] = sum;
 
@@ -801,17 +859,22 @@ namespace ice
 
         indx[j] = imax;
 
-        if (a[j][j] == 0.0) a[j][j] = 1.0e-20;
+        if (a[j][j] == 0.0)
+          {
+            a[j][j] = 1.0e-20;
+          }
 
         if (j != n)
           {
             dum = 1.0 / (a[j][j]);
 
-            for (i = j + 1; i <= n ; i++) a[i][j] *= dum;
+            for (i = j + 1; i <= n ; i++)
+              {
+                a[i][j] *= dum;
+              }
           }
       }
   }
-
 
   /* ***************************************************************************
      lubksb                                                                    */
@@ -830,8 +893,13 @@ namespace ice
 
         if (ii)
           for (j = ii; j <= i - 1; j++)
-            sum -= a[i][j] * b[j];
-        else if (sum) ii = i;
+            {
+              sum -= a[i][j] * b[j];
+            }
+        else if (sum)
+          {
+            ii = i;
+          }
 
         b[i] = sum;
       }
@@ -840,7 +908,10 @@ namespace ice
       {
         sum = b[i];
 
-        for (j = i + 1; j <= n; j++) sum -= a[i][j] * b[j];
+        for (j = i + 1; j <= n; j++)
+          {
+            sum -= a[i][j] * b[j];
+          }
 
         if (a[i][i] != 0)
           {
@@ -848,7 +919,6 @@ namespace ice
           }
       }
   }
-
 
   /* ***************************************************************************
      run_lms_fitting                                                           */
@@ -954,7 +1024,6 @@ namespace ice
     *conic_type = find_conic_type(m[1], m[2], m[3]);
   }
 
-
   /* ***************************************************************************
      determine_ellipse_lms3                                                    */
 
@@ -994,7 +1063,6 @@ namespace ice
       }
   }
 
-
   /* ***************************************************************************
      compute_lgt -                                                             */
 
@@ -1013,7 +1081,9 @@ namespace ice
                   npl->yptr[npl->lng - 1] / minor_axis);
 
     if (f_ang <= s_ang)
-      f_ang += M_PI * 2.0;
+      {
+        f_ang += M_PI * 2.0;
+      }
 
     lgt = 0.0;
 
@@ -1035,7 +1105,6 @@ namespace ice
 
     return (lgt);
   }
-
 
   /* ***************************************************************************
      compute_minimum_diff -                                                   */
@@ -1079,14 +1148,17 @@ namespace ice
     else
       {
         if (x_cir > x2)
-          deviation = min2;
+          {
+            deviation = min2;
+          }
         else
-          deviation = fabs(y_cir);
+          {
+            deviation = fabs(y_cir);
+          }
       }
 
     return (deviation);
   }
-
 
   /* ***************************************************************************
      compute_break_pos -                                                       */
@@ -1174,9 +1246,13 @@ namespace ice
     f = m[6];
 
     if (a == c)
-      *rot_angle = 0;
+      {
+        *rot_angle = 0;
+      }
     else
-      *rot_angle = atan(b / (a - c)) / 2.0;
+      {
+        *rot_angle = atan(b / (a - c)) / 2.0;
+      }
 
     ca = cos(*rot_angle);
     sa = sin(*rot_angle);
@@ -1187,7 +1263,6 @@ namespace ice
     *major_axis = sqrt((((v * v) / (4 * t)) + ((w * w) / (4 * u)) - f) / t);
     *minor_axis = sqrt((((v * v) / (4 * t)) + ((w * w) / (4 * u)) - f) / u);
   }
-
 
   /* ***************************************************************************
      determine_ellipse - berechnet Parameter eines Ellipsensegmentes för die
@@ -1225,13 +1300,10 @@ namespace ice
     *psi2 = 0;
     *w = 0;
 
-    OffMessage();
     npl = NewPointList(pos_fi - pos_st + 1);
-    OnMessage();
 
     if (npl == nullptr)
       {
-        SetOk();
         *pos_break = (pos_st + pos_fi) / 2 ;
         *max_dev = DBL_MAX;
         *ratio = DBL_MAX;
@@ -1244,9 +1316,15 @@ namespace ice
         npl->yptr[i] = pl->yptr[pos_st + i];
         npl->wptr[i] = 0;
 
-        if (scale < npl->xptr[i]) scale = npl->xptr[i];
+        if (scale < npl->xptr[i])
+          {
+            scale = npl->xptr[i];
+          }
 
-        if (scale < npl->yptr[i]) scale = npl->yptr[i];
+        if (scale < npl->yptr[i])
+          {
+            scale = npl->yptr[i];
+          }
 
         x_org = x_org + npl->xptr[i];
         y_org = y_org + npl->yptr[i];
@@ -1270,10 +1348,7 @@ namespace ice
         *max_dev = DBL_MAX;
         *pos_break = (pos_st + pos_fi) / 2 ;
         *ratio = DBL_MAX;
-        OffMessage();
         FreePointList(npl);
-        SetOk();
-        OnMessage();
         return;
       }
 
@@ -1310,13 +1385,25 @@ namespace ice
     *minor_axis = *minor_axis * scale;
 
     /* Entartung etwas eingrenzen ! */
-    if (*major_axis < 1.0) *major_axis = 1.0;
+    if (*major_axis < 1.0)
+      {
+        *major_axis = 1.0;
+      }
 
-    if (*minor_axis < 1.0) *minor_axis = 1.0;
+    if (*minor_axis < 1.0)
+      {
+        *minor_axis = 1.0;
+      }
 
-    if (*major_axis > 10000) *major_axis = 10000;
+    if (*major_axis > 10000)
+      {
+        *major_axis = 10000;
+      }
 
-    if (*minor_axis > 10000) *minor_axis = 10000;
+    if (*minor_axis > 10000)
+      {
+        *minor_axis = 10000;
+      }
 
     *x_cent = *x_cent * scale;
     *y_cent = *y_cent * scale;
@@ -1357,26 +1444,36 @@ namespace ice
 
     compute_st_fi(pl, pos_st, pos_fi, *x_cent, *y_cent, psi1, psi2);
 
-
     arc_lng = compute_elgt(npl, *major_axis, *minor_axis);
     *w = rot_angle;
     *pos_break = compute_ebreak_pos(npl, *major_axis, *minor_axis, max_dev)
                  + pos_st;
 
     if ((*pos_break <= pos_st + 6) || (*pos_break >= pos_fi - 6))
-      *pos_break = (pos_st + pos_fi) / 2 ;
+      {
+        *pos_break = (pos_st + pos_fi) / 2 ;
+      }
 
     if (arc_lng == 0)
-      *ratio = DBL_MAX;
+      {
+        *ratio = DBL_MAX;
+      }
     else
-      *ratio = *max_dev / arc_lng;
+      {
+        *ratio = *max_dev / arc_lng;
+      }
 
     /* Entartung wird bestraft ! */
     if ((Max((int)*major_axis, (int)*minor_axis) /
          Min((int)*major_axis, (int)*minor_axis)) > 300)
-      *ratio = DBL_MAX;
+      {
+        *ratio = DBL_MAX;
+      }
 
-    if (*psi1 < 0 || *psi2 < 0) *ratio = DBL_MAX;
+    if (*psi1 < 0 || *psi2 < 0)
+      {
+        *ratio = DBL_MAX;
+      }
 
     if (*ratio > DBL_MAX / 2 && *psi1 >= 0 && *psi2 >= 0)
       {
@@ -1385,12 +1482,7 @@ namespace ice
         *psi2 = -temp;
       }
 
-    SetOk();
-    OffMessage();
     FreePointList(npl);
-    SetOk();
-    OnMessage();
-
   }
 
   /* ***************************************************************************
@@ -1401,7 +1493,6 @@ namespace ice
      21.1.97
 
      ***************************************************************************/
-
 
   struct Segmentt                          /* mit ICE-Typ Segment vergleichbar */
   {
@@ -1419,7 +1510,6 @@ namespace ice
     Segmentt* prev, *next;                         /* Listenverkettung */
   };
 
-
   /* ***************************************************************************
      determine_segment - öbergibt Linien/Kreis/Ellipsen -  Parameter an das
                          Segment sg, je nach besten Signifikanzwert und mode   */
@@ -1433,9 +1523,15 @@ namespace ice
     double p, phi;
     double radius, major_axis, minor_axis, x_cent, y_cent, psi1, psi2, w;
 
-    if ((mode == 0) && (pl->lng < 6)) mode = 1;
+    if ((mode == 0) && (pl->lng < 6))
+      {
+        mode = 1;
+      }
 
-    if ((mode == 1) && (pl->lng < 4)) mode = 2;
+    if ((mode == 1) && (pl->lng < 4))
+      {
+        mode = 2;
+      }
 
     /* Parameter Liniensegment */
     determine_line(pos_st, pos_fi, pl,
@@ -1511,7 +1607,6 @@ namespace ice
       }
   }
 
-
   /* ***************************************************************************
      add_seg - fuegt ein Segment hinten an die Segment-Liste sl an             */
 
@@ -1522,7 +1617,10 @@ namespace ice
         /* SList noch leer */
         sl = (Segmentt*)malloc(sizeof(Segmentt));
 
-        if (sl == nullptr) return (nullptr);
+        if (sl == nullptr)
+          {
+            return (nullptr);
+          }
 
         sl->prev = nullptr;
         sl->next = nullptr;
@@ -1531,14 +1629,20 @@ namespace ice
       {
         sl->next = (Segmentt*)malloc(sizeof(Segmentt));
 
-        if (sl->next == nullptr) return (nullptr);
+        if (sl->next == nullptr)
+          {
+            return (nullptr);
+          }
 
         sl->next->prev = sl;                              /* (doppelt) Verketten */
         sl->next->next = nullptr;
         sl = sl->next;
       }
 
-    if (sg == nullptr) return (nullptr);
+    if (sg == nullptr)
+      {
+        return (nullptr);
+      }
 
     sl->p0[0] = sg->p0[0];
     sl->p0[1] = sg->p0[1];
@@ -1559,7 +1663,6 @@ namespace ice
     return (sl);
   }
 
-
   /* ***************************************************************************
      all_seg_gr - gibt False zuröck, falls die Anzahl der Punkte in der
                   Punktliste zwischen den Positionen pa und pi bzw. pi und pb
@@ -1567,10 +1670,15 @@ namespace ice
 
   int all_seg_gr(int pa, int pb, int pi)
   {
-    if (Min(pi - pa, pb - pi) < MIN_LNG) return (false);
-    else return (true);
+    if (Min(pi - pa, pb - pi) < MIN_LNG)
+      {
+        return (false);
+      }
+    else
+      {
+        return (true);
+      }
   }
-
 
   /* ***************************************************************************
      m_tree - Baut rekursiv binà¥ren Baum aus dem Typ Segmentt                  */
@@ -1588,19 +1696,28 @@ namespace ice
         act->prev = (Segmentt*)malloc(sizeof(Segmentt));
         act->next = (Segmentt*)malloc(sizeof(Segmentt));
 
-        if ((act->prev == nullptr) || (act->next == nullptr)) return (-1);
+        if ((act->prev == nullptr) || (act->next == nullptr))
+          {
+            return (-1);
+          }
 
         sig1 = m_tree(act->prev, pos_a, pos_break, pl, mode);
         sig2 = m_tree(act->next, pos_break, pos_b, pl, mode);
 
-        if ((sig1 == -1) || (sig2 == -1)) return (-1);
+        if ((sig1 == -1) || (sig2 == -1))
+          {
+            return (-1);
+          }
 
         if (sig < Min(sig1, sig2))
           {
             /* setze Flag fuer Abbruch nach Lowe */
             act->flag = LOWE_STOP;
           }
-        else sig = Min(sig1, sig2);
+        else
+          {
+            sig = Min(sig1, sig2);
+          }
       }
     else
       {
@@ -1613,7 +1730,6 @@ namespace ice
     return (sig);
   }
 
-
   /* ***************************************************************************
      t_tree - Traversiert Baum und baut dabei Segmentliste sl auf              */
 
@@ -1623,42 +1739,64 @@ namespace ice
       {
         sl = add_seg(sl, act);
 
-        if (sl == nullptr) return (nullptr);
+        if (sl == nullptr)
+          {
+            return (nullptr);
+          }
       }
     else if (act->flag == LOWE_STOP)                                /* Nach Lowe */
       {
         sl = add_seg(sl, act);
 
-        if (sl == nullptr) return (nullptr);
+        if (sl == nullptr)
+          {
+            return (nullptr);
+          }
       }
     else
       {
         /* rekursiver Abstieg */
-        if (act->prev != nullptr) sl = t_tree(act->prev, sl);
+        if (act->prev != nullptr)
+          {
+            sl = t_tree(act->prev, sl);
+          }
 
-        if (sl == nullptr) return (nullptr);
+        if (sl == nullptr)
+          {
+            return (nullptr);
+          }
 
-        if (act->next != nullptr) sl = t_tree(act->next, sl);
+        if (act->next != nullptr)
+          {
+            sl = t_tree(act->next, sl);
+          }
 
-        if (sl == nullptr) return (nullptr);
+        if (sl == nullptr)
+          {
+            return (nullptr);
+          }
       }
 
     return (sl);
   }
-
 
   /* ***************************************************************************
      f_tree - gibt Baum wieder frei                                            */
 
   void f_tree(Segmentt* act)
   {
-    if (act->prev != nullptr) f_tree(act->prev);
+    if (act->prev != nullptr)
+      {
+        f_tree(act->prev);
+      }
 
-    if (act->next != nullptr) f_tree(act->next);
+    if (act->next != nullptr)
+      {
+        f_tree(act->next);
+      }
 
     free(act);
   }
-
 
   /* ***************************************************************************
      improve - Datenreduktion auf der Segment-Liste                            */
@@ -1697,7 +1835,10 @@ namespace ice
             act2 = (Segmentt*)malloc(sizeof(Segmentt));
             act3 = (Segmentt*)malloc(sizeof(Segmentt));
 
-            if ((act1 == nullptr) || (act2 == nullptr) || (act3 == nullptr)) return (nullptr);
+            if ((act1 == nullptr) || (act2 == nullptr) || (act3 == nullptr))
+              {
+                return (nullptr);
+              }
 
             /* neue Signifikanzwerte fuer */
             /* current & prev */
@@ -1782,7 +1923,10 @@ namespace ice
                             act2->next = sg3->next;
                             act2->next->prev = act2;
                           }
-                        else act2->next = nullptr;
+                        else
+                          {
+                            act2->next = nullptr;
+                          }
 
                         sg1->next = act2;
                         act2->prev = sg1;
@@ -1812,7 +1956,10 @@ namespace ice
                                 act3->next = sg3->next;
                                 act3->next->prev = act3;
                               }
-                            else act3->next = nullptr;
+                            else
+                              {
+                                act3->next = nullptr;
+                              }
                           }
                         else
                           {
@@ -1823,7 +1970,10 @@ namespace ice
                                 act3->next = sg3->next;
                                 act3->next->prev = act3;
                               }
-                            else act3->next = nullptr;
+                            else
+                              {
+                                act3->next = nullptr;
+                              }
 
                             sl = act3;
                           }
@@ -1838,13 +1988,25 @@ namespace ice
                   }
               }
 
-            if (replace == true) cont = true;
+            if (replace == true)
+              {
+                cont = true;
+              }
 
-            if (act1 != nullptr) free(act1);
+            if (act1 != nullptr)
+              {
+                free(act1);
+              }
 
-            if (act2 != nullptr) free(act2);
+            if (act2 != nullptr)
+              {
+                free(act2);
+              }
 
-            if (act3 != nullptr) free(act3);
+            if (act3 != nullptr)
+              {
+                free(act3);
+              }
 
             sg2 = nullptr;
             sg3 = nullptr;
@@ -1862,11 +2024,13 @@ namespace ice
 
     sl = sg1;
 
-    while (sl->next != nullptr) sl = sl->next;
+    while (sl->next != nullptr)
+      {
+        sl = sl->next;
+      }
 
     return (sl);
   }
-
 
   /* ***************************************************************************
      changesl - wandelt die Segmentliste vom erweiterten Typ Segmentt in eine
@@ -1883,7 +2047,10 @@ namespace ice
       {
         seg = (Segment)malloc(sizeof(struct Segment_));         /* neues Segment */
 
-        if (seg == nullptr) return (nullptr);
+        if (seg == nullptr)
+          {
+            return (nullptr);
+          }
 
         seg->p0[0]  = sl->p0[0];                            /* Parameteröbergabe */
         seg->p0[1]  = sl->p0[1];
@@ -1900,7 +2067,10 @@ namespace ice
         seg->prev = nullptr;
         seg->next = nullptr;
 
-        if (segl == nullptr) segl = seg;             /* neue Segmentliste verketten */
+        if (segl == nullptr)
+          {
+            segl = seg;  /* neue Segmentliste verketten */
+          }
         else
           {
             segl->prev = seg;
@@ -1915,7 +2085,6 @@ namespace ice
 
     return (segl);
   }
-
 
   /* ***************************************************************************
      SegmentPointList - Segmentiert die Punkliste pl je nach mode in Linien -
@@ -1937,74 +2106,40 @@ namespace ice
     double code;
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((mode < 0) || (mode > 2))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pl->lng < 2)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     sl = nullptr;
     tree = (Segmentt*)malloc(sizeof(Segmentt));                      /* Wurzel */
 
     if (tree == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     code = m_tree(tree, 0, (pl->lng) - 1, pl, mode);          /* Baum aufbauen */
 
     if (code == -1)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     sl = t_tree(tree, sl);        /* Baum traversieren & Segmentliste aufbauen */
-
-    if (sl == nullptr)
-      {
-        Message(FNAME, "Nicht genug Speicher för die Segmentliste", NO_MEM);
-        return (nullptr);
-      }
 
     f_tree(tree);                                              /* Baum là¥«schen */
     sl = improve(sl, pl, mode);                              /* Datenreduktion */
 
-    if (sl == nullptr)
-      {
-        Message(FNAME, "Nicht genug Speicher beim Bearbeiten der Segmentliste",
-                NO_MEM);
-        return (nullptr);
-      }
-
     segl = changesl(sl);                         /* in Segmentliste Typ à¥ndern */
 
-    if (segl == nullptr)
-      {
-        Message(FNAME, "Nicht genug Speicher beim à¤¦ndern der Segmentliste",
-                NO_MEM);
-        return (nullptr);
-      }
-
-    if (segl) while (segl->prev) segl = segl->prev;
+    if (segl) while (segl->prev)
+        {
+          segl = segl->prev;
+        }
 
     return (segl);
   }
 #undef FNAME
-
-
 
   double compute_PointEllipseDist(double* pt, double* par)
   {
@@ -2018,9 +2153,13 @@ namespace ice
     ConvCartesPolar(d, &rad1, &phi);
 
     if (par[2] > par[3])
-      rad2 = par[2] * par[3] / sqrt(Sqr(par[2]) - (Sqr(par[2]) - Sqr(par[3])) * Sqr(cos(phi - par[4])));
+      {
+        rad2 = par[2] * par[3] / sqrt(Sqr(par[2]) - (Sqr(par[2]) - Sqr(par[3])) * Sqr(cos(phi - par[4])));
+      }
     else
-      rad2 = par[2] * par[3] / sqrt(Sqr(par[3]) - (Sqr(par[3]) - Sqr(par[2])) * Sqr(cos(phi - par[4] + M_PI / 4)));
+      {
+        rad2 = par[2] * par[3] / sqrt(Sqr(par[3]) - (Sqr(par[3]) - Sqr(par[2])) * Sqr(cos(phi - par[4] + M_PI / 4)));
+      }
 
     return fabs(rad1 - rad2);
   }
@@ -2067,26 +2206,16 @@ namespace ice
 
     double par[7], ppa[2], ppe[2];
 
-
     // Parameterkontrolle
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((type < 1) || (type > 7) || (pa < 0) || (pe >= pl->lng) || (pa > pe))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pe == pa)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     // Fuer ein Ellipsensegment muessen mindestens 6 Punkte zur
     // Verfuegung stehen
@@ -2095,10 +2224,7 @@ namespace ice
       {
 
         if (type == DS_ELLIPSE)
-          {
-            Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-            return (nullptr);
-          }
+          throw IceException(FNAME, M_TOO_LESS_POINTS);
 
         type &= ~DS_ELLIPSE;
       }
@@ -2110,10 +2236,7 @@ namespace ice
       {
 
         if (type == DS_CIRCLE)
-          {
-            Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-            return (nullptr);
-          }
+          throw IceException(FNAME, M_TOO_LESS_POINTS);
 
         type &= ~DS_CIRCLE;
       }
@@ -2123,10 +2246,7 @@ namespace ice
     sg = (Segment)malloc(sizeof(struct Segment_));
 
     if (sg == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     sg->typ = -1;
 
@@ -2251,7 +2371,10 @@ namespace ice
     else
       {
 
-        while (sg_liste->next) sg_liste = sg_liste->next;
+        while (sg_liste->next)
+          {
+            sg_liste = sg_liste->next;
+          }
 
         sg_liste->next = sg;
         sg->next = nullptr;
@@ -2261,7 +2384,6 @@ namespace ice
     return (sg);
   }
 #undef FNAME
-
 
   /* ***************************************************************************
      SegmentPointList - Segmentiert eine Punktliste mit dem
@@ -2301,22 +2423,13 @@ namespace ice
     // Parameterkontrolle
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) > 2) || max_dev <= 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (pl->lng < 2)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return (nullptr);
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     start = 0;
     sg = nullptr;
@@ -2343,34 +2456,52 @@ namespace ice
                 sg_temp = DetermineSegment(pl, start, ende, DS_LINE, nullptr, &max_adr, &s_max_dev);
                 // berechne Liniensegment und max. Abstand
 
-                if (sg_temp == nullptr) // kein Liniensegment gefunden (gibt es im Normalfall nicht)
+                if (sg_temp == nullptr)   // kein Liniensegment gefunden (gibt es im Normalfall nicht)
                   {
-                    if (sg) FreeSegmentList(sg);
+                    if (sg)
+                      {
+                        FreeSegmentList(sg);
+                      }
 
-                    if (sg_ok) FreeSegmentList(sg_ok);
+                    if (sg_ok)
+                      {
+                        FreeSegmentList(sg_ok);
+                      }
 
                     return (nullptr); // Fehlermeldung erfolgte in DetermineSegment
                   }
 
-                if (max_dev >= s_max_dev) // maximaler Abstand ist okay
+                if (max_dev >= s_max_dev)   // maximaler Abstand ist okay
                   {
-                    if (sg_ok) FreeSegmentList(sg_ok); // vorher schon Liniensegment gefunden
+                    if (sg_ok)
+                      {
+                        FreeSegmentList(sg_ok);  // vorher schon Liniensegment gefunden
+                      }
 
                     sg_ok = sg_temp; // neues (laengeres) Liniensegment merken
                     ende_ok = ende; // zugehoerigen Endpunkt der Punktliste merken
 
-                    if (step == -1) break; // Punktliste wurde rueckwaerts durchmustert
+                    if (step == -1)
+                      {
+                        break;  // Punktliste wurde rueckwaerts durchmustert
+                      }
 
-                    if (ende == pl->lng - 1) break; // gesamte Punktliste segmentiert
+                    if (ende == pl->lng - 1)
+                      {
+                        break;  // gesamte Punktliste segmentiert
+                      }
 
                     ende = Min(ende + step, pl->lng - 1);
                   }
-                else   // maximaler Abstand war zu gross
+                else     // maximaler Abstand war zu gross
                   {
                     FreeSegmentList(sg_temp);
                     step = -1; // grobe Schrittweite beenden und in feinen Schritten rueckwaerts
 
-                    if (ende == ende_ok + 1) break; // nichts besseres gefunden
+                    if (ende == ende_ok + 1)
+                      {
+                        break;  // nichts besseres gefunden
+                      }
 
                     ende--;
                   }
@@ -2380,13 +2511,16 @@ namespace ice
 
           }
 
-        if ((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) < 2 && pl->lng - start > 5) // Kreissegmente erwuenscht und noch genuegend Punkte da
+        if ((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) < 2 && pl->lng - start > 5)   // Kreissegmente erwuenscht und noch genuegend Punkte da
           {
             // Laengstes Kreissegmentstueck suchen (falls laenger als Linie)
 
             ende = ende_ok + 1; // Kreissegment muss mehr Punkte als gefundenes Liniensegment enthalten
 
-            if (ende - start < 4) ende = start + 4; // Kreissegment muss mindestens 5 Punkte enthalten
+            if (ende - start < 4)
+              {
+                ende = start + 4;  // Kreissegment muss mindestens 5 Punkte enthalten
+              }
 
             if (ende < pl->lng)
               {
@@ -2395,26 +2529,33 @@ namespace ice
 
                 do   // solange, bis Punktliste zu Ende, oder laengstmoegliches Kreissegment gefunden
                   {
-
-                    OffMessage();
-                    sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
                     // berechne Kreissegment und maximalen Abstand
-                    OnMessage();
-                    SetOk();
-
-                    if (sg_temp == nullptr) break; // Kreissegment konnte nicht berechnet werden
+                    try
+                      {
+                        sg_temp = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
+                      }
+                    catch (IceException& ex)
+                      {
+                        break;  // Kreissegment konnte nicht berechnet werden
+                      }
 
                     // (bei Fehler wird das Liniensegment genommen [besser als Abbruch?!])
 
-                    if (max_dev >= s_max_dev && sg_temp->par[4] >= 0) // maximaler Abstand ist okay
+                    if (max_dev >= s_max_dev && sg_temp->par[4] >= 0)   // maximaler Abstand ist okay
                       {
                         FreeSegmentList(sg_ok); // bisher gefundenes Segment loeschen
                         sg_ok = sg_temp; // neues (laengeres) Kreisegment merken
                         ende_ok = ende; // zugehoerigen Endpunkt der Liste merken
 
-                        if (step == -1) break; // Punktliste wurde rueckwaerts durchmustert
+                        if (step == -1)
+                          {
+                            break;  // Punktliste wurde rueckwaerts durchmustert
+                          }
 
-                        if (ende == pl->lng - 1) break; // gesamte Punktliste segmentiert
+                        if (ende == pl->lng - 1)
+                          {
+                            break;  // gesamte Punktliste segmentiert
+                          }
 
                         ende = Min(ende + step, pl->lng - 1);
                       }
@@ -2423,7 +2564,10 @@ namespace ice
                         FreeSegmentList(sg_temp);
                         step = -1; // grobe Schrittweite beenden, und fein rueckwaerts durchmustern
 
-                        if (ende == ende_ok + 1) break; // nichts besseres gefunden
+                        if (ende == ende_ok + 1)
+                          {
+                            break;  // nichts besseres gefunden
+                          }
 
                         ende--;
                       }
@@ -2433,15 +2577,16 @@ namespace ice
 
               }
 
-
-            if ((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) == 0 && pl->lng - start > 6) // Ellipsen erwuenscht und Punktliste genuegend Punkte
+            if ((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) == 0 && pl->lng - start > 6)   // Ellipsen erwuenscht und Punktliste genuegend Punkte
               {
                 // Laengstes Ellipsensegment suchen
 
                 ende = ende_ok + 1; // Ellipsensegment muss laenger, als bisher gefundenes Segment sein
 
-                if (ende - start < 5) ende = start + 5; // Ellipsensegment muss mindestens 6 Punkte enthalten
-
+                if (ende - start < 5)
+                  {
+                    ende = start + 5;  // Ellipsensegment muss mindestens 6 Punkte enthalten
+                  }
 
                 if (ende < pl->lng)
                   {
@@ -2451,23 +2596,29 @@ namespace ice
                     do   // solange, bis Punktliste zuende, oder laengstmoegliches Segment gefunden
                       {
 
-                        OffMessage();
                         sg_temp = DetermineSegment(pl, start, ende, DS_ELLIPSE, nullptr, &max_adr, &s_max_dev);
                         // berechnet Ellipsensegment und max. Abstand
-                        OnMessage();
-                        SetOk();
 
-                        if (sg_temp == nullptr) break; // Ellipsensegment konnte nicht berechnet werden
+                        if (sg_temp == nullptr)
+                          {
+                            break;  // Ellipsensegment konnte nicht berechnet werden
+                          }
 
-                        if (max_dev >= s_max_dev && sg_temp->par[6] >= 0) // maximaler Abstand okay
+                        if (max_dev >= s_max_dev && sg_temp->par[6] >= 0)   // maximaler Abstand okay
                           {
                             FreeSegmentList(sg_ok); // bisher gefundenes Segment loeschen
                             sg_ok = sg_temp; // neues Segment merken
                             ende_ok = ende; // zugehoerigen letzten Punktlistenpunkt merken
 
-                            if (step == -1) break; // Rueckwaertsdurchmusterung beenden
+                            if (step == -1)
+                              {
+                                break;  // Rueckwaertsdurchmusterung beenden
+                              }
 
-                            if (ende == pl->lng - 1) break; // gesamte Punktliste segmentiert
+                            if (ende == pl->lng - 1)
+                              {
+                                break;  // gesamte Punktliste segmentiert
+                              }
 
                             ende = Min(ende + step, pl->lng - 1);
                           }
@@ -2476,7 +2627,10 @@ namespace ice
                             FreeSegmentList(sg_temp);
                             step = -1; // grobe Schrittweite durch feine Rueckwaertsschritte ersetzen
 
-                            if (ende == ende_ok + 1) break; // nichts besseres gefunden
+                            if (ende == ende_ok + 1)
+                              {
+                                break;  // nichts besseres gefunden
+                              }
 
                             ende--;
                           }
@@ -2490,7 +2644,6 @@ namespace ice
 
           } // if (Kreissegment probieren)
 
-
         if (sg)   // gefundenes Segment an Segmentliste anhaengen
           {
 
@@ -2499,7 +2652,7 @@ namespace ice
             sg = sg->next;
           }
 
-        else // gefundenes Segment als erstes Segment in Segmentliste uebernehmen
+        else   // gefundenes Segment als erstes Segment in Segmentliste uebernehmen
           {
             sg = sg_ok;
             first_end = ende_ok;
@@ -2547,28 +2700,40 @@ namespace ice
                     sg_temp = DetermineSegment(pl, pl->lng - 1 - ende, pl->lng - 1 - start, DS_LINE, nullptr, &max_adr, &s_max_dev);
                     // berechne Liniensegment und max. Abstand
 
-                    if (sg_temp == nullptr) // kein Liniensegment gefunden (gibt es im Normalfall nicht)
+                    if (sg_temp == nullptr)   // kein Liniensegment gefunden (gibt es im Normalfall nicht)
                       {
-                        if (sg) FreeSegmentList(sg);
+                        if (sg)
+                          {
+                            FreeSegmentList(sg);
+                          }
 
                         return (nullptr); // Fehlermeldung erfolgte in DetermineSegment
                       }
 
-                    if (max_dev >= s_max_dev) // maximaler Abstand ist okay
+                    if (max_dev >= s_max_dev)   // maximaler Abstand ist okay
                       {
                         ende_ok = ende; // zugehoerigen Endpunkt der Punktliste merken
 
-                        if (step == -1) break; // Punktliste wurde rueckwaerts durchmustert
+                        if (step == -1)
+                          {
+                            break;  // Punktliste wurde rueckwaerts durchmustert
+                          }
 
-                        if (ende == stop) break; // gesamte Punktliste segmentiert
+                        if (ende == stop)
+                          {
+                            break;  // gesamte Punktliste segmentiert
+                          }
 
                         ende = Min(ende + step, stop);
                       }
-                    else   // maximaler Abstand war zu gross
+                    else     // maximaler Abstand war zu gross
                       {
                         step = -1; // grobe Schrittweite beenden und in feinen Schritten rueckwaerts
 
-                        if (ende == ende_ok + 1) break; // nichts besseres gefunden
+                        if (ende == ende_ok + 1)
+                          {
+                            break;  // nichts besseres gefunden
+                          }
 
                         ende--;
                       }
@@ -2580,7 +2745,6 @@ namespace ice
 
               }
 
-
             if ((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) < 2 && pl->lng - start > 5 && sg->typ > 1)
               // Kreissegmente erwuenscht und noch genuegend Punkte da
               // und Segment an dieser Stelle (aus anderer Richtung war keine Gerade)
@@ -2589,7 +2753,10 @@ namespace ice
 
                 ende = ende_ok + 1; // Kreissegment muss mehr Punkte als gefundenes Liniensegment enthalten
 
-                if (ende - start < 4) ende = start + 4; // Kreissegment muss mindestens 5 Punkte enthalten
+                if (ende - start < 4)
+                  {
+                    ende = start + 4;  // Kreissegment muss mindestens 5 Punkte enthalten
+                  }
 
                 if (ende <= stop)
                   {
@@ -2599,23 +2766,29 @@ namespace ice
                     do   // solange, bis Punktliste zu Ende, oder laengstmoegliches Kreissegment gefunden
                       {
 
-                        OffMessage();
                         sg_temp = DetermineSegment(pl, pl->lng - 1 - ende, pl->lng - 1 - start, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
                         // berechne Kreissegment und maximalen Abstand
-                        OnMessage();
-                        SetOk();
 
-                        if (sg_temp == nullptr) break; // Kreissegment konnte nicht berechnet werden
+                        if (sg_temp == nullptr)
+                          {
+                            break;  // Kreissegment konnte nicht berechnet werden
+                          }
 
                         // (bei Fehler wird das Liniensegment genommen [besser als Abbruch?!])
 
-                        if (max_dev >= s_max_dev && sg_temp->par[4] >= 0) // maximaler Abstand ist okay
+                        if (max_dev >= s_max_dev && sg_temp->par[4] >= 0)   // maximaler Abstand ist okay
                           {
                             ende_ok = ende; // zugehoerigen Endpunkt der Liste merken
 
-                            if (step == -1) break; // Punktliste wurde rueckwaerts durchmustert
+                            if (step == -1)
+                              {
+                                break;  // Punktliste wurde rueckwaerts durchmustert
+                              }
 
-                            if (ende == stop) break; // gesamte Punktliste segmentiert
+                            if (ende == stop)
+                              {
+                                break;  // gesamte Punktliste segmentiert
+                              }
 
                             ende = Min(ende + step, stop);
                           }
@@ -2623,7 +2796,10 @@ namespace ice
                           {
                             step = -1; // grobe Schrittweite beenden, und fein rueckwaerts durchmustern
 
-                            if (ende == ende_ok + 1) break; // nichts besseres gefunden
+                            if (ende == ende_ok + 1)
+                              {
+                                break;  // nichts besseres gefunden
+                              }
 
                             ende--;
                           }
@@ -2643,8 +2819,10 @@ namespace ice
 
                     ende = ende_ok + 1; // Ellipsensegment muss laenger, als bisher gefundenes Segment sein
 
-                    if (ende - start < 5) ende = start + 5; // Ellipsensegment muss mindestens 6 Punkte enthalten
-
+                    if (ende - start < 5)
+                      {
+                        ende = start + 5;  // Ellipsensegment muss mindestens 6 Punkte enthalten
+                      }
 
                     if (ende <= stop)
                       {
@@ -2654,21 +2832,27 @@ namespace ice
                         do   // solange, bis Punktliste zuende, oder laengstmoegliches Segment gefunden
                           {
 
-                            OffMessage();
                             sg_temp = DetermineSegment(pl, pl->lng - 1 - ende, pl->lng - 1 - start, DS_ELLIPSE, nullptr, &max_adr, &s_max_dev);
                             // berechnet Ellipsensegment und max. Abstand
-                            OnMessage();
-                            SetOk();
 
-                            if (sg_temp == nullptr) break; // Ellipsensegment konnte nicht berechnet werden
+                            if (sg_temp == nullptr)
+                              {
+                                break;  // Ellipsensegment konnte nicht berechnet werden
+                              }
 
-                            if (max_dev >= s_max_dev && sg_temp->par[6] >= 0) // maximaler Abstand okay
+                            if (max_dev >= s_max_dev && sg_temp->par[6] >= 0)   // maximaler Abstand okay
                               {
                                 ende_ok = ende; // zugehoerigen letzten Punktlistenpunkt merken
 
-                                if (step == -1) break; // Rueckwaertsdurchmusterung beenden
+                                if (step == -1)
+                                  {
+                                    break;  // Rueckwaertsdurchmusterung beenden
+                                  }
 
-                                if (ende == stop) break; // gesamte Punktliste segmentiert
+                                if (ende == stop)
+                                  {
+                                    break;  // gesamte Punktliste segmentiert
+                                  }
 
                                 ende = Min(ende + step, stop);
                               }
@@ -2676,7 +2860,10 @@ namespace ice
                               {
                                 step = -1; // grobe Schrittweite durch feine Rueckwaertsschritte ersetzen
 
-                                if (ende == ende_ok + 1) break; // nichts besseres gefunden
+                                if (ende == ende_ok + 1)
+                                  {
+                                    break;  // nichts besseres gefunden
+                                  }
 
                                 ende--;
                               }
@@ -2694,8 +2881,14 @@ namespace ice
 
             sg->p1[0] = pl->lng - 1 - ende_ok;
 
-            if (!start) sg->p1[1] = pl->lng - 1;
-            else  sg->p1[1] = sg->next->p1[0];
+            if (!start)
+              {
+                sg->p1[1] = pl->lng - 1;
+              }
+            else
+              {
+                sg->p1[1] = sg->next->p1[0];
+              }
 
             start = pl->lng - 1 - (int)((sg->p1[0] + sg->p0[0]) / 2.0 + 0.5);
             sg = sg->prev;
@@ -2726,10 +2919,8 @@ namespace ice
                 if (s_max_dev > max_dev && ende - start > 4 && (mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) < 2)
                   {
                     sg_temp = sg_ok;
-                    OffMessage();
+
                     sg_ok = DetermineSegment(pl, start, ende, DS_CIRCLE, nullptr, &max_adr, &s_max_dev);
-                    OnMessage();
-                    SetOk();
 
                     if (sg_ok)
                       {
@@ -2744,16 +2935,15 @@ namespace ice
                             temp_max_dev = s_max_dev;
                           }
                       }
-                    else sg_ok = sg_temp;
+                    else
+                      {
+                        sg_ok = sg_temp;
+                      }
 
                     if (temp_max_dev > max_dev && ende - start > 5 && (mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) == 0)
                       {
                         sg_temp = sg_ok;
-                        OffMessage();
                         sg_ok = DetermineSegment(pl, start, ende, DS_ELLIPSE, nullptr, &max_adr, &s_max_dev);
-                        OnMessage();
-                        SetOk();
-
                         if (sg_ok)
                           {
                             if (s_max_dev >= temp_max_dev || sg_ok->par[6] < 0)
@@ -2761,9 +2951,15 @@ namespace ice
                                 FreeSegmentList(sg_ok);
                                 sg_ok = sg_temp;
                               }
-                            else FreeSegmentList(sg_temp);
+                            else
+                              {
+                                FreeSegmentList(sg_temp);
+                              }
                           }
-                        else sg_ok = sg_temp;
+                        else
+                          {
+                            sg_ok = sg_temp;
+                          }
                       }
                   }
 
@@ -2771,23 +2967,41 @@ namespace ice
                 sg_ok->prev = sg->prev;
                 last_start = start;
 
-                if (!sg->prev) first_end = ende;
-                else sg->prev->next = sg_ok;
+                if (!sg->prev)
+                  {
+                    first_end = ende;
+                  }
+                else
+                  {
+                    sg->prev->next = sg_ok;
+                  }
 
-                if (sg->next) sg->next->prev = sg_ok;
+                if (sg->next)
+                  {
+                    sg->next->prev = sg_ok;
+                  }
 
                 free(sg);
                 sg = sg_ok;
                 sg_temp = sg->next;
 
-                if (sg->next) sg = sg->next;
+                if (sg->next)
+                  {
+                    sg = sg->next;
+                  }
 
               }
-            else // Segment beseitigen
+            else     // Segment beseitigen
               {
-                if (sg->prev) sg->prev->next = sg->next;
+                if (sg->prev)
+                  {
+                    sg->prev->next = sg->next;
+                  }
 
-                if (sg->next) sg->next->prev = sg->prev;
+                if (sg->next)
+                  {
+                    sg->next->prev = sg->prev;
+                  }
 
                 sg_temp = sg->prev;
                 sg_ok = sg->next;
@@ -2823,30 +3037,33 @@ namespace ice
         if (pl_temp == nullptr)
           {
             FreeSegmentList(sg);
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return (nullptr);
+            throw IceException(FNAME, M_NO_MEM);
           }
 
         c = 0;
 
         for (i = last_start; i < pl->lng; i++)
-          PutPoint(pl_temp, c++, pl->xptr[i], pl->yptr[i], 1);
+          {
+            PutPoint(pl_temp, c++, pl->xptr[i], pl->yptr[i], 1);
+          }
 
         for (i = 1; i <= first_end; i++)
-          PutPoint(pl_temp, c++, pl->xptr[i], pl->yptr[i], 1);
+          {
+            PutPoint(pl_temp, c++, pl->xptr[i], pl->yptr[i], 1);
+          }
 
-        OffMessage();
         sg_temp = SegmentPointList(pl_temp, mode | SPL_NOCLOSE, max_dev);
         // SPL_NOCLOSE verhindert hier eine endlose Rekursion
-        OnMessage();
-        SetOk();
 
         FreePointList(pl_temp);
 
         if (sg_temp)
           {
             // erstes Segment der "alten" Segmentierung loeschen
-            while (sg->prev) sg = sg->prev;
+            while (sg->prev)
+              {
+                sg = sg->prev;
+              }
 
             sg_ok = sg;
             sg = sg->next;
@@ -2854,7 +3071,10 @@ namespace ice
             free(sg_ok);
 
             // letztes Segment der "alten" Segmentierung loeschen
-            while (sg->next) sg = sg->next;
+            while (sg->next)
+              {
+                sg = sg->next;
+              }
 
             sg_ok = sg;
             sg = sg->prev;
@@ -2863,17 +3083,26 @@ namespace ice
             // "neue" Teilsegmentierung anhaengen
             if (sg)
               {
-                while (sg_temp->prev) sg_temp = sg_temp->prev;
+                while (sg_temp->prev)
+                  {
+                    sg_temp = sg_temp->prev;
+                  }
 
                 sg->next = sg_temp;
                 sg_temp->prev = sg;
               }
-            else sg = sg_temp;
+            else
+              {
+                sg = sg_temp;
+              }
           }
       }
 
     if (sg)
-      while (sg->prev) sg = sg->prev;
+      while (sg->prev)
+        {
+          sg = sg->prev;
+        }
 
     return sg;
   }

@@ -31,7 +31,7 @@
 #include <limits.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -88,9 +88,13 @@ namespace ice
     };
 
     if (!hole)
-      return otab[fr1.Int()][fr2.Int()];
+      {
+        return otab[fr1.Int()][fr2.Int()];
+      }
     else
-      return htab[fr1.Int()][fr2.Int()];
+      {
+        return htab[fr1.Int()][fr2.Int()];
+      }
   }
 
 #define FNAME "ConturSegmentlist"
@@ -107,10 +111,7 @@ namespace ice
     IMatrix segmente;
 
     if (!c.isValid())
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return segmente;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     int xmax, xmin, ymax, ymin;
     c.getRect(xmin, ymin, xmax, ymax);
@@ -121,10 +122,7 @@ namespace ice
     slist = (struct segm*) calloc(sizeof(struct segm), yanz);
 
     if (slist == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return segmente;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     /*Segmentliste initialisieren*/
     for (i = 0; i < yanz; i++)
@@ -147,11 +145,14 @@ namespace ice
           {
             if (append_seglist(slist, xx, yy) != OK)
               {
-                Message(FNAME, M_NO_MEM, NO_MEM);
+                throw IceException(FNAME, M_NO_MEM);
 
                 for (i = 0; i < yanz; i++)
                   {
-                    if (slist[i].xlist != nullptr) free(slist[i].xlist);
+                    if (slist[i].xlist != nullptr)
+                      {
+                        free(slist[i].xlist);
+                      }
                   }
 
                 free(slist);
@@ -207,7 +208,10 @@ namespace ice
 
     for (i = 0; i < yanz; i++)
       {
-        if (slist[i].xlist != nullptr) free(slist[i].xlist);
+        if (slist[i].xlist != nullptr)
+          {
+            free(slist[i].xlist);
+          }
       }
 
     free(slist);
@@ -220,20 +224,32 @@ namespace ice
     int i, index;
     index = 0;
 
-    while (slist[index].y != y) index++;
+    while (slist[index].y != y)
+      {
+        index++;
+      }
 
     y = index;
     tmp = slist[y].xlist;
     slist[y].xlist = (int*) calloc(sizeof(int), slist[y].count + 1);
 
-    if (slist[y].xlist == nullptr) return NO_MEM;
+    if (slist[y].xlist == nullptr)
+      {
+        return NO_MEM;
+      }
 
-    for (i = 0; i < slist[y].count; i++) *(slist[y].xlist + i) = *(tmp + i);
+    for (i = 0; i < slist[y].count; i++)
+      {
+        *(slist[y].xlist + i) = *(tmp + i);
+      }
 
     *(slist[y].xlist + slist[y].count) = x;
     slist[y].count++;
 
-    if (tmp != nullptr) free(tmp);
+    if (tmp != nullptr)
+      {
+        free(tmp);
+      }
 
     return OK;
   }

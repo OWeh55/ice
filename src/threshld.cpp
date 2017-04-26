@@ -28,7 +28,7 @@
 #include <limits>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "hist.h"
 #include "threshld.h"
@@ -49,13 +49,10 @@ namespace ice
     double ct;
     int topt;
 
-    if (!hist.valid())
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return 0;
-      }
+    if (!hist.isValid())
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
-    int n = hist.classes();
+    int n = hist.getNClasses();
 
     double m2 = 0;
     double s2 = 0;
@@ -65,10 +62,12 @@ namespace ice
 
     for (int i = 1; i <= n; i++)
       {
-        ct = hist.Count(i);
+        ct = hist.count(i);
 
         if (ct > 0)
-          nn++;
+          {
+            nn++;
+          }
 
         c2 += ct;
         m2 += ct * i;
@@ -76,17 +75,17 @@ namespace ice
       }
 
     if (nn == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     if (nn == 1)
       {
         discmax = 0.0;
 
         int i = 1;
-        while (hist.Count(i) == 0) i++;
+        while (hist.count(i) == 0)
+          {
+            i++;
+          }
 
         hist.ClassValue(i, valmin, valmax);
         return (valmax + valmin) / 2.0;
@@ -100,14 +99,18 @@ namespace ice
 
         for (int i = 1; i <= n; i++)
           {
-            ct = hist.Count(i);
+            ct = hist.count(i);
 
             if (ct > 0)
               {
                 if (i1 < 0)
-                  i1 = i;
+                  {
+                    i1 = i;
+                  }
                 else
-                  i2 = i;
+                  {
+                    i2 = i;
+                  }
               }
           }
 
@@ -124,7 +127,7 @@ namespace ice
 
     for (int t = 2; t <= n; t++)
       {
-        ct = hist.Count(t - 1);
+        ct = hist.count(t - 1);
         c1 += ct;
         m1 += ct * (t - 1);
         s1 += ct * (t - 1) * (t - 1);
@@ -168,10 +171,7 @@ namespace ice
     int topt;
 
     if (!hist.isValid())
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return 0;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     int n = hist.nClasses();
 
@@ -187,7 +187,9 @@ namespace ice
         double ct = hist.getCount(i);
 
         if (ct > 0)
-          nn++;
+          {
+            nn++;
+          }
 
         c2 += ct;
         m2 += ct * i;
@@ -195,10 +197,7 @@ namespace ice
       }
 
     if (nn == 0)
-      {
-        Message(FNAME, M_HIST_EMPTY, ERROR);
-        return 0;
-      }
+      throw IceException(FNAME, M_HIST_EMPTY);
 
     if (nn == 1)
       {
@@ -206,7 +205,9 @@ namespace ice
         int i = 0;
 
         while (hist.getCount(i) == 0)
-          i++;
+          {
+            i++;
+          }
 
         return i;
       }
@@ -216,12 +217,16 @@ namespace ice
         // two histogram classes -> two classes after binarization
         int i = 0;
         while (hist.getCount(i) == 0)
-          i++;
+          {
+            i++;
+          }
         int i1 = i;
         double c1 = hist.getCount(i1);
         i++;
         while (hist.getCount(i) == 0)
-          i++;
+          {
+            i++;
+          }
         int i2 = i;
         double c2 = hist.getCount(i2);
         double ct = c1 + c2;
@@ -336,7 +341,9 @@ namespace ice
           {
             double t = value[i];
             if (t < threshold)
-              max1 = t;
+              {
+                max1 = t;
+              }
           }
         threshold = (threshold + max1) / 2;
       }
@@ -400,7 +407,9 @@ namespace ice
           {
             int t = value[i];
             if (t < threshold)
-              max1 = t;
+              {
+                max1 = t;
+              }
           }
         threshold = (threshold + max1 + 1) / 2;
       }
@@ -422,10 +431,14 @@ namespace ice
     ya = img->ysize - 1;
 
     if ((xa - xi) < 20 * part)
-      part = 1;
+      {
+        part = 1;
+      }
 
     if ((ya - yi) < 20 * part)
-      part = 1;
+      {
+        part = 1;
+      }
 
     Histogram hist(img, part);
 
@@ -456,12 +469,15 @@ namespace ice
     yi = 1;
     ya = img->ysize - 2;
 
-    if ((xi >= xa) || (yi >= ya)) return (-1);
+    if ((xi >= xa) || (yi >= ya))
+      {
+        return (-1);
+      }
 
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;
 
-    h.Reset((int)ceil((img->maxval + 1) * 1.415)); /* max. Grad: sqrt(2)*maxval */
+    h.reset((int)ceil((img.maxval + 1) * 1.415)); /* max. Grad: sqrt(2)*maxval */
 
     for (y = yi; y <= ya; y += diffy)
       {
@@ -469,7 +485,7 @@ namespace ice
           {
             grd = (sqrt(Sqr(GetVal(img, x + 1, y) - GetVal(img, x - 1, y)) + \
                         Sqr(GetVal(img, x, y + 1) - GetVal(img, x, y - 1))));
-            h.Add(grd);
+            h.add(grd);
           }
       }
 
@@ -479,7 +495,7 @@ namespace ice
           {
             grd = (sqrt(Sqr(GetVal(img, x + 1, y) - GetVal(img, x - 1, y)) + \
                         Sqr(GetVal(img, x, y + 1) - GetVal(img, x, y - 1))));
-            h.Add(grd);
+            h.add(grd);
           }
       }
 
@@ -504,11 +520,14 @@ namespace ice
     yi = 2;
     ya = img->ysize - 3;
 
-    if ((xi >= xa) || (yi >= ya)) return (-1);
+    if ((xi >= xa) || (yi >= ya))
+      {
+        return (-1);
+      }
 
     diffx = (xa - xi) * PART / 100;
     diffy = (ya - yi) * PART / 100;
-    hist.Reset((img->maxval + 1) * 6);
+    hist.reset((img.maxval + 1) * 6);
 
     for (y = yi; y <= ya; y += diffy)
       {
@@ -516,7 +535,7 @@ namespace ice
           {
             lpl = (6 * GetVal(img, x, y) - 2 * (GetVal(img, x - 1, y) + GetVal(img, x + 1, y)) - \
                    GetVal(img, x - 2, y) - GetVal(img, x + 2, y));
-            hist.Add(lpl);
+            hist.add(lpl);
           }
       }
 
@@ -526,7 +545,7 @@ namespace ice
           {
             lpl = (6 * GetVal(img, x, y) - 2 * (GetVal(img, x, y - 1) + GetVal(img, x, y + 1)) - \
                    GetVal(img, x, y - 2) - GetVal(img, x, y + 2));
-            hist.Add(lpl);
+            hist.add(lpl);
           }
       }
 

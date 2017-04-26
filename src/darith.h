@@ -30,15 +30,15 @@
 namespace ice
 {
   /* Prozeduren der Bildarithmetik */
-  int ClearImgD(ImageD img);
-  int SetImgD(ImageD img, double val);
-  int MoveImgD(ImageD imgs, ImageD imgd);
+  void clearImgD(ImageD img);
+  void setImgD(ImageD img, double val);
+  void moveImgD(ImageD imgs, ImageD imgd);
 
-  int SmearImgD(const ImageD src, ImageD dest, int sx, int sy);
-  int SmearImgD(const ImageD src, ImageD dest, int nx);
+  void smearImgD(const ImageD src, ImageD dest, int sx, int sy);
+  void smearImgD(const ImageD src, ImageD dest, int nx);
 
-  int AddImgD(ImageD imgs1, ImageD imgs2, ImageD imgd);
-  int MulImgD(ImageD imgs1, ImageD imgs2, ImageD imgd);
+  void addImgD(ImageD imgs1, ImageD imgs2, ImageD imgd);
+  void mulImgD(ImageD imgs1, ImageD imgs2, ImageD imgd);
 
   /**
    * Searches the image for its maximum value

@@ -25,7 +25,7 @@
  ************************************************/
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "util.h"
@@ -44,10 +44,10 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sx = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sx1 = sx / 2;
 
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int x = 0;
 
@@ -91,18 +91,18 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sx = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sx1 = sx / 2;
 
     const T** p1 = (const T**)pn1->getDataPtr();
     T** p2 = (T**)pn2->getDataPtr();
 
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         const T* Zeile = p1[y];
         int x = 0;
 
-        while (x < sx1) // linker Rand
+        while (x < sx1)   // linker Rand
           {
             p2[y][x] = offset;
             x++;
@@ -135,31 +135,30 @@ namespace ice
   }
 
 #define FNAME "LSIHImg"
-  int LSIHImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
-              int norm, int offset)
+  void LSIHImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
+               int norm, int offset)
   {
     int dx, dy;
     int sx = mask.size();
 
     if ((sx < 1) || ((sx & 1) != 1) || (norm == 0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     if (pn1->getDataPtr() == pn2->getDataPtr())
       {
         Image src = NewImg(pn1, true);
-        return LSIHImg(src, pn2, mask, norm, offset);
+        LSIHImg(src, pn2, mask, norm, offset);
       }
 
     int typ1 = pn1->ImageType();
     int typ2 = pn2->ImageType();
 
     if (typ1 != typ2)
-      lsih_std(pn1, pn2, mask, norm, offset);
+      {
+        lsih_std(pn1, pn2, mask, norm, offset);
+      }
     else
       {
         switch (typ1)
@@ -178,19 +177,19 @@ namespace ice
             break;
           }
       }
-
-    return OK;
   }
 
-  int LSIHImg(const Image& pn1, const Image& pn2, const IVector& mask,
-              int norm, int offset)
+  void LSIHImg(const Image& pn1, const Image& pn2, const IVector& mask,
+               int norm, int offset)
   {
     vector<int> vmask;
 
     for (unsigned int i = 0; i < mask.size(); i++)
-      vmask.push_back(mask[i]);
+      {
+        vmask.push_back(mask[i]);
+      }
 
-    return LSIHImg(pn1, pn2, vmask, norm, offset);
+    LSIHImg(pn1, pn2, vmask, norm, offset);
   }
 
 #undef FNAME
@@ -202,10 +201,10 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sy = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sy1 = sy / 2;
 
-    for (int x = 0; x < dx; x++) // alle spalten
+    for (int x = 0; x < dx; x++)   // alle spalten
       {
         int y = 0;
 
@@ -249,17 +248,17 @@ namespace ice
     int dx = pn1->xsize;
     int dy = pn1->ysize;
     int sy = mask.size();
-    int maxval = pn2->maxval;
+    int maxval = pn2.maxval;
     int sy1 = sy / 2;
 
     const T** p1 = (const T**)pn1->getDataPtr();
     T** p2 = (T**)pn2->getDataPtr();
 
-    for (int x = 0; x < dx; x++) // alle spalten
+    for (int x = 0; x < dx; x++)   // alle spalten
       {
         int y = 0;
 
-        while (y < sy1) // oberer Rand
+        while (y < sy1)   // oberer Rand
           {
             p2[y][x] = offset;
             y++;
@@ -283,7 +282,7 @@ namespace ice
             y++;
           }
 
-        while (y < dy) // unterer Rand
+        while (y < dy)   // unterer Rand
           {
             p2[y][x] = offset;
             y++;
@@ -292,31 +291,30 @@ namespace ice
   }
 
 #define FNAME "LSIVImg"
-  int LSIVImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
-              int norm, int offset)
+  void LSIVImg(const Image& pn1, const Image& pn2, const vector<int>& mask,
+               int norm, int offset)
   {
     int dx, dy;
     int sy = mask.size();
 
     if ((sy < 1) || ((sy & 1) != 1) || (norm == 0))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
     if (pn1->getDataPtr() == pn2->getDataPtr())
       {
         Image src = NewImg(pn1, true);
-        return LSIVImg(src, pn2, mask, norm, offset);
+        LSIVImg(src, pn2, mask, norm, offset);
       }
 
     int typ1 = pn1->ImageType();
     int typ2 = pn2->ImageType();
 
     if (typ1 != typ2)
-      lsiv_std(pn1, pn2, mask, norm, offset);
+      {
+        lsiv_std(pn1, pn2, mask, norm, offset);
+      }
     else
       {
         switch (typ1)
@@ -335,19 +333,19 @@ namespace ice
             break;
           }
       }
-
-    return OK;
   }
 
-  int LSIVImg(const Image& pn1, const Image& pn2, const IVector& mask,
-              int norm, int offset)
+  void LSIVImg(const Image& pn1, const Image& pn2, const IVector& mask,
+               int norm, int offset)
   {
     vector<int> vmask;
 
     for (unsigned int i = 0; i < mask.size(); i++)
-      vmask.push_back(mask[i]);
+      {
+        vmask.push_back(mask[i]);
+      }
 
-    return LSIVImg(pn1, pn2, vmask, norm, offset);
+    LSIVImg(pn1, pn2, vmask, norm, offset);
   }
 
 #undef FNAME

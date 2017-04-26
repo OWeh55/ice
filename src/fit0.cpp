@@ -25,7 +25,7 @@
 
 #include <vector>
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fit.h"
@@ -37,7 +37,9 @@ namespace ice
     pl.resize(m.rows());
 
     for (int i = 0; i < m.rows(); i++)
-      pl[i] = Point(m[i][0], m[i][1]);
+      {
+        pl[i] = Point(m[i][0], m[i][1]);
+      }
   }
 
   void Matrix2w(const Matrix& m, std::vector<double>& w)
@@ -46,10 +48,14 @@ namespace ice
 
     if (m.cols() < 3)
       for (int i = 0; i < m.rows(); i++)
-        w[i] = 1.0;
+        {
+          w[i] = 1.0;
+        }
     else
       for (int i = 0; i < m.rows(); i++)
-        w[i] = m[i][2];
+        {
+          w[i] = m[i][2];
+        }
   }
 
 } // namespace ice

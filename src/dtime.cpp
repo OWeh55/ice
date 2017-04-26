@@ -38,8 +38,9 @@
 #endif
 #endif
 
+#include "defs.h"
 #include "dtime.h"
-#include "message.h"
+#include "IceException.h"
 
 namespace ice
 {
@@ -64,8 +65,7 @@ namespace ice
 
     if (i == -1)
       {
-        Message("TimeD()", "keine Zeit", -2000); /* kann nicht vorkommen ?! */
-        return (-1);
+        throw IceException("TimeD()", "keine Zeit"); /* kann nicht vorkommen ?! */
       }
 
     return (tt.tv_sec + ((double)tt.tv_usec) / 1000000);
@@ -82,13 +82,19 @@ namespace ice
       {
         time = (double)mtimes.tms_cutime;
 
-        if (!user) time += (double)mtimes.tms_cstime;
+        if (!user)
+          {
+            time += (double)mtimes.tms_cstime;
+          }
       }
     else
       {
         time = (double)mtimes.tms_utime;
 
-        if (!user) time += (double)mtimes.tms_stime;
+        if (!user)
+          {
+            time += (double)mtimes.tms_stime;
+          }
       }
 
     time /= (double)sysconf(_SC_CLK_TCK);
@@ -121,7 +127,7 @@ namespace ice
         return TimeD2(true, true);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
         break;
       }
 

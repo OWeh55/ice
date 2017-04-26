@@ -31,7 +31,9 @@ namespace ice
   const std::vector<T>& operator+=(std::vector<T>& v1, const std::vector<T>& v2)
   {
     for (int i = 0; i < v1.size(); ++i)
-      v1[i] += v2[i];
+      {
+        v1[i] += v2[i];
+      }
     return v1;
   }
 
@@ -46,7 +48,9 @@ namespace ice
   const std::vector<T>& operator-=(std::vector<T>& v1, const std::vector<T>& v2)
   {
     for (int i = 0; i < v1.size(); ++i)
-      v1[i] -= v2[i];
+      {
+        v1[i] -= v2[i];
+      }
     return v1;
   }
 
@@ -61,7 +65,9 @@ namespace ice
   const std::vector<T>& operator*=(std::vector<T>& v1, TS f)
   {
     for (int i = 0; i < v1.size(); ++i)
-      v1[i] *= f;
+      {
+        v1[i] *= f;
+      }
     return v1;
   }
 
@@ -86,7 +92,9 @@ namespace ice
   {
     double res = 0;
     for (int i = 0; i < v1.size(); ++i)
-      res += v1[i] * v2[i];
+      {
+        res += v1[i] * v2[i];
+      }
     return res;
   }
 
@@ -95,7 +103,9 @@ namespace ice
   {
     double l = 0;
     for (int i = 0; i < v.size(); ++i)
-      l += v[i] * v[i];
+      {
+        l += v[i] * v[i];
+      }
     return l;
   }
 
@@ -114,7 +124,9 @@ namespace ice
       {
         double f = 1.0 / l;
         for (int i = 0; i < res.size(); ++i)
-          res[i] *= f;
+          {
+            res[i] *= f;
+          }
       }
     return res;
   }
@@ -127,7 +139,9 @@ namespace ice
       {
         double f = 1.0 / l;
         for (int i = 0; i < v1.size(); ++i)
-          v1[i] *= f;
+          {
+            v1[i] *= f;
+          }
       }
   }
 
@@ -140,7 +154,9 @@ namespace ice
       {
         double f = 1.0 / l;
         for (int i = 0; i < v2.size(); ++i)
-          v2[i] *= f;
+          {
+            v2[i] *= f;
+          }
       }
   }
 
@@ -155,7 +171,9 @@ namespace ice
   {
     std::vector<T2> res(v1.size());
     for (int i = 0; i < v1.size(); ++i)
-      res[i] = static_cast<T2>(v1[i]);
+      {
+        res[i] = static_cast<T2>(v1[i]);
+      }
   }
 }
 #endif

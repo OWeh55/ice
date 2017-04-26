@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "darith.h"
@@ -84,18 +84,12 @@ namespace ice
         sint = new double[size];
 
         if (sint == NULL)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         cost = new double[size];
 
         if (cost == NULL)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
-          }
+          throw IceException(FNAME, M_NO_MEM);
       }
 
     double n = size;
@@ -104,8 +98,14 @@ namespace ice
       {
         cost[i] = cos((double)i * pi2 / n);
 
-        if (!invers) sint[i] = sin((double)i * pi2 / n);
-        else sint[i] = -sin((double)i * pi2 / n);
+        if (!invers)
+          {
+            sint[i] = sin((double)i * pi2 / n);
+          }
+        else
+          {
+            sint[i] = -sin((double)i * pi2 / n);
+          }
       }
 
     return OK;
@@ -137,7 +137,10 @@ namespace ice
     wi = 0;
     ln = 0;
 
-    for (i = 1; i < n; i = i + i) ln++;
+    for (i = 1; i < n; i = i + i)
+      {
+        ln++;
+      }
 
     for (nv2 = n / 2, i = j = 1; i < n; ++i)
       {
@@ -172,8 +175,14 @@ namespace ice
         ui = 0.0;
         wr = cos(pi / (double)le1);
 
-        if (!back) wi = -sin(pi / (double)le1);
-        else wi = sin(pi / (double)le1);
+        if (!back)
+          {
+            wi = -sin(pi / (double)le1);
+          }
+        else
+          {
+            wi = sin(pi / (double)le1);
+          }
 
         for (j = 1; j <= le1; j++)
           {
@@ -220,26 +229,17 @@ namespace ice
     int index;
 
     if (makesincostab(n, wi, wr, back) != OK)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     tr = new double[n];
 
     if (tr == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     ti = new double[n];
 
     if (ti == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < n; ++i)
       {
@@ -287,22 +287,13 @@ namespace ice
     int inverse;
 
     if (option != NORMAL && option != INVERS)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (n < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     inverse = (option != NORMAL);
 
@@ -320,8 +311,14 @@ namespace ice
 
     use_fast = (n & (n - 1)) == 0;
 
-    if (use_fast) return FFT1D(re, im, n, inverse);
-    else return FT1D(re, im, n, inverse);
+    if (use_fast)
+      {
+        return FFT1D(re, im, n, inverse);
+      }
+    else
+      {
+        return FT1D(re, im, n, inverse);
+      }
   }
 
   int Fourier(vector<double>& dstre, vector<double>& dstim,
@@ -338,27 +335,25 @@ namespace ice
     int inverse;
 
     if (option != NORMAL && option != INVERS)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     unsigned int dim = dstre.size();
 
     if (dim < 1 || dim != dstim.size())
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     inverse = (option != NORMAL);
 
     use_fast = (dim & (dim - 1)) == 0;
 
     if (use_fast)
-      return FFT1D(dstre.data(), dstim.data(), dim, inverse);
+      {
+        return FFT1D(dstre.data(), dstim.data(), dim, inverse);
+      }
     else
-      return FT1D(dstre.data(), dstim.data(), dim, inverse);
+      {
+        return FT1D(dstre.data(), dstim.data(), dim, inverse);
+      }
   }
 
   int Fourier(const vector<double>& srcre, const vector<double>& srcim,
@@ -378,18 +373,12 @@ namespace ice
     int inverse;
 
     if (option != NORMAL && option != INVERS)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     unsigned int dim = srcre.size();
 
     if (dim < 1 || dim != srcim.size())
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     dstre = srcre;
     dstim = srcim;
@@ -399,9 +388,13 @@ namespace ice
     use_fast = (dim & (dim - 1)) == 0;
 
     if (use_fast)
-      return FFT1D(dstre.data(), dstim.data(), dim, inverse);
+      {
+        return FFT1D(dstre.data(), dstim.data(), dim, inverse);
+      }
     else
-      return FT1D(dstre.data(), dstim.data(), dim, inverse);
+      {
+        return FT1D(dstre.data(), dstim.data(), dim, inverse);
+      }
   }
 #endif
 #undef FNAME

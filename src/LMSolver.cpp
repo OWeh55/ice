@@ -48,11 +48,15 @@ namespace ice
     nIterations = 0;
     nVars = select.size();
     if (nVars > functionDim || nVars > (int)x.size())
-      throw logic_error("too much variables");
+      {
+        throw logic_error("too much variables");
+      }
 
     for (unsigned int i = 0; i < select.size(); ++i)
       if (select[i] >= (int)x.size() || select[i] < 0)
-        throw out_of_range("index out of range");
+        {
+          throw out_of_range("index out of range");
+        }
 
     vector<double> functionValue(functionDim);
 
@@ -80,7 +84,9 @@ namespace ice
           {
             double ndiag = 0;
             for (int i = 0; i < nVars; ++i)
-              ndiag += A[i][i] * A[i][i];
+              {
+                ndiag += A[i][i] * A[i][i];
+              }
             ndiag = sqrt(ndiag);
             lmPara = 0.1 * ndiag;
           }
@@ -111,7 +117,9 @@ namespace ice
             double temp = x[idx];
             newX[idx] = temp - deltaX[i];
             if (newX[idx] != temp)
-              equal = false;
+              {
+                equal = false;
+              }
           }
 
         vector<double> newFunctionValue(functionDim);
@@ -141,7 +149,9 @@ namespace ice
           {
             lmPara = lmPara / 2;
             if (lmPara < DBL_EPSILON * 100)
-              lmPara = DBL_EPSILON * 100;
+              {
+                lmPara = DBL_EPSILON * 100;
+              }
           }
 
         double maxCos = 0;
@@ -158,7 +168,9 @@ namespace ice
             double cos = sumx / sqrt(sum2 * functionNorm2);
             // cout << "cos: " << cos << endl;
             if (fabs(cos) > maxCos)
-              maxCos = fabs(cos);
+              {
+                maxCos = fabs(cos);
+              }
           }
 
         // cout << "maxCos: " << maxCos << endl;
@@ -202,7 +214,9 @@ namespace ice
   {
     vector<int> select(x.size());
     for (unsigned int i = 0; i < select.size(); ++i)
-      select[i] = i;
+      {
+        select[i] = i;
+      }
     solve(x, select);
   }
 }

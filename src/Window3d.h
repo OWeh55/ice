@@ -91,12 +91,30 @@ namespace ice
 
     inline bool Inside(int x, int y, int z) const
     {
-      if (x < p1.x) return false;
-      if (y < p1.y) return false;
-      if (z < p1.z) return false;
-      if (x > p2.x) return false;
-      if (y > p2.y) return false;
-      if (z > p2.z) return false;
+      if (x < p1.x)
+        {
+          return false;
+        }
+      if (y < p1.y)
+        {
+          return false;
+        }
+      if (z < p1.z)
+        {
+          return false;
+        }
+      if (x > p2.x)
+        {
+          return false;
+        }
+      if (y > p2.y)
+        {
+          return false;
+        }
+      if (z > p2.z)
+        {
+          return false;
+        }
       return true;
     }
 

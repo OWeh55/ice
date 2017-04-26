@@ -43,7 +43,9 @@ namespace ice
     SingleImageObjectFunctor(const Image& timg, OFunc obj = NULL, int thr = 1): img(timg), object(obj), threshold(thr)
     {
       if (object == NULL)
-        object = ObjectThr;
+        {
+          object = ObjectThr;
+        }
     }
     SingleImageObjectFunctor(const Image& timg, int thr = 1): img(timg), object(ObjectThr), threshold(thr)
     {
@@ -51,7 +53,9 @@ namespace ice
     virtual object_rc operator()(IPoint p) const
     {
       if (!img.inside(p))
-        return isunknown;
+        {
+          return isunknown;
+        }
 
       return object(img, p.x, p.y, threshold);
     }
@@ -68,7 +72,9 @@ namespace ice
     MarkedImageObjectFunctor(const Image& timg, const Image& tmrk, OFunc obj = NULL, int thr = 1): img(timg), mrk(tmrk), object(obj), threshold(thr)
     {
       if (object == NULL)
-        object = ObjectThr;
+        {
+          object = ObjectThr;
+        }
     }
     MarkedImageObjectFunctor(const Image& timg, const Image& tmrk, int thr = 1): img(timg), mrk(tmrk), object(ObjectThr), threshold(thr)
     {
@@ -76,10 +82,14 @@ namespace ice
     virtual object_rc operator()(IPoint p) const
     {
       if (!img.inside(p))
-        return isunknown;
+        {
+          return isunknown;
+        }
 
       if (GetValUnchecked(mrk, p) != 0)
-        return isunknown;
+        {
+          return isunknown;
+        }
 
       return object(img, p.x, p.y, threshold);
     }

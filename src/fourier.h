@@ -69,10 +69,10 @@ namespace ice
 
   // (prefer to use class HartleyTrafo for Hartley transform!)
   // low level 1d Hartley transform
-  int HartleyD(const double* src, int dim, double* dst);
+  void HartleyD(const double* src, int dim, double* dst);
 
-  int Hartley(const Vector& s, Vector& d);
-  int Hartley(Vector& s);
+  void Hartley(const Vector& s, Vector& d);
+  void Hartley(Vector& s);
 
   // constants for parameter dir in 2d-functions
 #define XY 0
@@ -92,8 +92,8 @@ namespace ice
                   int dir = XY);
 
   // 2d Hartley transform
-  int HartleyImgD(ImageD src, ImageD dst, int dir = XY);
-  int HartleyImg(const Image& src, ImageD dst, int dir = XY);
+  void HartleyImgD(ImageD src, ImageD dst, int dir = XY);
+  void HartleyImg(const Image& src, ImageD dst, int dir = XY);
 
   // fourier2.cpp
 
@@ -120,36 +120,36 @@ namespace ice
   // cepstrum of an image
   int CepstrumImgD(ImageD img, ImageD ceps);
   // Magnitude phase spectrum of an image
-  int MPSpectrumImgD(ImageD img, ImageD mag, ImageD phase);
+  void MPSpectrumImgD(ImageD img, ImageD mag, ImageD phase);
 
   // fourier3.cpp
   // convolution in frequency domain
   // convolution in fourier images
-  int ConvolutionFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2, ImageD re3, ImageD im3);
+  void ConvolutionFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2, ImageD re3, ImageD im3);
   // convolution in hartley images
-  int ConvolutionHImgD(ImageD im1, ImageD im2, ImageD im3);
+  void ConvolutionHImgD(ImageD im1, ImageD im2, ImageD im3);
 
   // inverse convolution in frequency domain
   // inverse convolution in fourier images
-  int InvConvolutionFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2,
-                          ImageD re3, ImageD im3, double beta);
+  void InvConvolutionFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2,
+                           ImageD re3, ImageD im3, double beta);
   // inverse convolution in hartley images
-  int InvConvolutionHImgD(ImageD im1, ImageD im2, ImageD im3, double beta);
+  void InvConvolutionHImgD(ImageD im1, ImageD im2, ImageD im3, double beta);
 
   // CrossCorrelation
-  int CrossCorrelationFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2, ImageD re3, ImageD im3);
-  int CrossCorrelationHImgD(ImageD im1, ImageD im2, ImageD im3);
+  void CrossCorrelationFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2, ImageD re3, ImageD im3);
+  void CrossCorrelationHImgD(ImageD im1, ImageD im2, ImageD im3);
   // CrossCorrelation
-  int CrossCorrelationImgD(ImageD im1, ImageD im2, ImageD im3);
+  void CrossCorrelationImgD(ImageD im1, ImageD im2, ImageD im3);
 
 
   // fourier4.cpp
   // Whitening
-  int WhiteningFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2, double beta = 0);
-  int WhiteningHImgD(ImageD im1, ImageD im2, double beta = 0);
+  void WhiteningFImgD(ImageD re1, ImageD im1, ImageD re2, ImageD im2, double beta = 0);
+  void WhiteningHImgD(ImageD im1, ImageD im2, double beta = 0);
 
   // Whitening
-  int WhiteningImgD(ImageD im1, ImageD im2, double beta = 0);
+  void WhiteningImgD(ImageD im1, ImageD im2, double beta = 0);
 
   // in fourier?.cpp/conv.cpp internally used tools
 
@@ -159,8 +159,13 @@ namespace ice
     // frequency negative to that of index i
     // frequenzy 0 is at index size/2
     if ((size % 2) != 0)
-      return size - 1 - i;
-    if (i == 0) return 0;
+      {
+        return size - 1 - i;
+      }
+    if (i == 0)
+      {
+        return 0;
+      }
     return size - i;
   }
 

@@ -127,33 +127,26 @@ namespace ice
   }
 
 #define FNAME "Distortion3::Set"
-  void Distortion3::Set(const string& parastr)
+  void Distortion3::set(const string& parastr)
   {
     istringstream is(parastr);
 
     if (! ReadPara(is, "x0", x0) || ! ReadPara(is, "y0", y0) ||
         ! ReadPara(is, "d2", d2) || ! ReadPara(is, "d4", d4) || ! ReadPara(is, "d6", d6))
-      {
-        Message(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_FORMAT);
   }
 #undef FNAME
 
-
-  Vector Distortion3::MakeVector() const
+  Vector Distortion3::makeVector() const
   {
     return Vector(x0, y0, d2, d4, d6);
   }
 
-#define FNAME "Distortion3::Set"
-  void Distortion3::Set(const Vector& v)
+#define FNAME "Distortion3::set"
+  void Distortion3::set(const Vector& v)
   {
     if (v.size() != 5)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     x0 = v[0];
     y0 = v[1];

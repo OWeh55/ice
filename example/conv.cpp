@@ -32,8 +32,8 @@ int main(int arc, char* argv[])
   Show(ON, i5, "phasecorrelation");
   Show(ON, i6, "crosscorrelation");
 #if 1
-  SetImg(i1, 128);
-  SetImg(i2, 128);
+  setImg(i1, 128);
+  setImg(i2, 128);
   // unabhängiges Untergrund-Rauschen
   WindowWalker ww(i1);
   for (ww.init(); !ww.ready(); ww.next())

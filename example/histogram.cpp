@@ -6,10 +6,10 @@ void Show(const Histogram& h, const Image& mark)
 {
   int n;
   double xm, xs, sk;
-  h.Statistic(n, xm, xs, sk);
+  h.getStatistics(n, xm, xs, sk);
   Printf(" n=%d  xm=%9.3f xs=%9.3f sk=%9.3f\n", n, xm, xs, sk);
-  ClearImg(mark);
-  h.Vis(1, mark);
+  clearImg(mark);
+  h.draw(mark, 1);
 }
 
 /* Testprogramm für Histogrammfunktionen */
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
   ClearAlpha();
 
   Image grw = NewImg(700, 400, 255);
-  SetImg(grw, 255);
+  setImg(grw, 255);
   Image mark = NewImg(700, 400, 8);
   Show(OVERLAY, grw, mark);
 
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
   Printf("Pegel vom Histogramm %d \n", pglh);
   Printf("Pegel vom Bild %d \n", pgli);
 
-  BinImg(picture, pglh, picture);
+  binImg(picture, pglh, picture);
   GetChar();
 
   return (0);

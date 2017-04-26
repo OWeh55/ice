@@ -58,11 +58,15 @@ namespace ice
     {
       eemap::const_iterator iter1 = eep.upper_bound(x);
       if (iter1 == eep.end())
-        return false;
+        {
+          return false;
+        }
       eemap::const_iterator iter2 = iter1;
       --iter2;
       if (iter2 == eep.end())
-        return false;
+        {
+          return false;
+        }
 
       return iter2->second > 0;
     }
@@ -73,7 +77,9 @@ namespace ice
     {
       std::vector<int> res;
       for (int i = 0; i < (int)elements.size(); i++)
-        res.push_back(elements[i].x);
+        {
+          res.push_back(elements[i].x);
+        }
       return res;
     }
 
@@ -81,7 +87,9 @@ namespace ice
     {
       std::vector<bool> res;
       for (int i = 0; i < (int)elements.size(); i++)
-        res.push_back(elements[i].b);
+        {
+          res.push_back(elements[i].b);
+        }
       return res;
     }
 #endif
@@ -118,14 +126,18 @@ namespace ice
     int getMin() const
     {
       if (eep.empty())
-        return  -1;
+        {
+          return  -1;
+        }
       return eep.begin()->first;
     }
 
     int getMax() const
     {
       if (eep.empty())
-        return  -1;
+        {
+          return  -1;
+        }
       return eep.rbegin()->first;
     }
 

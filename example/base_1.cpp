@@ -31,26 +31,29 @@ int main(int argc, char* argv[])
   img = NewImg(sx - 2, sy - 2, maxcount);
   Show(ON, img, "Testbild1");
   Display(ON);
-  wloop(img, x, y) PutVal(img, x, y, Random(maxcount));
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      PutVal(img, x, y, Random(maxcount));
 
-  wloop(img, x, y)
-  {
-    a = -2 + 3 * ((double)x / (double)sx);
-    b = -1.5 + 3 * ((double)y / (double)sy);
-    fx = 0;
-    fy = 0;
-    z = 0;
-
-    while ((z < maxcount) && (fabs(fx) < 4) && (fabs(fy) < 4))
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
       {
-        fh = fx * fx - fy * fy + a;
-        fy = fx * fy * 2 + b;
-        fx = fh;
-        z++;
-      }
+        a = -2 + 3 * ((double)x / (double)sx);
+        b = -1.5 + 3 * ((double)y / (double)sy);
+        fx = 0;
+        fy = 0;
+        z = 0;
 
-    PutVal(img, x, y, z);
-  }
+        while ((z < maxcount) && (fabs(fx) < 4) && (fabs(fy) < 4))
+          {
+            fh = fx * fx - fy * fy + a;
+            fy = fx * fy * 2 + b;
+            fx = fh;
+            z++;
+          }
+
+        PutVal(img, x, y, z);
+      }
   WriteImg(img, "apfel.jpg"); /*bild retten */
 
   img2 = ReadImg("apfel.jpg");

@@ -130,10 +130,7 @@ namespace ice
     int dim = feat1.cols();
 
     if (dim != feat2.cols())
-      {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     // calculating distance field
     for (int i = 0; i < n1; ++i)
@@ -146,22 +143,27 @@ namespace ice
               {
               case D_EUCLID:
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(feat1[i][k] - feat2[j][k]);
+                  {
+                    d += Sqr(feat1[i][k] - feat2[j][k]);
+                  }
 
                 d = sqrt(d);
                 break;
 
               case D_SQUARE:
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(feat1[i][k] - feat2[j][k]);
-
+                  {
+                    d += Sqr(feat1[i][k] - feat2[j][k]);
+                  }
 
                 break;
 
               case D_CITYBLOCK:
 
                 for (int k = 0; k < dim; k++)
-                  d += fabs(feat1[i][k] - feat2[j][k]);
+                  {
+                    d += fabs(feat1[i][k] - feat2[j][k]);
+                  }
                 break;
               }
 

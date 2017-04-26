@@ -23,7 +23,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "picio.h"
 #include "ColorImage.h"
@@ -50,16 +50,16 @@ namespace ice
     title = newtitle;
 
     if (title.empty())
-      title = src.title;
+      {
+        title = src.title;
+      }
     makeValid();
   }
 
   ColorImage::ColorImage(const Image& rot, const Image& gruen, const Image& blau, const std::string& title)
   {
     if ((!IsImg(rot)) || (!IsImg(gruen)) || (!IsImg(blau)))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     else
       {
         // bilder (smart pointer) original übernehmen
@@ -70,9 +70,13 @@ namespace ice
         makeValid();
 
         if (!title.empty())
-          this->title = title;
+          {
+            this->title = title;
+          }
         else
-          this->title = rot->getTitle() + "/" + gruen->getTitle() + "/" + blau->getTitle();
+          {
+            this->title = rot->getTitle() + "/" + gruen->getTitle() + "/" + blau->getTitle();
+          }
       }
   }
 #undef FNAME
@@ -87,10 +91,16 @@ namespace ice
     maxval = maxValue;
     title = title_p;
     if (!title.empty())
-      title += " - ";
-    RETURN_VOID_IF_FAILED(red.create(xsize, ysize, maxval, title + "red"));
-    RETURN_VOID_IF_FAILED(green.create(xsize, ysize, maxval, title + "green"));
-    RETURN_VOID_IF_FAILED(blue.create(xsize, ysize, maxval, title + "blue"));
+      {
+        title += " - ";
+      }
+    try
+      {
+        red.create(xsize, ysize, maxval, title + "red");
+        green.create(xsize, ysize, maxval, title + "green");
+        blue.create(xsize, ysize, maxval, title + "blue");
+      }
+    RETHROW;
   }
 
   // given template colorimage
@@ -136,7 +146,9 @@ namespace ice
     ColorImage result;
     result.create(src, title);
     if (copy)
-      result.copy(src);
+      {
+        result.copy(src);
+      }
     return result;
   }
 
@@ -145,14 +157,18 @@ namespace ice
     ColorImage result;
     result.create(src, title);
     if (copy)
-      result.copy(src);
+      {
+        result.copy(src);
+      }
     return result;
   }
 
   bool ColorImage::makeValid()
   {
     if (!red.isValid())
-      return false;
+      {
+        return false;
+      }
     xsize = red.xsize;
     ysize = red.ysize;
     maxval = red.maxval;
@@ -163,11 +179,15 @@ namespace ice
   {
     //    std::cout << "isValid" << std::endl;
     if (!(red.isValid() && green.isValid() && blue.isValid()))
-      return false;
+      {
+        return false;
+      }
 
     //    std::cout << "isValid2" << std::endl;
     if (red == green || green == blue || red == blue)
-      return false;
+      {
+        return false;
+      }
 
     //    std::cout << "isValid (ne)" << std::endl;
     //    std::cout << xsize << " " << ysize << " " << maxval << std::endl;
@@ -185,35 +205,30 @@ namespace ice
            maxval == blue.maxval;
   }
 
-#define FNAME "ColorImage::Match"
-  int ColorImage::match(const ColorImage& img2) const
+#define FNAME "ColorImage::checkSizes"
+  void ColorImage::checkSizes(const ColorImage& img2) const
   {
-    //    std::cout << "match" << std::endl;
-    //    std::cout << isValid() << std::endl;
-    //    std::cout << img2.isValid() << std::endl;
     if (!isValid() || !img2.isValid())
+      throw IceException(FNAME, M_INVALID);
+    try
       {
-        Message(FNAME, M_INVALID, WRONG_PARAM);
-        return WRONG_PARAM;
+        red.checkSizes(img2.red);
       }
-    //    std::cout << "match1" << std::endl;
-    RETURN_ERROR_IF_FAILED(red.match(img2.red));
-    //    std::cout << "match2" << std::endl;
-    return OK;
+    RETHROW;
   }
-
-  int ColorImage::match(const ColorImage& img2, const ColorImage& img3) const
+#undef FNAME
+#define FNAME "ColorImage::checkImages"
+  void ColorImage::checkImages(const ColorImage& img2) const
   {
-    if (!isValid() || !img2.isValid() || !img3.isValid())
+    if (maxval != img2.maxval)
+      throw IceException(FNAME, M_WRONG_RANGE);
+    try
       {
-        Message(FNAME, M_INVALID, WRONG_PARAM);
-        return WRONG_PARAM;
+        checkSizes(img2);
       }
-
-    RETURN_ERROR_IF_FAILED(red.match(img2.red));
-    RETURN_ERROR_IF_FAILED(red.match(img3.red));
-    return OK;
+    RETHROW;
   }
+#undef FNAME
 
   int ColorImage::read(const std::string& filename)
   {
@@ -230,20 +245,20 @@ namespace ice
   {
     return WriteImg(red, green, blue, filename);
   }
-#undef FNAME
+
 #define FNAME "ColorImage::set"
   int ColorImage::set(ColorValue cv) const // Set all pixel to value
   {
-    RETURN_ERROR_IF_FAILED(SetImg(red, maxval - cv.red));
-    RETURN_ERROR_IF_FAILED(SetImg(green, maxval - cv.green));
-    RETURN_ERROR_IF_FAILED(SetImg(blue, maxval - cv.blue));
+    RETURN_ERROR_IF_FAILED(setImg(red, maxval - cv.red));
+    RETURN_ERROR_IF_FAILED(setImg(green, maxval - cv.green));
+    RETURN_ERROR_IF_FAILED(setImg(blue, maxval - cv.blue));
     return OK;
   }
   int ColorImage::set(int r, int g, int b) const // Set all pixel to value
   {
-    RETURN_ERROR_IF_FAILED(SetImg(red, r));
-    RETURN_ERROR_IF_FAILED(SetImg(green, g));
-    RETURN_ERROR_IF_FAILED(SetImg(blue, b));
+    RETURN_ERROR_IF_FAILED(setImg(red, r));
+    RETURN_ERROR_IF_FAILED(setImg(green, g));
+    RETURN_ERROR_IF_FAILED(setImg(blue, b));
     return OK;
   }
 #undef FNAME

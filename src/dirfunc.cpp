@@ -35,9 +35,15 @@ namespace ice
   int charequal(const char* s1, const char* s2)
   {
     // compare first letter if filename/filemask
-    if (*s1 == '?') return true;
+    if (*s1 == '?')
+      {
+        return true;
+      }
 
-    if (*s2 == '?') return true;
+    if (*s2 == '?')
+      {
+        return true;
+      }
 
     return *s1 == *s2;
   }
@@ -45,10 +51,16 @@ namespace ice
   int CompareString(const char* s1, const char* s2)
   {
     /* Test ob beide Strings zu Ende */
-    if (*s1 == '\0' && *s2 == '\0') return true;
+    if (*s1 == '\0' && *s2 == '\0')
+      {
+        return true;
+      }
 
     /* wenn ein String laenger als der andere, dann sind sie ungleich */
-    if (*s1 == '\0' || *s2 == '\0') return false;
+    if (*s1 == '\0' || *s2 == '\0')
+      {
+        return false;
+      }
 
     /* der Stern in s2 */
     if (*s2 == '*')
@@ -56,13 +68,19 @@ namespace ice
         s2++;
 
         while (*s1 != '\0')
-          if (CompareString(s1++, s2)) return true;
+          if (CompareString(s1++, s2))
+            {
+              return true;
+            }
 
         return *s2 == '\0';
       }
 
     /* der Normalfall */
-    if (!charequal(s1, s2)) return false;
+    if (!charequal(s1, s2))
+      {
+        return false;
+      }
 
     return CompareString(s1 + 1, s2 + 1);
   }
@@ -73,8 +91,10 @@ namespace ice
     DIR* dir;
     struct dirent* direntry;
 
-    if (path.empty()) // current directory
-      path = ".";
+    if (path.empty())   // current directory
+      {
+        path = ".";
+      }
 
     if ((dir = opendir(path.c_str())) != NULL)
       {
@@ -91,17 +111,25 @@ namespace ice
                     bool selected = false;
 
                     if ((mode & DIR_FILE) && (S_ISREG(buf.st_mode)))
-                      selected = true;
+                      {
+                        selected = true;
+                      }
 
                     if ((mode & DIR_DIR) && (S_ISDIR(buf.st_mode)) && basename != "." && basename != "..")
-                      selected = true;
+                      {
+                        selected = true;
+                      }
 
                     if (selected)
                       {
                         if (mode & DIR_WITHPATH)
-                          z.push_back(path + "/" + direntry->d_name);
+                          {
+                            z.push_back(path + "/" + direntry->d_name);
+                          }
                         else
-                          z.push_back(direntry->d_name);
+                          {
+                            z.push_back(direntry->d_name);
+                          }
                       }
                   }
               }
@@ -113,7 +141,9 @@ namespace ice
     sort(z.begin(), z.end());
 
     for (int i = 0; i < (int)z.size(); i++)
-      zz.push_back(z[i]);
+      {
+        zz.push_back(z[i]);
+      }
   }
 
   void Directory(std::vector<std::string>& z, const std::string& s, int mode)

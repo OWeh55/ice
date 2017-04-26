@@ -18,7 +18,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "statistics.h"
 #include "mateigen.h"
@@ -81,7 +81,9 @@ namespace ice
 
     for (int i = 0; i < nFeatures; ++i)
       for (int j = 0; j < nFeatures; ++j)
-        klt[j][i] = eigen2[i][j];
+        {
+          klt[j][i] = eigen2[i][j];
+        }
 
     return klt;
   }

@@ -22,12 +22,13 @@ int main(int argc, char* argv[])
   Show(_RGB, ir, ig, ib);
   Show(_RGB, ir1, ig1, ib1);
   Print("Generiere Testbild\n");
-  wloop(ir, x, y)
-  {
-    PutVal(ir, x, y, (x + y)*gsize / (xsize + ysize));
-    PutVal(ig, x, y, (xsize - 1 - x + y)*gsize / (xsize + ysize));
-    PutVal(ib, x, y, (x + ysize - 1 - y)*gsize / (xsize + ysize));
-  }
+  for (int y = 0; y < ir.ysize; y++)
+    for (int x = 0; x < ir.xsize; x++)
+      {
+        PutVal(ir, x, y, (x + y)*gsize / (xsize + ysize));
+        PutVal(ig, x, y, (xsize - 1 - x + y)*gsize / (xsize + ysize));
+        PutVal(ib, x, y, (x + ysize - 1 - y)*gsize / (xsize + ysize));
+      }
 
   Print("Schreibe Testbilder RGB und GRAU\n");
 
@@ -50,9 +51,9 @@ int main(int argc, char* argv[])
   GetChar();
 
   Print("Lese Farb-Bilder ein (rechtes Bild):\n");
-  ClearImg(ir1);
-  ClearImg(ig1);
-  ClearImg(ib1);
+  clearImg(ir1);
+  clearImg(ig1);
+  clearImg(ib1);
   Print("test_rgb.jpg\n");
   ReadJPEGImg("test_rgb.jpg", ir1, ig1, ib1);
   GetChar();
@@ -64,7 +65,7 @@ int main(int argc, char* argv[])
   Show(ON, ir);
   Show(ON, ir1);
   Print("Lese Grauwert-Bilder ein (rechtes Bild):\n");
-  ClearImg(ir1);
+  clearImg(ir1);
   Print("test_gray.jpg\n");
   ReadJPEGImg("test_gray.jpg", ir1);
   GetChar();

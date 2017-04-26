@@ -11,8 +11,8 @@ int main(int argc, char* argv[])
   Image img = NewImg(100 * fak, 100 * fak, 255);
   Image mark = NewImg(img);
 
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
   Show(OVERLAY, img, mark);
   ClearAlpha();
   Display(ON);
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 
   Print("Region 1\n");
   GetChar();
-  ClearImg(img);
+  clearImg(img);
 
   draw(k2, img, 255, 100);
 
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
   Print("Region 2\n");
   GetChar();
 
-  ClearImg(img);
+  clearImg(img);
 
   WindowWalker ww(img);
   for (ww.init(); !ww.ready(); ww.next())
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
   Print("Region 3 (markiert)\n");
   GetChar();
 
-  ClearImg(img);
+  clearImg(img);
 
   int i;
   int sel;
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 
   Print("Berechne \"Summe\"\n");
   Region ss = s[0] + s[1] + s[2];
-  ClearImg(mark);
+  clearImg(mark);
   ss.draw(mark, 3);
 
   double ta = TimeD();
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 
   Printf("done (%5.2f)\n", TimeD() - ta);
 
-  ClearImg(mark);
+  clearImg(mark);
   ss.draw(mark, 3);
 
   GetChar();
@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
         }
 
       Printf("%5.2f\n", (TimeD() - ta) * 1000);
-      ClearImg(mark);
+      clearImg(mark);
       ss.draw(mark, 3);
       ende = GetChar() == 'q';
     }

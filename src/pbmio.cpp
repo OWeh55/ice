@@ -27,7 +27,7 @@
 
 #include "exfile.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "picio.h"
 #include "PbmReader.h"
@@ -43,11 +43,17 @@ namespace ice
     int x, y, mv, ch;
     rd.getInfo(x, y, mv, ch);
     if (!IsImg(r))
-      r = NewImg(x, y, mv);
+      {
+        r = NewImg(x, y, mv);
+      }
     if (!IsImg(g))
-      g = NewImg(x, y, mv);
+      {
+        g = NewImg(x, y, mv);
+      }
     if (!IsImg(b))
-      b = NewImg(x, y, mv);
+      {
+        b = NewImg(x, y, mv);
+      }
     rd.getImage(r, g, b, flag);
     return OK;
   }
@@ -58,7 +64,9 @@ namespace ice
     int x, y, mv, ch;
     rd.getInfo(x, y, mv, ch);
     if (!IsImg(img))
-      img = NewImg(x, y, mv);
+      {
+        img = NewImg(x, y, mv);
+      }
     rd.getImage(img, flag);
     return img;
   }
@@ -110,10 +118,7 @@ namespace ice
     EXFILE fd = exopen(fname, FWMODUS);
 
     if (fd.fd == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     int rc = WritePBMImg(r, g, b, fd);
 
@@ -124,36 +129,34 @@ namespace ice
   int WritePBMImg(const Image& img, const string& fname)
   {
     FILE* fd;
-    int x, y;
     unsigned char ib;
     short int iw;
     int maxval;
 
     if ((fd = fopen(fname.c_str(), FWMODUS)) == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
-    maxval = img->maxval;
+    maxval = img.maxval;
     fprintf(fd, "P5\n%d %d %d\n", img->xsize, img->ysize, maxval);
 
     if (maxval < 256)
       {
-        wloop(img, x, y)
-        {
-          ib = maxval - GetVal(img, x, y);
-          fputc(ib, fd);
-        }
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            {
+              ib = maxval - GetVal(img, x, y);
+              fputc(ib, fd);
+            }
       }
     else
       {
-        wloop(img, x, y)
-        {
-          iw = maxval - GetVal(img, x, y);
-          fputc(iw >> 8, fd);
-          fputc(iw & 0xff, fd);
-        }
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            {
+              iw = maxval - GetVal(img, x, y);
+              fputc(iw >> 8, fd);
+              fputc(iw & 0xff, fd);
+            }
       }
 
     fclose(fd);

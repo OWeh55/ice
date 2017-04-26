@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -36,7 +36,9 @@ namespace ice
   GaussFit::GaussFit(int pdim): dim(pdim)
   {
     if (dim > 0)
-      Init(dim);
+      {
+        Init(dim);
+      }
   }
 
 #define FNAME "GaussFit::FitInit"
@@ -48,27 +50,30 @@ namespace ice
       }
 
     if (dim <= 0)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     values = 0;
     gsquare = 0;
     wsum = 0;
     para.resize(dim);
     for (int i = 0; i < dim; i++)
-      para[i] = 0;
+      {
+        para[i] = 0;
+      }
     sum.resize(dim);
     for (int i = 0; i < dim; i++)
       {
         sum[i].resize(dim);
         for (int j = 0; j < dim; j++)
-          sum[i][j] = 0;
+          {
+            sum[i][j] = 0;
+          }
       }
     gsum.resize(dim);
     for (int i = 0; i < dim; i++)
-      gsum[i] = 0;
+      {
+        gsum[i] = 0;
+      }
 
     finished = false;
   }
@@ -77,10 +82,7 @@ namespace ice
   void GaussFit::Value(const vector<double>& p, double v, double w)
   {
     if ((int)p.size() != dim)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
       {
@@ -116,10 +118,7 @@ namespace ice
   void GaussFit::Fit(const Matrix& p, const Vector& v)
   {
     if ((p.cols() != dim) || (p.rows() != v.Size()))
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     Init();
 
@@ -134,58 +133,55 @@ namespace ice
 #define FNAME "GaussFit::calc"
   void GaussFit::Finish()
   {
-    // "dreiecksmatrix" zu richtigen Matrix vervollständigen
-    for (int i = 1; i < dim; i++)
-      for (int j = 0; j < i; j++)
-        sum[i][j] = sum[j][i];
+    try
+      {
+        // "dreiecksmatrix" zu richtigen Matrix vervollständigen
+        for (int i = 1; i < dim; i++)
+          for (int j = 0; j < i; j++)
+            {
+              sum[i][j] = sum[j][i];
+            }
 
-    IF_FAILED(para = SolveLinEqu(Matrix(sum), Vector(gsum)))
-    {
-      Message(FNAME, M_0, ERROR);
-      return;
-    }
+        para = SolveLinEqu(Matrix(sum), Vector(gsum));
 
-    // calculate variance
-    var = gsquare;
+        // calculate variance
+        var = gsquare;
 
-    for (int i = 0; i < dim; i++)
-      for (int j = 0; j < dim; j++)
-        var += sum[i][j] * para[i] * para[j];
+        for (int i = 0; i < dim; i++)
+          for (int j = 0; j < dim; j++)
+            {
+              var += sum[i][j] * para[i] * para[j];
+            }
 
-    for (int i = 0; i < dim; i++)
-      var -= 2 * gsum[i] * para[i];
+        for (int i = 0; i < dim; i++)
+          {
+            var -= 2 * gsum[i] * para[i];
+          }
 
-    finished = true;
+        finished = true;
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "GaussFit::getResult"
   void GaussFit::getResult(vector<double>& v) const
   {
     if (!finished)
-      {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
-        return;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
     v = para;
   }
 
   void GaussFit::getResult(Vector& v) const
   {
     if (!finished)
-      {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
-        return;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
     v = Vector(para);
   }
 
   double GaussFit::Variance() const
   {
     if (!finished)
-      {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
-        return 0;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
     return var / wsum;
   }
 #undef FNAME

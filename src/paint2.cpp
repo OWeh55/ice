@@ -30,7 +30,7 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
@@ -64,23 +64,14 @@ namespace ice
   {
     Contur c;
 
-    if ((val1 < 0) || (val2 < 0) || (val1 > img->maxval) || (val2 > img->maxval))
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if ((val1 < 0) || (val2 < 0) || (val1 > img.maxval) || (val2 > img.maxval))
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     // offene Contur des Kreisbogensegments
     RETURN_ERROR_IF_FAILED(c = CircleSegmentContur(par));
@@ -89,8 +80,8 @@ namespace ice
       {
         // das innere fuellen
         Contur c1(c);
-        c1.Add(RoundInt(par[0]), RoundInt(par[1]));
-        c1.Add(c1.StartX(), c1.StartY());
+        c1.add(RoundInt(par[0]), RoundInt(par[1]));
+        c1.add(c1.StartX(), c1.StartY());
         RETURN_ERROR_IF_FAILED(FillRegion(c1, val2, img));
       }
 
@@ -106,31 +97,22 @@ namespace ice
     Contur c;
 
     if ((val1 < 0) || (val2 < 0) ||
-        (val1 > img->maxval) || (val2 > img->maxval))
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        (val1 > img.maxval) || (val2 > img.maxval))
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (mode != DEFAULT && mode != NOFILL)
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_MODE);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     RETURN_ERROR_IF_FAILED(c = EllipseSegmentContur(par));
 
     if (mode != NOFILL)
       {
         Contur c1(c);
-        c.Add(RoundInt(par[0]), RoundInt(par[1]));
-        c.Add(c.StartX(), c.StartY());
+        c.add(RoundInt(par[0]), RoundInt(par[1]));
+        c.add(c.StartX(), c.StartY());
 
         RETURN_ERROR_IF_FAILED(FillRegion(c, val2, img));
       }
@@ -150,13 +132,10 @@ namespace ice
     int ast;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     imgh = NewImg(img->xsize, img->ysize, 255);
-    SetImg(imgh, 0);
+    setImg(imgh, 0);
     ast = 0;
     xc = 1;
     yc = 1;
@@ -171,16 +150,17 @@ namespace ice
             yc++;
           }
 
-        if (calc_function(img, imgh, func, parray, xs, ys, val) == EXIST) ast++;
+        if (calc_function(img, imgh, func, parray, xs, ys, val) == EXIST)
+          {
+            ast++;
+          }
       }
 
     if (ast == 0)
       {
-        FreeImg(imgh);
         return NO_EXIST;
       }
 
-    FreeImg(imgh);
     return OK;
   }
 #undef FNAME
@@ -198,7 +178,7 @@ namespace ice
 
     if ((dx < 4) || (dy < 4))
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
+        throw IceException(FNAME, M_WRONG_WINDOW2);
         *xs = *ys = 0;
         return WRONG_WINDOW;
       }
@@ -206,8 +186,7 @@ namespace ice
     if (! Inside(img, xc, yc))
       {
         *xs = *ys = 0;
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return WRONG_STARTPOINT;
+        throw IceException(FNAME, M_WRONG_STARTPOINT);
       }
 
     for (y = yc; y < img->ysize; y += diff)
@@ -220,29 +199,61 @@ namespace ice
                 /*Testen aller Nachbarn in 4er Umgebung*/
                 result = 0;
                 if (decision(func, parray, x, y + 1, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
                 if (decision(func, parray, x, y - 1, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
                 if (decision(func, parray, x + 1, y, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
                 if (decision(func, parray, x - 1, y, dx, dy))
-                  result++;
+                  {
+                    result++;
+                  }
 
-                if (GetVal(imgh, x - 1, y - 1) > 0) continue;
+                if (GetVal(imgh, x - 1, y - 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x - 1, y) > 0)   continue;
+                if (GetVal(imgh, x - 1, y) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x - 1, y + 1) > 0) continue;
+                if (GetVal(imgh, x - 1, y + 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x, y + 1) > 0)   continue;
+                if (GetVal(imgh, x, y + 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x, y - 1) > 0)   continue;
+                if (GetVal(imgh, x, y - 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x + 1, y - 1) > 0) continue;
+                if (GetVal(imgh, x + 1, y - 1) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x + 1, y) > 0)   continue;
+                if (GetVal(imgh, x + 1, y) > 0)
+                  {
+                    continue;
+                  }
 
-                if (GetVal(imgh, x + 1, y + 1) > 0) continue;
+                if (GetVal(imgh, x + 1, y + 1) > 0)
+                  {
+                    continue;
+                  }
 
                 /*
                        printf("result: %d\n",result);
@@ -281,16 +292,10 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(img, imgh, dx, dy));
 
     if ((dx < 1) || (dy < 1))
-      {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     if (decision(func, parray, xs, ys, dx, dy) == 0)
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     int xx = xs;
     int yy = ys;
@@ -307,10 +312,7 @@ namespace ice
     while (ct < 4 && decision(func, parray, xx, yy, dx, dy) == 1);
 
     if (ct >= 4)
-      {
-        Message(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT3);
 
     ct = 0;    /* Zaehler der untersuchten Richtungen */
 
@@ -324,8 +326,7 @@ namespace ice
 
     if (ct >= 4)
       {
-        Message("calc_function", M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
-        return WRONG_STARTPOINT;
+        throw IceException("calc_function", M_WRONG_STARTPOINT2);
       }
 
     /* Hauptrichtung gefunden, jetzt noch Nebenrichtung testen */
@@ -336,9 +337,13 @@ namespace ice
 
     if (decision(func, parray, xx, yy, dx, dy) == 1)
       /* Nebenrichtung gltig */
-      dirneu = Direction + 7;          /* neue Hauptrichtung festlegen */
+      {
+        dirneu = Direction + 7;  /* neue Hauptrichtung festlegen */
+      }
     else
-      dirneu = Direction = Direction + 1; /* alte Hauptrichtung wieder herstellen */
+      {
+        dirneu = Direction = Direction + 1;  /* alte Hauptrichtung wieder herstellen */
+      }
 
     /* Startrichtung gefunden und merken */
     Freeman startdir = Direction;
@@ -346,12 +351,6 @@ namespace ice
     yy = ys;
     exist = 0;
 
-    /*
-      printf("startpunt:\n");
-      printf("Direction: %d dirneu: %d xx: %d yy:
-      %d xs: %d ys: %d\n",Direction,dirneu,xx,yy,xs,ys);
-      getch();
-    */
     /* Beginn der Konturfolge */
     do
       {
@@ -456,7 +455,9 @@ namespace ice
             dirneu = Direction - 1; /* neue zu untersuchende Hauptrichtung */
           }
         else
-          Direction = dirneu;    /* zurck zur Hauptrichtung */
+          {
+            Direction = dirneu;  /* zurck zur Hauptrichtung */
+          }
 
         /*
           printf("h3::: xx %d yy %d Direction %d, dirneu %d\n",xx,yy,Direction,dirneu);
@@ -467,9 +468,13 @@ namespace ice
     while (!(xx == xs && yy == ys && Direction == startdir));
 
     if (exist == 1)
-      return EXIST;
+      {
+        return EXIST;
+      }
     else
-      return NO_EXIST;
+      {
+        return NO_EXIST;
+      }
   }
 #undef FNAME
 }

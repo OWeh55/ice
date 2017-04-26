@@ -20,7 +20,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "util.h"
@@ -42,21 +42,22 @@ namespace ice
    * @param norm the scaling factor
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImg(const Image& src, const Image& dest,
-             int nx, int ny, int* mask,
-             int norm, int offset)
+  void LSIImg(const Image& src, const Image& dest,
+              int nx, int ny, int* mask,
+              int norm, int offset)
   {
-    if (norm == 0)
+    try
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        if (norm == 0)
+          throw IceException(FNAME, M_WRONG_PARAM);
+
+        // test if both images have valid pixel arrays and
+        // equal size of the active windows
+        MatchImg(src, dest);
+
+        lsiimg(src, dest, nx, ny, mask, norm, offset);
       }
-
-    // test if both images have valid pixel arrays and
-    // equal size of the active windows
-    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
-
-    return lsiimg(src, dest, nx, ny, mask, norm, offset);
+    RETHROW;
   }
 
   /**
@@ -68,15 +69,14 @@ namespace ice
    * @param mask the filter mask (scaling factor included in the double values)
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImg(const Image& src, const Image& dest,
-             int nx, int ny, double* mask,
-             int offset)
+  void LSIImg(const Image& src, const Image& dest,
+              int nx, int ny, double* mask,
+              int offset)
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
     RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
-
-    return lsiimg(src, dest, nx, ny, mask, offset);
+    lsiimg(src, dest, nx, ny, mask, offset);
   }
 #undef FNAME
 #define FNAME "LSIImgCyc"
@@ -91,21 +91,18 @@ namespace ice
    * @param norm the scaling factor
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImgCyc(const Image& src, const Image& dest,
-                int nx, int ny, int* mask,
-                int norm, int offset)
+  void LSIImgCyc(const Image& src, const Image& dest,
+                 int nx, int ny, int* mask,
+                 int norm, int offset)
   {
     if (norm == 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
     RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
-    return lsiimgcyc(src, dest, nx, ny, mask, norm, offset);
+    lsiimgcyc(src, dest, nx, ny, mask, norm, offset);
   }
 
   /**
@@ -118,9 +115,9 @@ namespace ice
    * @param mask the filter mask (scaling factor included in the double values)
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImgCyc(const Image& src, const Image& dest,
-                int nx, int ny, double* mask,
-                int offset)
+  void LSIImgCyc(const Image& src, const Image& dest,
+                 int nx, int ny, double* mask,
+                 int offset)
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
@@ -131,9 +128,11 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp = Image::createImage(dest, true);
+      {
+        tmp = Image::createImage(dest, true);
+      }
 
-    return lsiimgcyc(src, dest, nx, ny, mask, offset);
+    lsiimgcyc(src, dest, nx, ny, mask, offset);
   }
 
 #undef FNAME
@@ -148,35 +147,23 @@ namespace ice
    * @param norm the scaling factor
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImg(const Image& src, ImageD dest,
-             int nx, int ny, int* mask,
-             int norm)
+  void LSIImg(const Image& src, ImageD dest,
+              int nx, int ny, int* mask,
+              int norm)
   {
     if (norm == 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImg(src))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImgD(dest))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
-    return lsiimg(src, dest, nx, ny, mask, norm);
+    lsiimg(src, dest, nx, ny, mask, norm);
   }
 
   /**
@@ -188,31 +175,22 @@ namespace ice
    * @param mask the filter mask (scaling factor included in the double values)
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImg(const Image& src, ImageD dest,
-             int nx, int ny, double* mask)
+  void LSIImg(const Image& src, ImageD dest,
+              int nx, int ny, double* mask)
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
 
     if (!IsImg(src))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImgD(dest))
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((src->xsize != dest.xsize) || (src->ysize != dest.ysize))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
-    return lsiimg(src, dest, nx, ny, mask);
+    lsiimg(src, dest, nx, ny, mask);
   }
 
   /**
@@ -225,21 +203,18 @@ namespace ice
    * @param norm the scaling factor
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImg(ImageD src, ImageD dest,
-             int nx, int ny, int* mask,
-             int norm)
+  void LSIImg(ImageD src, ImageD dest,
+              int nx, int ny, int* mask,
+              int norm)
   {
     if (norm == 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
     RETURN_ERROR_IF_FAILED(MatchImgD(src, dest));
 
-    return lsiimg(src, dest, nx, ny, mask, norm);
+    lsiimg(src, dest, nx, ny, mask, norm);
   }
 
   /**
@@ -251,53 +226,53 @@ namespace ice
    * @param mask the filter mask (scaling factor included in the double values)
    * @param offset the value representing 0 (to handle negative results)
    */
-  int LSIImg(ImageD src, ImageD dest,
-             int nx, int ny, double* mask)
+  void LSIImg(ImageD src, ImageD dest,
+              int nx, int ny, double* mask)
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
     RETURN_ERROR_IF_FAILED(MatchImgD(src, dest));
 
-    return lsiimg(src, dest, nx, ny, mask);
+    lsiimg(src, dest, nx, ny, mask);
   }
 
 //####################################################################################################
-  int LSIImg(const Image& src, const Image& dest, const LSIFilter& f, int offset)
+  void LSIImg(const Image& src, const Image& dest, const LSIFilter& f, int offset)
   {
-    return f.Filter(src, dest, offset);
+    f.Filter(src, dest, offset);
   }
 
 // old versions with different parameter order
-  int LSIImg(const Image& src, int nx, int ny, int* kernel, int norm, int off, const Image& dest)
+  void LSIImg(const Image& src, int nx, int ny, int* kernel, int norm, int off, const Image& dest)
   {
-    return LSIImg(src, dest, nx, ny, kernel, norm, off);
+    LSIImg(src, dest, nx, ny, kernel, norm, off);
   }
 
-  int LSIImg(const Image& src, int nx, int ny, double* kernel, int off, const Image& dest)
+  void LSIImg(const Image& src, int nx, int ny, double* kernel, int off, const Image& dest)
   {
-    return LSIImg(src, dest, nx, ny, kernel, off);
+    LSIImg(src, dest, nx, ny, kernel, off);
   }
 
-  int LSIImg(const Image& src, const Matrix& mask, int off, const Image& dest)
+  void LSIImg(const Image& src, const Matrix& mask, int off, const Image& dest)
   {
-    return LSIImg(src, dest, mask, off);
+    LSIImg(src, dest, mask, off);
   }
 
-  int LSIImg(const Image& src, const IMatrix& mask, int norm, int off, const Image& dest)
+  void LSIImg(const Image& src, const IMatrix& mask, int norm, int off, const Image& dest)
   {
-    return LSIImg(src, dest, mask, norm, off);
+    LSIImg(src, dest, mask, norm, off);
   }
 
-  int LSIImg(const Image& src, const Image& dest, const Matrix& mask, int off)
+  void LSIImg(const Image& src, const Image& dest, const Matrix& mask, int off)
   {
     LSIFilter fm(mask);
-    return fm.Filter(src, dest, off);
+    fm.Filter(src, dest, off);
   }
 
-  int LSIImg(const Image& src, const Image& dest, const IMatrix& mask, int norm, int off)
+  void LSIImg(const Image& src, const Image& dest, const IMatrix& mask, int norm, int off)
   {
     LSIFilter fm(mask, norm);
-    return fm.Filter(src, dest, off);
+    fm.Filter(src, dest, off);
   }
 #undef FNAME
 }

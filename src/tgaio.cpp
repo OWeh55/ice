@@ -22,7 +22,7 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "exfile.h"
@@ -62,10 +62,7 @@ namespace ice
     int dy;
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     int identlen = tga_bread(fd);
     int color_map_typ = tga_bread(fd);
@@ -97,23 +94,14 @@ namespace ice
 
     fseek(fd, 18 + identlen, SEEK_SET);
 
-    if (typ != 2) /* nur RGB und keine Kompression */
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+    if (typ != 2)   /* nur RGB und keine Kompression */
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
-    if (interleave != 0) /*nur ohne Interleave */
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+    if (interleave != 0)   /*nur ohne Interleave */
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
-    if (colormaplen != 0) /*nur ohne Farbtabelle*/
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+    if (colormaplen != 0)   /*nur ohne Farbtabelle*/
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
     switch (bit)
       {
@@ -126,8 +114,7 @@ namespace ice
         ib.maxval = 31;
         break;
       default:
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     ib.planes = 3;
@@ -139,17 +126,23 @@ namespace ice
     ib.data = (unsigned char*)malloc(ib.linelength * ib.height);
     ib.intensity = true;
 
-    if (!IsImg(r)) r = NewImg(ib.width, ib.height, ib.maxval);
+    if (!IsImg(r))
+      {
+        r = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
-    if (!IsImg(g)) g = NewImg(ib.width, ib.height, ib.maxval);
+    if (!IsImg(g))
+      {
+        g = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
-    if (!IsImg(b)) b = NewImg(ib.width, ib.height, ib.maxval);
+    if (!IsImg(b))
+      {
+        b = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     if (!IsImg(r) || !IsImg(g) || !IsImg(b))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return (WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (dir != 0)
       {
@@ -199,11 +192,17 @@ namespace ice
     fclose(fd);
 
     if (!IsImg(r))
-      r = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        r = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(g))
-      g = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        g = NewImg(ib.width, ib.height, ib.maxval);
+      }
     if (!IsImg(b))
-      b = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        b = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, r, g, b, flag);
   }
@@ -231,10 +230,7 @@ namespace ice
     int dy;
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     identlen = tga_bread(fd);
     color_map_typ = tga_bread(fd);
@@ -266,23 +262,14 @@ namespace ice
 
     fseek(fd, 18 + identlen, SEEK_SET);
 
-    if (typ != 2) /* nur RGB und keine Kompression */
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
-      }
+    if (typ != 2)   /* nur RGB und keine Kompression */
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
-    if (interleave != 0) /*nur ohne Interleave */
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
-      }
+    if (interleave != 0)   /*nur ohne Interleave */
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
-    if (colormaplen != 0) /*nur ohne Farbtabelle*/
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
-      }
+    if (colormaplen != 0)   /*nur ohne Farbtabelle*/
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
     switch (bit)
       {
@@ -295,8 +282,7 @@ namespace ice
         ib.maxval = 31;
         break;
       default:
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return Image();
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     ib.planes = 3;
@@ -356,7 +342,9 @@ namespace ice
     fclose(fd);
 
     if (!IsImg(img))
-      img = NewImg(ib.width, ib.height, ib.maxval);
+      {
+        img = NewImg(ib.width, ib.height, ib.maxval);
+      }
 
     return Buffer2Image(ib, img, flag);
   }
@@ -373,15 +361,18 @@ namespace ice
     unsigned int i;
 
     if ((fd = fopen(hname.c_str(), FWMODUS)) == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return FILE_NOT_FOUND;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     identlen = WriteImgFileComment.length();
 
-    if (identlen > 0) tga_bwrite(fd, identlen + 1);
-    else tga_bwrite(fd, 0);
+    if (identlen > 0)
+      {
+        tga_bwrite(fd, identlen + 1);
+      }
+    else
+      {
+        tga_bwrite(fd, 0);
+      }
 
     tga_bwrite(fd, 0);
     tga_swrite(fd, 2);
@@ -401,7 +392,10 @@ namespace ice
 
     if (identlen > 0)
       {
-        for (i = 0; i < identlen; i++) tga_bwrite(fd, WriteImgFileComment[i]);
+        for (i = 0; i < identlen; i++)
+          {
+            tga_bwrite(fd, WriteImgFileComment[i]);
+          }
 
         tga_bwrite(fd, 0);
       }
@@ -410,9 +404,9 @@ namespace ice
       {
         for (x = 0; x < r->xsize; x++)
           {
-            rr = 255 - (GetVal(r, x, y) * 255 / r->maxval);
-            gg = 255 - (GetVal(g, x, y) * 255 / g->maxval);
-            bb = 255 - (GetVal(b, x, y) * 255 / b->maxval);
+            rr = 255 - (GetVal(r, x, y) * 255 / r.maxval);
+            gg = 255 - (GetVal(g, x, y) * 255 / g.maxval);
+            bb = 255 - (GetVal(b, x, y) * 255 / b.maxval);
             tga_bwrite(fd, bb);
             tga_bwrite(fd, gg);
             tga_bwrite(fd, rr);
@@ -450,7 +444,10 @@ namespace ice
   /*******************************************************************/
   static  int tga_swrite(FILE* fd, ushort s)
   {
-    if (!tga_bwrite(fd, (uchar)(s & 0xff))) return false;
+    if (!tga_bwrite(fd, (uchar)(s & 0xff)))
+      {
+        return false;
+      }
 
     return tga_bwrite(fd, (uchar)((s >> 8) & 0xff));
   }
@@ -475,10 +472,7 @@ namespace ice
     char bit, attr, dir, interleave;
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == nullptr)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     identlen = tga_bread(fd);
     color_map_typ = tga_bread(fd);
@@ -500,23 +494,14 @@ namespace ice
     dir = attr & 0x20;
     interleave = attr & 0xc0;
 
-    if (typ != 2) /* nur RGB und keine Kompression */
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+    if (typ != 2)   /* nur RGB und keine Kompression */
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
-    if (interleave != 0) /*nur ohne Interleave */
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+    if (interleave != 0)   /*nur ohne Interleave */
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
-    if (colormaplen != 0) /*nur ohne Farbtabelle*/
-      {
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+    if (colormaplen != 0)   /*nur ohne Farbtabelle*/
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
     xsize = width;
     ysize = height;

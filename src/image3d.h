@@ -71,42 +71,48 @@ namespace ice
       scale_z = zscale;
       seq.clear();
       for (int i = 0; i < zsize; i++)
-        seq.push_back(NewImg(xsize, ysize, maxval));
+        {
+          seq.push_back(NewImg(xsize, ysize, maxval));
+        }
     }
 
     virtual void create(const Image3d<TImage>& src)
     {
       if (src.isValid())
-        create(src.xsize, src.ysize, src.zsize, src.maxval, src.scale_x, src.scale_y, src.scale_z);
+        {
+          create(src.xsize, src.ysize, src.zsize, src.maxval, src.scale_x, src.scale_y, src.scale_z);
+        }
     }
 #define FNAME "Image3d::create"
     virtual void create(const std::string& filemask,
                         double xscale = 1.0, double yscale = 1.0, double zscale = 1.0)
     {
-      seq.clear();
-      std::vector<std::string> fn;
-      Directory(fn, filemask, DIR_FILE | DIR_WITHPATH);
-      zsize = fn.size();
-      if (zsize == 0)
+      try
         {
-          Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
-          return;
+          seq.clear();
+          std::vector<std::string> fn;
+          Directory(fn, filemask, DIR_FILE | DIR_WITHPATH);
+          zsize = fn.size();
+
+          if (zsize == 0)
+            throw IceException("", M_NOT_FOUND, filemask);
+
+          seq.resize(zsize);
+
+          for (int i = 0; i < zsize; i++)
+            {
+              // cout << "lese " << fn[i] << endl;
+              seq[i] = ReadImg(fn[i]);
+            }
+          xsize = seq[0].xsize;
+          ysize = seq[0].ysize;
+          maxval = seq[0].maxval;
+
+          scale_x = xscale;
+          scale_y = yscale;
+          scale_z = zscale;
         }
-
-      seq.resize(zsize);
-
-      for (int i = 0; i < zsize; i++)
-        {
-          // cout << "lese " << fn[i] << endl;
-          seq[i] = ReadImg(fn[i]);
-        }
-      xsize = seq[0].xsize;
-      ysize = seq[0].ysize;
-      maxval = seq[0].maxval;
-
-      scale_x = xscale;
-      scale_y = yscale;
-      scale_z = zscale;
+      RETHROW;
     }
 
     virtual void create(const std::vector<std::string>& files,
@@ -118,10 +124,7 @@ namespace ice
 
       zsize = files.size();
       if (zsize == 0)
-        {
-          Message(FNAME, M_EMPTY_LIST, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_EMPTY_LIST);
       for (unsigned int i = 0; i < files.size(); i++)
         {
           seq.push_back(ReadImg(files[i]));
@@ -150,10 +153,7 @@ namespace ice
             }
         }
       else
-        {
-          Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-          return WRONG_PARAM;
-        }
+        throw IceException(FNAME, M_WRONG_IMGSIZE);
       return OK;
     }
 #undef FNAME
@@ -185,17 +185,17 @@ namespace ice
     ValueType getPixel(int x, int y, int z) const
     {
       if (x < 0)
-        Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_XTOOSMALL);
       else if (x >= xsize)
-        Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_XTOOLARGE);
       else if (y < 0)
-        Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_YTOOSMALL);
       else if (y >= ysize)
-        Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_YTOOLARGE);
       else if (z < 0)
-        Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_ZTOOSMALL);
       else if (z >= zsize)
-        Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_ZTOOLARGE);
       else
         {
           return seq[z].getPixelUnchecked(x, y);
@@ -213,19 +213,21 @@ namespace ice
     void setPixel(int x, int y, int z, ValueType val) const
     {
       if (x < 0)
-        Message(FNAME, M_XTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_XTOOSMALL);
       else if (x >= xsize)
-        Message(FNAME, M_XTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_XTOOLARGE);
       else if (y < 0)
-        Message(FNAME, M_YTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_YTOOSMALL);
       else if (y >= ysize)
-        Message(FNAME, M_YTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_YTOOLARGE);
       else if (z < 0)
-        Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_ZTOOSMALL);
       else if (z >= zsize)
-        Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_ZTOOLARGE);
       else
-        seq[z].setPixelUnchecked(x, y, val);
+        {
+          seq[z].setPixelUnchecked(x, y, val);
+        }
     }
 #undef FNAME
 
@@ -244,14 +246,18 @@ namespace ice
     TImage& operator[](int i)
     {
       if (i < 0 || i >= (int)seq.size())
-        throw "z index out of range";
+        {
+          throw "z index out of range";
+        }
       return seq[i];
     }
 
     const TImage& operator[](int i) const
     {
       if (i < 0 || i >= (int)seq.size())
-        throw "z index out of range";
+        {
+          throw "z index out of range";
+        }
       return seq[i];
     }
 
@@ -259,16 +265,10 @@ namespace ice
     int match(const Image3d<TImage>& img2) const
     {
       if (!isValid() || !img2.isValid())
-        {
-          Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-          return WRONG_PARAM;
-        }
+        throw IceException(FNAME, M_WRONG_IMAGE);
 
       if ((xsize != img2.xsize) || (ysize != img2.ysize) || (zsize != img2.zsize))
-        {
-          Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-          return WRONG_PARAM;
-        }
+        throw IceException(FNAME, M_WRONG_IMGSIZE);
 
       return OK;
     }
@@ -276,7 +276,9 @@ namespace ice
     int match(const Image3d<TImage>& img2, const Image3d<TImage>& img3) const
     {
       if (match(img2) != OK)
-        return WRONG_PARAM;
+        {
+          return WRONG_PARAM;
+        }
       return match(img3);
     }
 #undef FNAME
@@ -325,13 +327,17 @@ namespace ice
       z /= scale_z;
 
       if (z < -0.5)
-        Message(FNAME, M_ZTOOSMALL, WRONG_PARAM);
+        throw IceException(FNAME, M_ZTOOSMALL);
       else if (z > zsize)
-        Message(FNAME, M_ZTOOLARGE, WRONG_PARAM);
+        throw IceException(FNAME, M_ZTOOLARGE);
       else if (z < 0)
-        GetInterpolVal(seq[0], x, y);
+        {
+          GetInterpolVal(seq[0], x, y);
+        }
       if (z > zsize - 1)
-        return GetInterpolVal(seq.back(), x, y);
+        {
+          return GetInterpolVal(seq.back(), x, y);
+        }
 
       int zi = (int)z;
       double zr = z - zi;
@@ -339,7 +345,9 @@ namespace ice
       double v1 = GetInterpolVal(seq[zi], x, y);
       double v2 = v1;
       if (zi + 1 < (int)seq.size())
-        v2 = GetInterpolVal(seq[zi + 1], x, y);
+        {
+          v2 = GetInterpolVal(seq[zi + 1], x, y);
+        }
       return v1 * (1 - zr) + v2 * zr;
     }
 #undef FNAME
@@ -362,7 +370,9 @@ namespace ice
     {
       int rc = 0;
       for (int i = 0; i < (int)seq.size() && rc == 0; i++)
-        rc = seq[i].set(val);
+        {
+          rc = seq[i].set(val);
+        }
       return rc;
     }
 

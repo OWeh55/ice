@@ -8,9 +8,9 @@ int main(int argc, char* argv[])
   double par[7];
 
   imgv = NewImg(256, 256, 256);
-  ClearImg(imgv);
+  clearImg(imgv);
   imgo = NewImg(256, 256, 256);
-  ClearImg(imgo);
+  clearImg(imgo);
   Show(OVERLAY, imgv, imgo);
   Display(ON);
   par[0] = 127;

@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 #include "util.h"
@@ -46,28 +46,21 @@ namespace ice
     unsigned char Shift, Shift1, Shift2;
     int i, j, ii;
     int Count, MaxVal, val;
-    int newimg;
     int sizex, sizey, xmax, ymax;
     int PixelPerByte;
     int ByteNbr, PosInByte;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return Image();
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, FILE_NOT_FOUND);
-        return Image();
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     fread((unsigned char*)&Header, 128, 1, fd);
 
     if (Header.Signature != 0x0a)
       {
-        Message(FNAME, "Kein PCX-File !!!", ERROR);
+        throw IceException(FNAME, M_WRONG_FORMAT);
         fclose(fd);
       }
 
@@ -91,8 +84,7 @@ namespace ice
         break;
       default:
         fclose(fd);
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return Image();
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     Shift2 = 3 - Shift1;
@@ -101,20 +93,9 @@ namespace ice
     sizex = Header.MaxX - Header.MinX + 1;
     sizey = Header.MaxY - Header.MinY + 1;
 
-    newimg = false;
-
     if (!IsImg(img))
       {
-        img = NewImg(sizex, sizey, MaxVal);
-
-        if (!IsImg(img))
-          {
-            fclose(fd);
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return Image();
-          }
-
-        newimg = true; /* merken dass Bild neu angefordert */
+        img.create(sizex, sizey, MaxVal);
       }
 
     xmax = min(sizex, img->xsize);
@@ -133,11 +114,8 @@ namespace ice
               {
                 fclose(fd);
 
-                if (newimg) FreeImg(img);
-
                 free(PCXLine);
-                Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-                return Image();
+                throw IceException(FNAME, M_WRONG_FILE);
               }
 
             if (Ch >> 6 == 0x03)
@@ -149,11 +127,8 @@ namespace ice
                   {
                     fclose(fd);
 
-                    if (newimg) FreeImg(img);
-
                     free(PCXLine);
-                    Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-                    return Image();
+                    throw IceException(FNAME, M_WRONG_FILE);
                   }
 
                 for (ii = 0; ii < Count; ii++)
@@ -164,15 +139,15 @@ namespace ice
                       {
                         fclose(fd);
 
-                        if (newimg) FreeImg(img);
-
                         free(PCXLine);
-                        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-                        return Image();
+                        throw IceException(FNAME, M_WRONG_FILE);
                       }
                   }
               }
-            else PCXLine[i++] = Ch;
+            else
+              {
+                PCXLine[i++] = Ch;
+              }
           }
 
         /* Transport der unkomprimierten Zeile "PCXLine" in das Bild "img" */
@@ -182,7 +157,7 @@ namespace ice
             PosInByte = PixelPerByte - 1 - (i % PixelPerByte);
             Shift = (PosInByte << Shift1);
             val = (PCXLine[ByteNbr] & (MaxVal << Shift)) >> Shift;
-            val = img->maxval - val * img->maxval / MaxVal;
+            val = img.maxval - val * img.maxval / MaxVal;
             PutVal(img, i, j, val);
           }
       }
@@ -209,15 +184,11 @@ namespace ice
     unsigned char* ColorTable;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((fd = fopen(hname.c_str(), FWMODUS)) == NULL)
       {
-        Message(FNAME, "File kann nicht eroeffnet werden", ERROR);
-        return ERROR;
+        throw IceException(FNAME, M_FILE_OPEN);
       }
 
     Header.Signature = 0x0a; /* Kennung PCX-File */
@@ -226,19 +197,19 @@ namespace ice
 
     /* Bits pro Bildpunkt */
 
-    if (img->maxval < 2)
+    if (img.maxval < 2)
       {
         Header.BitsPerPixel = 1;
         Shift1 = 0;
         MaxVal = 1;
       }
-    else if (img->maxval < 4)
+    else if (img.maxval < 4)
       {
         Header.BitsPerPixel = 2;
         Shift1 = 1;
         MaxVal = 3;
       }
-    else if (img->maxval < 16)
+    else if (img.maxval < 16)
       {
         Header.BitsPerPixel = 4;
         Shift1 = 2;
@@ -262,7 +233,9 @@ namespace ice
 
     /* Schreiben der Farbpalette*/
     for (i = 0; i < 48; i++)
-      Header.ColorMap[i] = 0;
+      {
+        Header.ColorMap[i] = 0;
+      }
 
     if (MaxVal < 16)
       for (i = 0; i < (MaxVal + 1); i++)
@@ -277,9 +250,15 @@ namespace ice
     /* Bytes pro Zeile (unkomprimiert)*/
     Header.BytesPerLine = img->xsize / PixelPerByte;
 
-    if ((Header.BytesPerLine % PixelPerByte) > 0) Header.BytesPerLine++;
+    if ((Header.BytesPerLine % PixelPerByte) > 0)
+      {
+        Header.BytesPerLine++;
+      }
 
-    if (Header.BytesPerLine % 2 == 1) Header.BytesPerLine++;
+    if (Header.BytesPerLine % 2 == 1)
+      {
+        Header.BytesPerLine++;
+      }
 
     /* Interpretation der Farbpalette */
     Header.PaletteInfo = 1;
@@ -287,8 +266,7 @@ namespace ice
     /* Schreiben des PCX-Headers in PCX-File */
     if (fwrite(&Header, 128, 1, fd) == 0)
       {
-        Message(FNAME, "Fehler beim Schreiben des Headers", ERROR);
-        return ERROR;
+        throw IceException(FNAME, M_WRONG_WRITE);
       }
 
     PCXLine = (unsigned char*) malloc(Header.BytesPerLine * sizeof(unsigned char));
@@ -296,14 +274,17 @@ namespace ice
     for (j = 0; j < img->ysize; j++)
       {
         /* Ruecksetzen von PCX-Line */
-        for (i = 0; i < Header.BytesPerLine; i++) PCXLine[i] = 0;
+        for (i = 0; i < Header.BytesPerLine; i++)
+          {
+            PCXLine[i] = 0;
+          }
 
         /* Generierung der unkomprimierten PCX-Zeile */
         ii = 0;
 
         for (i = 0; i < img->xsize; i++)
           {
-            val = MaxVal - GetVal(img, i, j) * MaxVal / img->maxval;
+            val = MaxVal - GetVal(img, i, j) * MaxVal / img.maxval;
             PosInByte = i % PixelPerByte;
             valh = val << (7 - (PosInByte << Shift1) - ((1 << Shift1) - 1));
             PCXLine[i / PixelPerByte] = PCXLine[i / PixelPerByte] | valh;
@@ -321,7 +302,9 @@ namespace ice
                 ii = i + 1;
 
                 while ((Count < 0x3f) && (ii < Header.BytesPerLine) && (PCXLine[ii++] == PCXLine[i]))
-                  Count = ii - i;
+                  {
+                    Count = ii - i;
+                  }
               }
 
             if (Count > 1 || ((PCXLine[i] & 0xc0) == 0xc0))
@@ -339,7 +322,9 @@ namespace ice
                     fwrite(&PCXLine[i], 1, 1, fd);
                   }
                 else
-                  fwrite(&PCXLine[i], 1, 1, fd);
+                  {
+                    fwrite(&PCXLine[i], 1, 1, fd);
+                  }
               }
 
             i += Count;
@@ -369,7 +354,6 @@ namespace ice
 
 #undef FNAME
 
-
   /************************************************************************/
 #define FNAME "InfPCXFile"
   int InfPCXFile(const string& fname, int& xsize, int& ysize,
@@ -384,7 +368,10 @@ namespace ice
     maxval = 0;
     nr = 0;
 
-    if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL) return FILE_NOT_FOUND;
+    if ((fd = fopen(hname.c_str(), FRMODUS)) == NULL)
+      {
+        return FILE_NOT_FOUND;
+      }
 
     fread((unsigned char*)&Header, 128, 1, fd);
 

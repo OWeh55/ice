@@ -23,11 +23,10 @@
  * Author: Alexander Lärz, 2005
  */
 
-
 #include <math.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "quaternion.h"
@@ -37,9 +36,15 @@ namespace ice
 
   int sign(double x)
   {
-    if (x < 0.0)return -1;
+    if (x < 0.0)
+      {
+        return -1;
+      }
 
-    if (x > 0.0)return 1;
+    if (x > 0.0)
+      {
+        return 1;
+      }
 
     return 0;
   }
@@ -119,7 +124,10 @@ namespace ice
           {
             return atan(sqrt(i * i + j * j + k * k) / real);
           }
-        else return atan(sqrt(i * i + j * j + k * k) / real) + M_PI;
+        else
+          {
+            return atan(sqrt(i * i + j * j + k * k) / real) + M_PI;
+          }
       }
     else
       {
@@ -129,7 +137,7 @@ namespace ice
           }
       }
 
-    Message(FNAME, M_NO_QUATERNIONEIGENWINKEL, NO_QUATERNIONEIGENWINKEL);
+    throw IceException(FNAME, M_NO_QUATERNIONEIGENWINKEL);
 
     return -1.0;
   }
@@ -140,7 +148,7 @@ namespace ice
   {
     if (i == 0 && j == 0 && k == 0)
       {
-        Message(FNAME, M_NO_QUATERNIONEIGENACHSE, NO_QUATERNIONEIGENACHSE);
+        throw IceException(FNAME, M_NO_QUATERNIONEIGENACHSE);
 
         return Quaternion(0, 0, 0, 0);
       }
@@ -162,19 +170,12 @@ namespace ice
 
     if (getSquareNorm() == 0)
       {
-        Message(FNAME, M_NO_QUATERNIONPHASES, NO_QUATERNIONPHASES);
+        throw IceException(FNAME, M_NO_QUATERNIONPHASES);
 
         return Vector3d(0, 0, 0);
       }
 
     temp = getNormalize();
-
-    int error = GetError();
-
-    if (error == NOT_NORMALIZEABLE)
-      {
-        Message(FNAME, M_0, NO_QUATERNIONPHASES);
-      }
 
     double x = 2 * (temp.i * temp.j - temp.real * temp.k);
 
@@ -184,8 +185,14 @@ namespace ice
       }
     else
       {
-        if (x < 0) delta = -M_PI_4;
-        else delta = M_PI_4;
+        if (x < 0)
+          {
+            delta = -M_PI_4;
+          }
+        else
+          {
+            delta = M_PI_4;
+          }
       }
 
     if (delta == M_PI_4 || delta == -M_PI_4)
@@ -225,14 +232,16 @@ namespace ice
           }
       }
 
-
     return Vector3d(alpha, beta, delta);
   }
 #undef FNAME
 
   bool Quaternion :: isUnitQuaternion()
   {
-    if (getSquareNorm() == 1)return true;
+    if (getSquareNorm() == 1)
+      {
+        return true;
+      }
 
     return false;
   }
@@ -267,7 +276,6 @@ namespace ice
     return Quaternion(nreal, ni, nj, nk);
   }
 
-
 #define FNAME "Quaternion :: getInverse()"
   Quaternion Quaternion :: getInverse()
   {
@@ -275,7 +283,7 @@ namespace ice
 
     if (norm == 0)
       {
-        Message(FNAME, M_NO_QUATERNIONINVERSE, NO_QUATERNIONINVERSE);
+        throw IceException(FNAME, M_NO_QUATERNIONINVERSE);
 
         return (*this);
       }
@@ -296,7 +304,7 @@ namespace ice
 
     if (norm == 0)
       {
-        Message(FNAME, M_NOT_NORMALIZEABLE, NOT_NORMALIZEABLE);
+        throw IceException(FNAME, M_NOT_NORMALIZEABLE);
 
         return (*this);
       }
@@ -392,15 +400,23 @@ namespace ice
     const char* str2 = "+";
     const char* str3 = "+";
 
-    if (x.i < 0)str1 = "";
+    if (x.i < 0)
+      {
+        str1 = "";
+      }
 
-    if (x.j < 0)str2 = "";
+    if (x.j < 0)
+      {
+        str2 = "";
+      }
 
-    if (x.k < 0)str3 = "";
+    if (x.k < 0)
+      {
+        str3 = "";
+      }
 
     return ost << x.real << str1 << x.i << "i" << str2 << x.j << "j" << str3 << x.k << "k";
   }
-
 
   Quaternion qexp(const Quaternion& x)
   {
@@ -425,7 +441,10 @@ namespace ice
 
   double Quaternion :: myatan2(double x, double y)
   {
-    if (y > 0)return atan(x / y);
+    if (y > 0)
+      {
+        return atan(x / y);
+      }
 
     if (y == 0)
       {
@@ -433,16 +452,24 @@ namespace ice
           {
             return M_PI;
           }
-        else return -M_PI;
+        else
+          {
+            return -M_PI;
+          }
       }
 
-    if (y < 0 && x < 0)return atan(x / y) - M_PI;
+    if (y < 0 && x < 0)
+      {
+        return atan(x / y) - M_PI;
+      }
 
-    if (y < 0 && x >= 0)return atan(x / y) + M_PI;
+    if (y < 0 && x >= 0)
+      {
+        return atan(x / y) + M_PI;
+      }
 
     return 0;
   }
 
 }
-
 

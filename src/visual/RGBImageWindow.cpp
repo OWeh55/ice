@@ -41,7 +41,9 @@ namespace ice
     addImage(blueImage);
     factor = 1;
     if (redImage->maxval < 128)
-      factor = 255 / redImage->maxval;
+      {
+        factor = 255 / redImage->maxval;
+      }
     // std::cout << factor<<std::endl;
   }
 

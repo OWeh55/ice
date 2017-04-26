@@ -2,12 +2,11 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "macro.h"
 
 #include "paint.h"
-
 
 namespace ice
 {
@@ -285,7 +284,9 @@ namespace ice
         for (int xi = x; xi < x + size; xi++)
           {
             if (xi > 0 && xi < img->xsize)
-              PutVal(img, xi, yi, val);
+              {
+                PutVal(img, xi, yi, val);
+              }
           }
   }
 
@@ -300,7 +301,9 @@ namespace ice
         for (int k = 0; k < 8; k++)
           {
             if (textcode[c][j] & mask)
-              drawDot(DotX, y + j * size, size, val, img);
+              {
+                drawDot(DotX, y + j * size, size, val, img);
+              }
 
             DotX += size;
             mask = mask >> 1;
@@ -332,25 +335,23 @@ namespace ice
 
     int hfeld[5] = {1, 2, 4, 8, 16};
 
-    if ((val < 0) || (val > img->maxval))
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if ((val < 0) || (val > img.maxval))
+      throw IceException(FNAME, M_WRONG_VAL);
 
     int DotSize;
 
     if (size_exp > 5)
-      {
-        Message(FNAME, M_WRONG_MAGNITUDE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MAGNITUDE);
     else
       {
         if (size_exp >= 0)
-          DotSize = hfeld[size_exp];
+          {
+            DotSize = hfeld[size_exp];
+          }
         else
-          DotSize = -size_exp;
+          {
+            DotSize = -size_exp;
+          }
       }
 
     int SignSize = 8 * DotSize;
@@ -374,7 +375,9 @@ namespace ice
           }
 
         if (SignY0 + SignSize >= img->ysize)
-          return OK;
+          {
+            return OK;
+          }
       }
 
     return OK;

@@ -41,7 +41,8 @@ endif
 #CXX=g++
 #CXX=icc
 
-COPT := $(COPT) -O4 -g -fno-strict-aliasing -Wall
+COPT := $(COPT) -O4 -g -fno-strict-aliasing 
+#-Wall
 #-ffast-math
 
 INCLUDE := -I$(ICEDIR)/src `wx-config --cxxflags`
@@ -214,7 +215,6 @@ valref\
 vectortest\
 vis1\
 vis2\
-vis3\
 visual\
 visualx\
 yuvConvert

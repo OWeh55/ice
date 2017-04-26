@@ -22,7 +22,7 @@
 #include <string.h>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "lists.h"
 #include "macro.h"
 
@@ -44,17 +44,16 @@ namespace ice
   PointList ConvexHull(PointList pl)
   {
     if (pl == NULL || pl->lng == 0)
-      {
-        Message(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     if (pl->lng <= 3)
       {
         PointList pl2 = NewPointList(3);
 
         for (int i = 0; i < pl->lng; i++)
-          PutPoint(pl2, 0, pl->xptr[i], pl->yptr[i], pl->wptr[i]);
+          {
+            PutPoint(pl2, 0, pl->xptr[i], pl->yptr[i], pl->wptr[i]);
+          }
 
         return pl2;
       }
@@ -66,13 +65,25 @@ namespace ice
 
     for (nr = 0; nr < pl->lng; nr++)
       {
-        if (xi > pl->xptr[nr]) xi = (int)(pl->xptr[nr]);
+        if (xi > pl->xptr[nr])
+          {
+            xi = (int)(pl->xptr[nr]);
+          }
 
-        if (yi > pl->yptr[nr]) yi = (int)(pl->yptr[nr]);
+        if (yi > pl->yptr[nr])
+          {
+            yi = (int)(pl->yptr[nr]);
+          }
 
-        if (xa < pl->xptr[nr]) xa = (int)(pl->xptr[nr]);
+        if (xa < pl->xptr[nr])
+          {
+            xa = (int)(pl->xptr[nr]);
+          }
 
-        if (ya < pl->yptr[nr]) ya = (int)(pl->yptr[nr]);
+        if (ya < pl->yptr[nr])
+          {
+            ya = (int)(pl->yptr[nr]);
+          }
       }
 
     int xsize = xa - xi + 1;
@@ -80,18 +91,14 @@ namespace ice
     int* ymin = new int[xsize];
 
     if (ymin == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     int* ymax = new int[xsize];
 
     if (ymax == NULL)
       {
         delete ymin;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int* imin = new int[xsize];
@@ -100,8 +107,7 @@ namespace ice
       {
         delete ymin;
         delete ymax;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int* imax = new int[xsize];
@@ -111,8 +117,7 @@ namespace ice
         delete ymin;
         delete ymax;
         delete imin;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int* used = new int[xsize];
@@ -123,8 +128,7 @@ namespace ice
         delete ymax;
         delete imin;
         delete imax;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     for (nr = 0; nr < xsize; nr++)
@@ -140,7 +144,10 @@ namespace ice
       {
         int index = (int)(pl->xptr[nr] - xi);
 
-        if (ymin[index] == INT_MAX) usedcnt++;
+        if (ymin[index] == INT_MAX)
+          {
+            usedcnt++;
+          }
 
         if (ymin[index] > pl->yptr[nr])
           {
@@ -179,8 +186,7 @@ namespace ice
         delete imin;
         delete imax;
         delete used;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     int current = -1;
@@ -219,7 +225,10 @@ namespace ice
               {
                 nr++;
 
-                if (current == xsize - 1) break;
+                if (current == xsize - 1)
+                  {
+                    break;
+                  }
 
                 while (ymin[++current] == INT_MAX);
               }
@@ -228,7 +237,10 @@ namespace ice
           {
             nr++;
 
-            if (current == xsize - 1) break;
+            if (current == xsize - 1)
+              {
+                break;
+              }
 
             while (ymin[++current] == INT_MAX);
           }
@@ -255,12 +267,18 @@ namespace ice
                               pl->xptr[imax[pl2[nr - 1]]], pl->yptr[imax[pl2[nr - 1]]],
                               pl->xptr[imax[pl2[nr]]], pl->yptr[imax[pl2[nr]]]);
 
-            if (det < 0) nr--;
+            if (det < 0)
+              {
+                nr--;
+              }
             else
               {
                 nr++;
 
-                if (current == 0) break;
+                if (current == 0)
+                  {
+                    break;
+                  }
 
                 do
                   {
@@ -273,7 +291,10 @@ namespace ice
           {
             nr++;
 
-            if (current == 0) break;
+            if (current == 0)
+              {
+                break;
+              }
 
             do
               {
@@ -294,15 +315,18 @@ namespace ice
         delete imax;
         delete used;
         delete pl2;
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     for (current = 0; current <= nr2; current++)
-      PutPoint(pl3, current, pl->xptr[imin[pl2[current]]], pl->yptr[imin[pl2[current]]], pl->wptr[imin[pl2[current]]]);
+      {
+        PutPoint(pl3, current, pl->xptr[imin[pl2[current]]], pl->yptr[imin[pl2[current]]], pl->wptr[imin[pl2[current]]]);
+      }
 
     for (current = nr2 + 1; current < nr; current++)
-      PutPoint(pl3, current, pl->xptr[imax[pl2[current]]], pl->yptr[imax[pl2[current]]], pl->wptr[imax[pl2[current]]]);
+      {
+        PutPoint(pl3, current, pl->xptr[imax[pl2[current]]], pl->yptr[imax[pl2[current]]], pl->wptr[imax[pl2[current]]]);
+      }
 
     delete ymin;
     delete ymax;
@@ -314,59 +338,65 @@ namespace ice
     return pl3;
   }
 
-
   Matrix ConvexHull(const Matrix& pl)
   {
-    std::vector<Point> vpl(pl.rows());
-    for (int i = 0; i < pl.rows(); i++)
+    try
       {
-        vpl[i].x = pl[i][0];
-        vpl[i].y = pl[i][1];
+        std::vector<Point> vpl(pl.rows());
+        for (int i = 0; i < pl.rows(); i++)
+          {
+            vpl[i].x = pl[i][0];
+            vpl[i].y = pl[i][1];
+          }
+
+        Matrix res(0, 2);
+        std::vector<Point> rpl;
+        ConvexHull<Point>(vpl, rpl);
+
+        for (unsigned int i = 0; i < rpl.size(); i++)
+          {
+            res.append(Vector(rpl[i].x, rpl[i].y));
+          }
+
+        return res;
       }
-
-    Matrix res(0, 2);
-    std::vector<Point> rpl;
-    IF_FAILED(ConvexHull<Point>(vpl, rpl))
-    {
-      return res;
-    }
-
-    for (unsigned int i = 0; i < rpl.size(); i++)
-      res.Append(Vector(rpl[i].x, rpl[i].y));
-
-    return res;
+    RETHROW;
   }
 
   Contur ConvexHull(const Contur& c)
   {
-    Contur res;
-
-    if (!c.isValid())
+    try
       {
-        Message(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
+        Contur res;
+        if (!c.isValid())
+          throw IceException(FNAME, M_INVALID_CONTUR);
+
+        if (c.Number() < 3)
+          {
+            return c;
+          }
+
+        bool hole = c.isHole();
+
+        std::vector<IPoint> pl;
+        c.getPoints(pl);
+
+        ConvexHull(pl, pl);
+
+        res.setStart(pl[0]);
+        for (unsigned int i = 1; i < pl.size(); i++)
+          {
+            res.add(pl[i]);
+          }
+        res.add(pl[0]); // close contur
+
+        if (hole)
+          {
+            res.invertDir();
+          }
         return res;
       }
-
-    if (c.Number() < 3)
-      return c;
-
-    bool hole = c.isHole();
-
-    std::vector<IPoint> pl;
-    c.getPoints(pl);
-
-    ConvexHull(pl, pl);
-
-    res.SetStart(pl[0]);
-    for (unsigned int i = 1; i < pl.size(); i++)
-      res.Add(pl[i]);
-    res.Add(pl[0]); // close contur
-
-    if (hole)
-      {
-        res.InvDir();
-      }
-    return res;
+    RETHROW;
   }
 
 #undef FNAME
@@ -387,7 +417,9 @@ namespace ice
     det2 = TriangleDet(x11, y11, x12, y12, xm2, ym2);
 
     if (det1 * det2 > 0)
-      return false;
+      {
+        return false;
+      }
 
     xm1 = (x21 + x22 + x11) / 3;
     ym1 = (y21 + y22 + y11) / 3;
@@ -412,10 +444,7 @@ namespace ice
   {
 
     if (pl1 == NULL || pl1->lng < 3 || pl2 == NULL || pl2->lng < 3)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return POLY_ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int i, j;
 
@@ -426,7 +455,10 @@ namespace ice
             if (LinesIntersect(pl1->xptr[i], pl1->yptr[i],
                                pl1->xptr[(i + 1) % (pl1->lng)], pl1->yptr[(i + 1) % (pl1->lng)],
                                pl2->xptr[j], pl2->yptr[j],
-                               pl2->xptr[(j + 1) % (pl2->lng)], pl2->yptr[(j + 1) % (pl2->lng)])) return POLY_INTERSECT;
+                               pl2->xptr[(j + 1) % (pl2->lng)], pl2->yptr[(j + 1) % (pl2->lng)]))
+              {
+                return POLY_INTERSECT;
+              }
           }
       }
 
@@ -444,17 +476,26 @@ namespace ice
           {
             sign1 = 1;
 
-            if (sign2 == 1) break;
+            if (sign2 == 1)
+              {
+                break;
+              }
           }
         else if (det < 0)
           {
             sign2 = 1;
 
-            if (sign1 == 1) break;
+            if (sign1 == 1)
+              {
+                break;
+              }
           }
       }
 
-    if (sign1 == 0 || sign2 == 0) return POLY_1_IN_2;
+    if (sign1 == 0 || sign2 == 0)
+      {
+        return POLY_1_IN_2;
+      }
 
     sign1 = sign2 = 0;
 
@@ -468,17 +509,26 @@ namespace ice
           {
             sign1 = 1;
 
-            if (sign2 == 1) break;
+            if (sign2 == 1)
+              {
+                break;
+              }
           }
         else if (det < 0)
           {
             sign2 = 1;
 
-            if (sign1 == 1) break;
+            if (sign1 == 1)
+              {
+                break;
+              }
           }
       }
 
-    if (sign1 == 0 || sign2 == 0) return POLY_2_IN_1;
+    if (sign1 == 0 || sign2 == 0)
+      {
+        return POLY_2_IN_1;
+      }
 
     return POLY_DISJUNKT;
   }

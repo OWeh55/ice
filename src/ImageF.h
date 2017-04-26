@@ -127,7 +127,9 @@ namespace ice
                 T max = std::numeric_limits<T>::max())
     {
       if (mat != nullptr)
-        freemat();
+        {
+          freemat();
+        }
 
       xsize = SizeX;
       ysize = SizeY;
@@ -148,7 +150,9 @@ namespace ice
       create(templateImg.xsize, templateImg.ysize,
              templateImg.minval, templateImg.maxval);
       if (shallCopy)
-        copy(templateImg);
+        {
+          copy(templateImg);
+        }
     }
 
     /**
@@ -263,7 +267,9 @@ namespace ice
     const ImageF& operator = (const ImageF& i)
     {
       if (&i == this)
-        return *this;
+        {
+          return *this;
+        }
 
       freemat();
       xsize = i.xsize;
@@ -299,32 +305,20 @@ namespace ice
     double getPixel(int x, int y) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
       return (*mat)[y][x];
     }
 
     double getPixel(IPoint p) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
       return (*mat)[p.y][p.x];
     }
 #undef FNAME
@@ -372,16 +366,10 @@ namespace ice
     void setPixel(int x, int y, double val) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       (*mat)[y][x] = val;
     }
@@ -389,16 +377,10 @@ namespace ice
     void setPixel(IPoint p, double val) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       (*mat)[p.y][p.x] = val;
     }
@@ -407,14 +389,18 @@ namespace ice
     {
       if ((unsigned int)p.x < (unsigned int)xsize)
         if ((unsigned int)p.y < (unsigned int)ysize)
-          (*mat)[p.y][p.x] = value;
+          {
+            (*mat)[p.y][p.x] = value;
+          }
     }
 
     void setPixelClipped(int x, int y, double value) const
     {
       if ((unsigned int)x < (unsigned int)xsize)
         if ((unsigned int)y < (unsigned int)ysize)
-          (*mat)[y][x] = value;
+          {
+            (*mat)[y][x] = value;
+          }
     }
 
 #undef FNAME
@@ -433,9 +419,13 @@ namespace ice
     {
       double val;
       if (getPixelInterpol(x, y, val))
-        return val;
+        {
+          return val;
+        }
       else
-        return 0.0;
+        {
+          return 0.0;
+        }
     }
 
     bool getPixelInterpol(double x, double y, double& val) const
@@ -463,7 +453,9 @@ namespace ice
         }
 
       if ((xi1 == xsize) || (yi1 == ysize))
-        return (*mat)[yi][xi]; // rechter/unterer Rand
+        {
+          return (*mat)[yi][xi];  // rechter/unterer Rand
+        }
 
       double dx  = x - (double) xi;
       double dx1 = 1.0 - dx;
@@ -480,24 +472,48 @@ namespace ice
     // code doubling for efficiency purposes !!
     bool inside(int x, int y) const
     {
-      if ((unsigned int)x >= (unsigned int)xsize) return false;
-      if ((unsigned int)y >= (unsigned int)ysize) return false;
+      if ((unsigned int)x >= (unsigned int)xsize)
+        {
+          return false;
+        }
+      if ((unsigned int)y >= (unsigned int)ysize)
+        {
+          return false;
+        }
       return true;
     }
 
     bool inside(IPoint p) const
     {
-      if ((unsigned int)p.x >= (unsigned int)xsize) return false;
-      if ((unsigned int)p.y >= (unsigned int)ysize) return false;
+      if ((unsigned int)p.x >= (unsigned int)xsize)
+        {
+          return false;
+        }
+      if ((unsigned int)p.y >= (unsigned int)ysize)
+        {
+          return false;
+        }
       return true;
     }
 
     bool inside(const Point& p) const
     {
-      if (p.x < -0.5) return false;
-      if (p.y < -0.5) return false;
-      if (p.x >= xsize - 0.5) return false;
-      if (p.y >= ysize - 0.5) return false;
+      if (p.x < -0.5)
+        {
+          return false;
+        }
+      if (p.y < -0.5)
+        {
+          return false;
+        }
+      if (p.x >= xsize - 0.5)
+        {
+          return false;
+        }
+      if (p.y >= ysize - 0.5)
+        {
+          return false;
+        }
       return true;
     }
 
@@ -534,14 +550,18 @@ namespace ice
     {
       nVis++;
       if (nVis == 0)
-        dfp = nullptr;
+        {
+          dfp = nullptr;
+        }
     }
 
     /* does the callback */
     void destroy()
     {
       if (dfp != nullptr)
-        (*dfp)(this);
+        {
+          (*dfp)(this);
+        }
 
       dfp = nullptr;
       nVis = 0;

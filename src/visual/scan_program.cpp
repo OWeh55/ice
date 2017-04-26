@@ -47,7 +47,10 @@ namespace ice
   {
     string hs = Split(config, ",", false);
     // cout << "hs:" << hs << endl;
-    if (hs != "program") return false;
+    if (hs != "program")
+      {
+        return false;
+      }
 
     Split(config, ",");
 
@@ -57,17 +60,29 @@ namespace ice
     DD(ch)->filename = Split(config, ",");
     //    cout << config << endl;
     if (config != "")
-      Channel[ch].xsize = atol(Split(config, ",").c_str());
+      {
+        Channel[ch].xsize = atol(Split(config, ",").c_str());
+      }
     else
-      Channel[ch].xsize = -1; // unknown
+      {
+        Channel[ch].xsize = -1;  // unknown
+      }
     if (config != "")
-      Channel[ch].ysize = atol(Split(config, ",").c_str());
+      {
+        Channel[ch].ysize = atol(Split(config, ",").c_str());
+      }
     else
-      Channel[ch].ysize = -1; // unknown
+      {
+        Channel[ch].ysize = -1;  // unknown
+      }
     if (config != "")
-      Channel[ch].maxval = atol(Split(config, ",").c_str());
+      {
+        Channel[ch].maxval = atol(Split(config, ",").c_str());
+      }
     else
-      Channel[ch].maxval = -1; // unknown
+      {
+        Channel[ch].maxval = -1;  // unknown
+      }
 
     Channel[ch].wxi = -1;
     Channel[ch].flags = SC_SCAN | SC_RGB;
@@ -95,11 +110,17 @@ namespace ice
 
              ((ScanProgramDesc*)(desc->driverdata))->filename;
     if (desc->xsize > 0)
-      config += "," + NumberString(desc->xsize);
+      {
+        config += "," + NumberString(desc->xsize);
+      }
     if (desc->ysize > 0)
-      config += "," + NumberString(desc->ysize);
+      {
+        config += "," + NumberString(desc->ysize);
+      }
     if (desc->maxval > 0)
-      config += "," + NumberString(desc->maxval);
+      {
+        config += "," + NumberString(desc->maxval);
+      }
 
     return true;
 
@@ -126,7 +147,6 @@ namespace ice
         RETURN_ERROR_IF_FAILED(pi = ReadImg(DD(ch)->filename, pi));
         unlink(DD(ch)->filename.c_str());
         Image2Buffer(pi, ib);
-        FreeImg(pi);
       }
     else
       {
@@ -140,9 +160,6 @@ namespace ice
         //      cout << "3" << endl;
         Image2Buffer(pir, pig, pib, ib);
         //      cout << "4" << endl;
-        FreeImg(pir);
-        FreeImg(pig);
-        FreeImg(pib);
       }
     return OK;
   }

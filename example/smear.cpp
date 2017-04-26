@@ -15,38 +15,39 @@ int main(int argc, char** argv)
   Image src;
   src.create(512, 512, MAXVALUE);
   Show(ON, src, "Source");
-  wloop(src, x, y)
-  {
-    int h = ((x / QSIZE) & 1) ^ ((y / QSIZE) & 1);
+  for (int y = 0; y < src.ysize; y++)
+    for (int x = 0; x < src.xsize; x++)
+      {
+        int h = ((x / QSIZE) & 1) ^ ((y / QSIZE) & 1);
 
-    if (h) PutVal(src, x, y, MAXVALUE - 20);
-    else PutVal(src, x, y, 20);
-  }
+        if (h) PutVal(src, x, y, MAXVALUE - 20);
+        else PutVal(src, x, y, 20);
+      }
   Image dst;
   dst.create(512, 512, MAXVALUE);
   Image mrk;
   mrk.create(512, 512, 4);
-  ClearImg(mrk);
+  clearImg(mrk);
   Show(OVERLAY, dst, mrk, "Destination");
-  SmearImg(src, dst, SSIZE);
+  smearImg(src, dst, SSIZE);
   Print(".");
   int i = 1;
 
   while (i < SNUMBER)
     {
-      SmearImg(dst, dst, SSIZE);
+      smearImg(dst, dst, SSIZE);
       Print(".");
       i++;
 //    sleep(1);
-      int x, y;
-      wloop(dst, x, y)
-      {
-        int v = GetVal(dst, x, y);
+      for (int y = 0; y < dst.ysize; y++)
+        for (int x = 0; x < dst.xsize; x++)
+          {
+            int v = GetVal(dst, x, y);
 
-        if (v == 20) PutVal(mrk, x, y, 1);
-        else if (v == MAXVALUE - 20) PutVal(mrk, x, y, 2);
-        else PutVal(mrk, x, y, 0);
-      }
+            if (v == 20) PutVal(mrk, x, y, 1);
+            else if (v == MAXVALUE - 20) PutVal(mrk, x, y, 2);
+            else PutVal(mrk, x, y, 0);
+          }
     }
 
   Print("\n");

@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "macro.h"
 #include "paint.h"
 #include "draw.h"
 #include "drawline.h"
@@ -97,7 +98,10 @@ namespace ice
   {
     int mode = DEFAULT;
 
-    if (fval == -1) mode = NOFILL;
+    if (fval == -1)
+      {
+        mode = NOFILL;
+      }
 
     double par[7];
     par[0] = es.getPos().x;
@@ -117,17 +121,10 @@ namespace ice
   {
     /* Parametertestung */
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || (val > img->maxval))
-      {
-        Message(FNAME, M_VALTOOSMALL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
+    if ((val < 0) || (val > img.maxval))
+      throw IceException(FNAME, M_VALTOOSMALL);
 
     double mya = 0.0; // Rel. Anfangspunkt
     double mye = 1.0; // Rel. Endpunkt
@@ -150,14 +147,18 @@ namespace ice
         mye = (img->xsize - 1 - p.x) / dp.x;
 
         if (!ls.limitMys(mya, mye))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
 
         ou = true;
       }
     else
       {
         if ((p.x < 0) || (p.x >= img->xsize))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
       }
 
     // test oberer und unterer Rand
@@ -168,13 +169,21 @@ namespace ice
         my2 = (img->ysize - 1 - p.y) / dp.y;
 
         if (!ls.limitMys(my1, my2))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
 
         if (ou)
           {
-            if (my1 > mya) mya = my1;
+            if (my1 > mya)
+              {
+                mya = my1;
+              }
 
-            if (my2 < mye) mye = my2;
+            if (my2 < mye)
+              {
+                mye = my2;
+              }
           }
         else
           {
@@ -185,7 +194,9 @@ namespace ice
     else
       {
         if ((p.y < 0) || (p.y >= img->ysize))
-          return NO_PAINT;
+          {
+            return NO_PAINT;
+          }
       }
 
     Point p1 = ls.RelPoint(mya);
@@ -200,10 +211,7 @@ namespace ice
   int draw(const PolygonalCurve& poly, const Image& img, int val, int fval)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (poly.isClosed() && fval >= 0)
       {
@@ -211,13 +219,17 @@ namespace ice
         for (p.y = 0; p.y < img->ysize; p.y++)
           for (p.x = 0; p.x < img->xsize; p.x++)
             if (poly.Inside(p))
-              PutVal(img, p, fval);
+              {
+                PutVal(img, p, fval);
+              }
       }
 
     unsigned int last = poly.size() - 1;
 
     if (poly.isClosed())
-      last = poly.size();
+      {
+        last = poly.size();
+      }
 
     if (val >= 0)
       {
@@ -232,10 +244,7 @@ namespace ice
   int draw(const Triangle& triangle, const Image& img, int val, int fval)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     if (fval >= 0)
       {
         Region region;
@@ -255,16 +264,10 @@ namespace ice
            const Image& img, int val)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (f.Size() != (int)pl.size())
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < f.Size(); i++)
       {
@@ -276,7 +279,6 @@ namespace ice
       }
     return OK;
   }
-
 
 #undef FNAME
 }

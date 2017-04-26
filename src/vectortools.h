@@ -25,7 +25,7 @@
 #include <iomanip>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 namespace ice
@@ -34,7 +34,9 @@ namespace ice
   T medianValue(std::vector<T> v) // call by value = copy !!
   {
     if (v.size() < 3)
-      return v[0]; // everything is median
+      {
+        return v[0];  // everything is median
+      }
     sort(v.begin(), v.end());
     return v[v.size() / 2];
   }
@@ -45,7 +47,10 @@ namespace ice
     T min = v[0];
     for (auto d : v)
       {
-        if (d < min) min = d;
+        if (d < min)
+          {
+            min = d;
+          }
       }
 
     return min;
@@ -57,7 +62,10 @@ namespace ice
     double max = v[0];
     for (auto d : v)
       {
-        if (d > max) max = d;
+        if (d > max)
+          {
+            max = d;
+          }
       }
 
     return max;
@@ -127,7 +135,7 @@ namespace ice
       {
         if (c != '<')
           {
-            Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILE);
             is.clear();
             return is;
           }
@@ -146,7 +154,7 @@ namespace ice
 
             if ((c != ',') && (c != '>'))
               {
-                Message(FNAME, M_WRONG_FILE, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILE);
                 is.clear();
                 return is;
               }

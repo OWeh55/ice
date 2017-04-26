@@ -30,7 +30,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -67,14 +67,20 @@ namespace ice
 
   object_rc ObjectThr(const Image& imgv, int x, int y, int pgl)
   {
-    if (GetValUnchecked(imgv, x, y) < pgl) return isunderground;
+    if (GetValUnchecked(imgv, x, y) < pgl)
+      {
+        return isunderground;
+      }
 
     return isobject;
   }
 
   object_rc ObjectThrInv(const Image& imgv, int x, int y, int pgl)
   {
-    if (GetValUnchecked(imgv, x, y) >= pgl) return isunderground;
+    if (GetValUnchecked(imgv, x, y) >= pgl)
+      {
+        return isunderground;
+      }
 
     return isobject;
   }

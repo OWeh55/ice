@@ -23,7 +23,7 @@
 #include <limits.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "util.h"
@@ -99,8 +99,7 @@ namespace ice
             valueFunction = get4l;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return Image();
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
@@ -118,12 +117,10 @@ namespace ice
             valueFunction = get4h;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return Image();
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
-
 
     int xsb = ib.width;
     int ysb = ib.height; // Bildgroesse im Puffer
@@ -133,7 +130,7 @@ namespace ice
         xs = img->xsize;
         ys = img->ysize;
         himg = img;
-        norm = (img->maxval != ib.maxval);
+        norm = (img.maxval != ib.maxval);
       }
     else
       {
@@ -143,10 +140,12 @@ namespace ice
 
         if (!IsImg(himg))
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
+            throw IceException(FNAME, M_NO_MEM);
 
             if (ib.can_delete)
-              free(ib.data);
+              {
+                free(ib.data);
+              }
 
             return Image();
           }
@@ -156,7 +155,10 @@ namespace ice
 
     if (flags & IB_SCALE)
       {
-        while ((xsb / scal > xs) || (ysb / scal > ys)) scal++;
+        while ((xsb / scal > xs) || (ysb / scal > ys))
+          {
+            scal++;
+          }
       }
 
     xm = Min(xs, xsb / scal);
@@ -172,15 +174,23 @@ namespace ice
               {
                 unsigned int val = valueFunction(hptr);
                 if (val > (unsigned int)ib.maxval)
-                  val -= ib.maxval + 1;
+                  {
+                    val -= ib.maxval + 1;
+                  }
 
                 if (ib.intensity)
                   {
                     val = ib.maxval - val;
                   }
 
-                if (norm) PutVal(himg, x, y, MulDiv(val, img->maxval, ib.maxval));
-                else PutVal(himg, x, y, val);
+                if (norm)
+                  {
+                    PutVal(himg, x, y, MulDiv(val, img.maxval, ib.maxval));
+                  }
+                else
+                  {
+                    PutVal(himg, x, y, val);
+                  }
 
                 hptr = hptr + scal * ib.valuesize;
               }
@@ -238,7 +248,7 @@ namespace ice
                 if (norm)
                   {
                     PutVal(himg, x, y,
-                           MulDiv(val, img->maxval, ib.maxval));
+                           MulDiv(val, img.maxval, ib.maxval));
                   }
                 else
                   {
@@ -264,7 +274,10 @@ namespace ice
           }
       }
 
-    if (ib.can_delete) free(ib.data);
+    if (ib.can_delete)
+      {
+        free(ib.data);
+      }
 
     return himg;
   }
@@ -297,8 +310,7 @@ namespace ice
             valueFunction = get4l;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
@@ -316,8 +328,7 @@ namespace ice
             valueFunction = get4h;
             break;
           default:
-            Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-            return WRONG_PARAM;
+            throw IceException(FNAME, M_WRONG_PARAM);
             break;
           }
       }
@@ -325,9 +336,12 @@ namespace ice
     if (ib.planes == 1)
       {
         // kein RGB-Bild
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
 
-        if (ib.can_delete) free(ib.data);
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
 
         return WRONG_FILE;
       }
@@ -374,20 +388,26 @@ namespace ice
 #endif
     RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
 
-    if ((imgr->maxval != imgg->maxval) || (imgr->maxval != imgb->maxval))
+    if ((imgr.maxval != imgg.maxval) || (imgr.maxval != imgb.maxval))
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_IMAGE);
 
-        if (ib.can_delete) free(ib.data);
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
 
         return WRONG_PARAM;
       }
 
-    norm = (imgr->maxval != ib.maxval);
+    norm = (imgr.maxval != ib.maxval);
 
     if (flags & IB_SCALE)
       {
-        while ((xsb / scal > xs) || (ysb / scal > ys)) scal++;
+        while ((xsb / scal > xs) || (ysb / scal > ys))
+          {
+            scal++;
+          }
       }
 
     xm = Min(xs, xsb / scal);
@@ -396,9 +416,12 @@ namespace ice
     if (ib.planes == 1)
       {
         // kein RGB-Bild
-        Message(FNAME, M_WRONG_FILETYPE, WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
 
-        if (ib.can_delete) free(ib.data);
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
 
         return WRONG_FILE;
       }
@@ -430,9 +453,12 @@ namespace ice
                 rptr = gptr + ib.width * ib.linelength;
                 break;
               default:
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_PARAM);
 
-                if (ib.can_delete) free(ib.data);
+                if (ib.can_delete)
+                  {
+                    free(ib.data);
+                  }
 
                 return WRONG_PARAM;
               }
@@ -452,14 +478,14 @@ namespace ice
 
                 if (norm)
                   {
-                    valr = MulDiv(valr, imgr->maxval, ib.maxval);
-                    valg = MulDiv(valg, imgg->maxval, ib.maxval);
-                    valb = MulDiv(valb, imgb->maxval, ib.maxval);
+                    valr = MulDiv(valr, imgr.maxval, ib.maxval);
+                    valg = MulDiv(valg, imgg.maxval, ib.maxval);
+                    valb = MulDiv(valb, imgb.maxval, ib.maxval);
                   }
 
-                PutVal(imgr, x, y, Min(imgr->maxval, Max(0, valr)));
-                PutVal(imgg, x, y, Min(imgg->maxval, Max(0, valg)));
-                PutVal(imgb, x, y, Min(imgb->maxval, Max(0, valb)));
+                PutVal(imgr, x, y, Min(imgr.maxval, Max(0, valr)));
+                PutVal(imgg, x, y, Min(imgg.maxval, Max(0, valg)));
+                PutVal(imgb, x, y, Min(imgb.maxval, Max(0, valb)));
 
                 switch (ib.packmethod)
                   {
@@ -476,9 +502,12 @@ namespace ice
                     bptr = bptr + ib.valuesize * scal;
                     break;
                   default:
-                    Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+                    throw IceException(FNAME, M_WRONG_PARAM);
 
-                    if (ib.can_delete) free(ib.data);
+                    if (ib.can_delete)
+                      {
+                        free(ib.data);
+                      }
 
                     return WRONG_PARAM;
                   }
@@ -486,7 +515,10 @@ namespace ice
           }
       }
 
-    if (ib.can_delete) free(ib.data);
+    if (ib.can_delete)
+      {
+        free(ib.data);
+      }
 
     return OK;
   }
@@ -530,9 +562,13 @@ namespace ice
     for (int i = 0; i < height; i++)
       {
         if (intensity)
-          getlinei(dst[i], width, src, factor, offset);
+          {
+            getlinei(dst[i], width, src, factor, offset);
+          }
         else
-          getline(dst[i], width, src, factor, offset);
+          {
+            getline(dst[i], width, src, factor, offset);
+          }
 
         src += lineoffset;
       }
@@ -546,8 +582,7 @@ namespace ice
     if (!IsImg(img))
       {
         // cerr << "isimg" << endl;
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_IMAGE);
       }
 
     int pt = img->ImageType();
@@ -555,14 +590,16 @@ namespace ice
     if ((pt < 0) || (pt > 3))
       {
         // cerr << "img-typ" << endl;
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_IMAGE);
       }
 
     int width = img->xsize;
     int height = img->ysize;
 
-    if (lineoffset == 0) lineoffset = width * factor;
+    if (lineoffset == 0)
+      {
+        lineoffset = width * factor;
+      }
 
     switch (pt)
       {
@@ -646,7 +683,7 @@ namespace ice
                (T*)buffer + 2 * height * lineoffset, lineoffset, 1, 0, intensity);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
         rc = WRONG_PARAM;
       }
 
@@ -659,10 +696,7 @@ namespace ice
                    int packmode, int lineoffset)
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int width;
     int height;
@@ -672,17 +706,19 @@ namespace ice
     int pt = imgr->ImageType();
 
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int factor = 3;
 
     if (packmode == IB_RGB32 || packmode == IB_BGR32)
-      factor = 4;
+      {
+        factor = 4;
+      }
 
-    if (lineoffset == 0) lineoffset = width * factor;
+    if (lineoffset == 0)
+      {
+        lineoffset = width * factor;
+      }
 
     int rc = ERROR;
 
@@ -729,15 +765,12 @@ namespace ice
   int Image2Buffer(const Image& img, ibuffer& ib)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     ib.width = img->xsize;
     ib.height = img->ysize;
     ib.planes = 1;
-    ib.maxval = img->maxval;
+    ib.maxval = img.maxval;
 
     ib.valuesize = img->getBytesPerPoint();
     ib.linelength = img->xsize * ib.valuesize;
@@ -749,10 +782,7 @@ namespace ice
     ib.data = (unsigned char*) malloc(ib.linelength * ib.height);
 
     if (ib.data == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     if (ib.valuesize == 1)
       {
@@ -760,7 +790,9 @@ namespace ice
 
         for (int y = 0; y < img->ysize; y++)
           for (int x = 0; x < img->xsize; x++)
-            *(bptr++) = img.getPixel(x, y);
+            {
+              *(bptr++) = img.getPixel(x, y);
+            }
       }
     else
       {
@@ -768,7 +800,9 @@ namespace ice
 
         for (int y = 0; y < img->ysize; y++)
           for (int x = 0; x < img->xsize; x++)
-            *(bptr++) = img.getPixel(x, y);
+            {
+              *(bptr++) = img.getPixel(x, y);
+            }
       }
 
     return OK;
@@ -779,25 +813,19 @@ namespace ice
   {
     // consistency checks at first
     if (!IsImg(RedImage) || !IsImg(GreenImage) || !IsImg(BlueImage))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     // some more consistency checks
     if (RedImage->xsize != GreenImage->xsize || RedImage->ysize != GreenImage->ysize ||
         RedImage->xsize != BlueImage->xsize  || RedImage->ysize != BlueImage->ysize ||
-        RedImage->maxval != GreenImage->maxval || RedImage->maxval != BlueImage->maxval)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        RedImage.maxval != GreenImage.maxval || RedImage.maxval != BlueImage.maxval)
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // copy values from the image to the image buffer
     ImageBuffer.width = RedImage->xsize;
     ImageBuffer.height = RedImage->ysize;
     ImageBuffer.planes = 3;
-    ImageBuffer.maxval = RedImage->maxval;
+    ImageBuffer.maxval = RedImage.maxval;
 
     ImageBuffer.valuesize = RedImage->getBytesPerPoint();
     ImageBuffer.linelength = RedImage->xsize * ImageBuffer.valuesize * 3;
@@ -809,10 +837,7 @@ namespace ice
     ImageBuffer.data = (unsigned char*)malloc(ImageBuffer.linelength * ImageBuffer.height);
 
     if (ImageBuffer.data == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     // copy the pixel values
     if (ImageBuffer.valuesize == 1)
@@ -882,37 +907,37 @@ namespace ice
     for (int i = 0; i < height; i++)
       {
         if (intensity)
-          storelinei(src[i], width, dst, factor, offset);
+          {
+            storelinei(src[i], width, dst, factor, offset);
+          }
         else
-          storeline(src[i], width, dst, factor, offset);
+          {
+            storeline(src[i], width, dst, factor, offset);
+          }
 
         dst += lineoffset;
       }
   }
-
 
   int Image2Buffer(const Image& img,
                    unsigned char*& buffer, int& size,
                    bool intensity, int lineoffset, int factor, int offset)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int pt = img->ImageType();
 
     if ((pt < 0) || (pt > 3))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int width = img->xsize;
     int height = img->ysize;
 
-    if (lineoffset == 0) lineoffset = width;
+    if (lineoffset == 0)
+      {
+        lineoffset = width;
+      }
 
     size = 0;
 
@@ -1016,7 +1041,7 @@ namespace ice
                  (T*)buffer + 2 * height * lineoffset, lineoffset, 1, 0, intensity);
         break;
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
         rc = WRONG_PARAM;
       }
 
@@ -1028,10 +1053,7 @@ namespace ice
                    bool intensity, int packmode, int lineoffset)
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int width;
     int height;
@@ -1041,17 +1063,19 @@ namespace ice
     int pt = imgr->ImageType();
 
     if ((pt < 0) || (pt > 3) || imgg->ImageType() != pt || imgb->ImageType() != pt)
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int factor = 3;
 
     if (packmode == IB_RGB32 || packmode == IB_BGR32)
-      factor = 4;
+      {
+        factor = 4;
+      }
 
-    if (lineoffset == 0) lineoffset = width * factor;
+    if (lineoffset == 0)
+      {
+        lineoffset = width * factor;
+      }
 
     size = 0;
 

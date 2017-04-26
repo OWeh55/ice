@@ -31,7 +31,7 @@
 #include <stddef.h>
 #include <float.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "root.h"
 #include "gentrans.h"
@@ -119,7 +119,9 @@ namespace ice
     int points = pl->lng;
 
     for (int i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     for (int i = 0; i < pl->lng; i++)
       {
@@ -135,7 +137,10 @@ namespace ice
 
     CorrectMoments(m);
 
-    if (fabs(m[i00]) < EPSILON) return ERROR;
+    if (fabs(m[i00]) < EPSILON)
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -148,7 +153,9 @@ namespace ice
     int points = pl.size();
 
     for (int i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     for (int i = 0; i < points; i++)
       {
@@ -159,7 +166,9 @@ namespace ice
     CorrectMoments(m);
 
     if (fabs(m[i00]) < EPSILON)
-      return ERROR;
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -171,7 +180,9 @@ namespace ice
     int points = pl.rows();
 
     for (int i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     for (int i = 0; i < pl.rows(); i++)
       {
@@ -187,7 +198,10 @@ namespace ice
 
     CorrectMoments(m);
 
-    if (fabs(m[i00]) < EPSILON) return ERROR;
+    if (fabs(m[i00]) < EPSILON)
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -205,13 +219,12 @@ namespace ice
     double x1, y1, x2, y2;
 
     if (a1 < 0 || a2 < 0 || a1 >= pl->lng || a2 >= pl->lng)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (i = 0; i < 15; i++)
-      m[i] = 0;
+      {
+        m[i] = 0;
+      }
 
     a3 = a2 + 1;
 
@@ -220,11 +233,20 @@ namespace ice
 
     do
       {
-        if (i == pl->lng) i = 0;
+        if (i == pl->lng)
+          {
+            i = 0;
+          }
 
-        if (j == a3) j = a1;
+        if (j == a3)
+          {
+            j = a1;
+          }
 
-        if (j == pl->lng) j = 0;
+        if (j == pl->lng)
+          {
+            j = 0;
+          }
 
         x1 = pl->xptr[i];
         y1 = pl->yptr[i];
@@ -238,7 +260,10 @@ namespace ice
 
     CorrectMoments(m);
 
-    if (fabs(m[i00]) < 1e-20) return ERROR;
+    if (fabs(m[i00]) < 1e-20)
+      {
+        return ERROR;
+      }
 
     centre[0] = m[1] / m[i00];
     centre[1] = m[2] / m[i00];
@@ -249,15 +274,22 @@ namespace ice
   void CopyMoments(const double ms[15], double md[15])
   {
     for (unsigned int i = 0; i < 15; i++)
-      md[i] = ms[i];
+      {
+        md[i] = ms[i];
+      }
   }
 
   int PosSign(const double ms[15], double md[15])
   {
     if (ms[i00] < 0)
-      for (unsigned int i = 0; i < 15; i++) md[i] = -ms[i];
+      for (unsigned int i = 0; i < 15; i++)
+        {
+          md[i] = -ms[i];
+        }
     else
-      CopyMoments(ms, md);
+      {
+        CopyMoments(ms, md);
+      }
 
     return OK;
   }
@@ -265,7 +297,10 @@ namespace ice
   int PosSign(double ms[15])
   {
     if (ms[i00] < 0)
-      for (unsigned int i = 0; i < 15; i++) ms[i] = -ms[i];
+      for (unsigned int i = 0; i < 15; i++)
+        {
+          ms[i] = -ms[i];
+        }
 
     return OK;
   }
@@ -470,7 +505,9 @@ namespace ice
     double mx[15];
 
     for (int i = 0; i < 15; i++)
-      mx[i] = m1[i];
+      {
+        mx[i] = m1[i];
+      }
 
     m2[i00] = mx[i00];
     m2[1]   = c * mx[1] - s * mx[2];
@@ -702,10 +739,7 @@ namespace ice
   int CalcCentralMoments(const double m[15], double mc[15])
   {
     if (m[0] == 0.0)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     double xs = m[1] / m[0];
     double ys = m[2] / m[0];
@@ -732,10 +766,7 @@ namespace ice
     ys = 0;
 
     if (fabs(m[0]) < 1e-15)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     PosSign(m, msk);
 
@@ -781,19 +812,13 @@ namespace ice
 
     // anisotrope Skalierungsnormierung
     if ((fabs(msk[3]) < 1e-5) || (fabs(msk[5]) < 1e-5))
-      {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     double h1 = msk[5] / (msk[3] * msk[3] * msk[3]);
     double h2 = msk[3] / (msk[5] * msk[5] * msk[5]);
 
     if (h1 < 0 || h2 < 0)
-      {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     alpha = pow(h1, 0.125);
     gamma = pow(h2, 0.125);
@@ -879,10 +904,7 @@ namespace ice
             double h = p2 * p2 - q;
 
             if (h < 0)
-              {
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                return ERROR;
-              }
+              throw IceException(FNAME, M_WRONG_PARAM);
 
             h = sqrt(h);
             sol[0] = Complex(-p2 + h, 0.0);
@@ -893,10 +915,7 @@ namespace ice
         else
           {
             if (m2[7] == 0)
-              {
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                return ERROR;
-              }
+              throw IceException(FNAME, M_WRONG_PARAM);
             else
               {
                 sol[0] = Complex(-m2[6] / (3 * m2[7]), 0.0);
@@ -913,9 +932,15 @@ namespace ice
         k = 0;
         l = 3;
 
-        if (sol[0].real() == sol[1].real()) k = 1;
+        if (sol[0].real() == sol[1].real())
+          {
+            k = 1;
+          }
 
-        if (sol[1].real() == sol[2].real()) l = 2;
+        if (sol[1].real() == sol[2].real())
+          {
+            l = 2;
+          }
       }
 
     //Normallagen für alle unterschiedlichen reellen Lösungen berechnen
@@ -949,10 +974,7 @@ namespace ice
       }
 
     if (imin < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     CopyMoments(mx[imin], m2);
     //    for (i=0;i<15;i++)
@@ -1068,10 +1090,7 @@ namespace ice
 
     // iterative Scherungsnormierung maf13=maf31=0
     if ((maf[14] < EPSILON) && (maf[10] < EPSILON))
-      {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     bool modified = true;
 
@@ -1169,10 +1188,7 @@ namespace ice
     PosSign(m1, m);
 
     if (m[0] < EPSILON)
-      {
-        Message(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
 
     // Normierung
     alpha = 1.0 / sqrt(m[0]);
@@ -1181,23 +1197,31 @@ namespace ice
 
     double fak = 1.0 / m[0] * alpha;
 
-    for (int i = 1; i < 3; i++) // Momente 1. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 1; i < 3; i++)   // Momente 1. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     fak *= alpha;
 
-    for (int i = 3; i < 6; i++) // Momente 2. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 3; i < 6; i++)   // Momente 2. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     fak *= alpha;
 
-    for (int i = 6; i < 10; i++) // Momente 3. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 6; i < 10; i++)   // Momente 3. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     fak *= alpha;
 
-    for (int i = 10; i < 15; i++) // Momente 4. Ordnung
-      m2[i] = m[i] * fak;
+    for (int i = 10; i < 15; i++)   // Momente 4. Ordnung
+      {
+        m2[i] = m[i] * fak;
+      }
 
     return OK;
   }
@@ -1218,155 +1242,166 @@ namespace ice
   double AffinFitMoments(const double m1p[15], const double m2p[15],
                          double tr[3][3])
   {
-    double m1[15], m2[15];
-    double mx[15], mn1[15], mn2[15], s3, s4, smin;
-    double tr1[3][3], tr2[3][3], trx[8][3][3], tra[8][3][3];
-    int i, imin, j, k, i1, i2;
-
-    PosSign(m1p, m1);
-    PosSign(m2p, m2);
-
-    // Flaeche darf nicht verschwinden
-    if (m1[0] < EPSILON || m2[0] < EPSILON)
+    try
       {
-        Message(FNAME, M_NUM_INSTABILITY, WRONG_PARAM);
-        return DBL_MAX;
-      }
+        double m1[15], m2[15];
+        double mx[15], mn1[15], mn2[15], s3, s4, smin;
+        double tr1[3][3], tr2[3][3], trx[8][3][3], tra[8][3][3];
+        int i, imin, j, k, i1, i2;
 
-    double dx, dy;
-    RETURN_IF_FAILED(NormalizeMomentsTranslation(m1, mx, dx, dy), 0.0);
-    //    TranslateMoments(m1,-m1[1]/m1[0],-m1[2]/m1[0],mx);
+        PosSign(m1p, m1);
+        PosSign(m2p, m2);
 
-    // Normierung der Momente durch isotrope Skalierung auf gleiche Fläche
-    RETURN_IF_FAILED(NormalizeMomentsArea(mx, mx), 0.0);
+        // Flaeche darf nicht verschwinden
+        if (m1[0] < EPSILON || m2[0] < EPSILON)
+          throw IceException(FNAME, M_NUM_INSTABILITY);
 
-    // optimale Methode auswaehlen
-    s3 = 0.0;
+        double dx, dy;
+        NormalizeMomentsTranslation(m1, mx, dx, dy);
+        //    TranslateMoments(m1,-m1[1]/m1[0],-m1[2]/m1[0],mx);
 
-    for (int i = 6; i < 10; i++)
-      s3 += mx[i] * mx[i]; // Summe 3. Mom.
+        // Normierung der Momente durch isotrope Skalierung auf gleiche Fläche
+        NormalizeMomentsArea(mx, mx);
 
-    s4 = 0.0;
+        // optimale Methode auswaehlen
+        s3 = 0.0;
 
-    for (int i = 10; i < 15; i++)
-      s4 += mx[i] * mx[i]; // Summe 4. Mom.
-
-    s3 /= 4;
-    s4 /= 5;
-
-    if (s3 > s4)
-      {
-        // 3. Momente groesser als 4. Momente --> Polynommethode
-        PolyNormMoments(m1, mn1, tr1);
-        PolyNormMoments(m2, mn2, tr2);
-        i1 = 6;
-        i2 = 10;
-      }
-    else
-      {
-        // Iterationsmethode ist besser
-        AffinIterateMoments(m1, mn1, tr1);
-        AffinIterateMoments(m2, mn2, tr2);
-        i1 = 10;
-        i2 = 15;
-
-        // Sonderbehandlung für Dreiecke
-        if (fabs(mn1[6] + mn1[8]) < 1e-5 && fabs(mn1[7] + mn1[9]) < 1e-5)
+        for (int i = 6; i < 10; i++)
           {
-            //Dreieck --> Polynommethode
+            s3 += mx[i] * mx[i];  // Summe 3. Mom.
+          }
+
+        s4 = 0.0;
+
+        for (int i = 10; i < 15; i++)
+          {
+            s4 += mx[i] * mx[i];  // Summe 4. Mom.
+          }
+
+        s3 /= 4;
+        s4 /= 5;
+
+        if (s3 > s4)
+          {
+            // 3. Momente groesser als 4. Momente --> Polynommethode
             PolyNormMoments(m1, mn1, tr1);
             PolyNormMoments(m2, mn2, tr2);
             i1 = 6;
             i2 = 10;
           }
-      }
-
-    InvertTrans(tr2);
-    // alle verbleibenden Möglichkeiten testen
-
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        trx[0][i][j] = tr2[i][j];
-
-    // Drehungen um 90 Grad
-    for (i = 0, j = 1; j < 4; i++, j++)
-      {
-        for (k = 0; k < 3; k++)
+        else
           {
-            trx[j][k][0] = trx[i][k][1];
-            trx[j][k][1] = -trx[i][k][0];
-            trx[j][k][2] = trx[i][k][2];
+            // Iterationsmethode ist besser
+            AffinIterateMoments(m1, mn1, tr1);
+            AffinIterateMoments(m2, mn2, tr2);
+            i1 = 10;
+            i2 = 15;
+
+            // Sonderbehandlung für Dreiecke
+            if (fabs(mn1[6] + mn1[8]) < 1e-5 && fabs(mn1[7] + mn1[9]) < 1e-5)
+              {
+                //Dreieck --> Polynommethode
+                PolyNormMoments(m1, mn1, tr1);
+                PolyNormMoments(m2, mn2, tr2);
+                i1 = 6;
+                i2 = 10;
+              }
           }
-      }
 
-    // Spiegelung an der y-Achse
-    for (i = 0; i < 3; i++)
-      {
-        trx[4][i][0] = -tr2[i][0];
-        trx[4][i][1] = tr2[i][1];
-        trx[4][i][2] = tr2[i][2];
-      }
+        InvertTrans(tr2);
+        // alle verbleibenden Möglichkeiten testen
 
-    // Drehungen um 90 Grad
-    for (i = 4, j = 5; j < 8; i++, j++)
-      {
-        for (k = 0; k < 3; k++)
+        for (i = 0; i < 3; i++)
+          for (j = 0; j < 3; j++)
+            {
+              trx[0][i][j] = tr2[i][j];
+            }
+
+        // Drehungen um 90 Grad
+        for (i = 0, j = 1; j < 4; i++, j++)
           {
-            trx[j][k][0] = trx[i][k][1];
-            trx[j][k][1] = -trx[i][k][0];
-            trx[j][k][2] = trx[i][k][2];
+            for (k = 0; k < 3; k++)
+              {
+                trx[j][k][0] = trx[i][k][1];
+                trx[j][k][1] = -trx[i][k][0];
+                trx[j][k][2] = trx[i][k][2];
+              }
           }
-      }
 
-    // Transformation Objekt1 - Objekt2 bestimmen
-    // und Abstandsmaß für Momente berechnen
-    smin = 1e20;
-    imin = 0;
-
-    for (i = 0; i < 8; i++)
-      {
-        MulMatrix((double*)trx[i], (double*)tr1, 3, 3, 3, (double*)tra[i]);
-        AffinTransMoments(m1, tra[i], mn1);
-        double fehlersumme = 0.0;
-
-        for (j = i1; j < i2; j++)
-          fehlersumme += Sqr(mn1[j] - m2[j]);
-
-        if (fehlersumme < smin)
+        // Spiegelung an der y-Achse
+        for (i = 0; i < 3; i++)
           {
-            smin = fehlersumme;
-            imin = i;
+            trx[4][i][0] = -tr2[i][0];
+            trx[4][i][1] = tr2[i][1];
+            trx[4][i][2] = tr2[i][2];
           }
+
+        // Drehungen um 90 Grad
+        for (i = 4, j = 5; j < 8; i++, j++)
+          {
+            for (k = 0; k < 3; k++)
+              {
+                trx[j][k][0] = trx[i][k][1];
+                trx[j][k][1] = -trx[i][k][0];
+                trx[j][k][2] = trx[i][k][2];
+              }
+          }
+
+        // Transformation Objekt1 - Objekt2 bestimmen
+        // und Abstandsmaß für Momente berechnen
+        smin = 1e20;
+        imin = 0;
+
+        for (i = 0; i < 8; i++)
+          {
+            MulMatrix((double*)trx[i], (double*)tr1, 3, 3, 3, (double*)tra[i]);
+            AffinTransMoments(m1, tra[i], mn1);
+            double fehlersumme = 0.0;
+
+            for (j = i1; j < i2; j++)
+              {
+                fehlersumme += Sqr(mn1[j] - m2[j]);
+              }
+
+            if (fehlersumme < smin)
+              {
+                smin = fehlersumme;
+                imin = i;
+              }
+          }
+
+        // Rückgabe der Transformation mit minimalem Abstand
+        for (i = 0; i < 3; i++)
+          for (j = 0; j < 3; j++)
+            {
+              tr[i][j] = tra[imin][i][j];
+            }
+
+        return smin;
       }
-
-    // Rückgabe der Transformation mit minimalem Abstand
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        tr[i][j] = tra[imin][i][j];
-
-    return smin;
+    RETHROW;
   }
 
   double AffinFitMoments(const double m1[15], const double m2[15], Trafo& tr)
   {
-    double oldtr[3][3];
-    double ret;
-    int i, j;
+    try
+      {
+        double oldtr[3][3];
 
-    IF_FAILED(ret = AffinFitMoments(m1, m2, oldtr))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ret;
-    }
+        double ret = AffinFitMoments(m1, m2, oldtr);
 
-    Matrix m(3, 3);
+        Matrix m(3, 3);
 
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        m[i][j] = oldtr[i][j];
+        for (int i = 0; i < 3; i++)
+          for (int j = 0; j < 3; j++)
+            {
+              m[i][j] = oldtr[i][j];
+            }
 
-    tr = Trafo(m);
-    return ret;
+        tr = Trafo(m);
+        return ret;
+      }
+    RETHROW;
   }
 #undef FNAME
 }

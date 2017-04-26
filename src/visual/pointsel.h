@@ -33,7 +33,7 @@
 
 namespace ice
 {
-  enum wselmode {select, shiftupperleft, shiftlowerright, setupperleft, setlowerright};
+  enum windowSelectionMode {select, shiftupperleft, shiftlowerright, setupperleft, setlowerright};
   int SelPoint(int option, const Image& img, int p[2]);// Compatibility
   IPoint SelPoint(int option, const Image& img);
   IPoint SelPoint(int option, const Image& img, int& rc);

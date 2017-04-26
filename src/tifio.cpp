@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "picio.h"
 
 #include "util.h"
@@ -55,7 +55,9 @@ namespace ice
         TIFFGetField(MyTiff, TIFFTAG_IMAGELENGTH, &Height);
 
         if (!img.isValid())
-          img.create(Width, Height, 255);
+          {
+            img.create(Width, Height, 255);
+          }
 
         uint32* Buffer = new uint32[Width * Height];
 
@@ -63,9 +65,15 @@ namespace ice
 
         TIFFClose(MyTiff);
         int xs = img.xsize;
-        if (Width < xs) xs = Width;
+        if (Width < xs)
+          {
+            xs = Width;
+          }
         int ys = img.ysize;
-        if (Height < ys) ys = Height;
+        if (Height < ys)
+          {
+            ys = Height;
+          }
 
         for (int y = 0; y < ys; ++y)
           for (int x = 0; x < xs; ++x)
@@ -79,9 +87,7 @@ namespace ice
         delete [] Buffer;
       }
     else
-      {
-        Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_NOT_FOUND);
     return img;
   }
 
@@ -98,13 +104,19 @@ namespace ice
         TIFFGetField(MyTiff, TIFFTAG_IMAGELENGTH, &Height);
 
         if (!imgr.isValid())
-          imgr.create(Width, Height, 255);
+          {
+            imgr.create(Width, Height, 255);
+          }
 
         if (!imgg.isValid())
-          imgg.create(Width, Height, 255);
+          {
+            imgg.create(Width, Height, 255);
+          }
 
         if (!imgb.isValid())
-          imgb.create(Width, Height, 255);
+          {
+            imgb.create(Width, Height, 255);
+          }
 
         int ys;
         int xs;
@@ -117,8 +129,14 @@ namespace ice
 
         TIFFClose(MyTiff);
 
-        if (Width < xs) xs = Width;
-        if (Height < ys) ys = Height;
+        if (Width < xs)
+          {
+            xs = Width;
+          }
+        if (Height < ys)
+          {
+            ys = Height;
+          }
 
         for (int y = 0; y < ys; ++y)
           for (int x = 0; x < xs; ++x)
@@ -136,10 +154,7 @@ namespace ice
         return OK;
       }
     else
-      {
-        Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_FOUND);
   }
 #undef FNAME
 
@@ -169,8 +184,7 @@ namespace ice
         return OK;
       }
 
-    Message(FNAME, M_NOT_FOUND, WRONG_PARAM);
-    return WRONG_PARAM;
+    throw IceException(FNAME, M_NOT_FOUND);
   }
 #undef FNAME
 
@@ -179,19 +193,13 @@ namespace ice
   int WriteTIFImg(const Image& img, const string& fname)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     TIFF* image;
 
     // Open the TIFF file
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // We need to set some values for basic tags before we can add any data
     TIFFSetField(image, TIFFTAG_IMAGEWIDTH, img.xsize);
@@ -213,7 +221,9 @@ namespace ice
     int idx = 0;
     for (int y = 0; y < img.ysize; y++)
       for (int x = 0; x < img.xsize; x++)
-        buffer[idx++] = img.getPixel(x, y) * 255 / img.maxval;
+        {
+          buffer[idx++] = img.getPixel(x, y) * 255 / img.maxval;
+        }
 
     // Write the information to the file
     TIFFWriteEncodedStrip(image, 0, buffer, img.xsize * img.ysize);
@@ -228,10 +238,7 @@ namespace ice
                   const string& fname)
   {
     if (! imgr.isValid() && imgg.isValid() && imgb.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xs, ys;
     RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
@@ -240,10 +247,7 @@ namespace ice
 
     // Open the TIFF file
     if ((image = TIFFOpen(fname.c_str(), "w")) == NULL)
-      {
-        Message(FNAME, M_FILE_OPEN, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
 
     // We need to set some values for basic tags before we can add any data
     TIFFSetField(image, TIFFTAG_IMAGEWIDTH, xs);

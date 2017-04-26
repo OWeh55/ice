@@ -28,7 +28,7 @@
 #endif
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "WindowWalker.h"
 #include "histogram.h"
@@ -55,8 +55,10 @@ namespace ice
 
     int lutSize = h.nClasses();
 
-    if (maxv < 0)  // default
-      maxv = lutSize - 1;
+    if (maxv < 0)   // default
+      {
+        maxv = lutSize - 1;
+      }
 
     lut.resize(lutSize);
 
@@ -70,7 +72,7 @@ namespace ice
     vector<double> cdf(lutSize);
 
     //    cout << "lutSize: " << lutSize << endl;
-    if (reg != 0.0) // regularisation == smooth histogram
+    if (reg != 0.0)   // regularisation == smooth histogram
       {
         double sigma = reg * lutSize / 2;
         // the histogram will be extended
@@ -96,7 +98,9 @@ namespace ice
         // calculate Cumulative distribution function
         double sum = 0.0;
         for (int k = 0; k < ext; ++k)
-          sum += filteredRel[k];
+          {
+            sum += filteredRel[k];
+          }
         //   cout << "Summe: " << sum << endl;
         for (int i = 0; i < lutSize; ++i)
           {
@@ -105,7 +109,9 @@ namespace ice
           }
         // cout << "Summe: " << sum << endl;
         for (int k = 0; k < ext; ++k)
-          sum += filteredRel[lutSize + ext + k];
+          {
+            sum += filteredRel[lutSize + ext + k];
+          }
 
         // cout << "Summe: " << sum << endl;
         // sum should be one in case of ideal filtering,
@@ -113,7 +119,9 @@ namespace ice
         if (sum != 1.0 && sum != 0.0)
           {
             for (int i = 0; i < lutSize; ++i)
-              cdf[i] = cdf[i] / sum;
+              {
+                cdf[i] = cdf[i] / sum;
+              }
           }
       }
     else
@@ -131,7 +139,6 @@ namespace ice
     // for (int i=0;i<lutSize+1;++i)
     //   cout << cdf[i] << " " ;
     // cout << endl;
-
 
     for (int i = 0; i < lutSize; i++)
       {
@@ -152,10 +159,7 @@ namespace ice
     // has to get
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Histogram h(img);
     return HistogramEqualizationLUT(h, lut, maxv, reg);
@@ -170,7 +174,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(img, imgd, dx, dy));
 
     vector<int> histx;
-    HistogramEqualizationLUT(img, histx, imgd->maxval, reg);
+    HistogramEqualizationLUT(img, histx, imgd.maxval, reg);
 
     WindowWalker w(imgd);
     for (w.init(); !w.ready(); w.next())

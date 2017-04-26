@@ -41,18 +41,16 @@ namespace ice
    *
    * @param img the image we want to process
    * @param val the value all channels will be set to
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int SetImg(const ColorImage& img, unsigned int val);
+  void setImg(const ColorImage& img, unsigned int val);
 
   /**
    * Fills each channel with its corresponding value in val
    *
    * @param img the image we want to process
    * @param val contains the value information for each channel
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int SetImg(const ColorImage& img, const ColorValue& val);
+  void setImg(const ColorImage& img, const ColorValue& val);
 
   /**
    * Adds the two input images. Depending on the mode the channels are
@@ -68,11 +66,10 @@ namespace ice
    * @param img2 the second addend
    * @param dest the destination image
    * @param mode defines how the result is adjusted to the properties of dest
-   * @return an error value (returns 0 if operation succeeded)
    */
 
-  int AddImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
-             int mode = MD_NORMALIZE);
+  void addImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
+              int mode = MD_NORMALIZE);
 
   /**
    * Subtracts the two input images. Depending on the mode the channels are
@@ -93,10 +90,10 @@ namespace ice
    * @param dest the destination image
    * @param smode defines how negative values are treated
    * @param mode defines how the result is adjusted to the properties of dest
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int SubImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
-             int mode = MD_NORMALIZE, int smode = SMD_ABSOLUTE);
+  void subImg(const ColorImage& img1, const ColorImage& img2,
+              const ColorImage& dest,
+              int mode = MD_NORMALIZE, int smode = SMD_ABSOLUTE);
 
   /**
    * Creates a new image with the greater value of the two source images at each pixel
@@ -106,10 +103,9 @@ namespace ice
    * @param img1 the first source image
    * @param img2 the second source image
    * @param dest the destination image
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int MaxImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
-             int mode = MD_LIMIT);
+  void maxImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
+              int mode = MD_LIMIT);
 
   /**
    * Creates a new image with the smaller value of the two source images at each pixel
@@ -119,10 +115,10 @@ namespace ice
    * @param img1 the first source image
    * @param img2 the second source image
    * @param dest the destination image
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int MinImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
-             int mode = MD_LIMIT);
+  void minImg(const ColorImage& img1, const ColorImage& img2,
+              const ColorImage& dest,
+              int mode = MD_LIMIT);
 
   /**
    * Copies src to dest by adapting the pixelvalues (linear histogram stretching)
@@ -131,9 +127,8 @@ namespace ice
    *
    * @param src: the source image
    * @param dest: the destination image
-   * @return an error value (returns 0 if operation succeeded)
    */
-  int RenormImg(const ColorImage& src, const ColorImage& dest);
+  void renormImg(const ColorImage& src, const ColorImage& dest);
 
   /**
    * equalizes the histogram of intensity channel of an image
@@ -143,8 +138,8 @@ namespace ice
    * @param src source image & destination image
    * @return error value (returns 0 if operation succeeded)
    */
-  int HistogramEqualization(const ColorImage& src);
-  int HistogramEqualization(const ColorImage& src, const ColorImage& dst);
+  void HistogramEqualization(const ColorImage& src);
+  void HistogramEqualization(const ColorImage& src, const ColorImage& dst);
 
   /*
    * The following part contains some linear local filters
@@ -161,9 +156,8 @@ namespace ice
    * @param src source image
    * @param dest destination image
    * @param n size of the filter
-   * @return error value (returns 0 if operation succeeded)
    */
-  int SmearImg(const ColorImage& src, const ColorImage& dest, int n = 3);
+  void smearImg(const ColorImage& src, const ColorImage& dest, int n = 3);
 
   /**
    * Convolutes each channel of src with a n times n 1-matrix
@@ -174,9 +168,8 @@ namespace ice
    * @param dest destination image
    * @param nx horizontal size of the filter
    * @param ny vertical size of the filter
-   * @return error value (returns 0 if operation succeeded)
    */
-  int SmearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny);
+  void smearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny);
 
   /**
    * The "Difference of Boxes" filter applies the SmearImg filter, first
@@ -191,10 +184,9 @@ namespace ice
    * @param n1 size of the first filter
    * @param n2 size of the second filter
    * @param mode mode of the subtraction (see above for available modes)
-   * @return error value (returns 0 if operation succeeded)
    */
-  int DoBImg(const ColorImage& src, const ColorImage& dest, int n1, int n2,
-             int smode = SMD_SHIFT);
+  void DoBImg(const ColorImage& src, const ColorImage& dest, int n1, int n2,
+              int smode = SMD_SHIFT);
 
   /**
    * Applies the Prewitt filter in X- respective Y-direction on the image.
@@ -204,10 +196,9 @@ namespace ice
    * @param src source image
    * @param dest destination image
    * @param norm specifies the norming factor of the destination values
-   * @return error value (returns 0 if operation succeeded)
    */
-  int GradXImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
-  int GradYImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
+  void GradXImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
+  void GradYImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
 
   /**
    * Applies the mean filter on the image.
@@ -215,9 +206,8 @@ namespace ice
    *
    * @param src source image
    * @param dest destination image
-   * @return error value (returns 0 if operation succeeded)
    */
-  int MeanImg(const ColorImage& src, const ColorImage& dest);
+  void MeanImg(const ColorImage& src, const ColorImage& dest);
 
   /**
    * Applies the Laplace-Filter in X-,Y- or both directions on the picture.
@@ -227,11 +217,10 @@ namespace ice
    * @param src source image
    * @param dest destination image
    * @param norm specifies the norming factor of the destination values
-   * @return error value (returns 0 if operation succeeded)
    */
-  int LaplaceXImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
-  int LaplaceYImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
-  int LaplaceImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
+  void LaplaceXImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
+  void LaplaceYImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
+  void LaplaceImg(const ColorImage& src, const ColorImage& dest, int norm = 1);
 
   /**
    * Applies the linear shift invariant Filter mask on src,
@@ -240,16 +229,16 @@ namespace ice
    * mask can be int*, double*, Matrix or IMatrix
    *
    */
-  int LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, int* mask, int norm, int offset);
-  int LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, double* mask, int offset);
-  int LSIImg(const ColorImage& src, const ColorImage& dest, const Matrix& mask, int offset);
-  int LSIImg(const ColorImage& src, const ColorImage& dest, const IMatrix& mask, int norm, int offset);
+  void LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, int* mask, int norm, int offset);
+  void LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, double* mask, int offset);
+  void LSIImg(const ColorImage& src, const ColorImage& dest, const Matrix& mask, int offset);
+  void LSIImg(const ColorImage& src, const ColorImage& dest, const IMatrix& mask, int norm, int offset);
 
   /**
    * The GaussImg filter is applied to src with sgima1 and sigma2.
    * The Difference of the two dest Images becomes the dest of MexicanImg.
    */
-  int MexicanHatImg(const ColorImage& src, const ColorImage& dest, double sigma, int neighbor);
+  void MexicanHatImg(const ColorImage& src, const ColorImage& dest, double sigma, int neighbor);
 
   /****************************************************************
    * The following section contains some nonlinear local filters  *
@@ -269,7 +258,7 @@ namespace ice
    * @param neighb the filtersize, has to be odd
    * @return error value (returns 0 if operation succeeded)
    */
-  int MedianImg(const ColorImage& src, const ColorImage& dest, int neighb);
+  void MedianImg(const ColorImage& src, const ColorImage& dest, int neighb);
 }
 
 #endif /* _COLORFUNCTIONS_H */

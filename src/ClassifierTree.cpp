@@ -23,7 +23,7 @@
 #include <assert.h>
 
 #include "vectortools.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "ClassifierTree.h"
@@ -35,11 +35,11 @@ namespace ice
 #define FNAME "ClassifierTree::ClassifierTree()"
   ClassifierTree::ClassifierTree(int classes, int dimension, int depth)
   {
-    IF_FAILED(Init(classes, dimension, depth))
-    {
-      // if initialisation fails
-      Message(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        Init(classes, dimension, depth);
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -47,19 +47,20 @@ namespace ice
   void ClassifierTree::Init()
   {
     if (nClasses == 0)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     Init(nClasses, nFeatures);
   }
 
   void ClassifierTree::Init(int classes, int dimension, int depth)
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
-    this->depth = depth;
-    tree.init(classes, dimension, depth);
+    try
+      {
+        Classifier::Init(classes, dimension);
+        this->depth = depth;
+        tree.init(classes, dimension, depth);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "ClassifierTree::Finish"

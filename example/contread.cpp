@@ -187,17 +187,17 @@ int main(int argc, char** argv)
 //  cout << "-->" << fn << "<---" << endl;
   Image img;
   img.create(XSIZE, YSIZE, MAXVALUE);
-  ClearImg(img);
+  clearImg(img);
 
   if (!quiet)
     Show(ON, img);
 
   ReadImg("PGM:|convert " + fn + " PGM:-", img);
-  int x, y;
-  wloop(img, x, y)
-  {
-    PutVal(img, x, y, (GetVal(img, x, y) << 6) & 0xffff);
-  }
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        PutVal(img, x, y, (GetVal(img, x, y) << 6) & 0xffff);
+      }
 
   ColorImage farbe(img, img, img);
   farbe.clear();
@@ -251,11 +251,12 @@ int main(int argc, char** argv)
 
   if (debayer)
     {
-      wloop(img, x, y)
-      {
-        ColorValue cv = farbe.getPixel(x, y);
-        PutVal(img, x, y, (cv.red + cv.green + cv.blue) / 3);
-      }
+      for (int y = 0; y < img.ysize; y++)
+        for (int x = 0; x < img.xsize; x++)
+          {
+            ColorValue cv = farbe.getPixel(x, y);
+            PutVal(img, x, y, (cv.red + cv.green + cv.blue) / 3);
+          }
 
       if (!bfilename.empty()) WriteImg(img, bfilename);
     }

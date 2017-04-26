@@ -163,6 +163,6 @@ namespace ice
     }
   };
 
-  int SetImg(const Image& img, const Function2d& fn);
+  void setImg(const Image& img, const Function2d& fn);
 }
 #endif

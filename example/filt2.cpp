@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
             {
             case 1:
 
-              if (GradXImg(p1, p2) != OK) exit(255);
+              GradXImg(p1, p2);
 
               break;
             case 101:
@@ -197,7 +197,7 @@ int main(int argc, char* argv[])
             }
             case 2:
 
-              if (GradYImg(p1, p2) != OK) exit(255);
+              GradYImg(p1, p2);
 
               break;
             case 102:
@@ -207,13 +207,13 @@ int main(int argc, char* argv[])
             }
             case 3:
 
-              if (GradImg(p1, 2, p2) != OK) exit(255);
+              GradImg(p1, 2, p2);
 
               break;
 
             case 4:
             {
-              if (GradDirImg(p1, p2) != OK) exit(255);
+              GradDirImg(p1, p2);
 
               WindowWalker p(p2);
               for (p.init(); !p.ready(); p.next())
@@ -225,70 +225,52 @@ int main(int argc, char* argv[])
 
             case 5:
 
-              if (SmearImg(p1, p2, 3) != OK)
-                exit(255);
-
+              smearImg(p1, p2, 3);
               break;
             case 6:
 
-              if (SmearImg(p1, p2, 11, 5) != OK)
-                exit(255);
+              smearImg(p1, p2, 11, 5);
 
               break;
             case 7:
 
-              if (LSIImg(p1, imatrix, KSIZE * KSIZE,
-                         p1->maxval / 2, p2) != OK)
-                exit(255);
-
+              LSIImg(p1, imatrix, KSIZE * KSIZE,
+                     p1->maxval / 2, p2);
               break;
+
             case 8:
-
-              if (LSIImg(p1, matrix * (1.0 / (KSIZE * KSIZE)),
-                         p1->maxval / 2, p2) != OK)
-                exit(255);
-
+              LSIImg(p1, matrix * (1.0 / (KSIZE * KSIZE)),
+                     p1->maxval / 2, p2);
               break;
 
             case 9:
-
-              if (LaplaceXImg(p1, 4, p2) != OK) exit(255);
-
+              LaplaceXImg(p1, 4, p2);
               break;
+
             case 10:
-
-              if (LaplaceYImg(p1, 4, p2) != OK) exit(255);
-
+              LaplaceYImg(p1, 4, p2);
               break;
+
             case 11:
-
-              if (LaplaceImg(p1, 4, p2) != OK) exit(255);
-
+              LaplaceImg(p1, 4, p2);
               break;
 
             case 12:
-
-              //if (DilateImg(p1, KSIZE, mask, p2)!=OK) exit(255);
-              if (DilateImg(p1, maskm, p2) != OK) exit(255);
-
+              DilateImg(p1, maskm, p2);
               break;
+
             case 13:
-
-              //if (ErodeImg(p1, KSIZE, mask, p2)!=OK) exit(255);
-              if (ErodeImg(p1, maskm, p2) != OK) exit(255);
-
+              ErodeImg(p1, maskm, p2);
               break;
 
             case 14:
-
-              if (DilateImg(p1, 5, 5, p2) != OK) exit(255);
-
+              DilateImg(p1, 5, 5, p2);
               break;
+
             case 15:
-
-              if (ErodeImg(p1, 5, 5, p2) != OK) exit(255);
-
+              ErodeImg(p1, 5, 5, p2);
               break;
+
             case 17:
               abort = true;
             }/* switch*/

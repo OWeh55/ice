@@ -23,7 +23,6 @@
 
 #include "ImageF.h"
 #include "base.h"
-#include "macro.h"
 
 namespace ice
 {
@@ -42,10 +41,7 @@ namespace ice
   {
     ImageD img;
     if ((xsize <= 0) || (ysize <= 0) || (minval > maxval))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return img;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
     img.create(xsize, ysize, minval, maxval);
     return img;
   }
@@ -55,10 +51,7 @@ namespace ice
     ImageD res;
 
     if (! im.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGED, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGED);
 
     res.create(im.xsize, im.ysize, im.minval, im.maxval);
 
@@ -66,7 +59,9 @@ namespace ice
       {
         for (int y = 0; y < im.ysize; y++)
           for (int x = 0; x < im.xsize; x++)
-            res.setPixelUnchecked(x, y, im.getPixelUnchecked(x, y));
+            {
+              res.setPixelUnchecked(x, y, im.getPixelUnchecked(x, y));
+            }
       }
 
     return res;
@@ -77,28 +72,22 @@ namespace ice
     ImageD res;
 
     if (!img.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     res.create(img.xsize, img.ysize, 0, img.maxval);
 
     if (copy)
       {
-        for (int y = 0; y < img->ysize; y++)
-          for (int x = 0; x < img->xsize; x++)
-            res.setPixelUnchecked(x, y, img.getPixelUnchecked(x, y));
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            {
+              res.setPixelUnchecked(x, y, img.getPixelUnchecked(x, y));
+            }
       }
 
     return res;
   }
 #undef FNAME
-  /* Freigeben eines Bildes */
-  inline   void FreeImgD(ImageD& img)
-  {
-    img.destroy();
-  }
 
   /* Kopieren Image ---> ImageD */
   int ConvImgImgD(const Image& imgs, ImageD& imgd,

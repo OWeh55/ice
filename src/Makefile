@@ -1,4 +1,4 @@
-###########################################
+##########################################
 #     		ICE Makefile              #
 ###########################################
 #
@@ -14,8 +14,8 @@
 ###########################################
 
 #NOFFTW3=1
-CXX := g++
-#CXX=g++-5
+#CXX := g++
+CXX=g++
 #CXX=clang++
 
 SUBDIRS := devices ocr
@@ -59,6 +59,7 @@ LIBDIR := ../lib/$(MACHTYPE)
 ASTYLE := astyle
 # format options for beautifier
 ASTYLE_OPT = --style=gnu --unpad-paren --pad-header --pad-oper --indent-namespaces --indent=spaces=2 --convert-tabs --align-pointer=type --align-reference=type
+#ASTYLE_OPT = --style=1tbs --unpad-paren --pad-header --pad-oper --indent-namespaces --indent=spaces=2 --convert-tabs --align-pointer=type --align-reference=type 
 
 ALLDIRS := . $(SUBDIRS) $(VISDIR)
 VPATH := $(SUBDIRS)
@@ -69,8 +70,8 @@ endif
 
 # optimize, but allow overriding with OPT
 # debug symbols
-# "all" warnings, but not unused-local-typedefs (since wxWidgets uses this)
-COPT := $(COPT) -O4 -g -Wall -Wno-unused-local-typedefs
+# "all" warnings, but not unused-local-typedefs (since wxWidgets uses these)
+COPT := $(COPT) -O4 -g -Wno-unused-local-typedefs -Wall
 
 # now allow OPT to override previous flags
 COPT := $(COPT) $(OPT)

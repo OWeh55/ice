@@ -42,10 +42,14 @@ namespace ice
       reflection = HAS_REFLECTION(trmode);
 
       if (trmode == TRM_AFFINE_NOR)
-        trmode = TRM_AFFINE;
+        {
+          trmode = TRM_AFFINE;
+        }
 
       if (trmode == TRM_PROJECTIVE_NOR)
-        trmode = TRM_PROJECTIVE;
+        {
+          trmode = TRM_PROJECTIVE;
+        }
     }
     virtual ~ObjectMatcher() {};
 

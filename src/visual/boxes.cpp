@@ -32,7 +32,7 @@
 #include <ctype.h>
 #include <vector>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "visual/screen.h"
 #include "visual/xio.h"
@@ -52,36 +52,47 @@ namespace ice
       (x1 < 0) || (x1 > x2) || (x2 > xm) ||
       (y1 < 0) || (y1 > y2) || (y2 > ym)
     )
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (frame)
       {
         SetAlphaCursor(x1, y1);
         PutChar(R_LO);
-        for (x = x1 + 1; x < x2; x++) PutChar(R_OU);
+        for (x = x1 + 1; x < x2; x++)
+          {
+            PutChar(R_OU);
+          }
         PutChar(R_RO);
         for (y = y1 + 1; y < y2; y++)
           {
             SetAlphaCursor(x1, y);
             PutChar(R_LR);
-            for (x = x1 + 1; x < x2; x++) PutChar(' ');
+            for (x = x1 + 1; x < x2; x++)
+              {
+                PutChar(' ');
+              }
             PutChar(R_LR);
           }
         SetAlphaCursor(x1, y2);
         PutChar(R_LU);
-        for (x = x1 + 1; x < x2; x++) PutChar(R_OU);
-        if ((x2 < xm) || (y2 < ym)) /* avoid rolling */
-          PutChar(R_RU);
+        for (x = x1 + 1; x < x2; x++)
+          {
+            PutChar(R_OU);
+          }
+        if ((x2 < xm) || (y2 < ym))   /* avoid rolling */
+          {
+            PutChar(R_RU);
+          }
       }
     else
       {
         for (y = y1; y <= y2; y++)
           {
             SetAlphaCursor(x1, y);
-            for (x = x1; x <= x2; x++) PutChar(' ');
+            for (x = x1; x <= x2; x++)
+              {
+                PutChar(' ');
+              }
           }
       }
     return OK;
@@ -98,10 +109,7 @@ namespace ice
     ym = AlphaSizeY() - 1;
 
     if ((xs > xm - 2) || (ys > ym - 2))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     x = 0;
     y = 0;
@@ -165,15 +173,27 @@ namespace ice
           {
             s[i] = '\0';
             ss[ys] = s + i + 1;
-            if (xa > xs) xs = xa;
+            if (xa > xs)
+              {
+                xs = xa;
+              }
             xa = 0;
             ys++;
           }
-        else xa++;
+        else
+          {
+            xa++;
+          }
         i++;
       }
-    if (xa > xs) xs = xa;
-    if ((rc = SetBox(xs, ys, where)) != OK) return rc;
+    if (xa > xs)
+      {
+        xs = xa;
+      }
+    if ((rc = SetBox(xs, ys, where)) != OK)
+      {
+        return rc;
+      }
     GetAlphaCursor(&xa, &ya);
     for (i = 0; i < ys; i++)
       {
@@ -197,7 +217,10 @@ namespace ice
       {
         if (ps[c] == '\n')
           {
-            if (ss[i].length() > xs) xs = ss[i].length(); // maximale Breite aktualisieren
+            if (ss[i].length() > xs)
+              {
+                xs = ss[i].length();  // maximale Breite aktualisieren
+              }
             ys++;             // Höhe = Zeilenzahl aktualisieren
             i++;
             ss.push_back("");
@@ -209,9 +232,15 @@ namespace ice
       }
 
     // letztes Wort extra behandeln
-    if (ss[i].length() > xs) xs = ss[i].length(); // maximale Breite aktualisieren
+    if (ss[i].length() > xs)
+      {
+        xs = ss[i].length();  // maximale Breite aktualisieren
+      }
 
-    if ((rc = SetBox(xs, ys, where)) != OK) return rc;
+    if ((rc = SetBox(xs, ys, where)) != OK)
+      {
+        return rc;
+      }
 
     GetAlphaCursor(&xa, &ya);
     for (unsigned int i = 0; i < ys; i++)
@@ -230,10 +259,7 @@ namespace ice
     char yn[2];
     char s[STRLEN];
     if (strlen(yns) < 2)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
     yn[0] = tolower(yns[0]);
     yn[1] = tolower(yns[1]);
     sprintf(s, "%s (%c/%c)", p, yn[0], yn[1]);
@@ -241,7 +267,9 @@ namespace ice
     SetAttribute(C_WHITE, C_GREEN, 0, 1);
     MessageBox(s, B_CENTER);
     do
-      a = tolower(GetChar());
+      {
+        a = tolower(GetChar());
+      }
     while ((a != yn[0]) && (a != yn[1]));
     PopAlpha();
     return (a == yn[0]);
@@ -253,10 +281,7 @@ namespace ice
     char yn[2];
     string s;
     if (yns.length() < 2)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
     yn[0] = toupper(yns[0]);
     yn[1] = toupper(yns[1]);
     s = p + "\n" + yn[0] + " / " + yn[1];
@@ -264,7 +289,9 @@ namespace ice
     SetAttribute(C_WHITE, C_GREEN, 0, 1);
     MessageBox(s, B_CENTER);
     do
-      a = toupper(GetChar());
+      {
+        a = toupper(GetChar());
+      }
     while ((a != yn[0]) && (a != yn[1]));
     PopAlpha();
     return (a == yn[0]);

@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include "matrixtools.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 #include "Classifier.h"
@@ -32,20 +32,14 @@ namespace ice
   void Classifier::Init()
   {
     if (state == invalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
     _reset();
   }
 
   void Classifier::Init(int classes, int dimension)
   {
     if ((dimension < 1) || (classes < 2))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     nFeatures = dimension;
     nClasses = classes;
@@ -58,22 +52,13 @@ namespace ice
   int Classifier::Train(const ClassSample& s)
   {
     if (state != training)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if ((int)s.features.size() != nFeatures)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     if (s.classNr < 0 || s.classNr >= nClasses)
-      {
-        Message(FNAME, M_INVALID_CLASSNUMBER, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_INVALID_CLASSNUMBER);
     classTrained[s.classNr]++;
     return _train(s);
   }
@@ -87,7 +72,9 @@ namespace ice
   {
     std::vector<double> v(feat.size());
     for (int i = 0; i < (int)feat.size(); i++)
-      v[i] = feat[i];
+      {
+        v[i] = feat[i];
+      }
     return Train(cl, v);
   }
 
@@ -95,19 +82,15 @@ namespace ice
   int Classifier::Train(const Matrix& m)
   {
     if ((m.rows() < 1) || (m.cols() != nFeatures + 1))
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (state != training)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     for (int i = 0; i < m.rows(); i++)
-      Train((int)Round(m[i][nFeatures]), m[i](0, nFeatures - 1));
+      {
+        Train((int)Round(m[i][nFeatures]), m[i](0, nFeatures - 1));
+      }
 
     return OK;
   }
@@ -115,7 +98,9 @@ namespace ice
   int Classifier::Train(const std::vector<ClassSample>& sampleVector)
   {
     for (unsigned int i = 0; i < sampleVector.size(); i++)
-      Train(sampleVector[i]);
+      {
+        Train(sampleVector[i]);
+      }
 
     return OK;
   }
@@ -123,20 +108,16 @@ namespace ice
   int Classifier::Train(const Matrix& m, const IVector& classnr)
   {
     if (state != training)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if ((m.rows() < 1) || (m.cols() != nFeatures) ||
         (m.rows() != classnr.Size()))
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     for (int i = 0; i < m.rows(); i++)
-      Train(classnr[i], m[i]);
+      {
+        Train(classnr[i], m[i]);
+      }
 
     return OK;
   }
@@ -146,21 +127,17 @@ namespace ice
   int Classifier::Finish()
   {
     if (state != training)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     bool allTrained = true;
     for (int i = 0; i < nClasses && allTrained; i++)
       if (classTrained[i] == 0)
-        allTrained = false;
+        {
+          allTrained = false;
+        }
 
     if (!allTrained)
-      {
-        Message(FNAME, M_NOT_TRAINED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_TRAINED);
 
     if (_finish())
       {
@@ -182,16 +159,10 @@ namespace ice
   int Classifier::Classify(const std::vector<double>& feat) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return -3;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
 
     if (nFeatures != (int)feat.size())
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return -3;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
     std::vector<double> prob;
     return _classify(feat, prob);
   }
@@ -200,25 +171,23 @@ namespace ice
                            std::vector<double>& prob) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return -3;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
 
     if (nFeatures != (int)feat.size())
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return -3;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
     prob.resize(nClasses);
     prob[0] = -1;
     int classNr = _classify(feat, prob);
-    if (prob[0] < 0) // Classifier did not set probabilities
+    if (prob[0] < 0)   // Classifier did not set probabilities
       {
         for (int i = 0; i < nClasses; ++i)
-          prob[i] = 0;
+          {
+            prob[i] = 0;
+          }
         if (classNr >= 0)
-          prob[classNr] = 1.0;
+          {
+            prob[classNr] = 1.0;
+          }
       }
     return classNr;
   }
@@ -227,7 +196,9 @@ namespace ice
   {
     std::vector<double> v(feat.size());
     for (unsigned int i = 0; i < feat.size(); i++)
-      v[i] = feat[i];
+      {
+        v[i] = feat[i];
+      }
     return Classify(v);
   }
 
@@ -235,16 +206,10 @@ namespace ice
   int Classifier::Classify(const Matrix& m, IVector& cl) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
 
     if (nFeatures != m.cols())
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     cl = IVector(m.rows());
 
@@ -260,11 +225,7 @@ namespace ice
   int Classifier::Classify(Matrix& m) const
   {
     IVector cl;
-    IF_FAILED(Classify(m, cl))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    }
+    Classify(m, cl);
     m = m || (Vector)cl;
     return OK;
   }
@@ -275,41 +236,29 @@ namespace ice
   {
     std::ifstream is(fn.c_str());
     if (!is.good())
-      {
-        Message(FNAME, M_FILE_OPEN, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
     return read(is);
   }
 
   int Classifier::read(std::istream& is)
   {
-    Message(FNAME, M_NOT_IMPLEMENTED, ERROR);
-    return ERROR;
+    throw IceException(FNAME, M_NOT_IMPLEMENTED);
   }
-
 #undef FNAME
 #define FNAME "Classifier::Write"
   int Classifier::write(const std::string& fn) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
     std::ofstream os(fn.c_str());
     if (!os.good())
-      {
-        Message(FNAME, M_FILE_OPEN, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_FILE_OPEN);
     return write(os);
   }
 
   int Classifier::write(std::ostream& os) const
   {
-    Message(FNAME, M_NOT_IMPLEMENTED, ERROR);
-    return ERROR;
+    throw IceException(FNAME, M_NOT_IMPLEMENTED);
   }
 #undef FNAME
 #define FNAME "Test"
@@ -318,29 +267,22 @@ namespace ice
   double Classifier::Test(const std::vector<ClassSample>& sl) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
 
     if (sl.size() < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (nFeatures != (int)sl[0].features.size())
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     int cc = 0; // count correct classified samples
 
     for (unsigned int i = 0; i < sl.size(); ++i)
       {
         if (sl[i].classNr == Classify(sl[i].features))
-          cc++;
+          {
+            cc++;
+          }
       }
 
     return ((double)cc) / ((double)sl.size());
@@ -349,23 +291,19 @@ namespace ice
   double Classifier::Test(const Matrix& m) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
 
     if (nFeatures != m.cols() - 1)
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     int cc = 0; // count correct classified samples
 
     for (int i = 0; i < m.rows(); i++)
       {
         if (RoundInt(m[i][m.cols()]) == Classify(m[i](0, nFeatures - 1)))
-          cc++;
+          {
+            cc++;
+          }
       }
 
     return ((double)cc) / ((double)m.rows());
@@ -375,23 +313,19 @@ namespace ice
   double Classifier::Test(const Matrix& m, const IVector& clnr) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
 
     if ((nFeatures != m.cols()) || (m.rows() != clnr.Size()))
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     int cc = 0; // count correct classified samples
 
     for (int i = 0; i < m.rows(); i++)
       {
         if (clnr[i] == Classify(m[i]))
-          cc++;
+          {
+            cc++;
+          }
       }
 
     return ((double)cc) / ((double)m.rows());
@@ -401,24 +335,18 @@ namespace ice
   double Classifier::Test(const Matrix& m, Matrix& r) const
   {
     if (state != ready)
-      {
-        Message(FNAME, M_NOT_FINISHED, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_NOT_FINISHED);
 
     if (nFeatures != m.cols() - 1)
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     int cc = 0; // counter for correct classifications
 
     IVector anz(nFeatures);
-    anz.Set(0);
+    anz.set(0);
 
     r = Matrix(nFeatures, nFeatures);
-    r.Set(0.0);
+    r.set(0.0);
 
     for (int i = 0; i < m.rows(); i++)
       {
@@ -426,17 +354,22 @@ namespace ice
         anz[cls] += 1;
         int cli = Classify(m[i](0, nFeatures - 1));
 
-        if (cli >= 0) // ignore rejections
+        if (cli >= 0)   // ignore rejections
           {
             r[cls][cli] += 1.0;
 
-            if (cli == cls) cc++;
+            if (cli == cls)
+              {
+                cc++;
+              }
           }
       }
 
     for (int i = 0; i < nFeatures; i++)
       for (int j = 0; j < nFeatures; j++)
-        r[i][j] = r[i][j] / anz[i];
+        {
+          r[i][j] = r[i][j] / anz[i];
+        }
 
     return ((double)cc) / ((double)m.rows());
   }

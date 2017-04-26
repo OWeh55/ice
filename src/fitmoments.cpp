@@ -37,7 +37,9 @@ namespace ice
 
     for (i = 0; i < 3; i++)
       for (j = 0; j < 3; j++)
-        trm[i][j] = tr[i][j];
+        {
+          trm[i][j] = tr[i][j];
+        }
 
     return Trafo(trm);
   }
@@ -62,20 +64,17 @@ namespace ice
     Moments mx = m.NormalizeSign();
 
     if (mx(0, 0) < EPSILON)
-      {
-        Message(FNAME, M_WRONG_OBJECT, WRONG_PARAM);
-        return tri;
-      }
+      throw IceException(FNAME, M_WRONG_OBJECT);
 
     Trafo tr;
     // trafo in die Standardlage ermitteln
     mx.Normalize(tr, Moments::polynom);
 
     // Trafo umkehren
-    tr.Invert();
+    tr.invert();
 
     // und Standard-Dreieck transformieren
-    TransformList(tr, tri);
+    transformList(tr, tri);
 
     return tri;
   }
@@ -89,14 +88,20 @@ namespace ice
 
   Matrix FitEquilateralTriangle(const Moments& m, double& guetemass)
   {
-    Matrix triangle(0, 2);
-    double p[3][2];
-    RETURN_IF_FAILED(FitEquilateraltriangleMoments(m.oldMoments(), p, guetemass), triangle);
+    try
+      {
+        Matrix triangle(0, 2);
+        double p[3][2];
+        FitEquilateraltriangleMoments(m.oldMoments(), p, guetemass);
 
-    for (int i = 0; i < 3; i++)
-      triangle.Append(Vector(p[i][0], p[i][1]));
+        for (int i = 0; i < 3; i++)
+          {
+            triangle.append(Vector(p[i][0], p[i][1]));
+          }
 
-    return triangle;
+        return triangle;
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "FitEquilateraltriangle"
@@ -107,14 +112,20 @@ namespace ice
   }
   Matrix FitIsoscelesTriangle(const Moments& m, double& guetemass)
   {
-    Matrix triangle(0, 2);
-    double p[3][2];
-    RETURN_IF_FAILED(FitIsoscelestriangleMoments(m.oldMoments(), p, guetemass), triangle);
+    try
+      {
+        Matrix triangle(0, 2);
+        double p[3][2];
+        FitIsoscelestriangleMoments(m.oldMoments(), p, guetemass);
 
-    for (int i = 0; i < 3; i++)
-      triangle.Append(Vector(p[i][0], p[i][1]));
+        for (int i = 0; i < 3; i++)
+          {
+            triangle.append(Vector(p[i][0], p[i][1]));
+          }
 
-    return triangle;
+        return triangle;
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "FitParallelogram"
@@ -200,37 +211,37 @@ namespace ice
 
   Matrix FitPolygon(const Moments& m, const Matrix& pl, double& guetemass)
   {
-    Matrix res(0, 2);
-    RETURN_IF_FAILED(CheckPolygon(pl), res);
-
-    int n = pl.rows();
-
-    if (n > 7)
+    try
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        Matrix res(0, 2);
+        CheckPolygon(pl);
+
+        int n = pl.rows();
+
+        if (n > 7)
+          throw IceException(FNAME, M_MATRIXFORMAT);
+
+        double pstart[7][2]; // initial solution
+
+        for (int i = 0; i < n; i++)
+          {
+            pstart[i][0] = pl[i][0];
+            pstart[i][1] = pl[i][1];
+          }
+
+        double p[7][2]; // result
+
+        FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass);
+
+        for (int i = 0; i < n; i++)
+          {
+            res.append(Vector(p[i][0], p[i][1]));
+          }
+
         return res;
       }
-
-    double pstart[7][2]; // initial solution
-
-    for (int i = 0; i < n; i++)
-      {
-        pstart[i][0] = pl[i][0];
-        pstart[i][1] = pl[i][1];
-      }
-
-    double p[7][2]; // result
-
-    RETURN_IF_FAILED(FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass), res);
-
-    for (int i = 0; i < n; i++)
-      {
-        res.Append(Vector(p[i][0], p[i][1]));
-      }
-
-    return res;
+    RETHROW;
   }
-
 
   Polygon FitPolygon(const Moments& m, const Polygon& pl, double& guetemass)
   {
@@ -239,10 +250,7 @@ namespace ice
     int n = pl.size();
 
     if (n > 7)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double pstart[7][2]; // initial solution
 
@@ -254,15 +262,19 @@ namespace ice
 
     double p[7][2]; // result
 
-    RETURN_IF_FAILED(FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass), res);
-
-    res.Reset(Point(p[0][0], p[0][1]));
-    for (int i = 1; i < n; i++)
+    try
       {
-        res.Add(Vector(p[i][0], p[i][1]));
-      }
+        FitPolygonMoments(n, m.oldMoments(), pstart, p, guetemass);
 
-    return res;
+        res.Reset(Point(p[0][0], p[0][1]));
+        for (int i = 1; i < n; i++)
+          {
+            res.add(Vector(p[i][0], p[i][1]));
+          }
+
+        return res;
+      }
+    RETHROW;
 
   }
 
@@ -311,9 +323,13 @@ namespace ice
 #define FNAME "Orientation"
   double Orientation(const Moments& m)
   {
-    double fi;
-    RETURN_IF_FAILED(OrientationMoments(m.oldMoments(), fi), 0.0);
-    return fi;
+    try
+      {
+        double fi;
+        OrientationMoments(m.oldMoments(), fi);
+        return fi;
+      }
+    RETHROW;
   }
 #undef FNAME
 

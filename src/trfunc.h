@@ -100,7 +100,7 @@ namespace ice
     {
       if (modified)
         {
-          inv = tr.Inverse();
+          inv = tr.inverse();
           modified = false;
         }
     }
@@ -123,7 +123,7 @@ namespace ice
     {
       makeInverse();
       double xt, yt;
-      Transform(inv, x, y, xt, yt);
+      transform(inv, x, y, xt, yt);
       return basefunc(xt, yt);
     }
 
@@ -131,12 +131,18 @@ namespace ice
     {
       Function2dModifier::getCoefficient(v);
 
+      const matrix<double>& tm = tr.getMatrix();
+
       for (int i = 0; i < 2; i++)
         for (int k = 0; k < 3; k++)
-          v.push_back(tr.Tmatrix()[i][k]);
+          {
+            v.push_back(tm[i][k]);
+          }
 
       for (int k = 0; k < 2; k++)
-        v.push_back(tr.Tmatrix()[2][k]);
+        {
+          v.push_back(tm[2][k]);
+        }
     };
 
     virtual int setCoefficient(const vector<double>& v, int idx = 0)
@@ -147,10 +153,14 @@ namespace ice
 
       for (int i = 0; i < 2; i++)
         for (int k = 0; k < 3; k++)
-          m[i][k] = v[idx++];
+          {
+            m[i][k] = v[idx++];
+          }
 
       for (int k = 0; k < 2; k++)
-        m[2][k] = v[idx++];
+        {
+          m[2][k] = v[idx++];
+        }
 
       m[2][2] = 1.0;
 
@@ -237,10 +247,12 @@ namespace ice
     virtual void getCoefficient(vector<double>& v) const
     {
       Function2dModifier::getCoefficient(v);
-      Vector dv = dist->MakeVector();
+      Vector dv = dist->makeVector();
       v.push_back(dv.Size());
       for (int i = 0; i < dv.Size(); i++)
-        v.push_back(dv[i]);
+        {
+          v.push_back(dv[i]);
+        }
     }
 
     virtual int setCoefficient(const vector<double>& v, int idx = 0)
@@ -248,8 +260,10 @@ namespace ice
       idx = Function2dModifier::setCoefficient(v, idx);
       Vector dv(v[idx++]);
       for (int i = 0; i < dv.Size(); i++)
-        dv[i] = v[idx++];
-      dist->Set(dv);
+        {
+          dv[i] = v[idx++];
+        }
+      dist->set(dv);
       return idx;
     }
   };

@@ -132,7 +132,10 @@ namespace ice
   template<typename T>
   inline T Max(const T& val1, const T& val2)
   {
-    if (val1 > val2) return val1;
+    if (val1 > val2)
+      {
+        return val1;
+      }
 
     return val2;
   }
@@ -140,7 +143,10 @@ namespace ice
   template<typename T>
   inline T Min(const T& val1, const T& val2)
   {
-    if (val1 < val2) return val1;
+    if (val1 < val2)
+      {
+        return val1;
+      }
 
     return val2;
   }
@@ -148,20 +154,32 @@ namespace ice
   template<typename T>
   inline void UpdateMax(T& var, T val)
   {
-    if (val > var) var = val;
+    if (val > var)
+      {
+        var = val;
+      }
   }
 
   template<typename T>
   inline void UpdateMin(T& var, T val)
   {
-    if (val < var) var = val;
+    if (val < var)
+      {
+        var = val;
+      }
   }
 
   template<typename T>
   inline void UpdateLimits(T& min, T& max, T val)
   {
-    if (val < min) min = val;
-    if (val > max) max = val;
+    if (val < min)
+      {
+        min = val;
+      }
+    if (val > max)
+      {
+        max = val;
+      }
   }
 
   template<typename T>

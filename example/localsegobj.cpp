@@ -11,7 +11,7 @@ void search_and_mark(const Image& m1, Image& imgo, of suche, of folge)
   vector<Contur> objects;
   vector<Contur> holes;
   Contur c;
-  ClearImg(imgo);
+  clearImg(imgo);
 
   while (SearchStart(m1, imgo, suche, 123, 5, ps) == OK)
     {
@@ -42,8 +42,6 @@ void search_and_mark(const Image& m1, Image& imgo, of suche, of folge)
 
 int main(int argc, char* argv[])
 {
-  int x, y;
-
   Image i1;
 
   if (argc > 1)
@@ -56,10 +54,11 @@ int main(int argc, char* argv[])
       // artificial image
       i1 = NewImg(XS, YS, 255);
 
-      wloop(i1, x, y)
-      {
-        PutVal(i1, x, y, 255 - (y / 4));
-      }
+      for (int y = 0; y < i1.ysize; y++)
+        for (int x = 0; x < i1.xsize; x++)
+          {
+            PutVal(i1, x, y, 255 - (y / 4));
+          }
 
       for (unsigned int i = 0; i < 230; i++)
         {
@@ -73,7 +72,7 @@ int main(int argc, char* argv[])
     }
 
   Image m1 = NewImg(i1);
-  ClearImg(m1);
+  clearImg(m1);
 
 //  Image mi=NewImg(i1);
 //  Image ma=NewImg(i1);
@@ -88,19 +87,19 @@ int main(int argc, char* argv[])
   LocalSeg(i1, m1, 7, 25, 15);
 
   Image imgo = NewImg(m1);                 // Markierungsbild anlegen
-  ClearImg(imgo);                          // und löschen
+  clearImg(imgo);                          // und löschen
   Show(OVERLAY, i1, imgo, "High/High");      // Bilddarstellung
 
   search_and_mark(m1, imgo, LocalSegObjHigh, LocalSegObjHigh);
 
   Image imgo2 = NewImg(m1);                 // Markierungsbild anlegen
-  ClearImg(imgo2);                          // und löschen
+  clearImg(imgo2);                          // und löschen
   Show(OVERLAY, i1, imgo2, "High/Low");      // Bilddarstellung
 
   search_and_mark(m1, imgo2, LocalSegObjHigh, LocalSegObj);
 
   Image imgo3 = NewImg(m1);                 // Markierungsbild anlegen
-  ClearImg(imgo3);                          // und löschen
+  clearImg(imgo3);                          // und löschen
   Show(OVERLAY, i1, imgo3, "Low/Low");      // Bilddarstellung
 
   search_and_mark(m1, imgo3, LocalSegObj, LocalSegObj);

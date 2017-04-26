@@ -177,7 +177,7 @@ namespace ice
   {
     int cols = sr.cols();
     int rows = sr.rows();
-    for (int r = 0; r < rows; ++r) // all rows
+    for (int r = 0; r < rows; ++r)   // all rows
       {
         std::vector<double> vr(cols);
         std::vector<double> vi(cols);
@@ -194,7 +194,7 @@ namespace ice
           }
       }
 
-    for (int c = 0; c < cols; ++c) // all columns
+    for (int c = 0; c < cols; ++c)   // all columns
       {
         std::vector<double> vr(rows);
         std::vector<double> vi(rows);

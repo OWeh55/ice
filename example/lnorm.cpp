@@ -92,7 +92,7 @@ public:
   void Statistic(double& xm, double& xs)
   {
     int s;
-    h.Statistic(s, xm, xs);
+    h.getStatistics(s, xm, xs);
   }
 
 } ;
@@ -237,25 +237,26 @@ int main(int argc, char** argv)
   for (i = 0; i < bilder; i++)
     {
       Print("+");
-      wloop(grw[i], x, y)
-      {
-        int x1 = x - nn;
-        int y1 = y - nn;
-        int x2 = x + nn;
-        int y2 = y + nn;
-
-        if ((x1 >= 0) && (y1 >= 0) && (x2 <= xs) && (y2 < ys))
+      for (int y = 0; y < grw[i].ysize; y++)
+        for (int x = 0; x < grw[i].xsize; x++)
           {
-            double xm = GetVal(mean, x, y);
-            double xs = GetVal(std, x, y);
-            double fac = 100 / (xs + nd);
-            double relg = GetVal(grw[i], x, y) - xm;
+            int x1 = x - nn;
+            int y1 = y - nn;
+            int x2 = x + nn;
+            int y2 = y + nn;
 
-            PutVal(grwn[i], x, y, limited(RoundInt(relg * fac + k * (xm - mv2) + mv2), 0, 255));
+            if ((x1 >= 0) && (y1 >= 0) && (x2 <= xs) && (y2 < ys))
+              {
+                double xm = GetVal(mean, x, y);
+                double xs = GetVal(std, x, y);
+                double fac = 100 / (xs + nd);
+                double relg = GetVal(grw[i], x, y) - xm;
+
+                PutVal(grwn[i], x, y, limited(RoundInt(relg * fac + k * (xm - mv2) + mv2), 0, 255));
+              }
+            else
+              PutVal(grwn[i], x, y, GetVal(grw[i], x, y));
           }
-        else
-          PutVal(grwn[i], x, y, GetVal(grw[i], x, y));
-      }
     }
 
   Print("\nFertig!\n");

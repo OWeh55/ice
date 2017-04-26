@@ -18,6 +18,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "macro.h"
 #include "filter.h"
 
 namespace ice
@@ -36,13 +37,19 @@ namespace ice
 
     /* diese erste Bedingung weicht von Zhang/Suen ab*/
     if ((white < 3) || (white > 6))
-      return false;
+      {
+        return false;
+      }
 
     if ((bitmask & 0x15) == 0x15)
-      return false;
+      {
+        return false;
+      }
 
     if (((bitmask & 0x54) == 0x54))
-      return false;
+      {
+        return false;
+      }
 
     int transitions = 0;
 
@@ -71,13 +78,19 @@ namespace ice
 
     /* diese erste Bedingung weicht von Zhang/Suen ab*/
     if ((white < 3) || (white > 6))
-      return false;
+      {
+        return false;
+      }
 
     if ((bitmask & 0x51) == 0x51)
-      return false;
+      {
+        return false;
+      }
 
     if (((bitmask & 0x45) == 0x45))
-      return false;
+      {
+        return false;
+      }
 
     int transitions = 0;
 
@@ -97,21 +110,45 @@ namespace ice
     int p = 0;
 
     /* Nachbarn ermitteln -> bitmaske */
-    if (GetValUnchecked(img, x, y - 1))   p |= 0x101;
+    if (GetValUnchecked(img, x, y - 1))
+      {
+        p |= 0x101;
+      }
 
-    if (GetValUnchecked(img, x + 1, y - 1)) p |= 0x02;
+    if (GetValUnchecked(img, x + 1, y - 1))
+      {
+        p |= 0x02;
+      }
 
-    if (GetValUnchecked(img, x + 1, y))   p |= 0x04;
+    if (GetValUnchecked(img, x + 1, y))
+      {
+        p |= 0x04;
+      }
 
-    if (GetValUnchecked(img, x + 1, y + 1)) p |= 0x08;
+    if (GetValUnchecked(img, x + 1, y + 1))
+      {
+        p |= 0x08;
+      }
 
-    if (GetValUnchecked(img, x, y + 1))   p |= 0x10;
+    if (GetValUnchecked(img, x, y + 1))
+      {
+        p |= 0x10;
+      }
 
-    if (GetValUnchecked(img, x - 1, y + 1)) p |= 0x20;
+    if (GetValUnchecked(img, x - 1, y + 1))
+      {
+        p |= 0x20;
+      }
 
-    if (GetValUnchecked(img, x - 1, y))   p |= 0x40;
+    if (GetValUnchecked(img, x - 1, y))
+      {
+        p |= 0x40;
+      }
 
-    if (GetValUnchecked(img, x - 1, y - 1)) p |= 0x80;
+    if (GetValUnchecked(img, x - 1, y - 1))
+      {
+        p |= 0x80;
+      }
 
     return p;
   }
@@ -121,21 +158,45 @@ namespace ice
     int p = 0;
 
     /* Nachbarn ermitteln -> bitmaske */
-    if (tdata[y - 1][x])   p |= 0x101;
+    if (tdata[y - 1][x])
+      {
+        p |= 0x101;
+      }
 
-    if (tdata[y - 1][x + 1])   p |= 0x02;
+    if (tdata[y - 1][x + 1])
+      {
+        p |= 0x02;
+      }
 
-    if (tdata[y][x + 1])   p |= 0x04;
+    if (tdata[y][x + 1])
+      {
+        p |= 0x04;
+      }
 
-    if (tdata[y + 1][x + 1])   p |= 0x08;
+    if (tdata[y + 1][x + 1])
+      {
+        p |= 0x08;
+      }
 
-    if (tdata[y + 1][x])   p |= 0x10;
+    if (tdata[y + 1][x])
+      {
+        p |= 0x10;
+      }
 
-    if (tdata[y + 1][x - 1])   p |= 0x20;
+    if (tdata[y + 1][x - 1])
+      {
+        p |= 0x20;
+      }
 
-    if (tdata[y][x - 1])   p |= 0x40;
+    if (tdata[y][x - 1])
+      {
+        p |= 0x40;
+      }
 
-    if (tdata[y - 1][x - 1])   p |= 0x80;
+    if (tdata[y - 1][x - 1])
+      {
+        p |= 0x80;
+      }
 
     return p;
   }
@@ -146,15 +207,12 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
 
-    int maxv = skelett->maxval;
+    int maxv = skelett.maxval;
 
     if (maxv < 2)
-      {
-        Message(FNAME, M_LOWRANGE, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_LOWRANGE);
 
-    BinImg(pic, lvl, skelett); // Ausgangsbild binarisieren
+    binImg(pic, lvl, skelett); // Ausgangsbild binarisieren
 
     /* Iterativ verduennen nach modifiziertem Zhang/Suen-Algorith. */
 
@@ -223,7 +281,7 @@ namespace ice
                 }
             }
       }
-    while (changes > 0); // Ende erst, falls keine Aenderung mehr
+    while (changes > 0);   // Ende erst, falls keine Aenderung mehr
 
     return 0;
   }
@@ -233,11 +291,11 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
 
-    int maxv = skelett->maxval;
+    int maxv = skelett.maxval;
 
     Image timg = NewImg(dimx, dimy, 3);
 
-    BinImg(pic, lvl, timg); // binarisieren und im Zwischenbild speichern
+    binImg(pic, lvl, timg); // binarisieren und im Zwischenbild speichern
 
     PixelType1** tdata = (PixelType1**)timg->getDataPtr();
 
@@ -308,8 +366,7 @@ namespace ice
                 }
             }
       }
-    while (changes > 0); // Ende erst, falls keine Aenderung mehr
-
+    while (changes > 0);   // Ende erst, falls keine Aenderung mehr
 
     for (int y = 0; y < dimy; y++)
       for (int x = 0; x < dimx; x++)

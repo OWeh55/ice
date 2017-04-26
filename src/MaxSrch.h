@@ -21,9 +21,8 @@
 #ifndef _MAX_SEARCH_STRUCT_
 #define _MAX_SEARCH_STRUCT_
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
-#include "macro.h"
 
 #include "base.h"
 

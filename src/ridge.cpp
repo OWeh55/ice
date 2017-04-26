@@ -30,7 +30,7 @@
 #include <stddef.h>  /* notwendig fuer Unix !!! */
 #include <math.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "freeman.h"
@@ -53,7 +53,7 @@ namespace ice
     int i, j;
     int xx, yy, xf, yf;
     smax = -1;
-    smin = img->maxval * 3;
+    smin = img.maxval * 3;
 
     for (dir1 = (dir + 7) & 7, i = 0; i < 3; i++, dir1 = (dir1 + 1) & 7)
       {
@@ -65,7 +65,10 @@ namespace ice
             Freeman(dir2).move(xx, yy, xf, yf);
             s = v + GetVal(img, xf, yf);
 
-            if (s < smin) smin = s;
+            if (s < smin)
+              {
+                smin = s;
+              }
 
             if (s > smax)
               {
@@ -92,44 +95,35 @@ namespace ice
     pgl *= 6;
 
     if ((dir != HORZ) && (dir != VERT))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImg(imgv))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImg(imgo))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!(Inside(imgv, x, y)))
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return (WRONG_STARTPOINT);
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     wxi = BOFF;
-    wxa = min(imgv->xsize, imgo->xsize) - 1 - BOFF;
+    wxa = min(imgv.xsize, imgo.xsize) - 1 - BOFF;
     wyi = BOFF;
-    wya = min(imgv->ysize, imgo->ysize) - 1 - BOFF;
+    wya = min(imgv.ysize, imgo.ysize) - 1 - BOFF;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
-      {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return WRONG_WINDOW;
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     /* an verkleinertes Suchfenster anpassen*/
-    if (x < wxi) x = wxi;
+    if (x < wxi)
+      {
+        x = wxi;
+      }
 
-    if (y < wyi) y = wyi;
+    if (y < wyi)
+      {
+        y = wyi;
+      }
 
     if (x > wxa)
       {
@@ -138,7 +132,10 @@ namespace ice
             y++;
             x = wxi;
           }
-        else return (NOT_FOUND);
+        else
+          {
+            return NOT_FOUND;
+          }
       }
 
     if (y > wya)
@@ -148,9 +145,15 @@ namespace ice
             x++;
             y = wyi;
 
-            if (x > wxa) return (NOT_FOUND);
+            if (x > wxa)
+              {
+                return (NOT_FOUND);
+              }
           }
-        else return (NOT_FOUND);
+        else
+          {
+            return (NOT_FOUND);
+          }
       }
 
     if (dir == HORZ)
@@ -182,7 +185,10 @@ namespace ice
                             s += GetVal(imgo, xf, yf);
                           }
 
-                        if (s == 0) return (OK);
+                        if (s == 0)
+                          {
+                            return (OK);
+                          }
                       }
                   }
 
@@ -229,7 +235,10 @@ namespace ice
                             s += GetVal(imgo, xf, yf);
                           }
 
-                        if (s == 0) return (OK);
+                        if (s == 0)
+                          {
+                            return (OK);
+                          }
                       }
                   }
 
@@ -267,16 +276,10 @@ namespace ice
     ys = ps[1];
 
     if (!IsImg(imgv))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return c;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!IsImg(imgo))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return c;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     wxi = BOFF;
     wxa = min(imgv->xsize, imgo->xsize) - 1 - BOFF;
@@ -284,16 +287,10 @@ namespace ice
     wya = min(imgv->ysize, imgo->ysize) - 1 - BOFF;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < BOFF))
-      {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return c;
-      }
+      throw IceException(FNAME, M_WRONG_WINDOW2);
 
     if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return c;
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     /*beste Startrichtung suchen*/
     maxval = 0;
@@ -304,10 +301,7 @@ namespace ice
         Freeman(i).move(xs, ys, xf, yf);
 
         if (GetVal(imgo, xf, yf) != 0)
-          {
-            Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-            return c;
-          }
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         dir = r_NextDir(imgv, xs, ys, i, val);
 
@@ -324,10 +318,10 @@ namespace ice
         return c;
       }
 
-    c.SetStart(xs, ys);
+    c.setStart(xs, ys);
     /* Beginn der Konturfolge */
     PutVal(imgo, xs, ys, 1);
-    c.Add(startdir);
+    c.add(startdir);
 
     Freeman(startdir).move(xs, ys, xx, yy);
 
@@ -339,24 +333,33 @@ namespace ice
       {
         aktdir = r_NextDir(imgv, xx, yy, aktdir, val);
 
-        if (val < pgl) break;
+        if (val < pgl)
+          {
+            break;
+          }
 
         Freeman(aktdir).move(xx, yy, xn, yn);
 
-        if (GetVal(imgo, xn, yn) != 0) break;
+        if (GetVal(imgo, xn, yn) != 0)
+          {
+            break;
+          }
 
-        if (xn < wxi || xn > wxa || yn < wyi || yn > wya) break;
+        if (xn < wxi || xn > wxa || yn < wyi || yn > wya)
+          {
+            break;
+          }
 
         xx = xn;
         yy = yn;
-        c.Add(aktdir);
+        c.add(aktdir);
         PutVal(imgo, xx, yy, 1);
         meanval += val;
       }
     while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
 
     /* Durchlaufrichtung der Kontur umdrehen*/
-    c.InvDir();
+    c.invertDir();
     /*jetzt in der anderen Richtung suchen*/
     aktdir = c.DirCode(c.Number() - 1);
 
@@ -364,17 +367,26 @@ namespace ice
       {
         aktdir = r_NextDir(imgv, xx, yy, aktdir, val);
 
-        if (val < pgl) break;
+        if (val < pgl)
+          {
+            break;
+          }
 
         Freeman(aktdir).move(xx, yy, xn, yn);
 
-        if (GetVal(imgo, xn, yn) != 0) break;
+        if (GetVal(imgo, xn, yn) != 0)
+          {
+            break;
+          }
 
-        if (xn < wxi || xn > wxa || yn < wyi || yn > wya) break;
+        if (xn < wxi || xn > wxa || yn < wyi || yn > wya)
+          {
+            break;
+          }
 
         xx = xn;
         yy = yn;
-        c.Add(aktdir);
+        c.add(aktdir);
 
         PutVal(imgo, xx, yy, 1);
         meanval += val;
@@ -395,7 +407,7 @@ namespace ice
 
         if ((xf == c.StartX()) && (yf == c.StartY()))
           {
-            c.Add(dir);
+            c.add(dir);
             break;
           }
       }

@@ -239,18 +239,14 @@ namespace ice
     rc = LMDif(parameterVector, ovar, DistFunc2, mark.rows() * 2 + 2, inumber);
 
     if (rc > 4)
-      {
-        Message(FNAME, M_NUM_INSTABILITY, ERROR);
-      }
+      throw IceException(FNAME, M_NUM_INSTABILITY);
     else
       {
         inumber = 100000;
         rc = LMDif(parameterVector, ovar, DistFunc_Mod2, mark.rows() * 2 + 2, inumber);
 
         if (rc > 4)
-          {
-            Message(FNAME, M_NUM_INSTABILITY, ERROR);
-          }
+          throw IceException(FNAME, M_NUM_INSTABILITY);
         else
           {
             // store calculated parameters of distortion
@@ -288,7 +284,6 @@ namespace ice
     Calc(mark, orig, tr);
   }
 
-
   Distortion2::Distortion2(const Matrix& mark, const Matrix& orig, const Vector& ImageCenter)
   {
     Calc(mark, orig, ImageCenter[0], ImageCenter[1]);
@@ -310,32 +305,26 @@ namespace ice
 #undef FNAME
 
 #define FNAME "Distortion2::Set"
-  void Distortion2::Set(const string& parastr)
+  void Distortion2::set(const string& parastr)
   {
     istringstream is(parastr);
 
     if (! ReadPara(is, "x0", x0) || ! ReadPara(is, "y0", y0) ||
         ! ReadPara(is, "d2", d2) || ! ReadPara(is, "d3", d3) || ! ReadPara(is, "d4", d4))
-      {
-        Message(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_FORMAT);
   }
 #undef FNAME
 
-  Vector Distortion2::MakeVector() const
+  Vector Distortion2::makeVector() const
   {
     return Vector(x0, y0, d2, d4, d3);
   }
 
-#define FNAME "Distortion2::Set"
-  void Distortion2::Set(const Vector& v)
+#define FNAME "Distortion2::set"
+  void Distortion2::set(const Vector& v)
   {
     if (v.size() != 5)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     x0 = v[0];
     y0 = v[1];

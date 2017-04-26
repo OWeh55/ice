@@ -25,8 +25,7 @@
 #include <malloc.h>
 
 #include "base.h"
-#include "message.h"
-#include "macro.h"
+#include "IceException.h"
 #include "drawline.h"
 #include "paint.h"
 
@@ -36,53 +35,44 @@
 // ---------------------------------------------------------------------------
 namespace ice
 {
-
   static int WST1(Image& i, Image& ret);
   static int WST2(Image& i, Image& ret);
 
 // Wasserscheidentransformation:
 // Startfunktion fuer WST1 - klassischer Flutungsansatz und WST2 - Markeransatz
 #define FNAME "WST"
-  int WST(const Image& in, Image& WSImg, int mode)
+  void WST(const Image& in, Image& WSImg, int mode)
   {
-    int rc = OK;
-    Image temp;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(in, WSImg));
-
-    bool needs_temp = in == WSImg;
-
-    if (needs_temp)
+    try
       {
-        /* Eingabebild=Zielbild*/
-        temp = NewImg(in, true);  /* temporaeres Eingabebild anlegen*/
+        MatchImg(in, WSImg);
+
+        Image temp;
+        bool needs_temp = in == WSImg;
+
+        if (needs_temp)
+          {
+            /* Eingabebild=Zielbild*/
+            temp = NewImg(in, true);  /* temporaeres Eingabebild anlegen*/
+          }
+        else
+          {
+            temp = in;
+          }
+
+        switch (mode)
+          {
+          case classic:
+            WST1(temp, WSImg);
+            break;
+          case marker:
+            WST2(temp, WSImg);
+            break;
+          default:
+            throw IceException(FNAME, M_WRONG_MODE);
+          }
       }
-    else
-      temp = in;
-
-    switch (mode)
-      {
-      case classic:
-        IF_FAILED(rc = WST1(temp, WSImg))
-        {
-          Message(FNAME, M_0, rc);
-        }
-        break;
-      case marker:
-        IF_FAILED(rc = WST2(temp, WSImg))
-        {
-          Message(FNAME, M_0, rc);
-        }
-        break;
-      default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        rc = WRONG_PARAM;
-        break;
-      }
-
-    if (needs_temp) FreeImg(temp); // temporaeres Bild freigeben
-
-    return rc;
+    RETHROW;
   }
 #undef FNAME
 
@@ -92,7 +82,9 @@ namespace ice
     int** m = new int* [y];
 
     for (int j = 0; j < y; j++)
-      m[j] = new int [x];
+      {
+        m[j] = new int [x];
+      }
 
     return m;
   }
@@ -102,7 +94,9 @@ namespace ice
     // Speicher fuer dyn. Array freigeben
 
     for (int j = 0; j < y; j++)
-      delete [] m[j];
+      {
+        delete [] m[j];
+      }
 
     delete [] m;
   }
@@ -129,7 +123,7 @@ namespace ice
     // pro Hoehenstufe ein Vektor fuer Punkte
     // nach Durchfuehren von Bucket-Sort:
     //    schneller Zugriff auf alle Punkte eines Hoehenlevels
-    PointVECTOR* b2 = new PointVECTOR[i->maxval + 1];
+    PointVECTOR* b2 = new PointVECTOR[i.maxval + 1];
     // FIFO-Punkt-Schlange
     FIFOList Q;
 
@@ -148,17 +142,23 @@ namespace ice
     // WS-Markierungsbild initialisieren
     setM(m1, x, y, xsize, ysize, INIT);
     // Distanzbild initialisieren
-    SetImg(m3, 0);
+    setImg(m3, 0);
 
-    wloop(i, x, y) // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
-    {
-      int level = GetVal(i, x, y);
+    // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
 
-      if (level > max) max = level;
+    for (int y = 0; y < i.ysize; y++)
+      for (int x = 0; x < i.xsize; x++)
+        {
+          int level = GetVal(i, x, y);
 
-      struct STPoint temp = {x, y, level};
-      b2[level].push_back(temp);
-    }
+          if (level > max)
+            {
+              max = level;
+            }
+
+          struct STPoint temp = {x, y, level};
+          b2[level].push_back(temp);
+        }
 
 // 1. von Level 0 bis Level GRWMax
 
@@ -326,7 +326,7 @@ ende:
 
               PutVal(m3, x, y, 0);      // Distanz 0 setzen (Punkt entweder WS, Beckenpixel (also schon verarbeitet) oder jetzt neues Minimum)
 
-              if (GetValM(m1, x, y) == MASK) // Pixel wurde noch nicht bearbeitet, MARK Wert in m2
+              if (GetValM(m1, x, y) == MASK)   // Pixel wurde noch nicht bearbeitet, MARK Wert in m2
                 {
                   current_label++;    // neues Label
 
@@ -373,32 +373,32 @@ ende:
 
     for (int y = 0; y < ysize; y++)   // Wasserscheiden von WSHED=-3 auf 0 setzen
       for (int x = 0; x < xsize; x++)
-        if (m1[y][x] == WSHD) m1[y][x] = 0;
+        if (m1[y][x] == WSHD)
+          {
+            m1[y][x] = 0;
+          }
 
     cout << current_label << endl;
 
     // Test, ob Regionenzahl in Zielbild passt
-    if (ret->maxval < current_label)
+    if (ret.maxval < current_label)
       {
-        Message(FNAME, M_LOWRANGE, WRONG_PARAM);
-        FreeImg(m3);
         ddelete(m1, xsize, ysize);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_LOWRANGE);
       }
 
-    wloop(ret, x, y)        // Markierungsarray m1 in Bild uebertragen
-    PutVal(ret, x, y, GetValM(m1, x, y));
+    // Markierungsarray m1 in Bild uebertragen
+    for (int y = 0; y < ret.ysize; y++)
+      for (int x = 0; x < ret.xsize; x++)
+        PutVal(ret, x, y, GetValM(m1, x, y));
 
     setborder(ret, 0);    // Rahmen um Ausgangsbild setzen. Bildrand als Regionengrenzen markieren
 
     ddelete(m1, xsize, ysize);
-    FreeImg(m3);
-
     Q.clear();
     return OK;
   }
 #undef FNAME
-
 
 // verschiedene Labels an Markerregionen vergeben
   int fillStartRegion(Image& m1, Image& m2, int x, int y, int currLab)
@@ -457,7 +457,7 @@ ende:
     // nach Durchfuehren von Bucket-Sort: schneller Zugriff auf alle Punkte eines Hoehenlevelctor
 
     vector <PointVECTOR> b2;
-    b2.resize(i->maxval + 1);
+    b2.resize(i.maxval + 1);
 
     int xpos = 0, ypos = 0;
     //    int gr = 0;
@@ -481,24 +481,26 @@ ende:
         m1[j] = (int*) malloc(sizeof(int) * xmax);
 
         if (m1[j] == NULL)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
-          }
+          throw IceException(FNAME, M_NO_MEM);
       }
 
     // WS-Markierungsbild initialisieren
     setM(m1, x, y, xmax, ymax, INIT);
 
-    wloop(i, x, y)    // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
-    {
-      int level = GetVal(i, x, y);
+    // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
+    for (int y = 0; y < i.ysize; y++)
+      for (int x = 0; x < i.xsize; x++)
+        {
+          int level = GetVal(i, x, y);
 
-      if (level > max) max = level;
+          if (level > max)
+            {
+              max = level;
+            }
 
-      struct STPoint stptemp = {x, y, level};
-      b2[level].push_back(stptemp);
-    }
+          struct STPoint stptemp = {x, y, level};
+          b2[level].push_back(stptemp);
+        }
 
     if (!b2[0].empty())
       {
@@ -553,9 +555,6 @@ ende:
               }
           }
       }
-
-//    Image ret2=NewImg(xmax,ymax,curlab+1);
-//    wloop(ret2,x,y) PutVal(ret2,x,y,GetValM(m1,x,y));
 
 // 1. von Level 0 bis Level GRWMax
     for (j = 1; j <= max; j++)
@@ -688,20 +687,24 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     for (int y = 0; y < ymax; y++)
       for (int x = 0; x < xmax; x++)
         {
-          if (m1[y][x] == WSHD) m1[y][x] = 0;
+          if (m1[y][x] == WSHD)
+            {
+              m1[y][x] = 0;
+            }
 
-          if (m1[y][x] < 0) m1[y][x] = curlab;
+          if (m1[y][x] < 0)
+            {
+              m1[y][x] = curlab;
+            }
         }
 
     // Rueckgabebild
-    if (ret->maxval < curlab)
-      {
-        Message(FNAME, M_LOWRANGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if (ret.maxval < curlab)
+      throw IceException(FNAME, M_LOWRANGE);
 
-    wloop(ret, x, y)      // Markierungsarray m1 in Bild uebertragen
-    PutVal(ret, x, y, GetValM(m1, x, y));
+    for (int y = 0; y < ret.ysize; y++)
+      for (int x = 0; x < ret.xsize; x++)
+        PutVal(ret, x, y, GetValM(m1, x, y));
 
     setborder(ret, 0);    // Rahmen um Ausgangsbild setzen. Bildrand als Regionengrenzen markieren
 
@@ -723,7 +726,6 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     };)
     return true;
   }
-
 
   bool PixelIsMinimum(const Image& i, int x, int y)
   {
@@ -753,7 +755,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     int ymax = i->ysize;
     int gp = GetVal(i, x, y); // Wert des Pixels
     int gh;
-    int second = i->maxval; // Kleinster Wert in der Umgebung
+    int second = i.maxval; // Kleinster Wert in der Umgebung
     //                     = Zweitkleinster Wert, falls (x,y) Minimum ist
 
     // erste Spalte (links)
@@ -761,7 +763,10 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
       {
         gh = GetVal(i, x - 1, y);
 
-        if (gh < gp) return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
         second = GetVal(i, x - 1, y);
 
@@ -769,18 +774,30 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
           {
             gh = GetVal(i, x - 1, y - 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
 
         if (y < ymax)
           {
             gh = GetVal(i, x - 1, y + 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
       }
 
@@ -789,26 +806,44 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
       {
         gh = GetVal(i, x + 1, y);
 
-        if (gh < gp) return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
-        if (second > gh) second = gh;
+        if (second > gh)
+          {
+            second = gh;
+          }
 
         if (y > 0)
           {
             gh = GetVal(i, x + 1, y - 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
 
         if (y < ymax)
           {
             gh = GetVal(i, x + 1, y + 1);
 
-            if (gh < gp) return -1;
+            if (gh < gp)
+              {
+                return -1;
+              }
 
-            if (second > gh) second = gh;
+            if (second > gh)
+              {
+                second = gh;
+              }
           }
       }
 
@@ -817,38 +852,56 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
       {
         gh = GetVal(i, x, y - 1);
 
-        if (gh < gp)  return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
-        if (second > gh) second = gh;
+        if (second > gh)
+          {
+            second = gh;
+          }
       }
 
     if (y < ymax)
       {
         gh = GetVal(i, x, y + 1);
 
-        if (gh < gp)  return -1;
+        if (gh < gp)
+          {
+            return -1;
+          }
 
-        if (second > gh) second = gh;
+        if (second > gh)
+          {
+            second = gh;
+          }
       }
 
     return second;
   }
 
-
 // Bildminima in Bild io markieren
   int getImgMinimas2(const Image& i, Image& io)
   {
 
-    int x, y;
     Image temp = NewImg(i);
-    wloop(i, x, y)  // Minima zu Plateaupixel zurecht stutzen
-    {
 
-      int val = PixelIsMinimum2(i, x, y);
+    // Minima zu Plateaupixel zurecht stutzen
+    for (int y = 0; y < i.ysize; y++)
+      for (int x = 0; x < i.xsize; x++)
+        {
+          int val = PixelIsMinimum2(i, x, y);
 
-      if (val != -1) PutVal(temp, x, y, val); // Punkt x,y ist Minimum: mit zweitkleinstem Wert ersetzen
-      else PutVal(temp, x, y, GetVal(i, x, y)); // Punkt kein Minimum: Wert uebernehmen
-    }
+          if (val != -1)
+            {
+              PutVal(temp, x, y, val);  // Punkt x,y ist Minimum: mit zweitkleinstem Wert ersetzen
+            }
+          else
+            {
+              PutVal(temp, x, y, GetVal(i, x, y));  // Punkt kein Minimum: Wert uebernehmen
+            }
+        }
     CopyImg(temp, io);
     return OK;
   }
@@ -858,16 +911,17 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   int getImgMinimas(const Image& i, Image& io)
   {
 
-    int x, y;
-
     if (!IsImg(i) || !IsImg(io))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    wloop(i, x, y) if (PixelIsMinimum(i, x, y)) PutVal(io, x, y, 0);
-
+    for (int y = 0; y < i.ysize; y++)
+      for (int x = 0; x < i.xsize; x++)
+        {
+          if (PixelIsMinimum(i, x, y))
+            {
+              PutVal(io, x, y, 0);
+            }
+        }
     return OK;
   }
 #undef FNAME
@@ -877,160 +931,21 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   int getImgMaximums(const Image& i, Image& io)
   {
 
-    int x, y;
-
     if (!IsImg(i) || !IsImg(io))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    wloop(i, x, y) if (PixelIsMaximum(i, x, y)) PutVal(io, x, y, 0);
+    for (int y = 0; y < i.ysize; y++)
+      for (int x = 0; x < i.xsize; x++)
+        {
+          if (PixelIsMaximum(i, x, y))
+            {
+              PutVal(io, x, y, 0);
+            }
+        }
 
     return OK;
   }
 #undef FNAME
-
-// Werte im Bild i, die kleiner als tresh sind, in Bild o auf 0 setzen
-// #define FNAME "prune"
-//   int prune(Image i, Image o, int tresh)
-//   {
-//     int x,y;
-//     RETURN_ERROR_IF_FAILED(MatchImg(i,o));
-//     wloop(i,x,y)
-//       {
-//  if (GetVal(i,x,y)<tresh) PutVal(o,x,y,0);
-//       }
-//     return OK;
-//   }
-// #undef FNAME
-
-// Minima aus Bild i in Bild o auferlegen
-// #define FNAME "imposeMinima"
-//   int imposeMinima(Image i, Image o)
-//   {
-//     int x,y;
-//     RETURN_ERROR_IF_FAILED(MatchImg(i,o));
-//     wloop(i,x,y)
-//       {
-//  if (GetVal(i,x,y)==0) PutVal(o,x,y,0);
-//  else PutVal(o,x,y,GetVal(o,x,y)+1);     // Punkte, die keine Minima sind, um eins erhoehen
-//       }
-//     return OK;
-//   }
-// #undef FNAME
-
-// Bild in wird in nach unten vollstaendiges (Lower Complete) Bild transformiert
-// #define FNAME "LowerComplete"
-//   int LowerCompleteImg(Image in, Image &lcImg)
-//   {
-
-//     int x,y, gr;
-
-//     int xsize=in->xsize;
-//     int ysize=in->ysize;
-
-//     Image mark;              // Markierungsbild
-//     int **lc;
-//     // lower complete Array, maximaler Pixelwert kann sehr gross werden
-//     // und ist vor der Transformation schwer abzuschaetzen
-
-//     lc= (int **) malloc(sizeof(int*)*ysize); // Initialisierung des LC-Arrays
-//     for (int j = 0; j < ysize; j++) {
-//       lc[j] = (int *) malloc(sizeof(int) * xsize);
-//       if (lc[j] == NULL) {
-//  Message(FNAME,M_NO_MEM,NO_MEM);
-//  return NO_MEM;
-//       }
-//     }
-
-//     if (in==NULL || lcImg==NULL){            // Eingabebild NULL?
-//       Message(FNAME,M_WRONG_PARAM,WRONG_PARAM);
-//       return WRONG_PARAM;
-//     }
-
-//     setM(lc,x,y,xsize,ysize,INIT);   // initialisieren des LC-Arrays mittels "setM"-Makro, INIT=-1
-
-//     mark=NewImg(in); SetImg(mark,1); // Markierungsbild initialisieren
-
-//     int dist=0;              // aktuelle Distanz auf 0 setzen
-//     FIFOList Q;              // Punktliste
-
-//     int xn,yn;             // Koordinaten der Nachbarpixel
-
-//     bool hasLowerNeighbor=false;
-
-//     wloop(in,x,y) {
-
-//       hasLowerNeighbor=false;
-//       ForAll8Nbrs(in,x,y,xn,yn, {    // hat Punkt Nachbar mit geringerem Grauwert?
-//  if (GetVal(in,xn,yn)<GetVal(in,x,y)) { hasLowerNeighbor=true; goto found;  }
-//       });
-//     found:
-//       if(hasLowerNeighbor) {
-//  struct STPoint temp={x,y,GetVal(in,x,y)};
-//  Q.push_back(temp);
-//  PutVal(mark,x,y,0);
-//  PutValM(lc,x,y,0);    // wenn mark=0 und lc=0, dann ist lc=INIT
-//       }
-//     }
-
-//     dist=1;
-
-//     struct STPoint temp={-1,-1,0};   // Trennelement fuer Punkte verschiedener Distanzen in der Punktliste
-//     struct STPoint t={-1,-1,0};
-//     Q.push_back(temp);
-
-//     if (!Q.empty())
-//       do {
-//  temp=Q.front();
-//  Q.pop_front();
-//  x=temp.x; y=temp.y; gr=temp.grw;
-
-//  if ((x==-1))        // wenn aktueller Punkt, Trennelement ist, Distanz erhoehen
-//    if (Q.empty()) { goto ende;}    // wenn letztes Element, Schleife verlassen
-//    else {
-//      dist++;       // Distanz erhoehen
-//      Q.push_back(temp);  // wenn x=-1 und y=-1 : temp als Trennelement wieder hinten anfuegen
-
-//    }
-//  else {
-//    PutValM(lc,x,y,dist);     // Distanz zum Plataueeintrittin lc eintragen
-
-//    ForAll8Nbrs(in,x,y,xn,yn, {   // Nachbarpixel ist Plateaupixel und von gleichem Plateau
-//      if (GetVal(in,xn,yn)== GetVal(in,x,y) && (GetVal(mark,xn,yn)==1)) {
-//        struct STPoint temp2=t;
-//        temp2.x=xn; temp2.y=yn; temp2.grw=GetVal(in,xn,yn);
-//        Q.push_back(temp2);
-//        PutVal(mark,xn,yn,0); // Punkt als bearbeitet markieren
-//        PutValM(lc,xn,yn,0);
-//      }
-//    });
-//  }
-//       }
-//       while (!Q.empty());
-
-//   ende:
-//     wloop(in,x,y) {
-//       // Addieren des neuen Plateauwertes mit dem neuen Inputwert
-//       if (GetValM(lc,x,y)!=0 && GetVal(mark,x,y)!=0)
-//  PutValM(lc,x,y,(dist*GetVal(in,x,y)+GetValM(lc,x,y)-1));
-
-//       else   // Multiplikation des Inputwertes mit dem maximalen Distanzwert
-//  PutValM(lc,x,y,(dist*GetVal(in,x,y)));
-//     }
-//     int max=0;
-//     wloop(in,x,y)  // maximalen Wert bestimmen
-//       if (GetValM(lc,x,y)>max) max=GetValM(lc,x,y);
-//     // neues Rueckgabebild mit max+2 Grauwerten anlegen
-//     lcImg=NewImg(in->xsize,in->ysize,max+2);
-//     wloop(lcImg,x,y) { // LC-Array in Ruegabebild speichern
-//       PutVal(lcImg,x,y,GetValM(lc,x,y));
-//     }
-
-//     return OK;
-//   }
-// #undef FNAME
 
 // Anzahl der Nachbarregionen bestimmen
   int NbRegions(const Image& i, int x, int y)
@@ -1055,14 +970,20 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     });
 
     for (it = nb_set.begin(); it != nb_set.end(); it++)
-      grwsum += *it;
+      {
+        grwsum += *it;
+      }
 
     size_set = nb_set.size();
 
     if (size_set == 0)
-      count = 1;
+      {
+        count = 1;
+      }
     else
-      count = size_set;
+      {
+        count = size_set;
+      }
 
     return grwsum / count;
   }
@@ -1073,62 +994,60 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     Image status = NewImg(i1);
-    SetImg(status, 0);
+    setImg(status, 0);
 
     if (!IsImg(i1) || treshold < 0)     // Eingabebild gueltig
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     struct STPoint temp;
 
-    int xl, yl;
-
     // fuer das gesamte Bild Markerpixelmengen bestimmen und wenn Pixelanzahl kleiner treshold, loeschen
-    wloop(i1, xl, yl)
-    {
-
-      // Punkt ist Markerpixel und noch nicht bearbeitet?
-      if (GetVal(i1, xl, yl) == 0 && GetVal(status, xl, yl) == 0)
+    for (int yl = 0; yl < i1.ysize; yl++)
+      for (int xl = 0; xl < i1.xsize; xl++)
         {
 
-          FIFOList PQ;
-
-          temp.x = xl;
-          temp.y = yl;
-          temp.grw = GetVal(i1, xl, yl);
-          PQ.push_back(temp);
-
-          if (!PQ.empty())
-            for (int n = 0; n < int(PQ.size()); n++)
-              {
-                int x, y, xn, yn;
-                x = PQ[n].x;
-                y = PQ[n].y;
-
-                // alle 8 Nachbarpixel untersuchen, ob sie aktuellen Marker gehoeren, wenn ja in Punktschlange einfuegen
-                ForAll8Nbrs(i1, x, y, xn, yn,
-                {
-                  if (GetVal(i1, xn, yn) == 0 && GetVal(status, xn, yn) == 0)
-                    {
-                      PutVal(status, xn, yn, 1);
-                      struct STPoint t2 = temp;
-                      t2.x = xl;
-                      t2.y = yl;
-                      t2.grw = GetVal(i1, xn, yn);
-                      PQ.push_back(t2);
-                    }
-                });
-              }
-
-          if (int(PQ.size()) < treshold)  // Marker loeschen, wenn er weniger als treshold Pixel enthaelt.
+          // Punkt ist Markerpixel und noch nicht bearbeitet?
+          if (GetVal(i1, xl, yl) == 0 && GetVal(status, xl, yl) == 0)
             {
-              for (int n = 0; n < int(PQ.size()); n++)
-                PutVal(i1, PQ[n].x, PQ[n].y, i1->maxval);
+
+              FIFOList PQ;
+
+              temp.x = xl;
+              temp.y = yl;
+              temp.grw = GetVal(i1, xl, yl);
+              PQ.push_back(temp);
+
+              if (!PQ.empty())
+                for (int n = 0; n < int(PQ.size()); n++)
+                  {
+                    int x, y, xn, yn;
+                    x = PQ[n].x;
+                    y = PQ[n].y;
+
+                    // alle 8 Nachbarpixel untersuchen, ob sie aktuellen Marker gehoeren, wenn ja in Punktschlange einfuegen
+                    ForAll8Nbrs(i1, x, y, xn, yn,
+                    {
+                      if (GetVal(i1, xn, yn) == 0 && GetVal(status, xn, yn) == 0)
+                        {
+                          PutVal(status, xn, yn, 1);
+                          struct STPoint t2 = temp;
+                          t2.x = xl;
+                          t2.y = yl;
+                          t2.grw = GetVal(i1, xn, yn);
+                          PQ.push_back(t2);
+                        }
+                    });
+                  }
+
+              if (int(PQ.size()) < treshold)   // Marker loeschen, wenn er weniger als treshold Pixel enthaelt.
+                {
+                  for (int n = 0; n < int(PQ.size()); n++)
+                    {
+                      PutVal(i1, PQ[n].x, PQ[n].y, i1.maxval);
+                    }
+                }
             }
         }
-    }
 
     return OK;
   }
@@ -1140,36 +1059,43 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     if (!IsImg(GrwImg) || !IsImg(WSHEDDeleted))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);   // ERROR - Bilder nicht initialisiert
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    int x, y, xn, yn;
+    int xn, yn;
 
-    wloop(GrwImg, x, y)
-    {
-
-      int GRWSum = 0;
-      int RegPixelAnz = 0;
-
-      if (GetVal(GrwImg, x, y) == 0)          // Punkt ist Wasserscheidenlinie
+    for (int y = 0; y < GrwImg.ysize; y++)
+      for (int x = 0; x < GrwImg.xsize; x++)
         {
-          ForAll8Nbrs(GrwImg, x, y, xn, yn,     // Nachbarschaft des Punktes betrachten
 
-                      if (GetVal(GrwImg, xn, yn) != 0)    // Nachbar ist kein WS-Pixel
-          {
-            GRWSum += GetVal(GrwImg, xn, yn); // Grauwertsumme aktualisieren
-              RegPixelAnz++;          // Anzahl der betrachteten Punkte erhoehen
+          int GRWSum = 0;
+          int RegPixelAnz = 0;
+
+          if (GetVal(GrwImg, x, y) == 0)          // Punkt ist Wasserscheidenlinie
+            {
+              ForAll8Nbrs(GrwImg, x, y, xn, yn,     // Nachbarschaft des Punktes betrachten
+
+                          if (GetVal(GrwImg, xn, yn) != 0)    // Nachbar ist kein WS-Pixel
+              {
+                GRWSum += GetVal(GrwImg, xn, yn); // Grauwertsumme aktualisieren
+                  RegPixelAnz++;          // Anzahl der betrachteten Punkte erhoehen
+                }
+                         );
+
+              // durschnittlichen Grauwert der Nachbarpunkte in Rueckgabebild eintragen
+              if (RegPixelAnz != 0)
+                {
+                  PutVal(WSHEDDeleted, x, y, (GRWSum / RegPixelAnz));
+                }
+              else
+                {
+                  PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
+                }
+            }                     // wenn keine WS, Grauwert uebernehmen
+          else
+            {
+              PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
             }
-                     );
-
-          // durschnittlichen Grauwert der Nachbarpunkte in Rueckgabebild eintragen
-          if (RegPixelAnz != 0) PutVal(WSHEDDeleted, x, y, (GRWSum / RegPixelAnz));
-          else PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
-        }                     // wenn keine WS, Grauwert uebernehmen
-      else PutVal(WSHEDDeleted, x, y, GetVal(GrwImg, x, y));
-    }
+        }
     return OK;
   }
 #undef FNAME
@@ -1182,16 +1108,15 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     Image Histo = NewImg(300, 300, 255);
-    SetImg(Histo, 255);
+    setImg(Histo, 255);
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {
         // Eingabebilder ungleich NULL?
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
-    int maxval = WSImg->maxval;
+    int maxval = WSImg.maxval;
 
     vector<long> regGrw(maxval + 1);
     vector<int> regPix(maxval + 1);
@@ -1202,12 +1127,12 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
         regPix[i] = 1;
       }
 
-    int x, y;
-    wloop(WSImg, x, y)
-    {
-      regGrw[GetVal(WSImg, x, y)] += GetVal(Original, x, y); // Grauwertsumme der Grauwerte aktualisieren
-      regPix[GetVal(WSImg, x, y)]++;    // Anzahl der Pixel in der Region erhoehen
-    }
+    for (int y = 0; y < WSImg.ysize; y++)
+      for (int x = 0; x < WSImg.xsize; x++)
+        {
+          regGrw[GetVal(WSImg, x, y)] += GetVal(Original, x, y); // Grauwertsumme der Grauwerte aktualisieren
+          regPix[GetVal(WSImg, x, y)]++;    // Anzahl der Pixel in der Region erhoehen
+        }
 
     regGrw[0] = 0;              // Grauwert fuer Wasserscheiden - Label 0!!
 
@@ -1225,44 +1150,17 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
         int regSize = (290 - wurzel / scale2Grw);     // skalieren
 
-        if (regSize < 0)  regSize = 0;
+        if (regSize < 0)
+          {
+            regSize = 0;
+          }
 
         PutVal(Histo, 10 + regGrw[i], regSize, 0);    // Region i hinsichtlich Groesse und durchschnittlichen Grauwert einzeichnen
       }
 
-    wloop(WSImg, x, y)
-    PutVal(GrwImg, x, y, regGrw[GetVal(WSImg, x, y)]);  // neue Grauwerte in Ausgabebild eintragen
-
-    return OK;
-  }
-#undef FNAME
-
-  /*************************************************/
-
-#define FNAME "Rahmen"
-  int rahmen(Image& i, int color)
-  {
-
-    int l;
-
-    if (!IsImg(i))
-      {
-        // Eingabebild gueltig
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
-    for (l = 0; l < i->xsize; l++)
-      {
-        PutVal(i, l, 0, color);
-        PutVal(i, l, i->ysize - 1, color);
-      }
-
-    for (l = 0; l < i->ysize; l++)
-      {
-        PutVal(i, 0, l, color);
-        PutVal(i, i->xsize - 1, l, color);
-      }
+    for (int y = 0; y < WSImg.ysize; y++)
+      for (int x = 0; x < WSImg.xsize; x++)
+        PutVal(GrwImg, x, y, regGrw[GetVal(WSImg, x, y)]);  // neue Grauwerte in Ausgabebild eintragen
 
     return OK;
   }

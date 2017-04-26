@@ -45,8 +45,8 @@ namespace ice
   (double x0, double y0, double phi, double Trans[3][3]);
 
   /* Premultiplikation von "Trans" mit Skalierung um Punkt (x0,y0) */
-  int ScaleTrans
-  (double x0, double y0, double facx, double faxy, double Trans[3][3]);
+  int ScaleTrans(double x0, double y0,
+                 double facx, double faxy, double Trans[3][3]);
 
   /* Premultiplikation von "Trans" mit affiner Transformation */
   int AffinTrans(double a11, double a12, double a13,

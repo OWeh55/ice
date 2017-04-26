@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 
   grw = NewImg(xs, ys, 255);
   mrk = NewImg(xs, ys, 7);
-  ClearImg(mrk);
+  clearImg(mrk);
   Display(ON);
   Show(OVERLAY, grw, mrk);
   Zoom(grw);
@@ -52,38 +52,38 @@ int main(int argc, char** argv)
   while (!ready)
     {
       ready = true;
-      int x, y;
-      wloop(mrk, x, y)
-      {
-        if (GetVal(mrk, x, y) == 2)
+      for (int y = 0; y < mrk.ysize; y++)
+        for (int x = 0; x < mrk.xsize; x++)
           {
-            int no = 0;
-            int nu = 0;
-
-            for (int dir = 0; dir < 8; dir += 2)
+            if (GetVal(mrk, x, y) == 2)
               {
-                int xt, yt;
-                Freeman(dir).move(x, y, xt, yt);
+                int no = 0;
+                int nu = 0;
 
-                if ((xt >= 0) && (xt < xs) && (yt >= 0) && (yt < ys))
+                for (int dir = 0; dir < 8; dir += 2)
                   {
-                    int v = GetVal(mrk, xt, yt);
+                    int xt, yt;
+                    Freeman(dir).move(x, y, xt, yt);
 
-                    if ((v == 0) || (v == 4)) no++;
+                    if ((xt >= 0) && (xt < xs) && (yt >= 0) && (yt < ys))
+                      {
+                        int v = GetVal(mrk, xt, yt);
 
-                    if ((v == 1) || (v == 5)) nu++;
+                        if ((v == 0) || (v == 4)) no++;
+
+                        if ((v == 1) || (v == 5)) nu++;
+                      }
                   }
+
+                if ((no > 0) && (nu == 0)) PutVal(mrk, x, y, 4);
+
+                if ((no == 0) && (nu > 0)) PutVal(mrk, x, y, 5);
+
+                if ((no > 0) && (nu > 0)) PutVal(mrk, x, y, 6);
+
+                if ((no == 0) && (nu == 0)) ready = false;
               }
-
-            if ((no > 0) && (nu == 0)) PutVal(mrk, x, y, 4);
-
-            if ((no == 0) && (nu > 0)) PutVal(mrk, x, y, 5);
-
-            if ((no > 0) && (nu > 0)) PutVal(mrk, x, y, 6);
-
-            if ((no == 0) && (nu == 0)) ready = false;
           }
-      }
     }
 
   GetChar();
@@ -93,38 +93,39 @@ int main(int argc, char** argv)
     {
       ready = true;
       int x, y;
-      wloop(mrk, x, y)
-      {
-        if (GetVal(mrk, x, y) == 6)
+      for (int y = 0; y < mrk.ysize; y++)
+        for (int x = 0; x < mrk.xsize; x++)
           {
-            for (int dir = 0; dir < 8; dir += 2)
+            if (GetVal(mrk, x, y) == 6)
               {
-                int xt, yt;
-                Freeman(dir).move(x, y, xt, yt);
-
-                if ((xt >= 0) && (xt < xs) && (yt >= 0) && (yt < ys))
+                for (int dir = 0; dir < 8; dir += 2)
                   {
-                    int v = GetVal(mrk, xt, yt);
+                    int xt, yt;
+                    Freeman(dir).move(x, y, xt, yt);
 
-                    if ((v == 4) || (v == 5))
+                    if ((xt >= 0) && (xt < xs) && (yt >= 0) && (yt < ys))
                       {
-                        PutVal(mrk, xt, yt, 6);
-                        ready = false;
+                        int v = GetVal(mrk, xt, yt);
+
+                        if ((v == 4) || (v == 5))
+                          {
+                            PutVal(mrk, xt, yt, 6);
+                            ready = false;
+                          }
                       }
                   }
-              }
 
-            PutVal(mrk, x, y, 7);
+                PutVal(mrk, x, y, 7);
+              }
           }
-      }
     }
 
   GetChar();
-  int x, y;
-  wloop(mrk, x, y)
-  {
-    PutVal(mrk, x, y, GetVal(mrk, x, y) & 3);
-  }
+  for (int y = 0; y < mrk.ysize; y++)
+    for (int x = 0; x < mrk.xsize; x++)
+      {
+        PutVal(mrk, x, y, GetVal(mrk, x, y) & 3);
+      }
   GetChar();
 
   return 0;

@@ -30,7 +30,9 @@ namespace ice
 
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)
-        PutVal(img, x, y, 255 - wxgrey.GetGreen(x, y));
+        {
+          PutVal(img, x, y, 255 - wxgrey.GetGreen(x, y));
+        }
 
     wxUninitialize();
     return true;

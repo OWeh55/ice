@@ -7,7 +7,7 @@
 #include <initializer_list>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 
 namespace ice
@@ -56,7 +56,9 @@ namespace ice
       data = new T[nColumns * nRows];
 
       for (int i = 0; i < nRows * nColumns; i++)
-        data[i] = m.data[i];
+        {
+          data[i] = m.data[i];
+        }
     }
 
     /**
@@ -80,7 +82,9 @@ namespace ice
     {
       int i = 0;
       for (auto p = l.begin(); p != l.end(); ++p)
-        data[i++] = *p;
+        {
+          data[i++] = *p;
+        }
     }
 
     /**
@@ -103,10 +107,14 @@ namespace ice
       if (mode >= 0)
         {
           for (int i = 0; i < nColumns * nRows; i++)
-            data[i] = 0.0;
+            {
+              data[i] = 0.0;
+            }
           if (mode == 1)
             for (int i = 0; i < nColumns * nRows; i += nColumns + 1)
-              data[i] = 1.0;
+              {
+                data[i] = 1.0;
+              }
         }
     }
 
@@ -119,14 +127,16 @@ namespace ice
     void resize(int r, int c)
     {
       matrix<T> newmat(r, c); // the new matrix
-      if (data != nullptr) // copy needed ?
+      if (data != nullptr)   // copy needed ?
         {
           // common range
           int nr = Min(r, nRows);
           int nc = Min(c, nColumns);
           for (int r = 0; r < nr; ++r)
             for (int c = 0; c < nc; ++c)
-              newmat[r][c] = (*this)[r][c];
+              {
+                newmat[r][c] = (*this)[r][c];
+              }
         }
       swap(newmat, *this);
     }
@@ -158,7 +168,9 @@ namespace ice
     void set(T value)
     {
       for (int i = 0; i < nRows * nColumns; i++)
-        data[i] = value;
+        {
+          data[i] = value;
+        }
     }
 
     /**
@@ -234,7 +246,9 @@ namespace ice
       matrix<double> tm(newrows, newcols);
       for (int r = 0; r < newrows; ++r)
         for (int c = 0; c < newcols; ++c)
-          tm[r][c] = data[(r + r1) * nColumns + (c + c1)];
+          {
+            tm[r][c] = data[(r + r1) * nColumns + (c + c1)];
+          }
       return tm;
     }
     //*************************************************************
@@ -272,7 +286,9 @@ namespace ice
     matrix<T>& operator +=(const matrix<T>& rhs)
     {
       for (int i = 0; i < nColumns * nRows; i++)
-        data[i] += rhs.data[i];
+        {
+          data[i] += rhs.data[i];
+        }
       return *this;
     }
 
@@ -293,7 +309,9 @@ namespace ice
     matrix<T>& operator -=(const matrix<T>& rhs)
     {
       for (int i = 0; i < nColumns * nRows; i++)
-        data[i] -= rhs.data[i];
+        {
+          data[i] -= rhs.data[i];
+        }
 
       return *this;
     }
@@ -306,7 +324,9 @@ namespace ice
       matrix<T> res(nRows, nColumns);
 
       for (int i = 0; i < nColumns * nRows; i++)
-        res.data[i] = -data[i];
+        {
+          res.data[i] = -data[i];
+        }
 
       return res;
     }
@@ -319,7 +339,9 @@ namespace ice
       matrix<T> res(nRows, nColumns);
 
       for (int i = 0; i < nColumns * nRows; i++)
-        res.data[i] = data[i] * v;
+        {
+          res.data[i] = data[i] * v;
+        }
 
       return res;
     }
@@ -334,10 +356,7 @@ namespace ice
       matrix<T> res(lhs.nRows, rhs.nColumns);
 
       if (lhs.nColumns != rhs.nRows)
-        {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          return res;
-        }
+        throw IceException(FNAME, M_WRONG_DIM);
 
       for (int i = 0; i < lhs.nRows; i++)
         for (int j = 0; j < rhs.nColumns; j++)
@@ -363,16 +382,15 @@ namespace ice
       std::vector<T> res(rhs.nColumns);
 
       if ((int)lhs.size() != rhs.nRows)
-        {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          return res;
-        }
+        throw IceException(FNAME, M_WRONG_DIM);
 
       for (int j = 0; j < rhs.nColumns; ++j)
         {
           double sum = 0;
           for (int k = 0; k < rhs.nRows; ++k)
-            sum += lhs[k] * rhs.data[k * rhs.nColumns + j];
+            {
+              sum += lhs[k] * rhs.data[k * rhs.nColumns + j];
+            }
 
           res[j] = sum;
         }
@@ -389,17 +407,16 @@ namespace ice
       std::vector<T> res(lhs.nRows);
 
       if (lhs.nColumns != (int)rhs.size())
-        {
-          Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-          return res;
-        }
+        throw IceException(FNAME, M_WRONG_DIM);
 
       for (int i = 0; i < lhs.nRows; ++i)
         {
           double sum = 0;
 
           for (int k = 0; k < lhs.nColumns; ++k)
-            sum += lhs.data[i * lhs.nColumns + k] * rhs[k];
+            {
+              sum += lhs.data[i * lhs.nColumns + k] * rhs[k];
+            }
 
           res[i] = sum;
         }
@@ -414,7 +431,9 @@ namespace ice
     matrix<T>& operator *= (T2 d)
     {
       for (int i = 0; i < nColumns * nRows; i++)
-        data[i] *= d;
+        {
+          data[i] *= d;
+        }
 
       return *this;
     }

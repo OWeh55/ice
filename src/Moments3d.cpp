@@ -7,7 +7,9 @@ namespace ice
   Moments3d::Moments3d(const std::vector<Vector3d>& pl)
   {
     for (auto& m : moments)
-      m = 0.0;
+      {
+        m = 0.0;
+      }
 
     for (int i = 0; i < (int)pl.size(); i++)
       {
@@ -52,7 +54,9 @@ namespace ice
                        const std::vector<std::vector<int>>& triangleList)
   {
     for (auto& m : moments)
-      m = 0.0;
+      {
+        m = 0.0;
+      }
     for (const std::vector<int>& vi : triangleList)
       {
         Vector3d p1 = pointList[vi[0]];

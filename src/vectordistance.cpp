@@ -18,13 +18,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 #include <math.h>
+
+#include "macro.h"
 #include "vectordistance.h"
 
 namespace ice
 {
-
   double EuclideanVectorDistance::distance(const double* x, const double* y, int n) const
   {
     double dist      = 0.0;
@@ -110,7 +110,9 @@ namespace ice
     std::vector<double> diff(n);
 
     for (int i = 0 ; i < n ; i++)
-      diff[i] = x[i] - y[i];
+      {
+        diff[i] = x[i] - y[i];
+      }
 
     double dist = 0.0;
 
@@ -134,10 +136,7 @@ namespace ice
     int dim = feat1.cols();
 
     if (dim != feat2.cols())
-      {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     Vector am(dim);
 
@@ -155,20 +154,26 @@ namespace ice
               case D_EUCLID:
 
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  {
+                    d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  }
 
                 d = sqrt(d);
                 break;
               case D_SQUARE:
 
                 for (int k = 0; k < dim; k++)
-                  d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  {
+                    d += Sqr(am.at(k) - feat2.at(j).at(k));
+                  }
 
                 break;
               case D_CITYBLOCK:
 
                 for (int k = 0; k < dim; k++)
-                  d += fabs(am.at(k) - feat2.at(j).at(k));
+                  {
+                    d += fabs(am.at(k) - feat2.at(j).at(k));
+                  }
               }
 
             dist.at(i).at(j) = d;
@@ -181,17 +186,24 @@ namespace ice
   Matrix DistanceMatrix(const Matrix& feat1, const Matrix& feat2,
                         int mode)
   {
-    Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat1, feat2, res, mode), res);
-    return res;
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat1, feat2, res, mode);
+        return res;
+      }
+    RETHROW;
   }
-
 
   Matrix DistanceMatrix(const Matrix& feat, int mode)
   {
-    Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat, feat, res, mode), res);
-    return res;
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat, feat, res, mode);
+        return res;
+      }
+    RETHROW;
   }
 
   int DistanceMatrix(const Matrix& feat1, const Matrix& feat2, Matrix& distmatrix, const VectorDistance& dist)
@@ -202,10 +214,7 @@ namespace ice
     int dim = feat1.cols();
 
     if (dim != feat2.cols())
-      {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     distmatrix = Matrix(n1, n2);
 
@@ -230,17 +239,11 @@ namespace ice
     unsigned int n1 = features_1.size();
     unsigned int n2 = features_2.size();
     if (n1 < 1 || n2 < 1)
-      {
-        Message(FNAME, M_EMPTY_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
 
     unsigned int feature_dim = features_1[0].size();
     if (features_2[0].size() != feature_dim)
-      {
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_VECTORDIM);
 
     dist = Matrix(n1, n2);
     for (unsigned int i = 0; i < n1; ++i)
@@ -261,18 +264,24 @@ namespace ice
 
   Matrix DistanceMatrix(const Matrix& feat1, const Matrix& feat2, const VectorDistance& dist)
   {
-    Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat1, feat2, res, dist), res);
-    return res;
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat1, feat2, res, dist);
+        return res;
+      }
+    RETHROW;
   }
 
   Matrix DistanceMatrix(const Matrix& feat, const VectorDistance& dist)
   {
-    Matrix res;
-    RETURN_IF_FAILED(DistanceMatrix(feat, feat, res, dist), res);
-    return res;
+    try
+      {
+        Matrix res;
+        DistanceMatrix(feat, feat, res, dist);
+        return res;
+      }
+    RETHROW;
   }
-
-
 #undef FNAME
 }

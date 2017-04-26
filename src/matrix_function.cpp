@@ -24,8 +24,9 @@
 #include <float.h>
 #include <string.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
+#include "macro.h"
 
 #include "vectorarrayfunctions.h"
 #include "numbase.h"
@@ -48,28 +49,27 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m2 == NULL)
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = m1[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = m1[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m2[i] = m1[i];
+      {
+        m2[i] = m1[i];
+      }
 
     return m2;
   }
@@ -81,12 +81,12 @@ namespace ice
     int i, j;
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    if (m == NULL) m = (double*)malloc(row * col * sizeof(double));
+    if (m == NULL)
+      {
+        m = (double*)malloc(row * col * sizeof(double));
+      }
 
     switch (option)
       {
@@ -94,18 +94,26 @@ namespace ice
 
         for (j = 0; j < row; j++)
           for (i = 0; i < col; i++)
-            if (i == j) *(m + (j * col) + i) = 1;
-            else *(m + (i * col) + j) = 0;
+            if (i == j)
+              {
+                *(m + (j * col) + i) = 1;
+              }
+            else
+              {
+                *(m + (i * col) + j) = 0;
+              }
 
         return m;
       case ZERO:
 
-        for (i = 0; i < row * col; i++) *(m + i) = 0;
+        for (i = 0; i < row * col; i++)
+          {
+            *(m + i) = 0;
+          }
 
         return m;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
   }
 #undef FNAME
@@ -117,22 +125,24 @@ namespace ice
     double* mptr;
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m1 == NULL)
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = val;
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = val;
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m1[i] = val;
+      {
+        m1[i] = val;
+      }
 
     return m1;
   }
@@ -145,28 +155,27 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL)
-      {
-        Message(FNAME , M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME , M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m2 == NULL)
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = fac * m1[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = fac * m1[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m2[i] = fac * m1[i];
+      {
+        m2[i] = fac * m1[i];
+      }
 
     return m2;
   }
@@ -179,28 +188,27 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL || m2 == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m3 == NULL)
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = m1[i] + m2[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = m1[i] + m2[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m3[i] = m1[i] + m2[i];
+      {
+        m3[i] = m1[i] + m2[i];
+      }
 
     return m3;
   }
@@ -213,28 +221,27 @@ namespace ice
     double* mptr;
 
     if (m1 == NULL || m2 == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m3 == NULL)
       {
         mptr = (double*)malloc(row * col * sizeof(double));
 
-        for (i = 0; i < row * col; i++) *(mptr + i) = m1[i] - m2[i];
+        for (i = 0; i < row * col; i++)
+          {
+            *(mptr + i) = m1[i] - m2[i];
+          }
 
         return mptr;
       }
 
     for (i = 0; i < row * col; i++)
-      m3[i] = m1[i] - m2[i];
+      {
+        m3[i] = m1[i] - m2[i];
+      }
 
     return m3;
   }
@@ -247,16 +254,10 @@ namespace ice
     double* mh, *mptr;
 
     if (m1 == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m2 == NULL)
       {
@@ -264,7 +265,9 @@ namespace ice
 
         for (i = 0; i < row; i++)
           for (j = 0; j < col; j++)
-            mptr[j * row + i] = m1[i * col + j];
+            {
+              mptr[j * row + i] = m1[i * col + j];
+            }
 
         return mptr;
       }
@@ -272,14 +275,13 @@ namespace ice
     mh = (double*) malloc(row * col * sizeof(double));
 
     if (mh == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < row; i++)
       for (j = 0; j < col; j++)
-        mh[j * row + i] = m1[i * col + j];
+        {
+          mh[j * row + i] = m1[i * col + j];
+        }
 
     MoveMatrix((double*)mh, col, row, (double*)m2);
     free(mh);
@@ -294,16 +296,10 @@ namespace ice
     double* mh, *mptr;
 
     if (m1 == NULL || m2 == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row1 < 1 || col1 < 1 || col2 < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (m3 == NULL)
       {
@@ -316,7 +312,9 @@ namespace ice
                 mptr[i * col2 + j] = 0;
 
                 for (k = 0; k < col1; k++)
-                  mptr[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+                  {
+                    mptr[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+                  }
               }
           }
 
@@ -326,10 +324,7 @@ namespace ice
     mh = (double*) malloc(row1 * col2 * sizeof(double));
 
     if (mh == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = 0; i < row1; i++)
       {
@@ -338,7 +333,9 @@ namespace ice
             mh[i * col2 + j] = 0;
 
             for (k = 0; k < col1; k++)
-              mh[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+              {
+                mh[i * col2 + j] += m1[i * col1 + k] * m2[k * col2 + j];
+              }
           }
       }
 
@@ -354,7 +351,7 @@ namespace ice
     double* mptr = NULL;
     int c, i, j, k, col, colh, row, rowh, offs, ret;
     double maxa, max, fh, fha;
-    double epsinst = 1e-100; // Grenze der Instabilitॊt
+    double epsinst = 1e-100; // Grenze der Instabilitaet
     double epsnull = 1e-200; // Definition 0
     double* dpa, *dpc;
     int size_a;
@@ -364,66 +361,31 @@ namespace ice
     maxa = 0;
 
     if (m1 == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
-    if (m2 == NULL) mptr = (double*)malloc(row * col * sizeof(double));
-    else mptr = m2;
+    if (m2 == NULL)
+      mptr = (double*)malloc(row * col * sizeof(double));
+    else
+      mptr = m2;
 
     size_a = dim * dim * sizeof(double);
     // Anforderung des dynamischen Speichers
     dpa = (double*) malloc(size_a);
-
-    if (dpa == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-
-        if (m2 == NULL) free(mptr);
-
-        return NULL;
-      }
-
     dpc = (double*)malloc(size_a);
-
-    if (dpc == NULL)
-      {
-        free(dpa);
-
-        if (m2 == NULL) free(mptr);
-
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
 
     // kopieren in dynamischen speicherbereich
     memcpy(dpa, m1, size_a);
 
     // füllen der "Einheitsmatrix " und normalisieren dpa
-    for (i = 0; i < dim * dim; i++) dpc[i] = 0;
-
-#if 0
+    for (i = 0; i < dim * dim; i++)
+      {
+        dpc[i] = 0;
+      }
 
     for (i = 0; i < dim; i++)
       {
-        fh = 0;
-
-        for (j = 0; j < dim; j++) fh += fabs(dpa[dim * i + j]);
-
-        fh /= dim;
-        fh = sqrt(fh);
-
-        for (j = 0; j < dim; j++) dpa[dim * i + j] /= fh;
-
-        dpc[i * dim + i] = 1 / fh;
+        dpc[i * dim + i] = 1;
       }
-
-#else
-
-    for (i = 0; i < dim; i++) dpc[i * dim + i] = 1;
-
-#endif
 
     // transformation des dynamischen A|C
     offs = 0;
@@ -474,7 +436,10 @@ namespace ice
           }
 
         // setzen der spalte "col" zu 0 ab zeile "colh+1"
-        if (fabs(dpa[dim * colh + col] / (*dpa)) < epsinst) ret = NUM_INSTABILITY;
+        if (fabs(dpa[dim * colh + col] / (*dpa)) < epsinst)
+          {
+            ret = NUM_INSTABILITY;
+          }
 
         if (fabs(dpa[dim * colh + col]) > epsnull)
           {
@@ -486,15 +451,22 @@ namespace ice
                 dpa[dim * i + col] = 0;
 
                 for (j = col + 1; j < dim; j++)
-                  dpa[dim * i + j] -= dpa[dim * colh + j] * fh;
+                  {
+                    dpa[dim * i + j] -= dpa[dim * colh + j] * fh;
+                  }
 
-                for (k = 0; k < dim; k++) dpc[dim * i + k] -= dpc[colh * dim + k] * fh;
+                for (k = 0; k < dim; k++)
+                  {
+                    dpc[dim * i + k] -= dpc[colh * dim + k] * fh;
+                  }
 
                 i++;
               }
           }
         else
-          offs = 1;
+          {
+            offs = 1;
+          }
 
         col++;
       };
@@ -524,10 +496,12 @@ namespace ice
         free(dpa);
         free(dpc);
 
-        if (m2 == NULL) free(mptr);
+        if (m2 == NULL)
+          {
+            free(mptr);
+          }
 
-        Message(FNAME, M_NO_INVERSE, NO_SOLUTION);
-        return NULL;
+        throw IceException(FNAME, M_NO_INVERSE);
       }
 
     free(dpa);
@@ -535,10 +509,12 @@ namespace ice
 
     if (ret == NUM_INSTABILITY)
       {
-        if (m2 == NULL) free(mptr);
+        if (m2 == NULL)
+          {
+            free(mptr);
+          }
 
-        Message(FNAME, M_NUM_INSTABILITY, NUM_INSTABILITY);
-        return NULL;
+        throw IceException(FNAME, M_NUM_INSTABILITY);
       }
 
     return mptr;
@@ -559,27 +535,33 @@ namespace ice
 
     /* Test Parmeterbelegung */
     if (m1 == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
-    if (m2 == NULL) mptr = (double*)malloc(row * col * sizeof(double));
+    if (m2 == NULL)
+      {
+        mptr = (double*)malloc(row * col * sizeof(double));
+      }
 
     if (row < 1 || col < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
 
     if (row > col)
       {
-        Message(FNAME, M_VEC_DEPEND, WRONG_PARAM);
+        throw IceException(FNAME, M_VEC_DEPEND);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -588,9 +570,12 @@ namespace ice
 
     if (rang < row)
       {
-        Message(FNAME, M_VEC_DEPEND, WRONG_PARAM);
+        throw IceException(FNAME, M_VEC_DEPEND);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -601,9 +586,12 @@ namespace ice
 
     if (hx == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -616,10 +604,13 @@ namespace ice
 
     if (hb1 == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(hx);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -628,11 +619,14 @@ namespace ice
 
     if (hb2 == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(hx);
         free(hb1);
 
-        if (mptr != NULL) free(mptr);
+        if (mptr != NULL)
+          {
+            free(mptr);
+          }
 
         return NULL;
       }
@@ -644,7 +638,9 @@ namespace ice
       {
         /* Löschen des Hilfsvektors */
         for (i = 0; i < row; i++)
-          hb2[i] = 0;
+          {
+            hb2[i] = 0;
+          }
 
         for (i = 0; i < k; i++)
           {
@@ -695,13 +691,22 @@ namespace ice
     i = 1;
     CrossProdVec(n, unit[0], v);
 
-    if (LengthVec(v) > eps) MoveVec(unit[0], ah[i++]);
+    if (LengthVec(v) > eps)
+      {
+        MoveVec(unit[0], ah[i++]);
+      }
 
     CrossProdVec(n, unit[1], v);
 
-    if (LengthVec(v) > eps)  MoveVec(unit[1], ah[i++]);
+    if (LengthVec(v) > eps)
+      {
+        MoveVec(unit[1], ah[i++]);
+      }
 
-    if (i < 3) MoveVec(unit[2], ah[2]);
+    if (i < 3)
+      {
+        MoveVec(unit[2], ah[2]);
+      }
 
     OrthoMatrix((double*)ah, 3, 3, (double*)m);
     return OK;
@@ -725,16 +730,10 @@ namespace ice
     colmem = 0;
 
     if (m == NULL)
-      {
-        Message(FNAME, M_WRONG_VECTOR, WRONG_VECTOR);
-        return (WRONG_VECTOR);
-      }
+      throw IceException(FNAME, M_WRONG_VECTOR);
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /* Test auf Trivialfall */
     flag = 1;
@@ -770,10 +769,7 @@ namespace ice
     hA = (double*) malloc(size);
 
     if (hA == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NO_MEM;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     memcpy(hA, m, size);
     /*** Transformation von (m,b) in Trapezform */
@@ -815,7 +811,9 @@ namespace ice
                 }
 
             if (cont2 == 1)
-              cont1 = 0;
+              {
+                cont1 = 0;
+              }
             else
               {
                 /* Vertauschen der colmem'ten und i'ten Spalte */
@@ -881,13 +879,17 @@ namespace ice
     *rank = rang;
 
     if (rang < dim)
-      *det = 0;
+      {
+        *det = 0;
+      }
     else
       {
         *det = 1;
 
         for (i = 0; i < dim; i++)
-          *det *= hA[i * col + i];
+          {
+            *det *= hA[i * col + i];
+          }
       }
 
     *det *= (double)flag;
@@ -909,98 +911,103 @@ namespace ice
         (fuer symmetrische Matrizen)
   ....................................................................*/
   {
-    int i, j;
-    double val;
-    double* eval, *evec;
-    int flag;
-    double eps = 1e-5;
-    i = 0;
-
-    if (m == NULL)
+    try
       {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        int i, j;
+        double val;
+        double* eval, *evec;
 
-    if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        double eps = 1e-5;
+        i = 0;
 
-    switch (mode)
-      {
-      case DEFAULT:
-        val = 0;
+        if (m == NULL)
+          throw IceException(FNAME, M_WRONG_MATRIX);
 
-        for (i = 0; i < row; i++)
-          for (j = 0; j < col; j++)
-            val += Sqr(*(m + i * col + j));
+        if (row < 1 || col < 1)
+          throw IceException(FNAME, M_WRONG_PARAM);
 
-        *norm = sqrt(val);
-        return OK;
-      case 1:
-        *norm = 0;
-
-        for (i = 0; i < row; i++)
+        switch (mode)
           {
+          case DEFAULT:
             val = 0;
 
-            for (j = 0; j < col; j++) val += m[i * col + j];
+            for (i = 0; i < row; i++)
+              for (j = 0; j < col; j++)
+                {
+                  val += Sqr(*(m + i * col + j));
+                }
 
-            if (val > *norm) *norm = val;
-          }
+            *norm = sqrt(val);
+            return OK;
+          case 1:
+            *norm = 0;
 
-        return OK;
-      case 2:
-        *norm = 0;
+            for (i = 0; i < row; i++)
+              {
+                val = 0;
 
-        for (j = 0; j < col; j++)
-          {
-            val = 0;
+                for (j = 0; j < col; j++)
+                  {
+                    val += m[i * col + j];
+                  }
 
-            for (j = 0; j < row; j++) val += m[j * col + i];
+                if (val > *norm)
+                  {
+                    *norm = val;
+                  }
+              }
 
-            if (val > *norm) *norm = val;
-          }
+            return OK;
+          case 2:
+            *norm = 0;
 
-        return OK;
-      case 3:
+            for (j = 0; j < col; j++)
+              {
+                val = 0;
 
-        if (row != col)
-          {
-            Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
+                for (j = 0; j < row; j++)
+                  {
+                    val += m[j * col + i];
+                  }
 
-        if (IsMatrixSymm(m, row, &eps) != true)
-          {
-            Message(FNAME, M_NO_SYMM, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
+                if (val > *norm)
+                  {
+                    *norm = val;
+                  }
+              }
 
-        eval = (double*)malloc(row * sizeof(double));
-        evec = (double*)malloc(row * row * sizeof(double));
-        OffMessage();
-        flag = EigenVal(m, row, eval, evec);
-        OnMessage();
+            return OK;
+          case 3:
 
-        if (flag != OK)
-          {
+            if (row != col)
+              throw IceException(FNAME, M_NO_SQUARE);
+
+            if (IsMatrixSymm(m, row, &eps) != true)
+              throw IceException(FNAME, M_NO_SYMM);
+
+            eval = (double*)malloc(row * sizeof(double));
+            evec = (double*)malloc(row * row * sizeof(double));
+
+            try
+              {
+                EigenVal(m, row, eval, evec);
+              }
+            catch (IceException& ex)
+              {
+                free(eval);
+                free(evec);
+                throw IceException(ex, FNAME);
+              }
+
+            *norm = eval[row - 1];
             free(eval);
             free(evec);
-            Message(FNAME, M_NO_REGULAR, WRONG_PARAM);
-            return WRONG_PARAM;
+            return OK;
+          default:
+            throw IceException(FNAME, M_WRONG_PARAM);
           }
-
-        *norm = eval[row - 1];
-        free(eval);
-        free(evec);
-        return OK;
-      default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
       }
+    RETHROW;
   }
 #undef FNAME
 //--------------------------------------------------------
@@ -1016,23 +1023,17 @@ namespace ice
     colh = 0;
 
     if (a == NULL)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     /* Anforderung des dynamischen Speichers */
     ha = (double*) malloc(row * col * sizeof(double));
 
     if (ha == NULL)
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(ha);
         return (NO_MEM);
       }
@@ -1042,14 +1043,11 @@ namespace ice
 
     r = Min(row, col);
     perm = 0;
-    OffMessage();
 
     if (NormMatrix(ha, row, col, DEFAULT, &eps) != OK)
       {
-        OnMessage();
-        Message(FNAME, M_0, ERROR);
         free(ha);
-        return ERROR;
+        throw IceException(FNAME, M_0);
       }
 
     eps = eps * 1e-60;
@@ -1105,23 +1103,33 @@ namespace ice
               *(ha + jj * col + i) = 0;
 
               for (ii = i + 1; ii < col; ii++)
-                *(ha + jj * col + ii) -= *(ha + i * col + ii) * d1;
+                {
+                  *(ha + jj * col + ii) -= *(ha + i * col + ii) * d1;
+                }
             }
       }
 
     *rank = r;
 
-    if (r < col) *det = 0;
+    if (r < col)
+      {
+        *det = 0;
+      }
     else
       {
         *det = *ha;
 
-        for (i = 1; i < r; i++) *det *= *(ha + i * col + i);
+        for (i = 1; i < r; i++)
+          {
+            *det *= *(ha + i * col + i);
+          }
 
-        if (perm % 2 == 1) *det = -*det;
+        if (perm % 2 == 1)
+          {
+            *det = -*det;
+          }
       }
 
-    OnMessage();
     free(ha);
     return OK;
   }
@@ -1133,20 +1141,16 @@ namespace ice
     int i;
 
     if (m == NULL)
-      {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (row1 < 0 || row2 < 0 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (row1 != row2)
       for (i = 0; i < col; i++)
-        std::swap(*(m + row1 * col + i), *(m + row2 * col + i));
+        {
+          std::swap(*(m + row1 * col + i), *(m + row2 * col + i));
+        }
 
     return m;
   }
@@ -1158,20 +1162,16 @@ namespace ice
     int i;
 
     if (m == NULL)
-      {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (col1 < 0 || col2 < 0 || row < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (col1 != col2)
       for (i = 0; i < row; i++)
-        std::swap(*(m + i * col + col1), *(m + i * col + col2));
+        {
+          std::swap(*(m + i * col + col1), *(m + i * col + col2));
+        }
 
     return m;
   }
@@ -1184,22 +1184,18 @@ namespace ice
     double val;
 
     if (row < 1 || col < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
     for (i = 0; i < row; i++)
       for (j = 0; j < col; j++)
-        val = Max(val, fabs(m[i * col + j]));
+        {
+          val = Max(val, fabs(m[i * col + j]));
+        }
 
     if (val < *eps)
       {
@@ -1219,25 +1215,23 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
     for (i = 0; i < dim; i++)
       for (j = 0; j < dim; j++)
         if (i == j)
-          val = Max(val, fabs(m[i * dim + j] - 1));
+          {
+            val = Max(val, fabs(m[i * dim + j] - 1));
+          }
         else
-          val = Max(val, fabs(m[i * dim + j]));
+          {
+            val = Max(val, fabs(m[i * dim + j]));
+          }
 
     if (val < *eps)
       {
@@ -1257,16 +1251,10 @@ namespace ice
     int flag;
 
     if (dim < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     m1 = (double*)malloc(dim * dim * sizeof(double));
     m2 = (double*)malloc(dim * dim * sizeof(double));
@@ -1276,8 +1264,14 @@ namespace ice
     free(m1);
     free(m2);
 
-    if (flag == true) return true;
-    else return false;
+    if (flag == true)
+      {
+        return true;
+      }
+    else
+      {
+        return false;
+      }
   }
 #undef FNAME
 //------------------------------------------------
@@ -1288,23 +1282,19 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
     for (i = 0; i < dim; i++)
       for (j = 0; j < dim; j++)
         if (i != j)
-          val = Max(val, fabs(m[i * dim + j]));
+          {
+            val = Max(val, fabs(m[i * dim + j]));
+          }
 
     if (val < *eps)
       {
@@ -1324,23 +1314,19 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
     for (i = 0; i < dim; i++)
       for (j = i + 1; j < dim; j++)
         if (i != j)
-          val = Max(val, fabs(m[i * dim + j] - m[j * dim + i]));
+          {
+            val = Max(val, fabs(m[i * dim + j] - m[j * dim + i]));
+          }
 
     if (val < *eps)
       {
@@ -1360,23 +1346,19 @@ namespace ice
     double val;
 
     if (dim < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     val = 0;
 
     for (i = 0; i < dim; i++)
       for (j = i + 1; j < dim; j++)
         if (i != j)
-          val = Max(val, fabs(m[i * dim + j] + m[j * dim + i]));
+          {
+            val = Max(val, fabs(m[i * dim + j] + m[j * dim + i]));
+          }
 
     if (val < *eps)
       {
@@ -1396,16 +1378,10 @@ namespace ice
     int rank;
 
     if (dim < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (*eps < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     DetMatrix(m, dim, dim, &val, &rank);
 
@@ -1429,23 +1405,18 @@ namespace ice
     int i;
 
     if (dim < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     eval = (double*)malloc(dim * sizeof(double));
     evec = (double*)malloc(dim * dim * sizeof(double));
-    OffMessage();
+
     i = EigenVal(m, dim, eval, evec);
-    OnMessage();
 
     if (i != OK)
       {
         free(eval);
         free(evec);
-        Message(FNAME, M_NO_REGULAR, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_NO_REGULAR);
       }
 
     free(evec);

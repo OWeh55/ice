@@ -10,8 +10,6 @@
 #include <stdio.h>
 #include <image.h>
 
-#include <dc1394/control.h>
-
 #ifndef WIN32
 #include <getopt.h>
 #endif

@@ -91,7 +91,9 @@ namespace ice
     long int result;
     string defs;
     if (def)
-      defs = NumberString(defValue);
+      {
+        defs = NumberString(defValue);
+      }
 
     Print(prompt);
     GetAlphaCursor(startx, starty);
@@ -105,7 +107,10 @@ namespace ice
         char* last;
         errno = 0;
         result = strtol(ins.c_str(), &last, 10);
-        if (errno == 0) ready = true;
+        if (errno == 0)
+          {
+            ready = true;
+          }
       }
     return result;
   }
@@ -137,7 +142,9 @@ namespace ice
     double result;
     string defs;
     if (def)
-      defs = NumberString(defaultValue);
+      {
+        defs = NumberString(defaultValue);
+      }
 
     Print(prompt);
     GetAlphaCursor(startx, starty);
@@ -151,7 +158,10 @@ namespace ice
         char* last;
         errno = 0;
         result = strtod(ins.c_str(), &last);
-        if (errno == 0) ready = true;
+        if (errno == 0)
+          {
+            ready = true;
+          }
       }
     return result;
   }

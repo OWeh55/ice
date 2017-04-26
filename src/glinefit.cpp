@@ -29,7 +29,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "analygeo.h"
 #include "pointlist.h"
@@ -47,7 +47,7 @@ namespace ice
     int cp[4][2];
     Contur c;
     PointList pl;
-    int i, cnt, rc;
+    int i, cnt;
     double cc, ss;
     double par[2], mean = 0;
     double md;
@@ -57,15 +57,8 @@ namespace ice
       if((lp[0][1]<img->wyi+dist)||(lp[0][1]>img->wya-dist)) return(-1);
       if((lp[1][0]<img->wxi+dist)||(lp[1][0]>img->wxa-dist)) return(-1);
       if((lp[1][1]<img->wyi+dist)||(lp[1][1]>img->wya-dist)) return(-1);*/
-    OffMessage();
-    rc = ConvPointHesse(lp[0], lp[1], p, phi);
-    OnMessage();
 
-    if (rc != OK)
-      {
-        Message(FNAME, M_0, WRONG_PARAM);
-        return (-1);
-      }
+    ConvPointHesse(lp[0], lp[1], p, phi);
 
     cc = cos(*phi);
     ss = sin(*phi);
@@ -78,9 +71,9 @@ namespace ice
     cp[3][0] = (int)(lp[1][0] + cc * dist + 0.5);
     cp[3][1] = (int)(lp[1][1] + ss * dist + 0.5);
     c = LineContur(cp[0], cp[1]);
-    c.Add(cp[2][0], cp[2][1]);
-    c.Add(cp[3][0], cp[3][1]);
-    c.Add(cp[0][0], cp[0][1]);
+    c.add(cp[2][0], cp[2][1]);
+    c.add(cp[3][0], cp[3][1]);
+    c.add(cp[0][0], cp[0][1]);
 
     pl = RegionPointList(c);
 
@@ -93,8 +86,7 @@ namespace ice
     if (mean == 0)
       {
         FreePointList(pl);
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return (-1);
+        throw IceException(FNAME, M_WRONG_POINTLIST);
       }
 
     thr = (int)(mean / (double)pl->lng + 0.5);
@@ -103,7 +95,10 @@ namespace ice
 
     for (i = 0; i < pl->lng; i++)
       {
-        if (pl->wptr[i] < thr) pl->wptr[i] = 0;
+        if (pl->wptr[i] < thr)
+          {
+            pl->wptr[i] = 0;
+          }
         else
           {
             mean += pl->wptr[i];
@@ -111,15 +106,14 @@ namespace ice
           }
       }
 
-    OffMessage();
-    rc = FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma);
-    OnMessage();
-
-    if (rc != OK)
+    try
+      {
+        FitLine(pl, 0, pl->lng - 1, 3, par, &md, &ma);
+      }
+    catch (IceException& ex)
       {
         FreePointList(pl);
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return (-1);
+        throw IceException(ex, FNAME);
       }
 
     *p = par[0];
@@ -129,13 +123,14 @@ namespace ice
   }
 #undef FNAME
   /*************************************************************************/
+#define FNAME "FitGradLine"
   double FitGradLine(Image img, double lp[2][2], int dist, double* p, double* phi)
   {
     int cp[4][2];
     Contur c;
     PointList pl;
     int x1, x2, y1, y2, g;
-    int i, x, y, rc;
+    int i, x, y;
     double cc, ss;
     double par[2], mean = 0, gew;
     double md;
@@ -146,7 +141,9 @@ namespace ice
         (Inside(img, (int)lp[0][0], (int)lp[0][1]) &&
          Inside(img, (int)lp[1][0], (int)lp[1][1]))
        )
-      return -1;
+      {
+        return -1;
+      }
 
     ConvPointHesse(lp[0], lp[1], p, phi);
 
@@ -163,9 +160,9 @@ namespace ice
     cp[3][1] = (int)(lp[1][1] + ss * dist + 0.5);
 
     c = LineContur(cp[0], cp[1]);
-    c.Add(cp[2][0], cp[2][1]);
-    c.Add(cp[3][0], cp[3][1]);
-    c.Add(cp[0][0], cp[0][1]);
+    c.add(cp[2][0], cp[2][1]);
+    c.add(cp[3][0], cp[3][1]);
+    c.add(cp[0][0], cp[0][1]);
     pl = RegionPointList(c);
     mean = 0;
 
@@ -207,7 +204,10 @@ namespace ice
 
     for (i = 0; i < pl->lng; i++)
       {
-        if (pl->wptr[i] < thr) pl->wptr[i] = 0;
+        if (pl->wptr[i] < thr)
+          {
+            pl->wptr[i] = 0;
+          }
         else
           {
             mean += pl->wptr[i];
@@ -215,15 +215,19 @@ namespace ice
           }
       }
 
-    OffMessage();
-    rc = FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma);
-    OnMessage();
-
-    if (rc != OK) return (-1);
-
+    try
+      {
+        FitLine(pl, 0, pl->lng - 1, 0, par, &md, &ma);
+      }
+    catch (IceException& ex)
+      {
+        FreePointList(pl);
+        throw IceException(ex, FNAME);
+      }
     *p = par[0];
     *phi = par[1];
     FreePointList(pl);
-    return (mean / cnt);
+    return mean / cnt;
   }
+#undef FNAME
 }

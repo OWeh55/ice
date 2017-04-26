@@ -27,7 +27,9 @@ namespace ice
   bool Delaunay::DTriangle::inside(Point pp) const
   {
     if (!nonDegenerate)
-      return false;
+      {
+        return false;
+      }
     // Compute vectors
     Point v0 = p2 - p1;
     Point v1 = p3 - p1;
@@ -102,7 +104,9 @@ namespace ice
     vector<Point> points(curv.size());
 
     for (int i = 0; i < (int)curv.size(); ++i)
-      points[i] = curv[i];
+      {
+        points[i] = curv[i];
+      }
 
     prepareNodes(points);
     triangulate();
@@ -117,7 +121,9 @@ namespace ice
   {
     nodes.resize(points.size());
     for (int i = 0; i < (int)points.size(); ++i)
-      nodes[i] = Node(points[i], i);
+      {
+        nodes[i] = Node(points[i], i);
+      }
 
     sort(nodes.begin(), nodes.end());
 
@@ -137,14 +143,16 @@ namespace ice
 
     for (int i = 0; i < ((int)edges.size()) - 1; ++i)
       {
-        if (!toDelete[i]) // not deleted yet
+        if (!toDelete[i])   // not deleted yet
           {
             Edge inverseEdge = edges[i].inversed();
             int foundIndex = -1;
             for (int k = i + 1; k < (int)edges.size() && foundIndex < 0 ; ++k)
               {
                 if (edges[k] == inverseEdge)
-                  foundIndex = k;
+                  {
+                    foundIndex = k;
+                  }
               }
 
             if (foundIndex >= 0)
@@ -179,14 +187,16 @@ namespace ice
 
     for (int i = 0; i < ((int)edges.size()) - 1; ++i)
       {
-        if (!toDelete[i]) // not deleted yet
+        if (!toDelete[i])   // not deleted yet
           {
             Edge inverseEdge = edges[i].inversed();
             int foundIndex = -1;
             for (int k = i + 1; k < (int)edges.size() && foundIndex < 0 ; ++k)
               {
                 if (edges[k] == inverseEdge)
-                  foundIndex = k;
+                  {
+                    foundIndex = k;
+                  }
               }
 
             if (foundIndex >= 0)
@@ -212,7 +222,6 @@ namespace ice
       }
     edges.resize(dest_idx);
   }
-
 
   void Delaunay::triangulate()
   {
@@ -279,7 +288,7 @@ namespace ice
             const Edge& current = infiniteTriangles[i];
             double relcross = current.relCross(currentNode);
             if (relcross > 0.0 || // right of edge
-                (relcross == 0.0 && current.Distance(currentNode) == 0.0)) // on edge
+                (relcross == 0.0 && current.Distance(currentNode) == 0.0))   // on edge
               {
                 edges.push_back(current);
                 edges.push_back(Edge(current.node2, infiniteNode));
@@ -323,9 +332,13 @@ namespace ice
           {
             const Edge& currentEdge = *it;
             if (currentEdge.node1 == infiniteNode)
-              infiniteTriangles.push_back(Edge(currentEdge.node2, currentNode));
+              {
+                infiniteTriangles.push_back(Edge(currentEdge.node2, currentNode));
+              }
             else if (currentEdge.node2 == infiniteNode)
-              infiniteTriangles.push_back(Edge(currentNode, currentEdge.node1));
+              {
+                infiniteTriangles.push_back(Edge(currentNode, currentEdge.node1));
+              }
             else
               Triangles.push_back(DTriangle(currentEdge.node1,
                                             currentEdge.node2,
@@ -361,7 +374,9 @@ namespace ice
               (t.p1 - t.p3).r2() <= limit2
             )
            )
-          output.push_back(Triangle(t.p1, t.p2, t.p3));
+          {
+            output.push_back(Triangle(t.p1, t.p2, t.p3));
+          }
       }
   }
 
@@ -398,7 +413,9 @@ namespace ice
     output.clear();
     for (int i = 0; i < (int)edges.size(); ++i)
       if ((limit <= 0) || ((edges[i].node1 - edges[i].node2).r2() <= limit2))
-        output.push_back(LineSeg(edges[i].node1, edges[i].node2));
+        {
+          output.push_back(LineSeg(edges[i].node1, edges[i].node2));
+        }
   }
 
   void Delaunay::getTrianglesI(std::vector<std::vector<int> >& output,
@@ -470,10 +487,7 @@ namespace ice
   void Delaunay::draw(const Image& img, int edgeValue, int fillValue, double limit) const
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (fillValue >= 0)
       {
@@ -488,7 +502,9 @@ namespace ice
         getEdges(edges, limit);
 
         for (vector<LineSeg>::const_iterator it = edges.begin(); it != edges.end(); ++it)
-          ice::draw(*it, img, edgeValue);
+          {
+            ice::draw(*it, img, edgeValue);
+          }
 
       }
   }

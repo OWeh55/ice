@@ -93,11 +93,11 @@ namespace ice
       return d2;
     }
 
-    virtual Vector MakeVector() const;
-    virtual void Set(const Vector& v);
+    virtual Vector makeVector() const;
+    virtual void set(const Vector& v);
 
     virtual std::string toString() const;
-    virtual void Set(const std::string& parastring);
+    virtual void set(const std::string& parastring);
 
     virtual Distortion0& operator =(const Distortion0& d);
 

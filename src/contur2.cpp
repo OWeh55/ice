@@ -30,7 +30,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -57,16 +57,10 @@ namespace ice
     y = ps[1];
 
     if ((direct != HORZ) && (direct != VERT))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!IsImg(imgv))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (IsImg(imgo))
       {
@@ -79,14 +73,17 @@ namespace ice
     wya = imgv->ysize - 1;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
+      throw IceException(FNAME, M_WRONG_WINDOW2);
+
+    if ((wxi - 1) == x)
       {
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return WRONG_WINDOW;
+        x++;  /* an verkleinertes Suchfenster anpassen*/
       }
 
-    if ((wxi - 1) == x) x++; /* an verkleinertes Suchfenster anpassen*/
-
-    if ((wyi - 1) == y) y++;
+    if ((wyi - 1) == y)
+      {
+        y++;
+      }
 
     if ((wxa + 1) == x)
       {
@@ -95,7 +92,10 @@ namespace ice
             y++;
             x = wxi;
           }
-        else return NOT_FOUND;
+        else
+          {
+            return NOT_FOUND;
+          }
       }
 
     if ((wya + 1) == y)
@@ -105,14 +105,14 @@ namespace ice
             x++;
             y = wyi;
           }
-        else return NOT_FOUND;
+        else
+          {
+            return NOT_FOUND;
+          }
       }
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return WRONG_STARTPOINT;
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     xl = x - 1;
     xr = x + 1;
@@ -123,12 +123,15 @@ namespace ice
 
     if (direct == HORZ)
       {
-        do /*Bild durchmustern ab Startpunkt*/
+        do   /*Bild durchmustern ab Startpunkt*/
           {
             /*nächste Zeile*/
 
             /* check bounds */
-            if (x > wxa || y > wya || xl > wxa || yo > wya || yu > wya) break;
+            if (x > wxa || y > wya || xl > wxa || yo > wya || yu > wya)
+              {
+                break;
+              }
 
             v1 = GetVal(imgv, xl, yo) + GetVal(imgv, x, yo);
             v3 = GetVal(imgv, xl, yu) + GetVal(imgv, x, yu);
@@ -139,7 +142,10 @@ namespace ice
               {
 
                 /* check bounds */
-                if (xr > wxa || yo > wya || yu > wya || y > wya) break;
+                if (xr > wxa || yo > wya || yu > wya || y > wya)
+                  {
+                    break;
+                  }
 
                 v1 += GetVal(imgv, xr, yo);
                 v3 += GetVal(imgv, xr, yu);
@@ -152,14 +158,17 @@ namespace ice
 
                     if ((grd1 = h * h + v * v) > pgl)
                       {
-                        do /*lokales maximum in zeile suchen*/
+                        do   /*lokales maximum in zeile suchen*/
                           {
                             grd2 = grd1;
                             ps[0] = x;
                             ps[1] = y;
 
                             /* check bounds */
-                            if (xl > wxa || yo > wya || yu > wya) break;
+                            if (xl > wxa || yo > wya || yu > wya)
+                              {
+                                break;
+                              }
 
                             v1 -= GetVal(imgv, xl, yo);
                             v3 -= GetVal(imgv, xl, yu);
@@ -169,7 +178,10 @@ namespace ice
                             xl++;
                             xr++;
 
-                            if (x > wxa || xr > wxa || y > wya || yu > wya || yo > wya) break;
+                            if (x > wxa || xr > wxa || y > wya || yu > wya || yo > wya)
+                              {
+                                break;
+                              }
 
                             v1 += GetVal(imgv, xr, yo);
                             v3 += GetVal(imgv, xr, yu);
@@ -188,12 +200,18 @@ namespace ice
                               s += GetVal(imgo, xf, yf);
                             }
 
-                        if (s == 0) return OK;
+                        if (s == 0)
+                          {
+                            return OK;
+                          }
                       }
                   }
 
                 /* check bounds */
-                if (xl > wxa || yo > wya || yu > wya) break;
+                if (xl > wxa || yo > wya || yu > wya)
+                  {
+                    break;
+                  }
 
                 v1 -= GetVal(imgv, xl, yo);
                 v3 -= GetVal(imgv, xl, yu);
@@ -251,7 +269,10 @@ namespace ice
                             yo++;
                             yu++;
 
-                            if (y > wya) break;
+                            if (y > wya)
+                              {
+                                break;
+                              }
 
                             h1 += GetVal(imgv, xl, yu);
                             h3 += GetVal(imgv, xr, yu);
@@ -270,7 +291,10 @@ namespace ice
                               s += GetVal(imgo, xf, yf);
                             }
 
-                        if (s == 0) return OK;
+                        if (s == 0)
+                          {
+                            return OK;
+                          }
                       }
                   }
 
@@ -307,22 +331,46 @@ namespace ice
 
     if (h == 0)
       {
-        if (v < 0) *dir = 6;
-        else *dir = 2;
+        if (v < 0)
+          {
+            *dir = 6;
+          }
+        else
+          {
+            *dir = 2;
+          }
 
         return grad;
       }
 
     val = abs(10000 * v / h);
 
-    if (val < 4142) *dir = 0;
-    else if (val < 24142) *dir = 1;
-    else *dir = 2;
+    if (val < 4142)
+      {
+        *dir = 0;
+      }
+    else if (val < 24142)
+      {
+        *dir = 1;
+      }
+    else
+      {
+        *dir = 2;
+      }
 
     if (h < 0)
-      if (v < 0) *dir += 4;
-      else *dir = 4 - *dir;
-    else if ((v < 0) && (*dir > 0)) *dir = 8 - *dir;
+      if (v < 0)
+        {
+          *dir += 4;
+        }
+      else
+        {
+          *dir = 4 - *dir;
+        }
+    else if ((v < 0) && (*dir > 0))
+      {
+        *dir = 8 - *dir;
+      }
 
     return grad;
   }
@@ -339,22 +387,40 @@ namespace ice
     yu = y + 1;
 
     if (IsImg(imgo))
-      if (GetVal(imgo, x, y) > 0) return -2;
+      if (GetVal(imgo, x, y) > 0)
+        {
+          return -2;
+        }
 
-    if (xl < 0) return -3;
+    if (xl < 0)
+      {
+        return -3;
+      }
 
-    if (xr >= imgv->xsize) return -3;
+    if (xr >= imgv->xsize)
+      {
+        return -3;
+      }
 
-    if (yo < 0) return -3;
+    if (yo < 0)
+      {
+        return -3;
+      }
 
-    if (yu >= imgv->ysize) return -3;
+    if (yu >= imgv->ysize)
+      {
+        return -3;
+      }
 
     h1 = GetVal(imgv, xl, yo) + GetVal(imgv, xl, y) + GetVal(imgv, xl, yu);
     h3 = GetVal(imgv, xr, yo) + GetVal(imgv, xr, y) + GetVal(imgv, xr, yu);
     v1 = GetVal(imgv, xr, yo) + GetVal(imgv, x, yo) + GetVal(imgv, xl, yo);
     v3 = GetVal(imgv, xr, yu) + GetVal(imgv, x, yu) + GetVal(imgv, xl, yu);
 
-    if (Gradient(v3 - v1, h3 - h1, &gdir) < thr) return -1;
+    if (Gradient(v3 - v1, h3 - h1, &gdir) < thr)
+      {
+        return -1;
+      }
 
     return gdir;
   }
@@ -369,15 +435,30 @@ namespace ice
     yu = y + 1;
 
     if (IsImg(imgo))
-      if (GetVal(imgo, x, y) > 0) return -1;
+      if (GetVal(imgo, x, y) > 0)
+        {
+          return -1;
+        }
 
-    if (xl < 0) return -2;
+    if (xl < 0)
+      {
+        return -2;
+      }
 
-    if (xr >= imgv->xsize) return -3;
+    if (xr >= imgv->xsize)
+      {
+        return -3;
+      }
 
-    if (yo < 0) return -4;
+    if (yo < 0)
+      {
+        return -4;
+      }
 
-    if (yu >= imgv->ysize) return -5;
+    if (yu >= imgv->ysize)
+      {
+        return -5;
+      }
 
     h1 = GetVal(imgv, xl, yo) + GetVal(imgv, xl, y) + GetVal(imgv, xl, yu);
     h3 = GetVal(imgv, xr, yo) + GetVal(imgv, xr, y) + GetVal(imgv, xr, yu);
@@ -391,176 +472,187 @@ namespace ice
                         int pgl, int maxgap,
                         int ps[2], int lng, double& meangrad)
   {
-    int wxi, wyi, wxa, wya;
-    int i;
-    int gap;
-    Contur c;
-    int startdir;
-    int xx, yy, xs, ys;
-    int xf, yf;
-    int dir, aktdir, nextdir, grdir, maxdir, maxgrad;
-    int val;
-    xs = ps[0];
-    ys = ps[1];
-    nextdir = 0;
-    maxdir = 0;
-
-    if (!IsImg(imgv))
+    try
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return Contur();
-      }
+        int wxi, wyi, wxa, wya;
+        int i;
+        int gap;
+        Contur c;
+        int startdir;
+        int xx, yy, xs, ys;
+        int xf, yf;
+        int dir, aktdir, nextdir, grdir, maxdir, maxgrad;
+        int val;
+        xs = ps[0];
+        ys = ps[1];
+        nextdir = 0;
+        maxdir = 0;
 
-    if (!IsImg(imgo))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return Contur();
-      }
+        if (!IsImg(imgv))
+          throw IceException(FNAME, M_WRONG_IMAGE);
 
-    IF_FAILED(MatchImg(imgv, imgo))
-    {
-      Message(FNAME, M_0, WRONG_PARAM);
-      return Contur();
-    }
+        if (!IsImg(imgo))
+          throw IceException(FNAME, M_WRONG_IMAGE);
 
-    wxi = 0;
-    wyi = 0;
-    wxa = imgv->xsize - 1;
-    wya = imgv->ysize - 1;
+        MatchImg(imgv, imgo);
 
-    if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-      {
+        wxi = 0;
+        wyi = 0;
+        wxa = imgv->xsize - 1;
+        wya = imgv->ysize - 1;
 
-        Message(FNAME, M_WRONG_WINDOW2, WRONG_WINDOW);
-        return Contur();
-      }
+        if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
+          throw IceException(FNAME, M_WRONG_WINDOW2);
 
-    if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return Contur();
-      }
+        if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
 
-    if (maxgap < 1) maxgap = 1;
-
-    pgl *= 6;
-    pgl *= pgl;
-
-    if ((val = GradVal(imgv, imgo, xs, ys, &startdir)) < pgl)
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return Contur();
-      }
-
-    gap = 0;
-    PutVal(imgo, xs, ys, 1);
-    c.SetStart(xs, ys); // set startpoint of Contur
-    xx = xs;
-    yy = ys;   // begin of contur following
-    aktdir = startdir; // save start direction
-    meangrad = val;    // strength of edges
-
-    do                 // start seraching backwards
-      {
-        maxgrad = 0;
-
-        for (dir = (aktdir + 1) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
+        if (maxgap < 1)
           {
-            Freeman(dir).move(xx, yy, xf, yf);
-            val = GradVal(imgv, imgo, xf, yf, &grdir);
+            maxgap = 1;
+          }
 
-            if (val < 0)
+        pgl *= 6;
+        pgl *= pgl;
+
+        if ((val = GradVal(imgv, imgo, xs, ys, &startdir)) < pgl)
+          throw IceException(FNAME, M_WRONG_STARTPOINT);
+
+        gap = 0;
+        PutVal(imgo, xs, ys, 1);
+        c.setStart(xs, ys); // set startpoint of Contur
+        xx = xs;
+        yy = ys;   // begin of contur following
+        aktdir = startdir; // save start direction
+        meangrad = val;    // strength of edges
+
+        do                 // start seraching backwards
+          {
+            maxgrad = 0;
+
+            for (dir = (aktdir + 1) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
               {
-                maxgrad = val;
+                Freeman(dir).move(xx, yy, xf, yf);
+                val = GradVal(imgv, imgo, xf, yf, &grdir);
+
+                if (val < 0)
+                  {
+                    maxgrad = val;
+                    break;
+                  }
+
+                if (val > maxgrad)
+                  {
+                    maxgrad = val;   /* maximalen Gradientenbetrag für 3 Richtungen*/
+                    maxdir = dir;
+                    nextdir = grdir;
+                  }
+              }
+
+            if (maxgrad < 0)
+              {
                 break;
               }
 
-            if (val > maxgrad)
+            if (maxgrad < pgl)
               {
-                maxgrad = val;   /* maximalen Gradientenbetrag für 3 Richtungen*/
-                maxdir = dir;
-                nextdir = grdir;
+                gap++;  /* kurze Lücken überspringen*/
               }
-          }
-
-        if (maxgrad < 0) break;
-
-        if (maxgrad < pgl) gap++;       /* kurze Lücken überspringen*/
-        else gap = 0;                  /* Lücke zuende*/
-
-        if (gap >= maxgap) break;       /* Lücke zu groß*/
-
-        Freeman(maxdir).move(xx, yy);
-        meangrad += maxgrad;           /* Kantenstärke aktualisieren */
-        PutVal(imgo, xx, yy, 1);
-        c.Add(maxdir);
-        aktdir = nextdir;              /* nächste Suchrichtung*/
-      }
-    while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
-
-    c.InvDir();
-
-    aktdir = startdir;            // restore start direction
-
-    do                            // search forward
-      {
-        maxgrad = 0;
-
-        for (dir = (aktdir + 5) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
-          {
-            Freeman(dir).move(xx, yy, xf, yf);
-            val = GradVal(imgv, imgo, xf, yf, &grdir);
-
-            if (val < 0)
+            else
               {
-                maxgrad = val;
+                gap = 0;  /* Lücke zuende*/
+              }
+
+            if (gap >= maxgap)
+              {
+                break;  /* Lücke zu groß*/
+              }
+
+            Freeman(maxdir).move(xx, yy);
+            meangrad += maxgrad;           /* Kantenstärke aktualisieren */
+            PutVal(imgo, xx, yy, 1);
+            c.add(maxdir);
+            aktdir = nextdir;              /* nächste Suchrichtung*/
+          }
+        while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
+
+        c.invertDir();
+
+        aktdir = startdir;            // restore start direction
+
+        do                            // search forward
+          {
+            maxgrad = 0;
+
+            for (dir = (aktdir + 5) & 7, i = 0; i < 3; dir = (dir + 1) & 7, i++)
+              {
+                Freeman(dir).move(xx, yy, xf, yf);
+                val = GradVal(imgv, imgo, xf, yf, &grdir);
+
+                if (val < 0)
+                  {
+                    maxgrad = val;
+                    break;
+                  }
+
+                if (val >= maxgrad)
+                  {
+                    maxgrad = val;     /* maximalen Gradientenbetrag für 3 Richtungen*/
+                    maxdir = dir;
+                    nextdir = grdir;
+                  }
+              }
+
+            if (maxgrad < 0)
+              {
                 break;
               }
 
-            if (val >= maxgrad)
+            if (maxgrad < pgl)
               {
-                maxgrad = val;     /* maximalen Gradientenbetrag für 3 Richtungen*/
-                maxdir = dir;
-                nextdir = grdir;
+                gap++;  /* kurze Lücken überspringen*/
+              }
+            else
+              {
+                gap = 0;  /* Lücke zuende*/
+              }
+
+            if (gap >= maxgap)
+              {
+                break;  /* Lücke zu groß*/
+              }
+
+            Freeman(maxdir).move(xx, yy);  /* nächster Konturpunkt*/
+            meangrad += maxgrad;           /* Kantenstärke aktualisieren*/
+            PutVal(imgo, xx, yy, 1);
+            c.add(maxdir);
+            aktdir = nextdir;              /* nächste Suchrichtung*/
+          }
+        while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
+
+        if (c.Number() == 0)
+          {
+            PutVal(imgo, xs, ys, 0);
+            return Contur();
+          }
+
+        for (dir = 0; dir < 8; dir++)
+          {
+            Freeman(dir).move(xx, yy, xf, yf);
+
+            if ((xf == c.StartX()) && (yf == c.StartY()))
+              {
+                c.add(dir);
+                meangrad += GradVal(imgv, imgo, xx, yy, &grdir);
+                break;
               }
           }
 
-        if (maxgrad < 0) break;
-
-        if (maxgrad < pgl) gap++;      /* kurze Lücken überspringen*/
-        else gap = 0;                  /* Lücke zuende*/
-
-        if (gap >= maxgap) break;      /* Lücke zu groß*/
-
-        Freeman(maxdir).move(xx, yy);  /* nächster Konturpunkt*/
-        meangrad += maxgrad;           /* Kantenstärke aktualisieren*/
-        PutVal(imgo, xx, yy, 1);
-        c.Add(maxdir);
-        aktdir = nextdir;              /* nächste Suchrichtung*/
+        meangrad = sqrt(meangrad / (c.Number() + 1)) / 6;
+        MarkContur(c, 0, imgo);
+        return c;
       }
-    while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys));
-
-    if (c.Number() == 0)
-      {
-        PutVal(imgo, xs, ys, 0);
-        return Contur();
-      }
-
-    for (dir = 0; dir < 8; dir++)
-      {
-        Freeman(dir).move(xx, yy, xf, yf);
-
-        if ((xf == c.StartX()) && (yf == c.StartY()))
-          {
-            c.Add(dir);
-            meangrad += GradVal(imgv, imgo, xx, yy, &grdir);
-            break;
-          }
-      }
-
-    meangrad = sqrt(meangrad / (c.Number() + 1)) / 6;
-    MarkContur(c, 0, imgo);
-    return c;
+    RETHROW;
   }
 
   Contur CalcGradContur(const Image& imgv, Image& imgo,
@@ -588,68 +680,116 @@ namespace ice
     vo += val;
     vl += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x++;
     val = GetVal(img, x, y);
     vo += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x++;
     val = GetVal(img, x, y);
     vo += val;
     vr += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     y++;
     val = GetVal(img, x, y);
     vr += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     y++;
     val = GetVal(img, x, y);
     vr += val;
     vu += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x--;
     val = GetVal(img, x, y);
     vu += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     x--;
     val = GetVal(img, x, y);
     vu += val;
     vl += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     y--;
     val = GetVal(img, x, y);
     vl += val;
 
-    if (val < min) min = val;
+    if (val < min)
+      {
+        min = val;
+      }
 
-    if (val > max) max = val;
+    if (val > max)
+      {
+        max = val;
+      }
 
     Gradient(vu - vo, vr - vl, &dir);
     Freeman(dir).move(s[0], s[1], x1, y1);
@@ -657,9 +797,13 @@ namespace ice
     thr = (GetVal(img, x1, y1) + GetVal(img, x2, y2)) / 2;
 
     if (thr > start)
-      return start;
+      {
+        return start;
+      }
     else
-      return thr;
+      {
+        return thr;
+      }
   }
   /************************************************/
   int grd(const Image& img, int x, int y)
@@ -716,7 +860,7 @@ namespace ice
 
     do
       {
-        if ((g >= pgl) && (((dir - c.DirCode(index)) & 7) < 3)) /*Schwelle überschritten*/
+        if ((g >= pgl) && (((dir - c.DirCode(index)) & 7) < 3))   /*Schwelle überschritten*/
           {
             do                          /*lokales Maximum suchen*/
               {
@@ -737,7 +881,10 @@ namespace ice
                 c.getPoint(1, x, y);
                 g = GradVal(imgv, imgo, x, y, &dir);
 
-                if (g > g1) return NOT_FOUND;
+                if (g > g1)
+                  {
+                    return NOT_FOUND;
+                  }
               }
 
             h = 0;
@@ -754,7 +901,9 @@ namespace ice
               }
 
             if (h == 0)
-              return OK;
+              {
+                return OK;
+              }
           }
 
         index++;                            /*nächsten Konturpunkt*/
@@ -788,7 +937,7 @@ namespace ice
 
     do
       {
-        if ((g >= pgl) && (((dir - c.DirCode(i)) & 7) < 3)) /*Schwelle überschritten*/
+        if ((g >= pgl) && (((dir - c.DirCode(i)) & 7) < 3))   /*Schwelle überschritten*/
           {
             do                          /*lokales Maximum suchen*/
               {
@@ -868,10 +1017,7 @@ namespace ice
     ys = ps[1];
 
     if (cls == NULL)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return Contur();
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     // Test vom Startpunkt alle acht Richtungen nach links beginnend
     Freeman dir(4);
@@ -886,10 +1032,7 @@ namespace ice
       }
 
     if (cr == 4)                    /* Startpunkt liegt im Objekt */
-      {
-        Message(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-        return Contur();
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT3);
 
     cr = 0;                        /* Zähler untersuchte Richtungen */
     dir.move(xs, ys, xf, yf);
@@ -902,12 +1045,9 @@ namespace ice
       }
 
     if (cr == 8)                    /* Startpunkt liegt im Untergrund */
-      {
-        Message(FNAME, M_WRONG_STARTPOINT2, WRONG_STARTPOINT);
-        return Contur();
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT2);
 
-    c.SetStart(xs, ys);
+    c.setStart(xs, ys);
 
     xx = xs;
     yy = ys;                   /* Beginn der Konturfolge */
@@ -917,7 +1057,7 @@ namespace ice
     do
       {
         dir.move(xx, yy);
-        c.Add(dir);
+        c.add(dir);
         dir = dir + 6;                   /* neue Richtung bestimmen */
         dir.move(xx, yy, xf, yf);
 
@@ -926,7 +1066,10 @@ namespace ice
             dir = dir + 1;
             dir.move(xx, yy, xf, yf);
 
-            if (cl == -4) break;         /* Abbruch, Kontur offen lassen */
+            if (cl == -4)
+              {
+                break;  /* Abbruch, Kontur offen lassen */
+              }
           }
       }
     while ((lng <= 0 || c.Number() < lng) && !(xx == xs && yy == ys && dir == startdir) && cl != -4);

@@ -31,7 +31,10 @@ namespace ice
   {
     int points = pl.size();
 
-    if (points < 4) return true;
+    if (points < 4)
+      {
+        return true;
+      }
 
     LineSeg e1;
 
@@ -46,7 +49,9 @@ namespace ice
             Edge(j, e2);
 
             if (e1.Intersection(e2))
-              return false;
+              {
+                return false;
+              }
           }
       }
 
@@ -62,10 +67,7 @@ namespace ice
     Contur c;
 
     if (!isValid())
-      {
-        Message(FNAME, M_INVALID_STRUCT, ERROR);
-        return c;
-      }
+      throw IceException(FNAME, M_INVALID_STRUCT);
 
     c.SetStart(IPoint(pl[0]));
 
@@ -110,19 +112,30 @@ namespace ice
       {
       case DPP_MIN:
 
-        if (dist1 < dist2) return dist1;
-        else return dist2;
+        if (dist1 < dist2)
+          {
+            return dist1;
+          }
+        else
+          {
+            return dist2;
+          }
 
       case DPP_MAX:
 
-        if (dist1 > dist2) return dist1;
-        else return dist2;
+        if (dist1 > dist2)
+          {
+            return dist1;
+          }
+        else
+          {
+            return dist2;
+          }
 
       case DPP_MEAN:
         return 0.5 * (dist1 + dist2);
       default:
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return 0.0;
+        throw IceException(FNAME, M_WRONG_MODE);
       }
   }
 
@@ -138,24 +151,32 @@ namespace ice
           {
           case DPP_MIN:
 
-            if (pdist < dist) dist = pdist;
+            if (pdist < dist)
+              {
+                dist = pdist;
+              }
 
             break;
           case DPP_MAX:
 
-            if (pdist > dist) dist = pdist;
+            if (pdist > dist)
+              {
+                dist = pdist;
+              }
 
             break;
           case DPP_MEAN:
             dist += pdist;
             break;
           default:
-            Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-            return 0.0;
+            throw IceException(FNAME, M_WRONG_MODE);
           }
       }
 
-    if (pmode == DPP_MEAN) dist /= p.pl.size();
+    if (pmode == DPP_MEAN)
+      {
+        dist /= p.pl.size();
+      }
 
     return dist;
   }
@@ -193,7 +214,9 @@ namespace ice
     p.Reset(npl[0]);
 
     for (unsigned int i = 1; i < npl.size(); i++)
-      p.Add(npl[i]);
+      {
+        p.add(npl[i]);
+      }
   }
 
 #undef FNAME

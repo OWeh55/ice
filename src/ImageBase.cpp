@@ -21,7 +21,7 @@
 
 #include <limits.h>
 
-#include "message.h"  // for printing error messages
+#include "IceException.h"
 #include "util.h"     // for MulDiv
 #include "macro.h"    // for min/max functions
 #include "ImageBase.h"
@@ -46,12 +46,16 @@ namespace ice
   {
 #ifdef CONTROLLED_REFRESH
     if (parent == nullptr)
-      tsp = &timestamp;
+      {
+        tsp = &timestamp;
+      }
     else
       {
         // get root of child tree
         while (par->parent != nullptr)
-          par = par->parent;
+          {
+            par = par->parent;
+          }
 
         tsp = & (par->timestamp);
       }
@@ -66,14 +70,13 @@ namespace ice
   int ImageBase::set(int grayvalue)
   {
     if (grayvalue > maxval)
-      {
-        ice::Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (int y = 0; y < ysize; y++)
       for (int x = 0; x < xsize; x++)
-        setP(x, y, grayvalue);
+        {
+          setP(x, y, grayvalue);
+        }
 
 #ifdef CONTROLLED_REFRESH
     needRefresh();

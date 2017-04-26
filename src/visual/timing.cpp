@@ -32,7 +32,10 @@ namespace ice
   {
     int i, ni;
     ni = n % TIMERNR;
-    for (i = 0; i < n; i++) Printf(" ");
+    for (i = 0; i < n; i++)
+      {
+        Printf(" ");
+      }
     Printf("Begin %s\n", s);
     startt[ni] = TimeD(TM_PROCESS);
     run[ni] = true;
@@ -42,7 +45,10 @@ namespace ice
   {
     int ni;
     ni = n % TIMERNR;
-    if (run[ni]) startt[ni] = TimeD(TM_PROCESS) - startt[ni];
+    if (run[ni])
+      {
+        startt[ni] = TimeD(TM_PROCESS) - startt[ni];
+      }
     run[ni] = false;
   }
 
@@ -50,7 +56,10 @@ namespace ice
   {
     int ni;
     ni = n % TIMERNR;
-    if (!run[ni]) startt[n] = TimeD(TM_PROCESS) - startt[n];
+    if (!run[ni])
+      {
+        startt[n] = TimeD(TM_PROCESS) - startt[n];
+      }
     run[ni] = true;
   }
 
@@ -58,8 +67,14 @@ namespace ice
   {
     int i, ni;
     ni = n % 10;
-    for (i = 0; i < n; i++) Printf(" ");
-    if (run[ni]) Stop(ni);
+    for (i = 0; i < n; i++)
+      {
+        Printf(" ");
+      }
+    if (run[ni])
+      {
+        Stop(ni);
+      }
     Printf("End %s (%6.2f)\n", s, startt[ni]);
   }
 }

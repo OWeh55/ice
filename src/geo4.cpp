@@ -25,37 +25,54 @@
 // simple geometric transformations on images
 namespace ice
 {
-#define FNAME "Shift"
-  int Shift(const Image& simg, const Image& dimg, int dx, int dy, int mode)
+#define FNAME "shift"
+  void shift(const Image& simg, const Image& dimg, int dx, int dy, int mode)
   {
-    int sx, sy;
-    RETURN_ERROR_IF_FAILED(MatchImg(simg, dimg, sx, sy));
-
-    Image himg = simg;
-
-    if (simg == dimg)
-      himg = NewImg(simg, true);
-
-    for (int y = 0; y < sy; y++)
+    try
       {
-        int yo = y - dy;
+        int sx, sy, mv;
+        checkImage(simg, dimg, sx, sy, mv);
 
-        if (yo < 0) yo += sy;
-        else yo = yo % sy;
+        Image himg = simg;
 
-        for (int x = 0; x < sx; x++)
+        if (simg == dimg)
           {
-            int xo = x - dx;
+            himg = NewImg(simg, true);
+          }
 
-            if (xo < 0) xo += sx;
-            else xo = xo % sx;
+        for (int y = 0; y < sy; y++)
+          {
+            int yo = y - dy;
 
-            PutVal(dimg, x, y, GetVal(himg, xo, yo));
+            if (yo < 0)
+              {
+                yo += sy;
+              }
+            else
+              {
+                yo = yo % sy;
+              }
+
+            for (int x = 0; x < sx; x++)
+              {
+                int xo = x - dx;
+
+                if (xo < 0)
+                  {
+                    xo += sx;
+                  }
+                else
+                  {
+                    xo = xo % sx;
+                  }
+
+                dimg.setPixel(x, y, himg.getPixel(xo, yo));
+              }
           }
       }
-
-    return OK;
+    RETHROW;
   }
+#undef FNAME
 
 } // namespace ice
-#undef FNAME
+

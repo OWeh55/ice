@@ -49,7 +49,7 @@ namespace ice
   double  AngleVec(double v1[3], double v2[3]);
 
   /*** n-dimensionale Vektoralgebra **********************************/
-  int     PrintVecRn(const char* str, double* h, int dim);
+  void    PrintVecRn(const char* str, double* h, int dim);
   double  LengthVecRn(double* v, int dim);
   double* MoveVecRn(double* v1, int dim, double* v2);
   double* AddVecRn(double* v1, double* v2, int dim, double* v3);
@@ -58,8 +58,8 @@ namespace ice
   double* ScaleVecRn(double* v1, int dim, double fac, double v2[3]);
   double  ScalProdVecRn(double* v1, double* v2, int dim);
   double  AngleVecRn(double* v1, double* v2, int dim);
-  int     SortVectorRn(double* v, int dim);
-  int     ConvVecDI(double* d, int dim, int* i);
-  int     ConvVecID(int* i, int dim, double* d);
+  void    SortVectorRn(double* v, int dim);
+  void    ConvVecDI(double* d, int dim, int* i);
+  void    ConvVecID(int* i, int dim, double* d);
 }
 #endif

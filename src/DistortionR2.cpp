@@ -69,9 +69,13 @@ namespace ice
             double fs = frs(rectified_radius);   // f'(rectified_radius)
 
             if (fs != 0.0)
-              rectified_radius -= afr / fs;      // Newton
+              {
+                rectified_radius -= afr / fs;  // Newton
+              }
             else
-              rectified_radius -= 1.0; // weiss nichts besseres
+              {
+                rectified_radius -= 1.0;  // weiss nichts besseres
+              }
 
             ct++;
           }

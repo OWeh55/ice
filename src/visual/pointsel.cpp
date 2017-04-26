@@ -52,10 +52,7 @@ namespace ice
     int rc;
     RETURN_ERROR_IF_FAILED(v = GetVisual(img));
     if (v == NULL)
-      {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_VIS);
     rc = v->SelPoint(mode, p);
     point[0] = p.x;
     point[1] = p.y;
@@ -67,13 +64,13 @@ namespace ice
 #define FNAME "SelVector"
   IVector SelVector(int mode, const Image& img, int& rc)
   {
-    int point[2];
-    IF_FAILED(rc = SelPoint(mode, img, point))
-    {
-      Message(FNAME, M_0, ERROR);
-      return IVector();
-    }
-    return IVector(point[0], point[1]);
+    try
+      {
+        int point[2];
+        rc = SelPoint(mode, img, point);
+        return IVector(point[0], point[1]);
+      }
+    RETHROW;
   }
 
   IVector SelVector(int mode, const Image& img)
@@ -98,11 +95,7 @@ namespace ice
   IPoint SelPoint(int mode, const Image& img, int& rc)
   {
     int point[2];
-    IF_FAILED(rc = SelPoint(mode, img, point))
-    {
-      Message(FNAME, M_0, ERROR);
-      return IPoint(point[0], point[1]);
-    }
+    rc = SelPoint(mode, img, point);
     return IPoint(point[0], point[1]);
   }
 
@@ -127,10 +120,7 @@ namespace ice
   {
     Visual v = GetVisual(img);
     if (NULL == v)
-      {
-        Message(FNAME, M_NOT_VIS, WRONG_PARAM);
-        return IPoint(0, 0);
-      }
+      throw IceException(FNAME, M_NOT_VIS);
     IPoint p(0, 0);
     v->SelPoint(DEFAULT, p);
     return p;

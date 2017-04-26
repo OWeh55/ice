@@ -23,7 +23,7 @@
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "Vector.h"
 #include "lmdif.h"
 
@@ -41,12 +41,18 @@ namespace ice
     int i;
 
     // get parameters from double[] to Vector
-    for (i = 0; i < n; i++)(*varvec)[(*optvec)[i]] = x[i];
+    for (i = 0; i < n; i++)
+      {
+        (*varvec)[(*optvec)[i]] = x[i];
+      }
 
     function(*varvec, *funcresult);
 
     // return distances as double[]
-    for (i = 0; i < m; i++) fva[i] = (*funcresult)[i];
+    for (i = 0; i < m; i++)
+      {
+        fva[i] = (*funcresult)[i];
+      }
 
     return 0;
   }
@@ -57,25 +63,16 @@ namespace ice
     int i;
 
     if (running)
-      {
-        Message(FNAME, M_NOT_NESTED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_NESTED);
 
     int optnumber = optvar.Size();
 
     if ((optnumber < 1) || (optnumber > variable.Size() || funcdim < optnumber))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     for (i = 0; i < optnumber; i++)
       if (optvar[i] >= variable.Size())
-        {
-          Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          return ERROR;
-        }
+        throw IceException(FNAME, M_WRONG_PARAM);
 
     running = true;
     varvec = new Vector(variable);
@@ -85,7 +82,9 @@ namespace ice
     double* x = new double[optnumber];
 
     for (i = 0; i < optnumber; i++)
-      x[i] = variable[optvar[i]];
+      {
+        x[i] = variable[optvar[i]];
+      }
 
     function = fcn;
 
@@ -98,11 +97,14 @@ namespace ice
     if (info == 0)
       {
         /* Fehler sollte nicht auftreten, da vorher getestet */
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM); // Fehler melden
+        throw IceException(FNAME, M_WRONG_PARAM);
         info = ERROR; // Rückgabewert vorbereiten
       }
 
-    for (i = 0; i < optnumber; i++) variable[optvar[i]] = x[i];
+    for (i = 0; i < optnumber; i++)
+      {
+        variable[optvar[i]] = x[i];
+      }
 
     delete varvec;
     delete optvec;

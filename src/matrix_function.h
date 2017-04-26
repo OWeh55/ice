@@ -33,7 +33,7 @@
 namespace ice
 {
 
-  /*** Matrizenalgebra ************************************************/
+  /*** Matrixalgebra ************************************************/
   double* DefMatrix(double* m, int row, int col, int option);
 
   double* SetMatrix(double* m, int row, int col, double val);
@@ -73,6 +73,5 @@ namespace ice
   int IsMatrixAnti(double* a, int dim, double* eps);
   int IsMatrixRegular(double* a, int dim, double* eps);
   int IsMatrixPosDef(double* a, int dim);
-
 }
 #endif

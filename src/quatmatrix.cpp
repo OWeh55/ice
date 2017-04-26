@@ -24,7 +24,7 @@
  * Author: Alexander Lärz, 2005
  */
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 
 #include "quatmatrix.h"
@@ -52,13 +52,12 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return;
+            throw IceException(FNAME, M_NO_MEM);
           }
       }
     else
       {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_MATRIX);
+        throw IceException(FNAME, M_MATRIXFORMAT);
         data = nullptr;
         return;
       }
@@ -82,8 +81,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return;
+            throw IceException(FNAME, M_NO_MEM);
           }
       }
     else
@@ -107,7 +105,10 @@ namespace ice
 
     if (data != nullptr)
       {
-        for (int i = 0; i < int(rows); i++) delete data[i];
+        for (int i = 0; i < int(rows); i++)
+          {
+            delete data[i];
+          }
 
         free(data);
       }
@@ -121,8 +122,7 @@ namespace ice
 
         if (data == nullptr)
           {
-            Message("operator=", M_NO_MEM, NO_MEM);
-            return *this;
+            throw IceException("operator=", M_NO_MEM);
           }
       }
     else
@@ -167,8 +167,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(rows)))
       {
-        Message("operator[]", "Wrong index", WRONG_PARAM);
-        return *data[0];
+        throw IceException("operator[]", "Wrong index");
       }
 
     return *data[i];
@@ -178,8 +177,7 @@ namespace ice
   {
     if ((i < 0) || (i >= int(rows)))
       {
-        Message("operator[]", "Wrong index", WRONG_PARAM);
-        return *data[0];
+        throw IceException("operator[]", "Wrong index");
       }
 
     return *data[i];
@@ -189,8 +187,7 @@ namespace ice
   {
     if ((qm1.rows != qm2.rows) || (qm1.columns != qm2.columns))
       {
-        Message("operator+", "Format doesn't match", WRONG_PARAM);
-        return qm1;
+        throw IceException("operator+", "Format doesn't match");
       }
 
     QuatMatrix res(qm1.rows, qm1.columns);
@@ -207,8 +204,7 @@ namespace ice
   {
     if ((qm1.rows != qm2.rows) || (qm1.columns != qm2.columns))
       {
-        Message("operator+", "Format doesn't match", WRONG_PARAM);
-        return qm1;
+        throw IceException("operator+", "Format doesn't match");
       }
 
     QuatMatrix res(qm1.rows, qm1.columns);
@@ -271,13 +267,22 @@ namespace ice
 
   bool operator==(const QuatMatrix& qm1, const QuatMatrix& qm2)
   {
-    if (qm1.rows != qm2.rows) return false;
+    if (qm1.rows != qm2.rows)
+      {
+        return false;
+      }
 
-    if (qm2.columns != qm2.columns) return false;
+    if (qm2.columns != qm2.columns)
+      {
+        return false;
+      }
 
     for (int i = 0; i < int(qm1.rows); i++)
       {
-        if (*qm1.data[i] != *qm2.data[i])return false;
+        if (*qm1.data[i] != *qm2.data[i])
+          {
+            return false;
+          }
 
       }
 
@@ -297,7 +302,10 @@ namespace ice
       {
         os << *qm.data[i];
 
-        if (i < int(qm.rows) - 1) os << ',' ;
+        if (i < int(qm.rows) - 1)
+          {
+            os << ',' ;
+          }
 
         os << endl ;
       }

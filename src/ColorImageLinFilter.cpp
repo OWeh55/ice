@@ -26,8 +26,8 @@
  * Anyway no automatic conversion will be done, to provide the filters to be
  * used in any color space.
  *
- * int SmearImg(const ColorImage &src, const ColorImage &dest, int n=3)
- * int SmearImg(const ColorImage &src, const ColorImage &dest, int nx, int ny)
+ * int smearImg(const ColorImage &src, const ColorImage &dest, int n=3)
+ * int smearImg(const ColorImage &src, const ColorImage &dest, int nx, int ny)
  * int DoBImg(const ColorImage &src, const ColorImage &dest, int n1, int n2, int mode=MD_NORMALIZE)
  * int GradXImg(const ColorImage &src, const ColorImage &dest, int norm=1)
  * int GradYImg(const ColorImage &src, const ColorImage &dest, int norm=1)
@@ -53,186 +53,189 @@ namespace ice
 {
   /********************* SMOOTHNESS FILTERS ********************/
 
-#define FNAME "SmearImg"
-  int SmearImg(const ColorImage& src, const ColorImage& dest, int n)
+#define FNAME "smearImg"
+  void smearImg(const ColorImage& src, const ColorImage& dest, int n)
   {
-    return SmearImg(src, dest, n, n);
+    smearImg(src, dest, n, n);
   }
 
-  int SmearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny)
+  void smearImg(const ColorImage& src, const ColorImage& dest, int nx, int ny)
   {
-    if (!src.isValid() || !dest.isValid())
+    try
       {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
+        smearImg(src.redImage(), dest.redImage(), nx, ny);
+        smearImg(src.greenImage(), dest.greenImage(), nx, ny);
+        smearImg(src.blueImage(), dest.blueImage(), nx, ny);
       }
-
-    RETURN_ERROR_IF_FAILED((SmearImg(src.redImage(), dest.redImage(), nx, ny)));
-    RETURN_ERROR_IF_FAILED((SmearImg(src.greenImage(), dest.greenImage(), nx, ny)));
-    RETURN_ERROR_IF_FAILED((SmearImg(src.blueImage(), dest.blueImage(), nx, ny)));
-
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "DoBImg"
-  int DoBImg(const ColorImage& src, const ColorImage& dest, int n1, int n2, int smode)
+  void DoBImg(const ColorImage& src, const ColorImage& dest, int n1, int n2, int smode)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-    RETURN_ERROR_IF_FAILED(DoBImg(src.redImage(), dest.redImage(), n1, n2, smode));
-    RETURN_ERROR_IF_FAILED(DoBImg(src.greenImage(), dest.greenImage(), n1, n2, smode));
-    RETURN_ERROR_IF_FAILED(DoBImg(src.blueImage(), dest.blueImage(), n1, n2, smode));
-    return OK;
+    try
+      {
+        DoBImg(src.redImage(), dest.redImage(), n1, n2, smode);
+        DoBImg(src.greenImage(), dest.greenImage(), n1, n2, smode);
+        DoBImg(src.blueImage(), dest.blueImage(), n1, n2, smode);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "MeanImg"
-  int MeanImg(const ColorImage& src, const ColorImage& dest)
+  void MeanImg(const ColorImage& src, const ColorImage& dest)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-    RETURN_ERROR_IF_FAILED((MeanImg(src.redImage(), dest.redImage())));
-    RETURN_ERROR_IF_FAILED((MeanImg(src.greenImage(), dest.greenImage())));
-    RETURN_ERROR_IF_FAILED((MeanImg(src.blueImage(), dest.blueImage())));
-
-    return OK;
+    try
+      {
+        MeanImg(src.redImage(), dest.redImage());
+        MeanImg(src.greenImage(), dest.greenImage());
+        MeanImg(src.blueImage(), dest.blueImage());
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "GaussImg"
-  int GaussImg(const ColorImage& src, int neighb, double sigma, const ColorImage& dest)
+  void GaussImg(const ColorImage& src, int neighb, double sigma, const ColorImage& dest)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-    RETURN_ERROR_IF_FAILED((GaussImg(src.redImage(), dest.redImage(), neighb, sigma)));
-    RETURN_ERROR_IF_FAILED((GaussImg(src.greenImage(), dest.greenImage(), neighb, sigma)));
-    RETURN_ERROR_IF_FAILED((GaussImg(src.blueImage(), dest.blueImage(), neighb, sigma)));
-
-    return OK;
+    try
+      {
+        GaussImg(src.redImage(), dest.redImage(), neighb, sigma);
+        GaussImg(src.greenImage(), dest.greenImage(), neighb, sigma);
+        GaussImg(src.blueImage(), dest.blueImage(), neighb, sigma);
+      }
+    RETHROW;
   }
 #undef FNAME
 
   /****************************** ****************************/
 
 #define FNAME "GradXImg"
-  int GradXImg(const ColorImage& src, const ColorImage& dest, int norm)
+  void GradXImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((GradXImg(src.redImage(), dest.redImage())));
-    RETURN_ERROR_IF_FAILED((GradXImg(src.greenImage(), dest.greenImage())));
-    RETURN_ERROR_IF_FAILED((GradXImg(src.blueImage(), dest.blueImage())));
-
-    return OK;
+    try
+      {
+        GradXImg(src.redImage(), dest.redImage());
+        GradXImg(src.greenImage(), dest.greenImage());
+        GradXImg(src.blueImage(), dest.blueImage());
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "GradYImg"
-  int GradYImg(const ColorImage& src, const ColorImage& dest, int norm)
+  void GradYImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((GradYImg(src.redImage(), dest.redImage(), norm)));
-    RETURN_ERROR_IF_FAILED((GradYImg(src.greenImage(), dest.greenImage(), norm)));
-    RETURN_ERROR_IF_FAILED((GradYImg(src.blueImage(), dest.blueImage(), norm)));
-
-    return OK;
+    try
+      {
+        GradYImg(src.redImage(), dest.redImage(), norm);
+        GradYImg(src.greenImage(), dest.greenImage(), norm);
+        GradYImg(src.blueImage(), dest.blueImage(), norm);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "LaplaceXImg"
-  int LaplaceXImg(const ColorImage& src, const ColorImage& dest, int norm)
+  void LaplaceXImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((LaplaceXImg(src.redImage(), dest.redImage(), norm)));
-    RETURN_ERROR_IF_FAILED((LaplaceXImg(src.greenImage(), dest.greenImage(), norm)));
-    RETURN_ERROR_IF_FAILED((LaplaceXImg(src.blueImage(), dest.blueImage(), norm)));
-
-    return OK;
+    try
+      {
+        LaplaceXImg(src.redImage(), dest.redImage(), norm);
+        LaplaceXImg(src.greenImage(), dest.greenImage(), norm);
+        LaplaceXImg(src.blueImage(), dest.blueImage(), norm);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "LaplaceYImg"
-  int LaplaceYImg(const ColorImage& src, const ColorImage& dest, int norm)
+  void LaplaceYImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((LaplaceYImg(src.redImage(), dest.redImage(), norm)));
-    RETURN_ERROR_IF_FAILED((LaplaceYImg(src.greenImage(), dest.greenImage(), norm)));
-    RETURN_ERROR_IF_FAILED((LaplaceYImg(src.blueImage(), dest.blueImage(), norm)));
-
-    return OK;
+    try
+      {
+        LaplaceYImg(src.redImage(), dest.redImage(), norm);
+        LaplaceYImg(src.greenImage(), dest.greenImage(), norm);
+        LaplaceYImg(src.blueImage(), dest.blueImage(), norm);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "LaplaceImg"
-  int LaplaceImg(const ColorImage& src, const ColorImage& dest, int norm)
+  void LaplaceImg(const ColorImage& src, const ColorImage& dest, int norm)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((LaplaceImg(src.redImage(), dest.redImage(), norm)));
-    RETURN_ERROR_IF_FAILED((LaplaceImg(src.greenImage(), dest.greenImage(), norm)));
-    RETURN_ERROR_IF_FAILED((LaplaceImg(src.blueImage(), dest.blueImage(), norm)));
-
-    return OK;
+    try
+      {
+        LaplaceImg(src.redImage(), dest.redImage(), norm);
+        LaplaceImg(src.greenImage(), dest.greenImage(), norm);
+        LaplaceImg(src.blueImage(), dest.blueImage(), norm);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "LSIImg"
-  int LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, int* mask, int norm, int offset)
+  void LSIImg(const ColorImage& src, const ColorImage& dest,
+              int nx, int ny, int* mask, int norm, int offset)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, norm, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, norm, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, norm, offset)));
-
-    return OK;
+    try
+      {
+        LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, norm, offset);
+        LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, norm, offset);
+        LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, norm, offset);
+      }
+    RETHROW;
   }
 
-  int LSIImg(const ColorImage& src, const ColorImage& dest, int nx, int ny, double* mask, int offset)
+  void LSIImg(const ColorImage& src, const ColorImage& dest,
+              int nx, int ny, double* mask, int offset)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, offset)));
-
-    return OK;
+    try
+      {
+        LSIImg(src.redImage(), dest.redImage(), nx, ny, mask, offset);
+        LSIImg(src.greenImage(), dest.greenImage(), nx, ny, mask, offset);
+        LSIImg(src.blueImage(), dest.blueImage(), nx, ny, mask, offset);
+      }
+    RETHROW;
   }
 
-  int LSIImg(const ColorImage& src, const ColorImage& dest, const Matrix& mask, int offset)
+  void LSIImg(const ColorImage& src, const ColorImage& dest, const Matrix& mask, int offset)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), mask, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), mask, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), mask, offset)));
-
-    return OK;
+    try
+      {
+        LSIImg(src.redImage(), dest.redImage(), mask, offset);
+        LSIImg(src.greenImage(), dest.greenImage(), mask, offset);
+        LSIImg(src.blueImage(), dest.blueImage(), mask, offset);
+      }
+    RETHROW;
   }
 
-  int LSIImg(const ColorImage& src, const ColorImage& dest, const IMatrix& mask, int norm, int offset)
+  void LSIImg(const ColorImage& src, const ColorImage& dest,
+              const IMatrix& mask, int norm, int offset)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((LSIImg(src.redImage(), dest.redImage(), mask, norm, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.greenImage(), dest.greenImage(), mask, norm, offset)));
-    RETURN_ERROR_IF_FAILED((LSIImg(src.blueImage(), dest.blueImage(), mask, norm, offset)));
-
-    return OK;
+    try
+      {
+        LSIImg(src.redImage(), dest.redImage(), mask, norm, offset);
+        LSIImg(src.greenImage(), dest.greenImage(), mask, norm, offset);
+        LSIImg(src.blueImage(), dest.blueImage(), mask, norm, offset);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "MexicanHatImg"
-  int MexicanHatImg(const ColorImage& src, const ColorImage& dest, double sigma, int neighb)
+  void MexicanHatImg(const ColorImage& src, const ColorImage& dest, double sigma, int neighb)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-
-    RETURN_ERROR_IF_FAILED((MexicanHatImg(src.redImage(), dest.redImage(), sigma, neighb)));
-    RETURN_ERROR_IF_FAILED((MexicanHatImg(src.greenImage(), dest.greenImage(), sigma, neighb)));
-    RETURN_ERROR_IF_FAILED((MexicanHatImg(src.blueImage(), dest.blueImage(), sigma, neighb)));
-
-    return OK;
+    try
+      {
+        MexicanHatImg(src.redImage(), dest.redImage(), sigma, neighb);
+        MexicanHatImg(src.greenImage(), dest.greenImage(), sigma, neighb);
+        MexicanHatImg(src.blueImage(), dest.blueImage(), sigma, neighb);
+      }
+    RETHROW;
   }
 #undef FNAME
 

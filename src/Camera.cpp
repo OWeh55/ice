@@ -142,18 +142,21 @@ namespace ice
     // must be called, before trafo tr is used
     // all methods, that change parameters, must
     // set c_val to false!
-    if (c_val) return;
+    if (c_val)
+      {
+        return;
+      }
 
     // Trafo zusammensetzen
     tr = Trafo(3, 3);
 
     // Bewegung Weltkoordinaten -> Kamerakoordinaten
     // x_w -> x_k
-    tr.Shift(-dx, -dy, -dz);
+    tr.shift(-dx, -dy, -dz);
 
-    tr.RotateZ(alpha);
-    tr.RotateY(beta);
-    tr.RotateX(gamma);
+    tr.rotateZ(alpha);
+    tr.rotateY(beta);
+    tr.rotateX(gamma);
 
     // Transformation Kamerakoordinaten -> (unverzerrte) Bildkoordinaten
     // x_k -> uv
@@ -165,9 +168,9 @@ namespace ice
     //
 
     tr.Projective(); // 3d -> 2d
-    tr.ShearX(s);
-    tr.Scale(0, 0, f, -a * f);
-    tr.Shift(u0, v0);
+    tr.shearX(s);
+    tr.scale(0, 0, f, -a * f);
+    tr.shift(u0, v0);
 
     c_val = true;
   }
@@ -199,13 +202,15 @@ namespace ice
       }
 
     if ((what == all) || (what == internal))
-      res.Append(dist->MakeVector());
+      {
+        res.Append(dist->makeVector());
+      }
 
     return res;
   }
 
 // Parameter nach Vektor setzen
-  void Camera::Set(const Vector& res, int what)
+  void Camera::set(const Vector& res, int what)
   {
     int i = 0;
 
@@ -244,15 +249,15 @@ namespace ice
         switch (disttyp)
           {
           case 1:
-            dist->Set(res(i, i + 3));
+            dist->set(res(i, i + 3));
             i += 4;
             break;
           case 2:
-            dist->Set(res(i, i + 4));
+            dist->set(res(i, i + 4));
             i += 5;
             break;
           case 3:
-            dist->Set(res(i, i + 4));
+            dist->set(res(i, i + 4));
             i += 5;
             break;
           }
@@ -261,7 +266,7 @@ namespace ice
     c_val = false;
   }
 
-  void Camera::Set(double fp, double ap, double sp, double u0p, double v0p)
+  void Camera::set(double fp, double ap, double sp, double u0p, double v0p)
   {
     f = fp;
     a = ap;
@@ -273,7 +278,7 @@ namespace ice
     c_val = false;
   }
 
-  void Camera::Get(double& fp, double& ap, double& sp,
+  void Camera::get(double& fp, double& ap, double& sp,
                    double& u0p, double& v0p) const
   {
     fp = f;
@@ -284,15 +289,15 @@ namespace ice
     v0p = v0;
   }
 
-  void Camera::Set(double fp, double ap, double sp,
+  void Camera::set(double fp, double ap, double sp,
                    double u0p, double v0p, const Distortion& d)
   {
-    Set(fp, ap, sp, u0p, v0p);
+    set(fp, ap, sp, u0p, v0p);
     assign(d);
     c_val = false;
   }
 
-  void Camera::SetExt(double dxp, double dyp, double dzp,
+  void Camera::setExt(double dxp, double dyp, double dzp,
                       double ap, double bp, double cp)
   {
     dx = dxp;
@@ -304,7 +309,7 @@ namespace ice
     c_val = false;
   }
 
-  void Camera::GetExt(double& dxp, double& dyp, double& dzp,
+  void Camera::getExt(double& dxp, double& dyp, double& dzp,
                       double& ap, double& bp, double& cp) const
   {
     dxp = dx;
@@ -315,68 +320,70 @@ namespace ice
     cp = gamma;
   }
 
-  void Camera::SetDist(const Distortion& d)
+  void Camera::setDist(const Distortion& d)
   {
     assign(d);
   }
 
-
-  Trafo& Camera::GetTrafo() const
+  Trafo& Camera::getTrafo() const
   {
     create_trans();
     return tr;
   }
 
-#define FNAME "Camera::Transform"
-  Vector Camera::Transform(const Vector& v) const
+#define FNAME "Camera::transform"
+  Vector Camera::transform(const Vector& v) const
   {
     Vector vh(2);
     create_trans();
 
     if (v.size() != 3)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return vh;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     vh = tr * v;
     vh = dist->Distort(vh);
     return vh;
   }
 
-  Point Camera::Transform(const Vector3d& p) const
+  Point Camera::transform(const Vector3d& p) const
   {
     create_trans();
     Point res;
-    ice::Transform(tr, p.x, p.y, p.z, res.x, res.y);
+    ice::transform(tr, p.x, p.y, p.z, res.x, res.y);
     dist->Distort(res.x, res.y);
     return res;
   }
 
-  void Camera::Transform(double x, double y, double z, double& u, double& v) const
+  void Camera::transform(double x, double y, double z, double& u, double& v) const
   {
     create_trans();
-    ice::Transform(tr, x, y, z, u, v);
+    ice::transform(tr, x, y, z, u, v);
     dist->Distort(u, v);
   }
 #undef FNAME
 #define FNAME "Camera::Ray"
   Line3d Camera::Ray(const Point& bp) const
   {
-    int i;
-    create_trans(); // Transformation erzeugen
-    Vector bpu(dist->Rect(bp));// Unverzeichneter Bildpunkt
-    bpu.Append(1); // in homogene Koordinaten umwandeln
-    Matrix T = tr.Tmatrix(); // Transformationsmatrix
-    Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)
-    Vector a(3);
+    try
+      {
+        create_trans(); // Transformation erzeugen
+        Vector bpu(dist->Rect(bp));// Unverzeichneter Bildpunkt
+        bpu.Append(1); // in homogene Koordinaten umwandeln
+        Matrix T = tr.getMatrix(); // Transformationsmatrix
+        Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)
+        Vector a(3);
 
-    for (i = 0; i < 3; i++) a[i] = T[i][3];
+        for (int i = 0; i < 3; i++)
+          {
+            a[i] = T[i][3];
+          }
 
-    RETURN_IF_FAILED(A = -Inverse(A), Line3d());
-    Vector c1 = A * a;   // Projektionszentrum
-    Vector c2 = A * bpu + c1; // Zweiter Punkt im Raum
-    return Line3d(Vector3d(c1), Vector3d(c2)); //Strahl zurückgeben
+        A = -Inverse(A);
+        Vector c1 = A * a;   // Projektionszentrum
+        Vector c2 = A * bpu + c1; // Zweiter Punkt im Raum
+        return Line3d(Vector3d(c1), Vector3d(c2)); //Strahl zurückgeben
+      }
+    RETHROW;
   }
 
   Line3d Camera::Ray(double u, double v) const

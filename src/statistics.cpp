@@ -31,8 +31,8 @@
 #include <string.h>
 #include <vector>
 
-#include "message.h"
-#include "macro.h"
+#include "defs.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "matdef.h"
 #include "statistics.h"
@@ -48,10 +48,13 @@ namespace ice
   {
     if (dimension < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
         dim = 0;
       }
-    else Init(dimension);
+    else
+      {
+        Init(dimension);
+      }
   }
 #undef FNAME
 
@@ -63,10 +66,7 @@ namespace ice
   int Statistics::Init()
   {
     if (dim < 1)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     sweight = 0.0;
 
@@ -83,7 +83,7 @@ namespace ice
   {
     if (dimension < 1)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
         dim = 0;
         return WRONG_PARAM;
       }
@@ -96,19 +96,15 @@ namespace ice
   int Statistics::put(const Vector& val, double weight)
   {
     if (weight < 0.0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (val.Size() != dim)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
-      akk[i] += val.at(i) * weight;
+      {
+        akk[i] += val.at(i) * weight;
+      }
 
     double weight_squared = Sqr(weight);
 
@@ -121,7 +117,9 @@ namespace ice
             sakk[i][j] += val_i * val[j];
 
             if (i != j)
-              sakk[j][i] = sakk[i][j];
+              {
+                sakk[j][i] = sakk[i][j];
+              }
           }
       }
 
@@ -132,19 +130,15 @@ namespace ice
   int Statistics::put(const std::vector<double>& val, double weight)
   {
     if (weight < 0.0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if ((int)val.size() != dim)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < dim; i++)
-      akk[i] += val[i] * weight;
+      {
+        akk[i] += val[i] * weight;
+      }
 
     double weight_squared = Sqr(weight);
 
@@ -157,7 +151,9 @@ namespace ice
             sakk[i][j] += val_i * val[j];
 
             if (i != j)
-              sakk[j][i] = sakk[i][j];
+              {
+                sakk[j][i] = sakk[i][j];
+              }
           }
       }
 
@@ -168,13 +164,12 @@ namespace ice
   int Statistics::put(const Matrix& vals)
   {
     if (vals.cols() != dim)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < vals.rows(); i++)
-      put(vals[i]);
+      {
+        put(vals[i]);
+      }
 
     return OK;
   }
@@ -184,15 +179,14 @@ namespace ice
   {
     std::vector<double> res(dim);
     if (sweight == 0.0)
-      {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
-        return res;
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     double inv_weight = 1 / sweight;
 
     for (int i = 0; i < dim; i++)
-      res[i] = akk[i] * inv_weight;
+      {
+        res[i] = akk[i] * inv_weight;
+      }
 
     return res;
   }
@@ -201,16 +195,15 @@ namespace ice
   Vector Mean(const Statistics& st)
   {
     if (st.sweight == 0.0)
-      {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
-        return Vector(st.dim);
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     Vector mean(st.dim);
     double inv_weight = 1 / st.sweight;
 
     for (int i = 0; i < st.dim; i++)
-      mean[i] = st.akk[i] * inv_weight;
+      {
+        mean[i] = st.akk[i] * inv_weight;
+      }
 
     return mean;
   }
@@ -226,10 +219,7 @@ namespace ice
   {
     matrix<double> res(dim, dim);
     if (sweight == 0.0)
-      {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
-        return res;
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     double nrm = 1 / sweight;
 
@@ -250,10 +240,7 @@ namespace ice
     Matrix res(st.dim, st.dim);
 
     if (st.sweight == 0.0)
-      {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
-        return res;
-      }
+      throw IceException(FNAME, M_STAT_NOENTRY);
 
     double nrm = 1 / st.sweight;
 
@@ -263,7 +250,10 @@ namespace ice
           double cov = (st.sakk[i][j] - st.akk[i] * st.akk[j] * nrm) * nrm;
           res.at(i).at(j) = cov;
 
-          if (i != j) res.at(j).at(i) = cov;
+          if (i != j)
+            {
+              res.at(j).at(i) = cov;
+            }
         }
 
     return res;
@@ -272,92 +262,82 @@ namespace ice
 #define FNAME "Statistics::getCorrelation"
   matrix<double> Statistics::getCorrelation() const
   {
-    matrix<double> res(dim, dim);
 
     if (sweight == 0.0)
+      throw IceException(FNAME, M_STAT_NOENTRY);
+    try
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        matrix<double> res = getCovariance();
+
+        for (int i = 0; i < dim; i++)
+          {
+            if (res[i][i] < 1e-32)
+              throw IceException(FNAME, M_ZERO_VARIANZ);
+          }
+
+        for (int i = 0; i < dim; i++)
+          for (int j = i + 1; j < dim; j++)
+            {
+              res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
+              res[j][i] = res[i][j];
+            }
+
+        for (int i = 0; i < dim; i++)
+          {
+            res[i][i] = 1.0;
+          }
+
         return res;
       }
-
-    IF_FAILED(res = getCovariance())
-    {
-      Message(FNAME, M_0, ERROR);
-      return res;
-    }
-
-    for (int i = 0; i < dim; i++)
-      {
-        if (res[i][i] < 1e-32)
-          {
-            Message(FNAME, M_ZERO_VARIANZ, ERROR);
-            return res;
-          }
-      }
-
-    for (int i = 0; i < dim; i++)
-      for (int j = i + 1; j < dim; j++)
-        {
-          res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
-          res[j][i] = res[i][j];
-        }
-
-    for (int i = 0; i < dim; i++)
-      {
-        res[i][i] = 1.0;
-      }
-
-    return res;
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Correlation"
   Matrix Correlation(const Statistics& st)
   {
-    Matrix res(st.dim, st.dim);
-
     if (st.sweight == 0.0)
+      throw IceException(FNAME, M_STAT_NOENTRY);
+
+    try
       {
-        Message(FNAME, M_STAT_NOENTRY, ERROR);
+        Matrix res = Covariance(st);
+
+        for (int i = 0; i < st.dim; i++)
+          {
+            if (res[i][i] < 1e-32)
+              throw IceException(FNAME, M_ZERO_VARIANZ);
+          }
+
+        for (int i = 0; i < st.dim; i++)
+          for (int j = i + 1; j < st.dim; j++)
+            {
+              res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
+              res[j][i] = res[i][j];
+            }
+
+        for (int i = 0; i < st.dim; i++)
+          {
+            res[i][i] = 1.0;
+          }
+
         return res;
       }
-
-    IF_FAILED(res = Covariance(st))
-    {
-      Message(FNAME, M_0, ERROR);
-      return res;
-    }
-
-    for (int i = 0; i < st.dim; i++)
-      {
-        if (res[i][i] < 1e-32)
-          {
-            Message(FNAME, M_ZERO_VARIANZ, ERROR);
-            return res;
-          }
-      }
-
-    for (int i = 0; i < st.dim; i++)
-      for (int j = i + 1; j < st.dim; j++)
-        {
-          res[i][j] = res[i][j] / sqrt(res[i][i] * res[j][j]);
-          res[j][i] = res[i][j];
-        }
-
-    for (int i = 0; i < st.dim; i++)
-      {
-        res[i][i] = 1.0;
-      }
-
-    return res;
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Write(Statistics)"
-  int Write(const Statistics& st, const std::string& fn)
+  void Write(const Statistics& st, const std::string& fn)
   {
-    std::ofstream out(fn.c_str());
-    RETURN_ERROR_IF_FAILED(out << st);
-    out.close();
-    return OK;
+    try
+      {
+        std::ofstream out(fn.c_str());
+        out << st;
+        out.close();
+      }
+    catch (std::exception& ex)
+      {
+        throw IceException(FNAME, ex.what());
+      }
   }
 #undef FNAME
 #define FNAME "operator << (Statistics)"
@@ -371,19 +351,24 @@ namespace ice
 
     for (int i = 0; i < st.dim; i++)
       for (int j = 0; j < st.dim; j++)
-        sakk[i][j] = st.sakk[i][j];
+        {
+          sakk[i][j] = st.sakk[i][j];
+        }
 
     out << sakk << std::endl ;
     return out;
   }
 #undef FNAME
 #define FNAME "Read(Statistics)"
-  int Read(Statistics& st, const std::string& fn)
+  void Read(Statistics& st, const std::string& fn)
   {
-    std::ifstream inp(fn.c_str());
-    RETURN_ERROR_IF_FAILED(inp >> st);
-    inp.close();
-    return OK;
+    try
+      {
+        std::ifstream inp(fn.c_str());
+        inp >> st;
+        inp.close();
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "operator >> (Statistics)"
@@ -394,9 +379,8 @@ namespace ice
 
     if ((c != ',') && (c != '#'))
       {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
         inp.clear(std::ios::badbit);
-        return inp;
+        throw IceException(FNAME, M_WRONG_FILE);
       }
 
     inp >> st.sweight;
@@ -407,13 +391,17 @@ namespace ice
     st.akk.resize(akk.size());
 
     for (unsigned int i = 0; i < akk.size(); i++)
-      st.akk[i] = akk[i];
+      {
+        st.akk[i] = akk[i];
+      }
 
     st.sakk.resize(sakk.rows(), std::vector<double>(sakk.cols()));
 
     for (int i = 0; i < sakk.rows(); i++)
       for (int j = 0; j < sakk.cols(); j++)
-        st.sakk[i][j] = sakk[i][j];
+        {
+          st.sakk[i][j] = sakk[i][j];
+        }
 
     return inp;
   }

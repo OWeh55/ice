@@ -76,17 +76,18 @@ int main(int argc, char* argv[])
       // artificial image for runtime check
       i1 = NewImg(XS, YS, 255);
 
-      wloop(i1, x, y)
-      {
-        if ((x / 20) & 1) PutVal(i1, x, y, y / 4);
-        else PutVal(i1, x, y, 255 - (y / 4));
-      }
+      for (int y = 0; y < i1.ysize; y++)
+        for (int x = 0; x < i1.xsize; x++)
+          {
+            if ((x / 20) & 1) PutVal(i1, x, y, y / 4);
+            else PutVal(i1, x, y, 255 - (y / 4));
+          }
 
       if (anz == 0) anz = ANZAHL;
     }
 
   Image m1 = NewImg(i1);
-  ClearImg(m1);
+  clearImg(m1);
 
 //  Image mi=NewImg(i1);
 //  Image ma=NewImg(i1);
@@ -120,14 +121,16 @@ int main(int argc, char* argv[])
       rot = NewImg(i1->xsize, i1->ysize, 255);
       gruen = NewImg(i1->xsize, i1->ysize, 255);
       blau = NewImg(i1->xsize, i1->ysize, 255);
-      wloop(rot, i, j)
-      {
-        int m;
-        m = GetVal(m1, i, j) % 6;
-        PutVal(rot, i, j, rv[m]);
-        PutVal(gruen, i, j, gv[m]);
-        PutVal(blau, i, j, bv[m]);
-      }
+
+      for (int y = 0; y < rot.ysize; y++)
+        for (int x = 0; x < rot.xsize; x++)
+          {
+            int m;
+            m = GetVal(m1, i, j) % 6;
+            PutVal(rot, i, j, rv[m]);
+            PutVal(gruen, i, j, gv[m]);
+            PutVal(blau, i, j, bv[m]);
+          }
 
       WriteImg(rot, gruen, blau, outfilename);
     }
@@ -138,12 +141,12 @@ int main(int argc, char* argv[])
       int gv[] = {127, 0, 255, 192, 64};
       Image gray;
       gray = NewImg(i1->xsize, i1->ysize, 255);
-      wloop(gray, i, j)
-      {
-        int m;
-        m = GetVal(m1, i, j) % 6;
-        PutVal(gray, i, j, gv[m]);
-      }
+      for (int y = 0; y < gray.ysize; y++)
+        for (int x = 0; x < gray.xsize; x++)
+          {
+            int m = GetVal(m1, x, y) % 6;
+            PutVal(gray, x, y, gv[m]);
+          }
 
       WriteImg(gray, outfilename);
     }

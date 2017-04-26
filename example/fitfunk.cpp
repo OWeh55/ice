@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 
   f4.FitFinish();
 
-  SetImg(img, f4);
+  setImg(img, f4);
   GetChar();
 
   f3.FitInit();
@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
   f3.FitVal(0, 255, 255);
   f3.FitFinish();
 
-  SetImg(img, f3);
+  setImg(img, f3);
   GetChar();
   return 0;
 }

@@ -71,11 +71,11 @@ void DiTest(Distortion& di)
       {
         double x = r * sin(fi) + X0;
         double y = r * cos(fi) + Y0;
-        orig.Append(Vector(x, y));
+        orig.append(Vector(x, y));
         double fr = 1.0 + D2 * r * r + D4 * r * r * r * r;
         double xd = r * fr * sin(fi) + X0 /*+ RandomD() - 0.5 */;
         double yd = r * fr * cos(fi) + Y0 /*+ RandomD()*/;
-        messung.Append(Vector(xd, yd));
+        messung.append(Vector(xd, yd));
       }
 
   //  cout << orig << endl;

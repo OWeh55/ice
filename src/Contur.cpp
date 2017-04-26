@@ -34,7 +34,7 @@
 #include <algorithm>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "contools.h"
@@ -88,7 +88,7 @@ namespace ice
   {
   }
 
-  int Contur::SetStart(IPoint p)
+  int Contur::setStart(IPoint p)
   {
     if (nDirectionCodes == 0)
       {
@@ -121,18 +121,21 @@ namespace ice
   int DirDiff(Freeman d1, Freeman d2)
   {
     int diff = d1.Int() - d2.Int();
-    if (diff > 4) diff -= 8;
-    else if (diff <= -4) diff += 8;
+    if (diff > 4)
+      {
+        diff -= 8;
+      }
+    else if (diff <= -4)
+      {
+        diff += 8;
+      }
     return diff;
   }
 
-  int Contur::Add(Freeman dir)
+  int Contur::add(Freeman dir)
   {
     if (!isvalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     data.push_back(dir);
     dir.move(endp);
@@ -142,16 +145,24 @@ namespace ice
 
     // globale Kruemmung aktualisieren
     if (nDirectionCodes > 0)
-      curv += DirDiff(dir, data[nDirectionCodes - 1]);
+      {
+        curv += DirDiff(dir, data[nDirectionCodes - 1]);
+      }
     else
-      curv = 0;
+      {
+        curv = 0;
+      }
 
     nDirectionCodes++;
 
     if ((dir.Int() & 1) > 0)
-      length += M_SQRT2;
+      {
+        length += M_SQRT2;
+      }
     else
-      length += 1.0;
+      {
+        length += 1.0;
+      }
 
     isclosed = (start == endp);
 
@@ -166,13 +177,10 @@ namespace ice
     return OK;
   }
 
-  int Contur::Add(IPoint p)
+  int Contur::add(IPoint p)
   {
     if (!isvalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     //    std::cout << "OK" << std::endl;
 
@@ -189,7 +197,10 @@ namespace ice
     x2 = p.x;
     y2 = p.y;
 
-    if ((x1 == x2) && (y1 == y2)) return OK; // nothing to do
+    if ((x1 == x2) && (y1 == y2))
+      {
+        return OK;  // nothing to do
+      }
 
     if (x1 < x2)
       {
@@ -225,12 +236,21 @@ namespace ice
         step2 = yd;
       }
 
-    if (((dir1 - dir2) & 7) == 2) dir2++;
-    else dir2 = (dir2 - 1) & 7;
+    if (((dir1 - dir2) & 7) == 2)
+      {
+        dir2++;
+      }
+    else
+      {
+        dir2 = (dir2 - 1) & 7;
+      }
 
     if (step2 == 0)                           /*achsenparallele Linie*/
       {
-        for (i = 0; i < step1; i++) Add(dir1);
+        for (i = 0; i < step1; i++)
+          {
+            add(dir1);
+          }
       }
     else
       {
@@ -246,10 +266,13 @@ namespace ice
 
               if (count <= 0)
                 {
-                  Add(dir2);
+                  add(dir2);
                   count += step1;
                 }
-              else Add(dir1);
+              else
+                {
+                  add(dir1);
+                }
             }
         else
 
@@ -259,10 +282,13 @@ namespace ice
 
               if (count < 0)
                 {
-                  Add(dir2);
+                  add(dir2);
                   count += step1;
                 }
-              else Add(dir1);
+              else
+                {
+                  add(dir1);
+                }
             }
       }
 
@@ -271,20 +297,19 @@ namespace ice
     return OK;
   }
 
-  int Contur::Add(const Contur& c)
+  int Contur::add(const Contur& c)
   {
     int i;
 
     if (!c.isvalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
-    RETURN_ERROR_IF_FAILED(Add(c.start));
+    RETURN_ERROR_IF_FAILED(add(c.start));
 
     for (i = 0; i < c.nDirectionCodes; i++)
-      RETURN_ERROR_IF_FAILED(Add(c.data[i]));
+      {
+        RETURN_ERROR_IF_FAILED(add(c.data[i]));
+      }
 
     cachedIndex = 0;
     cachedPoint = start;
@@ -295,30 +320,35 @@ namespace ice
   Contur operator+(const Contur& c1, const Contur& c2)
   {
     Contur res = c1;
-    res.Add(c2);
+    res.add(c2);
     return res;
   }
 #undef FNAME
 #define FNAME "Contur::operator="
   Contur& Contur::operator=(const Contur& c)
   {
-    if (&c == this) return *this;
+    if (&c == this)
+      {
+        return *this;
+      }
 
-    Reset();
+    reset();
 
     if (c.isvalid)
       {
-        SetStart(c.start);
-        Add(c);
+        setStart(c.start);
+        add(c);
       }
     else
-      isvalid = false;
+      {
+        isvalid = false;
+      }
 
     return *this;
   }
 #undef FNAME
 
-  int Contur::Reset()
+  int Contur::reset()
   {
     data.clear();
     nDirectionCodes = 0;
@@ -326,7 +356,7 @@ namespace ice
     return OK;
   }
 
-  int Contur::Reset(IPoint p)
+  int Contur::reset(IPoint p)
   {
     data.clear();
     nDirectionCodes = 0;
@@ -334,7 +364,7 @@ namespace ice
     return OK;
   }
 
-  int Contur::Reset(int x, int y)
+  int Contur::reset(int x, int y)
   {
     data.clear();
     nDirectionCodes = 0;
@@ -373,17 +403,16 @@ namespace ice
     return OK;
   }
 
-#define FNAME "Contur::InvDir"
-  int Contur::InvDir()
+#define FNAME "Contur::invertDir"
+  int Contur::invertDir()
   {
     if (!isvalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (nDirectionCodes == 0)
-      return OK; // keine Aktion nötig
+      {
+        return OK;  // keine Aktion nötig
+      }
 
     for (int i = 0; i < nDirectionCodes / 2; i++)
       {
@@ -393,8 +422,10 @@ namespace ice
         data[nDirectionCodes - i - 1] = h;
       }
 
-    for (int i = 0; i < nDirectionCodes; i++) // richtungscodes invertieren
-      data[i] = data[i].Inverse();
+    for (int i = 0; i < nDirectionCodes; i++)   // richtungscodes invertieren
+      {
+        data[i] = data[i].Inverse();
+      }
 
     std::swap(start, endp); // Start- und Endpunkt vertauschen
 
@@ -412,7 +443,9 @@ namespace ice
   int Contur::getRect(int& xi, int& yi, int& xa, int& ya) const
   {
     if (!isvalid)
-      return INVALID;
+      {
+        return INVALID;
+      }
 
     xi = xmin;
     xa = xmax;
@@ -424,7 +457,9 @@ namespace ice
   int Contur::getRect(Window& win) const
   {
     if (!isvalid)
-      return INVALID;
+      {
+        return INVALID;
+      }
 
     win = Window(xmin, ymin, xmax, ymax);
     return OK;
@@ -437,24 +472,22 @@ namespace ice
     IPoint res;
 
     if (!isvalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, INVALID);
-        return res;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     int currentIndex = 0;
     res = start;
 
     if (wantedIndex == 0)
-      return res;
-
-    if (isclosed)
-      wantedIndex = wantedIndex % nDirectionCodes; // bei geschlossener Kontur zyklisch arbeiten
-    else if (wantedIndex > nDirectionCodes)
       {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
         return res;
       }
+
+    if (isclosed)
+      {
+        wantedIndex = wantedIndex % nDirectionCodes;  // bei geschlossener Kontur zyklisch arbeiten
+      }
+    else if (wantedIndex > nDirectionCodes)
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if ((cachedIndex != INT_MAX) && (cachedIndex < wantedIndex))
       {
@@ -463,7 +496,9 @@ namespace ice
       }
 
     for (int i = currentIndex; i < wantedIndex; i++)
-      data[i].move(res);
+      {
+        data[i].move(res);
+      }
 
     cachedIndex = wantedIndex;
     cachedPoint = res;
@@ -488,16 +523,10 @@ namespace ice
     fc.clear();
 
     if (!isvalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, INVALID);
-        return INVALID;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     if (!isclosed)
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     if (data.empty())
       {
@@ -520,7 +549,10 @@ namespace ice
             currentc = data[i];
             int first = (lastc.Int() + 6) & 6 ;
             int last = (currentc.Int() + 7) & 6;
-            if (last < first) last += 8;
+            if (last < first)
+              {
+                last += 8;
+              }
             for (int i = first; i <= last; i++)
               {
                 pl.push_back(currentp);
@@ -538,10 +570,7 @@ namespace ice
     upl.clear();
 
     if (!isvalid)
-      {
-        Message(FNAME, M_NOT_INITIALISED, INVALID);
-        return INVALID;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     std::vector<Freeman> cd;
 

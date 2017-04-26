@@ -175,32 +175,23 @@ namespace ice
     /*virtual*/ void setPixelClipped(IPoint p, ColorValue rgb) const
     {
       if (inside(p))
-        setPixelLimited(p, rgb);
+        {
+          setPixelLimited(p, rgb);
+        }
     }
 
     /*virtual*/ void setPixelClipped(int x, int y, ColorValue rgb) const
     {
       if (inside(x, y))
-        setPixelLimited(x, y, rgb);
+        {
+          setPixelLimited(x, y, rgb);
+        }
     }
 
     /*virtual*/ int clear() const
     {
       return set(maxval, maxval, maxval);
     }
-
-    /*
-      virtual int Add(const ColorImage &i1, const ColorImage &i2, int mode = MD_LIMIT);
-      virtual int Add(const ColorImage &i1, int mode = MD_LIMIT);
-      virtual int Sub(const ColorImage &i1, const ColorImage &i2,
-      int smode = SMD_ABSOLUTE, int mode = MD_LIMIT);
-      virtual int Sub(const ColorImage &i1, int smode = SMD_ABSOLUTE, int mode = MD_LIMIT);
-
-      virtual int Max(const ColorImage &i1, const ColorImage &i2, int mode = MD_LIMIT);
-      virtual int Max(const ColorImage &i1, int mode = MD_LIMIT);
-      virtual int Min(const ColorImage &i1, const ColorImage &i2, int mode = MD_LIMIT);
-      virtual int Min(const ColorImage &i1, int mode = MD_LIMIT);
-    */
 
     /*virtual*/
     const Image& redImage() const
@@ -253,39 +244,75 @@ namespace ice
 
     /*virtual*/ bool inside(IPoint p) const
     {
-      if (p.x < 0) return false;
+      if (p.x < 0)
+        {
+          return false;
+        }
 
-      if (p.y < 0) return false;
+      if (p.y < 0)
+        {
+          return false;
+        }
 
-      if (p.x >= xsize) return false;
+      if (p.x >= xsize)
+        {
+          return false;
+        }
 
-      if (p.y >= ysize) return false;
+      if (p.y >= ysize)
+        {
+          return false;
+        }
 
       return true;
     }
 
     /*virtual*/ bool inside(const Point& p) const
     {
-      if (p.x < -0.5) return false;
+      if (p.x < -0.5)
+        {
+          return false;
+        }
 
-      if (p.y < -0.5) return false;
+      if (p.y < -0.5)
+        {
+          return false;
+        }
 
-      if (p.x >= xsize - 0.5) return false;
+      if (p.x >= xsize - 0.5)
+        {
+          return false;
+        }
 
-      if (p.y >= ysize - 0.5) return false;
+      if (p.y >= ysize - 0.5)
+        {
+          return false;
+        }
 
       return true;
     }
 
     /*virtual*/ bool inside(int x, int y) const
     {
-      if (x < 0) return false;
+      if (x < 0)
+        {
+          return false;
+        }
 
-      if (y < 0) return false;
+      if (y < 0)
+        {
+          return false;
+        }
 
-      if (x >= xsize) return false;
+      if (x >= xsize)
+        {
+          return false;
+        }
 
-      if (y >= ysize) return false;
+      if (y >= ysize)
+        {
+          return false;
+        }
 
       return true;
     }
@@ -296,9 +323,9 @@ namespace ice
       return inside(window.p1) && inside(window.p2);
     }
 
-    /*virtual*/ int match(const ColorImage& img2) const;
     /*virtual*/
-    int match(const ColorImage& img2, const ColorImage& img3) const;
+    void checkSizes(const ColorImage& img2) const;
+    void checkImages(const ColorImage& img2) const;
 
     /*virtual*/
     int read(const std::string& filename);

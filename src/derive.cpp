@@ -32,7 +32,7 @@ Numerische Integration eindimensionaler Funktionen:
 #include <string.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "equsys.h"
@@ -66,26 +66,22 @@ namespace ice
     /*--- Parametertest ----------------------------------------------*/
     if (dim < 1)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     if (i > dim || i < 1)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     if (h <= 0.0)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     if (mode > 5 || mode < 0)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     /*----------------------------------------------------------------*/
@@ -206,7 +202,6 @@ namespace ice
   /*                        huefner 1/94                             */
   /*******************************************************************/
 
-
   int Derive2Func(FuncD func, int dim, int i, double* x, double h, int mode, double* val)
 
   /*
@@ -222,33 +217,28 @@ namespace ice
     mode=0 - Stützstellen: -2,-1, 0, 1, 2
   */
 
-
   {
     double* hptrx0;
 
     /*--- Parametertest ----------------------------------------------*/
     if (dim < 1)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     if (i > dim || i < 1)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     if (h <= 0.0)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     if (mode > 4 || mode < 0)
       {
-        Message("DeriveFunc", M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException("DeriveFunc", M_WRONG_PARAM);
       }
 
     /*----------------------------------------------------------------*/
@@ -388,10 +378,7 @@ namespace ice
 
     /*--- Parametertest ----------------------------------------------*/
     if (*prec >= 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (down > top)
       {

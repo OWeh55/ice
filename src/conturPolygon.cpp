@@ -32,17 +32,14 @@ namespace ice
   {
 
     if (pl.rows() < 3 || pl.cols() < 2)
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     Matrix plw = Matrix(pl);
     Matrix pcl = Matrix(1, 2);
 
     if (pl[0][0] != pl[pl.rows() - 1][0] || pl[0][1] != pl[pl.rows() - 1][1])
       {
-        plw.Append(plw[0]);
+        plw.append(plw[0]);
       }
 
     int cr_nr = 0;
@@ -51,11 +48,15 @@ namespace ice
       {
         //Eckpunkte
         if (x == plw[i][0] && y == plw[i][1])
-          return true;
+          {
+            return true;
+          }
 
         //Punkte auf waagerechten Abschnitten
         if (y == plw[i][1] && y == plw[i + 1][1] && ((x >= plw[i][0] && x <= plw[i + 1][0]) || (x <= plw[i][0] && x >= plw[i + 1][0])))
-          return true;
+          {
+            return true;
+          }
 
         if ((plw[i][1] <= y && plw[i + 1][1] > y) || (plw[i][1] > y && plw[i + 1][1] <= y))
           {
@@ -64,15 +65,23 @@ namespace ice
 
             //Punkt auf Kante
             if (h1 == h2)
-              return true;
+              {
+                return true;
+              }
 
             if (plw[i + 1][1] - plw[i][1] > 0)
               {
-                if (h1 < h2) cr_nr++;
+                if (h1 < h2)
+                  {
+                    cr_nr++;
+                  }
               }
             else
               {
-                if (h1 > h2) cr_nr++;
+                if (h1 > h2)
+                  {
+                    cr_nr++;
+                  }
               }
           }
       }
@@ -100,18 +109,12 @@ namespace ice
   bool pointInside(double x, double y, const Contur& c)
   {
     if (!c.isValid())
-      {
-        Message(FNAME, M_INVALID_CONTUR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_INVALID_CONTUR);
 
     int nPoints = c.Number();
 
     if (nPoints < 3)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     Matrix pl = Matrix(nPoints, 2);
     int hx, hy;
@@ -138,33 +141,20 @@ namespace ice
   {
 
     if (pl.rows() < 3 || pl.cols() < 2)
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
-    /*PointList rpl = NewPointList(pl.rows());
-      for(int c1=0;c1<pl.rows();c1++){
-      rpl->xptr[c1] = pl[c1][0];
-      rpl->yptr[c1] = pl[c1][1];
-      rpl->wptr[c1] = 1;
-      }
-      if(!IsPolygon(rpl)){
-      Message(FNAME,"KEIN GUELTIGES POLYGON",WRONG_PARAM);
-      return WRONG_PARAM;
-      }
-      FreePointList(rpl);*/
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     Matrix plw(pl);
     Matrix pcl(1, 2);
 
     if (pl[0][0] != pl[pl.rows() - 1][0] || pl[0][1] != pl[pl.rows() - 1][1])
       {
-        plw.Append(pl[0]);
+        plw.append(pl[0]);
       }
 
     if (!c.isValid())
-      c.Reset();
+      {
+        c.reset();
+      }
 
     //erst Startpunkt und dessen Nachbarn hinzufuegen, damit last und
     //prelast definiert, danach "aeusseren Bogen" zum naechsten Punkt schlagen
@@ -175,7 +165,7 @@ namespace ice
 
     int stx = (int)plw[0][0];
     int sty = (int)plw[0][1];
-    c.SetStart(stx, sty);
+    c.setStart(stx, sty);
 
     // last added point
     int lastaddx = stx;
@@ -189,12 +179,16 @@ namespace ice
         freeman--;
 
         if (freeman == -1)
-          freeman = 7;
+          {
+            freeman = 7;
+          }
 
         Freeman(freeman).move(lastaddx, lastaddy, x, y);
 
         if (!pointInside(x, y, pl))
-          leftobj = true;
+          {
+            leftobj = true;
+          }
       }
 
     while (leftobj)
@@ -202,15 +196,19 @@ namespace ice
         freeman--;
 
         if (freeman == -1)
-          freeman = 7;
+          {
+            freeman = 7;
+          }
 
         Freeman(freeman).move(lastaddx, lastaddy, x, y);
 
         if (pointInside(x, y, pl))
-          leftobj = false;
+          {
+            leftobj = false;
+          }
       }
 
-    c.Add(x, y);
+    c.add(x, y);
     lastaddx = x;
     lastaddy = y;
 
@@ -226,20 +224,28 @@ namespace ice
           {
             freeman--;
 
-            if (freeman == -1) freeman = 7;
+            if (freeman == -1)
+              {
+                freeman = 7;
+              }
 
             Freeman(freeman).move(lastaddx, lastaddy, x, y);
 
-            if (pointInside(x, y, pl)) leftobj = false;
+            if (pointInside(x, y, pl))
+              {
+                leftobj = false;
+              }
           }
 
-        c.Add(x, y);
+        c.add(x, y);
         lastaddx = x;
         lastaddy = y;
       }
 
     if (c.isHole())
-      c.InvDir();
+      {
+        c.invertDir();
+      }
 
     return OK;
   }

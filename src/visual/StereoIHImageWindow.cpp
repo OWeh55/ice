@@ -52,7 +52,9 @@ namespace ice
   {
     int i = 0;
     if (PaintWindowY % 2 != 0)
-      i = 3;
+      {
+        i = 3;
+      }
 
     *(PixelArrayPtr++) = imgs[i]->getValueShifted(PaintImageX, PaintImageY);
     *(PixelArrayPtr++) = imgs[i + 1]->getValueShifted(PaintImageX, PaintImageY);

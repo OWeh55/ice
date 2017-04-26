@@ -92,19 +92,16 @@ namespace ice
   }
 #undef FNAME
 
-  Vector Distortion0::MakeVector() const
+  Vector Distortion0::makeVector() const
   {
     return Vector(x0, y0, d2);
   }
 
-#define FNAME "Distortion0::Set"
-  void Distortion0::Set(const Vector& v)
+#define FNAME "Distortion0::set"
+  void Distortion0::set(const Vector& v)
   {
     if (v.size() != 3)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     x0 = v[0];
     y0 = v[1];
@@ -120,16 +117,13 @@ namespace ice
     return os.str();
   }
 #undef FNAME
-#define FNAME "Distortion0::Set"
-  void Distortion0::Set(const string& parastr)
+#define FNAME "Distortion0::set"
+  void Distortion0::set(const string& parastr)
   {
     istringstream is(parastr);
 
     if (! ReadPara(is, "x0", x0) || ! ReadPara(is, "y0", y0) || ! ReadPara(is, "d2", d2))
-      {
-        Message(FNAME, M_WRONG_FORMAT, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_FORMAT);
   }
 #undef FNAME
 }

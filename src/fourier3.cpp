@@ -29,7 +29,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "darith.h"
 
 #include "fourier.h"
@@ -37,331 +37,309 @@
 namespace ice
 {
 #define FNAME "ConvolutionFImgD"
-  int ConvolutionFImgD(ImageD r1, ImageD i1, ImageD r2, ImageD i2,
-                       ImageD r3, ImageD i3)
+  void ConvolutionFImgD(ImageD r1, ImageD i1, ImageD r2, ImageD i2,
+                        ImageD r3, ImageD i3)
   {
-    int xs, ys;
-    double dr1, di1, dr2, di2, dr3, di3;
-    double factor;
+    try
+      {
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(r1, i1, r2));
-    RETURN_ERROR_IF_FAILED(MatchImgD(r2, i2, r3));
-    RETURN_ERROR_IF_FAILED(MatchImgD(r3, i3, xs, ys));
+        int xs, ys;
+        MatchImgD(r1, i1, r2);
+        MatchImgD(r2, i2, r3);
+        MatchImgD(r3, i3, xs, ys);
 
-    factor = sqrt(double(xs)) * sqrt(double(ys));
-    for (int y = 0; y < r1.ysize; ++y)
-      for (int x = 0; x < r1.xsize; ++x)
-        {
-          dr1 = GetValD(r1, x, y);
-          di1 = GetValD(i1, x, y);
-          dr2 = GetValD(r2, x, y);
-          di2 = GetValD(i2, x, y);
-          dr3 = (dr1 * dr2 - di1 * di2) * factor;
-          di3 = (dr1 * di2 + di1 * dr2) * factor;
-          PutValD(r3, x, y, dr3);
-          PutValD(i3, x, y, di3);
-        }
-    return OK;
+        double factor  = sqrt(double(xs)) * sqrt(double(ys));
+        for (int y = 0; y < r1.ysize; ++y)
+          for (int x = 0; x < r1.xsize; ++x)
+            {
+              double dr1 = GetValD(r1, x, y);
+              double di1 = GetValD(i1, x, y);
+              double dr2 = GetValD(r2, x, y);
+              double di2 = GetValD(i2, x, y);
+              double dr3 = (dr1 * dr2 - di1 * di2) * factor;
+              double di3 = (dr1 * di2 + di1 * dr2) * factor;
+              PutValD(r3, x, y, dr3);
+              PutValD(i3, x, y, di3);
+            }
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "ConvolutionHImgD"
-  int ConvolutionHImgD(ImageD i1, ImageD i2, ImageD i3)
+  void ConvolutionHImgD(ImageD i1, ImageD i2, ImageD i3)
   {
-    int xn, yn;
-    int xs, ys;
-    double d1, dn1, d2, dn2, d3;
-    double factor;
-    int NEED_TEMP = false;
-    ImageD hdest;
-
-    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
-
-    if ((i3 == i1) || (i3 == i2))
+    try
       {
-        NEED_TEMP = true;
-        hdest = NewImgD(xs, ys);
-      }
-    else hdest = i3;
+        int xs, ys;
+        MatchImgD(i1, i2, i3, xs, ys);
 
-    factor = sqrt(double(xs)) * sqrt(double(ys)) / 2;
+        int NEED_TEMP = false;
+        ImageD hdest;
 
-    for (int y = 0; y < i1.ysize; ++y)
-      for (int x = 0; x < i1.xsize; ++x)
-        {
-          xn = negf(x, xs);
-          yn = negf(y, ys);
-          d1 = GetValD(i1, x, y);
-          dn1 = GetValD(i1, xn, yn);
-          d2 = GetValD(i2, x, y);
-          dn2 = GetValD(i2, xn, yn);
-          d3 = (d1 * d2 + d1 * dn2 + dn1 * d2 - dn1 * dn2) * factor;
-          PutValD(hdest, x, y, d3);
-        }
+        if ((i3 == i1) || (i3 == i2))
+          {
+            NEED_TEMP = true;
+            hdest = NewImgD(xs, ys);
+          }
+        else
+          {
+            hdest = i3;
+          }
 
-    if (NEED_TEMP)
-      {
+        double factor = sqrt(double(xs)) * sqrt(double(ys)) / 2;
+
         for (int y = 0; y < i1.ysize; ++y)
           for (int x = 0; x < i1.xsize; ++x)
-            PutValD(i3, x, y, GetValD(hdest, x, y));
-        FreeImgD(hdest);
-      }
+            {
+              double xn = negf(x, xs);
+              double yn = negf(y, ys);
+              double d1 = GetValD(i1, x, y);
+              double dn1 = GetValD(i1, xn, yn);
+              double d2 = GetValD(i2, x, y);
+              double dn2 = GetValD(i2, xn, yn);
+              double   d3 = (d1 * d2 + d1 * dn2 + dn1 * d2 - dn1 * dn2) * factor;
+              PutValD(hdest, x, y, d3);
+            }
 
-    return OK;
+        if (NEED_TEMP)
+          {
+            for (int y = 0; y < i1.ysize; ++y)
+              for (int x = 0; x < i1.xsize; ++x)
+                {
+                  PutValD(i3, x, y, GetValD(hdest, x, y));
+                }
+          }
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "InvConvolutionFImgD"
-  int InvConvolutionFImgD(ImageD r1, ImageD i1, ImageD r2, ImageD i2,
-                          ImageD r3, ImageD i3, double beta)
+  void InvConvolutionFImgD(ImageD r1, ImageD i1, ImageD r2, ImageD i2,
+                           ImageD r3, ImageD i3, double beta)
   {
-    int xs, ys;
-    double dr1, di1, dr2, di2, dr3, di3;
-    double denom;
-    double factor;
-    double beta2 = beta * beta;
-
-    if (beta < 0)
+    try
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        if (beta < 0)
+          throw IceException(FNAME, M_WRONG_PARAM);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(r1, i1, r2, xs, ys));
-    RETURN_ERROR_IF_FAILED(MatchImgD(r2, i2, r3, xs, ys));
-    RETURN_ERROR_IF_FAILED(MatchImgD(r3, i3, xs, ys));
+        double beta2 = beta * beta;
 
-    factor = 1 / sqrt(double(xs * ys));
+        int xs, ys;
+        MatchImgD(r1, i1, r2);
+        MatchImgD(r2, i2, r3);
+        MatchImgD(r3, i3, xs, ys);
 
-    for (int y = 0; y < r1.ysize; ++y)
-      for (int x = 0; x < r1.xsize; ++x)
-        {
-          dr1 = GetValD(r1, x, y);
-          di1 = GetValD(i1, x, y);
-          dr2 = GetValD(r2, x, y);
-          di2 = GetValD(i2, x, y);
-          denom = dr1 * dr1 + di1 * di1;
+        double factor = 1 / sqrt(double(xs * ys));
 
-          if (beta == 0)
+        for (int y = 0; y < r1.ysize; ++y)
+          for (int x = 0; x < r1.xsize; ++x)
             {
-              if (denom == 0)
+              double dr1 = GetValD(r1, x, y);
+              double di1 = GetValD(i1, x, y);
+              double dr2 = GetValD(r2, x, y);
+              double di2 = GetValD(i2, x, y);
+              double denom = dr1 * dr1 + di1 * di1;
+
+              double dr3, di3;
+              if (beta == 0)
                 {
-                  dr3 = 0;
-                  di3 = 0;
+                  if (denom == 0)
+                    {
+                      dr3 = 0;
+                      di3 = 0;
+                    }
+                  else
+                    {
+                      dr3 = (dr1 * dr2 + di1 * di2) / denom * factor;
+                      di3 = (dr1 * di2 - di1 * dr2) / denom * factor;
+                    }
                 }
               else
                 {
+                  denom = denom + beta2;
                   dr3 = (dr1 * dr2 + di1 * di2) / denom * factor;
                   di3 = (dr1 * di2 - di1 * dr2) / denom * factor;
                 }
-            }
-          else
-            {
-              denom = denom + beta2;
-              dr3 = (dr1 * dr2 + di1 * di2) / denom * factor;
-              di3 = (dr1 * di2 - di1 * dr2) / denom * factor;
-            }
 
-          PutValD(r3, x, y, dr3);
-          PutValD(i3, x, y, di3);
-        }
-    return OK;
+              PutValD(r3, x, y, dr3);
+              PutValD(i3, x, y, di3);
+            }
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "InvConvolutionHImgD"
-  int InvConvolutionHImgD(ImageD i1, ImageD i2, ImageD i3, double beta)
+  void InvConvolutionHImgD(ImageD i1, ImageD i2, ImageD i3, double beta)
   {
-    int xn, yn;
-    int xs, ys;
-    double d1, dn1, d2, dn2, d3;
-    double dr1, di1, dr2, di2;
-    int NEED_TEMP = false;
-    ImageD hdest;
-
-    //  double denom;
-    double factor;
-    double beta2 = beta * beta;
-
-    if (beta < 0)
+    try
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        if (beta < 0)
+          throw IceException(FNAME, M_WRONG_PARAM);
+        double beta2 = beta * beta;
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
+        int xs, ys;
+        MatchImgD(i1, i2, i3, xs, ys);
 
-    if ((i3 == i1) || (i3 == i2))
-      {
-        NEED_TEMP = true;
-        hdest = NewImgD(xs, ys);
-      }
-    else hdest = i3;
+        ImageD hdest;
+        bool NEED_TEMP = false;
+        if ((i3 == i1) || (i3 == i2))
+          {
+            NEED_TEMP = true;
+            hdest = NewImgD(xs, ys);
+          }
+        else
+          {
+            hdest = i3;
+          }
 
-    factor = 1 / sqrt(double(xs * ys));
-    for (int y = 0; y < i1.ysize; ++y)
-      for (int x = 0; x < i1.xsize; ++x)
-        {
-          xn = negf(x, xs);
-          yn = negf(y, ys);
-
-          d1 = GetValD(i1, x, y);
-          dn1 = GetValD(i1, xn, yn);
-          dr1 = (d1 + dn1) / 2;
-          di1 = (-d1 + dn1) / 2;
-
-          d2 = GetValD(i2, x, y);
-          dn2 = GetValD(i2, xn, yn);
-          dr2 = (d2 + dn2) / 2;
-          di2 = (-d2 + dn2) / 2;
-
-          double denom = dr1 * dr1 + di1 * di1;
-
-          if (beta == 0)
+        double factor = 1 / sqrt(double(xs * ys));
+        for (int y = 0; y < i1.ysize; ++y)
+          for (int x = 0; x < i1.xsize; ++x)
             {
-              if (denom == 0)
+              int xn = negf(x, xs);
+              int yn = negf(y, ys);
+
+              double d1 = GetValD(i1, x, y);
+              double dn1 = GetValD(i1, xn, yn);
+              double dr1 = (d1 + dn1) / 2;
+              double di1 = (-d1 + dn1) / 2;
+
+              double d2 = GetValD(i2, x, y);
+              double dn2 = GetValD(i2, xn, yn);
+              double dr2 = (d2 + dn2) / 2;
+              double di2 = (-d2 + dn2) / 2;
+
+              double denom = dr1 * dr1 + di1 * di1;
+
+              double d3;
+              if (beta == 0)
                 {
-                  d3 = 0;
+                  if (denom == 0)
+                    {
+                      d3 = 0;
+                    }
+                  else
+                    {
+                      d3 = (dr1 * dr2 + di1 * di2 - dr1 * di2 + di1 * dr2) / denom * factor;
+                    }
                 }
               else
                 {
-                  d3 = (dr1 * dr2 + di1 * di2 - dr1 * di2 + di1 * dr2) / denom * factor;
+                  d3 = (dr1 * dr2 + di1 * di2 - dr1 * di2 + di1 * dr2) / (denom + beta2) * factor;
                 }
-            }
-          else
-            {
-              d3 = (dr1 * dr2 + di1 * di2 - dr1 * di2 + di1 * dr2) / (denom + beta2) * factor;
+
+              PutValD(hdest, x, y, d3);
             }
 
-          PutValD(hdest, x, y, d3);
-        }
-
-    if (NEED_TEMP)
-      {
-        for (int y = 0; y < i3.ysize; ++y)
-          for (int x = 0; x < i3.xsize; ++x)
-            PutValD(i3, x, y, GetValD(hdest, x, y));
-        FreeImgD(hdest);
+        if (NEED_TEMP)
+          {
+            for (int y = 0; y < i3.ysize; ++y)
+              for (int x = 0; x < i3.xsize; ++x)
+                {
+                  PutValD(i3, x, y, GetValD(hdest, x, y));
+                }
+          }
       }
-
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "CrossCorrelationFImgD"
-  int CrossCorrelationFImgD(ImageD r1, ImageD i1, ImageD r2, ImageD i2,
-                            ImageD r3, ImageD i3)
+  void CrossCorrelationFImgD(ImageD r1, ImageD i1, ImageD r2, ImageD i2,
+                             ImageD r3, ImageD i3)
   {
 
-    int xs, ys;
-    double dr1, di1, dr2, di2, dr3, di3;
-    double factor;
+    try
+      {
+        int xs, ys;
+        MatchImgD(r1, i1, xs, ys);
+        MatchImgD(r1, r2, i2);
+        MatchImgD(r1, r3, i3);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(r1, i1, r2, xs, ys));
-    RETURN_ERROR_IF_FAILED(MatchImgD(r2, i2, r3, xs, ys));
-    RETURN_ERROR_IF_FAILED(MatchImgD(r3, i3, xs, ys));
+        double factor = sqrt(double(xs)) * sqrt(double(ys));
 
-    factor = sqrt(double(xs)) * sqrt(double(ys));
-    for (int y = 0; y < r1.ysize; ++y)
-      for (int x = 0; x < r1.xsize; ++x)
-        {
-          dr1 = GetValD(r1, x, y);
-          di1 = GetValD(i1, x, y);
-          dr2 = GetValD(r2, x, y);
-          di2 = GetValD(i2, x, y);
-          dr3 = (dr1 * dr2 + di1 * di2) * factor;
-          di3 = (-dr1 * di2 + di1 * dr2) * factor;
-          PutValD(r3, x, y, dr3);
-          PutValD(i3, x, y, di3);
-        }
-    return OK;
+        for (int y = 0; y < r1.ysize; ++y)
+          for (int x = 0; x < r1.xsize; ++x)
+            {
+              double dr1 = GetValD(r1, x, y);
+              double di1 = GetValD(i1, x, y);
+              double dr2 = GetValD(r2, x, y);
+              double di2 = GetValD(i2, x, y);
+              double dr3 = (dr1 * dr2 + di1 * di2) * factor;
+              double di3 = (-dr1 * di2 + di1 * dr2) * factor;
+              PutValD(r3, x, y, dr3);
+              PutValD(i3, x, y, di3);
+            }
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "CrossCorrelationHImgD"
-  int CrossCorrelationHImgD(ImageD i1, ImageD i2, ImageD i3)
+  void CrossCorrelationHImgD(ImageD i1, ImageD i2, ImageD i3)
   {
-    int xn, yn;
-    int xs, ys;
-    double d1, dn1, d2, dn2, d3;
-    double factor;
-    int NEED_TEMP = false;
-    ImageD hdest;
-
-    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
-
-    if ((i3 == i1) || (i3 == i2))
+    try
       {
-        NEED_TEMP = true;
-        hdest = NewImgD(xs, ys);
+        int xs, ys;
+        MatchImgD(i1, i2, i3, xs, ys);
+
+        int NEED_TEMP = false;
+        ImageD hdest;
+
+        if ((i3 == i1) || (i3 == i2))
+          {
+            NEED_TEMP = true;
+            hdest = NewImgD(xs, ys);
+          }
+        else
+          {
+            hdest = i3;
+          }
+
+        double factor = sqrt(double(xs)) * sqrt(double(ys)) / 2;
+
+        for (int y = 0; y < i1.ysize; ++y)
+          for (int x = 0; x < i1.xsize; ++x)
+            {
+              int xn = negf(x, xs);
+              int yn = negf(y, ys);
+              double d1 = GetValD(i1, x, y);
+              double dn1 = GetValD(i1, xn, yn);
+              double d2 = GetValD(i2, x, y);
+              double dn2 = GetValD(i2, xn, yn);
+              double d3 = (d1 * d2 + d1 * dn2 - dn1 * d2 + dn1 * dn2) * factor;
+              PutValD(hdest, x, y, d3);
+            }
+
+        if (NEED_TEMP)
+          {
+            for (int y = 0; y < i3.ysize; ++y)
+              for (int x = 0; x < i3.xsize; ++x)
+                {
+                  PutValD(i3, x, y, GetValD(hdest, x, y));
+                }
+          }
       }
-    else hdest = i3;
-
-    factor = sqrt(double(xs)) * sqrt(double(ys)) / 2;
-
-    for (int y = 0; y < i1.ysize; ++y)
-      for (int x = 0; x < i1.xsize; ++x)
-        {
-          xn = negf(x, xs);
-          yn = negf(y, ys);
-          d1 = GetValD(i1, x, y);
-          dn1 = GetValD(i1, xn, yn);
-          d2 = GetValD(i2, x, y);
-          dn2 = GetValD(i2, xn, yn);
-          d3 = (d1 * d2 + d1 * dn2 - dn1 * d2 + dn1 * dn2) * factor;
-          PutValD(hdest, x, y, d3);
-        }
-
-    if (NEED_TEMP)
-      {
-        for (int y = 0; y < i3.ysize; ++y)
-          for (int x = 0; x < i3.xsize; ++x)
-            PutValD(i3, x, y, GetValD(hdest, x, y));
-        FreeImgD(hdest);
-      }
-
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "CrossCorrelationImgD"
-  int CrossCorrelationImgD(ImageD i1, ImageD i2, ImageD i3)
+  void CrossCorrelationImgD(ImageD i1, ImageD i2, ImageD i3)
   {
-    int xs, ys;
+    try
+      {
+        int xs, ys;
+        MatchImgD(i1, i2, i3, xs, ys);
 
-    ImageD h1, h2;
+        ImageD h1 = NewImgD(xs, ys);
+        ImageD h2 = NewImgD(xs, ys);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(i1, i2, i3, xs, ys));
+        HartleyImgD(i1, h1);
+        HartleyImgD(i2, h2);
 
-    h1 = NewImgD(xs, ys);
-    h2 = NewImgD(xs, ys);
+        CrossCorrelationHImgD(h1, h2, i3);
 
-    IF_FAILED(HartleyImgD(i1, h1))
-    {
-      FreeImgD(h1);
-      FreeImgD(h2);
-      return ERROR;
-    }
-
-    IF_FAILED(HartleyImgD(i2, h2))
-    {
-      FreeImgD(h1);
-      FreeImgD(h2);
-      return ERROR;
-    }
-
-    IF_FAILED(CrossCorrelationHImgD(h1, h2, i3))
-    {
-      FreeImgD(h1);
-      FreeImgD(h2);
-      return ERROR;
-    }
-
-    IF_FAILED(HartleyImgD(i3, i3))
-    {
-      FreeImgD(h1);
-      FreeImgD(h2);
-      return ERROR;
-    }
-
-    FreeImgD(h1);
-    FreeImgD(h2);
-
-    return OK;
+        HartleyImgD(i3, i3);
+      }
+    RETHROW;
   }
 #undef FNAME
 }

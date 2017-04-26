@@ -39,7 +39,9 @@ namespace ice
   {
     int res = 1;
     for (auto it = children.begin(); it != children.end(); it++)
-      res += (*it)->getNComponents();
+      {
+        res += (*it)->getNComponents();
+      }
     return res;
   }
 
@@ -62,7 +64,9 @@ namespace ice
         int hdepth = (*it)->getDepth();
 
         if (hdepth > depth)
-          depth = hdepth;
+          {
+            depth = hdepth;
+          }
       }
 
     return depth + 1;
@@ -76,7 +80,9 @@ namespace ice
         int cHeight = (*it)->setHeight(value);
 
         if (cHeight > height)
-          height = cHeight;
+          {
+            height = cHeight;
+          }
       }
     return height + abs(value - referenceValue);
   }
@@ -130,7 +136,9 @@ namespace ice
         children.erase(new_end, children.end());
 
         for (unsigned int i = 0; i < children.size(); i++)
-          children[i]->reduceSmallLeaves(minheight);
+          {
+            children[i]->reduceSmallLeaves(minheight);
+          }
       }
   }
 
@@ -138,7 +146,9 @@ namespace ice
   {
     // entfernt Teilstränge mit Flächen kleiner minarea
     if (area < minarea)
-      return true; // "ich bin klein"
+      {
+        return true;  // "ich bin klein"
+      }
 
     for (auto it = children.begin(); it != children.end(); it++)
       {
@@ -164,13 +174,18 @@ namespace ice
     // Baum ausgeben bis zu tiefe depth (debug)
     if (depth > lvl)
       {
-        for (int i = 0; i < lvl; i++) cout << ".";
+        for (int i = 0; i < lvl; i++)
+          {
+            cout << ".";
+          }
 
         cout << " area:" << area << " value:" << value;
         cout << " children:" << children.size() << endl;
         cout << " height of children:" << height << endl;
         for (auto it = children.begin(); it != children.end(); it++)
-          (*it)->print(depth, lvl + 1);
+          {
+            (*it)->print(depth, lvl + 1);
+          }
       }
   }
 
@@ -185,7 +200,9 @@ namespace ice
         color = (color) % (img.maxval + 1) + 1;
 
         for (auto it = children.begin(); it != children.end(); it++)
-          (*it)->draw(img, depth - 1);
+          {
+            (*it)->draw(img, depth - 1);
+          }
       }
   }
 
@@ -194,13 +211,17 @@ namespace ice
     int ret = 0;
 
     if (area < minarea)
-      return ret; // zu klein, Kinder können auch nicht größer sein, fertig
+      {
+        return ret;  // zu klein, Kinder können auch nicht größer sein, fertig
+      }
 
     regions.push_back(*region);
 
     ret = 1;
     for (auto it = children.begin(); it != children.end(); it++)
-      ret += (*it)->getBigRegions(regions, minarea);
+      {
+        ret += (*it)->getBigRegions(regions, minarea);
+      }
 
     return ret;
   }
@@ -218,9 +239,13 @@ namespace ice
     else
       {
         for (auto  it = children.begin(); it != children.end(); it++)
-          (*it)->getLeafs(leaves, basins);
+          {
+            (*it)->getLeafs(leaves, basins);
+          }
         if (children.size() == 1 && basins.back() == children[0])
-          basins.back() = this;
+          {
+            basins.back() = this;
+          }
       }
   }
 
@@ -233,7 +258,9 @@ namespace ice
     else
       {
         for (auto  it = children.begin(); it != children.end(); it++)
-          (*it)->getLeafs(leaves);
+          {
+            (*it)->getLeafs(leaves);
+          }
       }
 
   }
@@ -274,7 +301,9 @@ namespace ice
   {
     area = region->getArea();
     for (auto it = children.begin(); it != children.end(); it++)
-      area += (*it)->setArea();
+      {
+        area += (*it)->setArea();
+      }
     return area;
   }
 
@@ -293,7 +322,9 @@ namespace ice
     vector<int> bucket(mv + 1); // "Zeiger" auf ersten Grauwert mit Wert i
 
     for (int i = 0; i <= mv; i++)
-      bucket[i] = -1;
+      {
+        bucket[i] = -1;
+      }
 
     int idx = 0;
 
@@ -316,7 +347,9 @@ namespace ice
 
     // initialisierung der Datenstrukturen
     for (int idx = 0; idx < ss; idx++)
-      lowestNode[idx] = idx;
+      {
+        lowestNode[idx] = idx;
+      }
 
     int firstValue = mv;
     int endValue = -1;
@@ -357,7 +390,7 @@ namespace ice
                   {
                     int qidx = xy2ind(qx, qy);
 
-                    if (nodes[qidx] != nullptr) // if already processed
+                    if (nodes[qidx] != nullptr)   // if already processed
                       {
                         int adjTree = tree.find(qidx);
                         int adjNode = node.find(lowestNode[adjTree]);
@@ -381,7 +414,9 @@ namespace ice
                             else
                               {
                                 if (nodes[curNode] == nullptr)
-                                  nodes[curNode] = new ComponentTreeNode(value);
+                                  {
+                                    nodes[curNode] = new ComponentTreeNode(value);
+                                  }
                                 nodes[curNode]->addAsChild(*nodes[adjNode]);
                               }
 
@@ -392,7 +427,9 @@ namespace ice
                   }
               }
             if (curNode == idx && nodes[idx] == nullptr)
-              nodes[idx] = new ComponentTreeNode(value);
+              {
+                nodes[idx] = new ComponentTreeNode(value);
+              }
             // nächster Punkt
             idx = slink[idx];
           }

@@ -40,7 +40,7 @@
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fit.h"
@@ -93,19 +93,13 @@ namespace ice
     unsigned int pnr = pl.size();
 
     if (pnr < 3)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return Circle();
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (pnr != weight.size())
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return Circle();
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     /* Berechnung der Kovarianzmatrix */
-    cov.Set(0.0);
+    cov.set(0.0);
 
     for (unsigned int i = 0; i < pnr; i++)
       {
@@ -133,7 +127,9 @@ namespace ice
 
     for (int i = 1; i < 4; i++)
       for (int j = 0; j < i; j++)
-        cov[i][j] = cov[j][i];
+        {
+          cov[i][j] = cov[j][i];
+        }
 
     Vector eval;
     Matrix evec;
@@ -161,27 +157,22 @@ namespace ice
     std::vector<double> weight(pl.size());
 
     for (unsigned int i = 0; i < pl.size(); i++)
-      weight[i] = 1.0;
+      {
+        weight[i] = 1.0;
+      }
 
     return FitCircle(pl, weight);
   }
-
 
   Circle FitCircle(const std::vector<Point>& pl, std::vector<double>& weight, int step)
   {
     Circle res;
 
     if (pl.size() < 3)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (step < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double mse = 1.0;
 
@@ -191,7 +182,9 @@ namespace ice
         step--;
 
         if (step >= 0)
-          mse = new_weights(pl, weight, res);
+          {
+            mse = new_weights(pl, weight, res);
+          }
       }
 
     return res;

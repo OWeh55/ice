@@ -301,9 +301,6 @@ namespace ice
 #define UPDATE_WINDOW   18
 #define RESET_WINDOW    19
 
-// #define GRAY 20
-
-
   /* Informations-Konstante */
 
 #define DEFAULT   0
@@ -356,6 +353,7 @@ namespace ice
 #define UNSIGNED        58
 #define NO_INTERSECTION 59
 #define TANGENT         60
+
   /* Fileformate */
 #define UNSUPPORTED_TYP 70
 #define UNKNOWN_TYP     71
@@ -368,22 +366,20 @@ namespace ice
 #define PBM             78
 #define PSD             79
 
-  /* Farben */
-#define C_BLACK         0 /* nur fuer Alpha */
-#define C_BROWN         0 /* nur fuer Graphic */
+  // colors
+#define C_BLACK         0 // alpha display only
+#define C_BROWN         0 // image display only
 #define C_RED           1
 #define C_GREEN         2
 #define C_BLUE          3
 #define C_YELLOW        4
 #define C_CYAN          5
 #define C_MAGENTA       6
-#define C_PINK          7 /* nur fuer Graphic */
-#define C_WHITE         7 /* nur fuer Alpha */
+#define C_PINK          7 // image display only
+#define C_WHITE         7 // alpha display only
 
-  /* Defaultwerte */
-  /* defaults für implicit angelegte Bilder, wenn Maxval nicht anders
-     ermittelbar ist */
-
+  // default values
+  // defaults maxval for implicitly created images
 #define DEFAULT_IMG_MAXVAL 255
 
 #define MODE_NEW 1

@@ -36,9 +36,9 @@ namespace ice
   public:
     ConturList();  // Standard Constructor
     ConturList(const ConturList&);  // Copy Constructor
-    int Add(const Contur& c);
-    int Sub(int i);
-    Contur* GetContur(int i);
+    int add(const Contur& c);
+    int sub(int i);
+    Contur* getContur(int i);
     ~ConturList();
     const int& number;
     ConturList& operator =(const ConturList& cl);

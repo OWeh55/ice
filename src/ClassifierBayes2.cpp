@@ -23,7 +23,7 @@
 
 #include "matrixarith.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "MatrixAlgebra.h"
 #include "ClassifierBayes2.h"
@@ -35,11 +35,11 @@ namespace ice
                                      double ap1, double ap2, // probability
                                      double ac12, double ac21) // costs
   {
-    IF_FAILED(Init(classes, dimension, ap1, ap2, ac12, ac21))
-    {
-      // if initialisation fails
-      Message(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        Init(classes, dimension, ap1, ap2, ac12, ac21);
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -49,13 +49,17 @@ namespace ice
                               double ap1, double ap2, // probability
                               double ac12, double ac21) // costs
   {
-    RETURN_VOID_IF_FAILED(Classifier::Init(classes, dimension));
-    p1 = ap1;
-    p2 = ap2;
-    c12 = ac12;
-    c21 = ac21;
-    st1.Init(nFeatures);
-    st2.Init(nFeatures);
+    try
+      {
+        Classifier::Init(classes, dimension);
+        p1 = ap1;
+        p2 = ap2;
+        c12 = ac12;
+        c21 = ac21;
+        st1.Init(nFeatures);
+        st2.Init(nFeatures);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Train"
@@ -63,9 +67,13 @@ namespace ice
   int ClassifierBayes2::_train(const ClassSample& s)
   {
     if (s.classNr == 0)
-      Put(st1, s.features);
+      {
+        Put(st1, s.features);
+      }
     else
-      Put(st2, s.features);
+      {
+        Put(st2, s.features);
+      }
     return OK;
   }
 #undef FNAME
@@ -81,8 +89,14 @@ namespace ice
 
     double ent = dif2 * (sigma2 * dif2) - dif1 * (sigma1 * dif1) - limit;
 
-    if (ent > 0)  return 0;
-    else return 1;
+    if (ent > 0)
+      {
+        return 0;
+      }
+    else
+      {
+        return 1;
+      }
   }
 #undef FNAME
 #define FNAME "ClassifierBayes2::Finish"
@@ -121,10 +135,7 @@ namespace ice
     std::string id;
     source >> id;
     if (id != "ClassifierBayes2")
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     source >> nFeatures >> p1 >> p2;
     source >> c12 >> c21;
@@ -138,10 +149,7 @@ namespace ice
     source >> st2;
 
     if (source.fail() || source.bad())
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
 
     Finish();
     return OK;

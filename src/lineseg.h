@@ -61,7 +61,10 @@ namespace ice
     LineSeg(double xp, double yp, double x2p, double y2p, int typep = segment):
       GeoObject(xp, yp), dp(x2p - xp, y2p - yp), type(typep)
     {
-      if (dp == IPoint(0, 0)) dp.x = 1e-6;
+      if (dp == IPoint(0, 0))
+        {
+          dp.x = 1e-6;
+        }
     }
 
     /** constructor for line segment from xp,yp to x2p,y2p
@@ -69,7 +72,10 @@ namespace ice
     LineSeg(Point p1, Point p2, int typep = segment):
       GeoObject(p1), dp(p2 - p1), type(typep)
     {
-      if (p1 == p2) dp.x = 1e-6;
+      if (p1 == p2)
+        {
+          dp.x = 1e-6;
+        }
     }
 
     /** constructor for ray from p in direction fi
@@ -194,9 +200,15 @@ namespace ice
     {
       // begrenzt das my der Parameterdarstellung auf einen dem Typ
       // entsprechenden Bereich
-      if ((my < 0.0) && (type & begin_l)) my = 0.0;
+      if ((my < 0.0) && (type & begin_l))
+        {
+          my = 0.0;
+        }
 
-      if ((my > 1.0) && (type & end_l)) my = 1.0;
+      if ((my > 1.0) && (type & end_l))
+        {
+          my = 1.0;
+        }
 
       return my;
     }
@@ -214,18 +226,28 @@ namespace ice
 
       if (type & begin_l)
         {
-          if (my2 < 0.0) return false;
+          if (my2 < 0.0)
+            {
+              return false;
+            }
 
           if (my1 < 0.0)
-            my1 = 0.0;
+            {
+              my1 = 0.0;
+            }
         }
 
       if (type & end_l)
         {
-          if (my1 > 1.0) return false;
+          if (my1 > 1.0)
+            {
+              return false;
+            }
 
           if (my2 > 1.0)
-            my2 = 1.0;
+            {
+              my2 = 1.0;
+            }
         }
 
       return true;

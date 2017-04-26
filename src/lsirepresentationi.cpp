@@ -110,8 +110,14 @@ namespace ice
     summ = 0;
 
     for (int i = 0; i < dimx * dimy; i++)
-      if (mask[i] > 0) sump += mask[i];
-      else summ += mask[i];
+      if (mask[i] > 0)
+        {
+          sump += mask[i];
+        }
+      else
+        {
+          summ += mask[i];
+        }
 
     sump /= norm;
     summ /= norm;
@@ -159,7 +165,9 @@ namespace ice
     mask = new int[dimx * dimy];
 
     for (int i = 0; i < dimx * dimy; i++)
-      mask[i] = r.mask[i];
+      {
+        mask[i] = r.mask[i];
+      }
   }
 
   void LsiRepresentationI::reflectMask()
@@ -202,8 +210,14 @@ namespace ice
       {
         int v = mask[i];
 
-        if (v > 0) sump += v;
-        else summ -= v;
+        if (v > 0)
+          {
+            sump += v;
+          }
+        else
+          {
+            summ -= v;
+          }
       }
 
     double sumc = Max(sump, summ);
@@ -235,29 +249,29 @@ namespace ice
       }
   }
 
-  int LsiRepresentationI::Filter(const Image& src,
-                                 const Image& dest, int offset) const
+  void LsiRepresentationI::Filter(const Image& src,
+                                  const Image& dest, int offset) const
   {
-    LsiRepresentationI n = normalized(src->maxval);
+    LsiRepresentationI n = normalized(src.maxval);
 
-    return LSIImg(src, dest,
-                  n.dimx, n.dimy, n.mask,
-                  n.norm,
-                  offset);
+    LSIImg(src, dest,
+           n.dimx, n.dimy, n.mask,
+           n.norm,
+           offset);
   }
 
-  int LsiRepresentationI::Filter(const Image& src, ImageD dest) const
+  void LsiRepresentationI::Filter(const Image& src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask,
-                  norm);
+    LSIImg(src, dest,
+           dimx, dimy, mask,
+           norm);
   }
 
-  int LsiRepresentationI::Filter(ImageD src, ImageD dest) const
+  void LsiRepresentationI::Filter(ImageD src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask,
-                  norm);
+    LSIImg(src, dest,
+           dimx, dimy, mask,
+           norm);
   }
 
 }

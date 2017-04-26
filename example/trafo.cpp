@@ -29,8 +29,8 @@ int main(int argc, char* argv [])
   cout.precision(2);
 
   Trafo t1(3, 3);
-  t1.Rotate(Vector3d(0.5, 0.5, 0.5), Vector3d(0, 1, 0), 90);
-  t1.Scale(Vector(0.5, 0.5, 0.5), 0.5);
+  t1.rotate(Vector3d(0.5, 0.5, 0.5), Vector3d(0, 1, 0), 90);
+  t1.scale(Vector(0.5, 0.5, 0.5), 0.5);
 
   for (i = 0; i < pl1.rows(); i++)
     {
@@ -100,31 +100,28 @@ int main(int argc, char* argv [])
   cout << pl1 << pl2 ;
 
   t1 = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);
-  cout << t1.Tmatrix();
+  cout << t1.getMatrix();
   i3 = NewImg(i1);
   CopyImg(i1, i3);
   Show(ON, i3);
   Transform(t1, i1, i3);
-  SubImg(i3, i2, 3, i3);
+  subImg(i3, i2, 3, i3);
   GetChar();
   Show(OFF, i3);
 
   m1 = NewImg(i1->xsize, i1->ysize, 255);
-  ClearImg(m1);
+  clearImg(m1);
   m2 = NewImg(i2->xsize, i2->ysize, 255);
-  ClearImg(m2);
+  clearImg(m2);
 
   Show(OVERLAY, i1, m1);
   Contur c1, c2;
   c1 = SelContur(m1);
-  c2 = Transform(t1, c1);
+  c2 = transform(t1, c1);
   Show(OFF, i1);
   Show(OVERLAY, i2, m2);
   MarkContur(c2, 3, m2);
   GetChar();
-  FreeImg(i1);
-  FreeImg(i2);
-  FreeImg(m1);
-  FreeImg(m2);
+
   return 0;
 }

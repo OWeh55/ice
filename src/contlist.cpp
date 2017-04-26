@@ -21,7 +21,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "Contur.h"
 #include "contlist.h"
 
@@ -43,14 +43,19 @@ namespace ice
     conturs = cl.conturs;
 
     for (i = 0; i < conturs; i++)
-      data[i] = new Contur(*(cl.data[i]));
+      {
+        data[i] = new Contur(*(cl.data[i]));
+      }
   }
 
   ConturList& ConturList::operator=(const ConturList& cl)
   {
     int i;
 
-    for (i = 0; i < conturs; i++) delete data[i];
+    for (i = 0; i < conturs; i++)
+      {
+        delete data[i];
+      }
 
     free(data);
     data = (Contur**)malloc(cl.datalen * sizeof(Contur*));
@@ -58,13 +63,15 @@ namespace ice
     conturs = cl.conturs;
     {
       for (i = 0; i < conturs; i++)
-        data[i] = new Contur(*(cl.data[i]));
+        {
+          data[i] = new Contur(*(cl.data[i]));
+        }
     }
     return *this;
   }
 
 #define FNAME "ConturList::Add"
-  int ConturList::Add(const Contur& c)
+  int ConturList::add(const Contur& c)
   {
     Contur** hdata;
 
@@ -73,10 +80,7 @@ namespace ice
         hdata = (Contur**)realloc(data, (datalen + CONTURLISTBLOCKSIZE) * sizeof(Contur*));
 
         if (hdata == NULL)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return NO_MEM;
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         datalen += CONTURLISTBLOCKSIZE;
         data = hdata;
@@ -88,32 +92,32 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "ConturList::Sub"
-  int ConturList::Sub(int i)
+  int ConturList::sub(int i)
   {
     if ((i < 0) || (i >= conturs))
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     delete data[i];
 
-    for (i = i + 1; i < conturs; i++) data[i - 1] = data[i];
+    for (i = i + 1; i < conturs; i++)
+      {
+        data[i - 1] = data[i];
+      }
 
     conturs--;
     return OK;
   }
 #undef FNAME
-#define FNAME "ConturList::Contur"
-  Contur* ConturList::GetContur(int i)
+#define FNAME "ConturList::getContur"
+  Contur* ConturList::getContur(int i)
   {
-    if (i == conturs) return NULL; // No more conturs, but no Error
+    if (i == conturs)
+      {
+        return NULL;  // No more conturs, but no Error
+      }
 
     if ((i < 0) || (i > conturs))
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return data[i];
   }
@@ -122,7 +126,10 @@ namespace ice
   {
     int i;
 
-    for (i = 0; i < conturs; i++) delete data[i];
+    for (i = 0; i < conturs; i++)
+      {
+        delete data[i];
+      }
 
     free(data);
   }

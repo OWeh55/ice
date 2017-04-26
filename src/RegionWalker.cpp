@@ -38,8 +38,14 @@ namespace ice
             double y2 = yy * yy;
             if (x2 + y2 <= rad2)
               {
-                if (x < xmin) xmin = x;
-                if (x > xmax) xmax = x;
+                if (x < xmin)
+                  {
+                    xmin = x;
+                  }
+                if (x > xmax)
+                  {
+                    xmax = x;
+                  }
               }
           }
         segments.push_back(RowSegment(xmin, xmax, y));

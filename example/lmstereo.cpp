@@ -1,7 +1,9 @@
 #include <fstream>
-#include <image.h>
 #include <float.h>
 #include <lmdif.h>
+
+#include <macro.h>
+#include <image.h>
 
 #define SSIZE 256
 #define SS2 (SSIZE/2)
@@ -95,9 +97,9 @@ Trafo Kamera1(const Vector& par)
   double v0 = par[4];
 
   tr.Projective();
-  tr.ShearX(s);
-  tr.Scale(0, 0, f, a * f);
-  tr.Shift(u0, v0);
+  tr.shearX(s);
+  tr.scale(0, 0, f, a * f);
+  tr.shift(u0, v0);
   return tr;
 }
 
@@ -122,16 +124,16 @@ Trafo Kamera2(const Vector& par)
   double alpha = par[10]; // alpha - fz
 
   // Rotation Kamera
-  tr.RotateZ(alpha);
-  tr.RotateY(beta);
-  tr.RotateX(gamma);
+  tr.rotateZ(alpha);
+  tr.rotateY(beta);
+  tr.rotateX(gamma);
 
-  tr.Shift(dx, dy, dz);
+  tr.shift(dx, dy, dz);
 
   tr.Projective();
-  tr.ShearX(s);
-  tr.Scale(0, 0, f, a * f);
-  tr.Shift(u0, v0);
+  tr.shearX(s);
+  tr.scale(0, 0, f, a * f);
+  tr.shift(u0, v0);
   return tr;
 }
 
@@ -378,22 +380,14 @@ int DetectShift1(Image img1, Image img2,
   imgr = NewImg(sx, sy, 255);
 
 //  Show(ON,imgr);
-  IfFailed(InvConvolutionImg(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS))
-  {
-    FreeImg(imgr);
-    return ERROR;
-  }
+  InvConvolutionImg(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS);
 
-  IfFailed(val = PeakValuation(imgr, Image(), dxy[0], dxy[1]))
-  {
-    FreeImg(imgr);
-    return ERROR;
-  }
+
+  PeakValuation(imgr, Image(), dxy[0], dxy[1]);
 
   dxy[0] -= sx / 2;
   dxy[1] -= sy / 2;
 //  GetChar();
-  FreeImg(imgr);
   return OK;
 }
 
@@ -401,8 +395,8 @@ int DetectShift1(Image img1, Image img2,
 void MarkRefs(const Matrix& xy, Image m1, Image m2)
 {
   int i;
-  ClearImg(m1);
-  ClearImg(m2);
+  clearImg(m1);
+  clearImg(m2);
 
   for (i = 0; i < xy.rows(); i++)
     {
@@ -435,34 +429,32 @@ int readproject(const string& fn)
 
   if (!ref.fail())
     {
-      IfFailed(ref >> fn1)
-      {
-        fn1 = "pict_l.jpg";
-      }
-      IfFailed(ref >> fn2)
-      {
-        fn2 = "pict_r.jpg";
-      }
-      IfFailed(ref >> xy12)
-      {
-        SetOk();
-        xy12 = Matrix(0, 4);
-      }
+      if (!(ref >> fn1))
+        {
+          fn1 = "pict_l.jpg";
+        }
+      if (!(ref >> fn2))
+        {
+          fn2 = "pict_r.jpg";
+        }
+      if (!(ref >> xy12))
+        {
+          xy12 = Matrix(0, 4);
+        }
 
       if (xy12.rows() == 0)
         {
           xy12 = Matrix(0, 4);
         }
 
-      IfFailed(ref >> d3d)
-      {
-        SetOk();
-        d3d = Matrix(0, 3);
-        int i;
+      if (!(ref >> d3d))
+        {
+          d3d = Matrix(0, 3);
+          int i;
 
-        for (i = 0; i < xy12.rows(); i++)
-          d3d.Append(Vector(0.0, 0.0, Z_START_WERT));
-      }
+          for (i = 0; i < xy12.rows(); i++)
+            d3d.append(Vector(0.0, 0.0, Z_START_WERT));
+        }
 
       if (d3d.rows() == 0)
         {
@@ -544,13 +536,13 @@ void Modify()
           Printf("Referenz gelöscht\n");
           break;
         case '2':
-          ClearImg(hm2);
+          clearImg(hm2);
           dxy = Vector(SelVector(DEFAULT, hi2));
           xy12m[i] = Vector(xy12m[i][0], xy12m[i][1],
                             xy12m[i][2] + dxy[0] - SS2, xy12m[i][3] + dxy[1] - SS2);
           break;
         case '1':
-          ClearImg(hm1);
+          clearImg(hm1);
           dxy = Vector(SelVector(DEFAULT, hi1));
           xy12m[i] = Vector(xy12m[i][0] + dxy[0] - SS2, xy12m[i][1] + dxy[1] - SS2,
                             xy12m[i][2], xy12m[i][3]);
@@ -667,13 +659,13 @@ int main(int argc, char* argv[])
   readproject(project);
   i1 = ReadImg(fn1);
   m1 = NewImg(i1->xsize, i1->ysize, 7);
-  ClearImg(m1);
+  clearImg(m1);
   hi1 = NewImg(SSIZE, SSIZE, 255);
   hm1 = NewImg(SSIZE, SSIZE, 7);
 
   i2 = ReadImg(fn2);
   m2 = NewImg(i2->xsize, i2->ysize, 7);
-  ClearImg(m2);
+  clearImg(m2);
   hi2 = NewImg(SSIZE, SSIZE, 255);
   hm2 = NewImg(SSIZE, SSIZE, 7);
   Display(ON);

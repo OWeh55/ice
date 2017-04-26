@@ -67,7 +67,9 @@ namespace ice
     {
       std::vector<int> res;
       for (int i = 0; i < (int)elements.size(); i++)
-        res.push_back(elements[i].x);
+        {
+          res.push_back(elements[i].x);
+        }
       return res;
     }
 
@@ -75,7 +77,9 @@ namespace ice
     {
       std::vector<bool> res;
       for (int i = 0; i < (int)elements.size(); i++)
-        res.push_back(elements[i].b);
+        {
+          res.push_back(elements[i].b);
+        }
       return res;
     }
 #endif
@@ -108,14 +112,18 @@ namespace ice
     int getMin() const
     {
       if (elements.empty())
-        return  -1;
+        {
+          return  -1;
+        }
       return elements.front().x;
     }
 
     int getMax() const
     {
       if (elements.empty())
-        return  -1;
+        {
+          return  -1;
+        }
       return elements.back().x - 1;
     }
 
@@ -144,7 +152,9 @@ namespace ice
       bool operator<(const Elem& sec) const
       {
         if (x == sec.x)
-          return b > sec.b;
+          {
+            return b > sec.b;
+          }
         return x < sec.x;
       }
     };
@@ -156,10 +166,14 @@ namespace ice
 #if 0
       // recursive binary search
       if (right - left < 2)
-        return left;
+        {
+          return left;
+        }
       int middle = (right + left) / 2;
       if (value < elements[middle])
-        return findIndex(value, left, middle);
+        {
+          return findIndex(value, left, middle);
+        }
       return findIndex(value, middle, right);
 #else
       // iterative binary search
@@ -167,9 +181,13 @@ namespace ice
         {
           int middle = (right + left) / 2;
           if (value < elements[middle])
-            right = middle;
+            {
+              right = middle;
+            }
           else
-            left = middle;
+            {
+              left = middle;
+            }
         }
       return left;
 #endif
@@ -179,7 +197,9 @@ namespace ice
     {
       Elem val(value, b);
       if (elements.empty() || val < elements[0])
-        return -1;
+        {
+          return -1;
+        }
       return findIndex(val, 0, elements.size());
     }
 

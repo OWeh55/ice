@@ -143,7 +143,7 @@ namespace ice
     {
       int father = sarray[x]; // wer ist mein Vater ?
 
-      if (father != rootval) // ich bin noch nicht Root
+      if (father != rootval)   // ich bin noch nicht Root
         {
           makeRoot(father);      // Vater zu Root machen...
           setFather(father, x);  // ... und zu meinem Kind erklären!
@@ -156,7 +156,9 @@ namespace ice
       int depth = 0;
 
       while ((x = sarray[x]) != rootval)
-        depth++;
+        {
+          depth++;
+        }
 
       return depth;
     }

@@ -20,7 +20,7 @@
  */
 
 #include "base.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "Vector.h"
@@ -37,20 +37,20 @@ namespace ice
     int samples = m.rows();
 
     if (m.cols() < 2)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     FitInit();
 
     if (m.cols() > 2)
       for (int i = 0; i < samples; i++)
-        FitVal(m[i][0], m[i][1], m[i][2]);
+        {
+          FitVal(m[i][0], m[i][1], m[i][2]);
+        }
     else
       for (int i = 0; i < samples; i++)
-        FitVal(m[i][0], m[i][1]);
-
+        {
+          FitVal(m[i][0], m[i][1]);
+        }
 
     FitFinish();
     return OK;
@@ -127,12 +127,13 @@ namespace ice
     vsize = v.Size();
     ord = 0;
 
-    while ((ord + 1) * (ord + 2) / 2 < vsize) ord++;
+    while ((ord + 1) * (ord + 2) / 2 < vsize)
+      {
+        ord++;
+      }
 
     if ((ord + 1) * (ord + 2) / 2 != vsize)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
   }
 #undef FNAME
   void Polynom2d::FitInit(int n)

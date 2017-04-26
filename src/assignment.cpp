@@ -21,7 +21,7 @@
 #include "assignment.h"
 #include "numbase.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "Matrix.h"
 
 namespace ice
@@ -33,10 +33,7 @@ namespace ice
     // Ordnung: originale Zeile mit dem Index ref[i][0] erscheint
     // im Ergebnis in Zeile ref[i][1]
     if (feat.rows() != ref.rows())
-      {
-        Message(FNAME, M_WRONG_MATRIX, WRONG_MATRIX);
-        return WRONG_MATRIX;
-      }
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     int i;
     Matrix f1 = feat;

@@ -31,51 +31,56 @@ using namespace std;
 namespace ice
 {
 #define FNAME "OrientedSmearImg"
-  int OrientedSmearImg(const Image& pic,
-                       const Image& dir,
-                       const Image& dest,
-                       int filter_size, int filter_length, int filter_width)
+  void OrientedSmearImg(const Image& pic,
+                        const Image& dir,
+                        const Image& dest,
+                        int filter_size, int filter_length, int filter_width)
   {
-    int dimx, dimy;
-    RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
-
-    int dirsteps = dir->maxval + 1;
-    double dirfac = M_PI / dirsteps;
-
-    // Filter-Bank Smear
-    vector<LSIFilter> fsmear;
-
-    for (int i = 0; i < dirsteps; ++i)
+    try
       {
-        double fi = i * dirfac + M_PI * 0.5;
-        fsmear.push_back(mkOrientedSmearFilter(filter_size, fi, filter_length, filter_width));
-      }
+        int dimx, dimy;
+        checkSizes(pic, dir, dest, dimx, dimy);
+
+        int dirsteps = dir.maxval + 1;
+        double dirfac = M_PI / dirsteps;
+
+        // Filter-Bank Smear
+        vector<LSIFilter> fsmear;
+
+        for (int i = 0; i < dirsteps; ++i)
+          {
+            double fi = i * dirfac + M_PI * 0.5;
+            fsmear.push_back(makeOrientedSmearFilter(filter_size, fi, filter_length, filter_width));
+          }
 
 #ifdef OPENMP
-    #pragma omp parallel for schedule(dynamic,20)
+        #pragma omp parallel for schedule(dynamic,20)
 #endif
 
-    for (int y = 0; y < dimy; y++)
-      for (int x = 0; x < dimx; x++)
-        {
-          int richtungs_index = GetVal(dir, x, y);
-          int g = GetVal(pic, x, y, fsmear[richtungs_index]);
-          PutVal(dest, x, y, limited(g, dest));
-        }
-
-    return 0;
+        for (int y = 0; y < dimy; y++)
+          for (int x = 0; x < dimx; x++)
+            {
+              int richtungs_index = GetVal(dir, x, y);
+              int g = GetVal(pic, x, y, fsmear[richtungs_index]);
+              PutVal(dest, x, y, limited(g, dest));
+            }
+      }
+    RETHROW;
   }
 
-  int OrientedSmearImg(const ColorImage& src,
-                       const Image& dir,
-                       const ColorImage& dest,
-                       int filter_size, int filter_length, int filter_width)
+  void OrientedSmearImg(const ColorImage& src,
+                        const Image& dir,
+                        const ColorImage& dest,
+                        int filter_size, int filter_length, int filter_width)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-    RETURN_ERROR_IF_FAILED(OrientedSmearImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width));
-    RETURN_ERROR_IF_FAILED(OrientedSmearImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width));
-    RETURN_ERROR_IF_FAILED(OrientedSmearImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width));
-    return OK;
+    try
+      {
+        src.checkSizes(dest);
+        OrientedSmearImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width);
+        OrientedSmearImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width);
+        OrientedSmearImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width);
+      }
+    RETHROW;
   }
 
 
@@ -89,7 +94,7 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
 
-    int dirsteps = dir->maxval + 1;
+    int dirsteps = dir.maxval + 1;
     double dirfac = 2 * M_PI / dirsteps;
 
     // Filter-Bank Smear
@@ -98,7 +103,7 @@ namespace ice
     for (int i = 0; i < dirsteps; ++i)
       {
         double fi = i * dirfac;
-        fedge.push_back(mkOrientedEdgeFilter(filter_size, fi, filter_rad));
+        fedge.push_back(makeOrientedEdgeFilter(filter_size, fi, filter_rad));
       }
 
 #ifdef OPENMP
@@ -109,23 +114,25 @@ namespace ice
       for (int x = 0; x < dimx; x++)
         {
           int richtungs_index = GetVal(dir, x, y);
-          int g = GetVal(pic, x, y, fedge[richtungs_index]) + dest->maxval / 2;
+          int g = GetVal(pic, x, y, fedge[richtungs_index]) + dest.maxval / 2;
           PutVal(dest, x, y, limited(g, dest));
         }
 
     return 0;
   }
 
-  int OrientedEdgeImg(const ColorImage& src,
-                      const Image& dir,
-                      const ColorImage& dest,
-                      int filter_size, int filter_rad)
+  void OrientedEdgeImg(const ColorImage& src,
+                       const Image& dir,
+                       const ColorImage& dest,
+                       int filter_size, int filter_rad)
   {
-    RETURN_ERROR_IF_FAILED(src.match(dest));
-    RETURN_ERROR_IF_FAILED(OrientedEdgeImg(src.redImage(), dir, dest.redImage(), filter_size, filter_rad));
-    RETURN_ERROR_IF_FAILED(OrientedEdgeImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_rad));
-    RETURN_ERROR_IF_FAILED(OrientedEdgeImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_rad));
-    return OK;
+    try
+      {
+        OrientedEdgeImg(src.redImage(), dir, dest.redImage(), filter_size, filter_rad);
+        OrientedEdgeImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_rad);
+        OrientedEdgeImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_rad);
+      }
+    RETHROW;
   }
 
 #undef FNAME
@@ -138,7 +145,7 @@ namespace ice
     int dimx, dimy;
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dir, dest, dimx, dimy));
 
-    int dirsteps = dir->maxval + 1;
+    int dirsteps = dir.maxval + 1;
     double dirfac = M_PI / dirsteps;
 
     // Filter-Bank DoB
@@ -147,7 +154,7 @@ namespace ice
     for (int i = 0; i < dirsteps; ++i)
       {
         double fi = i * dirfac + 0.5 * M_PI;
-        fdob.push_back(mkOrientedDoBFilter(filter_size, fi, filter_length, filter_width));
+        fdob.push_back(makeOrientedDoBFilter(filter_size, fi, filter_length, filter_width));
       }
 
 #ifdef OPENMP
@@ -158,23 +165,25 @@ namespace ice
       for (int x = 0; x < dimx; x++)
         {
           int richtungs_index = GetVal(dir, x, y);
-          int g = GetVal(pic, x, y, fdob[richtungs_index]) + dest->maxval / 2;
+          int g = GetVal(pic, x, y, fdob[richtungs_index]) + dest.maxval / 2;
           PutVal(dest, x, y, limited(g, dest));
         }
 
     return 0;
   }
 
-  int OrientedDoBImg(const ColorImage& src,
-                     const Image& dir,
-                     const ColorImage& dest,
-                     int filter_size, int filter_length, int filter_width)
+  void OrientedDoBImg(const ColorImage& src,
+                      const Image& dir,
+                      const ColorImage& dest,
+                      int filter_size, int filter_length, int filter_width)
   {
-    RETURN_ERROR_IF_FAILED(src.match(src, dest));
-    RETURN_ERROR_IF_FAILED(OrientedDoBImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width));
-    RETURN_ERROR_IF_FAILED(OrientedDoBImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width));
-    RETURN_ERROR_IF_FAILED(OrientedDoBImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width));
-    return OK;
+    try
+      {
+        OrientedDoBImg(src.redImage(), dir, dest.redImage(), filter_size, filter_length, filter_width);
+        OrientedDoBImg(src.greenImage(), dir, dest.greenImage(), filter_size, filter_length, filter_width);
+        OrientedDoBImg(src.blueImage(), dir, dest.blueImage(), filter_size, filter_length, filter_width);
+      }
+    RETHROW;
   }
 
 #undef FNAME

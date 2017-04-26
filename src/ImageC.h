@@ -232,7 +232,9 @@ namespace ice
     const Image& operator = (const Image& i)
     {
       if (&i == this)
-        return *this;
+        {
+          return *this;
+        }
 
       freeimg();
       xsize = i.xsize;
@@ -295,16 +297,10 @@ namespace ice
     int getPixel(int x, int y) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       return img->getP(x, y);
     }
@@ -312,16 +308,10 @@ namespace ice
     int getPixel(IPoint p) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return 0;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       return img->getP(p.x, p.y);
     }
@@ -390,22 +380,13 @@ namespace ice
     void setPixel(int x, int y, int val) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if ((unsigned int)val > (unsigned int)maxval)
-        {
-          Message(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_VAL_OUT_OF_RANGE);
 
       img->setP(x, y, val);
     }
@@ -413,22 +394,13 @@ namespace ice
     void setPixel(IPoint p, int val) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if ((unsigned int)val > (unsigned int)maxval)
-        {
-          Message(FNAME, M_VAL_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_VAL_OUT_OF_RANGE);
 
       img->setP(p.x, p.y, val);
     }
@@ -448,7 +420,9 @@ namespace ice
       if ((unsigned int)p.x < (unsigned int)xsize)
         if ((unsigned int)p.y < (unsigned int)ysize)
           if ((unsigned int)value <= (unsigned int)maxval)
-            img->setP(p.x, p.y, value);
+            {
+              img->setP(p.x, p.y, value);
+            }
     }
 
     void setPixelClipped(int x, int y, int value) const
@@ -456,7 +430,9 @@ namespace ice
       if ((unsigned int)x < (unsigned int)xsize)
         if ((unsigned int)y < (unsigned int)ysize)
           if ((unsigned int)value <= (unsigned int)maxval)
-            img->setP(x, y, value);
+            {
+              img->setP(x, y, value);
+            }
     }
     //@}
 #undef FNAME
@@ -471,45 +447,45 @@ namespace ice
     void setPixelLimited(int x, int y, int val) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if (val <= 0)
-        img->setP(x, y, 0);
+        {
+          img->setP(x, y, 0);
+        }
       else if (val >= maxval)
-        img->setP(x, y, maxval);
+        {
+          img->setP(x, y, maxval);
+        }
       else
-        img->setP(x, y, val);
+        {
+          img->setP(x, y, val);
+        }
     }
 
     void setPixelLimited(IPoint p, int val) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
-        {
-          Message(FNAME, M_X_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_X_OUT_OF_RANGE);
 
       if ((unsigned int)p.y >= (unsigned int)ysize)
-        {
-          Message(FNAME, M_Y_OUT_OF_RANGE, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
       if (val <= 0)
-        img->setP(p.x, p.y, 0);
+        {
+          img->setP(p.x, p.y, 0);
+        }
       else if (val >= maxval)
-        img->setP(p.x, p.y, maxval);
+        {
+          img->setP(p.x, p.y, maxval);
+        }
       else
-        img->setP(p.x, p.y, val);
+        {
+          img->setP(p.x, p.y, val);
+        }
     }
     //@}
 #undef FNAME
@@ -644,10 +620,22 @@ namespace ice
      */
     bool inside(const Point& p) const
     {
-      if (p.x < -0.5) return false;
-      if (p.y < -0.5) return false;
-      if (p.x >= xsize - 0.5) return false;
-      if (p.y >= ysize - 0.5) return false;
+      if (p.x < -0.5)
+        {
+          return false;
+        }
+      if (p.y < -0.5)
+        {
+          return false;
+        }
+      if (p.x >= xsize - 0.5)
+        {
+          return false;
+        }
+      if (p.y >= ysize - 0.5)
+        {
+          return false;
+        }
       return true;
     }
 
@@ -659,9 +647,8 @@ namespace ice
       return inside(window.p1) && inside(window.p2);
     }
 
-    /*
-     * set
-     * set all pixels to the given value
+    /**
+     * set all pixels to the given value.
      */
     int set(int val) const
     {
@@ -669,21 +656,26 @@ namespace ice
     }
 
     /**
-     * read image from file
+     * read image from file.
      */
     int read(const std::string& filename);
 
     /**
-     * write image to file
+     * write image to file.
      */
     int write(const std::string& filename) const;
 
     //@{
     /**
-     * does the sizes of the images match?.
+     * make sure, the sizes of the images match.
+     * throws an exception if sizes do not match
      */
-    int match(const Image& img2) const;
-    int match(const Image& img2, const Image& img3) const;
+    void checkSizes(const Image& img2) const;
+    /**
+     * make sure, the sizes and value ranges of the images match.
+     * throws an exception if sizes do not match
+     */
+    void checkImage(const Image& img2) const;
     //@}
 
   protected:
@@ -756,10 +748,5 @@ namespace ice
                const Window& w,
                const std::string& title = "");
 
-  /**
-   * Release the data of img.
-   * After this img is invalid.
-   */
-  int FreeImg(Image& img);
 }
 #endif // #ifndef __IMAGEC_H

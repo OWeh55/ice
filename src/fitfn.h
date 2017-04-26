@@ -112,7 +112,9 @@ namespace ice
     virtual int setCoefficient(const std::vector<double>& v, int idx = 0)
     {
       for (unsigned int i = 0; i < co.size(); i++)
-        co[i] = v[idx++];
+        {
+          co[i] = v[idx++];
+        }
       return idx;
     }
 
@@ -306,7 +308,9 @@ namespace ice
     virtual int setCoefficient(const std::vector<double>& v, int idx = 0)
     {
       for (unsigned int i = 0; i < co.size(); i++)
-        co[i] = v[idx++];
+        {
+          co[i] = v[idx++];
+        }
       return idx;
     }
 

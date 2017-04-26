@@ -72,57 +72,61 @@ namespace ice
     virtual int DimSource() const;
     virtual int DimTarget() const;
 
-    virtual void Init();
+    virtual void init();
 
     // these methods *append* transformations to existing one
 
-    virtual int Shift(double x0, double y0);
-    virtual int Shift(double x0, double y0, double z0);
-    virtual int Shift(Vector3d v);
-    virtual int Shift(const ice::Vector& v);
-    virtual int Shift(const ice::Point& p)
+    virtual void shift(double x0, double y0);
+    virtual void shift(double x0, double y0, double z0);
+    virtual void shift(Vector3d v);
+    virtual void shift(const ice::Vector& v);
+    virtual void shift(const ice::Point& p)
     {
-      return Shift(p.x, p.y);
+      return shift(p.x, p.y);
     }
 
-    virtual int Rotate(double x0, double y0, double phi);
-    virtual int Rotate(Vector3d point, Vector3d axis, double phi);
+    virtual void rotate(double x0, double y0, double phi);
+    virtual void rotate(Vector3d point, Vector3d axis, double phi);
 
     // Eulersche Winkel!
-    virtual int RotateX(double phi);
-    virtual int RotateY(double phi);
-    virtual int RotateZ(double phi);
+    virtual void rotateX(double phi);
+    virtual void rotateY(double phi);
+    virtual void rotateZ(double phi);
 
     // euclidian move in 3d
     // shift (dx, dy, dz) + z-rotation alpha + y-rotation beta + x-rotation gamma
-    virtual int Move(double dx, double dy, double dz, double alpha, double beta, double gamma);
+    virtual void move(double dx, double dy, double dz, double alpha, double beta, double gamma);
     // shift d + z-rotation alpha + y-rotation beta + x-rotation gamma
-    virtual int Move(Vector3d d, double alpha, double beta, double gamma);
+    virtual void move(Vector3d d, double alpha, double beta, double gamma);
 
-    virtual int Flip(int axis);
+    virtual void flip(int axis);
 
-    virtual int ShearY(double dyx);
-    virtual int ShearX(double dxy);
+    virtual void shearY(double dyx);
+    virtual void shearX(double dxy);
 
-    virtual int Scale(double x0, double y0, double f);
-    virtual int Scale(double x0, double y0, double fx, double fy);
-    virtual int Scale(Vector3d center, double f);
-    virtual int Scale(Vector3d center, double fx, double fy, double fz);
-    virtual int Scale(const ice::Vector& center, double f);
-    virtual int Scale(const ice::Vector& center, const ice::Vector& f);
+    virtual void scale(double x0, double y0, double f);
+    virtual void scale(double x0, double y0, double fx, double fy);
+    virtual void scale(Vector3d center, double f);
+    virtual void scale(Vector3d center, double fx, double fy, double fz);
+    virtual void scale(const ice::Vector& center, double f);
+    virtual void scale(const ice::Vector& center, const ice::Vector& f);
 
-    virtual int Projective();
+    virtual void Projective();
 
     // append another Trafo
-    virtual int append(const Trafo& tr);
+    virtual void append(const Trafo& tr);
     // prepend another Trafo
-    virtual int prepend(const Trafo& tr);
+    virtual void prepend(const Trafo& tr);
 
-    virtual int Invert();
+    virtual void invert();
 
-    virtual Trafo Inverse() const;
+    virtual Trafo inverse() const;
 
-    virtual Matrix Tmatrix() const;
+    //    virtual Matrix Tmatrix() const;
+    virtual const matrix<double>& getMatrix() const
+    {
+      return m;
+    }
 
     friend Trafo operator *(const Trafo&, const Trafo&);
     friend ice::Vector operator *(const Trafo&, const ice::Vector&);
@@ -130,35 +134,31 @@ namespace ice
     friend ice::Point operator *(const Trafo&, const ice::Point&);
 
     // transformations in 2d
-    friend int Transform(const Trafo&, double& x, double& y);
-    friend int Transform(const Trafo&,
-                         double x, double y,
-                         double& xt, double& yt);
+    friend void transform(const Trafo&, double& x, double& y);
+    friend void transform(const Trafo&,
+                          double x, double y,
+                          double& xt, double& yt);
 
     // transformations in 3d
-    friend int Transform(const Trafo&, double& x, double& y, double& z);
-    friend int Transform(const Trafo&,
-                         double x, double y, double z,
-                         double& xt, double& yt, double& zt);
+    friend void transform(const Trafo&, double& x, double& y, double& z);
+    friend void transform(const Trafo&,
+                          double x, double y, double z,
+                          double& xt, double& yt, double& zt);
 
     // transformations 3d to 2d
-    friend int Transform(const Trafo&,
-                         double x, double y, double z,
-                         double& xt, double& yt);
+    friend void transform(const Trafo&,
+                          double x, double y, double z,
+                          double& xt, double& yt);
 
-    friend int TransformList(const Trafo& tr, Matrix& m);
-    friend int TransformList(const Trafo& tr, const Matrix& m1, Matrix& m2);
+    friend void transformList(const Trafo& tr, Matrix& m);
+    friend void transformList(const Trafo& tr, const Matrix& m1, Matrix& m2);
 
     friend Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
                                  int mode, const ice::Vector& weight);
 
-    const matrix<double>& getMatrix() const
-    {
-      return m;
-    }
 
   protected:
-    int normalize();
+    void normalize();
     matrix<double> m;
     int dimSource, dimTarget;
   };
@@ -167,26 +167,26 @@ namespace ice
   ice::Vector operator *(const Trafo&, const ice::Vector&);
 
 // transform in 2d
-  int Transform(const Trafo&, double& x, double& y);
-  int Transform(const Trafo&, double x, double y, double& xt, double& yt);
-  int Transform(const Trafo&, Point p1, Point& p2);
-  int Transform(const Trafo&, Point& p);
+  void transform(const Trafo&, double& x, double& y);
+  void transform(const Trafo&, double x, double y, double& xt, double& yt);
+  void transform(const Trafo&, Point p1, Point& p2);
+  void transform(const Trafo&, Point& p);
 
-  int Transform(const Trafo&, std::vector<Point>& p);
-  int Transform(const Trafo&, const std::vector<Point>& p1, std::vector<Point>& p2);
+  void transform(const Trafo&, std::vector<Point>& p);
+  void transform(const Trafo&, const std::vector<Point>& p1, std::vector<Point>& p2);
 
-  // rounding in name of function to avoid accidentally rounding
-  int TransformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt);
-  int TransformAndRound(const Trafo& tr, int& xt, int& yt);
+  // "round" in name of function to avoid accidentally rounding
+  void transformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt);
+  void transformAndRound(const Trafo& tr, int& xt, int& yt);
 
 // transform in 3d
-  int Transform(const Trafo&, double& x, double& y, double& z);
-  int Transform(const Trafo&, double x, double y, double z,
-                double& xt, double& yt, double& zt);
+  void transform(const Trafo&, double& x, double& y, double& z);
+  void transform(const Trafo&, double x, double y, double z,
+                 double& xt, double& yt, double& zt);
 
 // transform 3d to 2d
-  int Transform(const Trafo&, double x, double y, double z,
-                double& xt, double& yt);
+  void transform(const Trafo&, double x, double y, double z,
+                 double& xt, double& yt);
 
 }
 #endif

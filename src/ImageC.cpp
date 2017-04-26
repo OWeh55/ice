@@ -21,7 +21,7 @@
 #include <limits.h>
 #include <algorithm>
 
-#include "message.h"  // for printing error messages
+#include "IceException.h"
 
 #include "picio.h"
 
@@ -50,7 +50,12 @@ namespace ice
                      int MaxValue, const std::string& title)
   {
     if (img != nullptr)
-      freeimg();
+      {
+        freeimg();
+      }
+
+    if (SizeX < 1 || SizeY < 1 || MaxValue < 1)
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     xsize = SizeX;
     ysize = SizeY;
@@ -74,9 +79,7 @@ namespace ice
                 imag = new iceImage3(SizeX, SizeY, MaxValue, title);
               }
             else
-              {
-                Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-              }
+              throw IceException(FNAME, M_WRONG_PARAM);
           }
       }
     assign(imag);
@@ -95,7 +98,9 @@ namespace ice
   void Image::copy(const Image& src)
   {
     if (xsize != src.xsize || ysize != src.ysize || maxval != src.maxval)
-      create(src);
+      {
+        create(src);
+      }
     copyData(src);
   }
 #undef FNAME
@@ -114,7 +119,9 @@ namespace ice
     Image result;
     result.create(src, title);
     if (copy)
-      result.copyData(src);
+      {
+        result.copyData(src);
+      }
     return result;
   }
 #undef FNAME
@@ -135,7 +142,7 @@ namespace ice
         imag = new iceImage3((iceImage3*)i.img, w, title);
         break;
       default:
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     xsize = imag->xsize;
@@ -145,59 +152,46 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Image::match"
-  int Image::match(const Image& img2) const
+#define FNAME "Image::checkSizes"
+  void Image::checkSizes(const Image& img2) const
   {
     if (!isValid() || !img2.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((xsize != img2->xsize) || (ysize != img2->ysize))
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
-    return OK;
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
   }
-
-  int Image::match(const Image& img2, const Image& img3) const
+#undef FNAME
+#define FNAME "Image::checkImage"
+  void Image::checkImage(const Image& img2) const
   {
-    if (match(img2) != OK)
-      return WRONG_PARAM;
-    return match(img3);
+    try
+      {
+        checkSizes(img2);
+        if (maxval != img2.maxval)
+          throw IceException(FNAME, M_WRONG_RANGE);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "NewImg"
-  Image NewImg(int SizeX, int SizeY, int MaxValue, const std::string& title)
+  Image NewImg(int sizeX, int sizeY, int maxValue, const std::string& title)
   {
-    if (SizeX <= 0 || SizeY <= 0 || MaxValue <= 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return Image();
-      }
-
-    Image Img;
-    Img.create(SizeX, SizeY, MaxValue, title);
-    return Img;
+    return Image::createImage(sizeX, sizeY, maxValue, title);
   }
 
   Image NewImg(const ice::Image& Img, bool ShallCopyContents, const std::string& title)
   {
     if (!IsImg(Img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return Image();
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Image result;
     result.create(Img, title); // create with given size..
-    // result.setTitle(title); // rename to given name
 
-    if (ShallCopyContents) // copy content if neccesary
-      result.copyData(Img);
+    if (ShallCopyContents)   // copy content if neccesary
+      {
+        result.copyData(Img);
+      }
 
     return result;
   }
@@ -207,27 +201,11 @@ namespace ice
                const std::string& title)
   {
     if (!IsImg(imgp))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return Image();
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     Image result(imgp, w, title);
 
     return result;
-  }
-#undef FNAME
-#define FNAME "FreeImg"
-  int FreeImg(Image& Img)
-  {
-    if (!IsImg(Img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
-
-    Img.destroy();
-    return OK;
   }
 #undef FNAME
 #define FNAME "Image::write"
@@ -240,20 +218,24 @@ namespace ice
   int Image::read(const std::string& filename)
   {
     if (isValid())
-      return ReadImg(filename, *this).isValid();
+      {
+        return ReadImg(filename, *this).isValid();
+      }
     else
       {
         *this = ReadImg(filename);
         return isValid();
       }
   }
-
+#undef FNAME
   double Image::getPixelInterpol(double x, double y) const
   {
     // if x and y are too far outside the image border, we simply return zero
     // check before conversion to int to avoid overflow
     if (x < -0.5 || y < -0.5 || x > xsize || y > ysize)
-      return 0;
+      {
+        return 0;
+      }
 
     // Determine the local neighborhood of point(x, y), that means the 4 pixel positions
     //(xi, yi),(xi + 1, yi),(xi + 1, yi + 1), and(xi, yi + 1), that enclose(x, y)
@@ -265,18 +247,22 @@ namespace ice
     int yi1 = yi + 1;
 
     // check if the local neighborhood is still inside the image
-    if ((xi >= xsize) || (yi >= ysize)) return 0;
+    if ((xi >= xsize) || (yi >= ysize))
+      {
+        return 0;
+      }
 
-    if ((xi1 == xsize) || (yi1 == ysize)) return getPixelUnchecked(xi, yi); // rechter/unterer Rand
+    if ((xi1 == xsize) || (yi1 == ysize))
+      {
+        return getPixelUnchecked(xi, yi);  // rechter/unterer Rand
+      }
 
     double dx  = x - (double) xi;
     double dx1 = 1.0 - dx;
     double dy  = y - (double) yi;
     double dy1 = 1.0 - dy;
-    return dx1 * (dy1 * img->getP(xi, yi)
-                  + dy * img->getP(xi, yi1))
-           + dx  * (dy1 * img->getP(xi1, yi)
-                    + dy * img->getP(xi1, yi1));
+    return dx1 * (dy1 * img->getP(xi, yi) + dy * img->getP(xi, yi1))
+           + dx  * (dy1 * img->getP(xi1, yi) + dy * img->getP(xi1, yi1));
 
   }
 
@@ -305,7 +291,7 @@ namespace ice
         return false;
       }
 
-    if ((xi1 == xsize) || (yi1 == ysize)) // rechter/unterer Rand
+    if ((xi1 == xsize) || (yi1 == ysize))   // rechter/unterer Rand
       {
         val = getPixelUnchecked(xi, yi);
         return true;
@@ -321,6 +307,4 @@ namespace ice
                     dy * getPixelUnchecked(xi1, yi1));
     return true;
   }
-
-
 } // namespace

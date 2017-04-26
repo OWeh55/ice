@@ -23,18 +23,16 @@
  * Author: Alexander Lärz, 2005
  */
 
-
 #include "quaternion.h"
 #include "qft.h"
 
 #include "Vector.h"
 #include "Matrix.h"
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
 #include "base.h"
 #include "macro.h"
 #include "fourier.h"
-
 
 namespace ice
 {
@@ -46,89 +44,24 @@ namespace ice
     int M = input.getColumns();
     int N = input.getRows();
 
-    OffMessage();
-
     QuatMatrix o;
     o = QuatMatrix(N, M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector re1 = Vector(M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Vector im1 = Vector(M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector re2 = Vector(M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Vector im2 = Vector(M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Matrix mre1 = Matrix(N, M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Matrix mim1 = Matrix(N, M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Matrix mre2 = Matrix(N, M);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Matrix mim2 = Matrix(N, M);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     for (i = 0; i < N; i++)
       {
@@ -143,21 +76,7 @@ namespace ice
 
         Fourier(re1, im1, option);
 
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
-
         Fourier(re2, im2, option);
-
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
 
         mre1[i] = re1;
         mim1[i] = im1;
@@ -168,39 +87,11 @@ namespace ice
 
     Vector re3 = Vector(N);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector im3 = Vector(N);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     Vector re4 = Vector(N);
 
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
-
     Vector im4 = Vector(N);
-
-    if (GetError() != OK)
-      {
-        Message(FNAME, M_0, GetError());
-        OnMessage();
-        return ERROR;
-      }
 
     for (i = 0; i < M; i++)
       {
@@ -213,24 +104,9 @@ namespace ice
             im4[j] = mim2[j][i];
           }
 
-
         Fourier(re3, im3, option);
 
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
-
         Fourier(re4, im4, option);
-
-        if (GetError() != OK)
-          {
-            Message(FNAME, M_0, GetError());
-            OnMessage();
-            return ERROR;
-          }
 
         for (j = 0; j < N; j++)
           {
@@ -250,10 +126,8 @@ namespace ice
         o = o * f;
       }
 
-
     output = o;
 
-    OnMessage();
     return OK;
   }
 #undef FNAME
@@ -262,31 +136,18 @@ namespace ice
   int PowerSpektrumQFT(QuatMatrix& input, Image& output, int type, int mode)
   {
     if (!IsImg(output))
-      {
-        Message(FNAME, M_INVALID, INVALID);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != output->xsize || int(input.getRows()) != output->ysize)
-      {
-        Message(FNAME, M_WRONG_IMGSIZE, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (!(type == LOG || type == POWER || type == NORM))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
-
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    int maxcolor = output->maxval;
+    int maxcolor = output.maxval;
     int i, j;
     int X = input.getColumns();
     int Y = input.getRows();
@@ -319,13 +180,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {
@@ -356,7 +223,10 @@ namespace ice
                   {
                     help = log10(1.0 + snorm) / logf(1 + maxnorm * maxnorm) * (maxcolor - 1);
                   }
-                else help = 0;
+                else
+                  {
+                    help = 0;
+                  }
 
                 PutVal(output, xs, ys, int(help));
               }
@@ -371,39 +241,26 @@ namespace ice
   int EigenwinkelSpektrumQFT(QuatMatrix& input, Image& r, Image& g, Image& b, int mode)
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
-      {
-        Message(FNAME, M_INVALID, INVALID);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
-    if (r->maxval != g->maxval || r->maxval != b->maxval)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
-      }
+    if (r.maxval != g.maxval || r.maxval != b.maxval)
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    int maxcolor = r->maxval;
+    int maxcolor = r.maxval;
     int i, j;
     int X = input.getColumns();
     int Y = input.getRows();
     int xs, ys;
     double I = (maxcolor - 1) / 3.0;
     double ew, red, green, blue;
-
 
     for (i = 0; i < Y; i++)
       {
@@ -415,13 +272,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {
@@ -429,16 +292,20 @@ namespace ice
                 ys = i;
               }
 
-            OffMessage();
-            ew = input[i][j].getEigenwinkel();
-
-            if (GetError() == NO_QUATERNIONEIGENWINKEL)
+            bool ok = true;
+            try
+              {
+                ew = input[i][j].getEigenwinkel();
+              }
+            catch (IceException& ex)
               {
                 red = 255;
                 green = 255;
                 blue = 255;
+                ok = false;
               }
-            else
+
+            if (ok)
               {
                 if (ew < (2 * M_PI / 3))
                   {
@@ -454,9 +321,6 @@ namespace ice
                   }
               }
 
-            SetOk();
-            OnMessage();
-
             PutVal(r, xs, ys, int(red));
             PutVal(g, xs, ys, int(green));
             PutVal(b, xs, ys, int(blue));
@@ -471,39 +335,26 @@ namespace ice
   int EigenachsenSpektrumQFT(QuatMatrix& input, Image& r, Image& g, Image& b, int mode)
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
-      {
-        Message(FNAME, M_INVALID, INVALID);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != b->ysize)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
-    if (r->maxval != g->maxval || r->maxval != b->maxval)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
-      }
+    if (r.maxval != g.maxval || r.maxval != b.maxval)
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
-    int maxcolor = r->maxval;
+    int maxcolor = r.maxval;
     int i, j;
     int X = input.getColumns();
     int Y = input.getRows();
     int xs, ys;
     double red, green, blue;
     Quaternion mu;
-
 
     for (i = 0; i < Y; i++)
       {
@@ -515,13 +366,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {
@@ -529,24 +386,25 @@ namespace ice
                 ys = i;
               }
 
-            OffMessage();
-            mu = input[i][j].getEigenachse();
-
-            if (GetError() == NO_QUATERNIONEIGENACHSE)
+            bool ok = true;
+            try
+              {
+                mu = input[i][j].getEigenachse();
+              }
+            catch (IceException& ex)
               {
                 red = maxcolor;
                 green = maxcolor;
                 blue = maxcolor;
+                ok = false;
               }
-            else
+
+            if (ok)
               {
                 red = maxcolor / 2 + (maxcolor / 2) * mu.getI();
                 green = maxcolor / 2 + (maxcolor / 2) * mu.getJ();
                 blue = maxcolor / 2 + (maxcolor / 2) * mu.getK();
               }
-
-            SetOk();
-            OnMessage();
 
             PutVal(r, xs, ys, int(red));
             PutVal(g, xs, ys, int(green));
@@ -562,31 +420,15 @@ namespace ice
   int PhasenSpektrumQFT(QuatMatrix& input, Image& alpha, Image& beta, Image& delta, int mode)
   {
     if (!(IsImg(alpha) && IsImg(beta) && IsImg(delta)))
-      {
-        Message(FNAME, M_INVALID, INVALID);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_INVALID);
 
     if (int(input.getColumns()) != alpha->xsize || int(input.getRows()) != alpha->ysize ||
         int(input.getColumns()) != beta->xsize || int(input.getRows()) != beta->ysize ||
         int(input.getColumns()) != delta->xsize || int(input.getRows()) != delta->ysize)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return ERROR;
-      }
-
-    /*
-        if(r->maxval != g->maxval || r->maxval != b->maxval)
-        {
-          Message(FNAME,M_SIZES_DIFFER,WRONG_PARAM);
-          return ERROR;
-        }*/
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int i, j;
     int X = input.getColumns();
@@ -605,13 +447,19 @@ namespace ice
                   {
                     xs = X / 2 + j;
                   }
-                else xs = j - X / 2 + X % 2;
+                else
+                  {
+                    xs = j - X / 2 + X % 2;
+                  }
 
                 if (i < Y / 2)
                   {
                     ys = Y / 2 + i;
                   }
-                else ys = i - Y / 2 + Y % 2;
+                else
+                  {
+                    ys = i - Y / 2 + Y % 2;
+                  }
               }
             else
               {
@@ -619,23 +467,25 @@ namespace ice
                 ys = i;
               }
 
-            OffMessage();
-            phases = input[i][j].getPhases();
-
-            if (GetError() == NO_QUATERNIONPHASES)
+            bool ok = true;
+            try
               {
-                a = alpha->maxval;
-                b = beta->maxval;
-                d = delta->maxval;
+                phases = input[i][j].getPhases();
               }
-            else
+            catch (IceException& ex)
               {
-                a = alpha->maxval / 2 + phases.x * (alpha->maxval) / (2 * M_PI);
-                b = beta->maxval / 2 + phases.y * (beta->maxval) / M_PI;
-                d = (delta->maxval - 1) / 2 + phases.z * 4 * ((delta->maxval - 1) / 2) / M_PI;
+                a = alpha.maxval;
+                b = beta.maxval;
+                d = delta.maxval;
+                ok = false;
               }
 
-            OnMessage();
+            if (ok)
+              {
+                a = alpha.maxval / 2 + phases.x * (alpha.maxval) / (2 * M_PI);
+                b = beta.maxval / 2 + phases.y * (beta.maxval) / M_PI;
+                d = (delta.maxval - 1) / 2 + phases.z * 4 * ((delta.maxval - 1) / 2) / M_PI;
+              }
 
             PutVal(alpha, xs, ys, int(a));
             PutVal(beta, xs, ys, int(b));

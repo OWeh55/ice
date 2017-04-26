@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
   Image mark;
   mark.create(600, 600, 8);
   Show(OVERLAY, img, mark);
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
 
   // ideales Rechteck
   Contur c1;
@@ -36,8 +36,8 @@ int main(int argc, char* argv[])
   reduceAndShow(c1, mark);
 
   // Kreis
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
   Circle ci(300, 300, 140);
   draw(ci, img, 255, 255);
   IPoint pp(300, 300);
@@ -46,25 +46,25 @@ int main(int argc, char* argv[])
   reduceAndShow(c1, mark);
 
   // abgerundetes Rechteck
-  ClearImg(mark);
-  int x, y;
-  wloop(img, x, y)
-  {
-    if (abs(x - 300) + abs(y - 300) > 165) PutVal(img, x, y, 0);
-  }
+  clearImg(mark);
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        if (abs(x - 300) + abs(y - 300) > 165) PutVal(img, x, y, 0);
+      }
   pp = IPoint(300, 300);
   SearchStart(img, mark, NULL, 15, 1, pp);
   c1 = CalcContur(img, mark, NULL, 15, pp);
   reduceAndShow(c1, mark);
 
   //
-  ClearImg(img);
-  ClearImg(mark);
-  wloop(img, x, y)
-  wloop(img, x, y)
-  {
-    if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
-  }
+  clearImg(img);
+  clearImg(mark);
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
+      }
 
   for (int i = 0; i < 5; i++)
     DilateImg(img, 3, 3, img);
@@ -75,17 +75,17 @@ int main(int argc, char* argv[])
   reduceAndShow(c1, mark);
 
   // gestörtes Rechteck
-  ClearImg(img);
-  ClearImg(mark);
-  wloop(img, x, y)
-  wloop(img, x, y)
-  {
-    if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
+  clearImg(img);
+  clearImg(mark);
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      {
+        if (abs(x - 300) + abs(y - 300) < 165) PutVal(img, x, y, 255);
 
-    if (Random(19) < 1) PutVal(img, x, y, 255);
+        if (Random(19) < 1) PutVal(img, x, y, 255);
 
-    if (Random(19) < 1) PutVal(img, x, y, 0);
-  }
+        if (Random(19) < 1) PutVal(img, x, y, 0);
+      }
   DilateImg(img, 3, 3, img);
   ErodeImg(img, 3, 3, img);
   pp = IPoint(300, 300);

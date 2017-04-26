@@ -84,9 +84,6 @@ int main(int argc, char* argv[])
 
   tim4 = t_stop() / mc / sy / sx * 1e6;
 
-  FreeImg(img1);
-  FreeImg(img2);
-
   ClearAlpha();
   SetAlphaCursor(10, 5);
   Printf("Test Zeitverhalten des Bildpunktzugriffs");

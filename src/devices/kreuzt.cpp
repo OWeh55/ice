@@ -51,8 +51,14 @@ namespace ice
   /*****************************************************/
   int KtOpen()
   {
-    if (srlOpen(KT_DEVICE, 8, 0, 1, 2400, srlFLOWHARD) != srlOK) return -1;
-    if (KtInit() != OK) return -1;
+    if (srlOpen(KT_DEVICE, 8, 0, 1, 2400, srlFLOWHARD) != srlOK)
+      {
+        return -1;
+      }
+    if (KtInit() != OK)
+      {
+        return -1;
+      }
     return 0;
   }
   /*****************************************************/
@@ -64,10 +70,16 @@ namespace ice
   /*****************************************************/
   int KtInit()
   {
-    if (srlWriteString(KT_DEVICE, "MR400 MN A4 V50 OSB1 OSC0 OSH1 ", 0) != srlOK) return ERROR;
+    if (srlWriteString(KT_DEVICE, "MR400 MN A4 V50 OSB1 OSC0 OSH1 ", 0) != srlOK)
+      {
+        return ERROR;
+      }
     /*   if(SendCommand(fd,"7MN 7MR400 7A4 7V50 7OSB1 7OSC0 7OSH1 ")!=OK) return(ERROR); */
     /*   if(SendCommand(fd,"8MN 8MR400 8A4 8V50 8OSB1 8OSC0 8OSH1 ")!=OK) return(ERROR); */
-    if (KtWaitStop() != OK) return ERROR;
+    if (KtWaitStop() != OK)
+      {
+        return ERROR;
+      }
     return OK;
   }
   /*****************************************************/
@@ -77,31 +89,59 @@ namespace ice
     char dx[30], dy[30];
     sx = (int)(x * STEPPMM);
     sy = (int)(y * STEPPMM);
-    if ((sx < 0) || (sx > MAXSTEP)) return ERROR;
-    if ((sy < 0) || (sy > MAXSTEP)) return ERROR;
+    if ((sx < 0) || (sx > MAXSTEP))
+      {
+        return ERROR;
+      }
+    if ((sy < 0) || (sy > MAXSTEP))
+      {
+        return ERROR;
+      }
     sprintf(dx, "7D%d 7G ", sx);
     sprintf(dy, "8D%d 8G ", sy);
-    if (srlWriteString(KT_DEVICE, dx, 0) != srlOK) return ERROR;
-    if (srlWriteString(KT_DEVICE, dy, 0) != srlOK) return ERROR;
+    if (srlWriteString(KT_DEVICE, dx, 0) != srlOK)
+      {
+        return ERROR;
+      }
+    if (srlWriteString(KT_DEVICE, dy, 0) != srlOK)
+      {
+        return ERROR;
+      }
     return OK;
   }
   /*****************************************************/
   int KtHome(void)
   {
     if (srlWriteString(KT_DEVICE, "GH-3 ", 0) != srlOK)
-      return ERROR;
+      {
+        return ERROR;
+      }
     if (KtWaitStop() != OK)
-      return ERROR;
+      {
+        return ERROR;
+      }
     return OK;
   }
   /*****************************************************/
   int KtWaitStop()
   {
     char line[200];
-    if (srlWriteString(KT_DEVICE, "7LF ", 0) != srlOK) return ERROR;
-    if (srlReadString(KT_DEVICE, line, 200) != srlOK) return ERROR;
-    if (srlWriteString(KT_DEVICE, "8LF ") != srlOK) return ERROR;
-    if (srlReadString(KT_DEVICE, line, 200) != srlOK) return ERROR;
+    if (srlWriteString(KT_DEVICE, "7LF ", 0) != srlOK)
+      {
+        return ERROR;
+      }
+    if (srlReadString(KT_DEVICE, line, 200) != srlOK)
+      {
+        return ERROR;
+      }
+    if (srlWriteString(KT_DEVICE, "8LF ") != srlOK)
+      {
+        return ERROR;
+      }
+    if (srlReadString(KT_DEVICE, line, 200) != srlOK)
+      {
+        return ERROR;
+      }
     return OK;
   }
   /*****************************************************/

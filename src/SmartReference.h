@@ -43,7 +43,9 @@ namespace ice
     {
       --datapointer->nRefs;
       if (datapointer->nRefs == 0)
-        delete datapointer;
+        {
+          delete datapointer;
+        }
       datapointer = nullptr;
     }
 

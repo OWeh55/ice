@@ -25,7 +25,7 @@
 #include <iostream>
 
 #include "defs.h"
-#include "macro.h"
+#include "IceException.h"
 
 #include "strtool.h"
 
@@ -60,18 +60,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
                 break;
               case 2:
               case 3:
-                Message(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILETYPE, fn);
                 break;
               case 4:
               case 5:
-                Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
                 break;
               default:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
               }
 
             reader = nullptr;
@@ -85,7 +85,7 @@ namespace ice
           }
         catch (int error)
           {
-            Message(FNAME, M_FILE_OPEN + NumberString(error), WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN + NumberString(error));
             writer = nullptr;
           }
       }
@@ -95,20 +95,28 @@ namespace ice
   VideoFile::~VideoFile()
   {
     if (reader)
-      delete reader;
+      {
+        delete reader;
+      }
     if (writer)
-      delete writer;
+      {
+        delete writer;
+      }
   }
 
   int VideoFile::close()
   {
     if (reader)
-      delete reader;
+      {
+        delete reader;
+      }
 
     reader = nullptr;
 
     if (writer)
-      delete writer;
+      {
+        delete writer;
+      }
 
     writer = nullptr;
     return true;
@@ -119,8 +127,7 @@ namespace ice
   {
     if (writer)
       {
-        Message(FNAME, "Cannot reset in write mode", WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, "Cannot reset in write mode");
       }
 
     close();
@@ -135,18 +142,18 @@ namespace ice
         switch (error)
           {
           case 1:
-            Message(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, filename);
             break;
           case 2:
           case 3:
-            Message(FNAME, M_WRONG_FILETYPE, filename, WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILETYPE, filename);
             break;
           case 4:
           case 5:
-            Message(FNAME, M_UNSUPPORTED_FILE, filename, WRONG_FILE);
+            throw IceException(FNAME, M_UNSUPPORTED_FILE, filename);
             break;
           default:
-            Message(FNAME, M_FILE_OPEN, filename, WRONG_FILE);
+            throw IceException(FNAME, M_FILE_OPEN, filename);
           }
 
         reader = nullptr;
@@ -160,10 +167,7 @@ namespace ice
   int VideoFile::open(const string& fn, ios_base::openmode mode)
   {
     if (reader || writer)
-      {
-        Message(FNAME, M_ALREADY_OPEN, WRONG_STATE);
-        return WRONG_STATE;
-      }
+      throw IceException(FNAME, M_ALREADY_OPEN);
 
     if (mode == ios_base::in)
       {
@@ -176,18 +180,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
                 break;
               case 2:
               case 3:
-                Message(FNAME, M_WRONG_FILETYPE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILETYPE, fn);
                 break;
               case 4:
               case 5:
-                Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
                 break;
               default:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
               }
 
             reader = nullptr;
@@ -210,10 +214,10 @@ namespace ice
               case 1:
               case 20:
               case 21:
-                Message(FNAME, M_UNSUPPORTED_FILE, fn, WRONG_FILE);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
                 break;
               default:
-                Message(FNAME, M_FILE_OPEN, fn, WRONG_FILE);
+                throw IceException(FNAME, M_FILE_OPEN, fn);
               }
 
             reader = nullptr;
@@ -230,81 +234,69 @@ namespace ice
   bool VideoFile::read(const Image& img, int ch)
   {
     if (!reader)
+      throw IceException(FNAME, M_NOT_OPEN);
+    try
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
-      }
+        Image r = NewImg(img->xsize, img->ysize, img.maxval);
+        Image g = NewImg(img->xsize, img->ysize, img.maxval);
+        Image b = NewImg(img->xsize, img->ysize, img.maxval);
 
-    Image r = NewImg(img->xsize, img->ysize, img->maxval);
-    Image g = NewImg(img->xsize, img->ysize, img->maxval);
-    Image b = NewImg(img->xsize, img->ysize, img->maxval);
+        bool ok = reader->read(r, g, b);
+        if (!ok)
+          {
+            return false;
+          }
 
-    bool ok = false;
-    RETURN_IF_FAILED(ok = reader->read(r, g, b), false);
-
-    if (!ok)
-      return false;
-
-    IPoint ip;
-    for (ip.y = 0; ip.y < img->ysize; ip.y++)
-      for (ip.x = 0; ip.x < img->xsize; ip.x++)
-        {
-          int rv = GetVal(r, ip);
-          int gv = GetVal(g, ip);
-          int bv = GetVal(b, ip);
-
-          switch (ch)
+        IPoint ip;
+        for (ip.y = 0; ip.y < img->ysize; ip.y++)
+          for (ip.x = 0; ip.x < img->xsize; ip.x++)
             {
-            case 0:
-              PutVal(img, ip, rv);
-              break;
-            case 1:
-              PutVal(img, ip, gv);
-              break;
-            case 2:
-              PutVal(img, ip, bv);
-              break;
-            case 3:
-              PutVal(img, ip, GRAYVALUE(rv, gv, bv));
-              break;
-            }
-        }
+              int rv = GetVal(r, ip);
+              int gv = GetVal(g, ip);
+              int bv = GetVal(b, ip);
 
-    return true;
+              switch (ch)
+                {
+                case 0:
+                  PutVal(img, ip, rv);
+                  break;
+                case 1:
+                  PutVal(img, ip, gv);
+                  break;
+                case 2:
+                  PutVal(img, ip, bv);
+                  break;
+                case 3:
+                  PutVal(img, ip, GRAYVALUE(rv, gv, bv));
+                  break;
+                }
+            }
+
+        return true;
+      }
+    RETHROW;
   }
 
   bool VideoFile::read(const Image& imgr, const Image& imgg, const Image& imgb)
   {
     if (!reader)
+      throw IceException(FNAME, M_NOT_OPEN);
+    try
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
+        return reader->read(imgr, imgg, imgb);
       }
-
-    bool ok = false;
-    RETURN_IF_FAILED(ok = reader->read(imgr, imgg, imgb), false);
-
-    if (!ok)
-      return false;
-
-    return true;
+    RETHROW;
   }
 
   bool VideoFile::read()
   {
     if (!reader)
+      throw IceException(FNAME, M_NOT_OPEN);
+    try
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
+        return reader -> read();
       }
-
-    bool ok = false;
-    RETURN_IF_FAILED(ok = reader -> read(), false);
-
-    if (!ok)
-      return false;
-
-    return true;
+    RETHROW;
   }
 #undef FNAME
 
@@ -312,13 +304,15 @@ namespace ice
   void VideoFile::getPara(int& xsize, int& ysize, int& maxval, int& fpsp) const
   {
     if (reader)
-      reader->getPara(xsize, ysize, maxval, fpsp);
-    else if (writer)
-      writer->getPara(xsize, ysize, maxval, fpsp);
-    else
       {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
+        reader->getPara(xsize, ysize, maxval, fpsp);
       }
+    else if (writer)
+      {
+        writer->getPara(xsize, ysize, maxval, fpsp);
+      }
+    else
+      throw IceException(FNAME, M_NOT_OPEN);
   }
 #undef FNAME
 #define FNAME "VideoFile::set"
@@ -334,19 +328,14 @@ namespace ice
         writer->setPara(xsize, ysize, maxval, fpsp, brate);
       }
     else
-      {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
   }
 #undef FNAME
 #define FNAME "VideoFile::write"
   bool VideoFile::write(const Image& ir, const Image& ig, const Image& ib)
   {
     if (!writer)
-      {
-        Message(FNAME, M_NOT_OPEN, WRONG_STATE);
-        return false;
-      }
+      throw IceException(FNAME, M_NOT_OPEN);
 
     try
       {
@@ -357,13 +346,13 @@ namespace ice
         switch (error)
           {
           case 30:
-            Message(FNAME, "Cannot convert color space", error);
+            throw IceException(FNAME, "Cannot convert color space");
             break;
           case 31:
-            Message(FNAME, "Cannot encode video", error);
+            throw IceException(FNAME, "Cannot encode video");
             break;
           case 32:
-            Message(FNAME, "Cannot write video", error);
+            throw IceException(FNAME, "Cannot write video");
             break;
           }
         return false;
@@ -374,9 +363,13 @@ namespace ice
   int VideoFile::FrameNumber() const
   {
     if (writer)
-      return writer->FrameNumber();
+      {
+        return writer->FrameNumber();
+      }
     else if (reader)
-      return reader->FrameNumber();
+      {
+        return reader->FrameNumber();
+      }
 
     return -1; // "gentle" error - not open
   }

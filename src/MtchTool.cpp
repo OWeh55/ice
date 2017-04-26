@@ -24,7 +24,6 @@
 #include <limits.h>
 
 #include "contlist.h"
-#include "macro.h"
 
 #include "MtchTool.h"
 #include "DPList.h"
@@ -34,7 +33,6 @@ namespace ice
 {
   /*****************************************************************************/
   /*****************************************************************************/
-
   double Gauss2D(double x, double y, double xm, double ym,
                  double s1, double s2, double s12)
   {
@@ -66,9 +64,15 @@ namespace ice
             {
               g = GetValD(imgd, x, y);
 
-              if (gmax < g) gmax = g;
+              if (gmax < g)
+                {
+                  gmax = g;
+                }
 
-              if (gmin > g) gmin = g;
+              if (gmin > g)
+                {
+                  gmin = g;
+                }
             }
         }
 
@@ -81,7 +85,7 @@ namespace ice
             }
         }
 
-    if (x0 == -1 || y0 == -1) // Mittelwert bestimmen
+    if (x0 == -1 || y0 == -1)   // Mittelwert bestimmen
       {
         x0 = 0;
         y0 = 0;
@@ -102,8 +106,8 @@ namespace ice
           }
         else
           {
-            x0 = imgo->xsize / 2;
-            y0 = imgo->ysize / 2;
+            x0 = imgo.xsize / 2;
+            y0 = imgo.ysize / 2;
           }
       }
 
@@ -143,13 +147,25 @@ namespace ice
           if (GetVal(imgo, x, y))
             {
               double f = Gauss2D(x, y, x0, y0, sx, sy, sxy);
-              if (max < f) max = f;
-              if (min > f) min = f;
+              if (max < f)
+                {
+                  max = f;
+                }
+              if (min > f)
+                {
+                  min = f;
+                }
             }
         }
 
-    if (max > min) a = (gmax - gmin) / (max - min);
-    else a = 1;
+    if (max > min)
+      {
+        a = (gmax - gmin) / (max - min);
+      }
+    else
+      {
+        a = 1;
+      }
 
     b = -min * a;
   }
@@ -163,48 +179,40 @@ namespace ice
   {
     if (re == NULL || im == NULL ||
         re->xsize != im->xsize || re->ysize != im->ysize)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (dest == NULL)
       {
         dest = NewImgD(re->xsize, re->ysize, -DBL_MAX, DBL_MAX);
 
         if (dest == NULL)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return NULL;
-          }
+          throw IceException(FNAME, M_NO_MEM);
       }
     else if (dest->xsize != re->xsize || dest->ysize != re->ysize)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (smear)
       {
-        int x, y;
-        wloop(re, x, y)
-        {
-          double g1 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
-          double g2 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, y)));
-          double g3 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
-          double g4 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
-          double g5 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, y)));
-          double g6 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
-          double g7 = sqrt(Sqr(GetValD(re, x, (y - 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y - 1 + re->ysize) % re->ysize)));
-          double g8 = sqrt(Sqr(GetValD(re, x, y)) +    Sqr(GetValD(im, x, y)));
-          double g9 = sqrt(Sqr(GetValD(re, x, (y + 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y + 1 + re->ysize) % re->ysize)));
-          PutValD(dest, x, y, (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 + g9 + g9) / 10);
-        }
+        for (int y = 0; y < re.ysize; y++)
+          for (int x = 0; x < re.xsize; x++)
+            {
+              double g1 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
+              double g2 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, y)));
+              double g3 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
+              double g4 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
+              double g5 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, y)));
+              double g6 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
+              double g7 = sqrt(Sqr(GetValD(re, x, (y - 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y - 1 + re->ysize) % re->ysize)));
+              double g8 = sqrt(Sqr(GetValD(re, x, y)) +    Sqr(GetValD(im, x, y)));
+              double g9 = sqrt(Sqr(GetValD(re, x, (y + 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y + 1 + re->ysize) % re->ysize)));
+              PutValD(dest, x, y, (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 + g9 + g9) / 10);
+            }
       }
     else
       {
-        int x, y;
-        wloop(re, x, y) PutValD(dest, x, y, sqrt(Sqr(GetValD(re, x, y)) + Sqr(GetValD(im, x, y))));
+        for (int y = 0; y < re.ysize; y++)
+          for (int x = 0; x < re.xsize; x++)
+            PutValD(dest, x, y, sqrt(Sqr(GetValD(re, x, y)) + Sqr(GetValD(im, x, y))));
       }
 
     return dest;
@@ -220,32 +228,25 @@ namespace ice
 
     if (
       (!IsImg(img)) || (!IsImg(dest)) ||
-      dy >= img->xsize / 2 || dy >= img->ysize / 2 ||
+      dy >= img.xsize / 2 || dy >= img.ysize / 2 ||
       dx < 0 || dy < 0
     )
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (mode == CF_CUT)
       {
-
-        int x, y;
-        wloop(dest, x, y)
-        PutVal(dest, x, y, GetVal(img, x + dx, y + dy));
+        for (int y = 0; y < dest.ysize; y++)
+          for (int x = 0; x < dest.xsize; x++)
+            PutVal(dest, x, y, GetVal(img, x + dx, y + dy));
       }
     else if (mode == CF_SET)
       {
-        int x, y;
-        wloop(dest, x, y)
-        PutVal(dest, x, y, GetVal(img, x - dest->xsize / 2 + img->xsize / 2, y - dest->ysize / 2 + img->ysize / 2));
+        for (int y = 0; y < dest.ysize; y++)
+          for (int x = 0; x < dest.xsize; x++)
+            PutVal(dest, x, y, GetVal(img, x - dest.xsize / 2 + img.xsize / 2, y - dest.ysize / 2 + img.ysize / 2));
       }
     else
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     return OK;
   }
@@ -259,10 +260,7 @@ namespace ice
   double EntropyImg(Image img)
   {
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double entropy = 0.0;
     double p;
@@ -271,11 +269,14 @@ namespace ice
 
     Hist h = HistImg(img);
 
-    for (i = 1; i <= h.classes(); i++)
+    for (i = 1; i <= h.getNClasses(); i++)
       {
         p = h.Rel(i);
 
-        if (p > 0) entropy -= p * log(p) / l2;
+        if (p > 0)
+          {
+            entropy -= p * log(p) / l2;
+          }
       }
 
     return entropy;
@@ -291,10 +292,7 @@ namespace ice
   double EntropyImgD(ImageD img, double& maxentro)
   {
     if (!img.isValid())
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return -1;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double entropy = 0.0;
     int i, j, g;
@@ -308,7 +306,10 @@ namespace ice
         {
           g = Min(Max((int)(GetValD(img, i, j) * 255), 0), 255);
 
-          if (hist[g] == 0) maxentro++;
+          if (hist[g] == 0)
+            {
+              maxentro++;
+            }
 
           hist[g]++;
         }
@@ -320,7 +321,10 @@ namespace ice
       {
         hist[i] = (double)hist[i] / anz;
 
-        if (hist[i] > 0) entropy -= (double)hist[i] * log((double)hist[i]) / l2;
+        if (hist[i] > 0)
+          {
+            entropy -= (double)hist[i] * log((double)hist[i]) / l2;
+          }
       }
 
     maxentro = (log(Max(maxentro - 1.0, 1.0)) / log(2.0));
@@ -343,43 +347,41 @@ namespace ice
 
     ConturList clist;
 
-    if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img->xsize || sy >= img->ysize)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return ConturList();
-      }
+    if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img.xsize || sy >= img.ysize)
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     int weiter = true;
 
-    Image mark = NewImg(img->xsize, img->ysize, 1);
+    Image mark = NewImg(img.xsize, img.ysize, 1);
 
     if (!IsImg(mark))
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return ConturList();
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
-    ClearImg(mark);
+    clearImg(mark);
 
     do
       {
 
         int x, y, xs, ys, d, x0 = -1, y0 = -1, dir0 = 0, dir = 0, flag;
-        wloop(img, x, y)
-        {
-          if (GetVal(img, x, y) && !GetVal(mark, x, y) &&
-              (!img.getPixelClipped(x - 1, y) ||
-               !img.getPixelClipped(x  , y - 1) ||
-               !img.getPixelClipped(x  , y + 1) ||
-               !img.getPixelClipped(x + 1, y)))
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
             {
-              x0 = x;
-              y0 = y;
-              x = y = 10000;
+              if (GetVal(img, x, y) && !GetVal(mark, x, y) &&
+                  (!img.getPixelClipped(x - 1, y) ||
+                   !img.getPixelClipped(x  , y - 1) ||
+                   !img.getPixelClipped(x  , y + 1) ||
+                   !img.getPixelClipped(x + 1, y)))
+                {
+                  x0 = x;
+                  y0 = y;
+                  x = y = 10000;
+                }
             }
-        }
 
-        if (x0 == -1) break; // Kein Startpunkt mehr gefunden
+        if (x0 == -1)
+          {
+            break;  // Kein Startpunkt mehr gefunden
+          }
 
         // Startrichtung suchen
         for (d = 0; d < 8; d += 2)
@@ -394,10 +396,7 @@ namespace ice
         DPointList pl = NewDPointList();
 
         if (pl == NULL)
-          {
-            Message(FNAME, M_NO_MEM, NO_MEM);
-            return ConturList();
-          }
+          throw IceException(FNAME, M_NO_MEM);
 
         x = x0;
         y = y0;
@@ -431,12 +430,21 @@ namespace ice
                   }
               }
 
-            if (!flag) break;
+            if (!flag)
+              {
+                break;
+              }
 
             dir = d % 8;
 
-            if (pl->lng == 1) dir0 = dir;
-            else if (xs == x0 && ys == y0 && dir == dir0) break;
+            if (pl->lng == 1)
+              {
+                dir0 = dir;
+              }
+            else if (xs == x0 && ys == y0 && dir == dir0)
+              {
+                break;
+              }
 
             dir = (dir + 6) % 8;
 
@@ -447,24 +455,24 @@ namespace ice
 
         if (plnrm == NULL)
           {
-            Message(FNAME, M_NO_MEM, NO_MEM);
             FreePointList(pl);
-            return ConturList();
+            throw IceException(FNAME, M_NO_MEM);
           }
 
         for (int pln = 0; pln < pl->lng; pln++)
-          PutPoint(plnrm, (pl->lng - 1 - pln), pl->xptr[pln], pl->yptr[pln], 1);
+          {
+            PutPoint(plnrm, (pl->lng - 1 - pln), pl->xptr[pln], pl->yptr[pln], 1);
+          }
 
         FreePointList(pl);
 
         Contur c = PolygonContur(plnrm);
         FreePointList(plnrm);
-        clist.Add(c);
+        clist.add(c);
 
       }
     while (weiter);
 
-    FreeImg(mark);
     return clist;
   }
 }

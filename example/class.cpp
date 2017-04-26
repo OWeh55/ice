@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
   //  Image p1 = ReadImg("test_rgb.jpg");
   Image p1 = NewImg(512, 512, 255);
   Image m1 = NewImg(p1);
-  ClearImg(m1);
+  m1.set(0);
   Show(OVERLAY, p1, m1);
 
   vector<vector<double>> features;

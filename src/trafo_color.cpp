@@ -21,7 +21,7 @@
 
 #include "defs.h"
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "ColorImage.h"
 #include "trafo_img.h"
@@ -37,10 +37,7 @@ namespace ice
                 const ColorImage& simg, ColorImage& dimg, int mode)
   {
     if ((!simg.isValid()) || (!dimg.isValid()))
-      {
-        Message(FNAME, M_INVALID, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_INVALID);
 
     RETURN_ERROR_IF_FAILED(Transform(tr, simg.redImage(), dimg.redImage(), mode));
     RETURN_ERROR_IF_FAILED(Transform(tr, simg.greenImage(), dimg.greenImage(), mode));

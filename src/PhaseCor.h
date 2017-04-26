@@ -20,7 +20,7 @@
  */
 /* Phasenkorellation */
 // ttbb (c) 1998
-
+// ortmann 4/2017
 #ifndef _PHASEN_KOR_H_
 #define _PHASEN_KOR_H_
 
@@ -30,7 +30,7 @@
 
 namespace ice
 {
-  int PhaseCorrelationImg(ImageD img1, ImageD img2, ImageD img);
-  int PhaseCorrelationImg(Image img1, Image img2, Image img);
+  void PhaseCorrelationImg(const ImageD& img1, const ImageD& img2, const ImageD& img);
+  void PhaseCorrelationImg(const Image& img1, const Image& img2, const Image& img);
 }
 #endif

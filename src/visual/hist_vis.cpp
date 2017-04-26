@@ -27,7 +27,7 @@
 
 #include "macro.h"
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "visual/xio.h"
 
@@ -40,16 +40,13 @@ namespace ice
 //  Wolfgang Ortmann 11/99
 //
 #define FNAME "PrintHist"
-  int PrintHist(const Hist& h)
+  void printHist(const Hist& h)
   {
     int i;
     double kgrenzeneu = 0, kgrenzealt;
 
     if (!h.isInit)
-      {
-        Message(FNAME, M_NOT_INITIALISED, ERROR);
-        return ERROR;
-      }
+      throw IceException(FNAME, M_NOT_INITIALISED);
 
     Printf("          x<%7.3f          %d \n", h.lowerLimit, h.klasse[0]);
     kgrenzealt = h.lowerLimit;
@@ -64,7 +61,6 @@ namespace ice
            kgrenzeneu, h.klasse[h.nClasses + 1]);
     Printf(" min     :  %9.3e \n", h.min);
     Printf(" max     :  %9.3e \n", h.max);
-    return OK;
   };
 #undef FNAME
 }

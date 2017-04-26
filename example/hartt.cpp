@@ -18,10 +18,12 @@ void ShowLog(ImageD d, Image i)
 void ShowDiff(ImageD d1, ImageD d2, Image i)
 {
   int x, y;
-  ImageD diff = NewImgD(d1.xsize, d1.ysize);
-  wloop(diff, x, y) PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
+  ImageD diff;
+  diff.create(d1.xsize, d1.ysize);
+  for (int y = 0; y < diff.ysize; y++)
+    for (int x = 0; x < diff.xsize; x++)
+      PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
   ShowImg(diff, i);
-  FreeImgD(diff);
 }
 
 void PrintRange(string p, ImageD d)
@@ -34,8 +36,9 @@ void PrintDiffRange(string p, ImageD d1, ImageD d2)
 {
   int x, y;
   ImageD diff = NewImgD(d1.xsize, d1.ysize);
-  wloop(diff, x, y)
-  PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
+  for (int y = 0; y < diff.ysize; y++)
+    for (int x = 0; x < diff.xsize; x++)
+      PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
   UpdateLimitImgD(diff);
   Printf((p + ": %g .. %g\n").c_str(), diff.minval, diff.maxval);
   FreeImgD(diff);
@@ -80,7 +83,7 @@ int main(int argc, char* argv[])
   h = NewImgD(imgsize, imgsize, 0, 255);
 
   null = NewImgD(imgsize, imgsize, 0, 255);
-  SetImgD(null, 0);
+  setImgD(null, 0);
 
   links = NewImg(imgsize, imgsize, 255);
 
@@ -126,7 +129,9 @@ int main(int argc, char* argv[])
   PrintRange("Hartley", s1);
   ShowImg(s1, mitte);
   FourierImgD(original, null, NORMAL, s2, s3);
-  wloop(s2, x, y) PutValD(s2, x, y, GetValD(s2, x, y) - GetValD(s3, x, y));
+  for (int y = 0; y < s2.ysize; y++)
+    for (int x = 0; x < s2.xsize; x++)
+      PutValD(s2, x, y, GetValD(s2, x, y) - GetValD(s3, x, y));
   PrintRange("\"Fourier\"", s2);
   ShowImg(s2, rechts);
   Enter();
@@ -194,7 +199,7 @@ int main(int argc, char* argv[])
 
   Printf("Faltung: Hartley/Fourier\n");
   HartleyImgD(original, s1);
-  SetImgD(maske, 0);
+  setImgD(maske, 0);
   PutValD(maske, imgsize / 2, imgsize / 2, 1); //Faltungsmaske
   PutValD(maske, imgsize / 2 + 10, imgsize / 2 + 20, -0.9);
   PutValD(maske, imgsize / 2 - 20, imgsize / 2 + 15, 0.8);
@@ -251,7 +256,7 @@ int main(int argc, char* argv[])
 
   Printf("CrossCorrelation (Hartley)\n");
   HartleyImgD(original, s1);
-  SetImgD(maske, 0);
+  setImgD(maske, 0);
   PutValD(maske, imgsize / 2 - 50, imgsize / 2 - 30, 1); //Faltungsmaske
   PutValD(maske, imgsize / 2 - 30, imgsize / 2 - 50, 1);
   HartleyImgD(maske, s2);

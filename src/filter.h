@@ -64,9 +64,9 @@ namespace ice
   int LaplaceImg(const Image& imgs, const Image& imgd, int norm = 1);
 
   // filter3.cpp
-  int SmearImg(const Image& imgs, const Image& imgd, int sx, int sy);
-  int SmearImg(const Image& imgs, const Image& imgd, int sx = 3);
-  int SmearImg(const Image& imgs, int sx = 3);
+  void smearImg(const Image& imgs, const Image& imgd, int sx, int sy);
+  void smearImg(const Image& imgs, const Image& imgd, int sx = 3);
+  void smearImg(const Image& imgs, int sx = 3);
 
   int BoxImg(const Image& imgs, const Image& imgd, int sx, int sy);
   int BoxImg(const Image& imgs, const Image& imgd, int sx = 3);
@@ -94,10 +94,10 @@ namespace ice
 #define DirectedDoBImg OrientedDoBImg
 #define DirectedEdgeImg OrientedEdgeImg
 
-  int OrientedSmearImg(const Image& pic,
-                       const Image& dir,
-                       const Image& dest,
-                       int filter_size = 11, int filter_length = 10, int filter_width = 1);
+  void OrientedSmearImg(const Image& pic,
+                        const Image& dir,
+                        const Image& dest,
+                        int filter_size = 11, int filter_length = 10, int filter_width = 1);
 
   int OrientedDoBImg(const Image& pic,
                      const Image& dir,
@@ -109,20 +109,20 @@ namespace ice
                       const Image& dest,
                       int filter_size = 11, int filter_rad = 10);
 
-  int OrientedSmearImg(const ColorImage& pic,
-                       const Image& dir,
-                       const ColorImage& dest,
-                       int filter_size = 11, int filter_length = 10, int filter_width = 1);
+  void OrientedSmearImg(const ColorImage& pic,
+                        const Image& dir,
+                        const ColorImage& dest,
+                        int filter_size = 11, int filter_length = 10, int filter_width = 1);
 
-  int OrientedDoBImg(const ColorImage& pic,
-                     const Image& dir,
-                     const ColorImage& dest,
-                     int filter_size = 11, int filter_length = 10, int filter_width = 1);
-
-  int OrientedEdgeImg(const ColorImage& pic,
+  void OrientedDoBImg(const ColorImage& pic,
                       const Image& dir,
                       const ColorImage& dest,
-                      int filter_size = 11, int filter_rad = 10);
+                      int filter_size = 11, int filter_length = 10, int filter_width = 1);
+
+  void OrientedEdgeImg(const ColorImage& pic,
+                       const Image& dir,
+                       const ColorImage& dest,
+                       int filter_size = 11, int filter_rad = 10);
 
   // Erode/Dilate - morph.cpp
   //   in Rechteckumgebung

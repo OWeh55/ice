@@ -34,7 +34,7 @@
 #include <vector>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fit.h"
@@ -141,22 +141,13 @@ namespace ice
     double* cptr;
 
     if (pl.size() < 4)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (step < 0  || pl.size() != wv.size())
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (mode != 1 && mode != 2)
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     // normalize points
     double xs, ys;
@@ -216,17 +207,16 @@ namespace ice
 
             for (unsigned i = 1; i < 6; i++)
               for (unsigned int j = 0; j < i; j++)
-                cov[i][j] = cov[j][i];
+                {
+                  cov[i][j] = cov[j][i];
+                }
 
             MoveMatrix((double*)cov, 6, 6, (double*)tvec);
 
             RETURN_ERROR_IF_FAILED(cptr = InvertMatrix((double*)tvec, 6, (double*)cov));
 
             if (cptr == NULL)
-              {
-                Message(FNAME, M_WRONG_POINTS, WRONG_PARAM);
-                return WRONG_PARAM;
-              }
+              throw IceException(FNAME, M_WRONG_POINTS);
 
             RETURN_ERROR_IF_FAILED(EigenVal((double*)cov, 6, eval, (double*)evec));
 
@@ -246,7 +236,10 @@ namespace ice
 
             step--;
 
-            if (step >= 0) mse = fl_new_weights_ellipse(pl, wv, par);
+            if (step >= 0)
+              {
+                mse = fl_new_weights_ellipse(pl, wv, par);
+              }
           }
       }
 
@@ -262,7 +255,9 @@ namespace ice
             SetMatrix((double*)cov_2, 5, 5, 0.0);
 
             for (unsigned int i = 0; i < 5; ++i)
-              re_2[i] = 0.0;
+              {
+                re_2[i] = 0.0;
+              }
 
             for (unsigned int i = 0; i < pl.size(); i++)
               {
@@ -303,26 +298,27 @@ namespace ice
 
             for (unsigned int i = 1; i < 5; i++)
               for (unsigned int j = 0; j < i; j++)
-                cov_2[i][j] = cov_2[j][i];
+                {
+                  cov_2[i][j] = cov_2[j][i];
+                }
 
             for (unsigned int i = 0; i < 5; ++i)
-              re_2[i] = -re_2[i];
+              {
+                re_2[i] = -re_2[i];
+              }
 
             cov_2a = NewMatrix(MAT_DOUBLE, 5, 5);
 
             for (unsigned int i = 0; i < 5; ++i)
               for (unsigned int j = 0; j < 5; ++j)
-                cov_2a->data[i][j] = cov_2[i][j];
+                {
+                  cov_2a->data[i][j] = cov_2[i][j];
+                }
 
-            OffMessage();
             code = EquationSys(cov_2a, re_2, loesung);
-            OnMessage();
 
             if (code != OK)
-              {
-                Message(FNAME, M_0, INTERN_ERROR);
-                return INTERN_ERROR;
-              }
+              throw IceException(FNAME, M_0);
 
             koef[0] = 1.0 - loesung[0];
             koef[1] = loesung[0];
@@ -330,15 +326,8 @@ namespace ice
             koef[3] = loesung[3];
             koef[4] = loesung[1];
             koef[5] = loesung[4];
-            OffMessage();
-            code = FeatureQuadrFunc(koef, feat, &type);
-            OnMessage();
 
-            if (code != OK)
-              {
-                Message(FNAME, M_0, INTERN_ERROR);
-                return INTERN_ERROR;
-              }
+            RETURN_ERROR_IF_FAILED(code = FeatureQuadrFunc(koef, feat, &type));
 
             if (type != ELLIPSE)
               {
@@ -354,7 +343,10 @@ namespace ice
 
             step--;
 
-            if (step >= 0) mse = fl_new_weights_ellipse(pl, wv, par);
+            if (step >= 0)
+              {
+                mse = fl_new_weights_ellipse(pl, wv, par);
+              }
           }
       }
     // denormalize parameters
@@ -376,31 +368,25 @@ namespace ice
 
   Ellipse FitEllipse(const std::vector<Point>& pl, int step, int mode)
   {
-    double par[5];
-    int rc;
-    RETURN_IF_FAILED(rc = FitEllipse(pl, par, step, mode), Ellipse());
-    if (rc != OK)
+    try
       {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return Ellipse();
+        double par[5];
+        FitEllipse(pl, par, step, mode);
+        return Ellipse(par[0], par[1], par[2], par[3], par[4]);
       }
-
-    return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+    RETHROW;
   }
 
   Ellipse FitEllipse(const std::vector<Point>& pl, const std::vector<double>& weights,
                      int step, int mode)
   {
-    double par[5];
-    int rc;
-    RETURN_IF_FAILED(rc = FitEllipse(pl, weights, par, step, mode), Ellipse());
-    if (rc != OK)
+    try
       {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return Ellipse();
+        double par[5];
+        FitEllipse(pl, weights, par, step, mode);
+        return Ellipse(par[0], par[1], par[2], par[3], par[4]);
       }
-
-    return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+    RETHROW;
   }
 
   int FitEllipse(const Matrix& mpl, double* par, int step, int mode)
@@ -414,17 +400,13 @@ namespace ice
 
   Ellipse FitEllipse(const Matrix& pl, int step, int mode)
   {
-    double par[5];
-    int rc;
-    RETURN_IF_FAILED(rc = FitEllipse(pl, par, step, mode), Ellipse());
-
-    if (rc != OK)
+    try
       {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return Ellipse();
+        double par[5];
+        FitEllipse(pl, par, step, mode);
+        return Ellipse(par[0], par[1], par[2], par[3], par[4]);
       }
-
-    return Ellipse(par[0], par[1], par[2], par[3], par[4]);
+    RETHROW;
   }
 
 #undef FNAME

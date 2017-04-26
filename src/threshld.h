@@ -30,8 +30,7 @@
 #include <vector>
 
 #include "defs.h"
-#include "message.h"
-#include "macro.h"
+#include "IceException.h"
 
 #include "hist.h"
 #include "histogram.h"

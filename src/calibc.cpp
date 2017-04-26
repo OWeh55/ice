@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "Matrix.h"
 #include "lmdif.h"
@@ -97,10 +97,7 @@ namespace ice
       points = xyz.rows();
 
       if ((uv.rows() != points) || (xyz.cols() < 3) || (uv.cols() < 2))
-        {
-          Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-          return;
-        }
+        throw IceException(FNAME, M_WRONG_PARAM);
     };
     // Dimension der Fehlerfunktion
     int funcdim() const
@@ -113,10 +110,10 @@ namespace ice
       Camera cam(camp, disttyp);
       int i, j;
 
-      for (i = 0, j = 0; j < points; j++) // für jeden Funktionswert
+      for (i = 0, j = 0; j < points; j++)   // für jeden Funktionswert
         {
           double us, vs;
-          cam.Transform(xyz.at(j).at(0), xyz.at(j).at(1), xyz.at(j).at(2), us, vs);
+          cam.transform(xyz.at(j).at(0), xyz.at(j).at(1), xyz.at(j).at(2), us, vs);
           result.at(i) = us - uv.at(j).at(0);
           i++;
           result.at(i) = vs - uv.at(j).at(1);
@@ -176,11 +173,10 @@ namespace ice
 
     if (info > 3)
       {
-        Message(FNAME, "LMDif:" + LMDifMessage(info), ERROR);
-        return ERROR;
+        throw IceException(FNAME, "LMDif:" + LMDifMessage(info));
       }
 
-    cam.Set(camp);
+    cam.set(camp);
 
     return OK;
   }

@@ -29,9 +29,8 @@
 #include <math.h>
 
 #include "macro.h"
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
-
 
 #include "PeakVal.h"
 #include "PeakDtct.h"
@@ -61,10 +60,7 @@ namespace ice
     if (!IsImg(img) ||
         (mode != PN_NORMAL && mode != PN_CONVOLUTION) ||
         graynull < 0 || graynull > img.maxval)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return DBL_MAX;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     double   value = 0, pg0 = 0, noise = 0;
 
@@ -78,11 +74,20 @@ namespace ice
           if (!IsImg(mi) || GetVal(mi, x, y) == 0)
             {
               int g = GetVal(img, x, y);
-              if (ming > g) ming = g;
+              if (ming > g)
+                {
+                  ming = g;
+                }
 
-              if (maxg < g) maxg = g;
+              if (maxg < g)
+                {
+                  maxg = g;
+                }
 
-              if (maxabs < abs(g - graynull)) maxabs = abs(g - graynull);
+              if (maxabs < abs(g - graynull))
+                {
+                  maxabs = abs(g - graynull);
+                }
 
             }
         }
@@ -115,16 +120,18 @@ namespace ice
 
     PeakList pl = ImgPeakList(img, mi, 10, 0, zykl, (int)(noise + 0.5), IPL_STANDARD, graynull, mode);
 
-    if (pl == NULL) return DBL_MAX;
+    if (pl == NULL)
+      {
+        return DBL_MAX;
+      }
 
-    if (pl->grw < 0) // Keine Peaks gefunden
+    if (pl->grw < 0)   // Keine Peaks gefunden
       {
         FreePeakList(pl);
         x0 = -1;
         y0 = -1;
         return 0.0;
       }
-
 
     x0 = pl->x;
     y0 = pl->y;
@@ -142,10 +149,7 @@ namespace ice
     double* grwd = new double[panz];
 
     if (grwd == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return 0.0;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     plptr = pl;
     panz = 0;
@@ -161,8 +165,6 @@ namespace ice
 
     do
       {
-
-
 
         if (pnum == 0)
           {
@@ -195,7 +197,6 @@ namespace ice
     return pg0 / value;
 
   }
-
 
 #undef FNAME
 }

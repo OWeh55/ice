@@ -38,7 +38,9 @@ namespace ice
     mask = new double[dimx * dimy];
 
     for (int i = 0; i < dimx * dimy; i++)
-      mask[i] = r.mask[i];
+      {
+        mask[i] = r.mask[i];
+      }
   }
 
   LsiRepresentationD::LsiRepresentationD(const Matrix& m):
@@ -89,8 +91,14 @@ namespace ice
     summ = 0;
 
     for (int i = 0; i < dimx * dimy; i++)
-      if (mask[i] > 0) sump += mask[i];
-      else summ += mask[i];
+      if (mask[i] > 0)
+        {
+          sump += mask[i];
+        }
+      else
+        {
+          summ += mask[i];
+        }
   }
 
   void LsiRepresentationD::normalize()
@@ -100,7 +108,9 @@ namespace ice
     double range = p - m;
 
     for (int i = 0; i < dimx * dimy; i++)
-      mask[i] /= range;
+      {
+        mask[i] /= range;
+      }
   }
 
   void LsiRepresentationD::negateMask()
@@ -125,22 +135,22 @@ namespace ice
     mask = mask2;
   }
 
-  int LsiRepresentationD::Filter(const Image& src, const Image& dest, int offset) const
+  void LsiRepresentationD::Filter(const Image& src, const Image& dest, int offset) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask,
-                  offset);
+    LSIImg(src, dest,
+           dimx, dimy, mask,
+           offset);
   }
 
-  int LsiRepresentationD::Filter(const Image& src, ImageD dest) const
+  void LsiRepresentationD::Filter(const Image& src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask);
+    LSIImg(src, dest,
+           dimx, dimy, mask);
   }
 
-  int LsiRepresentationD::Filter(ImageD src, ImageD dest) const
+  void LsiRepresentationD::Filter(ImageD src, ImageD dest) const
   {
-    return LSIImg(src, dest,
-                  dimx, dimy, mask);
+    LSIImg(src, dest,
+           dimx, dimy, mask);
   }
 }

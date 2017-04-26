@@ -23,7 +23,7 @@
  * selfcalib.cpp  planar self calibration (zhang)
  *
  * Michael Schwarz 04/2007
- * Ortmann 08/2012
+ * Ortmann 08/2012, 04/2017
  */
 
 #include <float.h>
@@ -92,17 +92,17 @@ namespace ice
 
 #define FNAME "project_point"
 // Projektion eines Punktes aus der Welt in das Bild
-  void project_point(const double world[], const CameraParameters cp, double image[])
+  void project_point(const double world[], const CameraParameters& cp, double image[])
   {
     double cc[3];
-    cc[0] = world[0] * cp->R[0][0] + world[1] * cp->R[0][1] + world[2] * cp->R[0][2] + cp->t[0];
-    cc[1] = world[0] * cp->R[1][0] + world[1] * cp->R[1][1] + world[2] * cp->R[1][2] + cp->t[1];
-    cc[2] = world[0] * cp->R[2][0] + world[1] * cp->R[2][1] + world[2] * cp->R[2][2] + cp->t[2];
+    cc[0] = world[0] * cp.R[0][0] + world[1] * cp.R[0][1] + world[2] * cp.R[0][2] + cp.t[0];
+    cc[1] = world[0] * cp.R[1][0] + world[1] * cp.R[1][1] + world[2] * cp.R[1][2] + cp.t[1];
+    cc[2] = world[0] * cp.R[2][0] + world[1] * cp.R[2][1] + world[2] * cp.R[2][2] + cp.t[2];
 
     double sc[3];
-    sc[0] = cp->K[0][0] * cc[0] + cp->K[0][1] * cc[1] + cp->K[0][2] * cc[2];
-    sc[1] = cp->K[1][0] * cc[0] + cp->K[1][1] * cc[1] + cp->K[1][2] * cc[2];
-    sc[2] = cp->K[2][0] * cc[0] + cp->K[2][1] * cc[1] + cp->K[2][2] * cc[2];
+    sc[0] = cp.K[0][0] * cc[0] + cp.K[0][1] * cc[1] + cp.K[0][2] * cc[2];
+    sc[1] = cp.K[1][0] * cc[0] + cp.K[1][1] * cc[1] + cp.K[1][2] * cc[2];
+    sc[2] = cp.K[2][0] * cc[0] + cp.K[2][1] * cc[1] + cp.K[2][2] * cc[2];
 
     if (sc[2] != 0.0)
       {
@@ -119,7 +119,9 @@ namespace ice
     SingularValueDcmp(A, U, S, V);
 
     for (int i = 0; i < S.cols(); i++)
-      S[i][i] = 1.0;
+      {
+        S[i][i] = 1.0;
+      }
 
     return U * S * (!V);
   }
@@ -129,55 +131,59 @@ namespace ice
 // Berechnung der Homographie aus Punktkorrespondenzen
 // image -> punktliste bild
 // world -> punktliste vorgabe
-  Matrix calib_homography_zhang(int num_points, Matrix& image, Matrix& world)
+  Matrix calib_homography_zhang(int nPoints, Matrix& image, Matrix& world)
   {
-    int mat_size = 2 * num_points;
+    int nRows = 2 * nPoints;
 
-    if (mat_size < 9)
-      mat_size = 9;
-
-    Matrix A(mat_size, 9);
-    int num_eqn = 0;
-
-    for (int i = 0; i < num_points; i++)
+    if (nRows < 9)
       {
-        // Zhang has the things the other way round... anyway...
-        A[num_eqn][0] = 0;
-        A[num_eqn][1] = 0;
-        A[num_eqn][2] = 0;
-        A[num_eqn][3] = -world[i][0];
-        A[num_eqn][4] = -world[i][1];
-        A[num_eqn][5] = -1;
-        A[num_eqn][6] = image[i][1] * world[i][0];
-        A[num_eqn][7] = image[i][1] * world[i][1];
-        A[num_eqn][8] = image[i][1];
-
-        num_eqn++;
-        A[num_eqn][0] = world[i][0];
-        A[num_eqn][1] = world[i][1];
-        A[num_eqn][2] = 1;
-        A[num_eqn][3] = 0;
-        A[num_eqn][4] = 0;
-        A[num_eqn][5] = 0;
-        A[num_eqn][6] = -image[i][0] * world[i][0];
-        A[num_eqn][7] = -image[i][0] * world[i][1];
-        A[num_eqn][8] = -image[i][0];
-        num_eqn++;
+        nRows = 9;
       }
 
-    for (; num_eqn < mat_size; num_eqn++)
+    Matrix A(nRows, 9);
+    int equationNr = 0;
+
+    for (int i = 0; i < nPoints; i++)
+      {
+        // Zhang has the things the other way round... anyway...
+        A[equationNr][0] = 0;
+        A[equationNr][1] = 0;
+        A[equationNr][2] = 0;
+        A[equationNr][3] = -world[i][0];
+        A[equationNr][4] = -world[i][1];
+        A[equationNr][5] = -1;
+        A[equationNr][6] = image[i][1] * world[i][0];
+        A[equationNr][7] = image[i][1] * world[i][1];
+        A[equationNr][8] = image[i][1];
+
+        equationNr++;
+        A[equationNr][0] = world[i][0];
+        A[equationNr][1] = world[i][1];
+        A[equationNr][2] = 1;
+        A[equationNr][3] = 0;
+        A[equationNr][4] = 0;
+        A[equationNr][5] = 0;
+        A[equationNr][6] = -image[i][0] * world[i][0];
+        A[equationNr][7] = -image[i][0] * world[i][1];
+        A[equationNr][8] = -image[i][0];
+        equationNr++;
+      }
+
+    for (; equationNr < nRows; equationNr++)
       {
         for (int i = 0; i < 9; i++)
-          A[num_eqn][i] = 0.0;
+          {
+            A[equationNr][i] = 0.0;
+          }
       }
 
     // compute SVD
     Matrix U, V;
     Vector s;
     SingularValueDcmp(A, U, s, V);
+
     double min = s[0];
     int min_col = 0;
-
     for (int i = 1; i < 9; i++)
       {
         if (s[i] < min)
@@ -207,9 +213,9 @@ namespace ice
 #define FNAME "calib_intrinsic_zhang"
 // Berechnung der internen Kameraparametern nach Zhang
 
-  void mkequation(Vector& es, const Trafo& homographie, int z_i, int z_j)
+  void makeEquation(Vector& es, const Trafo& homographie, int z_i, int z_j)
   {
-    Matrix T = homographie.Tmatrix();
+    Matrix T = homographie.getMatrix();
     es[0] = T[0][z_i] * T[0][z_j];
     es[1] = T[0][z_i] * T[1][z_j] + T[1][z_i] * T[0][z_j];
     es[2] = T[0][z_i] * T[2][z_j] + T[2][z_i] * T[0][z_j];
@@ -220,19 +226,19 @@ namespace ice
 
   Matrix calib_intrinsic_zhang(const vector<Trafo>& H)
   {
-    int num_homographies = H.size();
-    Matrix C(2 * num_homographies, 6, 1);
-    int num_eqn = 0;
+    int nHomographies = H.size();
+    Matrix C(2 * nHomographies, 6, 1);
 
-    for (int k = 0; k < num_homographies; k++)
+    int equationNr = 0;
+    for (int k = 0; k < nHomographies; k++)
       {
-        // second row is v11-v22
-        mkequation(C[num_eqn + 1], H[k], 0, 0);
-        mkequation(C[num_eqn], H[k], 1, 1);
-        C[num_eqn + 1] = C[num_eqn + 1] - C[num_eqn];
+        // second row is v11 - v22
+        makeEquation(C[equationNr + 1], H[k], 0, 0);
+        makeEquation(C[equationNr], H[k], 1, 1);
+        C[equationNr + 1] = C[equationNr + 1] - C[equationNr];
         // first row is v12
-        mkequation(C[num_eqn], H[k], 0, 1);
-        num_eqn += 2;
+        makeEquation(C[equationNr], H[k], 0, 1);
+        equationNr += 2;
       }
 
     Matrix U, V;
@@ -262,10 +268,7 @@ namespace ice
 
     // compute A from B
     if (!IsPositivDefinit(B))
-      {
-        Message(FNAME, M_INTERN, ERROR);
-        return B;
-      }
+      throw IceException(FNAME, M_INTERN);
 
     Matrix A = CholeskyDecomposition(B);
 
@@ -280,46 +283,56 @@ namespace ice
 // Berechnung der externen Kameraparameter nach Zhang
   CameraParameters calib_extrinsic_zhang(const Matrix& H, const Matrix& K)
   {
-    CameraParameters ret = (CameraParameters)calloc(sizeof(struct _T_campar), 1);
+    CameraParameters ret;
     Matrix A = Inverse(K);
-    ret->R = Matrix(3, 3, 1);
-    ret->K = Matrix(K);
-    ret->t = Vector(3);
+    ret.R = Matrix(3, 3, 1);
+    ret.K = Matrix(K);
+    ret.t = Vector(3);
 
     Vector h(3);
 
     for (int i = 0; i < 3; i++)
-      h[i] = H[i][0];
+      {
+        h[i] = H[i][0];
+      }
 
     Vector r = A * h;
     double lambda = 1.0 / r.Length();
 
     for (int i = 0; i < 3; i++)
-      ret->R[i][0] = r[i];
+      {
+        ret.R[i][0] = r[i];
+      }
 
     for (int i = 0; i < 3; i++)
-      h[i] = H[i][1];
+      {
+        h[i] = H[i][1];
+      }
 
     r = A * h;
 
     for (int i = 0; i < 3; i++)
-      ret->R[i][1] = r[i];
+      {
+        ret.R[i][1] = r[i];
+      }
 
     // in theory r1 and r2 have the same length... we take the mean anyway
     lambda = (lambda + (1.0 / r.Length())) / 2.0;
-    ret->R = ret->R * lambda;
+    ret.R = ret.R * lambda;
 
-    ret->R[0][2] = ret->R[1][0] * ret->R[2][1] - ret->R[2][0] * ret->R[1][1];
-    ret->R[1][2] = ret->R[2][0] * ret->R[0][1] - ret->R[0][0] * ret->R[2][1];
-    ret->R[2][2] = ret->R[0][0] * ret->R[1][1] - ret->R[1][0] * ret->R[0][1];
-    ret->R = Orthonormalize(ret->R);
+    ret.R[0][2] = ret.R[1][0] * ret.R[2][1] - ret.R[2][0] * ret.R[1][1];
+    ret.R[1][2] = ret.R[2][0] * ret.R[0][1] - ret.R[0][0] * ret.R[2][1];
+    ret.R[2][2] = ret.R[0][0] * ret.R[1][1] - ret.R[1][0] * ret.R[0][1];
+    ret.R = Orthonormalize(ret.R);
 
     for (int i = 0; i < 3; i++)
-      h[i] = H[i][2];
+      {
+        h[i] = H[i][2];
+      }
 
-    ret->t = A * h;
+    ret.t = A * h;
 
-    ret->t = ret->t * lambda;
+    ret.t = ret.t * lambda;
 
     return ret;
   }
@@ -356,7 +369,9 @@ namespace ice
             h = sqrt((x - u) * (x - u) + (y - v) * (y - v));
 
             if (h < dist)
-              dist = h;
+              {
+                dist = h;
+              }
           }
 
         sum1 += dist;
@@ -379,7 +394,9 @@ namespace ice
             h = sqrt((x - u) * (x - u) + (y - v) * (y - v));
 
             if (h < dist)
-              dist = h;
+              {
+                dist = h;
+              }
           }
 
         sum2 += dist;
@@ -409,7 +426,7 @@ namespace ice
     dimy   = image->ysize;
     dimmax = dimx < dimy ? dimy : dimx;
 
-    int max_gw = image->maxval;
+    int max_gw = image.maxval;
 
     int number_of_found_objects;
     int number_of_searched_objects = CPOINTS;
@@ -440,11 +457,11 @@ namespace ice
     pic2 = NewImg(image);
     CopyImg(image, pic1);
     CopyImg(image, pic2);
-    SmearImg(image, pic2, 5, 5);
+    smearImg(image, pic2, 5, 5);
     copyborder(image, pic2, 2);
 
     mark1 = NewImg(dimx, dimy, max_gw);
-    ClearImg(mark1);
+    clearImg(mark1);
 
     double abstand = 0.0;        // Abstand der Muster in Bezug abhaengig von Pixelzahl und Bildrichtung
     double verschiebung_x = 0.0; // Verschiebung, damit Muster in der Mitte liegt
@@ -543,10 +560,12 @@ namespace ice
     // Lokale Kontursuche
     int neighb = (int)(dimmax / 100.0);
 
-    if (neighb % 2 == 0) neighb++;
+    if (neighb % 2 == 0)
+      {
+        neighb++;
+      }
 
     LocalSeg(pic2, mark1, neighb, 30);
-
 
     //while (SearchStart(pic1, mark1, NULL, threshold, 1, ps, HORZ) == OK)
     while (SearchStart(mark1, Image(), LocalSegObj, 0, 1, ps, HORZ) == OK)
@@ -563,13 +582,20 @@ namespace ice
                 FeatureContur(c, length, area, form, conv);
 
                 if (area > 0.0)
-                  FillRegion(c, 3, mark1);
-
+                  {
+                    FillRegion(c, 3, mark1);
+                  }
 
                 // wenn Objektgroesse oder Form nicht stimmt wird das Objekt nicht benutzt
-                if (area > ((dimx * dimy) /  100.0)) continue;
+                if (area > ((dimx * dimy) /  100.0))
+                  {
+                    continue;
+                  }
 
-                if (area < ((dimx * dimy) / 8000.0)) continue;
+                if (area < ((dimx * dimy) / 8000.0))
+                  {
+                    continue;
+                  }
 
                 /*
                   CopyImg(mark1,debug_mark);
@@ -578,7 +604,10 @@ namespace ice
                   form, conv);
                   getchar();
                 */
-                if (form > 2.9) continue;
+                if (form > 2.9)
+                  {
+                    continue;
+                  }
 
                 Moments mom(c);
                 Matrix m = ReducePolygon(c, 4);
@@ -600,11 +629,20 @@ namespace ice
                 double l6 = (p2 - p4).Length();
 
                 // wenn Objektgroesse oder Form nicht stimmt wird das Objekt nicht benutzt
-                if (fabs(l1 - l3) > ((l1 + l3) * 0.2)) continue;
+                if (fabs(l1 - l3) > ((l1 + l3) * 0.2))
+                  {
+                    continue;
+                  }
 
-                if (fabs(l2 - l4) > ((l2 + l4) * 0.2)) continue;
+                if (fabs(l2 - l4) > ((l2 + l4) * 0.2))
+                  {
+                    continue;
+                  }
 
-                if (fabs(l5 - l6) > ((l5 + l6) * 0.7)) continue;
+                if (fabs(l5 - l6) > ((l5 + l6) * 0.7))
+                  {
+                    continue;
+                  }
 
                 Vector intersection;
 
@@ -615,7 +653,7 @@ namespace ice
                               intersection))
                   {
 //      cout << "Schnittpunkt: " << intersection << endl;
-                    h_matrix.Append(intersection);
+                    h_matrix.append(intersection);
                     ++number_of_found_objects;
                   }
               }
@@ -651,7 +689,9 @@ namespace ice
                     distance = Distance(h_matrix[i][0], h_matrix[i][1], h_matrix[j][0], h_matrix[j][1]);
 
                     if (distance < matrix_of_min_distance[i])
-                      matrix_of_min_distance[i] = distance;
+                      {
+                        matrix_of_min_distance[i] = distance;
+                      }
                   }
               }
           }
@@ -659,7 +699,9 @@ namespace ice
         distance = 0.0;
 
         for (i = 0; i < number_of_found_objects; i++)
-          sort_matrix_of_min_distance[i] = matrix_of_min_distance[i];
+          {
+            sort_matrix_of_min_distance[i] = matrix_of_min_distance[i];
+          }
 
         sort(sort_matrix_of_min_distance,
              sort_matrix_of_min_distance + number_of_found_objects);
@@ -704,10 +746,14 @@ namespace ice
         }
 
       if (IsImg(debug_image))
-        CopyImg(pic1, debug_image);
+        {
+          CopyImg(pic1, debug_image);
+        }
 
       if (IsImg(debug_mark))
-        CopyImg(mark1, debug_mark);
+        {
+          CopyImg(mark1, debug_mark);
+        }
 
       printf("Anzahl gefundener Objekte: %d\n", number_of_found_objects);
       printf("die gelben Punkte markieren den Mittelpunkt der gefundenen Objekte\n");
@@ -715,15 +761,16 @@ namespace ice
       getchar();
 
       if (IsImg(debug_image))
-        ClearImg(debug_image);
+        {
+          clearImg(debug_image);
+        }
 
       if (IsImg(debug_mark))
-        ClearImg(debug_mark);
+        {
+          clearImg(debug_mark);
+        }
     }
 #endif
-
-    FreeImg(pic1);
-    FreeImg(mark1);
 
     if (number_of_found_objects != number_of_searched_objects)
       {
@@ -736,8 +783,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, "wrong number of objects"/*M_INTERN*/, ERROR);
-        return number_of_found_objects;
+        throw IceException(FNAME, "wrong number of objects");
       }
 
     pl2 = NewPointList(number_of_found_objects);
@@ -801,7 +847,9 @@ namespace ice
     Vector gewichte(M_MIN);
 
     for (i = 0; i < M_MIN; i++)
-      gewichte[i] = 1.0;
+      {
+        gewichte[i] = 1.0;
+      }
 
     double min_distance, phi_min;
 
@@ -811,15 +859,17 @@ namespace ice
     for (phi = 0.0; phi < 360.0; phi += 10.0)
       {
         rot2 = rot1;
-        rot2.Shift(-sum1, -sum2);
-        rot2.Rotate(0.0, 0.0, (phi / 180.0)*M_PI);
-        rot2.Shift(+sum1, +sum2);
-        TransformList(rot2, m1, m1_rot);
+        rot2.shift(-sum1, -sum2);
+        rot2.rotate(0.0, 0.0, (phi / 180.0)*M_PI);
+        rot2.shift(+sum1, +sum2);
+        transformList(rot2, m1, m1_rot);
 
         // Abstandsmatrix bestimmen
         for (i = 0; i < M; i++)
           for (j = 0; j < M; j++)
-            Abstand_2[i][j] = 0.0;
+            {
+              Abstand_2[i][j] = 0.0;
+            }
 
         for (i = 0; i < number_of_searched_objects; i++)
           for (j = 0; j < number_of_found_objects; j++)
@@ -841,10 +891,16 @@ namespace ice
             j = reference_pairs[k][1];
 
             if (number_of_searched_objects < number_of_found_objects)
-              if (i >= M_MIN) continue;
+              if (i >= M_MIN)
+                {
+                  continue;
+                }
 
             if (number_of_searched_objects > number_of_found_objects)
-              if (j >= M_MIN) continue;
+              if (j >= M_MIN)
+                {
+                  continue;
+                }
 
             x1 = int(m3[l][0] = m1_rot[i][0]);
             y1 = int(m3[l][1] = m1_rot[i][1]);
@@ -855,7 +911,7 @@ namespace ice
 
         t1 = MatchPointlistsLinOpt(m3, m4, TRANSFORMATION);
 
-        TransformList(t1, m3, m5);
+        transformList(t1, m3, m5);
 
         set_distance = point_set_distance(m4, m5);
 
@@ -867,16 +923,18 @@ namespace ice
       }
 
     rot2 = rot1;
-    rot2.Shift(-sum1, -sum2);
-    rot2.Rotate(0.0, 0.0, (phi_min / 180.0)*M_PI);
-    rot2.Shift(+sum1, +sum2);
+    rot2.shift(-sum1, -sum2);
+    rot2.rotate(0.0, 0.0, (phi_min / 180.0)*M_PI);
+    rot2.shift(+sum1, +sum2);
 
-    TransformList(rot2, m1, m1_rot);
+    transformList(rot2, m1, m1_rot);
 
     // Abstandsmatrix bestimmen
     for (i = 0; i < M; i++)
       for (j = 0; j < M; j++)
-        Abstand_2[i][j] = 0.0;
+        {
+          Abstand_2[i][j] = 0.0;
+        }
 
     for (i = 0; i < number_of_searched_objects; i++)
       for (j = 0; j < number_of_found_objects; j++)
@@ -909,8 +967,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
-        return number_of_points;
+        throw IceException(FNAME, M_INTERN);
       }
   }
 #undef FNAME
@@ -979,10 +1036,7 @@ namespace ice
     error = scan_image(image, number_of_points, pl1, pl2, reference_pairs, debug_image, debug_mark);
 
     if (error != 0)
-      {
-        Message(FNAME, M_INTERN, ERROR);
-        return error;
-      }
+      throw IceException(FNAME, M_INTERN);
 
     error = sort_reference_pairs(reference_pairs, number_of_points, pl1, pl2, imagepoints, worldpoints);
 
@@ -1012,7 +1066,7 @@ namespace ice
             verzeichnung.RectImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
-            c.SetDist(verzeichnung);
+            c.setDist(verzeichnung);
 
             // Matrix der Bildkoordinaten entzeichnen und
             // normierte Bildkoordinaten aus entzeichneter Matrix berechnen
@@ -1034,7 +1088,7 @@ namespace ice
             verzeichnung.RectImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
-            c.SetDist(verzeichnung);
+            c.setDist(verzeichnung);
 
             // Matrix der Bildkoordinaten entzeichnen und
             // normierte Bildkoordinaten aus entzeichneter Matrix berechnen
@@ -1055,7 +1109,7 @@ namespace ice
             verzeichnung.RectImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
-            c.SetDist(verzeichnung);
+            c.setDist(verzeichnung);
 
             // Matrix der Bildkoordinaten entzeichnen und
             // normierte Bildkoordinaten aus entzeichneter Matrix berechnen
@@ -1071,14 +1125,18 @@ namespace ice
 #ifdef selfcalib_debug
         {
           if (IsImg(debug_image))
-            CopyImg(image, debug_image);
+            {
+              CopyImg(image, debug_image);
+            }
 
           printf("Entzeichnetes Bild\n");
           printf("weiter mit <Enter> ...\n");
           getchar();
 
           if (IsImg(debug_image))
-            ClearImg(debug_image);
+            {
+              clearImg(debug_image);
+            }
         }
 #endif
 
@@ -1095,7 +1153,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1123,7 +1181,7 @@ namespace ice
     int number_of_images = images_in.size();
     int number_of_points = CPOINTS;
 
-    CameraParameters* cps = new CameraParameters [number_of_images];
+    vector<CameraParameters> cps(number_of_images);
 
     Matrix K;
 
@@ -1184,7 +1242,9 @@ namespace ice
                      fabs(image1_coords[k][0]) < fabs(image2_coords[k][0]) * 1.01) &&
                     (fabs(image1_coords[k][1]) > fabs(image2_coords[k][1]) * 0.99 &&
                      fabs(image1_coords[k][1]) < fabs(image2_coords[k][1]) * 1.01))
-                  anzahl_gleicher_werte++;
+                  {
+                    anzahl_gleicher_werte++;
+                  }
 
                 //printf("anz: %d   i: %d   j: %d   k: %d    ", anzahl_gleicher_werte, i, j, k);
                 //printf("x: %f   x: %f   y: %f   y: %f\n", image1_coords[k][0], image2_coords[k][0], image1_coords[k][1], image2_coords[k][1]);
@@ -1202,13 +1262,9 @@ namespace ice
           getchar();
         }
 #endif
-
-        Message(FNAME, M_INTERN, ERROR);
-        delete[] cps;
         delete[] all_repro_coords;
-        return ERROR;
+        throw IceException(FNAME, M_INTERN);
       }
-
 
     // Bestimmung der internen Kameraparameter nach Zhang
     K = calib_intrinsic_zhang(H);
@@ -1220,7 +1276,7 @@ namespace ice
             double summe_der_abst = 0.0;
 
             // Bestimmung der externen Kameraparameter nach Zhang
-            cps[actual_image_number] = calib_extrinsic_zhang(H[actual_image_number].Tmatrix(), K);
+            cps[actual_image_number] = calib_extrinsic_zhang(H[actual_image_number].getMatrix(), K);
 
             for (int i = 0; i < number_of_points; i++)
               {
@@ -1260,10 +1316,8 @@ namespace ice
                 }
 #endif
 
-                Message(FNAME, M_INTERN, NO_UNIQUE_SOLUTION);
-                delete[] cps;
                 delete[] all_repro_coords;
-                return NO_UNIQUE_SOLUTION;
+                throw IceException(FNAME, M_INTERN);
               }
           }
 
@@ -1273,30 +1327,30 @@ namespace ice
             int ain = actual_image_number;
 
             //Set(double fp,double ap,double sp,double u0p,double v0p);
-            cv[ain].Set(cps[ain]->K[0][0] * (dimmax / 2.0),
-                        cps[ain]->K[1][1] / (-cps[ain]->K[0][0]),
-                        cps[ain]->K[0][1] / cps[ain]->K[0][0],
-                        cps[ain]->K[0][2] * (dimmax / 2.0) + (dimx / 2.0),
-                        cps[ain]->K[1][2] * (dimmax / 2.0) + (dimy / 2.0));
+            cv[ain].set(cps[ain].K[0][0] * (dimmax / 2.0),
+                        cps[ain].K[1][1] / (-cps[ain].K[0][0]),
+                        cps[ain].K[0][1] / cps[ain].K[0][0],
+                        cps[ain].K[0][2] * (dimmax / 2.0) + (dimx / 2.0),
+                        cps[ain].K[1][2] * (dimmax / 2.0) + (dimy / 2.0));
 
             //SetExt(double dxp,double dyp,double dzp,double ap,double bp,double cp);
-            if ((cps[ain]->R[0][0] == 0) && (cps[ain]->R[1][0] == 0))
+            if ((cps[ain].R[0][0] == 0) && (cps[ain].R[1][0] == 0))
               {
-                cv[ain].SetExt(cps[ain]->t[0] * (dimmax / 2.0),
-                               cps[ain]->t[1] * (dimmax / 2.0),
-                               cps[ain]->t[2] * (dimmax / 2.0),
+                cv[ain].setExt(cps[ain].t[0] * (dimmax / 2.0),
+                               cps[ain].t[1] * (dimmax / 2.0),
+                               cps[ain].t[2] * (dimmax / 2.0),
                                0.0,
                                90.0,
-                               atan(cps[ain]->R[0][1] / cps[ain]->R[1][1]));
+                               atan(cps[ain].R[0][1] / cps[ain].R[1][1]));
               }
             else
               {
-                cv[ain].SetExt(cps[ain]->t[0] * (dimmax / 2.0),
-                               cps[ain]->t[1] * (dimmax / 2.0),
-                               cps[ain]->t[2] * (dimmax / 2.0),
-                               atan(cps[ain]->R[1][0] / cps[ain]->R[0][0]),
-                               atan(-cps[ain]->R[2][0]) / sqrt((cps[ain]->R[0][0] * cps[ain]->R[0][0]) + (cps[ain]->R[1][0] * cps[ain]->R[1][0])),
-                               atan(cps[ain]->R[2][1] / cps[ain]->R[2][2]));
+                cv[ain].setExt(cps[ain].t[0] * (dimmax / 2.0),
+                               cps[ain].t[1] * (dimmax / 2.0),
+                               cps[ain].t[2] * (dimmax / 2.0),
+                               atan(cps[ain].R[1][0] / cps[ain].R[0][0]),
+                               atan(-cps[ain].R[2][0]) / sqrt((cps[ain].R[0][0] * cps[ain].R[0][0]) + (cps[ain].R[1][0] * cps[ain].R[1][0])),
+                               atan(cps[ain].R[2][1] / cps[ain].R[2][2]));
               }
           }
       }
@@ -1304,7 +1358,7 @@ namespace ice
       {
         // Kameraparameter in Vector schreiben
         //Set(double fp,double ap,double sp,double u0p,double v0p);
-        cv[0].Set(K[0][0] * (dimmax / 2.0),
+        cv[0].set(K[0][0] * (dimmax / 2.0),
                   K[1][1] / (-K[0][0]),
                   K[0][1] / K[0][0],
                   K[0][2] * (dimmax / 2.0) + (dimx / 2.0),
@@ -1322,10 +1376,9 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
-    delete[] cps;
     delete[] all_repro_coords;
     return error;
   }
@@ -1346,7 +1399,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT);
 
         return WRONG_PARAM;
       }
@@ -1368,7 +1421,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1390,7 +1443,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+        throw IceException(FNAME, M_MATRIXFORMAT);
 
         return WRONG_PARAM;
       }
@@ -1410,7 +1463,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1433,8 +1486,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     int error = 0;
@@ -1457,7 +1509,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1478,7 +1530,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1497,7 +1549,7 @@ namespace ice
             }
 #endif
 
-            Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIXFORMAT);
 
             return WRONG_PARAM;
           }
@@ -1508,7 +1560,9 @@ namespace ice
     vector<Camera> cv(imagepoints.size());
 
     for (unsigned int i = 0; i < imagepoints.size(); i++)
-      cv[i] = c;
+      {
+        cv[i] = c;
+      }
 
     int number_of_images = imagepoints.size();
     vector<Image> images(number_of_images);
@@ -1531,7 +1585,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1552,7 +1606,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1571,7 +1625,7 @@ namespace ice
             }
 #endif
 
-            Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
+            throw IceException(FNAME, M_MATRIXFORMAT);
 
             return WRONG_PARAM;
           }
@@ -1600,7 +1654,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1621,8 +1675,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_VECTORDIM);
       }
 
     int error = 0;
@@ -1630,7 +1683,9 @@ namespace ice
     vector<Camera> cv(H.size());
 
     for (unsigned int i = 0; i < H.size(); i++)
-      cv[i] = c;
+      {
+        cv[i] = c;
+      }
 
     int number_of_images = H.size();
     int actual_image_number = 0;
@@ -1664,7 +1719,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1685,7 +1740,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1722,7 +1777,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1744,7 +1799,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
+        throw IceException(FNAME, M_VECTORDIM);
 
         return WRONG_PARAM;
       }
@@ -1779,7 +1834,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1800,8 +1855,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_VECTORDIM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_VECTORDIM);
       }
 
     int error = 0;
@@ -1809,7 +1863,9 @@ namespace ice
     vector<Camera> cv(images.size());
 
     for (unsigned int i = 0; i < images.size(); i++)
-      cv[i] = c;
+      {
+        cv[i] = c;
+      }
 
     int number_of_images = images.size();
     int actual_image_number = 0;
@@ -1843,7 +1899,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_INTERN, ERROR);
+        throw IceException(FNAME, M_INTERN);
       }
 
     return error;
@@ -1864,7 +1920,7 @@ namespace ice
         }
 #endif
 
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAM);
 
         Image img = NewImg(dimx, dimy, 255);
 
@@ -1933,11 +1989,13 @@ namespace ice
             pl[3][1] = pattern[i][7] * abstand + verschiebung_y;
           }
 
-        c.Reset();
-        c.SetStart((int)pl[3][0], (int)pl[3][1]);
+        c.reset();
+        c.setStart((int)pl[3][0], (int)pl[3][1]);
 
         for (int j = 0; j < 4; j++)
-          c.Add((int)pl[j][0], (int)pl[j][1]);
+          {
+            c.add((int)pl[j][0], (int)pl[j][1]);
+          }
 
         FillRegion(c, 255, img);
       }

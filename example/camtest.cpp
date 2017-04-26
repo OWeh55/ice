@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
   cout << cam.toString(" ") << endl;
 
   for (int i = 0; i < welt.rows(); i++)
-    cout << cam.Transform(welt[i]) << endl;
+    cout << cam.transform(welt[i]) << endl;
 
 
   Calib(cam, welt, bild, 3);

@@ -18,6 +18,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "macro.h"
 #include "fitfn.h"
 #include "shading.h"
 
@@ -50,10 +51,7 @@ namespace ice
     Function2dWithFitting* fn;
 
     if (mode < 0)
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     switch (mode)
       {

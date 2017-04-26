@@ -34,7 +34,7 @@ namespace ice
     IPoint pUnderground = startdir.step(pObject);
     Freeman adir = startdir;
 
-    res.Reset();
+    res.reset();
 
     int dir2 = 2;
     int dir1 = 1;
@@ -47,7 +47,7 @@ namespace ice
         dir6 = 2;
       }
 
-    res.SetStart(pObject);
+    res.setStart(pObject);
 
     //    std::cout << "is Valid " << res.isValid() << std::endl;
 
@@ -92,7 +92,7 @@ namespace ice
                     // ..|XX
                     // ..|XX
                     // links abbiegen
-                    res.Add((adir + dir1).Int());
+                    res.add((adir + dir1).Int());
                     pObject = test2;
                     adir = adir + dir6;
                   }
@@ -135,7 +135,7 @@ namespace ice
                     // ..|XX
                     // ..|XX
                     // links abbiegen
-                    res.Add((adir + dir1).Int());
+                    res.add((adir + dir1).Int());
                     pObject = test2;
                     adir = adir + dir6;
                   }
@@ -151,9 +151,9 @@ namespace ice
                         // geradeaus
                         pObject = test;
                         pUnderground = test2;
-                        res.Add((adir + dir2).Int());
+                        res.add((adir + dir2).Int());
                       }
-                    else /* obj == isunknown */
+                    else     /* obj == isunknown */
                       {
                         // uu XX
                         // uu XX
@@ -181,10 +181,7 @@ namespace ice
     // ist startpunkt objektpunkt ?
 
     if (of(start) != isobject)
-      {
-        Message(FNAME, M_WRONG_STARTPOINT, WRONG_STARTPOINT);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT);
 
     // Suche Untergrundpunkt in Nachbarschaft (links beginnend)
 
@@ -199,20 +196,17 @@ namespace ice
       }
 
     if (cr == 4)                    // Startpunkt liegt im Objekt
-      {
-        Message(FNAME, M_WRONG_STARTPOINT3, WRONG_STARTPOINT);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_STARTPOINT3);
 
-    if (Go(start, startdir, true, of, res)) // if true -> open contur
+    if (Go(start, startdir, true, of, res))   // if true -> open contur
       {
         // from start in inverse direction
         Contur h;
         Go(start, startdir, false, of, h);
         // invert found contur
-        h.InvDir();
+        h.invertDir();
         // add first contur
-        h.Add(res);
+        h.add(res);
         // -> this is result
         res = h;
       }

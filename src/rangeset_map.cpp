@@ -34,7 +34,9 @@ namespace ice
         int x2 = i->first;
         ++i;
         for (int x = x1; x < x2; x++)
-          img.setPixelClipped(x, y, val);
+          {
+            img.setPixelClipped(x, y, val);
+          }
       }
 
     return OK;
@@ -50,7 +52,9 @@ namespace ice
         int x2 = i->first;
         ++i;
         for (int x = x1; x < x2; x++)
-          points.push_back(IPoint(x, y));
+          {
+            points.push_back(IPoint(x, y));
+          }
 
       }
   }
@@ -77,7 +81,7 @@ namespace ice
         ++i;
         int x2 = i->first;
         ++i;
-        m.Add(y, x1, x2 - 1);
+        m.add(y, x1, x2 - 1);
       }
 
     return OK;
@@ -94,9 +98,13 @@ namespace ice
         // cout << i->first << ": " << i->second << endl;
         int level2 = level + i->second;
         if (level <= 0 && level2 > 0)
-          new_eep[i->first] = 1;
+          {
+            new_eep[i->first] = 1;
+          }
         else if (level > 0 && level2 <= 0)
-          new_eep[i->first] = -1;
+          {
+            new_eep[i->first] = -1;
+          }
         level = level2;
       }
     eep = new_eep;
@@ -107,11 +115,17 @@ namespace ice
         // cout << i->first << ": " << i->second << endl;
         int level2 = level + i->second;
         if (level <= 0 && level2 > 0)
-          i->second = 1;
+          {
+            i->second = 1;
+          }
         else if (level > 0 && level2 <= 0)
-          i->second = -1;
+          {
+            i->second = -1;
+          }
         else
-          i->second = 0;
+          {
+            i->second = 0;
+          }
         level = level2;
       }
 
@@ -120,10 +134,14 @@ namespace ice
       {
         i = eep.begin();
         while (i != eep.end() && i->second != 0)
-          ++i;
+          {
+            ++i;
+          }
 
         if (i != eep.end())
-          eep.erase(i);
+          {
+            eep.erase(i);
+          }
       }
     while (i != eep.end());
   }
@@ -132,11 +150,15 @@ namespace ice
   {
     if (inverted)
       for (eemap::const_iterator i = map2.begin(); i != map2.end(); ++i)
-        eep[i->first] -= i->second;
+        {
+          eep[i->first] -= i->second;
+        }
 
     else
       for (eemap::const_iterator i = map2.begin(); i != map2.end(); ++i)
-        eep[i->first] += i->second;
+        {
+          eep[i->first] += i->second;
+        }
   }
 
   std::ostream& operator<<(std::ostream& out, const RangeSetMap& s)

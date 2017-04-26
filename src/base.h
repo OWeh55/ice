@@ -37,29 +37,55 @@ namespace ice
   typedef int PixelType3;
 
   // sets all grey values of >Img< to >Value<
-  int SetImg(const Image& Img, int Value);
-  int ClearImg(const Image& img);
+  void setImg(const Image& img, int value);
+  void clearImg(const Image& img);
 
   // Copy an image
   int CopyImg(const Image& source, const Image& destination);
 
   // Checks, if image is valid
 
-  inline bool IsImg(const Image& Img)
+  inline bool IsImg(const Image& img)
   {
-    return Img.isValid();
+    return img.isValid();
   }
 
   // These functions check if 2 or 3 images match == the sizes of the images
-  // are equal. Versions with parameters SizeX and SizeY return
+  // are equal. Versions with parameters sizeX and sizeY return
   // the windowsize
   // if the images don't match, an error is forced
   int MatchImg(const Image& p1,
                const Image& p2,
-               const Image& p3, int& SizeX, int& SizeY);
-  int MatchImg(const Image& p1, const Image& p2, int& SizeX, int& SizeY);
+               const Image& p3, int& sizeX, int& sizeY);
+  int MatchImg(const Image& p1, const Image& p2, int& sizeX, int& sizeY);
   int MatchImg(const Image& p1, const Image& p2, const Image& p3);
   int MatchImg(const Image& p1, const Image& p2);
+
+  // These functions check if 2 or 3 images match == the sizes of the images
+  // are equal. Versions with parameters sizeX and sizeY return
+  // the size
+  // if the images don't match, an exception is thrown
+  void checkSizes(const Image& p1,
+                  const Image& p2,
+                  const Image& p3, int& sizeX, int& sizeY);
+  void checkSizes(const Image& p1, const Image& p2, int& sizeX, int& sizeY);
+  void checkSizes(const Image& p1, const Image& p2, const Image& p3);
+  void checkSizes(const Image& p1, const Image& p2);
+
+  // These functions check if images are valid. In the case of 2 or 3 images
+  // the size and maximum value are compared.  If images are invalid or
+  // sizes or maximum value are different, an exception ist thrown.
+  // Versions with parameters sizeX, sizeY and maxVal return
+  // the size and maximum value
+
+  void checkImage(const Image& p1,
+                  const Image& p2,
+                  const Image& p3, int& sizeX, int& sizeY, int& maxVal);
+  void checkImage(const Image& p1, const Image& p2, int& sizeX, int& sizeY, int& maxVal);
+  void checkImage(const Image& p1, int& sizeX, int& sizeY, int& maxVal);
+  void checkImage(const Image& p1, const Image& p2, const Image& p3);
+  void checkImage(const Image& p1, const Image& p2);
+  void checkImage(const Image& p1);
 
   // Interpretes the image Img as a continous grey value function.
   // Returns the grey value at location (x, y). This value is

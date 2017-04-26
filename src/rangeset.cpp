@@ -29,7 +29,9 @@ namespace ice
     for (int i = 0; i < (int)elements.size(); i += 2)
       {
         for (int x = elements[i].x; x < elements[i + 1].x; x++)
-          img.setPixelClipped(x, y, val);
+          {
+            img.setPixelClipped(x, y, val);
+          }
       }
     return OK;
   }
@@ -39,7 +41,9 @@ namespace ice
     for (int i = 0; i < (int)elements.size(); i += 2)
       {
         for (int x = elements[i].x; x < elements[i + 1].x; x++)
-          points.push_back(IPoint(x, y));
+          {
+            points.push_back(IPoint(x, y));
+          }
       }
   }
 
@@ -55,7 +59,7 @@ namespace ice
   {
     for (int i = 0; i < (int)elements.size(); i += 2)
       {
-        m.Add(y, elements[i].x, elements[i + 1].x - 1);
+        m.add(y, elements[i].x, elements[i + 1].x - 1);
       }
 
     return OK;
@@ -108,20 +112,30 @@ namespace ice
         else
           {
             if (inverted)
-              res[didx++] = !v2[sidx2++];
+              {
+                res[didx++] = !v2[sidx2++];
+              }
             else
-              res[didx++] = v2[sidx2++];
+              {
+                res[didx++] = v2[sidx2++];
+              }
           }
       }
     while (sidx1 < size1)
-      res[didx++] = elements[sidx1++];
+      {
+        res[didx++] = elements[sidx1++];
+      }
 
     while (sidx2 < size2)
       {
         if (inverted)
-          res[didx++] = !v2[sidx2++];
+          {
+            res[didx++] = !v2[sidx2++];
+          }
         else
-          res[didx++] = v2[sidx2++];
+          {
+            res[didx++] = v2[sidx2++];
+          }
       }
     elements = res;
   }

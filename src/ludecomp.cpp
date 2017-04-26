@@ -27,7 +27,7 @@
 #include "Matrix.h"
 #include "ludecomp.h"
 
-#include "message.h"
+#include "IceException.h"
 #include "math.h"
 
 namespace ice
@@ -52,11 +52,8 @@ namespace ice
 
     int dim = a.cols(); // Dimension merken
 
-    if (dim != a.rows()) // auf quadratische Matrix testen
-      {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if (dim != a.rows())   // auf quadratische Matrix testen
+      throw IceException(FNAME, M_NO_SQUARE);
 
     LU = a;
 
@@ -73,26 +70,28 @@ namespace ice
           {
             double temp = fabs(LU(i, j));
 
-            if (temp > big) big = temp;
+            if (temp > big)
+              {
+                big = temp;
+              }
           }
 
         if (big == 0)
-          {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         vv[i] = 1.0 / big;
       }
 
-    for (int j = 0; j < dim; j++) // loop over all columns
+    for (int j = 0; j < dim; j++)   // loop over all columns
       {
         for (int i = 0; i < j; i++)
           {
             double sum = LU(i, j);
 
             for (int k = 0; k < i; k++)
-              sum -= LU(i, k) * LU(k, j);
+              {
+                sum -= LU(i, k) * LU(k, j);
+              }
 
             LU(i, j) = sum;
           }
@@ -105,7 +104,9 @@ namespace ice
             double sum = LU(i, j);
 
             for (int k = 0; k < j; k++)
-              sum -= LU(i, k) * LU(k, j);
+              {
+                sum -= LU(i, k) * LU(k, j);
+              }
 
             LU(i, j) = sum;
             double dum = vv[i] * fabs(sum);
@@ -128,20 +129,22 @@ namespace ice
 
             indx[j] = imax;
           }
-        else indx[j] = j;
+        else
+          {
+            indx[j] = j;
+          }
 
         if (LU(j, j) == 0)
-          {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-            return ERROR;
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         if (j < dim - 1)
           {
             double dum = 1.0 / LU(j, j);
 
             for (int i = j + 1; i < dim; i++)
-              LU(i, j) *= dum;
+              {
+                LU(i, j) *= dum;
+              }
           }
       } // all columns
 
@@ -162,11 +165,8 @@ namespace ice
 
     int dim = a.cols(); // Dimension merken
 
-    if (dim != a.rows()) // auf quadratische Matrix testen
-      {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if (dim != a.rows())   // auf quadratische Matrix testen
+      throw IceException(FNAME, M_NO_SQUARE);
 
     LU = a;
 
@@ -183,26 +183,28 @@ namespace ice
           {
             double temp = fabs(LU[i][j]);
 
-            if (temp > big) big = temp;
+            if (temp > big)
+              {
+                big = temp;
+              }
           }
 
         if (big == 0)
-          {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-            return WRONG_PARAM;
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         vv[i] = 1.0 / big;
       }
 
-    for (int j = 0; j < dim; j++) // loop over all columns
+    for (int j = 0; j < dim; j++)   // loop over all columns
       {
         for (int i = 0; i < j; i++)
           {
             double sum = LU[i][j];
 
             for (int k = 0; k < i; k++)
-              sum -= LU[i][k] * LU[k][j];
+              {
+                sum -= LU[i][k] * LU[k][j];
+              }
 
             LU[i][j] = sum;
           }
@@ -215,7 +217,9 @@ namespace ice
             double sum = LU[i][j];
 
             for (int k = 0; k < j; k++)
-              sum -= LU[i][k] * LU[k][j];
+              {
+                sum -= LU[i][k] * LU[k][j];
+              }
             LU[i][j] = sum;
 
             double dum = vv[i] * fabs(sum);
@@ -232,7 +236,9 @@ namespace ice
             if (j != imax)
               {
                 for (int c = 0; c < LU.cols(); ++c)
-                  std::swap(LU[j][c], LU[imax][c]);
+                  {
+                    std::swap(LU[j][c], LU[imax][c]);
+                  }
                 dsign = -dsign;
                 vv[imax] = vv[j];
               }
@@ -240,20 +246,21 @@ namespace ice
             indx[j] = imax;
           }
         else
-          indx[j] = j;
+          {
+            indx[j] = j;
+          }
 
         if (LU[j][j] == 0.0)
-          {
-            Message(FNAME, M_MATRIX_SINGULAR, WRONG_PARAM);
-            return ERROR;
-          }
+          throw IceException(FNAME, M_MATRIX_SINGULAR);
 
         if (j < dim - 1)
           {
             double dum = 1.0 / LU[j][j];
 
             for (int i = j + 1; i < dim; i++)
-              LU[i][j] *= dum;
+              {
+                LU[i][j] *= dum;
+              }
           }
       } // all columns
 
@@ -289,14 +296,18 @@ namespace ice
         for (i = 0; i < U.cols(); i++)
           {
             for (j = i + 1; j < U.rows(); j++)
-              U[j][i] = 0;
+              {
+                U[j][i] = 0;
+              }
           }
 
         // L ist untere Dreiecksmatrix
         for (i = 0; i < L.cols(); i++)
           {
             for (j = 0; j < i; j++)
-              L[j][i] = 0;
+              {
+                L[j][i] = 0;
+              }
             L[i][i] = 1.0;
           }
       }
@@ -322,14 +333,18 @@ namespace ice
         for (i = 0; i < U.cols(); i++)
           {
             for (j = i + 1; j < U.rows(); j++)
-              U[j][i] = 0;
+              {
+                U[j][i] = 0;
+              }
           }
 
         // L ist untere Dreiecksmatrix
         for (i = 0; i < L.cols(); i++)
           {
             for (j = 0; j < i; j++)
-              L[j][i] = 0;
+              {
+                L[j][i] = 0;
+              }
             L[i][i] = 1.0;
           }
       }
@@ -346,23 +361,14 @@ namespace ice
 
     int dim = LU.cols(); // Dimension merken
 
-    if (dim != LU.rows()) // auf quadratische Matrix testen
-      {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return res;
-      }
+    if (dim != LU.rows())   // auf quadratische Matrix testen
+      throw IceException(FNAME, M_NO_SQUARE);
 
-    if (indx.Size() != dim) // Größe permutation korrekt
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
-      }
+    if (indx.Size() != dim)   // Größe permutation korrekt
+      throw IceException(FNAME, M_WRONG_DIM);
 
-    if (b.Size() != dim) // Größe inhomogenität korrekt
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
-      }
+    if (b.Size() != dim)   // Größe inhomogenität korrekt
+      throw IceException(FNAME, M_WRONG_DIM);
 
     int ii = -1;
 
@@ -375,9 +381,14 @@ namespace ice
         if (ii >= 0)
           {
             for (int j = ii; j < i; j++)
-              sum -= LU(i, j) * res[j];
+              {
+                sum -= LU(i, j) * res[j];
+              }
           }
-        else if (sum) ii = i;
+        else if (sum)
+          {
+            ii = i;
+          }
 
         res[i] = sum;
       }
@@ -387,7 +398,9 @@ namespace ice
         double sum = res[i];
 
         for (int j = i + 1; j < dim; j++)
-          sum -= LU(i, j) * res[j];
+          {
+            sum -= LU(i, j) * res[j];
+          }
 
         res[i] = sum / LU(i, i);
       }
@@ -406,22 +419,13 @@ namespace ice
     int dim = LU.cols(); // Dimension merken und auf quadratische Matrix testen
 
     if (dim != LU.rows())
-      {
-        Message(FNAME, M_NO_SQUARE, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_NO_SQUARE);
 
     if ((int)indx.size() != dim)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     if ((int)b.size() != dim)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return res;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     int ii = -1;
 
@@ -434,10 +438,14 @@ namespace ice
         if (ii >= 0)
           {
             for (int j = ii; j < i; j++)
-              sum -= LU[i][j] * res[j];
+              {
+                sum -= LU[i][j] * res[j];
+              }
           }
         else if (sum)
-          ii = i;
+          {
+            ii = i;
+          }
 
         res[i] = sum;
       }
@@ -447,7 +455,9 @@ namespace ice
         double sum = res[i];
 
         for (int j = i + 1; j < dim; j++)
-          sum -= LU[i][j] * res[j];
+          {
+            sum -= LU[i][j] * res[j];
+          }
 
         res[i] = sum / LU[i][i];
       }

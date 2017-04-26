@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "message.h"
+#include "IceException.h"
 #include "numbase.h"
 #include "macro.h"
 
@@ -41,11 +41,11 @@ namespace ice
     ClassifierNormal(classes, dimension),
     nNeighbors(nNeighbors), norm(norm)
   {
-    IF_FAILED(Init(classes, dimension, nNeighbors, norm))
-    {
-      // if initialisation fails
-      Message(FNAME, M_0, ERROR);
-    }
+    try
+      {
+        Init(classes, dimension, nNeighbors, norm);
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -53,16 +53,22 @@ namespace ice
   void ClassifierNearestNeighbor::Init(int classes, int dimension,
                                        int nNeighbors, bool norm)
   {
-    RETURN_VOID_IF_FAILED(ClassifierNormal::Init(classes, dimension));
-    this->nNeighbors = nNeighbors;
-    this->norm = norm;
+    try
+      {
+        ClassifierNormal::Init(classes, dimension);
+        this->nNeighbors = nNeighbors;
+        this->norm = norm;
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "ClassifierNearestNeighbor::Finish"
   bool ClassifierNearestNeighbor::_finish()
   {
     if (norm)
-      doNormalization(normalizeScaling);
+      {
+        doNormalization(normalizeScaling);
+      }
     tree.create(samples);
     //    tree.statistics();
     samples.clear();
@@ -78,12 +84,18 @@ namespace ice
   {
     std::vector<double> fn(feat);
     if (norm)
-      normalize(fn);
+      {
+        normalize(fn);
+      }
 
     if (nNeighbors == 1)
-      return _classify1(fn, probs);
+      {
+        return _classify1(fn, probs);
+      }
     else
-      return _classifyk(fn, probs);
+      {
+        return _classifyk(fn, probs);
+      }
   }
 
   int ClassifierNearestNeighbor::_classify1(const std::vector<double>& fn,
@@ -92,8 +104,7 @@ namespace ice
     const ClassSample* rp = tree.findNearest(fn);
     if (rp == NULL)
       {
-        Message(FNAME, M_NOT_INITIALISED, 2);
-        return -1;
+        throw IceException(FNAME, M_NOT_INITIALISED);
       }
     return rp->classNr;
   }
@@ -130,7 +141,9 @@ namespace ice
           {
             max = probs[i];
             if (max > rejection_threshold)
-              maxClass = i;
+              {
+                maxClass = i;
+              }
           }
       }
 
@@ -143,16 +156,15 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierNearestNeighbor")
-      {
-        Message(FNAME, M_WRONG_FILE, WRONG_FILE);
-        return WRONG_FILE;
-      }
+      throw IceException(FNAME, M_WRONG_FILE);
     source >> nFeatures;
     source >> nClasses;
     source >> nNeighbors;
     source >> norm;
     if (norm)
-      readNormalization(source);
+      {
+        readNormalization(source);
+      }
     Init(nClasses, nFeatures, nNeighbors, norm);
     tree.read(source);
     state = ready;
@@ -168,7 +180,9 @@ namespace ice
     dest << nNeighbors << " ";
     dest << norm << endl ;
     if (norm)
-      writeNormalization(dest);
+      {
+        writeNormalization(dest);
+      }
     tree.write(dest);
     return OK;
   }

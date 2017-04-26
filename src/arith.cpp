@@ -25,8 +25,9 @@
 #include <iostream>
 #include <stdlib.h>
 
-#include "message.h"
+#include "IceException.h"
 #include "defs.h"
+
 #include "macro.h"
 
 #include "base.h"
@@ -64,8 +65,8 @@ namespace ice
 //
 // Bildaddition
 //
-#define FNAME "AddImg"
-  int AddImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
+#define FNAME "addImg"
+  void addImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
   {
     int dx, dy;
     int x, y;
@@ -75,11 +76,11 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = pn1->maxval + pn2->maxval; /*maximaler wert bei addition */
-    gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
+    gmax1 = pn1.maxval + pn2.maxval; /*maximaler wert bei addition */
+    gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     // jetzt addieren
-    if (gmax == gmax1)  /* keine Normierung noetig */
+    if (gmax == gmax1)   /* keine Normierung noetig */
       {
         LOOP { PutVal(pn3, x, y, VAL1 + VAL2); }
       }
@@ -102,31 +103,26 @@ namespace ice
               val = val % gzahl;
               break;
             default:
-            {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
         }
       }
-
-    return OK;
   }
 
 #undef FNAME
 //
 // Bild-Subtraktion
 //
-#define FNAME "SubImg"
-  int SubImg(const Image& pn1, const Image& pn2, int smode, const Image& pn3, int mode)
+#define FNAME "subImg"
+  void subImg(const Image& pn1, const Image& pn2, int smode, const Image& pn3, int mode)
 //
 //  Subtraktion zweier Bilder, ergebnis muss immer positiv sein
 //  smode   rechnung
 //  SMD_ABSOLUTE:  pn3=abs(pn1-pn2)
 //  SMD_POSITIVE:  pn3=max(pn1-pn2,0)
-//  SMD_SHIFT:     pn3=pn1-pn2+pn2->maxval
+//  SMD_SHIFT:     pn3=pn1-pn2+pn2.maxval
 //
   {
     int dx, dy;
@@ -138,33 +134,30 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
     /* maximalwerte des Ergebnisses ermitteln */
-    gzahl = pn3->maxval + 1;
+    gzahl = pn3.maxval + 1;
     gnull = gzahl / 2;
 
     switch (smode)
       {
       case SMD_ABSOLUTE:
-        gmax1 = Max(pn1->maxval, pn2->maxval);
+        gmax1 = Max(pn1.maxval, pn2.maxval);
         break;
       case SMD_POSITIVE:
-        gmax1 = pn1->maxval;
+        gmax1 = pn1.maxval;
         break;
       case SMD_SHIFT:
-        gmax1 = Max(pn1->maxval, pn2->maxval) * 2 + 1;
+        gmax1 = Max(pn1.maxval, pn2.maxval) * 2 + 1;
         break;
       default:
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
-    gmax = pn3->maxval;
+    gmax = pn3.maxval;
 
     //
     // jetzt subtrahieren
     //
-    if (gmax == gmax1) // Überlaufbehandlung ist überflüssig
+    if (gmax == gmax1)   // Überlaufbehandlung ist überflüssig
       {
         switch (smode)
           {
@@ -175,7 +168,7 @@ namespace ice
             LOOP { PutVal(pn3, x, y, Max(VAL1 - VAL2, 0)); };
             break;
           case SMD_SHIFT:
-            LOOP { PutVal(pn3, x, y, VAL1 - VAL2 + pn2->maxval); };
+            LOOP { PutVal(pn3, x, y, VAL1 - VAL2 + pn2.maxval); };
             break;
           }/*switch (mode) */
       }/*if*/
@@ -194,13 +187,22 @@ namespace ice
               break;
             case SMD_POSITIVE:
 
-              if (val < 0) val = 0;
+              if (val < 0)
+                {
+                  val = 0;
+                }
 
               break;
             case SMD_SHIFT:
 
-              if (mode == MD_NORMALIZE) val = val + pn2->maxval;
-              else val = val + gnull;
+              if (mode == MD_NORMALIZE)
+                {
+                  val = val + pn2.maxval;
+                }
+              else
+                {
+                  val = val + gnull;
+                }
 
               break;
             }
@@ -215,38 +217,33 @@ namespace ice
               break;
             case MD_MODULO:
 
-              while (val < 0) val += gzahl;
+              while (val < 0)
+                {
+                  val += gzahl;
+                }
 
               val = val % gzahl;
               break;
             default:
-            {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
         }/*switch (mode) */
       }/*else*/
-
-    return OK;
   }
 
-  int SubImg(const Image& pn1, const Image& pn2, const Image& pn3,
-             int smode, int mode)
+  void subImg(const Image& pn1, const Image& pn2, const Image& pn3,
+              int smode, int mode)
   {
-    int rc;
-    RETURN_ERROR_IF_FAILED(rc = SubImg(pn1, pn2, smode, pn3, mode));
-    return rc;
+    subImg(pn1, pn2, smode, pn3, mode);
   }
-
 #undef FNAME
 //
 // Maximal-Bild zweier Bilder
 //
-#define FNAME "MaxImg"
-  int MaxImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
+#define FNAME "maxImg"
+  void maxImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
   {
     int dx, dy;
     int x, y;
@@ -256,11 +253,11 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = Max(pn1->maxval, pn2->maxval); /*maximaler wert*/
-    gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
+    gmax1 = Max(pn1.maxval, pn2.maxval); /*maximaler wert*/
+    gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Maximum-Bild erzeugen */
-    if (gmax == gmax1)  /* keine Normierung noetig */
+    if (gmax == gmax1)   /* keine Normierung noetig */
       {
         LOOP { PutVal(pn3, x, y, Max(VAL1, VAL2)); }
       }
@@ -283,24 +280,19 @@ namespace ice
               val = (val + gzahl) % gzahl;
               break;
             default:
-            {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
         }
       }
-
-    return OK;
   }
 #undef FNAME
 //
 // Minimal-Bild zweier Bilder
 //
-#define FNAME "MinImg"
-  int MinImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
+#define FNAME "minImg"
+  void minImg(const Image& pn1, const Image& pn2, const Image& pn3, int mode)
   {
     int dx, dy;
     int x, y;
@@ -309,11 +301,11 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = Min(pn1->maxval, pn2->maxval); /*maximaler wert*/
-    gmax = pn3->maxval; /* maximalwert aus Zielbild ermitteln */
+    gmax1 = Min(pn1.maxval, pn2.maxval); /*maximaler wert*/
+    gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Minimum-Bild erzeugen */
-    if (gmax == gmax1)  /* keine Normierung noetig */
+    if (gmax == gmax1)   /* keine Normierung noetig */
       {
         LOOP { PutVal(pn3, x, y, Min(VAL1, VAL2)); }
       }
@@ -336,159 +328,154 @@ namespace ice
               val = (val + gzahl) % gzahl;
               break;
             default:
-            {
-              Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-              return WRONG_PARAM;
-            }
+              throw IceException(FNAME, M_WRONG_MODE);
             }
 
           PutVal(pn3, x, y, val);
         }
       }
-
-    return OK;
   }
 #undef FNAME
   /***************************************************************/
   /* Bild mit neuen Abmessungen generieren                       */
   /***************************************************************/
-#define FNAME "RenormImg"
-  int RenormImg(const Image& p, const Image& dest)
+#define FNAME "renormImg"
+  void renormImg(const Image& p, const Image& dest)
   {
-    int x, y;
     int ax, ay, av;
     int nx, ny, nv;
 
     if ((!IsImg(p)) || (!IsImg(dest)))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     nx = dest->xsize;
     ny = dest->ysize;
-    nv = dest->maxval;
+    nv = dest.maxval;
 
     ax = p->xsize;
     ay = p->ysize;
-    av = p->maxval;
+    av = p.maxval;
 
-    wloop(dest, x, y)
-    {
-      int xo = MulDiv(x, ax, nx);
-      int yo = MulDiv(y, ay, ny);
-      PutVal(dest, x, y, MulDiv(GetVal(p, xo, yo), nv, av));
-    }
-    return OK;
+    for (int y = 0; y < dest.ysize; y++)
+      for (int x = 0; x < dest.xsize; x++)
+        {
+          int xo = MulDiv(x, ax, nx);
+          int yo = MulDiv(y, ay, ny);
+          PutVal(dest, x, y, MulDiv(GetVal(p, xo, yo), nv, av));
+        }
   }
 #undef FNAME
   /*********************************************************************/
   /* invertiertes Bild                                                 */
   /*********************************************************************/
-#define FNAME "InvertImg"
-  static int InvertImg_core_std(const Image& pn1, const Image& pn2)
+#define FNAME "invertImg"
+  static void invertImg_core_std(const Image& pn1, const Image& pn2)
   {
-    int x, y;
-    int gmax1 = pn1->maxval; /*maximaler wert*/
-    int gmax2 = pn2->maxval;  /* maximalwert aus Zielbild ermitteln */
+    int gmax1 = pn1.maxval; /*maximaler wert*/
+    int gmax2 = pn2.maxval;  /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt inverses Bild erzeugen */
-    if (gmax1 == gmax2) /* keine Normierung noetig */
+    if (gmax1 == gmax2)   /* keine Normierung noetig */
       {
-        wloop(pn1, x, y)
-        {
-          int go = GetValUnchecked(pn1, x, y);
-          PutValUnchecked(pn2, x, y, gmax1 - go);
-        }
+        for (int y = 0; y < pn1.ysize; y++)
+          for (int x = 0; x < pn1.xsize; x++)
+            {
+              int go = GetValUnchecked(pn1, x, y);
+              PutValUnchecked(pn2, x, y, gmax1 - go);
+            }
       }
     else
       {
-        wloop(pn1, x, y)
-        {
-          int go = GetValUnchecked(pn1, x, y);
-          PutValUnchecked(pn2, x, y, MulDiv(gmax1 - go, gmax2, gmax1));
-        }
+        for (int y = 0; y < pn1.ysize; y++)
+          for (int x = 0; x < pn1.xsize; x++)
+            {
+              int go = GetValUnchecked(pn1, x, y);
+              PutValUnchecked(pn2, x, y, MulDiv(gmax1 - go, gmax2, gmax1));
+            }
       }
-
-    return OK;
   }
 
   template<class T>
-  int InvertImg_core(const Image& pn1, const Image& pn2)
+  void invertImg_core(const Image& pn1, const Image& pn2)
   {
-    int x, y;
-    int gmax = pn1->maxval; /*maximaler wert*/
+    int gmax = pn1.maxval; /*maximaler wert*/
 
     T** dp1 = (T**)pn1->getDataPtr();
     T** dp2 = (T**)pn2->getDataPtr();
 
-    wloop(pn1, x, y)
-    {
-      dp2[y][x] = gmax - dp1[y][x];
-    }
+    for (int y = 0; y < pn1.ysize; y++)
+      for (int x = 0; x < pn1.xsize; x++)
+        {
+          dp2[y][x] = gmax - dp1[y][x];
+        }
 #ifdef CONTROLLED_REFRESH
     pn2->needRefresh();
 #endif
-    return OK;
   }
 
-  int InvertImg(const Image& pn1, const Image& pn2)
+  void invertImg(const Image& pn1, const Image& pn2)
   {
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2));
 
-    int gmax1 = pn1->maxval; /* maximalwert Quellbild */
-    int gmax2 = pn2->maxval; /* maximalwert Zielbild */
+    int gmax1 = pn1.maxval; /* maximalwert Quellbild */
+    int gmax2 = pn2.maxval; /* maximalwert Zielbild */
 
     if (gmax1 != gmax2)
-      return InvertImg_core_std(pn1, pn2);
+      {
+        return invertImg_core_std(pn1, pn2);
+      }
 
     int pt1 = pn1->ImageType();
     int pt2 = pn2->ImageType();
 
     if (pt1 != pt2)
-      return InvertImg_core_std(pn1, pn2);
+      {
+        return invertImg_core_std(pn1, pn2);
+      }
 
     switch (pt1)
       {
       case 1:
-        return InvertImg_core<PixelType1>(pn1, pn2);
+        invertImg_core<PixelType1>(pn1, pn2);
         break;
       case 2:
-        return InvertImg_core<PixelType2>(pn1, pn2);
+        invertImg_core<PixelType2>(pn1, pn2);
         break;
       case 3:
-        return InvertImg_core<PixelType3>(pn1, pn2);
+        invertImg_core<PixelType3>(pn1, pn2);
         break;
       default:
-        return InvertImg_core_std(pn1, pn2);
+        invertImg_core_std(pn1, pn2);
         break;
       }
-
-    return OK;
   }
 
-  int InvertImg(const Image& pn)
+  void invertImg(const Image& pn)
   {
-    int ret;
-    RETURN_ERROR_IF_FAILED(ret = InvertImg(pn, pn));
-    return ret;
+    invertImg(pn, pn);
   }
 #undef FNAME
   /*********************************************************************/
   /* Binär-Bild                                                        */
   /*********************************************************************/
-#define FNAME "BinImg"
+#define FNAME "binImg"
   template<typename SrcType, typename DestType>
   void _bin(const Image& src, const Image& dest, int bin, int val)
   {
     const SrcType** Pixels = (const SrcType**)src->getDataPtr();
     DestType** Pixeld = (DestType**)dest->getDataPtr();
 
-    for (int y = 0; y < src->ysize; y++)
-      for (int x = 0; x < src->xsize; x++)
+    for (int y = 0; y < src.ysize; y++)
+      for (int x = 0; x < src.xsize; x++)
         {
-          if (Pixels[y][x] < (unsigned int)bin) Pixeld[y][x] = 0;
-          else Pixeld[y][x] = val;
+          if (Pixels[y][x] < (unsigned int)bin)
+            {
+              Pixeld[y][x] = 0;
+            }
+          else
+            {
+              Pixeld[y][x] = val;
+            }
         }
 
 #ifdef CONTROLLED_REFRESH
@@ -502,22 +489,28 @@ namespace ice
     for (p.y = 0; p.y < src->ysize; p.y++)
       for (p.x = 0; p.x < src->xsize; p.x++)
         {
-          if (GetValUnchecked(src, p) < bin) PutValUnchecked(dest, p, 0);
-          else PutValUnchecked(dest, p, val);
+          if (GetValUnchecked(src, p) < bin)
+            {
+              PutValUnchecked(dest, p, 0);
+            }
+          else
+            {
+              PutValUnchecked(dest, p, val);
+            }
         }
   }
 
-  int BinImg(const Image& src, const Image& dest, int bin, int val)
+  void binImg(const Image& src, const Image& dest, int bin, int val)
   {
     RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
-    if (val < 0) val = dest->maxval;
-
-    if ((bin < 1) || (bin > src->maxval) || (val < 0) || (val > dest->maxval))
+    if (val < 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        val = dest.maxval;
       }
+
+    if ((bin < 1) || (bin > src.maxval) || (val < 0) || (val > dest.maxval))
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     switch ((src->ImageType() << 4) + dest->ImageType())
       {
@@ -552,46 +545,50 @@ namespace ice
         _bin_std(src, dest, bin, val);
         break;
       }
-
-    return OK;
   }
 
-  int BinImg(const Image& imgs, int thr, const Image& imgd)
+  void binImg(const Image& imgs, int thr, const Image& imgd)
   {
-    return BinImg(imgs, imgd, thr);
+    binImg(imgs, imgd, thr);
   }
 
-  int BinImg(const Image& imgs, int thr)
+  void binImg(const Image& imgs, int thr)
   {
-    return BinImg(imgs, imgs, thr);
+    binImg(imgs, imgs, thr);
   }
 
 #undef FNAME
   /*********************************************************************/
   /* Bild - Skalierung                                                 */
   /*********************************************************************/
-#define FNAME "ScaleImg"
-  int ScaleImg(const Image& pn1, int a, int b, const Image& pn2)
+#define FNAME "scaleImg"
+  void scaleImg(const Image& pn1, int a, int b, const Image& pn2)
   {
 
     int dx, dy;
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
-    int gmax = pn2->maxval; /* maximalwert aus Zielbild ermitteln */
+    int gmax = pn2.maxval; /* maximalwert aus Zielbild ermitteln */
 
     for (int y = 0; y < dy; y++)      \
       for (int x = 0; x < dx; x++)
         {
           int v = (VAL1 * a + b) / 10;
 
-          if (v < 0) PutVal(pn2, x, y, 0);
-          else if (y > gmax) PutVal(pn2, x, y, gmax);
+          if (v < 0)
+            {
+              PutVal(pn2, x, y, 0);
+            }
+          else if (y > gmax)
+            {
+              PutVal(pn2, x, y, gmax);
+            }
           else
-            PutVal(pn2, x, y, v);
+            {
+              PutVal(pn2, x, y, v);
+            }
         }
-
-    return OK;
   }
 #undef FNAME
 
@@ -601,7 +598,9 @@ namespace ice
   {
     if ((img1->xsize != img2->xsize) ||
         (img1->ysize != img2->ysize))
-      return false;
+      {
+        return false;
+      }
 
     ValueType** const Pixel1 = (ValueType** const)(img1->getDataPtr());
     ValueType** const Pixel2 = (ValueType** const)(img2->getDataPtr());
@@ -609,7 +608,9 @@ namespace ice
     for (int y = 0; y < img1->ysize; y++)
       for (int x = 0; x < img1->xsize; x++)
         if (Pixel1[y][x] != Pixel2[y][x])
-          return false;
+          {
+            return false;
+          }
 
     return true;
   }
@@ -618,52 +619,57 @@ namespace ice
   {
     if ((img1->xsize != img2->xsize) ||
         (img1->ysize != img2->ysize))
-      return false;
+      {
+        return false;
+      }
 
     for (int y = 0; y < img1->ysize; y++)
       for (int x = 0; x < img1->xsize; x++)
         if (img1.getPixelUnchecked(x, y) != img2.getPixelUnchecked(x, y))
-          return false;
+          {
+            return false;
+          }
 
     return true;
   }
 
   bool equalImg(const Image& img1, const Image& img2)
   {
-    RETURN_IF_FAILED(MatchImg(img1, img2), false);
-
-    if (img1->ImageType() == img2->ImageType())
+    try
       {
-        switch (img1->ImageType())
-          {
-          case 1:
-            return equalImg<unsigned char>(img1, img2);
-          case 2:
-            return equalImg<unsigned short>(img1, img2);
-          case 3:
-            return equalImg<unsigned int>(img1, img2);
-          default:
-            return equalImg_std(img1, img2);
-          }
-      }
+        MatchImg(img1, img2);
 
-    return equalImg_std(img1, img2);
+        if (img1->ImageType() == img2->ImageType())
+          {
+            switch (img1->ImageType())
+              {
+              case 1:
+                return equalImg<unsigned char>(img1, img2);
+              case 2:
+                return equalImg<unsigned short>(img1, img2);
+              case 3:
+                return equalImg<unsigned int>(img1, img2);
+              default:
+                return equalImg_std(img1, img2);
+              }
+          }
+
+        return equalImg_std(img1, img2);
+      }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "findMax"
   int findMax(const Image& img, int& PosX, int& PosY)
   {
+    if (! IsImg(img))
+      throw IceException(FNAME, M_WRONG_IMAGE);
+
     int max = 0;
 
-    if (! IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return max;
-      }
-
-    int xSize = img->xsize;
-    int ySize = img->ysize;
+    int xSize = img.xsize;
+    int ySize = img.ysize;
 
     for (int y = 0; y < ySize; y++)
       for (int x = 0; x < xSize; x++)
@@ -696,12 +702,9 @@ namespace ice
     int tmp = 0;
 
     if (! IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return tmp;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
-    tmp = img->maxval + 1;
+    tmp = img.maxval + 1;
     int xSize = img->xsize;
     int ySize = img->ysize;
 

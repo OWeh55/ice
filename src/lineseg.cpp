@@ -21,7 +21,7 @@
 #include <math.h>
 
 #include "Vector.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "numbase.h"
 #include "defs.h"
@@ -45,10 +45,7 @@ namespace ice
   LineSeg::LineSeg(const Vector& v, int typep) : GeoObject(v), type(typep)
   {
     if (v.Size() < 4)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     dp.x = v[2] - p.x;
     dp.y = v[3] - p.y;
@@ -59,9 +56,7 @@ namespace ice
   void LineSeg::setType(int typep)
   {
     if ((typep != line) && (typep != ray) && (typep != segment) && (typep != inv_ray))
-      {
-        Message(FNAME, M_WRONG_MODE, WRONG_PARAM);
-      }
+      throw IceException(FNAME, M_WRONG_MODE);
 
     type = typep;
   }
@@ -98,7 +93,9 @@ namespace ice
         d2 = -d2;
       }
     else
-      pp = -pp;
+      {
+        pp = -pp;
+      }
 
     phi = atan2(d2, d1);
     return;
@@ -134,7 +131,9 @@ namespace ice
     double alpha2 = sec.OrientationAngle();
 
     while (alpha2 < alpha1)
-      alpha2 += 2 * M_PI;
+      {
+        alpha2 += 2 * M_PI;
+      }
 
     return alpha2 - alpha1;
   }
@@ -194,22 +193,34 @@ namespace ice
     // check if inside (of line segment or ray)
     if (type & begin_l)
       {
-        if (my1 < 0.0) return false;
+        if (my1 < 0.0)
+          {
+            return false;
+          }
       }
 
     if (type & end_l)
       {
-        if (my1 > 1.0) return false;
+        if (my1 > 1.0)
+          {
+            return false;
+          }
       }
 
     if (second.type & begin_l)
       {
-        if (my2 < 0.0) return false;
+        if (my2 < 0.0)
+          {
+            return false;
+          }
       }
 
     if (second.type & end_l)
       {
-        if (my2 > 1.0) return false;
+        if (my2 > 1.0)
+          {
+            return false;
+          }
       }
 
     return true;

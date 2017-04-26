@@ -26,7 +26,9 @@ namespace ice
     Walker(center)
   {
     if (sizey < 0)
-      sizey = sizex;
+      {
+        sizey = sizex;
+      }
     int sx = sizex / 2;
     int sx2 = sizex - 1 - sx;
     int sy = sizey / 2;

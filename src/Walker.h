@@ -83,7 +83,9 @@ namespace ice
     virtual void next(int n)
     {
       for (int i = 0; i < n && ! ready_; ++i)
-        next();
+        {
+          next();
+        }
     }
 
     /**
@@ -98,7 +100,9 @@ namespace ice
     virtual void prev(int n)
     {
       for (int i = 0; i < n && ! ready_; ++i)
-        prev();
+        {
+          prev();
+        }
     }
 
     /**

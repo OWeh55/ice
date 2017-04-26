@@ -10,7 +10,6 @@
 #include <math.h>
 
 #include <image.h>
-#include <message.h>
 #include <defs.h>
 #include <macro.h>
 #include <numbase.h>
@@ -39,7 +38,7 @@ int main(int argc, char* argv[])
     }
 
   imgm = NewImg(img->xsize, img->ysize, 63);
-  SetImg(imgm, 0);
+  setImg(imgm, 0);
   Display(ON);
   Show(OVERLAY, img, imgm);
   /*   SmearImg(img,img); */

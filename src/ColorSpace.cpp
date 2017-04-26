@@ -27,6 +27,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include "macro.h"
 #include "util.h"
 
 #include "ColorSpace.h"
@@ -93,8 +94,14 @@ namespace ice
         if (r != g || g != b)
           {
             double min = r;
-            if (g < min) min = g;
-            if (b < min) min = b;
+            if (g < min)
+              {
+                min = g;
+              }
+            if (b < min)
+              {
+                min = b;
+              }
             s = 1.0 - min / i;
 
             if (s > 0.0)
@@ -214,7 +221,6 @@ namespace ice
     toColorValue(r, g, b, cv, maxval);
   }
 
-
   //===================================================================
   const double xref = 0.95;
   const double yref = 1.00;
@@ -226,18 +232,26 @@ namespace ice
   static double fxyz(double cn)
   {
     if (cn > eps)
-      return cbrt(cn);
+      {
+        return cbrt(cn);
+      }
     else
-      return (kappa * cn + 16) / 116 ;
+      {
+        return (kappa * cn + 16) / 116 ;
+      }
   }
 
   static double fxyzr(double cn)
   {
     double cn3 = cn * cn * cn;
     if (cn3 > eps)
-      return cn3;
+      {
+        return cn3;
+      }
     else
-      return (116 * cn - 16) / kappa;
+      {
+        return (116 * cn - 16) / kappa;
+      }
   }
 
   void XyzToLab(double x, double y, double z, double& l, double& a, double& b)
@@ -296,7 +310,6 @@ namespace ice
     toColorValue(rr, gg, bb, dst, maxval);
   }
 
-
   //============================================================
 
   void setPixel(const Image& img, int x, int y, double value)
@@ -309,10 +322,7 @@ namespace ice
                       const Image& lImg, const Image& aImg, const Image& bImg)
   {
     if (!src.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     int xs = src.xsize;
     int ys = src.ysize;
     int dx, dy;
@@ -320,10 +330,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(lImg, aImg, bImg, dx, dy));
 
     if (dx != xs || dy != ys)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)
@@ -345,10 +352,7 @@ namespace ice
                       const ColorImage& dst)
   {
     if (!dst.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xs = dst.xsize;
     int ys = dst.ysize;
@@ -358,10 +362,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(lImg, aImg, bImg, dx, dy));
 
     if (dx != xs || dy != ys)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)
@@ -381,10 +382,7 @@ namespace ice
                       const Image& hue, const Image& saturation, const Image& intensity)
   {
     if (!src.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     int xs = src.xsize;
     int ys = src.ysize;
     int dx, dy;
@@ -392,10 +390,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(hue, saturation, intensity, dx, dy));
 
     if (dx != xs || dy != ys)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)
@@ -415,10 +410,7 @@ namespace ice
                       const ColorImage& dst)
   {
     if (!dst.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     int xs = dst.xsize;
     int ys = dst.ysize;
@@ -428,10 +420,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(hue, saturation, intensity, dx, dy));
 
     if (dx != xs || dy != ys)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)
@@ -451,10 +440,7 @@ namespace ice
                       const Image& yImg, const Image& uImg, const Image& vImg)
   {
     if (!src.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     int xs = src.xsize;
     int ys = src.ysize;
     int dx, dy;
@@ -462,10 +448,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(yImg, uImg, vImg, dx, dy));
 
     if (dx != xs || dy != ys)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)
@@ -484,10 +467,7 @@ namespace ice
                       const ColorImage& dst)
   {
     if (!dst.isValid())
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
     int xs = dst.xsize;
     int ys = dst.ysize;
     int dx, dy;
@@ -495,10 +475,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(yImg, uImg, vImg, dx, dy));
 
     if (dx != xs || dy != ys)
-      {
-        Message(FNAME, M_SIZES_DIFFER, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)

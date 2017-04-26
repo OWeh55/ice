@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "darith.h"
@@ -70,8 +70,14 @@ namespace ice
               break;
             case MD_LOG:
 
-              if (p != 0.0) p = log10(p);
-              else p = -1e12;
+              if (p != 0.0)
+                {
+                  p = log10(p);
+                }
+              else
+                {
+                  p = -1e12;
+                }
 
               PutValD(nrm, x, y, p);
               break;
@@ -116,8 +122,14 @@ namespace ice
                 break;
               case MD_LOG:
 
-                if (p != 0.0) p = log10(p);
-                else p = -1e12;
+                if (p != 0.0)
+                  {
+                    p = log10(p);
+                  }
+                else
+                  {
+                    p = -1e12;
+                  }
 
                 break;
               }
@@ -128,9 +140,10 @@ namespace ice
 
     for (int y = 0; y < h.ysize; ++y)
       for (int x = 0; x < h.xsize; ++x)
-        PutValD(nrm, x, y, GetValD(h, x, y));
+        {
+          PutValD(nrm, x, y, GetValD(h, x, y));
+        }
 
-    FreeImgD(h);
     return OK;
   }
 #undef FNAME
@@ -164,7 +177,6 @@ namespace ice
   {
     int xs, ys;
     int xn, yn;
-    int NEED_TEMP = false;
     ImageD source;
     double v1, v2, cmp[2], db, dp;
 
@@ -172,13 +184,17 @@ namespace ice
 
     if ((im == p) || (im == b))
       {
-        NEED_TEMP = true;
         source = NewImgD(xs, ys);
         for (int y = 0; y < ys; ++y)
           for (int x = 0; x < xs; ++x)
-            PutValD(source, x, y, GetValD(im, x, y));
+            {
+              PutValD(source, x, y, GetValD(im, x, y));
+            }
       }
-    else source = im;
+    else
+      {
+        source = im;
+      }
 
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
@@ -193,8 +209,6 @@ namespace ice
           PutValD(b, x, y, db);
           PutValD(p, x, y, dp);
         }
-
-    if (NEED_TEMP) FreeImgD(source);
 
     return OK;
   }
@@ -257,13 +271,15 @@ namespace ice
 #undef FNAME
 //---------------------------------------------------
 #define FNAME "MPSpectrumImgD"
-  int MPSpectrumImgD(ImageD img, ImageD mag, ImageD phase)
+  void MPSpectrumImgD(ImageD img, ImageD mag, ImageD phase)
   {
-    ImageD temp = NewImgD(img);
-    RETURN_ERROR_IF_FAILED(HartleyImgD(img, temp));
-    RETURN_ERROR_IF_FAILED(MPSpectrumHImgD(temp, mag, phase));
-    FreeImgD(temp);
-    return OK;
+    try
+      {
+        ImageD temp = NewImgD(img);
+        HartleyImgD(img, temp);
+        MPSpectrumHImgD(temp, mag, phase);
+      }
+    RETHROW;
   }
 #undef FNAME
 //--------------------------------------------------------

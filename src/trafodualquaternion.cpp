@@ -25,7 +25,7 @@
  */
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 
 #include "Matrix.h"
 #include "Vector.h"
@@ -158,7 +158,7 @@ namespace ice
 
     if (!(in.rows() == 4 && in.cols() == 4))
       {
-        Message(FNAME, M_WRONG_MATRIXTYPE, WRONG_MATRIX);
+        throw IceException(FNAME, M_WRONG_MATRIXTYPE);
 
         return out;
       }

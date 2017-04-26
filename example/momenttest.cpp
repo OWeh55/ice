@@ -66,10 +66,10 @@ int main(int argc, char* argv[])
   r.add(-10, -10, 10, 10);
 
   Contur c(-10, -10);
-  c.Add(10, -10);
-  c.Add(10, 10);
-  c.Add(-10, 10);
-  c.Add(-10, -10);
+  c.add(10, -10);
+  c.add(10, 10);
+  c.add(-10, 10);
+  c.add(-10, -10);
 
   Moments m1, m2, m3;
   Moments m1n, m2n, m3n;
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
       pmom(m1);
 
       m2.Init();      // "leerer" Konstruktor
-      m2.Add(q1);     // Hinzufügen eines Objekt
+      m2.add(q1);     // Hinzufügen eines Objekt
       pmom(m2);
       cout << "Differenz: " << m1.Diff(m2) << endl;
 
@@ -114,10 +114,10 @@ int main(int argc, char* argv[])
 
       cout << "Eine Transformation als 'Trafo'" << endl;
       Trafo tr;
-      tr.Rotate(0, 0, 3);
-      tr.Scale(0, 0, 0.75);
-      tr.ShearX(0.1);
-      Trafo tri = tr.Inverse();
+      tr.rotate(0, 0, 3);
+      tr.scale(0, 0, 0.75);
+      tr.shearX(0.1);
+      Trafo tri = tr.inverse();
       m2 = m1.AffineTransform(tr);
 //    pmom(m1); pmom(m2);
       cout << "..und die inverse Transformation" << endl;
@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
 
       for (int i = 0; i < 360; i += 1)
         {
-          CircA.Append(Vector(10.0 * cos(Arcus(i)) + 9.0, 10.0 * sin(Arcus(i)) + 8.0));
+          CircA.append(Vector(10.0 * cos(Arcus(i)) + 9.0, 10.0 * sin(Arcus(i)) + 8.0));
         }
 
       cout << "fast Kreis -> Kreis" << endl;
@@ -213,8 +213,8 @@ int main(int argc, char* argv[])
 
       cout << "fast Ellipse -> Ellipse" << endl;
       Trafo tr;
-      tr.Scale(0.0, 0.0, 2.0, 1.0);
-      tr.Rotate(0.0, 0.0, 2);
+      tr.scale(0.0, 0.0, 2.0, 1.0);
+      tr.rotate(0.0, 0.0, 2);
       Moments mel(CircA);
       mel = mel.AffineTransform(tr);
       Ellipse el = FitEllipse(mel);

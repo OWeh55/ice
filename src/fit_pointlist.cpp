@@ -18,10 +18,12 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "macro.h"
 #include "fit.h"
-#include "fit_pointlist.h"
 #include "analygeo.h"
 #include "vectorarrayfunctions.h"
+
+#include "fit_pointlist.h"
 
 namespace ice
 {
@@ -58,7 +60,10 @@ namespace ice
       }
     while (i != ad2);
 
-    if (ss == 0.0) return 1;
+    if (ss == 0.0)
+      {
+        return 1;
+      }
 
     return OK;
   }
@@ -69,36 +74,29 @@ namespace ice
   {
     double p, phi, ss, cc, h, lmin, lmax, xm, ym;
     double par[2];
-    int ad, rc;
+    int ad;
     double* xptr, *yptr;
     Segment sl;
-    rc = OK;
 
     if ((ad2 - ad1) < 2)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     sl = (Segment)malloc(sizeof(struct Segment_));
 
     if (sl == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     sl->prev = nullptr;
     sl->next = nullptr;
-    OffMessage();
-    FitLine(pl, ad1, ad2, step, par, dmax, adr);
-    OnMessage();
 
-    if (rc == ERROR)
+    try
       {
-        Message(FNAME, "Kein Segment angepasst", WRONG_PARAM);
+        FitLine(pl, ad1, ad2, step, par, dmax, adr);
+      }
+    catch (IceException& ex)
+      {
         free(sl);
-        return nullptr;
+        throw IceException(FNAME, "Kein Segment angepasst");
       }
 
     p = par[0];
@@ -115,9 +113,15 @@ namespace ice
       {
         h = *yptr * cc - *xptr * ss;
 
-        if (h < lmin) lmin = h; /*minimaler Fusspunkt*/
+        if (h < lmin)
+          {
+            lmin = h;  /*minimaler Fusspunkt*/
+          }
 
-        if (h > lmax) lmax = h;     /*maximaler Fusspunkt*/
+        if (h > lmax)
+          {
+            lmax = h;  /*maximaler Fusspunkt*/
+          }
 
         xptr++;
         yptr++;
@@ -189,22 +193,13 @@ namespace ice
     eta20 = 0;
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((adr1 < 0) || (adr2 < 0) || (adr2 < adr1) || (adr2 > pl->lng - 1))
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if ((adr2 - adr1) < 6)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     FitCircle(pl, adr1, adr2, step, par, mdist, madr);
 
@@ -216,18 +211,21 @@ namespace ice
     ptr = (double*)malloc(len * sizeof(double));
 
     if (ptr == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     for (i = adr1; i <= adr2; i++)
       {
         eta = atan2(pl->yptr[i] - centre[1], pl->xptr[i] - centre[0]);
         eta = fmod(eta, M_PI * 2);
 
-        if (eta < 0) ptr[i - adr1] = eta + M_PI * 2;
-        else ptr[i - adr1] = eta;
+        if (eta < 0)
+          {
+            ptr[i - adr1] = eta + M_PI * 2;
+          }
+        else
+          {
+            ptr[i - adr1] = eta;
+          }
       }
 
     SortVectorRn(ptr, len);
@@ -240,7 +238,10 @@ namespace ice
         eta2 = ptr[(i + len - 1) % len];
         eta = eta2 - eta1;
 
-        if (eta < 0) eta += M_PI * 2;
+        if (eta < 0)
+          {
+            eta += M_PI * 2;
+          }
 
         if ((eta < etamin) && (eta > eps))
           {
@@ -253,8 +254,7 @@ namespace ice
     if ((segm = (Segment)malloc(sizeof(struct Segment_))) == nullptr)
       {
         free(ptr);
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     segm->typ = 2; /* Kreis */
@@ -269,7 +269,7 @@ namespace ice
     segm->par[4] = eta20;
     segm->prev = nullptr;
     segm->next = nullptr;
-    SetOk();
+
     free(ptr);
     return segm;
   }
@@ -292,7 +292,6 @@ namespace ice
   Segment FitEllipseSegment(PointList pl, int adr1, int adr2, int step,
                             double* mdist, int* madr)
   {
-    int code;
     double* ptr;
     double etamin, eta, eta1, eta2, eta10, eta20;
     int i, len;
@@ -304,52 +303,24 @@ namespace ice
     eta20 = 0;
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((adr1 < 0) || (adr2 < 0) || (adr2 < adr1) || (adr2 > pl->lng - 1))
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if ((adr2 - adr1) < 6)
-      {
-        Message(FNAME, M_TOO_LESS_POINTS, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
-    OffMessage();
-    code = FitEllipse(pl, adr1, adr2, step, par, mdist, madr);
-    OnMessage();
+    RETURN_ERROR_IF_FAILED(FitEllipse(pl, adr1, adr2, step, par, mdist, madr));
+
     centre[0] = par[0];
     centre[1] = par[1];
     a = par[2];
     b = par[3];
     phi = par[4];
 
-    if (code == NO_ELLIPSE)
-      {
-        Message(FNAME, M_NO_ELLIPSE, NO_ELLIPSE);
-        return nullptr;
-      }
-
-    if (code != OK)
-      {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return nullptr;
-      }
-
     len = adr2 - adr1 + 1;
     ptr = (double*)malloc(len * sizeof(double));
-
-    if (ptr == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
-      }
 
     for (i = adr1; i <= adr2; i++)
       {
@@ -357,11 +328,17 @@ namespace ice
         eta -= phi;
         eta = fmod(eta, M_PI * 2);
 
-        if (eta < 0) ptr[i - adr1] = eta + M_PI * 2;
-        else ptr[i - adr1] = eta;
+        if (eta < 0)
+          {
+            ptr[i - adr1] = eta + M_PI * 2;
+          }
+        else
+          {
+            ptr[i - adr1] = eta;
+          }
       }
 
-    code = SortVectorRn(ptr, len);
+    SortVectorRn(ptr, len);
 
     etamin = HUGE_VAL;
 
@@ -371,7 +348,10 @@ namespace ice
         eta2 = ptr[(i + len - 1) % len];
         eta = eta2 - eta1;
 
-        if (eta < 0) eta += M_PI * 2;
+        if (eta < 0)
+          {
+            eta += M_PI * 2;
+          }
 
         if ((eta < etamin) && (eta > eps))
           {
@@ -384,8 +364,7 @@ namespace ice
     if ((segm = (Segment)malloc(sizeof(struct Segment_))) == nullptr)
       {
         free(ptr);
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     segm->typ = 3; /* Ellipse */
@@ -394,9 +373,18 @@ namespace ice
     ss = sin(phi);
     eta = eta10 - phi;
 
-    if (eta > M_PI * 3 / 2) eta = atan(a / b * tan(eta)) + M_PI * 2;
-    else if (eta > M_PI / 2) eta = atan(a / b * tan(eta)) + M_PI;
-    else eta = atan(a / b * tan(eta));
+    if (eta > M_PI * 3 / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI * 2;
+      }
+    else if (eta > M_PI / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI;
+      }
+    else
+      {
+        eta = atan(a / b * tan(eta));
+      }
 
     x = a * cos(eta);
     y = b * sin(eta);
@@ -404,9 +392,18 @@ namespace ice
     segm->p0[1] = x * ss + y * cc + centre[1];
     eta = eta20 - phi;
 
-    if (eta > M_PI * 3 / 2)eta = atan(a / b * tan(eta)) + M_PI * 2;
-    else if (eta > M_PI / 2)eta = atan(a / b * tan(eta)) + M_PI;
-    else eta = atan(a / b * tan(eta));
+    if (eta > M_PI * 3 / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI * 2;
+      }
+    else if (eta > M_PI / 2)
+      {
+        eta = atan(a / b * tan(eta)) + M_PI;
+      }
+    else
+      {
+        eta = atan(a / b * tan(eta));
+      }
 
     x = a * cos(eta);
     y = b * sin(eta);
@@ -422,7 +419,6 @@ namespace ice
     segm->par[6] = eta20;
     segm->prev = nullptr;
     segm->next = nullptr;
-    SetOk();
     free(ptr);
     return segm;
   }

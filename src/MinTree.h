@@ -42,8 +42,7 @@ namespace ice
     {
       if (nPoints < 1)
         {
-          Message("MinTree::MinTree", M_EMPTY_POINTLIST, WRONG_PARAM);
-          return;
+          throw IceException("MinTree::MinTree", M_EMPTY_POINTLIST);
         }
 
       // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes == Wurzel
@@ -90,7 +89,7 @@ namespace ice
                   // i <-> mini ist Kandidat für eine kürzere Verbindung zum Baum
                   // double newDistance = Distance2(pmin, pointList[i]);
                   double newDistance = (pmin - pointList[i]).length2();
-                  if (newDistance < edgeLength[i]) // kuerzer ?!
+                  if (newDistance < edgeLength[i])   // kuerzer ?!
                     {
                       edgeLength[i] = newDistance;
                       qu[i] = mini;

@@ -33,13 +33,12 @@ namespace ice
   PolygonalCurve::PolygonalCurve(const Matrix& im, bool close): closed(close)
   {
     if (im.cols() < 2 || im.rows() < 2)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     for (int i = 0; i < im.rows(); i++)
-      pl.push_back(Point(im[i][0], im[i][1]));
+      {
+        pl.push_back(Point(im[i][0], im[i][1]));
+      }
 
     p = pl[0]; // Startpunkt = Position des GeoObject
   }
@@ -57,25 +56,29 @@ namespace ice
     p = pp;
 
     for (unsigned int i = 0; i < pl.size(); i++)
-      pl[i] += dp;
+      {
+        pl[i] += dp;
+      }
   }
 
   /******************************************************/
 #define FNAME "PolygonalCurve::MakeContur"
-  Contur PolygonalCurve::MakeContur() const
+  Contur PolygonalCurve::makeContur() const
   {
     Contur c;
 
-    c.SetStart(IPoint(pl[0]));
+    c.setStart(IPoint(pl[0]));
 
     for (unsigned int i = 1; i < pl.size(); i++)
       {
-        c.Add(IPoint(pl[i]));
+        c.add(IPoint(pl[i]));
       }
 
     // close contur ?
     if (closed)
-      c.Add(IPoint(pl[0]));
+      {
+        c.add(IPoint(pl[0]));
+      }
 
     return c;
   }
@@ -91,26 +94,36 @@ namespace ice
     Point dp = p2 - p1;
     Point dp1 = p - p1;
 
-    if (dp1.y == 0.0) // scanlinie trifft Ecke
+    if (dp1.y == 0.0)   // scanlinie trifft Ecke
       {
-        if (dp1.x == 0.0) // Punkt ist Eckpunkt
-          return true;
+        if (dp1.x == 0.0)   // Punkt ist Eckpunkt
+          {
+            return true;
+          }
 
         if (dp.y < 0.0)
           {
             if (lastdir == -1) // weiter fallend
-              if (dp1.x > 0.0) c++;
+              if (dp1.x > 0.0)
+                {
+                  c++;
+                }
           }
         else if (dp.y > 0.0)
           {
             if (lastdir == 1) // weiter steigend
-              if (dp1.x > 0.0) c++;
+              if (dp1.x > 0.0)
+                {
+                  c++;
+                }
           }
         else
           //    if (dp.y==0.0) // Punkt auf horizontaler Kante
           {
             if ((p1.x <= p.x) && (p2.x >= p.x))
-              return true;
+              {
+                return true;
+              }
           }
       }
     else if (p1.y < p.y && p2.y > p.y)
@@ -118,24 +131,42 @@ namespace ice
         double z = dp.Cross(dp1);
 
         /* Punkt auf der Kante? */
-        if (z == 0.0) return true;
+        if (z == 0.0)
+          {
+            return true;
+          }
 
         /* Kante schneidet Scanlinie _links_ vom Punkt? */
-        if (z < 0) c++;
+        if (z < 0)
+          {
+            c++;
+          }
       }
     else if (p1.y > p.y && p2.y < p.y)
       {
         double z = dp.Cross(dp1);
 
         /* Punkt auf der Kante? */
-        if (z == 0.0) return true;
+        if (z == 0.0)
+          {
+            return true;
+          }
 
         /* Kante schneidet Scanlinie _links_ vom Punkt? */
-        if (z > 0) c++;
+        if (z > 0)
+          {
+            c++;
+          }
       }
 
-    if (dp.y > 0.0) lastdir = 1;
-    else if (dp.y < 0.0) lastdir = -1;
+    if (dp.y > 0.0)
+      {
+        lastdir = 1;
+      }
+    else if (dp.y < 0.0)
+      {
+        lastdir = -1;
+      }
 
     return false;
   }
@@ -143,7 +174,9 @@ namespace ice
   bool PolygonalCurve::inside_(Point p) const
   {
     if (!closed)
-      return false;
+      {
+        return false;
+      }
 
     int nPoints = pl.size();
     int lastdir = 0;
@@ -151,8 +184,14 @@ namespace ice
     for (int i = nPoints - 1; i >= 0 && lastdir == 0; i--)
       {
         unsigned int i1 = (i + 1) % nPoints;
-        if (pl[i].y < pl[i1].y) lastdir = 1;
-        else if (pl[i].y > pl[i1].y) lastdir = -1;
+        if (pl[i].y < pl[i1].y)
+          {
+            lastdir = 1;
+          }
+        else if (pl[i].y > pl[i1].y)
+          {
+            lastdir = -1;
+          }
       }
 
     int c = 0;
@@ -161,7 +200,10 @@ namespace ice
       {
         int i1 = (i + 1) % nPoints;
         if (handleOneEdge(p, pl[i], pl[i1],
-                          lastdir, c)) return false;
+                          lastdir, c))
+          {
+            return false;
+          }
       }
 
     return (c & 1) == 1;
@@ -177,7 +219,9 @@ namespace ice
     unsigned int last = pl.size() - 1;
 
     if (closed)
-      last = pl.size();
+      {
+        last = pl.size();
+      }
 
     for (unsigned int i = 0; i < last; i++)
       {
@@ -199,10 +243,14 @@ namespace ice
     double len = 0.0;
 
     for (unsigned int i = 1; i < pl.size(); i++)
-      len += ice::Distance(pl[i], pl[i - 1]);
+      {
+        len += ice::Distance(pl[i], pl[i - 1]);
+      }
 
     if (closed)
-      len += ice::Distance(pl[0], pl[pl.size() - 1]);
+      {
+        len += ice::Distance(pl[0], pl[pl.size() - 1]);
+      }
 
     return len;
   }
@@ -224,8 +272,7 @@ namespace ice
       {
         // reducing to less then 3 point does not make sense
         // "reducing" to more then original points does not make sense
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     // already reduced enough
@@ -241,18 +288,28 @@ namespace ice
       {
         reduced_poly* rpl;
         if (closed)
-          rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::two);
+          {
+            rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::two);
+          }
         else
-          rpl = new reduced_poly(pl, reduced_poly::two);
+          {
+            rpl = new reduced_poly(pl, reduced_poly::two);
+          }
 
         while (rpl->size() < nRemainingPoints)
-          rpl->split();
+          {
+            rpl->split();
+          }
 
         while (rpl->size() < (nRemainingPoints + nAllPoints) / 2)
-          rpl->split();
+          {
+            rpl->split();
+          }
 
         while (rpl->size() > nRemainingPoints)
-          rpl->merge();
+          {
+            rpl->merge();
+          }
 
         rpl->getPolygonalCurve(result);
         delete rpl;
@@ -262,11 +319,15 @@ namespace ice
       {
         reduced_poly* rpl;
         if (closed)
-          rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          {
+            rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          }
         else
-          rpl = new reduced_poly(pl, reduced_poly::all);
+          {
+            rpl = new reduced_poly(pl, reduced_poly::all);
+          }
 
-        while (rpl->size() > nRemainingPoints) // reduce to wished number of edges
+        while (rpl->size() > nRemainingPoints)   // reduce to wished number of edges
           {
             rpl->merge();
           }
@@ -279,13 +340,17 @@ namespace ice
       {
         reduced_poly* rpl;
         if (closed)
-          rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          {
+            rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          }
         else
-          rpl = new reduced_poly(pl, reduced_poly::all);
+          {
+            rpl = new reduced_poly(pl, reduced_poly::all);
+          }
 
         rpl->merge();
 
-        while (rpl->size() > nRemainingPoints) // reduce to wished number of edges
+        while (rpl->size() > nRemainingPoints)   // reduce to wished number of edges
           {
             rpl->split();
             rpl->merge();
@@ -298,8 +363,7 @@ namespace ice
       default:
       {
         // undefined mode
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
       }
@@ -315,10 +379,7 @@ namespace ice
   void PolygonalCurve::ReducedToPrecision(double prec, PolygonalCurve& result, int mode) const
   {
     if (prec < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     switch (mode)
       {
@@ -326,18 +387,24 @@ namespace ice
       {
         reduced_poly* rpl;
         if (closed)
-          rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          {
+            rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          }
         else
-          rpl = new reduced_poly(pl, reduced_poly::all);
+          {
+            rpl = new reduced_poly(pl, reduced_poly::all);
+          }
 
-        while (rpl->size() > 3 && rpl->precision() < prec) // reduce to given precision
+        while (rpl->size() > 3 && rpl->precision() < prec)   // reduce to given precision
           {
             rpl->merge();
             // std::cout << rpl->size() << ": " << rpl->precision() << std::endl;
           }
 
         if (rpl->precision() > prec)
-          rpl->split(); // undo last step
+          {
+            rpl->split();  // undo last step
+          }
         //  std::cout << rpl.size() << ": " << rpl.precision() << std::endl;
         rpl->getPolygonalCurve(result);
         delete rpl;
@@ -347,9 +414,13 @@ namespace ice
       {
         reduced_poly* rpl;
         if (closed)
-          rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::two);
+          {
+            rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::two);
+          }
         else
-          rpl = new reduced_poly(pl, reduced_poly::two);
+          {
+            rpl = new reduced_poly(pl, reduced_poly::two);
+          }
 
         rpl->split(); // we need at least 3 corners
 
@@ -367,12 +438,16 @@ namespace ice
       {
         reduced_poly* rpl;
         if (closed)
-          rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          {
+            rpl = new reduced_poly_cyclic(pl, reduced_poly_cyclic::all);
+          }
         else
-          rpl = new reduced_poly(pl, reduced_poly::all);
+          {
+            rpl = new reduced_poly(pl, reduced_poly::all);
+          }
 
         rpl->merge();
-        while (rpl->size() > 3 && rpl->precision() < prec) // reduce to given precision
+        while (rpl->size() > 3 && rpl->precision() < prec)   // reduce to given precision
           {
             rpl->split();
             rpl->merge();
@@ -381,7 +456,9 @@ namespace ice
           }
 
         if (rpl->precision() > prec)
-          rpl->split(); // undo last step
+          {
+            rpl->split();  // undo last step
+          }
 
         rpl->getPolygonalCurve(result);
         delete rpl;
@@ -390,8 +467,7 @@ namespace ice
       default:
       {
         // undefined mode
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return;
+        throw IceException(FNAME, M_WRONG_PARAM);
       }
 
       }
@@ -428,7 +504,9 @@ namespace ice
     unsigned int last = pl.size() - 1;
 
     if (closed)
-      last = pl.size();
+      {
+        last = pl.size();
+      }
 
     for (unsigned int i = 0; i < last; i++)
       {

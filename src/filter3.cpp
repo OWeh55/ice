@@ -25,7 +25,7 @@
 #include <map>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "arith.h"
@@ -57,11 +57,13 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp = NewImg(dest, true);
+      {
+        tmp = NewImg(dest, true);
+      }
 
-    int gmax1 = src->maxval * 9;
-    int gmax2 = dest->maxval;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 9;
+    int gmax2 = dest.maxval;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 = 1;
@@ -119,11 +121,13 @@ namespace ice
     // since we write directly in dest and need to read from positions where we wrote before
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
-      tmp = NewImg(dest, true);
+      {
+        tmp = NewImg(dest, true);
+      }
 
-    int gmax1 = src->maxval * 9;
-    int gmax2 = dest->maxval;
-    int dmax = dest->maxval;
+    int gmax1 = src.maxval * 9;
+    int gmax2 = dest.maxval;
+    int dmax = dest.maxval;
     int srcwyi = 0;
     int srcwxi = 0;
     int srcwxi1 = + 1;
@@ -200,20 +204,20 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "SmearImg"
-  /****************** SmearImg *************************/
+#define FNAME "smearImg"
+  /****************** smearImg *************************/
 
   static void smear_core_std(const Image& pn1, const Image& pn2, int sx, int sy)
   {
-    int dx = pn1->xsize;
-    int dy = pn1->ysize;
+    int dx = pn1.xsize;
+    int dy = pn1.ysize;
     int sx1 = sx / 2;
     int sy1 = sy / 2;
 
-    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1->maxval);
+    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1.maxval);
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int y1 = y;
         int x1 = 0, x2 = 0;
@@ -238,12 +242,14 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
 
     int ct = sx * sy;
     int adjustment = ct / 2; // adjustment for rounding
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0;
         int yt = 0;
@@ -280,9 +286,9 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
-
-    FreeImg(tmp);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
   }
 
   template<class T>
@@ -301,10 +307,12 @@ namespace ice
     int** tmp = new int* [hx];
 
     for (int i = 0; i < hx; i++)
-      tmp[i] = new int[dy];
+      {
+        tmp[i] = new int[dy];
+      }
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int x1 = 0, x2 = 0;
         int gsum = 0;
@@ -331,9 +339,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0, yt = 0;
         int gsum = 0;
@@ -370,28 +380,28 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
 #ifdef CONTROLLED_REFRESH
     pn2->needRefresh();
 #endif
 
     for (int i = 0; i < hx; i++)
-      delete [] tmp[i];
+      {
+        delete [] tmp[i];
+      }
 
     delete [] tmp;
   }
 
-  int SmearImg(const Image& pn1, const Image& pn2, int sx, int sy)
+  void smearImg(const Image& pn1, const Image& pn2, int sx, int sy)
   {
     int dx, dy;
 
-
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
@@ -399,7 +409,9 @@ namespace ice
     int typ2 = pn2->ImageType();
 
     if (typ1 != typ2)
-      smear_core_std(pn1, pn2, sx, sy);
+      {
+        smear_core_std(pn1, pn2, sx, sy);
+      }
     else
       {
         switch (typ1)
@@ -418,18 +430,16 @@ namespace ice
             break;
           }
       }
-
-    return OK;
   }
 
-  int SmearImg(const Image& pn1, const Image& pn2, int sx)
+  void smearImg(const Image& pn1, const Image& pn2, int sx)
   {
-    return SmearImg(pn1, pn2, sx, sx);
+    smearImg(pn1, pn2, sx, sx);
   }
 
-  int SmearImg(const Image& imgs, int sx)
+  void smearImg(const Image& imgs, int sx)
   {
-    return SmearImg(imgs, imgs, sx, sx);
+    smearImg(imgs, imgs, sx, sx);
   }
 #undef FNAME
 
@@ -441,12 +451,12 @@ namespace ice
     int dy = pn1->ysize;
     int sx1 = sx / 2;
     int sy1 = sy / 2;
-    int mv = pn2->maxval;
+    int mv = pn2.maxval;
 
-    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1->maxval);
+    Image tmp = NewImg(dx - sx + 1, dy, sx * pn1.maxval);
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int y1 = y;
         int x1 = 0, x2 = 0;
@@ -471,9 +481,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0;
         int yt = 0;
@@ -511,9 +523,9 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        PutValUnchecked(pn2, x, y, 0);
-
-    FreeImg(tmp);
+        {
+          PutValUnchecked(pn2, x, y, 0);
+        }
   }
 
   template<class T1, class T2>
@@ -527,15 +539,18 @@ namespace ice
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
-    int mv = pn2->maxval;
+    int mv = pn2.maxval;
 
     int hx = dx - sx + 1;
     int** tmp = new int* [hx];
 
-    for (int i = 0; i < hx; i++) tmp[i] = new int[dy];
+    for (int i = 0; i < hx; i++)
+      {
+        tmp[i] = new int[dy];
+      }
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++) // alle zeilen
+    for (int y = 0; y < dy; y++)   // alle zeilen
       {
         int x1 = 0, x2 = 0;
         int gsum = 0;
@@ -559,9 +574,11 @@ namespace ice
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
-    for (int x = 0; x < dx - sx + 1; x++) // alle spalten
+    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0, yt = 0;
         int gsum = 0;
@@ -598,14 +615,18 @@ namespace ice
 
     for (int x = dx - sx1; x < dx; x++)
       for (int y = 0; y < dy; y++)
-        p2[y][x] = 0;
+        {
+          p2[y][x] = 0;
+        }
 
 #ifdef CONTROLLED_REFRESH
     pn2->needRefresh();
 #endif
 
     for (int i = 0; i < hx; i++)
-      delete [] tmp[i];
+      {
+        delete [] tmp[i];
+      }
 
     delete [] tmp;
   }
@@ -617,8 +638,7 @@ namespace ice
     /*
       if ((sx<1)||((sx & 1)!=1)||(sy<1)||((sy & 1)!=1))
       {
-      Message(FNAME,M_WRONG_PARAM,WRONG_PARAM);
-      return WRONG_PARAM;
+    throw IceException(FNAME,M_WRONG_PARAM,WRONG_PARAM);
       }
     */
 
@@ -685,17 +705,14 @@ namespace ice
     int dx, dy;
 
     if ((n1 < 1) || ((n1 & 1) != 1) || (n2 < 1) || ((n2 & 1) != 1))
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
-    Image box1 = NewImg(dx, dy, imgs->maxval);
-    Image box2 = NewImg(dx, dy, imgs->maxval);
-    RETURN_ERROR_IF_FAILED(SmearImg(imgs, box1, n1));
-    RETURN_ERROR_IF_FAILED(SmearImg(imgs, box2, n2));
-    RETURN_ERROR_IF_FAILED(SubImg(box1, box2, imgd, mode));
+    Image box1 = NewImg(dx, dy, imgs.maxval);
+    Image box2 = NewImg(dx, dy, imgs.maxval);
+    RETURN_ERROR_IF_FAILED(smearImg(imgs, box1, n1));
+    RETURN_ERROR_IF_FAILED(smearImg(imgs, box2, n2));
+    RETURN_ERROR_IF_FAILED(subImg(box1, box2, imgd, mode));
 
     return OK;
   }
@@ -713,30 +730,42 @@ namespace ice
                   int scalef, bool use_gauss_filter)
   {
     int dx, dy;
-    int  x,  y;
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
 
     Image imgs_wide = NewImg(dx + 2 * boundary_x,
                              dy + 2 * boundary_y,
-                             imgs->maxval);
+                             imgs.maxval);
 
-    wloop(imgs_wide, x, y)
-    {
-      int xo = x - boundary_x;
-      int yo = y - boundary_y;
+    for (int y = 0; y < imgs_wide.ysize; y++)
+      for (int x = 0; x < imgs_wide.xsize; x++)
+        {
+          int xo = x - boundary_x;
+          int yo = y - boundary_y;
 
-      if (xo < 0) xo = 0;
+          if (xo < 0)
+            {
+              xo = 0;
+            }
 
-      if (yo < 0) yo = 0;
+          if (yo < 0)
+            {
+              yo = 0;
+            }
 
-      if (xo >= dx) xo = dx - 1;
+          if (xo >= dx)
+            {
+              xo = dx - 1;
+            }
 
-      if (yo >= dy) yo = dy - 1;
+          if (yo >= dy)
+            {
+              yo = dy - 1;
+            }
 
-      PutValUnchecked(imgs_wide, x, y,
-                      GetValUnchecked(imgs, xo, yo));
-    }
+          PutValUnchecked(imgs_wide, x, y,
+                          GetValUnchecked(imgs, xo, yo));
+        }
 
     std::map<int, Image> smearimgs;
 
@@ -756,22 +785,19 @@ namespace ice
             if (it == smearimgs.end())
               {
                 Image smearresult = NewImg(imgs_wide->xsize,
-                                           imgs_wide->ysize, imgs_wide->maxval);
-                ClearImg(smearresult);
+                                           imgs_wide->ysize, imgs_wide.maxval);
+                clearImg(smearresult);
 
                 if (use_gauss_filter)
                   {
                     if (nx != ny)
-                      {
-                        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-                        return WRONG_PARAM;
-                      }
+                      throw IceException(FNAME, M_WRONG_PARAM);
 
                     GaussImg(imgs_wide, smearresult, nx, nx / 3.0);
                   }
                 else
                   {
-                    SmearImg(imgs_wide, smearresult, nx, ny);
+                    smearImg(imgs_wide, smearresult, nx, ny);
                   }
 
                 smearimgs[key] = smearresult;
@@ -779,7 +805,7 @@ namespace ice
           }
       }
 
-    ClearImg(imgd);
+    clearImg(imgd);
 
     for (int i = 0 ; i < filtersizes.rows() ; i++)
       {
@@ -793,34 +819,39 @@ namespace ice
         Image box1 = smearimgs[key1];
         Image box2 = smearimgs[key2];
 
-        wloop(imgd, x, y)
-        {
-          int xn = x + boundary_x;
-          int yn = y + boundary_y;
-          long int box1v = GetValUnchecked(box1, xn, yn);
-          long int box2v = GetValUnchecked(box2, xn, yn);
-          long int diff = box1v - box2v;
-          long int v = imgs->maxval;
-
-          if (diff > 0)
+        for (int x = 0; x < imgd.xsize; x++)
+          for (int y = 0; y < imgd.ysize; y++)
             {
-              int current_val = GetValUnchecked(imgd, x, y);
+              int xn = x + boundary_x;
+              int yn = y + boundary_y;
+              long int box1v = GetValUnchecked(box1, xn, yn);
+              long int box2v = GetValUnchecked(box2, xn, yn);
+              long int diff = box1v - box2v;
+              long int v = imgs.maxval;
 
-              if (scalef != 0.0)
+              if (diff > 0)
                 {
-                  long int box1_s = box1v + scalef;
-                  v    = (diff * (box1_s + imgs->maxval)) / (diff + box1_s);
+                  int current_val = GetValUnchecked(imgd, x, y);
 
-                  if (v > current_val)
-                    PutValUnchecked(imgd, x, y, v);
-                }
-              else
-                {
-                  if (diff > current_val)
-                    PutValUnchecked(imgd, x, y, diff);
+                  if (scalef != 0.0)
+                    {
+                      long int box1_s = box1v + scalef;
+                      v    = (diff * (box1_s + imgs.maxval)) / (diff + box1_s);
+
+                      if (v > current_val)
+                        {
+                          PutValUnchecked(imgd, x, y, v);
+                        }
+                    }
+                  else
+                    {
+                      if (diff > current_val)
+                        {
+                          PutValUnchecked(imgd, x, y, diff);
+                        }
+                    }
                 }
             }
-        }
       }
 
     return 0;
@@ -835,13 +866,17 @@ namespace ice
     double sigma2 = 2 * sigma * sigma;
 
     for (int i = 0; i <= half; i++)
-      gf[0][half - i] = gf[0][half + i] = exp(-i * i / sigma2);
+      {
+        gf[0][half - i] = gf[0][half + i] = exp(-i * i / sigma2);
+      }
 
     // Gausfunktion normieren auf 1.0
     double summe = 0.0;
 
     for (int i = 0; i < size; i++)
-      summe += gf[0][i];
+      {
+        summe += gf[0][i];
+      }
 
     for (int i = 0; i < size; i++)
       {
@@ -863,8 +898,7 @@ namespace ice
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_PARAM);
       };
 
     /* Bildgrößen ueberpruefen */
@@ -897,8 +931,7 @@ namespace ice
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_PARAM);
       };
 
     /* Bildgrößen ueberpruefen */
@@ -930,7 +963,7 @@ namespace ice
    *  (x*x+y*y - 2 * sigma^2)/sigma^4 * exp(-(x*x+y*y)/(2*sigma^2)
    */
 
-  void mkLoG(Matrix& f, double sigma)
+  void makeLoG(Matrix& f, double sigma)
   {
     int sx = f.cols();
     int sy = f.rows();
@@ -954,7 +987,9 @@ namespace ice
             f[y][x] = c;
 
             if (c > 0)
-              sump += c;
+              {
+                sump += c;
+              }
           }
       }
 
@@ -968,19 +1003,18 @@ namespace ice
   }
 
 #define FNAME "MexicanHatImg"
-  int mkMexicanHatFilter(double sigma, int size, LSIFilter& f)
+  int makeMexicanHatFilter(double sigma, int size, LSIFilter& f)
   {
     if (size < 0 || sigma < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     if (size == 0)
-      size = (int)(sigma * 5) | 1;
+      {
+        size = (int)(sigma * 5) | 1;
+      }
 
     Matrix fc(size, size);
-    mkLoG(fc, sigma);
+    makeLoG(fc, sigma);
     f = LSIFilter(fc);
     return OK;
   }
@@ -989,8 +1023,8 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
-    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2, img2->maxval / 2));
+    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2, img2.maxval / 2));
     return OK;
   }
 
@@ -998,7 +1032,7 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
     RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
     return OK;
   }
@@ -1007,7 +1041,7 @@ namespace ice
                     double sigma, int size)
   {
     LSIFilter f;
-    RETURN_ERROR_IF_FAILED(mkMexicanHatFilter(sigma, size, f));
+    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
     RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
     return OK;
   }

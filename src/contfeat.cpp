@@ -27,7 +27,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "conturfunctions.h"
@@ -48,16 +48,10 @@ namespace ice
     int i;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || val > img->maxval)
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if ((val < 0) || val > img.maxval)
+      throw IceException(FNAME, M_WRONG_VAL);
 
     xx = c.StartX();
     yy = c.StartY();
@@ -81,28 +75,21 @@ namespace ice
     int i, x;
 
     if (!IsImg(img))
-      {
-        Message(FNAME, M_WRONG_IMAGE, WRONG_POINTER);
-        return WRONG_POINTER;
-      }
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || val > img->maxval)
-      {
-        Message(FNAME, M_WRONG_VAL, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+    if ((val < 0) || val > img.maxval)
+      throw IceException(FNAME, M_WRONG_VAL);
 
     if (!c.isClosed())
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return (CONOCLOSED);
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     IMatrix segm = ConturSegmentlist(c);
 
     for (i = 0; i < segm.rows(); i++)
       for (x = segm[i][1]; x <= segm[i][2]; x++)
-        img.setPixelClipped(x, segm[i][0], val);
+        {
+          img.setPixelClipped(x, segm[i][0], val);
+        }
 
     return OK;
   }
@@ -117,25 +104,21 @@ namespace ice
     PointList pl;
 
     if (!c.isClosed())
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return NULL;
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     IMatrix segm = ConturSegmentlist(c);
     IMatrix points(0, 2);
 
     for (i = 0; i < segm.rows(); i++)
       for (j = segm[i][1]; j < segm[i][2]; j++)
-        points = points && IVector(j, segm[i][0]);
+        {
+          points = points && IVector(j, segm[i][0]);
+        }
 
     pl = (PointList)malloc(sizeof(struct PointList_));
 
     if (pl == NULL)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->xptr = (double*)malloc(points.rows() * sizeof(double));
     pl->yptr = (double*)malloc(points.rows() * sizeof(double));
@@ -145,8 +128,7 @@ namespace ice
     if ((pl->xptr == NULL) || (pl->yptr == NULL) || (pl->wptr == NULL))
       {
         free(pl);
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return NULL;
+        throw IceException(FNAME, M_NO_MEM);
       }
 
     x = pl->xptr;
@@ -170,16 +152,15 @@ namespace ice
     IMatrix points(0, 2);
 
     if (!c.isClosed())
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return points;
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     IMatrix segm = ConturSegmentlist(c);
 
     for (i = 0; i < segm.rows(); i++)
       for (j = segm[i][1]; j < segm[i][2]; j++)
-        points.Append(IVector(j, segm[i][0]));
+        {
+          points.Append(IVector(j, segm[i][0]));
+        }
 
     return points;
   }
@@ -197,7 +178,10 @@ namespace ice
     double l1 = 0, l2 = 0;
     int i, z1;
 
-    if (c.Number() < (2 * s1)) return 0.0;
+    if (c.Number() < (2 * s1))
+      {
+        return 0.0;
+      }
 
     z1 = s1;
 
@@ -206,9 +190,13 @@ namespace ice
         c.getDirection(i).move(p);
 
         if ((c.DirCode(i) & 1) == 0)
-          l2++;
+          {
+            l2++;
+          }
         else
-          l2 += M_SQRT2;
+          {
+            l2 += M_SQRT2;
+          }
 
         z1--;
 
@@ -221,7 +209,9 @@ namespace ice
       }
 
     if (z1 < s1)
-      l1 += sqrt(Sqr(p.x - p1.x) + Sqr(p.y - p1.y));
+      {
+        l1 += sqrt(Sqr(p.x - p1.x) + Sqr(p.y - p1.y));
+      }
 
     return l2 / l1;
   }
@@ -232,16 +222,15 @@ namespace ice
   {
 
     if (!c.isClosed())
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return CONOCLOSED;
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     /* Erstellen der Segmentliste */
     IMatrix segm = ConturSegmentlist(c);
 
     for (int i = 0; i < 15; i++)
-      mm[i] = 0;
+      {
+        mm[i] = 0;
+      }
 
     for (int i = 0; i < segm.rows(); i++)
       {
@@ -341,10 +330,7 @@ namespace ice
     int m10 = 0, m01 = 0, m00 = 0;
 
     if (!c.isClosed())
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return IPoint();
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     /* Erstellen der Segmentliste */
     IMatrix segm = ConturSegmentlist(c);
@@ -364,7 +350,10 @@ namespace ice
         m01 += x0 * y;
       }
 
-    if (m00 == 0) return IPoint();
+    if (m00 == 0)
+      {
+        return IPoint();
+      }
 
     return IPoint(m10 / m00, m01 / m00);
   }
@@ -376,10 +365,7 @@ namespace ice
     int m10 = 0, m01 = 0, m00 = 0;
 
     if (!c.isClosed())
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return Point();
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     /* Erstellen der Segmentliste */
     IMatrix segm = ConturSegmentlist(c);
@@ -399,7 +385,10 @@ namespace ice
         m01 += x0 * y;
       }
 
-    if (m00 == 0) return Point();
+    if (m00 == 0)
+      {
+        return Point();
+      }
 
     return Point((double)m10 / (double)m00, (double)m01 / (double)m00);
   }
@@ -413,10 +402,7 @@ namespace ice
                     double& form, double& conv)
   {
     if (!c.isClosed())
-      {
-        Message(FNAME, M_CONTUR_NOT_CLOSED, CONOCLOSED);
-        return CONOCLOSED;
-      }
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
 
     if (c.Number() > 0)
       {
@@ -451,9 +437,13 @@ namespace ice
             UpdateLimits(mmin, mmax, x - y);
 
             if ((rcode.Int() & 1) == 0)
-              nGeradeSchritte++;
+              {
+                nGeradeSchritte++;
+              }
             else
-              nSchraegeSchritte++;
+              {
+                nSchraegeSchritte++;
+              }
 
             switch (rcode.Int())
               {

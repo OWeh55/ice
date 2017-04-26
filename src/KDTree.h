@@ -117,9 +117,13 @@ namespace ice
                       if (i != sidx)
                         {
                           if (s[i][vidx] < splitValue)
-                            lv.push_back(s[i]);
+                            {
+                              lv.push_back(s[i]);
+                            }
                           else
-                            rv.push_back(s[i]);
+                            {
+                              rv.push_back(s[i]);
+                            }
                         }
                     }
                   //      std::cout << lv.size() << " " << rv.size() << " " << splitValue << std::endl;
@@ -179,9 +183,11 @@ namespace ice
                      const Node*& minNode) const
     {
       if (tree == nullptr)
-        return;
+        {
+          return;
+        }
 
-      if (tree->idx < 0) // leaf
+      if (tree->idx < 0)   // leaf
         {
           check(tree, v, minDistance2, minNode);
         }
@@ -197,24 +203,28 @@ namespace ice
             {
               findNearest(tree->left, v, minDistance2, minNode);
 
-              if (minDistance2 > hd2) // suche auch auf der anderen Seite
+              if (minDistance2 > hd2)   // suche auch auf der anderen Seite
                 {
                   // check this node
                   check(tree, v, minDistance2, minNode);
-                  if (minDistance2 > hd2) // suche auch auf der anderen Seite
-                    findNearest(tree->right, v, minDistance2, minNode);
+                  if (minDistance2 > hd2)   // suche auch auf der anderen Seite
+                    {
+                      findNearest(tree->right, v, minDistance2, minNode);
+                    }
                 }
             }
           else
             {
               findNearest(tree->right, v, minDistance2, minNode);
 
-              if (minDistance2 > hd2) // suche auch auf der anderen Seite
+              if (minDistance2 > hd2)   // suche auch auf der anderen Seite
                 {
                   // check this node
                   check(tree, v, minDistance2, minNode);
-                  if (minDistance2 > hd2) // suche auch auf der anderen Seite
-                    findNearest(tree->left, v, minDistance2, minNode);
+                  if (minDistance2 > hd2)   // suche auch auf der anderen Seite
+                    {
+                      findNearest(tree->left, v, minDistance2, minNode);
+                    }
                 }
             }
         }
@@ -224,7 +234,9 @@ namespace ice
     {
       // checkCount=0;
       if (tree == nullptr)
-        throw "empty tree";
+        {
+          throw "empty tree";
+        }
       const Node* minNode;
       double minDistance2 = std::numeric_limits<double>::max();
       findNearest(tree, v, minDistance2, minNode);
@@ -235,10 +247,14 @@ namespace ice
     const T* findNearest(const T& s) const
     {
       if (tree == nullptr)
-        throw "empty tree";
+        {
+          throw "empty tree";
+        }
       std::vector<double> v(s.size());
       for (int k = 0; k < s.size(); ++k)
-        v[k] = s[k];
+        {
+          v[k] = s[k];
+        }
       return findNearest(v);
     }
 
@@ -250,7 +266,9 @@ namespace ice
                       int k) const
     {
       if (tree == nullptr)
-        return;
+        {
+          return;
+        }
 
       double d2 = distance2(tree->data, v);
 
@@ -286,7 +304,9 @@ namespace ice
           for (unsigned int i = 1; i < dist.size(); ++i)
             {
               if (dist[i] > minDistance)
-                minDistance = dist[i];
+                {
+                  minDistance = dist[i];
+                }
             }
         }
 
@@ -297,7 +317,7 @@ namespace ice
         {
           findKNearest(tree->left, v, minDistance, minNodes, dist, k);
 
-          if (minDistance > hd2) // suche auch auf der anderen Seite
+          if (minDistance > hd2)   // suche auch auf der anderen Seite
             {
               findKNearest(tree->right, v, minDistance, minNodes, dist, k);
             }
@@ -306,7 +326,7 @@ namespace ice
         {
           findKNearest(tree->right, v, minDistance, minNodes, dist, k);
 
-          if (minDistance > hd2) // suche auch auf der anderen Seite
+          if (minDistance > hd2)   // suche auch auf der anderen Seite
             {
               findKNearest(tree->left, v, minDistance, minNodes, dist, k);
             }
@@ -317,7 +337,9 @@ namespace ice
                       std::vector<const T*>& neighbors, std::vector<double>& distances) const
     {
       if (tree == nullptr)
-        throw "empty tree";
+        {
+          throw "empty tree";
+        }
       std::vector<const Node*> minNodes;
       std::vector<double> dist2;
       double minDistance2 = std::numeric_limits<double>::max();
@@ -344,10 +366,14 @@ namespace ice
                       std::vector<const T*>& neighbors, std::vector<double>& distances) const
     {
       if (tree == nullptr)
-        throw "empty tree";
+        {
+          throw "empty tree";
+        }
       std::vector<double> v(s.size());
       for (int k = 0; k < s.size(); ++k)
-        v[k] = s[k];
+        {
+          v[k] = s[k];
+        }
       findKNearest(v, k, neighbors, distances);
     }
 
@@ -361,12 +387,16 @@ namespace ice
                        std::vector<const Node*>& minNodes) const
     {
       if (tree == nullptr)
-        return;
+        {
+          return;
+        }
 
       double d2 = distance2(tree->data, v);
 
       if (d2 < dist2)
-        minNodes.push_back(tree);
+        {
+          minNodes.push_back(tree);
+        }
 
       double hd = v[tree->idx] - tree->data[tree->idx]; // distance to split plane
       double hd2 = hd * hd;
@@ -375,7 +405,7 @@ namespace ice
         {
           findNeighbors(tree->left, v, dist2, minNodes);
 
-          if (dist2 > hd2) // suche auch auf der anderen Seite
+          if (dist2 > hd2)   // suche auch auf der anderen Seite
             {
               findNeighbors(tree->right, v, dist2, minNodes);
             }
@@ -384,7 +414,7 @@ namespace ice
         {
           findNeighbors(tree->right, v, dist2, minNodes);
 
-          if (dist2 > hd2) // suche auch auf der anderen Seite
+          if (dist2 > hd2)   // suche auch auf der anderen Seite
             {
               findNeighbors(tree->left, v, dist2, minNodes);
             }
@@ -395,7 +425,9 @@ namespace ice
                        std::vector<const T*>& neighbors) const
     {
       if (tree == nullptr)
-        throw "empty tree";
+        {
+          throw "empty tree";
+        }
       std::vector<const Node*> minNodes;
       findNeighbors(tree, v, distance * distance, minNodes);
       int nFound = minNodes.size();
@@ -410,10 +442,14 @@ namespace ice
                        std::vector<const T*>& neighbors) const
     {
       if (tree == nullptr)
-        throw "empty tree";
+        {
+          throw "empty tree";
+        }
       std::vector<double> v(s.size());
       for (int k = 0; k < s.size(); ++k)
-        v[k] = s[k];
+        {
+          v[k] = s[k];
+        }
       findNeighbors(v, distance, neighbors);
     }
 
@@ -434,7 +470,9 @@ namespace ice
             }
         }
       else
-        os << "N" << std::endl;
+        {
+          os << "N" << std::endl;
+        }
     }
 
     /***
@@ -450,7 +488,9 @@ namespace ice
       char c;
       is >> c;
       if (c == 'N')
-        tr = nullptr;
+        {
+          tr = nullptr;
+        }
       else
         {
           Node h;
@@ -476,7 +516,9 @@ namespace ice
     int getNNodes(const Node* tree) const
     {
       if (tree == nullptr)
-        return 0;
+        {
+          return 0;
+        }
       return getNNodes(tree->left) + getNNodes(tree->right) + 1;
     }
 
@@ -486,7 +528,9 @@ namespace ice
     int getMaxDepth(const Node* tree) const
     {
       if (tree == nullptr)
-        return 0;
+        {
+          return 0;
+        }
       int leftMaxDepth = getMaxDepth(tree->left);
       int rightMaxDepth = getMaxDepth(tree->right);
       return rightMaxDepth > leftMaxDepth ? rightMaxDepth + 1 : leftMaxDepth + 1;
@@ -498,7 +542,9 @@ namespace ice
     int getMinDepth(const Node* tree) const
     {
       if (tree == nullptr)
-        return 0;
+        {
+          return 0;
+        }
       int leftMinDepth = getMinDepth(tree->left);
       int rightMinDepth = getMinDepth(tree->right);
       return rightMinDepth < leftMinDepth ? rightMinDepth + 1 : leftMinDepth + 1;
@@ -531,9 +577,13 @@ namespace ice
             {
               double val = sl[k][i];
               if (val > max[i])
-                max[i] = val;
+                {
+                  max[i] = val;
+                }
               else if (val < min[i])
-                min[i] = val;
+                {
+                  min[i] = val;
+                }
             }
         }
 
@@ -552,7 +602,9 @@ namespace ice
         }
 
       if (featureIdx < 0)
-        return false;
+        {
+          return false;
+        }
 
       // use center value as splitvalue
       double diff2 = maxdif / 2;
@@ -593,7 +645,9 @@ namespace ice
           return true;
         }
       else
-        return false;
+        {
+          return false;
+        }
     }
 
     Node* tree;

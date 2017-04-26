@@ -27,7 +27,7 @@
 #include <float.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "fit.h"
@@ -56,10 +56,7 @@ namespace ice
     pl = (PointList) malloc(sizeof(struct PointList_));
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, ERROR);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->lng = lng;
     pl->xptr = (double*)malloc(lng * sizeof(double));
@@ -74,22 +71,13 @@ namespace ice
   int PutPoint(PointList pl, int adr, double x, double y, double weight)
   {
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (adr < 0 || adr > pl->lng)
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (weight < 0)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     pl->xptr[adr] = x;
     pl->yptr[adr] = y;
@@ -103,10 +91,7 @@ namespace ice
   int FreePointList(PointList pl)
   {
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_PTR, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (pl->lng != 0)
       {
@@ -131,18 +116,12 @@ namespace ice
     double* wp;
 
     if (diff < 1)
-      {
-        Message(FNAME, M_WRONG_PARAM, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_WRONG_PARAM);
 
     pl = (PointList)malloc(sizeof(struct PointList_));
 
     if (pl == nullptr)
-      {
-        Message(FNAME, M_NO_MEM, NO_MEM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_NO_MEM);
 
     pl->lng = c.Number() / diff + 1;
     pl->xptr = (double*)malloc(pl->lng * sizeof(double) + 1);
@@ -151,7 +130,7 @@ namespace ice
 
     if ((pl->xptr == nullptr) || (pl->yptr == nullptr) || (pl->wptr == nullptr))
       {
-        Message(FNAME, M_NO_MEM, NO_MEM);
+        throw IceException(FNAME, M_NO_MEM);
         free(pl);
         return nullptr;
       }
@@ -183,7 +162,10 @@ namespace ice
 
   int FreeSegmentList(Segment sl)
   {
-    while (sl->prev != nullptr) sl = sl->prev;
+    while (sl->prev != nullptr)
+      {
+        sl = sl->prev;
+      }
 
     while (sl->next != nullptr)
       {
@@ -197,29 +179,47 @@ namespace ice
   /************************************************/
   Segment AddSegment(Segment segl, Segment seg)
   {
-    if (segl == nullptr) return (seg);
+    if (segl == nullptr)
+      {
+        return (seg);
+      }
 
-    while (segl->next != nullptr) segl = segl->next;
+    while (segl->next != nullptr)
+      {
+        segl = segl->next;
+      }
 
     segl->next = seg;
 
-    if (seg != nullptr) seg->prev = segl;
+    if (seg != nullptr)
+      {
+        seg->prev = segl;
+      }
 
     return (seg);
   }
   /************************************************/
   Segment FirstSegment(Segment seg)
   {
-    if (seg == nullptr) return (nullptr);
+    if (seg == nullptr)
+      {
+        return (nullptr);
+      }
 
-    while (seg->prev != nullptr) seg = seg->prev;
+    while (seg->prev != nullptr)
+      {
+        seg = seg->prev;
+      }
 
     return (seg);
   }
   /************************************************/
   Segment NextSegment(Segment s)
   {
-    if (s == nullptr) return (nullptr);
+    if (s == nullptr)
+      {
+        return (nullptr);
+      }
 
     return (s->next);
   }
@@ -229,23 +229,19 @@ namespace ice
   int PointList2Matrix(PointList pl, int ad1, int ad2, Matrix& m)
   {
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (ad1 < 0 || ad1 > pl->lng - 1 || ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     m = Matrix(0, 3);
 
-    m.Append(Vector(pl->xptr[ad1], pl->yptr[ad1], pl->wptr[ad1]));
+    m.append(Vector(pl->xptr[ad1], pl->yptr[ad1], pl->wptr[ad1]));
 
     for (int i = ad1 + 1; i != ad2; i = (i + 1) % pl->lng)
-      m.Append(Vector(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      {
+        m.append(Vector(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      }
 
     return OK;
   }
@@ -255,24 +251,20 @@ namespace ice
   int PointList2vector(PointList pl, int ad1, int ad2, vector<PointValue>& vpv)
   {
     if (pl == nullptr)
-      {
-        Message(FNAME, M_WRONG_POINTLIST, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (ad1 < 0 || ad1 > pl->lng - 1 ||
         ad2 < 0 || ad2 > pl->lng - 1 || pl->lng <= 0)
-      {
-        Message(FNAME, M_WRONG_INDEX, WRONG_PARAM);
-        return WRONG_PARAM;
-      }
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     vpv.clear();
 
     vpv.push_back(PointValue(pl->xptr[ad1], pl->yptr[ad1], pl->wptr[ad1]));
 
     for (int i = ad1 + 1; i != ad2; i = (i + 1) % pl->lng)
-      vpv.push_back(PointValue(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      {
+        vpv.push_back(PointValue(pl->xptr[i], pl->yptr[i], pl->wptr[i]));
+      }
 
     return OK;
   }
@@ -282,19 +274,20 @@ namespace ice
   PointList Matrix2PointList(const Matrix& m)
   {
     if ((m.cols() < 2))
-      {
-        Message(FNAME, M_MATRIXFORMAT, WRONG_PARAM);
-        return nullptr;
-      }
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     PointList pl = NewPointList(m.rows());
 
     if (m.cols() > 2) // Gewicht vorhanden
       for (int i = 0; i < m.rows(); i++)
-        PutPoint(pl, i, m[i][0], m[i][1], m[i][2]);
+        {
+          PutPoint(pl, i, m[i][0], m[i][1], m[i][2]);
+        }
     else
       for (int i = 0; i < m.rows(); i++)
-        PutPoint(pl, i, m[i][0], m[i][1], 1.0);
+        {
+          PutPoint(pl, i, m[i][0], m[i][1], 1.0);
+        }
 
     return pl;
   }

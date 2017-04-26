@@ -27,12 +27,14 @@ namespace ice
 #define FWMODUS "wb"
 #define FRMODUS "rb"
 
-  enum filekind { fk_file, fk_process, fk_stdio };
+  enum kindOfFile { fk_file, fk_process, fk_stdio };
+
   typedef struct
   {
     FILE* fd;
-    enum filekind kind;
+    enum kindOfFile kind;
   } EXFILE;
+
   EXFILE exopen(const std::string& path, const char* mode);
   int exclose(EXFILE df);
 }

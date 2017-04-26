@@ -79,20 +79,33 @@ namespace ice
 
     l1 = (x21 * y43 - x43 * y21);
 
-    if (fabs(l1) < 1e-10) return false;
+    if (fabs(l1) < 1e-10)
+      {
+        return false;
+      }
 
     *l = (x31 * y43 - x43 * y31) / l1;
 
-    if ((*l <= 0.00001) || (*l >= 0.9999)) return false;
+    if ((*l <= 0.00001) || (*l >= 0.9999))
+      {
+        return false;
+      }
 
     l2 = -1;
 
     if (fabs(y43) > 1e-10)
-      l2 = (*l * y21 - y31) / y43;
+      {
+        l2 = (*l * y21 - y31) / y43;
+      }
     else if (fabs(x43) > 1e-10)
-      l2 = (*l * x21 - x31) / x43;
+      {
+        l2 = (*l * x21 - x31) / x43;
+      }
 
-    if (l2 <= 0.00001 || l2 >= 0.9999) return false;
+    if (l2 <= 0.00001 || l2 >= 0.9999)
+      {
+        return false;
+      }
 
     return true;
   }
@@ -121,12 +134,18 @@ namespace ice
     double l1 = (x31 * y43 - x43 * y31) / l;
 
     // Geradenschnittpunkt ausserhalb strecke 1
-    if ((l1 < 0.0) || (l1 > 1.0)) result = false;
+    if ((l1 < 0.0) || (l1 > 1.0))
+      {
+        result = false;
+      }
 
     double l2 = (x31 * y21 - x21 * y31) / l;
 
     // Geradenschnittpunkt ausserhalb strecke 2
-    if (l2 < 0.0 || l2 > 1.0) result = false;
+    if (l2 < 0.0 || l2 > 1.0)
+      {
+        result = false;
+      }
 
     // Schnittpunkt immer berechnen, auch wenn ausserhalb der Strecken
     res = l1 * (b - a) + a;

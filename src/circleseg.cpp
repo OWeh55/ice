@@ -21,7 +21,7 @@
 #include <math.h>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 
 #include "numbase.h"
@@ -42,16 +42,16 @@ namespace ice
     phi1 = FMod(phi1, 2 * M_PI);
     phi2 = FMod(phi2, 2 * M_PI);
 
-    if (phi2 < phi1) phi2 += 2 * M_PI;
+    if (phi2 < phi1)
+      {
+        phi2 += 2 * M_PI;
+      }
   }
 
   CircleSeg::CircleSeg(const Vector& v) : Circle(v)
   {
     if (v.Size() < 5)
-      {
-        Message(FNAME, M_WRONG_DIM, WRONG_PARAM);
-        return;
-      }
+      throw IceException(FNAME, M_WRONG_DIM);
 
     phi1 = v[3];
     phi2 = v[4];
@@ -89,14 +89,18 @@ namespace ice
     double res = LineSeg(p, Point(p.x + r * cos(phi1), p.y + r * sin(phi1))).distance_(pp);
 
     if ((d = LineSeg(p, Point(p.x + r * cos(phi2), p.y + r * sin(phi2))).distance_(pp)) < res)
-      res = d;
+      {
+        res = d;
+      }
 
     Point delta = pp - p;
     double fi = FMod(delta.phi(), 2 * M_PI);
 
     if (phi_inside(fi))
       if ((d = Circle::distance_(pp)) < res)
-        res = d;
+        {
+          res = d;
+        }
 
     return res;
   }

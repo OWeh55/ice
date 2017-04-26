@@ -48,7 +48,7 @@ namespace ice
   }
 
   iceSelectRectInteraction::iceSelectRectInteraction(ImageWindow* imagewindow,
-      const Window& w, wselmode modep)
+      const Window& w, windowSelectionMode modep)
     : InteractionHandler(imagewindow),
       mode(modep),
       FirstPoint(w.XI(), w.YI()),
@@ -58,14 +58,19 @@ namespace ice
 
   bool iceSelectRectInteraction::Init()
   {
-    if (mode != select) DrawSelectedRect();
+    if (mode != select)
+      {
+        DrawSelectedRect();
+      }
     return true;
   }
 
   void iceSelectRectInteraction::DrawSelectedRect()
   {
     if (mode == select)
-      return;
+      {
+        return;
+      }
 
     // We use logical function wxXOR (see explanation at iceSelectPointInteraction::DrawCursor).
     wxClientDC ClientDC(imageWindow);
@@ -100,12 +105,16 @@ namespace ice
   {
     // we only draw the selection if the first corner has already been selected
     if (select == mode)
-      return;
+      {
+        return;
+      }
 
     // paint the new position only if it lies within the image
     IPoint MousePos = imageWindow->translateWin2ImagePos(MouseEvent.GetPosition());
     if (!window.inside(MousePos))
-      return;
+      {
+        return;
+      }
 
     MousePos = makeValid(MousePos);
 
@@ -216,7 +225,9 @@ namespace ice
   {
     // delete the selection rectangle from the window, if it has been painted
     if (mode != select)
-      DrawSelectedRect();
+      {
+        DrawSelectedRect();
+      }
 
     // call base class cleanup (see class specification)
     InteractionHandler::Cleanup();

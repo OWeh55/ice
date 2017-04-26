@@ -23,7 +23,7 @@
 #include <fstream>
 
 #include "defs.h"
-#include "message.h"
+#include "IceException.h"
 #include "macro.h"
 #include "matrix_function.h"
 #include "numbase.h"
@@ -33,7 +33,7 @@
 
 #define PRECISION 1e-200
 
-#define ERR(f,m,r,ret) { Message(f,m,r); return ret; }
+#define ERR(f,m,r,ret) { throw IceException(f,m); }
 
 using std::vector;
 namespace ice
@@ -42,69 +42,72 @@ namespace ice
 #define FNAME "Matrix::CholeskyInverse"
   Matrix CholeskyInverse(const Matrix& mat)
   {
-    Matrix inverse;
-
-    int dimension = mat.cols();
-
-    if (dimension != mat.rows())
-      ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, inverse);
-
-    Matrix l;
-    RETURN_IF_FAILED(l = CholeskyDecomposition(mat), inverse);
-
-    Matrix h(dimension, dimension);
-    Matrix lt(dimension, dimension);
-
-    for (int k = 0; k < dimension; k++)
+    try
       {
-        for (int i = 0; i < dimension; i++)
+        int dimension = mat.cols();
+
+        if (dimension != mat.rows())
+          throw IceException(FNAME, M_NO_SQUARE);
+
+        Matrix l = CholeskyDecomposition(mat);
+
+        Matrix h(dimension, dimension);
+        Matrix lt(dimension, dimension);
+
+        for (int k = 0; k < dimension; k++)
           {
-            if (k <= i)
-              h[k][i] = mat[k][i];
-            else
-              h[k][i] = l[k][i];
-
-            lt[k][i] = l[i][k];
-          }
-      }
-
-    double sum;
-
-    inverse = Matrix(dimension, dimension);
-    Vector x(dimension);
-
-    for (int n = 0; n < dimension; n++)
-      {
-        x.Set(0.0);
-        x[n] = 1.0;
-
-        for (int i = 0; i < dimension; i++)
-          {
-            sum = x[i];
-
-            for (int k = i - 1; k >= 0; k--)
+            for (int i = 0; i < dimension; i++)
               {
-                sum -= h[i][k] * x[k];
+                if (k <= i)
+                  {
+                    h[k][i] = mat[k][i];
+                  }
+                else
+                  {
+                    h[k][i] = l[k][i];
+                  }
+
+                lt[k][i] = l[i][k];
+              }
+          }
+
+        Matrix inverse(dimension, dimension);
+        Vector x(dimension);
+
+        for (int n = 0; n < dimension; n++)
+          {
+            x.set(0.0);
+            x[n] = 1.0;
+
+            for (int i = 0; i < dimension; i++)
+              {
+                double sum = x[i];
+
+                for (int k = i - 1; k >= 0; k--)
+                  {
+                    sum -= h[i][k] * x[k];
+                  }
+
+                x[i] = sum / l[i][i];
               }
 
-            x[i] = sum / l[i][i];
-          }
-
-        for (int i = (dimension - 1); i >= 0; i--)
-          {
-            sum = x[i];
-
-            for (int k = i + 1; k < dimension; k++)
+            for (int i = (dimension - 1); i >= 0; i--)
               {
-                sum -= h[k][i] * x[k];
+                double sum = x[i];
+
+                for (int k = i + 1; k < dimension; k++)
+                  {
+                    sum -= h[k][i] * x[k];
+                  }
+
+                x[i] = sum / l[i][i];
+                inverse[i][n] = x[i];
               }
-
-            x[i] = sum / l[i][i];
-            inverse[i][n] = x[i];
           }
-      }
 
-    return inverse;
+        return inverse;
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -114,13 +117,12 @@ namespace ice
     int dimension = mat.cols();
 
     if (mat.rows() != dimension)
-      ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, Matrix());
+      throw IceException(FNAME, M_NO_SQUARE);
 
     Matrix res(dimension, dimension);
-    res.Set(0.0);
+    res.set(0.0);
 
     Matrix hilf2(mat);
-
 
     double sum;
 
@@ -137,12 +139,16 @@ namespace ice
           if (i == j)
             {
               if (sum <= 0.0)
-                ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+                {
+                  ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+                }
 
               res.at(i).at(i) = sqrt(sum);
             }
           else
-            hilf2.at(j).at(i) = sum / res.at(i).at(i);
+            {
+              hilf2.at(j).at(i) = sum / res.at(i).at(i);
+            }
         }
 
     for (int i = 0; i < dimension; i++)
@@ -158,34 +164,35 @@ namespace ice
 #define FNAME "Matrix::IsPositivDefinit()"
   bool IsPositivDefinit(const Matrix& mat)
   {
-    int i, j, k;
-
     int dimension = mat.cols();
 
     if (dimension != mat.rows())
-      ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, false);
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     Matrix hilf2(mat);
 
     Matrix h(dimension, dimension);
-    h.Set(0);
+    h.set(0);
 
     double sum;
 
-    for (i = 0; i < dimension; i++)
+    for (int i = 0; i < dimension; i++)
       {
-        for (j = i; j < dimension; j++)
+        for (int j = i; j < dimension; j++)
           {
             sum = hilf2[i][j];
 
-            for (k = i - 1; k >= 0; k--)
+            for (int k = i - 1; k >= 0; k--)
               {
                 sum -= hilf2[i][k] * hilf2[j][k];
               }
 
             if (i == j)
               {
-                if (sum <= 0.0) return false;
+                if (sum <= 0.0)
+                  {
+                    return false;
+                  }
 
                 h[i][i] = sqrt(sum);
               }
@@ -202,22 +209,32 @@ namespace ice
 
   bool hasInverse(const Matrix& mat)
   {
-    int i, j;
-    double* Mat;
     int dim = mat.cols();
 
-    if (dim != mat.rows()) return false;
+    if (dim != mat.rows())
+      {
+        return false;
+      }
 
-    Mat = new double[dim * dim];
+    double* Mat = new double[dim * dim];
 
-    for (j = 0; j < dim; j++)
-      for (i = 0; i < dim; i++)
-        Mat[j * dim + i] = mat[j][i];
+    for (int j = 0; j < dim; j++)
+      for (int i = 0; i < dim; i++)
+        {
+          Mat[j * dim + i] = mat[j][i];
+        }
 
-    IF_FAILED(InvertMatrix(Mat, dim, Mat))
-    {
-      return false;
-    }
+    try
+      {
+        InvertMatrix(Mat, dim, Mat);
+      }
+    catch (IceException& ex)
+      {
+        delete [] Mat;
+        return false;
+      }
+
+    delete [] Mat;
     return true;
   }
 
@@ -228,9 +245,15 @@ namespace ice
     double max;
     max = 0;
 
-    if (m.rows() == 0) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, -1);
+    if (m.rows() == 0)
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, -1);
+      }
 
-    if ((j1 < 0) || (j1 >= m.cols())) ERR(FNAME, M_WRONG_PARAM, WRONG_PARAM, -1);
+    if ((j1 < 0) || (j1 >= m.cols()))
+      {
+        ERR(FNAME, M_WRONG_PARAM, WRONG_PARAM, -1);
+      }
 
     for (int j = j1; j < m.rows(); j++)
       {
@@ -254,9 +277,15 @@ namespace ice
   {
     int i, j, k;
 
-    if (m.cols() != m.rows()) ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+    if (m.cols() != m.rows())
+      {
+        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+      }
 
-    if (m.rows() == 1) return m[0][0];
+    if (m.rows() == 1)
+      {
+        return m[0][0];
+      }
 
     int dim = m.rows();
     double det = 1.0;
@@ -298,7 +327,10 @@ namespace ice
               }
           }
 
-        if (max == 0) return 0;
+        if (max == 0)
+          {
+            return 0;
+          }
 
         if (p_k[k] != k)
           {
@@ -324,7 +356,10 @@ namespace ice
               }
           }
 
-        for (j = (k + 1); j < dim; j++) h[j][k] = 0;
+        for (j = (k + 1); j < dim; j++)
+          {
+            h[j][k] = 0;
+          }
       }
 
     det = sign;
@@ -340,9 +375,14 @@ namespace ice
   double Determinant(const matrix<double>& m)
   {
     if (m.cols() != m.rows())
-      ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+      {
+        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+      }
 
-    if (m.rows() == 1) return m[0][0];
+    if (m.rows() == 1)
+      {
+        return m[0][0];
+      }
 
     int dim = m.rows();
 
@@ -385,7 +425,10 @@ namespace ice
               }
           }
 
-        if (max == 0) return 0;
+        if (max == 0)
+          {
+            return 0;
+          }
 
         if (p_k[k] != k)
           {
@@ -412,7 +455,9 @@ namespace ice
           }
 
         for (int j = (k + 1); j < dim; j++)
-          h[j][k] = 0;
+          {
+            h[j][k] = 0;
+          }
       }
 
     double det = sign;
@@ -429,21 +474,23 @@ namespace ice
   double CholeskyDeterminant(const Matrix& m)
   {
     if (m.cols() != m.rows())
+      throw IceException(FNAME, M_NO_SQUARE);
+
+    try
       {
-        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+        int dimension = m.cols();
+        Matrix l = CholeskyDecomposition(m);
+
+        double det = 1;
+
+        for (int k = 0; k < dimension; k++)
+          {
+            det = det * l[k][k];
+          }
+
+        return det * det;
       }
-
-    int dimension = m.cols();
-    Matrix l;
-
-    RETURN_IF_FAILED(l = CholeskyDecomposition(m), 0.0);
-
-    double det = 1;
-
-    for (int k = 0; k < dimension; k++)
-      det = det * l[k][k];
-
-    return det * det;
+    RETHROW;
   }
 #undef FNAME
 
@@ -451,19 +498,19 @@ namespace ice
   int SolveLinEqu1(const Matrix& m, const Vector& v, Vector& res)
   {
     // Matrix is square, v has correct size
+    try
+      {
+        Matrix LU;
+        IVector indx;
 
-    Matrix LU;
-    IVector indx;
+        // LU-Zerlegung
+        LUDecompositionPacked(m, LU, indx);
 
-    // LU-Zerlegung
-    IF_FAILED(LUDecompositionPacked(m, LU, indx, true))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-    // Lösen von L*U*x=i
-    res = LUSolve(LU, indx, v);
-    return OK;
+        // Lösen von L*U*x=i
+        res = LUSolve(LU, indx, v);
+        return OK;
+      }
+    RETHROW;
   }
 
   int SolveLinearEquation1(const matrix<double>& A,
@@ -471,49 +518,44 @@ namespace ice
                            std::vector<double>& x)
   {
     // Matrix is square, v has correct size
+    try
+      {
+        matrix<double> LU;
+        vector<int> index;
 
-    matrix<double> LU;
-    vector<int> index;
-
-    // LU-Zerlegung
-    IF_FAILED(LUDecompositionPacked(A, LU, index, true))
-    {
-      Message(FNAME, M_0, ERROR);
-      return ERROR;
-    }
-    // Lösen von L*U*x=b
-    x = LUSolve(LU, index, b);
-    return OK;
+        // LU-Zerlegung
+        LUDecompositionPacked(A, LU, index, true);
+        // Lösen von L*U*x=b
+        x = LUSolve(LU, index, b);
+        return OK;
+      }
+    RETHROW;
   }
 
   Vector SolveLinEqu(const Matrix& m, const Vector& v)
   {
-    int rc;
-    Vector res(v);
-
-    if (v.Size() != m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
-
-    if (m.cols() > m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
-
-    // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
-    if (m.cols() < m.rows())
+    try
       {
-        Matrix a = m.MulTrans(m); // m^T * m
-        Vector i = m.MulTrans(v); // m^T * v
-        rc = SolveLinEqu1(a, i, res);
-      }
-    else
-      {
-        rc = SolveLinEqu1(m, v, res);
-      }
+        Vector res(v);
 
-    if (rc != OK)
-      {
-        Message(FNAME, M_0, ERROR);
+        if (v.Size() != m.rows() || m.cols() > m.rows())
+          throw IceException(FNAME, M_WRONG_MATRIX);
+
+        // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
+        if (m.cols() < m.rows())
+          {
+            Matrix a = m.MulTrans(m); // m^T * m
+            Vector i = m.MulTrans(v); // m^T * v
+            SolveLinEqu1(a, i, res);
+          }
+        else
+          {
+            SolveLinEqu1(m, v, res);
+          }
+
         return res;
       }
-
-    return res;
+    RETHROW;
   }
 
 #undef FNAME
@@ -523,9 +565,15 @@ namespace ice
   {
     std::vector<double> res(m.cols());
 
-    if ((int)b.size() != m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+    if ((int)b.size() != m.rows())
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+      }
 
-    if (m.cols() > m.rows()) ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+    if (m.cols() > m.rows())
+      {
+        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+      }
 
     int rc;
 
@@ -538,7 +586,9 @@ namespace ice
           {
             bb[i] = 0;
             for (int k = 0; k < m.rows(); ++k)
-              bb[i] += m[k][i] * b[k];
+              {
+                bb[i] += m[k][i] * b[k];
+              }
           }
         rc = SolveLinearEquation1(a, bb, res);
       }
@@ -548,10 +598,7 @@ namespace ice
       }
 
     if (rc != OK)
-      {
-        Message(FNAME, M_0, ERROR);
-        return res;
-      }
+      throw IceException(FNAME, M_0);
 
     return res;
   }

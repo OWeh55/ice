@@ -32,8 +32,8 @@
 namespace ice
 {
 
-  int RadonImg(Image& srcimg, Image& radonimg);
-  int InvRadonImg(Image& radonimg, Image& resimg, int fmax = -1);
+  void RadonImg(Image& srcimg, Image& radonimg);
+  void InvRadonImg(Image& radonimg, Image& resimg, int fmax = -1);
 
   class RadonCTrafo
   {

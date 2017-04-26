@@ -1,6 +1,6 @@
 #include <getopt.h>
 #include <image_nonvis.h>
-#include <videoio.h>
+#include <VideoFile.h>
 
 void usage(const string& pn)
 {

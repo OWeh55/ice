@@ -11,8 +11,7 @@ int hpc(const Contur& c, Matrix& cm, int steps = SANZ)
 
   if (!c.isValid() || !c.isClosed())
     {
-      Message(FNAME, M_CONTUR_NOT_CLOSED, WRONG_PARAM);
-      return WRONG_PARAM;
+      throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
     }
 
   MomentRegion(c, mom, xys);
@@ -38,7 +37,7 @@ int hpc(const Contur& c, Matrix& cm, int steps = SANZ)
 
           if (cross > 0)
             {
-              hpl.Append(cpl[j]);
+              hpl.append(cpl[j]);
             }
         }
 
@@ -56,7 +55,7 @@ int main(int argv, char** argc)
   Contur c;
   Image mark;
   mark = NewImg(800, 600, 255);
-  ClearImg(mark);
+  clearImg(mark);
   Display(ON);
   Show(OVERLAY, mark);
   Matrix cpl;
