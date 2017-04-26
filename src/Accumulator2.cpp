@@ -18,6 +18,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <iostream>
+#include <stdexcept>
 #include "darith.h"
 #include "Accumulator2.h"
 

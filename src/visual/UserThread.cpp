@@ -52,11 +52,11 @@ namespace ice
         strcpy(argv[i], sc.c_str());
       }
 
-    wxThread::ExitCode exitcode;
+    long int exitcode = 1;
     // calling Main of the user
     try
       {
-        exitcode = (wxThread::ExitCode) long(::Main(argc, argv));
+        exitcode = ::Main(argc, argv);
       }
     catch (const exception& ex)
       {
@@ -73,6 +73,6 @@ namespace ice
       }
 
     delete [] argv;
-    return exitcode;
+    return wxThread::ExitCode(exitcode);
   }
 }

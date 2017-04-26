@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  vector<double> v{5, 6, 4, 2, 3, 2, 4, 5, 4, 3, 2, 1, 2, 3, 4};
+  vector<double> v {5, 6, 4, 2, 3, 2, 4, 5, 4, 3, 2, 1, 2, 3, 4};
   for (int i = 0; i < v.size(); ++i)
     cout << setw(8) << i;
   cout << endl;

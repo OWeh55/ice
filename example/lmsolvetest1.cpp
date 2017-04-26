@@ -42,7 +42,7 @@ int main(int argc, char** argv)
   if (argc > 1)
     nValues = atoi(argv[1]);
 
-  vector<double> x{1.0, 2.0, 3.0, 4.0, 5.0}; // Die Stützstellen
+  vector<double> x {1.0, 2.0, 3.0, 4.0, 5.0}; // Die Stützstellen
 
   // eventuell mehr stützstellen
   for (int i = x.size(); i < nValues; ++i)

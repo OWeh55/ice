@@ -188,8 +188,8 @@ namespace ice
       else
         {
           int splitIdx = tree->idx;
-          assert(v.size() == tree->data.size());
-          assert(splitIdx < v.size());
+          assert((int)v.size() == tree->data.size());
+          assert(splitIdx < (int)v.size());
           double hd = v[splitIdx] - tree->data[splitIdx]; // distance to hyperplane
           double hd2 = hd * hd;
 
@@ -570,7 +570,7 @@ namespace ice
           double higherValue = std::numeric_limits<double>::max();
           int higherIdx = -1;
 
-          for (int k = 0; k < sl.size(); ++k)
+          for (unsigned int k = 0; k < sl.size(); ++k)
             {
               double avalue = sl[k][featureIdx];
               //std::cout << k << ": " << lowerValue << ".." << higherValue;

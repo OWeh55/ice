@@ -71,7 +71,7 @@ namespace ice
   public:
     Distortion(): x0(0), y0(0) {}
     Distortion(double x0p, double y0p): x0(x0p), y0(y0p) {}
-    Distortion(double x0p, double y0p, int dimx, int dimy): x0(x0p * dimx), y0(y0p * dimy) {}
+    Distortion(double x0p, double y0p, int dimx, int dimy): x0(x0p* dimx), y0(y0p* dimy) {}
     virtual ~Distortion() {};
 
     // basic distortion and rectifying
