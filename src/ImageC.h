@@ -26,8 +26,6 @@
 #include "Window.h"
 #include "ImageBase.h"
 
-//#define CONTROLLED_REFRESH 1
-
 namespace ice
 {
 //----------------- class image ----------------------------------------

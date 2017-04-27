@@ -695,8 +695,8 @@ namespace ice
   }
 
 #undef FNAME
-#define FNAME "DrawPolygon"
-  void DrawPolygon(PointList pl, int val, Image& img)
+#define FNAME "drawPolygon"
+  void drawPolygon(PointList pl, int val, Image& img)
   {
     int i, j;
 

@@ -716,9 +716,6 @@ namespace ice
                 datab[y][x + 1] = 255 - d2.b;
               }
           }
-        imgr->needRefresh();
-        imgg->needRefresh();
-        imgb->needRefresh();
       }
     else
       {

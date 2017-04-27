@@ -36,30 +36,11 @@ namespace ice
       ysize(SizeY),
       maxval(MaxIntensity),
       VisNumber(0),
-#ifdef CONTROLLED_REFRESH
-      timestamp(0),
-#endif
       dfp(nullptr),
       refcount(0),
       parent(par),
       title(titleP)
   {
-#ifdef CONTROLLED_REFRESH
-    if (parent == nullptr)
-      {
-        tsp = &timestamp;
-      }
-    else
-      {
-        // get root of child tree
-        while (par->parent != nullptr)
-          {
-            par = par->parent;
-          }
-
-        tsp = & (par->timestamp);
-      }
-#endif
   }
 
   ImageBase::~ImageBase()
@@ -78,9 +59,6 @@ namespace ice
           setP(x, y, grayvalue);
         }
 
-#ifdef CONTROLLED_REFRESH
-    needRefresh();
-#endif
     return OK;
   }
 #undef FNAME

@@ -617,9 +617,6 @@ namespace ice
         break;
       }
 
-#ifdef CONTROLLED_REFRESH
-    img->needRefresh();
-#endif
     return OK;
   }
 
@@ -752,11 +749,6 @@ namespace ice
         break;
       }
 
-#ifdef CONTROLLED_REFRESH
-    imgr->needRefresh();
-    imgg->needRefresh();
-    imgb->needRefresh();
-#endif
     return rc;
   }
 #undef FNAME

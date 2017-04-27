@@ -1187,10 +1187,6 @@ namespace ice
 
     int rc = LMDif(corners, 2 * n, LM_polygon, 15, inumber, 10000);
 
-    // auf corners 0-2*n-1  == 2*n Unbekannte
-    // auf corners 2*n bis 2*n+15 == Ziele im LSE Kriterium, hier die Momente des canonical frame
-    // LM_polygon == eine Funktion die die 15 Werte im LSE Kriterium berechnet
-
     if (rc > 3)
       {
         throw IceException(FNAME, "LMDif " + LMDifMessage(rc));

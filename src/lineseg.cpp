@@ -35,7 +35,7 @@ namespace ice
 #define FNAME "LineSeg::LineSeg"
   LineSeg::LineSeg(double pp, double phi) :
     // dem Ursprung nächster Punkt als Startpunkt
-    GeoObject(pp* cos(phi), pp* sin(phi)),
+    GeoObject(pp * cos(phi), pp * sin(phi)),
     // Punkt mit Abstand 1 als zweiter Punkt
     dp(-sin(phi), cos(phi)),
     type(line)

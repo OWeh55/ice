@@ -101,11 +101,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 
@@ -164,11 +159,7 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
+
     return OK;
   }
 #undef FNAME
@@ -239,11 +230,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 
@@ -302,11 +288,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 
@@ -380,11 +361,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 
@@ -448,11 +424,6 @@ namespace ice
           }
       }
 
-#ifndef NOVISUAL
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 #undef FNAME

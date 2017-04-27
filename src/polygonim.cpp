@@ -328,8 +328,8 @@ namespace ice
     RETHROW;
   }
 #undef FNAME
-#define FNAME "DrawPolygon"
-  int DrawPolygon(const Matrix& pl, int val, const Image& img,
+#define FNAME "drawPolygon"
+  int drawPolygon(const Matrix& pl, int val, const Image& img,
                   int marker, int size, int color)
   {
     if (!IsImg(img))

@@ -28,8 +28,6 @@
 #include "defs.h"
 #include "Window.h"
 
-//#define CONTROLLED_REFRESH 1
-
 namespace ice
 {
   class Image;
@@ -175,38 +173,12 @@ namespace ice
 
     int VisNumber; /**< Number of current visualisations */
 
-#ifdef CONTROLLED_REFRESH
-    int timestamp; /**< timestamp of last change to image */
-    int* tsp; /**< pointer to timestamp */
-
-  public:
-    /**
-     * mark image for update
-     * Do not overload, it's not virtual
-     */
-    inline void needRefresh() //
-    {
-      (*tsp)++;
-    }
-#else
-  public:
-    /**
-     * mark image for update
-     * this is a dummy, if CONTROLLED_REFRESH is not activ
-     * Do not overload, it's not virtual
-     */
-    inline void needRefresh()
-    {
-      // dummy for compatibility
-    }
-#endif
-
   protected:
     /**
      * pointer to the registered call back function
      * must be set to nullptr by constructor
      */
-    DestroyFPtr dfp;
+    DestroyFPtr dfp = nullptr;
 
   public:
 
@@ -215,20 +187,11 @@ namespace ice
      * used by visualisation to switch off before the image is gone
      */
 
-#ifdef CONTROLLED_REFRESH
-    virtual int* startVis(DestroyFPtr af)
-    {
-      dfp = af;
-      VisNumber++;
-      return tsp;
-    }
-#else
     virtual void startVis(DestroyFPtr af)
     {
       VisNumber++;
       dfp = af;
     }
-#endif
 
     virtual void stopVis()
     {
@@ -240,7 +203,7 @@ namespace ice
         }
     }
 
-    /* does the callback */
+    /* do the callback */
     virtual void destroy()
     {
       if (dfp != nullptr)

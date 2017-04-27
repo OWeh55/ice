@@ -151,9 +151,6 @@ namespace ice
 
   bool ImageWindow::Destroy()
   {
-#ifdef CONTROLLED_REFRESH
-    while (NeedsUpdate())  /* nothing */ ;  // avoid new paint
-#endif
     while (PaintIsRunning)
       {
         usleep(1000);
@@ -174,13 +171,9 @@ namespace ice
       {
         return false;
       }
-#ifdef CONTROLLED_REFRESH
-    int* tsp = img->startVis(DestroyWindows);
-    imgs.push_back(new ImageStructInt(img, tsp));
-#else
     img->startVis(DestroyWindows);
     imgs.push_back(new ImageStructInt(img));
-#endif
+
     return true;
   }
 
@@ -190,13 +183,9 @@ namespace ice
       {
         return false;
       }
-#ifdef CONTROLLED_REFRESH
-    int* tsp = img->startVis(DestroyWindowsD);
-    imgs.push_back(new ImageStructDouble(img, tsp));
-#else
     img->startVis(DestroyWindowsD);
     imgs.push_back(new ImageStructDouble(img));
-#endif
+
     return true;
   }
 
@@ -657,13 +646,8 @@ namespace ice
   void ImageWindow::RegularUpdate()
   {
     // check if there is any need to refresh
-#ifdef CONTROLLED_REFRESH
-    if (NeedsUpdate())
-#endif
-      {
-        Refresh();
-        Update(); // Update enforces repainting of windows
-      }
+    Refresh();
+    Update(); // Update enforces repainting of windows
   }
 
   void ImageWindow::DrawCursor(const IPoint& Position)

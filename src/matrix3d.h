@@ -13,12 +13,12 @@ namespace ice
     matrix3d(): xsize(0), ysize(0), zsize(0), data(0) {}
 
     matrix3d(int xs, int ys, int zs):
-      xsize(xs), ysize(ys), zsize(zs), data(new T[xs* ys* zs])
+      xsize(xs), ysize(ys), zsize(zs), data(new T[xs * ys * zs])
     {
     }
 
     matrix3d(int xs, int ys, int zs, T val):
-      xsize(xs), ysize(ys), zsize(zs), data(new T[xs* ys* zs])
+      xsize(xs), ysize(ys), zsize(zs), data(new T[xs * ys * zs])
     {
       for (int i = 0; i < xs * ys * zs; i++)
         {
@@ -27,7 +27,7 @@ namespace ice
     }
 
     matrix3d(const matrix3d& src):
-      xsize(src.xsize), ysize(src.ysize), zsize(src.zsize), data(new T[xsize* ysize* zsize])
+      xsize(src.xsize), ysize(src.ysize), zsize(src.zsize), data(new T[xsize * ysize * zsize])
     {
       for (int i = 0; i < xsize * ysize * zsize; i++)
         {

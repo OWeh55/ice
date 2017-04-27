@@ -32,6 +32,9 @@
 using namespace std;
 #endif
 
+#include <iostream>
+using namespace std;
+
 #include "visual/ImageMgr.h"
 #include "visual/GreyImageWindow.h"
 #include "visual/GreyImageColorTableWindow.h"
@@ -103,10 +106,10 @@ namespace ice
 
   Visual ImageManager::GetVisual(ImageBase* img) const
   {
-    Visual result = NULL;
+    Visual result = nullptr;
     // find Visual showing given Image
-    for (std::list<ImageWindow*>::const_iterator it = WindowList.begin();
-         result == NULL && it != WindowList.end() ;
+    for (auto it = WindowList.begin();
+         result == nullptr && it != WindowList.end() ;
          it++)
       {
         if ((*it)->showsImage(img))
@@ -119,10 +122,10 @@ namespace ice
 
   Visual ImageManager::GetVisual(ImageD* img) const
   {
-    Visual result = NULL;
+    Visual result = nullptr;
     // find Visual showing given Image
     for (std::list<ImageWindow*>::const_iterator it = WindowList.begin();
-         result == NULL && it != WindowList.end() ;
+         result == nullptr && it != WindowList.end() ;
          it++)
       {
         if ((*it)->showsImage(img))
@@ -147,7 +150,7 @@ namespace ice
     int param;
     std::string title;
     Visual v;
-    ImageData(): img1(NULL), img2(NULL), img3(NULL), img4(NULL), img5(NULL), img6(NULL), imgd(NULL), v(NULL) {}
+    ImageData(): img1(nullptr), img2(nullptr), img3(nullptr), img4(nullptr), img5(nullptr), img6(nullptr), imgd(nullptr), v(nullptr) {}
   };
 
   void ImageManager::OnCreateGreyWin(wxCommandEvent& Event)
@@ -157,7 +160,7 @@ namespace ice
 
     GreyImageWindow* imageWindow;
 
-    if (id.img1 != NULL)
+    if (id.img1 != nullptr)
       {
         imageWindow = new GreyImageWindow(id.img1, id.title);
       }
@@ -300,7 +303,7 @@ namespace ice
 #define FNAME "Show"
   Visual ImageManager::Show(int Mode, Visual vis)
   {
-    if (vis == NULL)
+    if (vis == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
 
     switch (Mode)
@@ -341,7 +344,7 @@ namespace ice
       case OFF:
       {
         Visual v = GetVisual(Img);
-        while (v != NULL)
+        while (v != nullptr)
           {
             // Delete the corresponding image window
             // this has to be done in the main thread
@@ -410,7 +413,7 @@ namespace ice
       case OFF:
       {
         Visual v = GetVisual(Img);
-        while (v != NULL)
+        while (v != nullptr)
           {
             // Delete the corresponding image window
             // this has to be done in the main thread
@@ -449,7 +452,7 @@ namespace ice
     id.img2 = Image2;
 
     ImageBase* himg = Image1;
-    if (himg == NULL)
+    if (himg == nullptr)
       {
         himg = Image2;
       }
@@ -469,7 +472,7 @@ namespace ice
       {
         // if no base image is provided we redirect the request to the
         // "one image" Show()
-        if (Image1 == NULL)
+        if (Image1 == nullptr)
           {
             return Show(Mode, Image2, name);
           }
@@ -646,25 +649,32 @@ namespace ice
     Visual v;
     do
       {
-        v = wxGetApp().GetImageManager()->GetVisual(img);
-        if (v != NULL)
+        ImageManager* im = wxGetApp().GetImageManager();
+        if (im != nullptr)
           {
-            wxGetApp().GetImageManager()->Show(OFF, v);
+            v = wxGetApp().GetImageManager()->GetVisual(img);
+            if (v != nullptr)
+              {
+                wxGetApp().GetImageManager()->Show(OFF, v);
+              }
           }
+        else
+          v = nullptr;
       }
-    while (v != NULL);
+    while (v != nullptr);
   }
+
   void DestroyWindowsD(ice::ImageD* img)
   {
     Visual v;
     do
       {
         v = wxGetApp().GetImageManager()->GetVisual(img);
-        if (v != NULL)
+        if (v != nullptr)
           {
             wxGetApp().GetImageManager()->Show(OFF, v);
           }
       }
-    while (v != NULL);
+    while (v != nullptr);
   }
 }

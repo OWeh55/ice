@@ -34,8 +34,8 @@
 namespace ice
 {
   // functions with PointList
-  void DrawPolygon(PointList pl, int val, const Image& img);
-  int DrawPolygon(const Matrix& pl, int val, const Image& img,
+  void drawPolygon(PointList pl, int val, const Image& img);
+  int drawPolygon(const Matrix& pl, int val, const Image& img,
                   int marker = 0, int size = 5, int color = -1);
 
   Contur PolygonContur(PointList pl);

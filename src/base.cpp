@@ -81,9 +81,6 @@ namespace ice
         sourcetype == DestinationImage->ImageType())
       {
         DestinationImage.copyData(SourceImage);
-#ifdef CONTROLLED_REFRESH
-        DestinationImage->needRefresh();
-#endif
       }
     else
       {

@@ -93,11 +93,6 @@ namespace ice
             Pixeld2[y + size2][x + size2] = Pixels2[medY][medX];
             Pixeld3[y + size2][x + size2] = Pixels3[medY][medX];
           }
-#ifdef CONTROLLED_REFRESH
-        dest.redImage()->needRefresh();
-        dest.greenImage()->needRefresh();
-        dest.blueImage()->needRefresh();
-#endif
       }
   }
 

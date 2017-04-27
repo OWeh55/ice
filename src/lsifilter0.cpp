@@ -112,9 +112,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 
   void lsiimg_std(const Image& src, const Image& dest,
@@ -188,9 +185,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 
   void lsiimg_std(const Image& src, const Image& dest,
@@ -219,9 +213,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 
   void lsiimg(const Image& src, const Image& dest, int nx, int ny, int* mask, int norm, int off)

@@ -85,11 +85,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 
@@ -140,9 +135,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
     return OK;
   }
 #undef FNAME
@@ -194,9 +186,6 @@ namespace ice
           Pixeld[y][x + 1] = limited(v, dmax);
         }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
     return OK;
   }
 #else
@@ -259,9 +248,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->NeedRefresh();
-#endif
     return OK;
   }
 
@@ -320,11 +306,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 #undef FNAME

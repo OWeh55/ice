@@ -61,7 +61,7 @@ namespace ice
     catch (const exception& ex)
       {
         cout << "Unhandled exception: " << ex.what() << endl;
-        exitcode = (wxThread::ExitCode)1;
+        exitcode = 1;
       }
 
     // tell the application that it can finish

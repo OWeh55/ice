@@ -19,7 +19,7 @@ iceFrame::iceFrame(const wxString& WindowTitle)
             WindowTitle, // window title
             wxPoint(-1, -1),  // window position, we don't care
             wxSize(100, 100)),  // window size, we don't care yet
-  ChildWindow(NULL)
+    ChildWindow(NULL)
 {
 }
 
@@ -30,8 +30,8 @@ iceFrame::iceFrame(const wxString& WindowTitle, long WindowStyle)
             wxPoint(-1, -1),  // window position, we don't care
             wxSize(100, 100),
             WindowStyle), // window size, we don't care yet
-  ChildWindow(NULL),
-  MenuBar(NULL)
+    ChildWindow(NULL),
+    MenuBar(NULL)
 {
 //  AddMenuItem("File","Open",11);
 //  AddMenuItem("File","Close",12);

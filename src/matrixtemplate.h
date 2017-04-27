@@ -43,7 +43,7 @@ namespace ice
      * @see init()
      */
     matrix(int r, int c, int init = -1):
-      nColumns(c), nRows(r), data(new T[r* c])
+      nColumns(c), nRows(r), data(new T[r * c])
     {
       initMatrix(init);
     }
@@ -78,7 +78,7 @@ namespace ice
      * @param l linear list of values.
      */
     matrix(int r, int c, const std::initializer_list<T>& l):
-      nColumns(c), nRows(r), data(new T[r* c])
+      nColumns(c), nRows(r), data(new T[r * c])
     {
       int i = 0;
       for (auto p = l.begin(); p != l.end(); ++p)
@@ -196,7 +196,7 @@ namespace ice
     /**
      * copy assign operator.
      */
-    const matrix<T>& operator =(matrix && s)
+    const matrix<T>& operator =(matrix&& s)
     {
       swap(*this, s);
       return *this;

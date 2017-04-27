@@ -99,11 +99,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 
@@ -165,12 +160,6 @@ namespace ice
                                    limited(((vy1 + vy3) - 2 * vy2 + 9 * tmp.getPixelUnchecked(x + srcwxi1, y + srcwyim1)) * gmax2 / gmax1, dmax));
           }
       }
-
-#ifdef CONTROLLED_REFRESH
-#ifndef NOVISUAL
-    dest->needRefresh();
-#endif
-#endif
     return OK;
   }
 #undef FNAME
@@ -383,10 +372,6 @@ namespace ice
         {
           p2[y][x] = 0;
         }
-
-#ifdef CONTROLLED_REFRESH
-    pn2->needRefresh();
-#endif
 
     for (int i = 0; i < hx; i++)
       {
@@ -618,10 +603,6 @@ namespace ice
         {
           p2[y][x] = 0;
         }
-
-#ifdef CONTROLLED_REFRESH
-    pn2->needRefresh();
-#endif
 
     for (int i = 0; i < hx; i++)
       {

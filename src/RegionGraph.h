@@ -55,7 +55,7 @@ namespace ice
   if (y>0) { y_nb=y-1; x_nb=x; code;}\
   if (y<(p->ysize-1)) { y_nb=y+1; x_nb=x; code;}\
 }\
- 
+
 
 // Makrodefinition fuer 4-er Nachbarschaft
 // jetzt 4 Zuweisungen, 4 Vergleiche
@@ -66,7 +66,7 @@ namespace ice
   if (y>0) { y_nb=y-1; x_nb=x; code;}\
   if (y<(p->ysize-1)) { y_nb=y+1; x_nb=x; code;}\
 }\
- 
+
   struct STPoint
   {
     // Punktstruktur

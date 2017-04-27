@@ -135,9 +135,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 
   void lsiimgcyc_std(const Image& src, const Image& dest,
@@ -231,9 +228,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 
   /**
@@ -341,9 +335,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 
   void lsiimgcyc_std(const Image& src, const Image& dest,
@@ -437,9 +428,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 #undef FNAME
 

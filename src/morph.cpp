@@ -1274,10 +1274,6 @@ namespace ice
 
       }
 
-#ifdef CONTROLLED_REFRESH
-    pn2->needRefresh();
-    pn3->needRefresh();
-#endif
     deletetemp(tmp1, dx, dy);
     deletetemp(tmp2, dx, dy);
   }

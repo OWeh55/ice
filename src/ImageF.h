@@ -531,20 +531,11 @@ namespace ice
     // set call back function, that is called, if the image is destroyed
     // used by visualisation to switch off before the image is gone
 
-#ifdef CONTROLLED_REFRESH
-    int* startVis(DestroyFPtr af)
-    {
-      dfp = af;
-      nVis++;
-      return tsp;
-    }
-#else
     void startVis(DestroyFPtr af)
     {
       nVis++;
       dfp = af;
     }
-#endif
 
     void stopVis()
     {

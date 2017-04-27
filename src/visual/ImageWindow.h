@@ -270,25 +270,6 @@ namespace ice
     virtual void SetZoomFactor(int NewZoomFactor);
     int CalcOptimalZoom() const;
 
-    // This method tells if the window should be redrawn on the next
-    // automatic update event.
-    // this implementation decides on the base of changes in displayed
-    // images
-#ifdef CONTROLLED_REFRESH
-    virtual bool NeedsUpdate()
-    {
-      bool rc = false;
-      for (unsigned int i = 0; i < imgs.size(); i++)
-        {
-          if (imgs[i]->CheckTimeStamp())
-            {
-              rc = true;
-            }
-        }
-      return rc;
-    }
-#endif
-
     // Writes the RGB value for image position (x, y) into the pixel
     // array at position Pos.
     virtual void PutPixel() = 0;

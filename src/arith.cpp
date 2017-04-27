@@ -408,9 +408,6 @@ namespace ice
         {
           dp2[y][x] = gmax - dp1[y][x];
         }
-#ifdef CONTROLLED_REFRESH
-    pn2->needRefresh();
-#endif
   }
 
   void invertImg(const Image& pn1, const Image& pn2)
@@ -477,10 +474,6 @@ namespace ice
               Pixeld[y][x] = val;
             }
         }
-
-#ifdef CONTROLLED_REFRESH
-    dest->needRefresh();
-#endif
   }
 
   void _bin_std(const Image& src, const Image& dest, int bin, int val)

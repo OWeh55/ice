@@ -59,13 +59,6 @@ namespace ice
     virtual void setP(int PosX, int PosY, int Value)
     {
       Pixel[PosY][PosX] = Value;
-#ifndef NOVISUAL
-#ifdef CONTROLLED_REFRESH
-      // update the refresh flag, so that the image will be
-      // automatically updated (if automatic update is enabled)
-      needRefresh();
-#endif
-#endif
     }
 
     virtual int getP(int PosX, int PosY) const
@@ -213,10 +206,6 @@ namespace ice
       {
         memcpy(Pixel[y], ((iceImage<ValueType>*)source)->Pixel[y], sizeof(ValueType)*xsize);
       }
-
-#ifdef CONTROLLED_REFRESH
-    needRefresh();
-#endif
   }
 
   template<typename ValueType>
@@ -232,9 +221,6 @@ namespace ice
           }
       }
 
-#ifdef CONTROLLED_REFRESH
-    needRefresh();
-#endif
     return OK;
   }
 }

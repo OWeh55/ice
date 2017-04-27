@@ -94,9 +94,6 @@ namespace ice
                 }
             }
         }
-#ifdef CONTROLLED_REFRESH
-    oimg->needRefresh();
-#endif
   }
 
 #define FNAME "LocalSeg"
