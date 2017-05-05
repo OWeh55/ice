@@ -52,7 +52,7 @@ namespace ice
                        ImageD eval = ImageD()
                       );
 
-  int GradDirImg(const Image& imgs, const Image& imgd);
+  void GradDirImg(const Image& imgs, const Image& imgd);
 
   // filter2.cpp
   int LaplaceXImg(const Image& imgs, int norm, const Image& imgd);

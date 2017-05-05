@@ -454,7 +454,7 @@ namespace ice
                              const Image& dest, // "Winkel"-Bild
                              int detectionsize, // Umgebung
                              ImageD lambda1, ImageD lambda2 // Eigenwerte zurückgeben
-                            )
+			     )
   {
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
@@ -655,105 +655,115 @@ namespace ice
     return 0;
   }
 #undef FNAME
+
   /****************** GradDirImg **********************/
 #define FNAME "GradDirImg"
-  int GradDirImg(const Image& pn1p, const Image& pn2)
+  int getDir(double deltaX,double deltaY)
   {
-    int x, y, dx, dy, val, Direction;
-    int vy1, vy2, vy3, vx, vy, xoff, yoff;
+    int dir;
+        if (deltaY > 0)
+	  {
+	    if (deltaX>0)
+	      {
+		if (deltaX>deltaY)
+		  dir=0;
+		else
+		  dir=1;
+	      }
+	    else
+	      {
+		if (-deltaX<deltaY)
+		  dir=2;
+		else
+		  dir=3;
+	      }
+	  }
+	else
+	  {
+	    if (deltaX<0)
+	      {
+		if (-deltaX>-deltaY)
+		  dir=4;
+		else
+		  dir=5;
+	      }
+	    else
+	      {
+		if (deltaX<-deltaY)
+		  dir=6;
+		else
+		  dir=7;
+	      }
+	  }
+	return dir;
+  }
 
-    RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
+  void GradDirImg(const Image& pn1p, const Image& pn2)
+  {
 
+    static const double dfi=M_PI/8;
+    static const double tan1=tan(dfi);
+  
+    int xSize,ySize;
+    checkSizes(pn1p, pn2, xSize, ySize);
+    
     if ((pn2.maxval < 7))
       throw IceException(FNAME, M_WRONG_PARAM);
 
     Image pn1 = pn1p;
 
-    if (pn2 == pn1)   /*Quellbild=Zielbild*/
+    if (pn2 == pn1)   /* Quellbild = Zielbild */
       {
-        pn1 = NewImg(pn2, true);  /*temporaeres Quellbild anlegen*/
+        pn1 = NewImg(pn2, true);  /* temporaeres Quellbild anlegen */
       }
 
-    for (x = 0; x < dx; x++)
+    for (int x = 0; x < xSize; x++)
       {
         PutValUnchecked(pn2, x, 0, 2);
         PutValUnchecked(pn2, x, pn2->ysize - 1, 6);
       }
 
-    for (y = 1; y < dy - 1; y++)
+    for (int y = 1; y < ySize - 1; y++)
       {
         PutValUnchecked(pn2, 0, y, 0);
         PutValUnchecked(pn2, pn2->xsize - 1, y, 4);
       }
 
-    xoff = -1;
-    yoff = -1;
+    int xoff = -1;
+    int yoff = -1;
 
-    for (x = 2; x < dx; x++)
+    for (int x = 2; x < xSize; x++)
       {
-        vy1 = GetValUnchecked(pn1, x - 2, 0)
+        int vy1 = GetValUnchecked(pn1, x - 2, 0)
               + GetValUnchecked(pn1, x - 1, 0)
               + GetValUnchecked(pn1, x  , 0);
-        vy2 = GetValUnchecked(pn1, x - 2, 1)
+        int vy2 = GetValUnchecked(pn1, x - 2, 1)
               + GetValUnchecked(pn1, x - 1, 1)
               + GetValUnchecked(pn1, x  , 1);
-        vy3 = GetValUnchecked(pn1, x - 2, 2)
+        int vy3 = GetValUnchecked(pn1, x - 2, 2)
               + GetValUnchecked(pn1, x - 1, 2)
               + GetValUnchecked(pn1, x  , 2);
-        vx = GetValUnchecked(pn1, x  , 0)
+	// force cast here
+        double deltax = GetValUnchecked(pn1, x  , 0)
              + GetValUnchecked(pn1, x  , 1)
              + GetValUnchecked(pn1, x  , 2)
              - GetValUnchecked(pn1, x - 2, 0)
              - GetValUnchecked(pn1, x - 2, 1)
              - GetValUnchecked(pn1, x - 2, 2);
-        vy = vy3 - vy1;
+	// force cast here
+        double deltay = vy3 - vy1;
 
-        if (vx == 0)
-          if (vy < 0)
-            {
-              Direction = 6;
-            }
-          else
-            {
-              Direction = 2;
-            }
-        else
+	// rotation by M_PI/8
+	double deltax1 = deltax        - tan1 * deltay;
+	double deltay1 = tan1 * deltax + deltay;
+	
+	// sectors can be detected comparing deltax1 and deltay1 and zero
+
+        PutValUnchecked(pn2, x + xoff, 1, getDir(deltax1,deltay1));
+
+        for (int y = 3; y < ySize; y++)
           {
-            val = abs(10000 * vy / vx);
-
-            if (val < 4142)
-              {
-                Direction = 0;
-              }
-            else if (val < 24142)
-              {
-                Direction = 1;
-              }
-            else
-              {
-                Direction = 2;
-              }
-
-            if (vx < 0)
-              if (vy < 0)
-                {
-                  Direction = Direction + 4;
-                }
-              else
-                {
-                  Direction = 4 - Direction;
-                }
-            else if ((vy < 0) && (Direction > 0))
-              {
-                Direction = 8 - Direction;
-              }
-          }
-
-        PutValUnchecked(pn2, x + xoff, 1, Direction);
-
-        for (y = 3; y < dy; y++)
-          {
-            vx = vx
+            deltax = deltax
                  + GetValUnchecked(pn1, x - 2, y - 3)
                  - GetValUnchecked(pn1, x - 2, y)
                  - GetValUnchecked(pn1, x  , y - 3)
@@ -763,54 +773,17 @@ namespace ice
             vy3 = GetValUnchecked(pn1, x - 2, y)
                   + GetValUnchecked(pn1, x - 1, y)
                   + GetValUnchecked(pn1, x  , y);
-            vy = vy3 - vy1;
+            deltay = vy3 - vy1;
 
-            if (vx == 0)
-              if (vy < 0)
-                {
-                  Direction = 6;
-                }
-              else
-                {
-                  Direction = 2;
-                }
-            else
-              {
-                val = abs(10000 * vy / vx);
-
-                if (val < 4142)
-                  {
-                    Direction = 0;
-                  }
-                else if (val < 24142)
-                  {
-                    Direction = 1;
-                  }
-                else
-                  {
-                    Direction = 2;
-                  }
-
-                if (vx < 0)
-                  if (vy < 0)
-                    {
-                      Direction = Direction + 4;
-                    }
-                  else
-                    {
-                      Direction = 4 - Direction;
-                    }
-                else if ((vy < 0) && (Direction > 0))
-                  {
-                    Direction = 8 - Direction;
-                  }
-              }
-
-            PutValUnchecked(pn2, x + xoff, y + yoff, Direction);
+	    // rotation by M_PI/8
+	    double deltax1 = deltax        - tan1 * deltay;
+	    double deltay1 = tan1 * deltax + deltay;
+	    
+	    // sectors can be detected comparing deltax1 and deltay1 and zero
+	    
+	    PutValUnchecked(pn2, x + xoff, y + yoff, getDir(deltax1,deltay1));
           }
       }
-
-    return OK;
   }
 #undef FNAME
 }

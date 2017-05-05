@@ -10,7 +10,7 @@
 
 #define TM_MODE TM_PROCESS
 
-#define TIMES 30
+#define TIMES 3
 #define KSIZE 11
 #define MAXVALUE (256-1)
 //#define KSIZE 3
@@ -18,22 +18,22 @@
 int main(int argc, char* argv[])
 {
   int rc;
-  int maxval = MAXVALUE;
+  int maximumValue = MAXVALUE;
   int filter = -1;
-  int ntimes = TIMES;
+  int nTimes = TIMES;
 
   while ((rc = getopt(argc, argv, "m:t:f:")) >= 0)
     {
       switch (rc)
         {
         case 'm':
-          maxval = atol(optarg);
+          maximumValue = atol(optarg);
           break;
         case 'f':
           filter = atol(optarg);
           break;
         case 't':
-          ntimes = atol(optarg);
+          nTimes = atol(optarg);
           break;
         }
     }
@@ -113,12 +113,18 @@ int main(int argc, char* argv[])
   // Originalbild einlesen
   Image p1a = ReadImg(filename);
   // Bild mit gewünschtem Maximalwert erzeugen
-  Image p1 = NewImg(p1a->xsize, p1a->ysize, maxval);
+  Image p1 = NewImg(p1a->xsize, p1a->ysize, maximumValue);
 
   IPoint p;
   for (p.y = 0; p.y < p1->ysize; p.y++)
     for (p.x = 0; p.x < p1->xsize; p.x++)
-      PutVal(p1, p, GetVal(p1a, p)*maxval / 255);
+      PutVal(p1, p, GetVal(p1a, p)*maximumValue / 255);
+
+  /*
+  for (p.y = 0; p.y < p1->ysize; p.y++)
+    for (p.x = 0; p.x < p1->xsize; p.x++)
+    p1.setPixelLimited(p, int((p - IPoint(p1a.xsize / 2, p1a.ysize / 2)).length()) % p1.maxval);
+  */
 
   // Zielbild anlegen
   Image p2 = NewImg(p1);
@@ -134,6 +140,9 @@ int main(int argc, char* argv[])
 
   while (!abort)
     {
+      Print(" Test Filterung \n");
+      Print("   und Laufzeittest\n");
+      Print(" Filterung erfolgt " + to_string(nTimes) + " mal.");
       vector<string> men;
       IVector mid;
 
@@ -176,35 +185,32 @@ int main(int argc, char* argv[])
 
       int sel = Menu(men, mid, 33, 2, 77, 22);
 
-      vector<double> times(ntimes);
+      vector<double> times(nTimes);
 
       atime = TimeD(TM_MODE);
       double ctime = atime;
 
-      for (int iii = 0; iii < ntimes; iii++)
+      for (int iii = 0; iii < nTimes; iii++)
         {
           switch (sel)
             {
             case 1:
-
               GradXImg(p1, p2);
-
               break;
+
             case 101:
-            {
               LSIImg(p1, p2, gradx, p2->maxval / 2);
               break;
-            }
+
             case 2:
 
               GradYImg(p1, p2);
 
               break;
             case 102:
-            {
               LSIImg(p1, p2, grady, p2->maxval / 2);
               break;
-            }
+
             case 3:
 
               GradImg(p1, 2, p2);
@@ -214,7 +220,7 @@ int main(int argc, char* argv[])
             case 4:
             {
               GradDirImg(p1, p2);
-
+              // "normalization" to p2->maxval
               WindowWalker p(p2);
               for (p.init(); !p.ready(); p.next())
                 {
@@ -228,12 +234,9 @@ int main(int argc, char* argv[])
               smearImg(p1, p2, 3);
               break;
             case 6:
-
               smearImg(p1, p2, 11, 5);
-
               break;
             case 7:
-
               LSIImg(p1, imatrix, KSIZE * KSIZE,
                      p1->maxval / 2, p2);
               break;
@@ -281,11 +284,11 @@ int main(int argc, char* argv[])
           ctime = jetzt;
         }
 
-      for (int i = 0; i < ntimes; i++)
+      for (int i = 0; i < nTimes; i++)
         cout << times[i] * 1000 << " " ;
 
       cout << endl;
-      Printf("Zeit: %6.2f ms\n", (TimeD(TM_MODE) - atime) / ntimes * 1000.0);
+      Printf("Zeit: %6.2f ms\n", (TimeD(TM_MODE) - atime) / nTimes * 1000.0);
     }/* while */
 
   return 0;
