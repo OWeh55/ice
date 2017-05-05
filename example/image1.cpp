@@ -12,31 +12,31 @@
 
 int main(int argc, char* argv[])
 {
-  Image ptr;
-  ptr.create(sx, sy, 255);
+  Image img;
+  img.create(sx, sy, 255);
 
   cout << "Bild mit Testmuster beschreiben" << endl;
 
   for (int y = 0; y < sy; y++)
     for (int x = 0; x < sx; x++)
-      ptr.setPixel(x, y, (x + y) & 255);
+      img.setPixel(x, y, (x + y) & 255);
 
   cout << "Vergleichen mit Vorgabe" << endl;
 
   int ct = 0;
 
-  WindowWalker ww(ptr);
+  WindowWalker ww(img);
   for (ww.init(); !ww.ready(); ww.next())
-    if (ptr.getPixel(ww) != ((ww.x + ww.y) & 255))
+    if (img.getPixel(ww) != ((ww.x + ww.y) & 255))
       {
         cout << "Fehler an Position " << ww.x << "," << ww.y << " ";
-        cout << ptr.getPixel(ww) << " != " << ((ww.x + ww.y) & 255);
+        cout << img.getPixel(ww) << " != " << ((ww.x + ww.y) & 255);
         ct++;
       }
 
   if (ct == 0)
     cout << "Vergleich OK" << endl;
-  ptr.destroy();
+  img.destroy();
 
   return 0;
 }

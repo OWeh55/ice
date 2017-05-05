@@ -7,12 +7,12 @@
 void reduceAndShow(const Contur& c1, Image& mark)
 {
   Matrix pl = ReducePolygon(c1, 4);
-  DrawPolygon(pl, 1, mark);
+  drawPolygon(pl, 1, mark);
 
   for (int i = -1; i < 3; i++)
     {
       Matrix pl1 = FitPolygonContur(pl, c1, i);
-      DrawPolygon(pl1, 3 + i, mark);
+      drawPolygon(pl1, 3 + i, mark);
       GetChar();
     }
 }

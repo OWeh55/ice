@@ -96,8 +96,7 @@ namespace ice
 
             for (int x = 0; x < src->xsize + 1 - 3; x++)
               {
-                int tmpVal = 0;
-                tmpVal =
+                int tmpVal =
                   PixelSource[y][x] * mask[0] +
                   PixelSource[y][x + 1] * mask[1] +
                   PixelSource[y][x + 2] * mask[2] +
@@ -229,24 +228,33 @@ namespace ice
       {
       case 17:
         lsiimg<PixelType1, PixelType1>(tmp, dest, nx, ny, mask, norm, off);
+        break;
       case 18:
         lsiimg<PixelType1, PixelType2>(tmp, dest, nx, ny, mask, norm, off);
+        break;
       case 19:
         lsiimg<PixelType1, PixelType3>(tmp, dest, nx, ny, mask, norm, off);
+        break;
 
       case 33:
         lsiimg<PixelType2, PixelType1>(tmp, dest, nx, ny, mask, norm, off);
+        break;
       case 34:
         lsiimg<PixelType2, PixelType2>(tmp, dest, nx, ny, mask, norm, off);
+        break;
       case 35:
         lsiimg<PixelType2, PixelType3>(tmp, dest, nx, ny, mask, norm, off);
+        break;
 
       case 49:
         lsiimg<PixelType3, PixelType1>(tmp, dest, nx, ny, mask, norm, off);
+        break;
       case 50:
         lsiimg<PixelType3, PixelType2>(tmp, dest, nx, ny, mask, norm, off);
+        break;
       case 51:
         lsiimg<PixelType3, PixelType3>(tmp, dest, nx, ny, mask, norm, off);
+        break;
 
       default:
         // non standard images
@@ -268,22 +276,31 @@ namespace ice
       {
       case 17:
         lsiimg<PixelType1, PixelType1>(tmp, dest, nx, ny, mask, off);
+        break;
       case 18:
         lsiimg<PixelType1, PixelType2>(tmp, dest, nx, ny, mask, off);
+        break;
       case 19:
         lsiimg<PixelType1, PixelType3>(tmp, dest, nx, ny, mask, off);
+        break;
       case 33:
         lsiimg<PixelType2, PixelType1>(tmp, dest, nx, ny, mask, off);
+        break;
       case 34:
         lsiimg<PixelType2, PixelType2>(tmp, dest, nx, ny, mask, off);
+        break;
       case 35:
         lsiimg<PixelType2, PixelType3>(tmp, dest, nx, ny, mask, off);
+        break;
       case 49:
         lsiimg<PixelType3, PixelType1>(tmp, dest, nx, ny, mask, off);
+        break;
       case 50:
         lsiimg<PixelType3, PixelType2>(tmp, dest, nx, ny, mask, off);
+        break;
       case 51:
         lsiimg<PixelType3, PixelType3>(tmp, dest, nx, ny, mask, off);
+        break;
 
       default:
         // non standard images
@@ -471,10 +488,13 @@ namespace ice
       {
       case 1:
         lsiimg<PixelType1>(src, dest, nx, ny, mask, norm);
+        break;
       case 2:
         lsiimg<PixelType2>(src, dest, nx, ny, mask, norm);
+        break;
       case 3:
         lsiimg<PixelType3>(src, dest, nx, ny, mask, norm);
+        break;
       default:
         lsiimg_std(src, dest, nx, ny, mask, norm);
       }
@@ -486,10 +506,13 @@ namespace ice
       {
       case 1:
         lsiimg<PixelType1>(src, dest, nx, ny, mask);
+        break;
       case 2:
         lsiimg<PixelType2>(src, dest, nx, ny, mask);
+        break;
       case 3:
         lsiimg<PixelType3>(src, dest, nx, ny, mask);
+        break;
       default:
         lsiimg_std(src, dest, nx, ny, mask);
       }

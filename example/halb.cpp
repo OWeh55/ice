@@ -68,7 +68,7 @@ int main(int argv, char** argc)
       c = SelContur(mark, TRUE);
       hpc(c, sxy);
       MarkContur(c, color, mark);
-      DrawPolygon(sxy, color, mark);
+      drawPolygon(sxy, color, mark);
       color++;
     }
 

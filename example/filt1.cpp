@@ -3,16 +3,16 @@
 int main(int argc, char** argv)
 {
   Image orig;
-  Image grad;
-  Image lsi;
-  Image diff;
-  orig = ReadImg("test_gray.jpg");
+  orig.read("test_gray.jpg");
   Show(ON, orig, "Original");
-  grad = NewImg(orig);
+  Image grad;
+  grad.create(orig);
   Show(ON, grad, "GradX");
-  lsi = NewImg(orig);
+  Image lsi;
+  lsi.create(orig);
   Show(ON, lsi, "lsi");
-  diff = NewImg(orig);
+  Image diff;
+  diff.create(orig);
   Show(ON, diff, "diff");
   IMatrix fm(0, 3);
   fm.Append(IVector(-1, 0, 1));

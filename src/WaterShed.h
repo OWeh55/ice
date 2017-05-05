@@ -86,8 +86,8 @@ namespace ice
 // WST ist Aufruf-Wrapper für (interne) Funktionen WST1, WST2
 // WST1 - klassischer Flutungsansatz und WST2 - Markeransatz
 
-  enum wstmode { classic, marker};
-  void WST(Image& i, Image& WSImg, int mode = classic);
+  enum class WstMode { classic, marker};
+  void WST(Image& i, Image& WSImg, WstMode mode = WstMode::classic);
 
 //int WST1(Image i, Image &o);
 //int WST2(Image i, Image &o);

@@ -77,7 +77,7 @@ namespace ice
         }
       catch (...)
         {
-          cout << "UNBEKANNTE EXCEPTION" << endl;
+          std::cout << "UNBEKANNTE EXCEPTION" << std::endl;
         }
     }
 #undef FNAME
@@ -141,9 +141,9 @@ namespace ice
   private:
     Treader& reader;
 
-    vector<Image> vr;
-    vector<Image> vg;
-    vector<Image> vb;
+    std::vector<Image> vr;
+    std::vector<Image> vg;
+    std::vector<Image> vb;
 
     int bsize;
     int begin_bidx; // first buffer index (with content)
@@ -220,7 +220,7 @@ namespace ice
             }
 
           // ersten Frame lesen
-          if (!reader.Read(buffer[0]))
+          if (!reader.read(buffer[0]))
             {
               throw 2;
             }
@@ -238,15 +238,15 @@ namespace ice
         }
       catch (...)
         {
-          cout << "UNBEKANNTE EXCEPTION" << endl;
+          std::cout << "UNBEKANNTE EXCEPTION" << std::endl;
         }
     }
 #undef FNAME
 
     virtual ~ReadImageCache() {};
 
-#define FNAME "ReadImageCache::Read"
-    virtual bool Read(const Image& img, int frame = next)
+#define FNAME "ReadImageCache::read"
+    virtual bool read(const Image& img, int frame = next)
     {
       error = no_error;
 
@@ -293,7 +293,7 @@ namespace ice
   private:
     Treader& reader;
 
-    vector<Image> buffer;
+    std::vector<Image> buffer;
 
     int bsize;
     int begin_bidx; // first buffer index (with content)
@@ -317,7 +317,7 @@ namespace ice
     {
       while (error == no_error && last_frame < frame_nr)
         {
-          if (!reader.Read(buffer[end_bidx]))
+          if (!reader.read(buffer[end_bidx]))
             {
               error = past_eof;
             }

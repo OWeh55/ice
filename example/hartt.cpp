@@ -12,7 +12,6 @@ void ShowLog(ImageD d, Image i)
   ImageD log = NewImgD(d);
   LogImgD(d, log);
   ShowImg(log, i);
-  FreeImgD(log);
 }
 
 void ShowDiff(ImageD d1, ImageD d2, Image i)
@@ -41,7 +40,6 @@ void PrintDiffRange(string p, ImageD d1, ImageD d2)
       PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
   UpdateLimitImgD(diff);
   Printf((p + ": %g .. %g\n").c_str(), diff.minval, diff.maxval);
-  FreeImgD(diff);
 }
 
 void Enter(void)

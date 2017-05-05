@@ -148,9 +148,5 @@ int main(int argc, char* argv[])
   toint();
   GETCHAR();
 
-  FreeImgD(d1);
-  FreeImgD(d2);
-  Display(OFF);
-
   return 0;
 }

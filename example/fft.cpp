@@ -99,8 +99,6 @@ void Transform(const Image& i, int kind)
     }
 
   ConvImgDImg(id, i);
-  FreeImgD(is);
-  FreeImgD(id);
 }
 
 int main(int argc, char** argv)

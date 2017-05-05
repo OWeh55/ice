@@ -41,7 +41,7 @@ namespace ice
 // Wasserscheidentransformation:
 // Startfunktion fuer WST1 - klassischer Flutungsansatz und WST2 - Markeransatz
 #define FNAME "WST"
-  void WST(const Image& in, Image& WSImg, int mode)
+  void WST(const Image& in, Image& WSImg, WstMode mode)
   {
     try
       {
@@ -62,10 +62,10 @@ namespace ice
 
         switch (mode)
           {
-          case classic:
+          case WstMode::classic:
             WST1(temp, WSImg);
             break;
-          case marker:
+          case WstMode::marker:
             WST2(temp, WSImg);
             break;
           default:
