@@ -34,12 +34,10 @@
 namespace ice
 {
   // filter1.cpp
-  int GradXImg(const Image& imgs, int norm, const Image& imgd);
-  int GradYImg(const Image& imgs, int norm, const Image& imgd);
-  int GradXImg(const Image& imgs, const Image& imgd, int norm = 1);
-  int GradYImg(const Image& imgs, const Image& imgd, int norm = 1);
+  void GradXImg(const Image& imgs, const Image& imgd, int norm = 1);
+  void GradYImg(const Image& imgs, const Image& imgd, int norm = 1);
 
-  int GradImg(const Image& imgs, int norm, const Image& imgd);
+  void GradImg(const Image& imgs, const Image& imgd, int norm = 1);
 
   int CalcDirectionStructImg(const Image& pic, // zu untersuchendes Bild
                              const Image& dest, // "Winkel"-Bild

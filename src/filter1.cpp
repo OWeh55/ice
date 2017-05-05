@@ -39,13 +39,10 @@ namespace ice
    * @param norm some (optional) extra norming factor
    */
   template<typename SrcType, typename DestType>
-  int GradYImg(const Image& src, const Image& dest, int norm = 1)
+  void GradYImg_template(const Image& src, const Image& dest, int norm = 1)
   {
-    int vx1, vx2, vx3;
-
-    // test if both images have valid pixel arrays and
-    // equal size of the active windows
-    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
+    int sizeX = src.xsize;
+    int sizeY = src.ysize;
 
     Image tmp = src;
 
@@ -60,8 +57,8 @@ namespace ice
     int gmax2 = dest.maxval * norm;
     int offset = (dest.maxval + 1) / 2;
     int dmax = dest.maxval;
-    int srcwyam1 = src->ysize - 2;
-    int srcwxa1 = src->xsize;
+    int srcwyam1 = sizeY - 2;
+    int srcwxa1 = sizeX;
 
     // the border of width 1 around the image will be filled with maxval/2
     setborder(dest, 1, offset);
@@ -69,6 +66,7 @@ namespace ice
     const SrcType** Pixels = (const SrcType**)tmp->getDataPtr();
     DestType** Pixeld = (DestType**)dest->getDataPtr();
 
+    int vx1, vx2, vx3;
     for (int y = 0; y < srcwyam1; y++)
       {
         vx1 = -Pixels[y][0] + Pixels[y + 2][0];
@@ -84,17 +82,11 @@ namespace ice
             Pixeld[y + 1][x - 1] = limited((vx1 + vx2 + vx3) * gmax2 / gmax1 + offset, dmax);
           }
       }
-
-    return OK;
   }
 
-  int GradYImg_std(const Image& src, const Image& dest, int norm = 1)
+  void GradYImg_std(const Image& src, const Image& dest, int norm = 1)
   {
     int vx1, vx2, vx3;
-
-    // test if both images have valid pixel arrays and
-    // equal size of the active windows
-    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -134,12 +126,9 @@ namespace ice
             dest.setPixelUnchecked(x - 1, y + 1, limited((vx1 + vx2 + vx3)*gmax2 / gmax1 + offset, dmax));
           }
       }
-
-    return OK;
   }
 #undef FNAME
 
-#if 1
 #define FNAME "GradXImg"
   /**
    * This template function applies the horizontal Prewitt operator on an image
@@ -148,11 +137,10 @@ namespace ice
    * @param norm some (optional) extra norming factor
    */
   template<typename SrcType, typename DestType>
-  int GradXImg(const Image& src, const Image& dest, int norm = 1)
+  void GradXImg_template(const Image& src, const Image& dest, int norm = 1)
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
-    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -186,79 +174,11 @@ namespace ice
           Pixeld[y][x + 1] = limited(v, dmax);
         }
 
-    return OK;
-  }
-#else
-// experimentelle fassung
-// --  mit Zeiger-Jongliererei
-#define FNAME "GradXImg"
-  /**
-   * This template function applies the horizontal Prewitt operator on an image
-   * @param src the source image
-   * @param dest the destination image (doesn't need to differ from src)
-   * @param norm some (optional) extra norming factor
-   */
-  template<typename SrcType, typename DestType>
-  int GradXImg(const Image& src, const Image& dest, int norm = 1)
-  {
-    // test if both images have valid pixel arrays and
-    // equal size of the active windows
-    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
-
-    Image tmp = src;
-
-    // since we write directly in dest and need to read from positions
-    // where we wrote before we need to copy the source image if
-    // it shares its pixelarray with the destination image
-    if (src == dest)
-      {
-        tmp.copy(src);
-      }
-
-    int gmax1 = src.maxval * 6;
-    int gmax2 = dest.maxval * norm;
-    int dmax = dest.maxval;
-    int offset = (dest.maxval + 1) / 2;
-    int xmax = dest->xsize;
-    int ymax = dest->ysize;
-
-    // the border of width 1 around the image will be filled with maxval/2
-    border(dest, 1, offset);
-
-    const SrcType** Pixels = (const SrcType**)tmp->GetDataPtr();
-    DestType** Pixeld = (DestType**)dest->GetDataPtr();
-
-    for (int y = 1; y < ymax - 1; y++)
-      {
-        const SrcType* z1 = Pixels[y - 1];
-        const SrcType* z2 = Pixels[y];
-        const SrcType* z3 = Pixels[y + 1];
-
-        for (int x1 = 0, x = 1, x2 = 2; x < xmax - 1; x1++, x2++, x++)
-          {
-            int v = (
-                      - z1[0] + z1[2]
-                      - z2[0] + z2[2]
-                      - z3[0] + z3[2]
-                    ) * gmax2 / gmax1 + offset;
-            z1++;
-            z2++;
-            z3++;
-            Pixeld[y][x] = limited(v, dmax);
-          }
-      }
-
-    return OK;
   }
 
-#endif
-  int GradXImg_std(const Image& src, const Image& dest, int norm = 1)
+  void GradXImg_std(const Image& src, const Image& dest, int norm = 1)
   {
     int vy1, vy2, vy3;
-
-    // test if both images have valid pixel arrays and
-    // equal size of the active windows
-    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
 
     Image tmp = src;
 
@@ -305,147 +225,165 @@ namespace ice
             dest.setPixelUnchecked(x + dsxoff, y + dsyoff, limited((vy1 + vy2 + vy3) * gmax2 / gmax1 + offset, dmax));
           }
       }
-
-    return OK;
   }
 #undef FNAME
 
 #define FNAME "GradXImg"
-  int GradXImg(const Image& src, const Image& dest, int norm)
+  void GradXImg(const Image& src, const Image& dest, int norm)
   {
-    switch ((src->ImageType() << 4) + dest->ImageType())
+    try
       {
-      case 17:
-        return GradXImg<unsigned char, unsigned char>(src, dest, norm);
-      case 18:
-        return GradXImg<unsigned char, unsigned short>(src, dest, norm);
-      case 19:
-        return GradXImg<unsigned char, unsigned int>(src, dest, norm);
-      case 33:
-        return GradXImg<unsigned short, unsigned char>(src, dest, norm);
-      case 34:
-        return GradXImg<unsigned short, unsigned short>(src, dest, norm);
-      case 35:
-        return GradXImg<unsigned short, unsigned int>(src, dest, norm);
-      case 49:
-        return GradXImg<unsigned int, unsigned char>(src, dest, norm);
-      case 50:
-        return GradXImg<unsigned int, unsigned short>(src, dest, norm);
-      case 51:
-        return GradXImg<unsigned int, unsigned int>(src, dest, norm);
-      default:
-        return GradXImg_std(src, dest, norm);
-      }
-  }
-#undef FNAME
-
-  int GradYImg(const Image& src, const Image& dest, int norm)
-  {
-    switch ((src->ImageType() << 4) + dest->ImageType())
-      {
-      case 17:
-        return GradYImg<unsigned char, unsigned char>(src, dest, norm);
-      case 18:
-        return GradYImg<unsigned char, unsigned short>(src, dest, norm);
-      case 19:
-        return GradYImg<unsigned char, unsigned int>(src, dest, norm);
-      case 33:
-        return GradYImg<unsigned short, unsigned char>(src, dest, norm);
-      case 34:
-        return GradYImg<unsigned short, unsigned short>(src, dest, norm);
-      case 35:
-        return GradYImg<unsigned short, unsigned int>(src, dest, norm);
-      case 49:
-        return GradYImg<unsigned int, unsigned char>(src, dest, norm);
-      case 50:
-        return GradYImg<unsigned int, unsigned short>(src, dest, norm);
-      case 51:
-        return GradYImg<unsigned int, unsigned int>(src, dest, norm);
-      default:
-        return GradYImg_std(src, dest, norm);
-      }
-  }
-
-  /**
-   * The versions with old parameter order just call the new ones
-   */
-  int GradXImg(const Image& src, int norm, const Image& dest)
-  {
-    return GradXImg(src, dest, norm);
-  }
-
-  int GradYImg(const Image& src, int norm, const Image& dest)
-  {
-    return GradYImg(src, dest, norm);
-  }
-
-  /****************** GradImg *************************/
-#define FNAME "GradImg"
-  int GradImg(const Image& pn1p, int norm, const Image& pn2)
-  {
-    int x, y, dx, dy, gmax1, gmax2, val;
-    int vy1, vy2, vy3, vx, vy, xoff, yoff;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(pn1p, pn2, dx, dy));
-
-    Image pn1 = pn1p;
-
-    if (pn2 == pn1)   /*Quellbild=Zielbild*/
-      {
-        pn1 = NewImg(pn2, true);  /*temporaeres Bild anlegen*/
-      }
-
-    gmax1 = pn1.maxval * 6;
-    gmax2 = pn2.maxval * norm;
-
-    setborder(pn2, 1, 0);
-
-    xoff = -1;
-    yoff = -1;
-
-    for (x = 2; x < dx; x++)
-      {
-        vy1 = GetValUnchecked(pn1, x - 2, 0)
-              + GetValUnchecked(pn1, x - 1, 0)
-              + GetValUnchecked(pn1, x  , 0);
-        vy2 = GetValUnchecked(pn1, x - 2, 1)
-              + GetValUnchecked(pn1, x - 1, 1)
-              + GetValUnchecked(pn1, x  , 1);
-        vy3 = GetValUnchecked(pn1, x - 2, 2)
-              + GetValUnchecked(pn1, x - 1, 2)
-              + GetValUnchecked(pn1, x  , 2);
-
-        vx = GetValUnchecked(pn1, x, 0)
-             + GetValUnchecked(pn1, x  , 1)
-             + GetValUnchecked(pn1, x  , 2)
-             - GetValUnchecked(pn1, x - 2, 0)
-             - GetValUnchecked(pn1, x - 2, 1)
-             - GetValUnchecked(pn1, x - 2, 2);
-        vy = vy3 - vy1;
-        val = (int)sqrt((double)(vy * vy + vx * vx));
-        PutValUnchecked(pn2, x + xoff, 1,
-                        limited(val * gmax2 / gmax1, pn2));
-
-        for (y = 3; y < dy; y++)
+        checkSizes(src, dest);
+        switch ((src->ImageType() << 4) + dest->ImageType())
           {
-            vx = vx
-                 + GetValUnchecked(pn1, x - 2, y - 3)
-                 - GetValUnchecked(pn1, x - 2, y)
-                 - GetValUnchecked(pn1, x  , y - 3)
-                 + GetValUnchecked(pn1, x  , y);
-            vy1 = vy2;
-            vy2 = vy3;
-            vy3 = GetValUnchecked(pn1, x - 2, y)
-                  + GetValUnchecked(pn1, x - 1, y)
-                  + GetValUnchecked(pn1, x  , y);
-            vy = vy3 - vy1;
-            val = RoundInt(sqrt((double)(vy * vy + vx * vx)));
-            PutValUnchecked(pn2, x + xoff, y + yoff,
-                            limited(val * gmax2 / gmax1, pn2));
+          case 17:
+            GradXImg_template<PixelType1, PixelType1>(src, dest, norm);
+            break;
+          case 18:
+            GradXImg_template<PixelType1, PixelType2>(src, dest, norm);
+            break;
+          case 19:
+            GradXImg_template<PixelType1, PixelType3>(src, dest, norm);
+            break;
+          case 33:
+            GradXImg_template<PixelType2, PixelType1>(src, dest, norm);
+            break;
+          case 34:
+            GradXImg_template<PixelType2, PixelType2>(src, dest, norm);
+            break;
+          case 35:
+            GradXImg_template<PixelType2, PixelType3>(src, dest, norm);
+            break;
+          case 49:
+            GradXImg_template<PixelType3, PixelType1>(src, dest, norm);
+            break;
+          case 50:
+            GradXImg_template<PixelType3, PixelType2>(src, dest, norm);
+            break;
+          case 51:
+            GradXImg_template<PixelType3, PixelType3>(src, dest, norm);
+            break;
+          default:
+            GradXImg_std(src, dest, norm);
           }
       }
+    RETHROW;
+  }
+#undef FNAME
+#define FNAME "GradYImg"
+  void GradYImg(const Image& src, const Image& dest, int norm)
+  {
+    try
+      {
+        switch ((src->ImageType() << 4) + dest->ImageType())
+          {
+          case 17:
+            GradYImg_template<PixelType1, PixelType1>(src, dest, norm);
+            break;
+          case 18:
+            GradYImg_template<PixelType1, PixelType2>(src, dest, norm);
+            break;
+          case 19:
+            GradYImg_template<PixelType1, PixelType3>(src, dest, norm);
+            break;
+          case 33:
+            GradYImg_template<PixelType2, PixelType1>(src, dest, norm);
+            break;
+          case 34:
+            GradYImg_template<PixelType2, PixelType2>(src, dest, norm);
+            break;
+          case 35:
+            GradYImg_template<PixelType2, PixelType3>(src, dest, norm);
+            break;
+          case 49:
+            GradYImg_template<PixelType3, PixelType1>(src, dest, norm);
+            break;
+          case 50:
+            GradYImg_template<PixelType3, PixelType2>(src, dest, norm);
+            break;
+          case 51:
+            GradYImg_template<PixelType3, PixelType3>(src, dest, norm);
+            break;
+          default:
+            GradYImg_std(src, dest, norm);
+          }
+      }
+    RETHROW;
+  }
+#undef FNAME
+  /****************** GradImg *************************/
+#define FNAME "GradImg"
+  void GradImg(const Image& pn1p, const Image& pn2, int norm)
+  {
+    try
+      {
+        int sizeX, sizeY;
+        //    int x, y, dx, dy, gmax1, gmax2, val;
+        //    int vy1, vy2, vy3, vx, vy, xoff, yoff;
 
-    return OK;
+        checkSizes(pn1p, pn2, sizeX, sizeY);
+
+        Image pn1 = pn1p;
+
+        if (pn2 == pn1)   /*Quellbild=Zielbild*/
+          {
+            pn1 = NewImg(pn2, true);  /*temporaeres Bild anlegen*/
+          }
+
+        int gmax1 = pn1.maxval * 6;
+        int gmax2 = pn2.maxval * norm;
+
+        setborder(pn2, 1, 0);
+
+        int xoff = -1;
+        int yoff = -1;
+        int vx, vy;
+        int vy1, vy2, vy3;
+        for (int x = 2; x < sizeX; x++)
+          {
+            vy1 = GetValUnchecked(pn1, x - 2, 0)
+                  + GetValUnchecked(pn1, x - 1, 0)
+                  + GetValUnchecked(pn1, x  , 0);
+            vy2 = GetValUnchecked(pn1, x - 2, 1)
+                  + GetValUnchecked(pn1, x - 1, 1)
+                  + GetValUnchecked(pn1, x  , 1);
+            vy3 = GetValUnchecked(pn1, x - 2, 2)
+                  + GetValUnchecked(pn1, x - 1, 2)
+                  + GetValUnchecked(pn1, x  , 2);
+
+            vx = GetValUnchecked(pn1, x, 0)
+                 + GetValUnchecked(pn1, x  , 1)
+                 + GetValUnchecked(pn1, x  , 2)
+                 - GetValUnchecked(pn1, x - 2, 0)
+                 - GetValUnchecked(pn1, x - 2, 1)
+                 - GetValUnchecked(pn1, x - 2, 2);
+
+            vy = vy3 - vy1;
+
+            int val = (int)sqrt((double)(vy * vy + vx * vx));
+            PutValUnchecked(pn2, x + xoff, 1,
+                            limited(val * gmax2 / gmax1, pn2));
+
+            for (int y = 3; y < sizeY; y++)
+              {
+                vx = vx
+                     + GetValUnchecked(pn1, x - 2, y - 3)
+                     - GetValUnchecked(pn1, x - 2, y)
+                     - GetValUnchecked(pn1, x  , y - 3)
+                     + GetValUnchecked(pn1, x  , y);
+                vy1 = vy2;
+                vy2 = vy3;
+                vy3 = GetValUnchecked(pn1, x - 2, y)
+                      + GetValUnchecked(pn1, x - 1, y)
+                      + GetValUnchecked(pn1, x  , y);
+                vy = vy3 - vy1;
+                val = RoundInt(sqrt((double)(vy * vy + vx * vx)));
+                PutValUnchecked(pn2, x + xoff, y + yoff,
+                                limited(val * gmax2 / gmax1, pn2));
+              }
+          }
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -454,7 +392,7 @@ namespace ice
                              const Image& dest, // "Winkel"-Bild
                              int detectionsize, // Umgebung
                              ImageD lambda1, ImageD lambda2 // Eigenwerte zurückgeben
-			     )
+                            )
   {
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
@@ -473,12 +411,12 @@ namespace ice
     Image p_x;
     p_x.create(dimx, dimy, maxval_d);
 
-    GradXImg(pic, 1, p_x);
+    GradXImg(pic, p_x, 1);
 
     Image p_y;
     p_y.create(dimx, dimy, maxval_d);
 
-    GradYImg(pic, 1, p_y);
+    GradYImg(pic, p_y, 1);
 
     // Koeffizienten des Struktur-Tensors in double-Bildern
     ImageD xx = NewImgD(dimx, dimy);
@@ -601,11 +539,11 @@ namespace ice
     // Gradientenbilder
     Image p_x;
     p_x.create(dimx, dimy, maxval_d);
-    GradXImg(pic, 1, p_x);
+    GradXImg(pic, p_x);
 
     Image p_y;
     p_y.create(dimx, dimy, maxval_d);
-    GradYImg(pic, 1, p_y);
+    GradYImg(pic, p_y);
 
     // Gradientenbild als ImageD
     ImageD gx = NewImgD(dimx, dimy);
@@ -658,55 +596,55 @@ namespace ice
 
   /****************** GradDirImg **********************/
 #define FNAME "GradDirImg"
-  int getDir(double deltaX,double deltaY)
+  int getDir(double deltaX, double deltaY)
   {
     int dir;
-        if (deltaY > 0)
-	  {
-	    if (deltaX>0)
-	      {
-		if (deltaX>deltaY)
-		  dir=0;
-		else
-		  dir=1;
-	      }
-	    else
-	      {
-		if (-deltaX<deltaY)
-		  dir=2;
-		else
-		  dir=3;
-	      }
-	  }
-	else
-	  {
-	    if (deltaX<0)
-	      {
-		if (-deltaX>-deltaY)
-		  dir=4;
-		else
-		  dir=5;
-	      }
-	    else
-	      {
-		if (deltaX<-deltaY)
-		  dir=6;
-		else
-		  dir=7;
-	      }
-	  }
-	return dir;
+    if (deltaY > 0)
+      {
+        if (deltaX > 0)
+          {
+            if (deltaX > deltaY)
+              dir = 0;
+            else
+              dir = 1;
+          }
+        else
+          {
+            if (-deltaX < deltaY)
+              dir = 2;
+            else
+              dir = 3;
+          }
+      }
+    else
+      {
+        if (deltaX < 0)
+          {
+            if (-deltaX > -deltaY)
+              dir = 4;
+            else
+              dir = 5;
+          }
+        else
+          {
+            if (deltaX < -deltaY)
+              dir = 6;
+            else
+              dir = 7;
+          }
+      }
+    return dir;
   }
 
   void GradDirImg(const Image& pn1p, const Image& pn2)
   {
 
-    static const double dfi=M_PI/8;
-    static const double tan1=tan(dfi);
-  
-    int xSize,ySize;
+    static const double dfi = M_PI / 8;
+    static const double tan1 = tan(dfi);
+
+    int xSize, ySize;
     checkSizes(pn1p, pn2, xSize, ySize);
-    
+
     if ((pn2.maxval < 7))
       throw IceException(FNAME, M_WRONG_PARAM);
 
@@ -719,14 +657,14 @@ namespace ice
 
     for (int x = 0; x < xSize; x++)
       {
-        PutValUnchecked(pn2, x, 0, 2);
-        PutValUnchecked(pn2, x, pn2->ysize - 1, 6);
+        pn2.setPixelUnchecked(x, 0, 2);
+        pn2.setPixelUnchecked(x, pn2->ysize - 1, 6);
       }
 
     for (int y = 1; y < ySize - 1; y++)
       {
-        PutValUnchecked(pn2, 0, y, 0);
-        PutValUnchecked(pn2, pn2->xsize - 1, y, 4);
+        pn2.setPixelUnchecked(0, y, 0);
+        pn2.setPixelUnchecked(pn2->xsize - 1, y, 4);
       }
 
     int xoff = -1;
@@ -734,54 +672,54 @@ namespace ice
 
     for (int x = 2; x < xSize; x++)
       {
-        int vy1 = GetValUnchecked(pn1, x - 2, 0)
-              + GetValUnchecked(pn1, x - 1, 0)
-              + GetValUnchecked(pn1, x  , 0);
-        int vy2 = GetValUnchecked(pn1, x - 2, 1)
-              + GetValUnchecked(pn1, x - 1, 1)
-              + GetValUnchecked(pn1, x  , 1);
-        int vy3 = GetValUnchecked(pn1, x - 2, 2)
-              + GetValUnchecked(pn1, x - 1, 2)
-              + GetValUnchecked(pn1, x  , 2);
-	// force cast here
-        double deltax = GetValUnchecked(pn1, x  , 0)
-             + GetValUnchecked(pn1, x  , 1)
-             + GetValUnchecked(pn1, x  , 2)
-             - GetValUnchecked(pn1, x - 2, 0)
-             - GetValUnchecked(pn1, x - 2, 1)
-             - GetValUnchecked(pn1, x - 2, 2);
-	// force cast here
+        int vy1 = pn1.getPixelUnchecked(x - 2, 0)
+                  + pn1.getPixelUnchecked(x - 1, 0)
+                  + pn1.getPixelUnchecked(x  , 0);
+        int vy2 = pn1.getPixelUnchecked(x - 2, 1)
+                  + pn1.getPixelUnchecked(x - 1, 1)
+                  + pn1.getPixelUnchecked(x  , 1);
+        int vy3 = pn1.getPixelUnchecked(x - 2, 2)
+                  + pn1.getPixelUnchecked(x - 1, 2)
+                  + pn1.getPixelUnchecked(x  , 2);
+        // force cast here
+        double deltax = pn1.getPixelUnchecked(x  , 0)
+                        + pn1.getPixelUnchecked(x  , 1)
+                        + pn1.getPixelUnchecked(x  , 2)
+                        - pn1.getPixelUnchecked(x - 2, 0)
+                        - pn1.getPixelUnchecked(x - 2, 1)
+                        - pn1.getPixelUnchecked(x - 2, 2);
+        // force cast here
         double deltay = vy3 - vy1;
 
-	// rotation by M_PI/8
-	double deltax1 = deltax        - tan1 * deltay;
-	double deltay1 = tan1 * deltax + deltay;
-	
-	// sectors can be detected comparing deltax1 and deltay1 and zero
+        // rotation by M_PI/8
+        double deltax1 = deltax        - tan1 * deltay;
+        double deltay1 = tan1 * deltax + deltay;
 
-        PutValUnchecked(pn2, x + xoff, 1, getDir(deltax1,deltay1));
+        // sectors can be detected comparing deltax1 and deltay1 and zero
+
+        pn2.setPixelUnchecked(x + xoff, 1, getDir(deltax1, deltay1));
 
         for (int y = 3; y < ySize; y++)
           {
             deltax = deltax
-                 + GetValUnchecked(pn1, x - 2, y - 3)
-                 - GetValUnchecked(pn1, x - 2, y)
-                 - GetValUnchecked(pn1, x  , y - 3)
-                 + GetValUnchecked(pn1, x  , y);
+                     + pn1.getPixelUnchecked(x - 2, y - 3)
+                     - pn1.getPixelUnchecked(x - 2, y)
+                     - pn1.getPixelUnchecked(x  , y - 3)
+                     + pn1.getPixelUnchecked(x  , y);
             vy1 = vy2;
             vy2 = vy3;
-            vy3 = GetValUnchecked(pn1, x - 2, y)
-                  + GetValUnchecked(pn1, x - 1, y)
-                  + GetValUnchecked(pn1, x  , y);
+            vy3 = pn1.getPixelUnchecked(x - 2, y)
+                  + pn1.getPixelUnchecked(x - 1, y)
+                  + pn1.getPixelUnchecked(x  , y);
             deltay = vy3 - vy1;
 
-	    // rotation by M_PI/8
-	    double deltax1 = deltax        - tan1 * deltay;
-	    double deltay1 = tan1 * deltax + deltay;
-	    
-	    // sectors can be detected comparing deltax1 and deltay1 and zero
-	    
-	    PutValUnchecked(pn2, x + xoff, y + yoff, getDir(deltax1,deltay1));
+            // rotation by M_PI/8
+            double deltax1 = deltax        - tan1 * deltay;
+            double deltay1 = tan1 * deltax + deltay;
+
+            // sectors can be detected comparing deltax1 and deltay1 and zero
+
+            pn2.setPixelUnchecked(x + xoff, y + yoff, getDir(deltax1, deltay1));
           }
       }
   }
