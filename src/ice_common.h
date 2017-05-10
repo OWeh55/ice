@@ -98,6 +98,7 @@
 #include "histogramequalization.h"
 #include "hist.h"
 #include "icefunc.h"
+#include "IceException.h"
 #include "image3dfunc.h"
 #include "image3d.h"
 #include "imatch.h"

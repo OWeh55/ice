@@ -139,7 +139,12 @@ int main(int argc, char* argv[])
   f5.FitInit(3);
 
   for (i = 0; i < 99; i++)
-    f5.FitVal(i, a * i * i * i + b * i * i + c * i + d + myRand(noise));
+    {
+      double value= a * i * i * i + b * i * i + c * i + d + myRand(noise);
+      if (i<10)
+	cout << i << " " << value << endl;
+      f5.FitVal(i, value);
+    }
 
   f5.FitFinish();
 
@@ -147,6 +152,9 @@ int main(int argc, char* argv[])
   f5.getCoefficient(res);
   Printf("Ergebnis: %g*x^3+%g*x^2+%g*x+%g=y\n", res[3], res[2], res[1], res[0]);
   Printf("Varianz: %6.2f\n", f5.Variance());
+  for (i = 0; i < 9; i++)
+    cout << i << " " << f5(i) << endl;
+
   GetChar();
 
   Image img;

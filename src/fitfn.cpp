@@ -98,7 +98,8 @@ namespace ice
     double res = 0;
 
     // horner schema
-    for (int i = ord - 1; i >= 0; i--)
+    //    for (int i = ord - 1; i >= 0; i--)
+    for (int i = ord; i >= 0; i--)
       {
         res = res * x + co[i];
       }
