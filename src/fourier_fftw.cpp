@@ -40,54 +40,55 @@ using namespace std;
 
 namespace ice
 {
-  static fftw_complex* in = NULL;
-  static fftw_complex* out = NULL;
-  static int fftw_size = 0;
-  static fftw_plan fftw_p;
-  static bool isforward = false;
-  static double fftnorm = 0.0;
+  /*
+    static fftw_complex* in = NULL;
+    static fftw_complex* out = NULL;
+    static int fftw_size = 0;
+    static fftw_plan fftw_p;
+    static bool isforward = false;
+    static double fftnorm = 0.0;
+
+    // altes array freigeben
+    fftw_free(in);
+    fftw_free(out);
+
+    // plan freigeben
+    fftw_destroy_plan(fftw_p);
+
+    // neues array anlegen
+    in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * n);
+    out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * n);
+    isforward = forward;
+    fftw_size = n;
+    fftnorm = 1.0 / sqrt((double)n);
+    fftw_p = fftw_plan_dft_1d(n, in, out, forward ? FFTW_FORWARD : FFTW_BACKWARD, FFTW_ESTIMATE);
+  */
 
 #define FNAME "FourierD"
   int FourierD(const double* srcre, const double* srcim,
                int n, int option,
                double* re, double* im)
   {
-    if (re == NULL || im == NULL || srcre == NULL || srcim == NULL)
+    if (re == nullptr || im == nullptr || srcre == nullptr || srcim == nullptr)
       throw IceException(FNAME, M_WRONG_PTR);
 
     if (option != NORMAL && option != INVERS)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    bool forward = option == NORMAL;
-
     if (n < 1)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    if ((n != fftw_size) || (forward != isforward))
-      {
-        // altes array freigeben
-        if (in != NULL)
-          {
-            fftw_free(in);
-          }
+    bool forward = option == NORMAL;
 
-        if (out != NULL)
-          {
-            fftw_free(out);
-          }
+    fftw_complex* in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * n);
+    fftw_complex* out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * n);
+    // cout << n << " " << in << " " << out << endl;
 
-        // plan freigeben
-        fftw_destroy_plan(fftw_p);
-        // neues array anlegen
-        in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * n);
-        out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * n);
-        isforward = forward;
-        fftw_size = n;
-        fftnorm = 1.0 / sqrt((double)n);
-        fftw_p = fftw_plan_dft_1d(n, in, out,
-                                  forward ? FFTW_FORWARD : FFTW_BACKWARD,
-                                  FFTW_ESTIMATE);
-      }
+    fftw_plan fftw_p = fftw_plan_dft_1d(n, in, out, 
+					forward ? FFTW_FORWARD : FFTW_BACKWARD, 
+					FFTW_ESTIMATE);
+
+    double fftnorm =  1.0 / sqrt((double)n);
 
     // copy data
 
@@ -105,6 +106,12 @@ namespace ice
         re[i] = out[i][0] * fftnorm;
         im[i] = out[i][1] * fftnorm;
       }
+    // altes array freigeben
+    fftw_free(in);
+    fftw_free(out);
+
+    // plan freigeben
+    fftw_destroy_plan(fftw_p);
 
     return OK;
   }
@@ -123,30 +130,12 @@ namespace ice
 
     bool forward = option == NORMAL;
 
-    if ((dim != fftw_size) || (forward != isforward))
-      {
-        // altes array freigeben
-        if (in != NULL)
-          {
-            fftw_free(in);
-          }
-        if (out != NULL)
-          {
-            fftw_free(out);
-          }
+    fftw_complex* in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
+    fftw_complex* out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
 
-        // plan freigeben
-        fftw_destroy_plan(fftw_p);
-        // neues array anlegen
-        in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
-        out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
-        isforward = forward;
-        fftw_size = dim;
-        fftnorm = 1.0 / sqrt((double)dim);
-        fftw_p = fftw_plan_dft_1d(dim, in, out,
-                                  forward ? FFTW_FORWARD : FFTW_BACKWARD,
-                                  FFTW_ESTIMATE);
-      }
+    fftw_plan fftw_p = fftw_plan_dft_1d(dim, in, out, forward ? FFTW_FORWARD : FFTW_BACKWARD, FFTW_ESTIMATE);
+
+    double fftnorm =  1.0 / sqrt((double)dim);
 
     // copy data
 
@@ -165,6 +154,13 @@ namespace ice
         im[i] = out[i][1] * fftnorm;
       }
 
+    // altes array freigeben
+    fftw_free(in);
+    fftw_free(out);
+
+    // plan freigeben
+    fftw_destroy_plan(fftw_p);
+
     return OK;
   }
 
@@ -181,30 +177,12 @@ namespace ice
 
     bool forward = option == NORMAL;
 
-    if ((dim != fftw_size) || (forward != isforward))
-      {
-        // altes array freigeben
-        if (in != NULL)
-          {
-            fftw_free(in);
-          }
-        if (out != NULL)
-          {
-            fftw_free(out);
-          }
+    fftw_complex* in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
+    fftw_complex* out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
 
-        // plan freigeben
-        fftw_destroy_plan(fftw_p);
-        // neues array anlegen
-        in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
-        out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * dim);
-        isforward = forward;
-        fftw_size = dim;
-        fftnorm = 1.0 / sqrt((double)dim);
-        fftw_p = fftw_plan_dft_1d(dim, in, out,
-                                  forward ? FFTW_FORWARD : FFTW_BACKWARD,
-                                  FFTW_ESTIMATE);
-      }
+    fftw_plan fftw_p = fftw_plan_dft_1d(dim, in, out, forward ? FFTW_FORWARD : FFTW_BACKWARD, FFTW_ESTIMATE);
+
+    double fftnorm =  1.0 / sqrt((double)dim);
 
     // copy data
 
@@ -222,6 +200,13 @@ namespace ice
         re[i] = out[i][0] * fftnorm;
         im[i] = out[i][1] * fftnorm;
       }
+
+    // altes array freigeben
+    fftw_free(in);
+    fftw_free(out);
+
+    // plan freigeben
+    fftw_destroy_plan(fftw_p);
 
     return OK;
   }

@@ -38,8 +38,8 @@ COPT := $(COPT) -DNOFFTW3
 endif
 
 # we use MACHTYPE as subdirectory name to allow parallel 
-#  build on different architektures
-# we need to make sure, there is an definition of MACHTYPE
+# build on different architektures
+# we need to make sure, there is a definition of MACHTYPE
 ifndef MACHTYPE
 MACHTYPE := some_machine
 endif
@@ -68,7 +68,7 @@ ifdef NOVISUAL
 COPT := $(COPT) -DNOVISUAL
 endif
 
-# optimize, but allow overriding with OPT
+# optimize (OPT allows to override this)
 # debug symbols
 # "all" warnings, but not unused-local-typedefs (since wxWidgets uses these)
 COPT := $(COPT) -O4 -g -Wno-unused-local-typedefs -Wall
@@ -95,9 +95,7 @@ INCLUDEVIS := $(INCLUDE)
 SRC := $(wildcard *.cpp)
 SRCVIS := $(wildcard $(VISDIR)/*.cpp)
 
-#HDR := $(wildcard *.h)
-#HDROK := $(patsubst %.h,%.hok,$(notdir $(HDR)))
-
+# allow further setting from module.mk in subdirectories
 include $(patsubst %, %/module.mk, $(SUBDIRS))
 
 OBJ := $(patsubst %.cpp,$(OBJDIR)/%.o,$(notdir $(SRC)))
@@ -128,7 +126,7 @@ preparation:
 	mkdir -p $(DEPDIR)
 	mkdir -p $(DEPVISDIR)
 
-buildlib: $(HDROK) $(OBJ) $(OBJVIS)
+buildlib: $(OBJ) $(OBJVIS)
 	-rm $(LIBDIR)/libice.a
 	ar ruvs $(LIBDIR)/libice.a $(OBJ) $(OBJVIS)
 	ranlib $(LIBDIR)/libice.a
