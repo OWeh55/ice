@@ -146,7 +146,7 @@ int main(int argc, char* argv[])
   Show(ON, img1x);
   Show(ON, img2x);
 
-  setImg(img1x, 127);
+  img1x.set(127);
 
   // Symmetrisches Bild erzeugen
   for (i = 0; i < dim; i++)

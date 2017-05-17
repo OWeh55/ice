@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
 
             case 3:
 
-              GradImg(p1, 2, p2);
+              GradImg(p1, p2, 2);
 
               break;
 

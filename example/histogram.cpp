@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
   ClearAlpha();
 
   Image grw = NewImg(700, 400, 255);
-  setImg(grw, 255);
+  grw.set(255);
   Image mark = NewImg(700, 400, 8);
   Show(OVERLAY, grw, mark);
 

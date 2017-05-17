@@ -16,7 +16,7 @@ int main(int args, char** argv)
   LineSeg l(p);
   Image g, m;
   g = NewImg(1000, 700, 255);
-  setImg(g, 255);
+  g.set(255);
   m = NewImg(1000, 700, 255);
   clearImg(m);
   Alpha(ON);

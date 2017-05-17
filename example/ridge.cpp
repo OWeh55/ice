@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
     }
 
   imgm = NewImg(img->xsize, img->ysize, 63);
-  setImg(imgm, 0);
+  imgm.set(0);
   Display(ON);
   Show(OVERLAY, img, imgm);
   /*   SmearImg(img,img); */

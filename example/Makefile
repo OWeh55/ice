@@ -120,7 +120,7 @@ erode\
 erodil\
 fcompare\
 fft\
-ffttest\
+fft_bench\
 fileseltest\
 filt0\
 filt2\

@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
   Image mark = NewImg(511, 511, 255);
 
   clearImg(img);
-  setImg(img, 111);
+  img.set(111);
 
   for (int i = 0; i < 300; i += 10)
     Line(5, 95, 477, i, 255, img);

@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
   int i = 1;
 
   while (GetChar() != 'X')
-    setImg(m, (i++) % 64);
+    m.set((i++) % 64);
 
   return 0;
 }
