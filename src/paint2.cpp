@@ -135,7 +135,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     imgh = NewImg(img->xsize, img->ysize, 255);
-    setImg(imgh, 0);
+    imgh.set(0);
     ast = 0;
     xc = 1;
     yc = 1;

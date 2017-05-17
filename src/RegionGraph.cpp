@@ -961,10 +961,11 @@ ende:
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    Image mark = NewImg(Original->xsize, Original->ysize, 2);
+    Image mark;
+    mark.create(Original->xsize, Original->ysize, 2);
 
-    setImg(GrwImg, 0);
-    setImg(mark, 0);
+    GrwImg.set(0);
+    mark.set(0);
 
     int grw, grwsum;
     int xn, yn, xkoor, ykoor;
@@ -1039,7 +1040,7 @@ ende:
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg) || Treshold < 0)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    setImg(GrwImg, 255);
+    GrwImg.set(255);
     Image BlWh = NewImg(WSImg);
     RegionGraph RG;
     EdgeGraph* EG;

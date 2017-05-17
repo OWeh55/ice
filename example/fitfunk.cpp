@@ -140,9 +140,9 @@ int main(int argc, char* argv[])
 
   for (i = 0; i < 99; i++)
     {
-      double value= a * i * i * i + b * i * i + c * i + d + myRand(noise);
-      if (i<10)
-	cout << i << " " << value << endl;
+      double value = a * i * i * i + b * i * i + c * i + d + myRand(noise);
+      if (i < 10)
+        cout << i << " " << value << endl;
       f5.FitVal(i, value);
     }
 

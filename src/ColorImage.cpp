@@ -247,19 +247,17 @@ namespace ice
   }
 
 #define FNAME "ColorImage::set"
-  int ColorImage::set(ColorValue cv) const // Set all pixel to value
+  void ColorImage::set(ColorValue cv) const // Set all pixel to value
   {
-    RETURN_ERROR_IF_FAILED(setImg(red, maxval - cv.red));
-    RETURN_ERROR_IF_FAILED(setImg(green, maxval - cv.green));
-    RETURN_ERROR_IF_FAILED(setImg(blue, maxval - cv.blue));
-    return OK;
+    red.set(maxval - cv.red);
+    green.set(maxval - cv.green);
+    blue.set(maxval - cv.blue);
   }
-  int ColorImage::set(int r, int g, int b) const // Set all pixel to value
+  void ColorImage::set(int r, int g, int b) const // Set all pixel to value
   {
-    RETURN_ERROR_IF_FAILED(setImg(red, r));
-    RETURN_ERROR_IF_FAILED(setImg(green, g));
-    RETURN_ERROR_IF_FAILED(setImg(blue, b));
-    return OK;
+    red.set(r);
+    green.set(g);
+    blue.set(b);
   }
 #undef FNAME
 

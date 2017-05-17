@@ -30,14 +30,14 @@ namespace ice
   // typedefs for pixel value type
   typedef unsigned char PixelType1;
   typedef unsigned short PixelType2;
-  // we use signed int here, because unsigned int would exceed the range
+  // we use (signed) int here, because unsigned int would exceed the range
   // in many functions working with int
   // moreover unsigned int would cause an implicit conversion
   // to double in many cases
   typedef int PixelType3;
 
   // sets all grey values of >Img< to >Value<
-  void setImg(const Image& img, int value);
+  //  void setImg(const Image& img, int value);
   void clearImg(const Image& img);
 
   // Copy an image
@@ -170,4 +170,3 @@ namespace ice
   void setborder(const Image& p, int val);
 }
 #endif  /* IFNDEF _BASE_H */
-

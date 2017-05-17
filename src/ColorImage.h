@@ -86,10 +86,10 @@ namespace ice
     // set ColorImage to value
     // Set all pixel with colorvalue cv
     /*virtual*/
-    int set(ColorValue cv) const;
+    void set(ColorValue cv) const;
     // set all pixel with grayvalues red, green, blue
     /*virtual*/
-    int set(int red, int green, int blue) const;
+    void set(int red, int green, int blue) const;
 
     /*virtual*/
     ColorValue getPixel(int x, int y) const
@@ -188,9 +188,9 @@ namespace ice
         }
     }
 
-    /*virtual*/ int clear() const
+    /*virtual*/ void clear() const
     {
-      return set(maxval, maxval, maxval);
+      set(maxval, maxval, maxval);
     }
 
     /*virtual*/

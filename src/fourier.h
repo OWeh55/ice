@@ -20,7 +20,7 @@
  */
 /*
    fourier.h,
-   Wolfgang Ortmann 1997, 1998, 2006, 2013
+   Wolfgang Ortmann 1997, 1998, 2006, 2013, 2017
 */
 #ifndef _FOURIER_H
 #define _FOURIER_H
@@ -37,8 +37,8 @@ namespace ice
 
   // low level function using c array
   // (prefer to use class FourierTrafo for Fourier transform!)
-  // implementation in fourier_fftw.cpp and fourier_nofftw.cpp
-  // define NOFFTW3 if you do not want or nor can use library fftw3
+  // implementations in fourier_fftw.cpp and fourier_nofftw.cpp
+  // define NOFFTW3 if you do not want or can not use library fftw3
   //
   int FourierD(const double* srcre, const double* srcim,
                int dim, int option,
@@ -59,13 +59,13 @@ namespace ice
   int Fourier(const Vector& re, const Vector& im,
               int option,
               Vector& rre, Vector& rim);
+
   // inplace  Vector + Vector
   int Fourier(Vector& re, Vector& im, int option = NORMAL);
 
   // complex Numbers as row in a Matrix
   int Fourier(const Matrix& ms, int option, Matrix& md);
   int Fourier(Matrix& ms, int option = NORMAL);
-
 
   // (prefer to use class HartleyTrafo for Hartley transform!)
   // low level 1d Hartley transform
@@ -79,7 +79,7 @@ namespace ice
 #define X_ONLY 1
 #define Y_ONLY 2
 
-  // constants for parameter mode
+  // constants for parameter "mode"
 #define MD_MAGNITUDE 0
 #define MD_POWER 1
 #define MD_LOG 2
@@ -141,7 +141,6 @@ namespace ice
   void CrossCorrelationHImgD(ImageD im1, ImageD im2, ImageD im3);
   // CrossCorrelation
   void CrossCorrelationImgD(ImageD im1, ImageD im2, ImageD im3);
-
 
   // fourier4.cpp
   // Whitening

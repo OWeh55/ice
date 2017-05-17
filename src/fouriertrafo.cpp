@@ -52,8 +52,10 @@ namespace ice
   // use fftw3
   void FourierTrafo::setParameter(int newSize, bool newForward)
   {
+    // cout << "setParameter" << endl;
     if ((newSize != size) || (newForward != forward))   // changes?
       {
+        // cout << "setParameter " << newSize << endl;
         if (size > 0)   // already initialised
           {
             // free old array

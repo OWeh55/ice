@@ -26,13 +26,14 @@ void print(const vector<double>& v, bool index = true)
   cout << endl;
 }
 
-const int vsize = 21;
+const int vsize = 11;
 
 int main(int argc, char** argv)
 {
   // two functions
   vector<double> f1(vsize);
   vector<double> f2(vsize);
+
   for (int i = 0; i < vsize; ++i)
     {
       double fi = M_PI * 2 * i / vsize;

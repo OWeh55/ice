@@ -84,9 +84,9 @@ namespace ice
     fftw_complex* out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * n);
     // cout << n << " " << in << " " << out << endl;
 
-    fftw_plan fftw_p = fftw_plan_dft_1d(n, in, out, 
-					forward ? FFTW_FORWARD : FFTW_BACKWARD, 
-					FFTW_ESTIMATE);
+    fftw_plan fftw_p = fftw_plan_dft_1d(n, in, out,
+                                        forward ? FFTW_FORWARD : FFTW_BACKWARD,
+                                        FFTW_ESTIMATE);
 
     double fftnorm =  1.0 / sqrt((double)n);
 

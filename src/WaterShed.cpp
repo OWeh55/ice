@@ -142,7 +142,7 @@ namespace ice
     // WS-Markierungsbild initialisieren
     setM(m1, x, y, xsize, ysize, INIT);
     // Distanzbild initialisieren
-    setImg(m3, 0);
+    m3.set(0);
 
     // Vorbereitung: Pixel nach aufsteigendem Grauwert sortieren
 
@@ -993,8 +993,9 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   int deleteSmallMarkers(Image& i1, int treshold)
   {
 
-    Image status = NewImg(i1);
-    setImg(status, 0);
+    Image status;
+    status.create(i1);
+    status.set(0);
 
     if (!IsImg(i1) || treshold < 0)     // Eingabebild gueltig
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -1107,8 +1108,9 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   int dGRWHistogramm(Image Original, Image WSImg, Image& GrwImg)  //,Histogram h) {
   {
 
-    Image Histo = NewImg(300, 300, 255);
-    setImg(Histo, 255);
+    Image Histo;
+    Histo.create(300, 300, 255);
+    Histo.set(255);
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {

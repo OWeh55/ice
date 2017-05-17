@@ -38,7 +38,7 @@ using namespace std;
 
 namespace ice
 {
-//-----------------------------------------------------
+  //-----------------------------------------------------
 #define FNAME "FourierImgD"
   int FourierImgD(ImageD srcre, ImageD srcim,
                   int option, ImageD re,

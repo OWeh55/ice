@@ -181,12 +181,12 @@ namespace ice
             }
         }
 
-    setImg(inr, 0);
-    setImg(dist, 0);
+    inr.set(0);
+    dist.set(0);
 
-    if (IsImg(dir))
+    if (dir.isValid())
       {
-        setImg(dir, 8);
+        dir.set(8);
       }
 
     if (step < 0)

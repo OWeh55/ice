@@ -55,17 +55,17 @@ namespace ice
    */
   void setImg(const ColorImage& img, unsigned int val)
   {
-    RETURN_ERROR_IF_FAILED((setImg(img.redImage(), val)));
-    RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), val)));
-    RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), val)));
+    img.redImage().set(val);
+    img.greenImage().set(val);
+    img.blueImage().set(val);
   }
 
   void setImg(const ColorImage& img, const ColorValue& val)
   {
     int maxval = img.maxval;
-    RETURN_ERROR_IF_FAILED((setImg(img.redImage(), maxval - val.red)));
-    RETURN_ERROR_IF_FAILED((setImg(img.greenImage(), maxval - val.green)));
-    RETURN_ERROR_IF_FAILED((setImg(img.blueImage(), maxval - val.blue)));
+    img.redImage().set(maxval - val.red);
+    img.greenImage().set(maxval - val.green);
+    img.blueImage().set(maxval - val.blue);
   }
 
   void setImg(const ColorImage& img, const Function2d& fn)
