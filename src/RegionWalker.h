@@ -33,9 +33,11 @@ namespace ice
   class RegionWalker: public Walker
   {
   public:
-    /*
-    RegionWalker(IPoint p): Walker(p) {}
-    */
+    /**
+     * c'tor creates an (incomplete) Walker with reference point p
+     */
+    explicit RegionWalker(IPoint p): Walker(p) {}
+
     /**
      * c'tor creates a Walker for a Region
      */

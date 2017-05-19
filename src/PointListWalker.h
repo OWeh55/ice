@@ -44,6 +44,10 @@ namespace ice
     {
     }
 
+    explicit PointListWalker(IPoint p): Walker(p), pl(), idx(0), idx0(0)
+    {
+    }
+
     /**
      * c'tor with point list as std::vector<IPoint>.
      * @param v vector with points
