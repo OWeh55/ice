@@ -38,7 +38,7 @@ namespace ice
 
     Contur();  // Standard-Konstruktor;
     Contur(const Contur& c);  // Copy-Konstruktor;
-    Contur(IPoint p); // Konstruktor mit gegebenem Startpunkt;
+    explicit Contur(IPoint p); // Konstruktor mit gegebenem Startpunkt;
     Contur(int x, int y); // Konstruktor mit gegebenem Startpunkt;
 
     ~Contur();
