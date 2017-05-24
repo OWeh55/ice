@@ -5,7 +5,11 @@ IMAGES=		ellipse.eps \
 		contur1.eps \
 		contur2.eps \
 		contur3.eps \
-		freeman.eps
+		dirdob.eps \
+		diredge.eps \
+		dirsmear.eps \
+		freeman.eps \
+		lineseg.eps
 
 ICESECT=contributions.tex einleit.tex bilder.tex einaus.tex bearb.tex data.tex \
 	fitting.tex filter.tex geoobj.tex grafik.tex graph.tex klassif.tex \
@@ -25,6 +29,11 @@ ROBSECT=	intro.tex \
 		robcntl.tex
 
 ICEDOCPARTS=icedoc.tex $(ICESECT) $(IMAGES)
+
+%.eps: %.fig
+	fig2dev -L eps $*.fig $*.eps
+
+
 
 all:	pdf #	html
 

@@ -187,11 +187,14 @@ Eine vollst\"andige Grapheniteration durchf\"uhren:
 \subsection{Regionenwachstum}
 
 \proch{Region}{RegionGrow}{int x,int y,const Image \&orig,int maxsize=INT\_MAX,int refvalue=-1}{segment1.h}
-\procf{int}{RegionGrow}{int x,int y,const Image \&orig,Image \&mark,int val=1,int maxsize=INT\_MAX,int refvalue=-1}
+\procf{void}{RegionGrow}{int x,int y,const Image \&orig,Image \&mark,int val=1,int maxsize=INT\_MAX,int refvalue=-1}
+\procf{Region}{RegionGrow}{IPoint p,const Image \&orig,int maxsize=INT\_MAX,int refvalue=-1}
+\procf{void}{RegionGrow}{IPoint p,const Image \&orig,Image \&mark,int val=1,int maxsize=INT\_MAX,int refvalue=-1}
 \descr{Ermittelt durch Regionenwachstum auf dem Bild $orig$ eine Region mit 
-  maximal $maxSize$ Pixeln um den Punkt (x,y). Das Regionenwachstum erfolgt 
-durch Hinzufügen des ``ähnlichsten'' Punktes. Der ``ähnlichste'' Punkt ist 
-der Punkt, der die geringste Wert-Abweichung vom Startpunkt zeigt, 
+  maximal $maxSize$ Pixeln um den Punkt (x,y) bzw. $p$. 
+Das Regionenwachstum erfolgt durch Hinzufügen des ``ähnlichsten'' Punktes. 
+Der ``ähnlichste'' Punkt ist der Punkt, der die geringste Wert-Abweichung 
+vom Startpunkt zeigt, 
 beziehungsweise die geringste Abweichung vom übergebenen Referenzwert 
 $refvalue$, wenn dieser nicht negativ ist. Durch Angabe von 0 oder 
 orig.maxval kann RegionGrow zur Ermittlung von Minima- oder 
@@ -200,11 +203,14 @@ Maxima-Regionen genutzt werden. Abbruchbedingung ist das
   benachbarten Punkten. Die zweite Aufruf-Form zeichnet die Region mit dem
   Wert $val$ in das Bild $mark$ ein.}
 
-\proch{Region}{RegionGrowGrw}{int x,int y,const Image \&orig,double stdmax=3.0,int maxSize=INT\_MAX}{segment1.h}
-\procf{int}{RegionGrowGrw}{int x,int y,const Image \&orig,Image \&mark,int
+\proch{Region}{RegionGrowDeviation}{int x,int y,const Image \&orig,double stdmax=3.0,int maxSize=INT\_MAX}{segment1.h}
+\procf{void}{RegionGrowDeviation}{int x,int y,const Image \&orig,Image \&mark,int
+  val=1,double stdmax=3.0,int maxSize=INT\_MAX}
+\procf{Region}{RegionGrowDeviation}{IPoint p,const Image \&orig,double stdmax=3.0,int maxSize=INT\_MAX}
+\procf{void}{RegionGrowDeviation}{IPoint p,const Image \&orig,Image \&mark,int
   val=1,double stdmax=3.0,int maxSize=INT\_MAX}
 \descr{Ermittelt durch Regionenwachstum eine Region mit maximal $maxSize$
-  Pixeln um den Punkt (x,y). Das Wachstum wird abgebrochen, wenn die
+  Pixeln um den Punkt (x,y) bzw. $p$. Das Wachstum wird abgebrochen, wenn die
   Standardabweichung der Grauwerte der Region den Wert $stdmax$ übersteigt.
   Die zweite Aufruf-Form zeichnet die Region mit dem Wert $val$ in das Bild $mark$ ein.}
 
