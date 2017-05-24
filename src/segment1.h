@@ -42,20 +42,20 @@ namespace ice
 // durch std beschraenkt.
 
 // Ergebnis ist eine Region
-  Region RegionGrowGrw(int x, int y, const Image& orig,
-                       double std = 3.0, int maxSize = INT_MAX);
+  Region RegionGrowDeviation(int x, int y, const Image& orig,
+                             double std = 3.0, int maxSize = INT_MAX);
 
-  Region RegionGrowGrw(IPoint p, const Image& orig,
-                       double std = 3.0, int maxSize = INT_MAX);
+  Region RegionGrowDeviation(IPoint p, const Image& orig,
+                             double std = 3.0, int maxSize = INT_MAX);
 
 // Ergebnis ist Markierung im Bild mark
-  int RegionGrowGrw(int x, int y,
-                    const Image& Orig, const Image& mark, int val = 1,
-                    double std = 3.0, int maxSize = INT_MAX);
+  void RegionGrowDeviation(int x, int y,
+                           const Image& Orig, const Image& mark, int val = 1,
+                           double std = 3.0, int maxSize = INT_MAX);
 
-  int RegionGrowGrw(IPoint p,
-                    const Image& Orig, const Image& mark, int val = 1,
-                    double std = 3.0, int maxSize = INT_MAX);
+  void RegionGrowDeviation(IPoint p,
+                           const Image& Orig, const Image& mark, int val = 1,
+                           double std = 3.0, int maxSize = INT_MAX);
 
   // Region mit maximal maxSize Pixeln um den Punkt (x,y) aus dem Bild orig
   // berechnen. Die Grenze der Region bestimmt sich aus der maximalen
@@ -70,10 +70,10 @@ namespace ice
 
   // Ergebnis ist Markierung im Bild mark
 
-  int RegionGrow(int x, int y, const Image& orig, const Image& mark,
-                 int val = 1, int  maxSize = INT_MAX, int refval = -1);
-  int RegionGrow(IPoint p, const Image& orig, const Image& mark,
-                 int val = 1, int  maxSize = INT_MAX, int refval = -1);
+  void RegionGrow(int x, int y, const Image& orig, const Image& mark,
+                  int val = 1, int  maxSize = INT_MAX, int refval = -1);
+  void RegionGrow(IPoint p, const Image& orig, const Image& mark,
+                  int val = 1, int  maxSize = INT_MAX, int refval = -1);
 }
 #endif
 

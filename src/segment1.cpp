@@ -32,19 +32,7 @@
 
 namespace ice
 {
-#if 0
-  class PointValue
-  {
-  public:
-    IPoint p;
-    int grw;
-
-    PointValue(IPoint pp, int grey = 0): p(pp), grw(grey) {}
-  private:
-  };
-#endif
-
-// class with function object for comparison of TaskObjects
+  // class with function object for comparison of TaskObjects
   class ComparePoints
   {
   public :
@@ -59,19 +47,19 @@ namespace ice
 
   typedef deque<struct STPoint> FIFOList;
 
-  /* Funktionen RegionGrow
+  /* Funktionen RegionGrowDeviation
    * - Saatpunkt: (x,y)
    * - Originalbild: orig
-   * - Ergebnisbild: Mark
+   * - Ergebnisbild: mark
    * - Zulässige Standardabweichung der Grauwerte
    * - Anzahl der maximal zu betrachtenden Punkte: maxSize
    */
 
-  // GRWThresh - Schwellwert für die Differenz der Grauwerte im Objekt
-
-#define FNAME "RegionGrowGrw"
-  void Collect(const Image& orig,
-               const Image& mark, IPoint p, int refgrw, PointQueue& PQ)
+#define FNAME "RegionGrowDeviation"
+  void collect(const Image& orig,
+               const Image& mark, IPoint p,
+               int refgrw,
+               PointQueue& PQ)
   {
     if (orig.inside(p))
       if (mark.getPixel(p) == 0)
@@ -81,14 +69,14 @@ namespace ice
         }
   }
 
-  Region RegionGrowGrw(int x, int y, const Image& orig,
-                       double stdmax, int  maxSize)
+  Region RegionGrowDeviation(int x, int y, const Image& orig,
+                             double stdmax, int  maxSize)
   {
-    return RegionGrowGrw(IPoint(x, y), orig, stdmax, maxSize);
+    return RegionGrowDeviation(IPoint(x, y), orig, stdmax, maxSize);
   }
 
-  Region RegionGrowGrw(IPoint p, const Image& orig,
-                       double stdmax, int  maxSize)
+  Region RegionGrowDeviation(IPoint p, const Image& orig,
+                             double stdmax, int  maxSize)
   {
     Region Res;
 
@@ -140,7 +128,7 @@ namespace ice
             for (nw.init(); !nw.ready(); nw.next())
               // insert unhandled point in queue
               {
-                Collect(orig, i, nw, refgrw, PQ);
+                collect(orig, i, nw, refgrw, PQ);
               }
           }  // (std<stdmax)
         else
@@ -155,36 +143,38 @@ namespace ice
     return Res;
   }
 
-  int RegionGrowGrw(int x, int y, const Image& orig, const Image& mark, int val,
-                    double stdmax, int maxSize)
+  void RegionGrowDeviation(int x, int y, const Image& orig, const Image& mark, int val,
+                           double stdmax, int maxSize)
   {
-    return RegionGrowGrw(IPoint(x, y), orig, mark, val, stdmax, maxSize);
+    RegionGrowDeviation(IPoint(x, y), orig, mark, val, stdmax, maxSize);
   }
 
-  int RegionGrowGrw(IPoint p, const Image& orig, const Image& mark, int val,
-                    double stdmax, int maxSize)
+  void RegionGrowDeviation(IPoint p, const Image& orig, const Image& mark, int val,
+                           double stdmax, int maxSize)
   {
-    Region res;
-    RETURN_ERROR_IF_FAILED(MatchImg(orig, mark));
-    RETURN_ERROR_IF_FAILED(res = RegionGrowGrw(p, orig, stdmax, maxSize));
-    RETURN_ERROR_IF_FAILED(res.draw(mark, val));
-    return OK;
+    try
+      {
+        checkSizes(orig, mark);
+        Region res = RegionGrowDeviation(p, orig, stdmax, maxSize);
+        res.draw(mark, val);
+      }
+    RETHROW;
   }
-
 #undef FNAME
 
 #define FNAME "RegionGrow"
-  void Collect(const Image& orig, const Image& mark,
-               IPoint p, int refgrw,
-               PointQueue& pq, double& sum)
+  void collect(const Image& orig, const Image& mark,
+               IPoint p,
+               int refValue,
+               PointQueue& pq, int& sum)
   {
     if (orig.inside(p))
       if (mark.getPixel(p) == 0)
         {
-          int grw =  orig.getPixel(p);
-          pq.push(IPointValue(p, abs(refgrw - grw)));
+          int value =  orig.getPixel(p);
+          pq.push(IPointValue(p, abs(refValue - value)));
           mark.setPixel(p, 1); // bearbeitet
-          sum += grw;
+          sum += value;
         }
   }
 
@@ -207,7 +197,7 @@ namespace ice
 
     vector<IPoint> collectedPoints;
 
-    PointQueue Candidates;
+    PointQueue candidatePoints;
     int startval = orig.getPixel(p);
 
     if (refval < 0)
@@ -215,53 +205,54 @@ namespace ice
         refval = startval;
       }
 
-    double GrwSumRegion = 0;
+    int sumRegion = 0;
     // startpunkt ist erster Kandidat
-    double GrwSumCandidates = startval;
+    int sumCandidates = startval;
 
-    Candidates.push(IPointValue(p, abs(startval - refval)));
+    candidatePoints.push(IPointValue(p, abs(startval - refval)));
 
-    int PointCount = 0;
+    int nPoints = 0;
 
     double Max = 0;
     int Maxj = 0;
 
-    while ((PointCount < MaxSize) && (!Candidates.empty()))
+    while ((nPoints < MaxSize) && (!candidatePoints.empty()))
       {
         // Punkt mit geringster Grauwertabweichung aus Queue lesen
-        IPoint pn = Candidates.top();
-        Candidates.pop();
-        PointCount++;
+        IPointValue pn = candidatePoints.top();
+        candidatePoints.pop();
+        nPoints++;
 
         // .. In Liste fuer Objektpunkte
         collectedPoints.push_back(pn);
 
-        int grw = GetVal(orig, pn);
+        int value = GetVal(orig, pn);
 
-        GrwSumRegion += grw;  // zum Objekt hinzufügen
-        GrwSumCandidates -= grw; // aus Kandidatenliste entfernen
+        sumRegion += value;  // zum Objekt hinzufügen
+        sumCandidates -= value; // aus Kandidatenliste entfernen
 
         // Nachbarschaft des aktuellen Punktes betrachten
         // unbearbeitete Punkte in Queue aufnehmen
         Neighbor4Walker nw(pn);
         for (nw.init(); !nw.ready(); nw.next())
-          // insert unhandled point in queue
           {
-            Collect(orig, himg, nw, refval, Candidates, GrwSumCandidates);
+            // insert point in queue (if not yet seen)
+            collect(orig, himg, nw, refval, candidatePoints, sumCandidates);
           }
 
-        if (Candidates.size() > 2)
+        if (candidatePoints.size() > 0)
           {
             // durchschnittlichen Grauwert der Region
-            double GrwReg = GrwSumRegion / PointCount;
+            double valRegion = sumRegion / nPoints;
             // durchschnittlicher Grauwert der Kandidatenpunkte
-            double GrwCandidates = GrwSumCandidates / Candidates.size();
+            double valCandidates = sumCandidates / candidatePoints.size();
 
+            double diff = fabs(valRegion - valCandidates);
             // neues Maximum ?
-            if (fabs(GrwReg - GrwCandidates) > Max)
+            if (diff > Max)
               {
-                Max = fabs(GrwReg - GrwCandidates); // Wert des Maximums merken
-                Maxj = PointCount;       // und Zahl der zur Region gehörenden Punkte
+                Max = diff; // Wert des Maximums merken
+                Maxj = nPoints;       // und Zahl der zur Region gehörenden Punkte
               }
           }
       }
@@ -274,16 +265,24 @@ namespace ice
     return res;
   }
 
-  int RegionGrow(int x, int y, const Image& orig,
-                 const Image& mark, int val,
-                 int  maxSize, int refval)
+  void RegionGrow(int x, int y, const Image& orig,
+                  const Image& mark, int val,
+                  int  maxSize, int refval)
   {
-    Region res;
-    RETURN_ERROR_IF_FAILED(MatchImg(orig, mark));
-    RETURN_ERROR_IF_FAILED(res = RegionGrow(x, y, orig, maxSize, refval));
-    RETURN_ERROR_IF_FAILED(res.draw(mark, val));
-    return OK;
+    try
+      {
+        checkSizes(orig, mark);
+        Region res = RegionGrow(x, y, orig, maxSize, refval);
+        res.draw(mark, val);
+      }
+    RETHROW;
   }
 
+  void RegionGrow(IPoint p, const Image& orig,
+                  const Image& mark, int val,
+                  int  maxSize, int refval)
+  {
+    RegionGrow(p.x, p.y, orig, mark, val, maxSize, refval);
+  }
 #undef FNAME
 }
