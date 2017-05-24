@@ -63,17 +63,16 @@ namespace ice
   // MittlererGrauwertDerRegion - MittlererGrauwertDerAngrenzendenUntergrundpunkte
   // Ergebnis ist eine Region
 
-  Region RegionGrow(IPoint p, const Image& orig,
-                    int MaxSize = INT_MAX, int refval = -1);
-  Region RegionGrow(int x, int y, const Image& orig, int maxSize = INT_MAX,
-                    int refval = -1);
+  Region RegionGrowing(IPoint p, const Image& orig,
+                       int MaxSize = INT_MAX, bool findMin = false);
+  Region RegionGrowing(int x, int y, const Image& orig, int maxSize = INT_MAX,
+                       bool findMin = false);
 
   // Ergebnis ist Markierung im Bild mark
-
-  void RegionGrow(int x, int y, const Image& orig, const Image& mark,
-                  int val = 1, int  maxSize = INT_MAX, int refval = -1);
-  void RegionGrow(IPoint p, const Image& orig, const Image& mark,
-                  int val = 1, int  maxSize = INT_MAX, int refval = -1);
+  void RegionGrowing(int x, int y, const Image& orig, const Image& mark,
+                     int val = 1, int  maxSize = INT_MAX, bool findMin = false);
+  void RegionGrowing(IPoint p, const Image& orig, const Image& mark,
+                     int val = 1, int  maxSize = INT_MAX, bool findMin = false);
 }
 #endif
 

@@ -43,7 +43,8 @@ namespace ice
   };
 
   // Punktprioritaetswarteschlange
-  typedef priority_queue<IPointValue, deque<IPointValue> , ComparePoints> PointQueue;
+  typedef priority_queue<IPointValue, deque<IPointValue> , ComparePoints> PointQueueMin;
+  typedef priority_queue<IPointValue, deque<IPointValue> > PointQueueMax;
 
   typedef deque<struct STPoint> FIFOList;
 
@@ -59,7 +60,7 @@ namespace ice
   void collect(const Image& orig,
                const Image& mark, IPoint p,
                int refgrw,
-               PointQueue& PQ)
+               PointQueueMin& PQ)
   {
     if (orig.inside(p))
       if (mark.getPixel(p) == 0)
@@ -86,7 +87,7 @@ namespace ice
 
     Histogram stat(orig.maxval + 1);
 
-    PointQueue PQ;      // Priority Queue der Randpunkte
+    PointQueueMin PQ;      // Priority Queue der Randpunkte
 
     int refgrw = GetVal(orig, p);
     PQ.push(IPointValue(p, 0)); // Startpunkt in Qeue eintragen
@@ -162,33 +163,34 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "RegionGrow"
+#define FNAME "RegionGrowing"
   void collect(const Image& orig, const Image& mark,
-               IPoint p,
-               int refValue,
-               PointQueue& pq, int& sum)
+               IPoint p, bool findMin,
+               PointQueueMin& pq, int& sum)
   {
+    // point inside image?
     if (orig.inside(p))
+      // point not seen yet?
       if (mark.getPixel(p) == 0)
         {
           int value =  orig.getPixel(p);
-          pq.push(IPointValue(p, abs(refValue - value)));
-          mark.setPixel(p, 1); // bearbeitet
+          if (!findMin)
+            value = -value;
+          pq.push(IPointValue(p, value));
           sum += value;
+          mark.setPixel(p, 1); // bearbeitet
         }
   }
 
-  Region RegionGrow(int xp, int yp, const Image& orig, int MaxSize, int refval)
+  Region RegionGrowing(int xp, int yp, const Image& orig, int maxSize, bool findMin)
   {
     IPoint p(xp, yp);
-    return RegionGrow(p, orig, MaxSize, refval);
+    return RegionGrowing(p, orig, maxSize, findMin);
   }
 
-  Region RegionGrow(IPoint p, const Image& orig, int MaxSize, int refval)
+  Region RegionGrowing(IPoint p, const Image& orig, int maxSize, bool findMin)
   {
-    Region res;
-
-    if ((!orig.inside(p)) || (MaxSize <= 0))   // Parametertestung
+    if ((!orig.inside(p)) || (maxSize <= 0))   // Parametertestung
       throw IceException(FNAME, M_WRONG_PARAM);
 
     Image himg;
@@ -197,39 +199,35 @@ namespace ice
 
     vector<IPoint> collectedPoints;
 
-    PointQueue candidatePoints;
-    int startval = orig.getPixel(p);
-
-    if (refval < 0)
-      {
-        refval = startval;
-      }
+    PointQueueMin candidatePoints;
+    // int startval = orig.getPixel(p);
 
     int sumRegion = 0;
-    // startpunkt ist erster Kandidat
-    int sumCandidates = startval;
+    int sumCandidates = 0;
 
-    candidatePoints.push(IPointValue(p, abs(startval - refval)));
+    // startpunkt ist erster Kandidat
+    collect(orig, himg, p, findMin, candidatePoints, sumCandidates);
 
     int nPoints = 0;
 
-    double Max = 0;
-    int Maxj = 0;
+    double maxDiff = 0;
+    int maxPoints = 0;
 
-    while ((nPoints < MaxSize) && (!candidatePoints.empty()))
+    while ((nPoints < maxSize) && (!candidatePoints.empty()))
       {
         // Punkt mit geringster Grauwertabweichung aus Queue lesen
         IPointValue pn = candidatePoints.top();
-        candidatePoints.pop();
-        nPoints++;
+        int value = pn.Value();
 
+        // remove from candidates
+        candidatePoints.pop();
+        sumCandidates -= value;
+
+        // add to region
+        nPoints++;
         // .. In Liste fuer Objektpunkte
         collectedPoints.push_back(pn);
-
-        int value = GetVal(orig, pn);
-
         sumRegion += value;  // zum Objekt hinzufügen
-        sumCandidates -= value; // aus Kandidatenliste entfernen
 
         // Nachbarschaft des aktuellen Punktes betrachten
         // unbearbeitete Punkte in Queue aufnehmen
@@ -237,27 +235,29 @@ namespace ice
         for (nw.init(); !nw.ready(); nw.next())
           {
             // insert point in queue (if not yet seen)
-            collect(orig, himg, nw, refval, candidatePoints, sumCandidates);
+            collect(orig, himg, nw, findMin, candidatePoints, sumCandidates);
           }
 
-        if (candidatePoints.size() > 0)
+        if (!candidatePoints.empty())
           {
             // durchschnittlichen Grauwert der Region
-            double valRegion = sumRegion / nPoints;
+            double valRegion = (double)sumRegion / nPoints;
             // durchschnittlicher Grauwert der Kandidatenpunkte
-            double valCandidates = sumCandidates / candidatePoints.size();
+            double valCandidates = (double)sumCandidates / candidatePoints.size();
 
             double diff = fabs(valRegion - valCandidates);
+            // cout << nPoints << " " << diff << endl;
             // neues Maximum ?
-            if (diff > Max)
+            if (diff > maxDiff)
               {
-                Max = diff; // Wert des Maximums merken
-                Maxj = nPoints;       // und Zahl der zur Region gehörenden Punkte
+                maxDiff = diff;       // Wert des Maximums merken
+                maxPoints = nPoints;   // und Zahl der zur Region gehörenden Punkte
               }
           }
       }
 
-    for (int j = 0; j < Maxj; j++)
+    Region res;
+    for (int j = 0; j < maxPoints; j++)
       {
         res.add(collectedPoints[j]);
       }
@@ -265,24 +265,24 @@ namespace ice
     return res;
   }
 
-  void RegionGrow(int x, int y, const Image& orig,
-                  const Image& mark, int val,
-                  int  maxSize, int refval)
+  void RegionGrowing(int x, int y, const Image& orig,
+                     const Image& mark, int val,
+                     int  maxSize, bool findMin)
   {
     try
       {
         checkSizes(orig, mark);
-        Region res = RegionGrow(x, y, orig, maxSize, refval);
+        Region res = RegionGrowing(x, y, orig, maxSize, findMin);
         res.draw(mark, val);
       }
     RETHROW;
   }
 
-  void RegionGrow(IPoint p, const Image& orig,
-                  const Image& mark, int val,
-                  int  maxSize, int refval)
+  void RegionGrowing(IPoint p, const Image& orig,
+                     const Image& mark, int val,
+                     int  maxSize, bool findMin)
   {
-    RegionGrow(p.x, p.y, orig, mark, val, maxSize, refval);
+    RegionGrowing(p.x, p.y, orig, mark, val, maxSize, findMin);
   }
 #undef FNAME
 }

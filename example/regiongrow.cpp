@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
       // RegionGrow(p.x, p.y, i1, i2, co, 100000);
       // Region r = RegionGrowGrw(p.X(),p.Y(),i1,10.0,30000);
 
-      //Region r = RegionGrow(p, i1, 100000, 0); // 0 - Minimumsuche
-      //Region r = RegionGrow(p, i1, 100000, i1.maxval); // maxval=Maximumsuche
-      Region r = RegionGrow(p, i1, 100000); // Ähnichkeit zu Keimpunkt
+      // Region r = RegionGrowing(p, i1, 100000, true); // Minimum-Suche
+      // Region r = RegionGrow(p, i1, 100000, i1.maxval); // maxval=Maximumsuche
+      Region r = RegionGrowing(p, i1, 100000); // Maximum-Suche
       r.draw(i2, co);
 
 #if 0
