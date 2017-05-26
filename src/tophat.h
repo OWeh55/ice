@@ -24,20 +24,20 @@
 namespace ice
 {
   void topHatTransform(const ice::Image& source, ice::Image& destination,
-                       int nx, int ny=-1);
+                       int nx, int ny = -1);
 
 #define FNAME "topHatTransform"
   template<typename T>
   void topHatTransform(const ice::Image& source, ice::Image& destination,
-                       const T &im)
+                       const T& im)
   {
     try
       {
         Image opened;
         opened.create(source);
- 
-	openingImg(source, opened, im);
-	subImg(source, opened, destination, SMD_POSITIVE);
+
+        openingImg(source, opened, im);
+        subImg(source, opened, destination, SMD_POSITIVE);
       }
     RETHROW;
   }

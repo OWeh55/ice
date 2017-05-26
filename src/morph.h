@@ -36,9 +36,6 @@ namespace ice
   // Erode / Dilate
   // with rectangular structuring element
 
-  void erodeImg(const Image& img1, int nx, int ny, const Image& img2);
-  void dilateImg(const Image& img1, int nx, int ny, const Image& img2);
-
   void erodeImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
   void dilateImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
 
@@ -47,29 +44,49 @@ namespace ice
 
 
   // structuring element defined by mask
-  
+
   void dilateImg(const Image& img1, int neighb, int* mask, const Image& img2);
   void erodeImg(const Image& img1, int neighb, int* mask, const Image& img2);
 
   void dilateImg(const Image& img1, int nx, int ny, int* mask,
-                const Image& img2);
+                 const Image& img2);
   void erodeImg(const Image& img1, int nx, int ny, int* mask,
-               const Image& img2);
+                const Image& img2);
 
   void dilateImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
   void erodeImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
- 
+
   void dilateImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
   void erodeImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
-
-  void openingImg(const Image& img1, const Image& img2, const IMatrix& msk);
-  void closingImg(const Image& img1, const Image& img2, const IMatrix& msk);
 
   void dilateImg(const Image& imgss, const Image& imgd, const matrix<int>& msk);
   void erodeImg(const Image& imgss, const Image& imgd, const matrix<int>& msk);
 
-  void openingImg(const Image& img1, const Image& img2, const matrix<int>& msk);
-  void closingImg(const Image& img1, const Image& img2, const matrix<int>& msk);
+#define FNAME "openingImg"
+  template<typename T>
+  void openingImg(const Image& img1, const Image& img2, const T& m)
+  {
+    try
+      {
+        erodeImg(img1, img2, m);
+        dilateImg(img2, img2, m);
+      }
+    RETHROW;
+  }
+#undef FNAME
+#define FNAME "closingImg"
+  template<typename T>
+  void closingImg(const Image& img1, const Image& img2, const T& m)
+  {
+    try
+      {
+        dilateImg(img1, img2, m);
+        erodeImg(img2, img2, m);
+      }
+    RETHROW;
+  }
+#undef FNAME
+
 
   // erode and dilate
   int MinMaxImg(const Image& pn1, int sx, int sy,

@@ -31,9 +31,9 @@ namespace ice
       {
         Image opened;
         opened.create(source);
- 
-	openingImg(source, opened, nx, ny);
-	subImg(source, opened, destination, SMD_POSITIVE);
+
+        openingImg(source, opened, nx, ny);
+        subImg(source, opened, destination, SMD_POSITIVE);
       }
     RETHROW;
   }
@@ -51,7 +51,7 @@ namespace ice
         Image result;
         result.copy(source);
         result.invert();
-        topHatTransformMin(result, result, nx,ny);
+        topHatTransformMin(result, result, nx, ny);
         result.invert();
       }
     RETHROW;
@@ -61,8 +61,8 @@ namespace ice
                        ice::Image& destination,
                        int nx, int ny)
   {
-    if (ny<0)
-      ny=nx;
+    if (ny < 0)
+      ny = nx;
 
     if (nx > 0)
       topHatTransformMin(source, destination, nx, ny);

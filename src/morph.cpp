@@ -28,6 +28,8 @@
 
 #include "IceException.h"
 #include "base.h"
+#include "MinMaxHistogram.h"
+
 #include "macro.h"
 
 #include "morph.h"
@@ -39,268 +41,309 @@ namespace ice
 //--------------------------------------
 // Morphologic filters
 //--------------------------------------
-
-  class MinMaxHistogram
-  {
-    // very simple and fast histogram
-    // used for incremental calculation of min and max
-
 #define MHISTSIZE (1<<13)
-
-    int* data;
-    int size;
-    int min, max;
-
-  public:
-    MinMaxHistogram(int maxval)
-    {
-      size = maxval + 1;
-      data = new int[size];
-      reset();
-    }
-
-    void reset()
-    {
-      for (int i = 0; i < size; i++)
-        {
-          data[i] = 0;
-        }
-
-      min = size - 1;
-      max = 0;
-    }
-
-    ~MinMaxHistogram()
-    {
-      delete [] data;
-    }
-
-    inline void inc(int i)
-    {
-      int oldValue = data[i]++;
-
-      if (oldValue == 0)
-        {
-          // was empty
-          if (i < min)   // new min?
-            {
-              min = i;
-            }
-
-          if (i > max)   // new max?
-            {
-              max = i;
-            }
-        }
-    }
-
-    inline void dec(int i)
-    {
-      int newValue = --data[i];
-      if (newValue == 0)
-        {
-          // now empty
-          if (i == min)   // if i was min
-            {
-              // find new min
-              while (min < size - 1 && data[min] == 0)
-                {
-                  min++;
-                }
-            }
-
-          if (i == max)   // if i was max
-            {
-              // find new max
-              while (max > 0 && data[max] == 0)
-                {
-                  max--;
-                }
-            }
-        }
-    }
-    int getMin() const
-    {
-      return min;
-    }
-    int getMax() const
-    {
-      return max;
-    }
-  };
 //------------------------------------------------------
-
-  int** newtemp(int dx, int dy)
-  {
-    int** tmp = new int* [dx];
-
-    for (int x = 0; x < dx; x++)
-      {
-        tmp[x] = new int[dy];
-      }
-
-    return tmp;
-  }
-
-  void deletetemp(int** tmp, int dx, int dy)
-  {
-    for (int x = 0; x < dx; x++)
-      {
-        delete [] tmp[x];
-      }
-
-    delete [] tmp;
-  }
-
+// optimized versions for rectangular structuring element
 //------------------------------------------------------
 #define FNAME "dilateImg"
   void dilateImgO(const Image& pn1, int sx, int sy, const Image& pn2)
   {
     // dilatation in rectangular window
     // optimized with incremental calculation of max with histogram
-    int dx, dy;
 
     if ((pn1.maxval >= MHISTSIZE) ||
         (sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    int sx1 = sx / 2;
-    int sy1 = sy / 2;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
-    int maxval = pn1.maxval;
-
-    if (pn2.maxval < maxval)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    MinMaxHistogram mh(maxval);
-    int** tmp = newtemp(dx, dy);
-
-    // horizontal filtering
-    for (int y = 0; y < dy; y++)   // all rows
+    try
       {
-        int ypn1 = y;
-        mh.reset();
-        int xr = 0;
-        int xrpn1 = 0;
 
-        while (xr < sx1)
+        int sx1 = sx / 2;
+        int sy1 = sy / 2;
+
+        int dx, dy;
+        checkSizes(pn1, pn2, dx, dy);
+        int maxval = pn1.maxval;
+
+        if (pn2.maxval < maxval)
+          throw IceException(FNAME, M_WRONG_PARAM);
+
+        MinMaxHistogram mh(maxval);
+        matrix<int> tmp(dx, dy);
+
+        // horizontal filtering
+        for (int y = 0; y < dy; y++)   // all rows
           {
-            // enter "right" values to histogram
-            mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
-            xr++;
-            xrpn1++;
+            int ypn1 = y;
+            mh.reset();
+            int xr = 0;
+            int xrpn1 = 0;
+
+            while (xr < sx1)
+              {
+                // enter "right" values to histogram
+                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                xr++;
+                xrpn1++;
+              }
+
+            int xd = 0;
+
+            while (xd < sx1)
+              {
+                // enter "right" values to histogram
+                // write result
+                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                tmp[xd][y] = mh.getMax();
+                xr++;
+                xrpn1++;
+                xd++;
+              }
+
+            //        int xl = 0;
+            int xlpn1 = 0;
+
+            while (xr < dx)
+              {
+                // enter "right" values to histogram
+                // write result
+                // delete "left" value from histogram
+                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                tmp[xd][y] = mh.getMax();
+                mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+
+                //            xl++;
+                xlpn1++;
+                xr++;
+                xrpn1++;
+                xd++;
+              }
+
+            while (xd < dx)
+              {
+                // write result
+                // delete "left" value from histogram
+                tmp[xd][y] = mh.getMax();
+                mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+                //            xl++;
+                xlpn1++;
+                xd++;
+              }
           }
 
-        int xd = 0;
-
-        while (xd < sx1)
+        // vertical filtering
+        for (int x = 0; x < dx; x++)   // all columns
           {
-            // enter "right" values to histogram
-            // write result
-            mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
-            tmp[xd][y] = mh.getMax();
-            xr++;
-            xrpn1++;
-            xd++;
-          }
+            int xpn2 = x;
 
-        //        int xl = 0;
-        int xlpn1 = 0;
+            mh.reset();
 
-        while (xr < dx)
-          {
-            // enter "right" values to histogram
-            // write result
-            // delete "left" value from histogram
-            mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
-            tmp[xd][y] = mh.getMax();
-            mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+            int yr = 0;
 
-            //            xl++;
-            xlpn1++;
-            xr++;
-            xrpn1++;
-            xd++;
-          }
+            while (yr < sy1)
+              {
 
-        while (xd < dx)
-          {
-            // write result
-            // delete "left" value from histogram
-            tmp[xd][y] = mh.getMax();
-            mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
-            //            xl++;
-            xlpn1++;
-            xd++;
+                mh.inc(tmp[x][yr]);
+                yr++;
+              }
+
+            int yd = 0;
+            int ydpn2 = 0;
+
+            while (yd < sy1)
+              {
+                mh.inc(tmp[x][yr]);
+                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
+                yr++;
+                yd++;
+                ydpn2++;
+              }
+
+            int yl = 0;
+
+            while (yr < dy)
+              {
+                mh.inc(tmp[x][yr]);
+                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
+                mh.dec(tmp[x][yl]);
+
+                yl++;
+                yr++;
+                yd++;
+                ydpn2++;
+              }
+
+            while (yd < dy)
+              {
+                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
+                mh.dec(tmp[x][yl]);
+
+                yl++;
+                yd++;
+                ydpn2++;
+              }
+
           }
       }
-
-    // vertical filtering
-    for (int x = 0; x < dx; x++)   // all columns
-      {
-        int xpn2 = x;
-
-        mh.reset();
-
-        int yr = 0;
-
-        while (yr < sy1)
-          {
-
-            mh.inc(tmp[x][yr]);
-            yr++;
-          }
-
-        int yd = 0;
-        int ydpn2 = 0;
-
-        while (yd < sy1)
-          {
-            mh.inc(tmp[x][yr]);
-            PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
-            yr++;
-            yd++;
-            ydpn2++;
-          }
-
-        int yl = 0;
-
-        while (yr < dy)
-          {
-            mh.inc(tmp[x][yr]);
-            PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
-            mh.dec(tmp[x][yl]);
-
-            yl++;
-            yr++;
-            yd++;
-            ydpn2++;
-          }
-
-        while (yd < dy)
-          {
-            PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
-            mh.dec(tmp[x][yl]);
-
-            yl++;
-            yd++;
-            ydpn2++;
-          }
-
-      }
-
-    deletetemp(tmp, dx, dy);
+    RETHROW;
   }
+#undef FNAME
+//--------------------------------------------------
+#define FNAME "erodeImg"
+  void erodeImgO(const Image& pn1, int sx, int sy, const Image& pn2)
+  {
+    // erosion in rectangular window
+    // optimized with incremental calculation of min with histogram
+    try
+      {
+        if (pn1.maxval >= MHISTSIZE)
+          throw IceException(FNAME, M_WRONG_PARAM);
 
-  void dilateImg(const Image& sourceImage, int sx, int sy,
-                const Image& destinationImage)
+        if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
+          throw IceException(FNAME, M_WRONG_PARAM);
+
+        int sx1 = sx / 2;
+        int sy1 = sy / 2;
+
+        int dx, dy;
+        checkSizes(pn1, pn2, dx, dy);
+
+        int maxval = pn1.maxval;
+
+        if (pn2.maxval < maxval)
+          throw IceException(FNAME, M_WRONG_PARAM);
+
+        MinMaxHistogram mh(maxval);
+
+        matrix<int> tmp(dx, dy);
+
+        // horizontal filtering
+        for (int y = 0; y < dy; y++)   // all rows
+          {
+            int ypn1 = y;
+
+            mh.reset();
+            int xr = 0;
+            int xrpn1 = 0;
+
+            while (xr < sx1)
+              {
+                // enter "right" values to histogram
+                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                xr++;
+                xrpn1++;
+              }
+
+            int xd = 0;
+
+            while (xd < sx1)
+              {
+                // enter "right" values to histogram
+                // write result
+                mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
+                tmp[xd][y] = mh.getMin();
+                xr++;
+                xrpn1++;
+                xd++;
+              }
+
+            int xlpn1 = 0;
+
+            while (xr < dx)
+              {
+                // enter "right" values to histogram
+                // write result
+                // delete "left" value from histogram
+                mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
+                tmp[xd][y] = mh.getMin();
+                mh.dec(pn1.getPixelUnchecked(xlpn1, ypn1));
+                //            xl++;
+                xlpn1++;
+                xr++;
+                xrpn1++;
+                xd++;
+              }
+
+            while (xd < dx)
+              {
+                // write result
+                // delete "left" value from histogram
+                tmp[xd][y] = mh.getMin();
+                mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+                //            xl++;
+                xlpn1++;
+                xd++;
+              }
+          }
+
+        // vertical filtering
+        for (int x = 0; x < dx; x++)   // all columns
+          {
+            int xpn2 = x;
+            mh.reset();
+            int yr = 0;
+
+            while (yr < sy1)
+              {
+                mh.inc(tmp[x][yr]);
+                yr++;
+              }
+
+            int yd = 0;
+            int ydpn2 = 0;
+
+            while (yd < sy1)
+              {
+                mh.inc(tmp[x][yr]);
+                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
+                yr++;
+                yd++;
+                ydpn2++;
+              }
+
+            int yl = 0;
+
+            while (yr < dy)
+              {
+                mh.inc(tmp[x][yr]);
+                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
+                mh.dec(tmp[x][yl]);
+                yl++;
+                yr++;
+                yd++;
+                ydpn2++;
+              }
+
+            while (yd < dy)
+              {
+                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
+                mh.dec(tmp[x][yl]);
+                yl++;
+                yd++;
+                ydpn2++;
+              }
+
+          }
+      }
+    RETHROW;
+  }
+#undef FNAME
+//--------------------------------------------------
+#define FNAME "dilateImg"
+  void dilateImg(const Image& sourceImage,
+                 const Image& destinationImage,
+                 int sx, int sy)
   {
     // Dilatation mit rechteckigen Fenster
 
+    if (sy < 0)
+      {
+        sy = sx;
+      }
+
     Image imgs = sourceImage;
     int need_temp;
-    int dx, dy;
+
     int x, y;
     int xx, yy;
     int val;
@@ -311,98 +354,209 @@ namespace ice
     int sx1 = sx / 2;
     int sy1 = sy / 2;
 
-    RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
-
-    if (imgs.maxval < MHISTSIZE)
+    try
       {
-        dilateImgO(imgs, sx, sy, destinationImage);
-	return;
-      }
+        int dx, dy;
+        checkSizes(imgs, destinationImage, dx, dy);
 
-    need_temp = (destinationImage == imgs);
-
-    if (need_temp)
-      {
-        imgs = NewImg(imgs, true);
-      }
-
-    // filter rows
-
-    for (y = 0; y < dy; y++)
-      {
-        // linker Rand auf 0
-        for (x = 0; x < sx1; ++x)
+        if (imgs.maxval < MHISTSIZE)
           {
-            PutVal(destinationImage, x, y, 0);
-          }
-        // normale Werte
-        for (x = sx1; x < dx - sx1; x++)
-          {
-            val = 0;
-
-            for (xx = x - sx1; xx <= x + sx1; xx++)
-              {
-                val = max(val, GetVal(imgs, xx, y));
-              }
-
-            PutVal(destinationImage, x, y, val);
-          }
-        // rechter Rand auf 0
-        for (x = dx - sx1; x < dx; ++x)
-          {
-            PutVal(destinationImage, x, y, 0);
-          }
-      }
-
-    // filter cols
-    int* linebuffer = new int[dy];
-
-    for (x = 0; x < dx; x++)
-      {
-        for (y = 0; y < sy1; y++)
-          {
-            linebuffer[y] = 0;
+            dilateImgO(imgs, sx, sy, destinationImage);
+            return;
           }
 
-        for (y = sy1; y < dy - sy1; y++)
+        need_temp = (destinationImage == imgs);
+
+        if (need_temp)
           {
-            val = 0;
-
-            for (yy = -sy1; yy <= sy1; yy++)
-              {
-                val = max(val, GetVal(destinationImage, x, y + yy));
-              }
-
-            linebuffer[y] = val;
+            imgs = NewImg(imgs, true);
           }
 
-        for (y = dy - sy1; y < dy; y++)
-          {
-            linebuffer[y] = 0;
-          }
+        // filter rows
 
         for (y = 0; y < dy; y++)
           {
-            PutVal(destinationImage, x, y, linebuffer[y]);
+            // linker Rand auf 0
+            for (x = 0; x < sx1; ++x)
+              {
+                PutVal(destinationImage, x, y, 0);
+              }
+            // normale Werte
+            for (x = sx1; x < dx - sx1; x++)
+              {
+                val = 0;
+
+                for (xx = x - sx1; xx <= x + sx1; xx++)
+                  {
+                    val = max(val, GetVal(imgs, xx, y));
+                  }
+
+                PutVal(destinationImage, x, y, val);
+              }
+            // rechter Rand auf 0
+            for (x = dx - sx1; x < dx; ++x)
+              {
+                PutVal(destinationImage, x, y, 0);
+              }
           }
+
+        // filter cols
+        int* linebuffer = new int[dy];
+
+        for (x = 0; x < dx; x++)
+          {
+            for (y = 0; y < sy1; y++)
+              {
+                linebuffer[y] = 0;
+              }
+
+            for (y = sy1; y < dy - sy1; y++)
+              {
+                val = 0;
+
+                for (yy = -sy1; yy <= sy1; yy++)
+                  {
+                    val = max(val, GetVal(destinationImage, x, y + yy));
+                  }
+
+                linebuffer[y] = val;
+              }
+
+            for (y = dy - sy1; y < dy; y++)
+              {
+                linebuffer[y] = 0;
+              }
+
+            for (y = 0; y < dy; y++)
+              {
+                PutVal(destinationImage, x, y, linebuffer[y]);
+              }
+          }
+
+        delete [] linebuffer;
+      }
+    RETHROW;
+  }
+#undef FNAME
+//--------------------------------------------------
+#define FNAME "erodeImg"
+  void erodeImg(const Image& sourceImage, const Image& destinationImage,
+                int sx, int sy)
+  {
+    // Erosion mit rechteckigen Fenster
+    if (sy < 0)
+      {
+        sy = sx;
       }
 
-    delete [] linebuffer;
+    Image imgs = sourceImage;
+    int need_temp;
+
+    int x, y;
+    int xx, yy;
+    int val;
+    int* buffer = NULL;
+
+    if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
+      throw IceException(FNAME, M_WRONG_PARAM);
+
+    int sx1 = sx / 2;
+    int sy1 = sy / 2;
+    try
+      {
+        int dx, dy;
+        checkSizes(imgs, destinationImage, dx, dy);
+
+        if (imgs.maxval < MHISTSIZE)
+          {
+            erodeImgO(imgs, sx, sy, destinationImage);
+            return;
+          }
+
+        need_temp = (destinationImage == imgs);
+
+        if (need_temp)
+          {
+            imgs = NewImg(imgs, true);
+          }
+
+        // filter rows
+
+        for (y = 0; y < dy; y++)
+          {
+            for (x = 0; x < sx1; ++x)
+              {
+                PutVal(destinationImage, x, y, 0);
+              }
+            for (x = sx1; x < dx - sx1; x++)
+              {
+                val = imgs.maxval;
+
+                for (xx = -sx1; xx <= sx1; xx++)
+                  {
+                    val = min(val, GetVal(imgs, x + xx, y));
+                  }
+
+                PutVal(destinationImage, x, y, val);
+              }
+            for (x = dx - sx1; x < dx; ++x)
+              {
+                PutVal(destinationImage, x, y, 0);
+              }
+          }
+
+        // filter cols
+        buffer = new int[dy];
+
+        for (x = 0; x < dx; x++)
+          {
+            for (y = 0; y < sy1; y++)
+              {
+                buffer[y] = 0;
+              }
+
+            for (y = sy1; y < dy - sy1; y++)
+              {
+                val = imgs.maxval;
+
+                for (yy = -sy1; yy <= sy1; yy++)
+                  {
+                    val = min(val, GetVal(destinationImage, x, y + yy));
+                  }
+
+                buffer[y] = val;
+              }
+
+            for (y = dy - sy1; y < dy; y++)
+              {
+                buffer[y] = 0;
+              }
+
+            for (y = 0; y < dy; y++)
+              {
+                PutVal(destinationImage, x, y, buffer[y]);
+              }
+          }
+
+        delete [] buffer;
+      }
+    RETHROW;
   }
+#undef FNAME
 
   /* dilate/erode with given mask (as int*) */
-
+#define FNAME "dilateImg"
   void dilateImg(const Image& sourceImage,
-                int nbhx, int nbhy, int* mask,
-                const Image& destinationImage)
+                 int nbhx, int nbhy, int* mask,
+                 const Image& destinationImage)
   {
     Image imgs = sourceImage;
     Image imgh;
     int dx, dy;
 
-    if (mask == NULL)
+    if (mask == nullptr)
       {
-        return dilateImg(imgs, nbhx, nbhy, destinationImage);
+        return dilateImg(imgs, destinationImage, nbhx, nbhy);
       }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
@@ -469,8 +623,8 @@ namespace ice
   }
 
   void dilateImg(const Image& sourceImage,
-                int nbh, int* mask,
-                const Image& destinationImage)
+                 int nbh, int* mask,
+                 const Image& destinationImage)
   {
     dilateImg(sourceImage, nbh, nbh, mask, destinationImage);
   }
@@ -478,16 +632,16 @@ namespace ice
 #undef FNAME
 #define FNAME "erodeImg"
   void erodeImg(const Image& sourceImage,
-               int nbhx, int nbhy, int* mask,
-               const Image& destinationImage)
+                int nbhx, int nbhy, int* mask,
+                const Image& destinationImage)
   {
     Image imgs = sourceImage;
     Image imgh;
     int dx, dy;
 
-    if (mask == NULL)
+    if (mask == nullptr)
       {
-        return dilateImg(imgs, nbhx, nbhy, destinationImage);
+        return dilateImg(imgs, destinationImage, nbhx, nbhy);
       }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
@@ -554,8 +708,8 @@ namespace ice
   }
 
   void erodeImg(const Image& sourceImage,
-               int nbh, int* mask,
-               const Image& destinationImage)
+                int nbh, int* mask,
+                const Image& destinationImage)
   {
     erodeImg(sourceImage, nbh, nbh, mask, destinationImage);
   }
@@ -609,261 +763,6 @@ namespace ice
 
 #undef FNAME
 
-//--------------------------------------------------
-#define FNAME "erodeImg"
-  void erodeImgO(const Image& pn1, int sx, int sy, const Image& pn2)
-  {
-    // erosion in rectangular window
-    // optimized with incremental calculation of min with histogram
-    try {
-    if (pn1.maxval >= MHISTSIZE)
-      throw IceException(FNAME, M_WRONG_PARAM);
-    
-    if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    int sx1 = sx / 2;
-    int sy1 = sy / 2;
-    
-    int dx, dy;
-    checkSizes(pn1, pn2, dx, dy);
-    
-    int maxval = pn1.maxval;
-
-    if (pn2.maxval < maxval)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    MinMaxHistogram mh(maxval);
-
-    int** tmp = newtemp(dx, dy);
-
-    // horizontal filtering
-    for (int y = 0; y < dy; y++)   // all rows
-      {
-        int ypn1 = y;
-
-        mh.reset();
-        int xr = 0;
-        int xrpn1 = 0;
-
-        while (xr < sx1)
-          {
-            // enter "right" values to histogram
-            mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
-            xr++;
-            xrpn1++;
-          }
-
-        int xd = 0;
-
-        while (xd < sx1)
-          {
-            // enter "right" values to histogram
-            // write result
-            mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
-            tmp[xd][y] = mh.getMin();
-            xr++;
-            xrpn1++;
-            xd++;
-          }
-
-        int xlpn1 = 0;
-
-        while (xr < dx)
-          {
-            // enter "right" values to histogram
-            // write result
-            // delete "left" value from histogram
-            mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
-            tmp[xd][y] = mh.getMin();
-            mh.dec(pn1.getPixelUnchecked(xlpn1, ypn1));
-            //            xl++;
-            xlpn1++;
-            xr++;
-            xrpn1++;
-            xd++;
-          }
-
-        while (xd < dx)
-          {
-            // write result
-            // delete "left" value from histogram
-            tmp[xd][y] = mh.getMin();
-            mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
-            //            xl++;
-            xlpn1++;
-            xd++;
-          }
-      }
-
-    // vertical filtering
-    for (int x = 0; x < dx; x++)   // all columns
-      {
-        int xpn2 = x;
-        mh.reset();
-        int yr = 0;
-
-        while (yr < sy1)
-          {
-            mh.inc(tmp[x][yr]);
-            yr++;
-          }
-
-        int yd = 0;
-        int ydpn2 = 0;
-
-        while (yd < sy1)
-          {
-            mh.inc(tmp[x][yr]);
-            PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
-            yr++;
-            yd++;
-            ydpn2++;
-          }
-
-        int yl = 0;
-
-        while (yr < dy)
-          {
-            mh.inc(tmp[x][yr]);
-            PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
-            mh.dec(tmp[x][yl]);
-            yl++;
-            yr++;
-            yd++;
-            ydpn2++;
-          }
-
-        while (yd < dy)
-          {
-            PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
-            mh.dec(tmp[x][yl]);
-            yl++;
-            yd++;
-            ydpn2++;
-          }
-
-      }
-
-    deletetemp(tmp, dx, dy);
-    }
-    RETHROW;
-  }
-
-  void erodeImg(const Image& sourceImage, int sx, int sy,
-               const Image& destinationImage)
-  {
-    // Dilatation mit rechteckigen Fenster
-
-    Image imgs = sourceImage;
-    int need_temp;
-    int dx, dy;
-    int x, y;
-    int xx, yy;
-    int val;
-    int* buffer = NULL;
-
-    if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    int sx1 = sx / 2;
-    int sy1 = sy / 2;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(imgs, destinationImage, dx, dy));
-
-    if (imgs.maxval < MHISTSIZE)
-      {
-        erodeImgO(imgs, sx, sy, destinationImage);
-	return;
-      }
-
-    need_temp = (destinationImage == imgs);
-
-    if (need_temp)
-      {
-        imgs = NewImg(imgs, true);
-      }
-
-    // filter rows
-
-    for (y = 0; y < dy; y++)
-      {
-        for (x = 0; x < sx1; ++x)
-          {
-            PutVal(destinationImage, x, y, 0);
-          }
-        for (x = sx1; x < dx - sx1; x++)
-          {
-            val = imgs.maxval;
-
-            for (xx = -sx1; xx <= sx1; xx++)
-              {
-                val = min(val, GetVal(imgs, x + xx, y));
-              }
-
-            PutVal(destinationImage, x, y, val);
-          }
-        for (x = dx - sx1; x < dx; ++x)
-          {
-            PutVal(destinationImage, x, y, 0);
-          }
-      }
-
-    // filter cols
-    buffer = new int[dy];
-
-    for (x = 0; x < dx; x++)
-      {
-        for (y = 0; y < sy1; y++)
-          {
-            buffer[y] = 0;
-          }
-
-        for (y = sy1; y < dy - sy1; y++)
-          {
-            val = imgs.maxval;
-
-            for (yy = -sy1; yy <= sy1; yy++)
-              {
-                val = min(val, GetVal(destinationImage, x, y + yy));
-              }
-
-            buffer[y] = val;
-          }
-
-        for (y = dy - sy1; y < dy; y++)
-          {
-            buffer[y] = 0;
-          }
-
-        for (y = 0; y < dy; y++)
-          {
-            PutVal(destinationImage, x, y, buffer[y]);
-          }
-      }
-
-    delete [] buffer;
-  }
-#undef FNAME
-
-  void erodeImg(const Image& img1, const Image& img2, int nx, int ny)
-  {
-    if (ny < 0)
-      {
-        ny = nx;
-      }
-    erodeImg(img1, nx, ny, img2);
-  }
-
-  void dilateImg(const Image& img1, const Image& img2, int nx, int ny)
-  {
-    if (ny < 0)
-      {
-        ny = nx;
-      }
-    dilateImg(img1, nx, ny, img2);
-  }
-
 #define FNAME "openingImg"
   void openingImg(const Image& img1, const Image& img2, int nx, int ny)
   {
@@ -871,10 +770,11 @@ namespace ice
       {
         ny = nx;
       }
-    try {
-      erodeImg(img1, nx, ny, img2);
-      dilateImg(img2, nx, ny, img2);
-    }
+    try
+      {
+        erodeImg(img1, img2, nx, ny);
+        dilateImg(img2, img2, nx, ny);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -885,31 +785,11 @@ namespace ice
       {
         ny = nx;
       }
-    try {
-      dilateImg(img1, nx, ny, img2);
-      erodeImg(img2, nx, ny, img2);
-    }
-    RETHROW;
-  }
-#undef FNAME
-
-#define FNAME "openingImg"
-  void openingImg(const Image& img1, const Image& img2, const IMatrix& m)
-  {
-    try {
-      erodeImg(img1, img2, m);
-      dilateImg(img2, img2, m);
-    }
-    RETHROW;
-  }
-#undef FNAME
-#define FNAME "closingImg"
-  void closingImg(const Image& img1, const Image& img2, const IMatrix& m)
-  {
-    try {
-      dilateImg(img1, img2, m);
-      erodeImg(img2, img2, m);
-    }
+    try
+      {
+        dilateImg(img1, img2, nx, ny);
+        erodeImg(img2, img2, nx, ny);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -924,8 +804,8 @@ namespace ice
     int dy = pn1.ysize;
     int maxval = pn1.maxval;
 
-    int** tmp1 = newtemp(dx, dy);
-    int** tmp2 = newtemp(dx, dy);
+    matrix<int> tmp1(dx, dy);
+    matrix<int> tmp2(dx, dy);
 
     MinMaxHistogram mh(maxval);
 
@@ -1089,8 +969,6 @@ namespace ice
 
       }
 
-    deletetemp(tmp1, dx, dy);
-    deletetemp(tmp2, dx, dy);
   }
 
   template<class T>
@@ -1107,8 +985,8 @@ namespace ice
     T** minp = (T**)pn2->getDataPtr();
     T** maxp = (T**)pn3->getDataPtr();
 
-    int** tmp1 = newtemp(dx, dy);
-    int** tmp2 = newtemp(dx, dy);
+    matrix<int> tmp1(dx, dy);
+    matrix<int> tmp2(dx, dy);
     MinMaxHistogram mh(maxval);
 
     // horizontal filtering
@@ -1271,9 +1149,6 @@ namespace ice
           }
 
       }
-
-    deletetemp(tmp1, dx, dy);
-    deletetemp(tmp2, dx, dy);
   }
 
   int MinMaxImg(const Image& pn1, int sx, int sy,
