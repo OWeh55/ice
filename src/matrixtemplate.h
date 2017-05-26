@@ -62,6 +62,20 @@ namespace ice
     }
 
     /**
+     * type conversion of elements
+     */
+    template<typename Tsource>
+    explicit matrix(const matrix<Tsource>& m): nColumns(m.cols()), nRows(m.rows())
+    {
+      data = new T[nColumns * nRows];
+
+      for (int i = 0; i < nRows * nColumns; i++)
+        {
+          data[i] = (T)m[i / nColumns][i % nColumns] ;
+        }
+    }
+
+    /**
      * move constructor.
      */
     matrix(matrix&& m)

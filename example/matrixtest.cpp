@@ -92,5 +92,15 @@ int main(int argc, char* argv[])
   cout << "mat2(2,1,4,3)" << endl;
   cout << setw(2) << mat2(2, 1, 4, 3) << endl;
 
+  // type conversions
+  matrix<int> mi(3, 4, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+  matrix<double> md(mi);
+  cout << fixed << setprecision(2);
+  cout << setw(5) << mi << endl;
+  cout << setw(5) << md << endl;
+  md *= 1.111111;
+  cout << setw(5) << md << endl;
+  mi = (matrix<int>)md;
+  cout << setw(5) << mi << endl;
   return OK;
 }
