@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
       }
 
   for (int i = 0; i < 5; i++)
-    dilateImg(img, 3, 3, img);
+    dilateImg(img, img, 3, 3);
 
   pp = IPoint(300, 300);
   SearchStart(img, mark, NULL, 15, 1, pp);
@@ -86,8 +86,8 @@ int main(int argc, char* argv[])
 
         if (Random(19) < 1) PutVal(img, x, y, 0);
       }
-  dilateImg(img, 3, 3, img);
-  erodeImg(img, 3, 3, img);
+  dilateImg(img, img, 3, 3);
+  erodeImg(img, img, 3, 3);
   pp = IPoint(300, 300);
   SearchStart(img, mark, NULL, 15, 1, pp);
   c1 = CalcContur(img, mark, NULL, 15, pp);
