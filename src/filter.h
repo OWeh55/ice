@@ -121,40 +121,5 @@ namespace ice
                        const Image& dir,
                        const ColorImage& dest,
                        int filter_size = 11, int filter_rad = 10);
-
-  // Erode/Dilate - morph.cpp
-  //   in Rechteckumgebung
-  int ErodeImg(const Image& img1, int nx, int ny, const Image& img2);
-  int DilateImg(const Image& img1, int nx, int ny, const Image& img2);
-
-  int ErodeImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
-  int DilateImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
-
-  int OpeningImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
-  int ClosingImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
-
-
-  //   in Umgebung durch Maske festgelegt
-  int DilateImg(const Image& img1, int neighb, int* mask, const Image& img2);
-  int ErodeImg(const Image& img1, int neighb, int* mask, const Image& img2);
-  int DilateImg(const Image& img1, int nx, int ny, int* mask,
-                const Image& img2);
-  int ErodeImg(const Image& img1, int nx, int ny, int* mask,
-               const Image& img2);
-
-  int DilateImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
-  int ErodeImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
-  int DilateImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
-  int ErodeImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
-
-  int OpeningImg(const Image& img1, const Image& img2, const IMatrix& msk);
-  int ClosingImg(const Image& img1, const Image& img2, const IMatrix& msk);
-
-  // Skelettierung - skelett.cpp
-  int skeletonImg(const Image& img1, const Image& img2, int lvl = 1);
-
-  // gemeinsame Bestimmung Max und Min
-  int MinMaxImg(const Image& img1, int nx, int ny,
-                const Image& imin, const Image& imax);
 }
 #endif

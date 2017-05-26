@@ -33,6 +33,7 @@
 #include "histogram.h"
 #include "arith.h"
 #include "fitfn.h"
+#include "morph.h"
 #include "filter.h"
 
 #include "icefunc.h"

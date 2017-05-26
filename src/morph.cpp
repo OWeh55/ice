@@ -30,7 +30,7 @@
 #include "base.h"
 #include "macro.h"
 
-#include "filter.h"
+#include "morph.h"
 
 using namespace std;
 
@@ -153,8 +153,8 @@ namespace ice
   }
 
 //------------------------------------------------------
-#define FNAME "DilateImg"
-  int DilateImgO(const Image& pn1, int sx, int sy, const Image& pn2)
+#define FNAME "dilateImg"
+  int dilateImgO(const Image& pn1, int sx, int sy, const Image& pn2)
   {
     // dilatation in rectangular window
     // optimized with incremental calculation of max with histogram
@@ -295,7 +295,7 @@ namespace ice
     return OK;
   }
 
-  int DilateImg(const Image& sourceImage, int sx, int sy,
+  int dilateImg(const Image& sourceImage, int sx, int sy,
                 const Image& destinationImage)
   {
     // Dilatation mit rechteckigen Fenster
@@ -317,7 +317,7 @@ namespace ice
 
     if (imgs.maxval < MHISTSIZE)
       {
-        return DilateImgO(imgs, sx, sy, destinationImage);
+        return dilateImgO(imgs, sx, sy, destinationImage);
       }
 
     need_temp = (destinationImage == imgs);
@@ -392,9 +392,9 @@ namespace ice
     return OK;
   }
 
-  /* Dilate/Erode with given mask (as int*) */
+  /* dilate/erode with given mask (as int*) */
 
-  int DilateImg(const Image& sourceImage,
+  int dilateImg(const Image& sourceImage,
                 int nbhx, int nbhy, int* mask,
                 const Image& destinationImage)
   {
@@ -404,7 +404,7 @@ namespace ice
 
     if (mask == NULL)
       {
-        return DilateImg(imgs, nbhx, nbhy, destinationImage);
+        return dilateImg(imgs, nbhx, nbhy, destinationImage);
       }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
@@ -472,16 +472,16 @@ namespace ice
     return OK;
   }
 
-  int DilateImg(const Image& sourceImage,
+  int dilateImg(const Image& sourceImage,
                 int nbh, int* mask,
                 const Image& destinationImage)
   {
-    return DilateImg(sourceImage, nbh, nbh, mask, destinationImage);
+    return dilateImg(sourceImage, nbh, nbh, mask, destinationImage);
   }
 
 #undef FNAME
-#define FNAME "ErodeImg"
-  int ErodeImg(const Image& sourceImage,
+#define FNAME "erodeImg"
+  int erodeImg(const Image& sourceImage,
                int nbhx, int nbhy, int* mask,
                const Image& destinationImage)
   {
@@ -491,7 +491,7 @@ namespace ice
 
     if (mask == NULL)
       {
-        return DilateImg(imgs, nbhx, nbhy, destinationImage);
+        return dilateImg(imgs, nbhx, nbhy, destinationImage);
       }
 
     if ((nbhx & 1) == 0 || (nbhy & 1) == 0)
@@ -559,17 +559,17 @@ namespace ice
     return OK;
   }
 
-  int ErodeImg(const Image& sourceImage,
+  int erodeImg(const Image& sourceImage,
                int nbh, int* mask,
                const Image& destinationImage)
   {
-    return ErodeImg(sourceImage, nbh, nbh, mask, destinationImage);
+    return erodeImg(sourceImage, nbh, nbh, mask, destinationImage);
   }
 
 #undef FNAME
 
-#define FNAME "DilateImg"
-  int DilateImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
+#define FNAME "dilateImg"
+  int dilateImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
   {
     int nx = mask.cols();
     int ny = mask.rows();
@@ -581,19 +581,19 @@ namespace ice
         {
           imask[i++] = mask[y][x];
         }
-    int rc = DilateImg(sourceImage, nx, ny, imask, destinationImage);
+    int rc = dilateImg(sourceImage, nx, ny, imask, destinationImage);
     delete [] imask;
     return rc;
   }
 
-  int DilateImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
+  int dilateImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
   {
-    return DilateImg(sourceImage, mask, destinationImage);
+    return dilateImg(sourceImage, mask, destinationImage);
   }
 #undef FNAME
 
-#define FNAME "ErodeImg"
-  int ErodeImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
+#define FNAME "erodeImg"
+  int erodeImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
   {
     int nx = mask.cols();
     int ny = mask.rows();
@@ -605,21 +605,21 @@ namespace ice
         {
           imask[i++] = mask[y][x];
         }
-    int rc = ErodeImg(sourceImage, nx, ny, imask, destinationImage);
+    int rc = erodeImg(sourceImage, nx, ny, imask, destinationImage);
     delete [] imask;
     return rc;
   }
 
-  int ErodeImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
+  int erodeImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
   {
-    return ErodeImg(sourceImage, mask, destinationImage);
+    return erodeImg(sourceImage, mask, destinationImage);
   }
 
 #undef FNAME
 
 //--------------------------------------------------
-#define FNAME "ErodeImg"
-  int ErodeImgO(const Image& pn1, int sx, int sy, const Image& pn2)
+#define FNAME "erodeImg"
+  int erodeImgO(const Image& pn1, int sx, int sy, const Image& pn2)
   {
     // erosion in rectangular window
     // optimized with incremental calculation of min with histogram
@@ -760,7 +760,7 @@ namespace ice
     return OK;
   }
 
-  int ErodeImg(const Image& sourceImage, int sx, int sy,
+  int erodeImg(const Image& sourceImage, int sx, int sy,
                const Image& destinationImage)
   {
     // Dilatation mit rechteckigen Fenster
@@ -783,7 +783,7 @@ namespace ice
 
     if (imgs.maxval < MHISTSIZE)
       {
-        return ErodeImgO(imgs, sx, sy, destinationImage);
+        return erodeImgO(imgs, sx, sy, destinationImage);
       }
 
     need_temp = (destinationImage == imgs);
@@ -856,62 +856,62 @@ namespace ice
   }
 #undef FNAME
 
-  int ErodeImg(const Image& img1, const Image& img2, int nx, int ny)
+  int erodeImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    return ErodeImg(img1, nx, ny, img2);
+    return erodeImg(img1, nx, ny, img2);
   }
 
-  int DilateImg(const Image& img1, const Image& img2, int nx, int ny)
+  int dilateImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    return DilateImg(img1, nx, ny, img2);
+    return dilateImg(img1, nx, ny, img2);
   }
 
-#define FNAME "OpeningImg"
-  int OpeningImg(const Image& img1, const Image& img2, int nx, int ny)
+#define FNAME "openingImg"
+  int openingImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    RETURN_ERROR_IF_FAILED(ErodeImg(img1, nx, ny, img2));
-    RETURN_ERROR_IF_FAILED(DilateImg(img2, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(erodeImg(img1, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(dilateImg(img2, nx, ny, img2));
     return OK;
   }
 #undef FNAME
-#define FNAME "ClosingImg"
-  int ClosingImg(const Image& img1, const Image& img2, int nx, int ny)
+#define FNAME "closingImg"
+  int closingImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    RETURN_ERROR_IF_FAILED(DilateImg(img1, nx, ny, img2));
-    RETURN_ERROR_IF_FAILED(ErodeImg(img2, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(dilateImg(img1, nx, ny, img2));
+    RETURN_ERROR_IF_FAILED(erodeImg(img2, nx, ny, img2));
     return OK;
   }
 #undef FNAME
 
-#define FNAME "OpeningImg"
-  int OpeningImg(const Image& img1, const Image& img2, const IMatrix& m)
+#define FNAME "openingImg"
+  int openingImg(const Image& img1, const Image& img2, const IMatrix& m)
   {
-    RETURN_ERROR_IF_FAILED(ErodeImg(img1, img2, m));
-    RETURN_ERROR_IF_FAILED(DilateImg(img2, img2, m));
+    RETURN_ERROR_IF_FAILED(erodeImg(img1, img2, m));
+    RETURN_ERROR_IF_FAILED(dilateImg(img2, img2, m));
     return OK;
   }
 #undef FNAME
-#define FNAME "ClosingImg"
-  int ClosingImg(const Image& img1, const Image& img2, const IMatrix& m)
+#define FNAME "closingImg"
+  int closingImg(const Image& img1, const Image& img2, const IMatrix& m)
   {
-    RETURN_ERROR_IF_FAILED(DilateImg(img1, img2, m));
-    RETURN_ERROR_IF_FAILED(ErodeImg(img2, img2, m));
+    RETURN_ERROR_IF_FAILED(dilateImg(img1, img2, m));
+    RETURN_ERROR_IF_FAILED(erodeImg(img2, img2, m));
     return OK;
   }
 #undef FNAME

@@ -20,12 +20,11 @@
  */
 
 #include "base.h"
-#include "filter.h"
+#include "morph.h"
 #include "lseg.h"
 
 namespace ice
 {
-
   void lsegcore_std(const Image& source,
                     const Image& minimg, const Image& maximg,
                     const Image& oimg,
@@ -128,7 +127,7 @@ namespace ice
 
         MinMaxImg(source, neighb, neighb, minimg, maximg); // max and min in neighborhood
 
-        if (oimg->ImageType() != 1)   // für Zielebild sehr seltene Ausnahme, deshalb Verzicht auf Optimierung
+        if (oimg->ImageType() != 1)   // für Zielbild sehr seltene Ausnahme, deshalb Verzicht auf Optimierung
           {
             lsegcore_std(source, minimg, maximg, oimg, level);
           }
