@@ -115,6 +115,14 @@ namespace ice
     void copy(const Image& src);
 
     /**
+     *  invert all values of image\n
+     */
+    void invert()
+    {
+      img->invert();
+    }
+
+    /**
     * subimage constructor.
     * subimages are references to a part of another image (img).
     * @param img parent image

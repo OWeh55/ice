@@ -62,4 +62,17 @@ namespace ice
     return OK;
   }
 #undef FNAME
+
+#define FNAME "Image::invert"
+  int ImageBase::invert()
+  {
+    for (int y = 0; y < ysize; y++)
+      for (int x = 0; x < xsize; x++)
+        {
+          setP(x, y, maxval - getP(x, y));
+        }
+
+    return OK;
+  }
+#undef FNAME
 } // namespace

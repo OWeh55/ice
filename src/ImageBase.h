@@ -131,6 +131,11 @@ namespace ice
     virtual int set(int grayvalue);
 
     /**
+     * invert all image values.
+     */
+    virtual int invert();
+
+    /**
      * Set all image values to 0.
      */
     virtual void clear()
