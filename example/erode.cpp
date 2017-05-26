@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
   double ta = TimeD();
 
   for (int i = 0; i < TIMES; i++)
-    DilateImg(img, XS, YS, img);
+    dilateImg(img, XS, YS, img);
 
   Printf("Dilatation: %4.3f s\n", TimeD() - ta);
   GetChar();
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
   ta = TimeD();
 
   for (int i = 0; i < TIMES; i++)
-    ErodeImg(img, XS, YS, img);
+    erodeImg(img, XS, YS, img);
 
   Printf("Erosion: %4.3f s\n", TimeD() - ta);
   GetChar();

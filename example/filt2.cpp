@@ -259,11 +259,11 @@ int main(int argc, char* argv[])
               break;
 
             case 12:
-              DilateImg(p1, maskm, p2);
+              dilateImg(p1, maskm, p2);
               break;
 
             case 13:
-              ErodeImg(p1, maskm, p2);
+              erodeImg(p1, maskm, p2);
               break;
 
             case 14:

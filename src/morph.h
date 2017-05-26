@@ -35,42 +35,41 @@ namespace ice
 {
   // Erode / Dilate
   // with rectangular structuring element
-  /*
-  int erodeImg(const Image& img1, int nx, int ny, const Image& img2);
-  int dilateImg(const Image& img1, int nx, int ny, const Image& img2);
-  */
 
-  int erodeImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
-  int dilateImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+  void erodeImg(const Image& img1, int nx, int ny, const Image& img2);
+  void dilateImg(const Image& img1, int nx, int ny, const Image& img2);
 
-  int openingImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
-  int closingImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+  void erodeImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+  void dilateImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+
+  void openingImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
+  void closingImg(const Image& img1, const Image& img2, int nx = 3, int ny = -1);
 
 
   // structuring element defined by mask
-  /*
-  int dilateImg(const Image& img1, int neighb, int* mask, const Image& img2);
-  int erodeImg(const Image& img1, int neighb, int* mask, const Image& img2);
+  
+  void dilateImg(const Image& img1, int neighb, int* mask, const Image& img2);
+  void erodeImg(const Image& img1, int neighb, int* mask, const Image& img2);
 
-  int dilateImg(const Image& img1, int nx, int ny, int* mask,
+  void dilateImg(const Image& img1, int nx, int ny, int* mask,
                 const Image& img2);
-  int erodeImg(const Image& img1, int nx, int ny, int* mask,
+  void erodeImg(const Image& img1, int nx, int ny, int* mask,
                const Image& img2);
 
-  int dilateImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
-  int erodeImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
-  */
-  int dilateImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
-  int erodeImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
+  void dilateImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
+  void erodeImg(const Image& imgss, const IMatrix& msk, const Image& imgd);
+ 
+  void dilateImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
+  void erodeImg(const Image& imgss, const Image& imgd, const IMatrix& msk);
 
-  int openingImg(const Image& img1, const Image& img2, const IMatrix& msk);
-  int closingImg(const Image& img1, const Image& img2, const IMatrix& msk);
+  void openingImg(const Image& img1, const Image& img2, const IMatrix& msk);
+  void closingImg(const Image& img1, const Image& img2, const IMatrix& msk);
 
-  int dilateImg(const Image& imgss, const Image& imgd, const matrix<int>& msk);
-  int erodeImg(const Image& imgss, const Image& imgd, const matrix<int>& msk);
+  void dilateImg(const Image& imgss, const Image& imgd, const matrix<int>& msk);
+  void erodeImg(const Image& imgss, const Image& imgd, const matrix<int>& msk);
 
-  int openingImg(const Image& img1, const Image& img2, const matrix<int>& msk);
-  int closingImg(const Image& img1, const Image& img2, const matrix<int>& msk);
+  void openingImg(const Image& img1, const Image& img2, const matrix<int>& msk);
+  void closingImg(const Image& img1, const Image& img2, const matrix<int>& msk);
 
   // erode and dilate
   int MinMaxImg(const Image& pn1, int sx, int sy,

@@ -154,7 +154,7 @@ namespace ice
 
 //------------------------------------------------------
 #define FNAME "dilateImg"
-  int dilateImgO(const Image& pn1, int sx, int sy, const Image& pn2)
+  void dilateImgO(const Image& pn1, int sx, int sy, const Image& pn2)
   {
     // dilatation in rectangular window
     // optimized with incremental calculation of max with histogram
@@ -291,11 +291,9 @@ namespace ice
       }
 
     deletetemp(tmp, dx, dy);
-
-    return OK;
   }
 
-  int dilateImg(const Image& sourceImage, int sx, int sy,
+  void dilateImg(const Image& sourceImage, int sx, int sy,
                 const Image& destinationImage)
   {
     // Dilatation mit rechteckigen Fenster
@@ -317,7 +315,8 @@ namespace ice
 
     if (imgs.maxval < MHISTSIZE)
       {
-        return dilateImgO(imgs, sx, sy, destinationImage);
+        dilateImgO(imgs, sx, sy, destinationImage);
+	return;
       }
 
     need_temp = (destinationImage == imgs);
@@ -389,12 +388,11 @@ namespace ice
       }
 
     delete [] linebuffer;
-    return OK;
   }
 
   /* dilate/erode with given mask (as int*) */
 
-  int dilateImg(const Image& sourceImage,
+  void dilateImg(const Image& sourceImage,
                 int nbhx, int nbhy, int* mask,
                 const Image& destinationImage)
   {
@@ -468,20 +466,18 @@ namespace ice
             PutValUnchecked(destinationImage, x, y, val);
           }
       }
-
-    return OK;
   }
 
-  int dilateImg(const Image& sourceImage,
+  void dilateImg(const Image& sourceImage,
                 int nbh, int* mask,
                 const Image& destinationImage)
   {
-    return dilateImg(sourceImage, nbh, nbh, mask, destinationImage);
+    dilateImg(sourceImage, nbh, nbh, mask, destinationImage);
   }
 
 #undef FNAME
 #define FNAME "erodeImg"
-  int erodeImg(const Image& sourceImage,
+  void erodeImg(const Image& sourceImage,
                int nbhx, int nbhy, int* mask,
                const Image& destinationImage)
   {
@@ -555,21 +551,19 @@ namespace ice
             PutValUnchecked(destinationImage, x, y, val);
           }
       }
-
-    return OK;
   }
 
-  int erodeImg(const Image& sourceImage,
+  void erodeImg(const Image& sourceImage,
                int nbh, int* mask,
                const Image& destinationImage)
   {
-    return erodeImg(sourceImage, nbh, nbh, mask, destinationImage);
+    erodeImg(sourceImage, nbh, nbh, mask, destinationImage);
   }
 
 #undef FNAME
 
 #define FNAME "dilateImg"
-  int dilateImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
+  void dilateImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
   {
     int nx = mask.cols();
     int ny = mask.rows();
@@ -581,19 +575,18 @@ namespace ice
         {
           imask[i++] = mask[y][x];
         }
-    int rc = dilateImg(sourceImage, nx, ny, imask, destinationImage);
+    dilateImg(sourceImage, nx, ny, imask, destinationImage);
     delete [] imask;
-    return rc;
   }
 
-  int dilateImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
+  void dilateImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
   {
-    return dilateImg(sourceImage, mask, destinationImage);
+    dilateImg(sourceImage, mask, destinationImage);
   }
 #undef FNAME
 
 #define FNAME "erodeImg"
-  int erodeImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
+  void erodeImg(const Image& sourceImage, const IMatrix& mask, const Image& destinationImage)
   {
     int nx = mask.cols();
     int ny = mask.rows();
@@ -605,38 +598,36 @@ namespace ice
         {
           imask[i++] = mask[y][x];
         }
-    int rc = erodeImg(sourceImage, nx, ny, imask, destinationImage);
+    erodeImg(sourceImage, nx, ny, imask, destinationImage);
     delete [] imask;
-    return rc;
   }
 
-  int erodeImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
+  void erodeImg(const Image& sourceImage, const Image& destinationImage, const IMatrix& mask)
   {
-    return erodeImg(sourceImage, mask, destinationImage);
+    erodeImg(sourceImage, mask, destinationImage);
   }
 
 #undef FNAME
 
 //--------------------------------------------------
 #define FNAME "erodeImg"
-  int erodeImgO(const Image& pn1, int sx, int sy, const Image& pn2)
+  void erodeImgO(const Image& pn1, int sx, int sy, const Image& pn2)
   {
     // erosion in rectangular window
     // optimized with incremental calculation of min with histogram
-    int x, y;
-
+    try {
     if (pn1.maxval >= MHISTSIZE)
       throw IceException(FNAME, M_WRONG_PARAM);
-
+    
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
       throw IceException(FNAME, M_WRONG_PARAM);
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
+    
     int dx, dy;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
-
+    checkSizes(pn1, pn2, dx, dy);
+    
     int maxval = pn1.maxval;
 
     if (pn2.maxval < maxval)
@@ -647,7 +638,7 @@ namespace ice
     int** tmp = newtemp(dx, dy);
 
     // horizontal filtering
-    for (y = 0; y < dy; y++)   // all rows
+    for (int y = 0; y < dy; y++)   // all rows
       {
         int ypn1 = y;
 
@@ -669,14 +660,13 @@ namespace ice
           {
             // enter "right" values to histogram
             // write result
-            mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+            mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
             tmp[xd][y] = mh.getMin();
             xr++;
             xrpn1++;
             xd++;
           }
 
-        //        int xl = 0;
         int xlpn1 = 0;
 
         while (xr < dx)
@@ -684,9 +674,9 @@ namespace ice
             // enter "right" values to histogram
             // write result
             // delete "left" value from histogram
-            mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+            mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
             tmp[xd][y] = mh.getMin();
-            mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+            mh.dec(pn1.getPixelUnchecked(xlpn1, ypn1));
             //            xl++;
             xlpn1++;
             xr++;
@@ -707,7 +697,7 @@ namespace ice
       }
 
     // vertical filtering
-    for (x = 0; x < dx; x++)   // all columns
+    for (int x = 0; x < dx; x++)   // all columns
       {
         int xpn2 = x;
         mh.reset();
@@ -756,11 +746,11 @@ namespace ice
       }
 
     deletetemp(tmp, dx, dy);
-
-    return OK;
+    }
+    RETHROW;
   }
 
-  int erodeImg(const Image& sourceImage, int sx, int sy,
+  void erodeImg(const Image& sourceImage, int sx, int sy,
                const Image& destinationImage)
   {
     // Dilatation mit rechteckigen Fenster
@@ -783,7 +773,8 @@ namespace ice
 
     if (imgs.maxval < MHISTSIZE)
       {
-        return erodeImgO(imgs, sx, sy, destinationImage);
+        erodeImgO(imgs, sx, sy, destinationImage);
+	return;
       }
 
     need_temp = (destinationImage == imgs);
@@ -852,67 +843,74 @@ namespace ice
       }
 
     delete [] buffer;
-    return OK;
   }
 #undef FNAME
 
-  int erodeImg(const Image& img1, const Image& img2, int nx, int ny)
+  void erodeImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    return erodeImg(img1, nx, ny, img2);
+    erodeImg(img1, nx, ny, img2);
   }
 
-  int dilateImg(const Image& img1, const Image& img2, int nx, int ny)
+  void dilateImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    return dilateImg(img1, nx, ny, img2);
+    dilateImg(img1, nx, ny, img2);
   }
 
 #define FNAME "openingImg"
-  int openingImg(const Image& img1, const Image& img2, int nx, int ny)
+  void openingImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    RETURN_ERROR_IF_FAILED(erodeImg(img1, nx, ny, img2));
-    RETURN_ERROR_IF_FAILED(dilateImg(img2, nx, ny, img2));
-    return OK;
+    try {
+      erodeImg(img1, nx, ny, img2);
+      dilateImg(img2, nx, ny, img2);
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "closingImg"
-  int closingImg(const Image& img1, const Image& img2, int nx, int ny)
+  void closingImg(const Image& img1, const Image& img2, int nx, int ny)
   {
     if (ny < 0)
       {
         ny = nx;
       }
-    RETURN_ERROR_IF_FAILED(dilateImg(img1, nx, ny, img2));
-    RETURN_ERROR_IF_FAILED(erodeImg(img2, nx, ny, img2));
-    return OK;
+    try {
+      dilateImg(img1, nx, ny, img2);
+      erodeImg(img2, nx, ny, img2);
+    }
+    RETHROW;
   }
 #undef FNAME
 
 #define FNAME "openingImg"
-  int openingImg(const Image& img1, const Image& img2, const IMatrix& m)
+  void openingImg(const Image& img1, const Image& img2, const IMatrix& m)
   {
-    RETURN_ERROR_IF_FAILED(erodeImg(img1, img2, m));
-    RETURN_ERROR_IF_FAILED(dilateImg(img2, img2, m));
-    return OK;
+    try {
+      erodeImg(img1, img2, m);
+      dilateImg(img2, img2, m);
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "closingImg"
-  int closingImg(const Image& img1, const Image& img2, const IMatrix& m)
+  void closingImg(const Image& img1, const Image& img2, const IMatrix& m)
   {
-    RETURN_ERROR_IF_FAILED(dilateImg(img1, img2, m));
-    RETURN_ERROR_IF_FAILED(erodeImg(img2, img2, m));
-    return OK;
+    try {
+      dilateImg(img1, img2, m);
+      erodeImg(img2, img2, m);
+    }
+    RETHROW;
   }
 #undef FNAME
 

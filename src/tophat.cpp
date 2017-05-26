@@ -25,22 +25,22 @@
 namespace ice
 {
   void topHatTransformMin(const ice::Image& source,
-                          ice::Image& destination, int size)
+                          ice::Image& destination, int nx, int ny)
   {
     try
       {
         Image opened;
         opened.create(source);
-
-        openingImg(source, opened, size);
-        subImg(source, opened, destination, SMD_POSITIVE);
+ 
+	openingImg(source, opened, nx, ny);
+	subImg(source, opened, destination, SMD_POSITIVE);
       }
     RETHROW;
   }
 
   void topHatTransformMax(const ice::Image& source,
                           ice::Image& destination,
-                          int size)
+                          int nx, int ny)
   {
     // this should be difference of "closed" image and
     // original image.
@@ -51,7 +51,7 @@ namespace ice
         Image result;
         result.copy(source);
         result.invert();
-        topHatTransformMin(result, result, size);
+        topHatTransformMin(result, result, nx,ny);
         result.invert();
       }
     RETHROW;
@@ -59,12 +59,15 @@ namespace ice
 
   void topHatTransform(const ice::Image& source,
                        ice::Image& destination,
-                       int size)
+                       int nx, int ny)
   {
-    if (size > 0)
-      topHatTransformMin(source, destination, size);
+    if (ny<0)
+      ny=nx;
+
+    if (nx > 0)
+      topHatTransformMin(source, destination, nx, ny);
     else
-      topHatTransformMax(source, destination, -size);
+      topHatTransformMax(source, destination, -nx, -ny);
   }
 #undef FNAME
 }

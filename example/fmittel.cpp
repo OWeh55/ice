@@ -283,8 +283,8 @@ int main(int argc, char* argv[])
                 mask.setPixel(w, 0);
             }
 
-          ErodeImg(mask, mask);
-          DilateImg(mask, mask);
+          erodeImg(mask, mask);
+          dilateImg(mask, mask);
           // ergebnis-darstellung
 
           IPoint hx(in1t.xsize / 2, 0);

@@ -14,11 +14,11 @@ int main(int argc, char* argv[])
   printf("Erosion");
   fflush(stdout);
   getchar();
-  ErodeImg(img, 3, (int*)mask, img);              /*Erosion*/
+  erodeImg(img, 3, (int*)mask, img);              /*Erosion*/
   printf("Dilatation");
   fflush(stdout);
   getchar();
-  DilateImg(img, 3, (int*)mask, img);             /*Dilatation*/
+  dilateImg(img, 3, (int*)mask, img);             /*Dilatation*/
   getchar();
   Display(OFF);
   return 0;
