@@ -81,8 +81,8 @@ namespace ice
 
             while (xr < sx1)
               {
-                // enter "right" values to histogram
-                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                // add "right" values to histogram
+                mh.inc(pn1.getPixel(xrpn1, ypn1));
                 xr++;
                 xrpn1++;
               }
@@ -91,9 +91,9 @@ namespace ice
 
             while (xd < sx1)
               {
-                // enter "right" values to histogram
+                // add "right" values to histogram
                 // write result
-                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
                 tmp[xd][y] = mh.getMax();
                 xr++;
                 xrpn1++;
@@ -105,12 +105,12 @@ namespace ice
 
             while (xr < dx)
               {
-                // enter "right" values to histogram
+                // add "right" values to histogram
                 // write result
-                // delete "left" value from histogram
-                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                // remove "left" value from histogram
+                mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
                 tmp[xd][y] = mh.getMax();
-                mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+                mh.dec(pn1.getPixelUnchecked(xlpn1, ypn1));
 
                 //            xl++;
                 xlpn1++;
@@ -122,9 +122,9 @@ namespace ice
             while (xd < dx)
               {
                 // write result
-                // delete "left" value from histogram
+                // remove "left" value from histogram
                 tmp[xd][y] = mh.getMax();
-                mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+                mh.dec(pn1.getPixelUnchecked(xlpn1, ypn1));
                 //            xl++;
                 xlpn1++;
                 xd++;
@@ -153,7 +153,7 @@ namespace ice
             while (yd < sy1)
               {
                 mh.inc(tmp[x][yr]);
-                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
+                pn2.setPixelUnchecked(xpn2, ydpn2, mh.getMax());
                 yr++;
                 yd++;
                 ydpn2++;
@@ -164,7 +164,7 @@ namespace ice
             while (yr < dy)
               {
                 mh.inc(tmp[x][yr]);
-                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
+                pn2.setPixelUnchecked(xpn2, ydpn2, mh.getMax());
                 mh.dec(tmp[x][yl]);
 
                 yl++;
@@ -175,7 +175,7 @@ namespace ice
 
             while (yd < dy)
               {
-                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMax());
+                pn2.setPixelUnchecked(xpn2, ydpn2, mh.getMax());
                 mh.dec(tmp[x][yl]);
 
                 yl++;
@@ -228,8 +228,8 @@ namespace ice
 
             while (xr < sx1)
               {
-                // enter "right" values to histogram
-                mh.inc(GetValUnchecked(pn1, xrpn1, ypn1));
+                // add "right" values to histogram
+                mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
                 xr++;
                 xrpn1++;
               }
@@ -238,7 +238,7 @@ namespace ice
 
             while (xd < sx1)
               {
-                // enter "right" values to histogram
+                // add "right" values to histogram
                 // write result
                 mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
                 tmp[xd][y] = mh.getMin();
@@ -251,9 +251,9 @@ namespace ice
 
             while (xr < dx)
               {
-                // enter "right" values to histogram
+                // add "right" values to histogram
                 // write result
-                // delete "left" value from histogram
+                // remove "left" value from histogram
                 mh.inc(pn1.getPixelUnchecked(xrpn1, ypn1));
                 tmp[xd][y] = mh.getMin();
                 mh.dec(pn1.getPixelUnchecked(xlpn1, ypn1));
@@ -267,9 +267,9 @@ namespace ice
             while (xd < dx)
               {
                 // write result
-                // delete "left" value from histogram
+                // remove "left" value from histogram
                 tmp[xd][y] = mh.getMin();
-                mh.dec(GetValUnchecked(pn1, xlpn1, ypn1));
+                mh.dec(pn1.getPixelUnchecked(xlpn1, ypn1));
                 //            xl++;
                 xlpn1++;
                 xd++;
@@ -295,7 +295,7 @@ namespace ice
             while (yd < sy1)
               {
                 mh.inc(tmp[x][yr]);
-                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
+                pn2.setPixelUnchecked(xpn2, ydpn2, mh.getMin());
                 yr++;
                 yd++;
                 ydpn2++;
@@ -306,7 +306,7 @@ namespace ice
             while (yr < dy)
               {
                 mh.inc(tmp[x][yr]);
-                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
+                pn2.setPixelUnchecked(xpn2, ydpn2, mh.getMin());
                 mh.dec(tmp[x][yl]);
                 yl++;
                 yr++;
@@ -316,7 +316,7 @@ namespace ice
 
             while (yd < dy)
               {
-                PutValUnchecked(pn2, xpn2, ydpn2, mh.getMin());
+                pn2.setPixelUnchecked(xpn2, ydpn2, mh.getMin());
                 mh.dec(tmp[x][yl]);
                 yl++;
                 yd++;
@@ -358,13 +358,13 @@ namespace ice
       {
         int dx, dy;
         checkSizes(imgs, destinationImage, dx, dy);
-
+	
         if (imgs.maxval < MHISTSIZE)
           {
             dilateImgO(imgs, sx, sy, destinationImage);
             return;
           }
-
+	  
         need_temp = (destinationImage == imgs);
 
         if (need_temp)
