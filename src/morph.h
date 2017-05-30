@@ -93,6 +93,6 @@ namespace ice
                 const Image& pn2, const Image& pn3);
 
   // Skelettierung - skelett.cpp
-  void skeletonImg(const Image& img1, const Image& img2, int lvl = 1, int nIter=INT_MAX);
+  void skeletonImg(const Image& img1, const Image& img2, int lvl = 1, int nIter = INT_MAX);
 }
 #endif

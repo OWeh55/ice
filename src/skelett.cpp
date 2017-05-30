@@ -27,11 +27,11 @@ namespace ice
 {
   int getWhite(int bitmask)
   {
-    int white=0;
+    int white = 0;
     for (int i = 0x1; i < 0x100; i = i << 1)
       {
         if (!(i & bitmask))
-            white++;
+          white++;
       }
     return white;
   }
@@ -47,14 +47,14 @@ namespace ice
           {
             transitions++; /* 01-Muster */
           }
-	mask1 <<= 1;
-	mask2 <<= 1;
-	if (mask2>255)
-	  mask2=1;
+        mask1 <<= 1;
+        mask2 <<= 1;
+        if (mask2 > 255)
+          mask2 = 1;
       }
     return transitions;
   }
-  
+
   bool clearpixel1(int bitmask)
   {
     int white = getWhite(bitmask);
@@ -124,13 +124,13 @@ namespace ice
   int getNeighbors(PixelType1** tdata, int x, int y)
   {
     return (tdata[y - 1][x] & 1) * 0x01 |
-      (tdata[y - 1][x+1] & 1) * 0x02 |
-      (tdata[y][x+1] & 1) * 0x04 |
-      (tdata[y + 1][x+1] & 1) * 0x08 |
-      (tdata[y + 1][x] & 1) * 0x10 |
-      (tdata[y + 1][x-1] & 1) * 0x20 |
-      (tdata[y][x-1] & 1) * 0x40 |
-      (tdata[y-1][x-1] & 1) * 0x80;
+           (tdata[y - 1][x + 1] & 1) * 0x02 |
+           (tdata[y][x + 1] & 1) * 0x04 |
+           (tdata[y + 1][x + 1] & 1) * 0x08 |
+           (tdata[y + 1][x] & 1) * 0x10 |
+           (tdata[y + 1][x - 1] & 1) * 0x20 |
+           (tdata[y][x - 1] & 1) * 0x40 |
+           (tdata[y - 1][x - 1] & 1) * 0x80;
   }
 #endif
 
@@ -164,14 +164,14 @@ namespace ice
 
         PixelType1** tempData = (PixelType1**)tempImage->getDataPtr();
 
-	std::array<bool,256> clearPixel1;
-	std::array<bool,256> clearPixel2;
+        std::array<bool, 256> clearPixel1;
+        std::array<bool, 256> clearPixel2;
 
-	for (int mask=0; mask<256; mask++)
-	  {
-	    clearPixel1[mask]=clearpixel1(mask);
-	    clearPixel2[mask]=clearpixel2(mask);
-	  }
+        for (int mask = 0; mask < 256; mask++)
+          {
+            clearPixel1[mask] = clearpixel1(mask);
+            clearPixel2[mask] = clearpixel2(mask);
+          }
 
         /* Iterativ verduennen nach modifiziertem Zhang/Suen-Algorith. */
 

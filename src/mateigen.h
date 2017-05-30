@@ -51,8 +51,8 @@ namespace ice
 
 
   // obsolete versions with MatrixStruct
-  MatrixStruct Mateigen(MatrixStruct A, double* eval, MatrixStruct evect);
-  int SingularValueDcmp(MatrixStruct A, MatrixStruct* U, MatrixStruct* S, MatrixStruct* V);
+  //MatrixStruct Mateigen(MatrixStruct A, double* eval, MatrixStruct evect);
+  //  int SingularValueDcmp(MatrixStruct A, MatrixStruct* U, MatrixStruct* S, MatrixStruct* V);
 
 }
 

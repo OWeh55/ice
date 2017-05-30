@@ -56,8 +56,8 @@ namespace ice
   } ibuffer;
 
   Image Buffer2Image(ibuffer& ib, const Image& img, int flags = IB_CROP);
-  int Buffer2Image(ibuffer& ib, const Image& imgr, const Image& imgg, const Image& imgb,
-                   int flags = IB_CROP);
+  void Buffer2Image(ibuffer& ib, const Image& imgr, const Image& imgg, const Image& imgb,
+                    int flags = IB_CROP);
 
   int Image2Buffer(const Image& ir, const Image& ig, const Image& ib, ibuffer& ibuf);
   int Image2Buffer(const Image& img, ibuffer& ib);

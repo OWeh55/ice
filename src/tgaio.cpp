@@ -203,8 +203,8 @@ namespace ice
       {
         b = NewImg(ib.width, ib.height, ib.maxval);
       }
-
-    return Buffer2Image(ib, r, g, b, flag);
+    Buffer2Image(ib, r, g, b, flag);
+    return OK;
   }
 
   Image ReadTGAImg(const string& fname, Image& img, int flag)

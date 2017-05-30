@@ -41,6 +41,7 @@ Matrix a singulär ist und OK bei korrekter Ausführung.
 ******************************************************************************/
 namespace ice
 {
+#if 0
 #define TINY 1.0e-20;
   int ludecomp(double** a, int n, int* indx, double* d)
   {
@@ -486,4 +487,5 @@ namespace ice
     return (d);
   }
 #undef FNAME
+#endif
 }

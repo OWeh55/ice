@@ -132,52 +132,6 @@ namespace ice
     nodes.erase(newEnd, nodes.end());
   }
 
-#if 0
-  void Delaunay::cleanEdges(const vector<Edge>& edges,
-                            vector<Edge>& edges2, bool both) const
-  {
-    // remove edges, that exist in list two times (in both directions)
-
-    // marke edges to delete
-    vector<bool> toDelete(edges.size(), false);
-
-    for (int i = 0; i < ((int)edges.size()) - 1; ++i)
-      {
-        if (!toDelete[i])   // not deleted yet
-          {
-            Edge inverseEdge = edges[i].inversed();
-            int foundIndex = -1;
-            for (int k = i + 1; k < (int)edges.size() && foundIndex < 0 ; ++k)
-              {
-                if (edges[k] == inverseEdge)
-                  {
-                    foundIndex = k;
-                  }
-              }
-
-            if (foundIndex >= 0)
-              {
-                // delete edge _and_ inverse edge ?
-                if (both)
-                  {
-                    toDelete[i] = true;
-                  }
-                toDelete[foundIndex] = true;
-              }
-          }
-      }
-
-    edges2.clear();
-    for (int i = 0; i < (int)edges.size(); ++i)
-      {
-        if (!toDelete[i])
-          {
-            edges2.push_back(edges[i]);
-          }
-      }
-  }
-#endif
-
   void Delaunay::cleanEdges(vector<Edge>& edges, bool both) const
   {
     // remove edges, that exist in list two times (in both directions)

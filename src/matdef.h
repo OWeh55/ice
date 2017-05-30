@@ -56,4 +56,3 @@ namespace ice
 #define MAT_CHAR 2
 }
 #endif
-
