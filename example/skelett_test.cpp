@@ -8,9 +8,9 @@ int main(int argc, char** argv)
   Show(ON, src, "source");
   ReadImg("test_gray.jpg", src);
 
+#if 0
   Image direction, filtered;
 
-#if 0
   filtered = NewImg(src, false);
   SetImg(filtered, filtered->maxval);
 
@@ -31,20 +31,22 @@ int main(int argc, char** argv)
   double ta = TimeD();
 
   for (int i = 0; i < 2; i++)
-    SkelettImg(src, dst, 131);
-
+    //SkelettImg(src, dst, 131);
+    skeletonImg(src, dst, 131);
+  
   double tg = TimeD() - ta;
   Printf("Zeit: %4.2lf s\n", tg);
 
-#if 0
+#if 1
 
   Image dstx = NewImg(src);
   Show(ON, dstx, "destinationXXX");
 
   ta = TimeD();
 
-  for (int i = 0; i < 10; i++)
-    SkelettImgX(src, dstx);
+  for (int i = 0; i < 2; i++)
+    skeletonImg(src, dstx);
+  //    SkelettImgX(src, dstx);
 
   tg = TimeD() - ta;
   Printf("Zeitx: %4.2lf s\n", tg);
@@ -53,20 +55,20 @@ int main(int argc, char** argv)
   Show(OVERLAY, src, mark);
 
   int nError = 0;
-
-  for (IPoint p = src.begin(); p != src.end(); src.next(p))
+  WindowWalker ww(src);
+  for (ww.init(); !ww.ready(); ww.next())
     {
-      bool v1 = GetVal(dst, p) > 0;
-      bool v2 = GetVal(dstx, p) > 0;
+      bool v1 = GetVal(dst, ww) > 0;
+      bool v2 = GetVal(dstx, ww) > 0;
 
       if (v1 == v2)
         {
-          PutVal(mark, p, 2); //OK
+          PutVal(mark, ww, 2); //OK
         }
       else
         {
           nError++;
-          PutVal(mark, p, 1); //  !!
+          PutVal(mark, ww, 1); //  !!
         }
     }
 

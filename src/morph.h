@@ -87,12 +87,11 @@ namespace ice
   }
 #undef FNAME
 
-
   // erode and dilate
   int MinMaxImg(const Image& pn1, int sx, int sy,
                 const Image& pn2, const Image& pn3);
 
   // Skelettierung - skelett.cpp
-  int skeletonImg(const Image& img1, const Image& img2, int lvl = 1);
+  void skeletonImg(const Image& img1, const Image& img2, int lvl = 1);
 }
 #endif

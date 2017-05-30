@@ -20,13 +20,8 @@
  */
 /*********************************************************************
 
-  Weitere ICE-Funktionen - 18.08.1997 - ttbb
-
-  GetFreeman
-  Skeleton
   Thinning
-  Shading
-  HistogramEqual
+
   RelaxImg
 
 **********************************************************************/
@@ -38,47 +33,7 @@
 
 namespace ice
 {
-
-  void RotateImg(Image& img, short typ);
-
-  /*********************************************************************
-
-      Skeleton
-
-      Skeletierung des Binaerbildes img nach _imgd.
-      Ist _imgd==NULL wird das Ergebnisbild neu angelegt.
-      Rueckgabe: NULL bei Fehler, sonst Zeiger auf das Ergebnisbild.
-      mode3 gibt die Richtung (VERT,HORZ oder HORZ_VERT) an.
-      Mit mode wird die Behandlung der Minima angegeben:
-          Eintragen des ersten Minima eines Plateus: FIRST_EXTREMA
-          letztes:                                   LAST_EXTREMA
-          mittlerer:                                 MID_EXTREMA
-          Gesamtes Plateau:                          ALL_EXTREMA
-      Dito mode2 fuer die Maxima.
-      thresh gibt die Grauwertdifferenz an, um die sich zwei
-      aufeinanderfolgende Extrema unterscheiden mussen.
-      diff ist nur im Zusammenhang mit dem Modus ALL_EXTREMA fuer
-      die Maxima interessant. diff muss aus [0,1] sein und bestimmt
-      die relative zulaessige Grauwertdifferenz fuer Pixel neben dem
-      Plateau, die noch zum Plateau zugehoerig zaehlen.
-
-
-  **********************************************************************/
-
-
-#define FIRST_EXTREMA 1
-#define MID_EXTREMA   2
-#define LAST_EXTREMA  3
-#define ALL_EXTREMA   4
-#define NO_EXTREMA    0
-#define HORZ_VERT     (HORZ+VERT+1)
-
-  void Skeleton(const Image& img,
-                int mode, int mode2, int mode3,
-                int thresh, double diff, const Image& imgd);
-
-  void SkeletonImg(const Image& pic, const Image& skelett, int lvl);
-
+  void rotateImg(Image& img, short typ);
 
   /**********************************************************************
 
@@ -96,7 +51,5 @@ namespace ice
   ***********************************************************************/
 
   void RelaxImg(const Image& img, const Image& imgd, int n = 3);
-
-
 }
 #endif
