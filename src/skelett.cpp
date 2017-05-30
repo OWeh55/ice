@@ -18,189 +18,121 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "macro.h"
+#include <array>
+
 #include "morph.h"
 #include "WindowWalker.h"
 
 namespace ice
 {
-  bool clearpixel1(int bitmask)
+  int getWhite(int bitmask)
   {
-    int white = 0; /* Anzahl der weissen Nachbarn */
-
+    int white=0;
     for (int i = 0x1; i < 0x100; i = i << 1)
       {
         if (!(i & bitmask))
-          {
             white++;
-          }
       }
+    return white;
+  }
 
-    /* diese erste Bedingung weicht von Zhang/Suen ab*/
-    if ((white < 3) || (white > 6))
-      {
-        return false;
-      }
-
-    if ((bitmask & 0x15) == 0x15)
-      {
-        return false;
-      }
-
-    if (((bitmask & 0x54) == 0x54))
-      {
-        return false;
-      }
-
+  int getTransitions(int bitmask)
+  {
     int transitions = 0;
-
-    for (int i = 0x01, j = 0x02; i < 0x100; i = i << 1, j = j << 1)
+    int mask1 = 1;
+    int mask2 = 2;
+    for (int i = 0; i < 8; i++)
       {
-        if (((bitmask & i) == 0) && ((bitmask & j) == j))
+        if (((bitmask & mask1) == 0) && ((bitmask & mask2) > 0))
           {
             transitions++; /* 01-Muster */
           }
+	mask1 <<= 1;
+	mask2 <<= 1;
+	if (mask2>255)
+	  mask2=1;
+      }
+    return transitions;
+  }
+  
+  bool clearpixel1(int bitmask)
+  {
+    int white = getWhite(bitmask);
+
+    /* diese erste Bedingung weicht von Zhang/Suen ab*/
+    if ((white < 3) || (white > 6))
+      // if ((white < 2) || (white > 6))  // Zhang/Suen
+      {
+        return false;
       }
 
-    return transitions == 1;
+    if ((bitmask & 0x15) == 0x15) // ORU
+      {
+        return false;
+      }
+
+    if (((bitmask & 0x54) == 0x54)) // LUR
+      {
+        return false;
+      }
+
+    return getTransitions(bitmask) == 1;
   }
 
   bool clearpixel2(int bitmask)
   {
-    int white = 0; /* Anzahl der weissen Nachbarn */
-
-    for (int i = 0x1; i < 0x100; i = i << 1)
-      {
-        if (!(i & bitmask))
-          {
-            white++;
-          }
-      }
+    int white = getWhite(bitmask);
 
     /* diese erste Bedingung weicht von Zhang/Suen ab*/
     if ((white < 3) || (white > 6))
+      // if ((white < 2) || (white > 6))  // Zhang/Suen
       {
         return false;
       }
 
-    if ((bitmask & 0x51) == 0x51)
+    if ((bitmask & 0x51) == 0x51) // LOU
       {
         return false;
       }
 
-    if (((bitmask & 0x45) == 0x45))
+    if (((bitmask & 0x45) == 0x45)) //LOR
       {
         return false;
       }
 
-    int transitions = 0;
-
-    for (int i = 1, j = 2; i < 0x100; i = i << 1, j = j << 1)
-      {
-        if (((bitmask & i) == 0) && ((bitmask & j) == j))
-          {
-            transitions++; /* 01-Muster */
-          }
-      }
-
-    return transitions == 1;
+    return getTransitions(bitmask) == 1;
   }
 
-  int getNeighbors(const Image& img, int x, int y)
-  {
-    int p = 0;
-
-    /* Nachbarn ermitteln -> bitmaske */
-    if (GetValUnchecked(img, x, y - 1))
-      {
-        p |= 0x101;
-      }
-
-    if (GetValUnchecked(img, x + 1, y - 1))
-      {
-        p |= 0x02;
-      }
-
-    if (GetValUnchecked(img, x + 1, y))
-      {
-        p |= 0x04;
-      }
-
-    if (GetValUnchecked(img, x + 1, y + 1))
-      {
-        p |= 0x08;
-      }
-
-    if (GetValUnchecked(img, x, y + 1))
-      {
-        p |= 0x10;
-      }
-
-    if (GetValUnchecked(img, x - 1, y + 1))
-      {
-        p |= 0x20;
-      }
-
-    if (GetValUnchecked(img, x - 1, y))
-      {
-        p |= 0x40;
-      }
-
-    if (GetValUnchecked(img, x - 1, y - 1))
-      {
-        p |= 0x80;
-      }
-
-    return p;
-  }
-
+#if 0
   int getNeighbors(PixelType1** tdata, int x, int y)
   {
     int p = 0;
 
     /* Nachbarn ermitteln -> bitmaske */
-    if (tdata[y - 1][x])
-      {
-        p |= 0x101;
-      }
-
-    if (tdata[y - 1][x + 1])
-      {
-        p |= 0x02;
-      }
-
-    if (tdata[y][x + 1])
-      {
-        p |= 0x04;
-      }
-
-    if (tdata[y + 1][x + 1])
-      {
-        p |= 0x08;
-      }
-
-    if (tdata[y + 1][x])
-      {
-        p |= 0x10;
-      }
-
-    if (tdata[y + 1][x - 1])
-      {
-        p |= 0x20;
-      }
-
-    if (tdata[y][x - 1])
-      {
-        p |= 0x40;
-      }
-
-    if (tdata[y - 1][x - 1])
-      {
-        p |= 0x80;
-      }
+    if (tdata[y - 1][x]) p |= 0x01;
+    if (tdata[y - 1][x + 1])  p |= 0x02;
+    if (tdata[y][x + 1]) p |= 0x04;
+    if (tdata[y + 1][x + 1]) p |= 0x08;
+    if (tdata[y + 1][x]) p |= 0x10;
+    if (tdata[y + 1][x - 1]) p |= 0x20;
+    if (tdata[y][x - 1]) p |= 0x40;
+    if (tdata[y - 1][x - 1]) p |= 0x80;
 
     return p;
   }
+#else
+  int getNeighbors(PixelType1** tdata, int x, int y)
+  {
+    return (tdata[y - 1][x] & 1) * 0x01 |
+      (tdata[y - 1][x+1] & 1) * 0x02 |
+      (tdata[y][x+1] & 1) * 0x04 |
+      (tdata[y + 1][x+1] & 1) * 0x08 |
+      (tdata[y + 1][x] & 1) * 0x10 |
+      (tdata[y + 1][x-1] & 1) * 0x20 |
+      (tdata[y][x-1] & 1) * 0x40 |
+      (tdata[y-1][x-1] & 1) * 0x80;
+  }
+#endif
 
   void clearMarkedPixel(PixelType1** tempData, int dimx, int dimy)
   {
@@ -216,13 +148,12 @@ namespace ice
   }
 
 #define FNAME "skeletonImg"
-  void skeletonImg(const Image& pic, const Image& skelett, int lvl)
+  void skeletonImg(const Image& pic, const Image& skelett, int lvl, int nIter)
   {
     try
       {
         int dimx, dimy;
         checkSizes(pic, skelett, dimx, dimy);
-
         int maxv = skelett.maxval;
 
         Image tempImage;
@@ -233,13 +164,22 @@ namespace ice
 
         PixelType1** tempData = (PixelType1**)tempImage->getDataPtr();
 
+	std::array<bool,256> clearPixel1;
+	std::array<bool,256> clearPixel2;
+
+	for (int mask=0; mask<256; mask++)
+	  {
+	    clearPixel1[mask]=clearpixel1(mask);
+	    clearPixel2[mask]=clearpixel2(mask);
+	  }
+
         /* Iterativ verduennen nach modifiziertem Zhang/Suen-Algorith. */
 
-        int nIteration = 0;
+        int nIterations = 0;
         int changes = 0;
         do
           {
-            nIteration++;
+            nIterations++;
             changes = 0;
 
             // only inner points (left upper to right lower)
@@ -250,7 +190,7 @@ namespace ice
                     // get binary pattern of neighbours as int
                     int p = getNeighbors(tempData, x, y);
 
-                    if (clearpixel1(p))
+                    if (clearPixel1[p])
                       {
                         tempData[y][x] = 1; // mark pixel to "remove"
                         changes++;
@@ -267,7 +207,7 @@ namespace ice
                   {
                     int p = getNeighbors(tempData, x, y);
 
-                    if (clearpixel2(p))
+                    if (clearPixel2[p])
                       {
                         tempData[y][x] = 1;
                         changes++;
@@ -277,7 +217,7 @@ namespace ice
             // clear marked pixel
             clearMarkedPixel(tempData, dimx, dimy);
           }
-        while (changes > 0);   // until no more chages occur
+        while (changes > 0 && nIterations < nIter);   // until no more changes occur
 
         WindowWalker ww(skelett);
         for (ww.init(); !ww.ready(); ww.next())
