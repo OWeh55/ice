@@ -143,10 +143,22 @@ namespace ice
       rep->negateMask();
     }
 
-    virtual int getDX() const { return rep->getDX();}
-    virtual int getDY() const { return rep->getDY();}
-    virtual int getXDimension() const { return rep->getXDimension();}
-    virtual int getYDimension() const { return rep->getYDimension();}
+    virtual int getDX() const
+    {
+      return rep->getDX();
+    }
+    virtual int getDY() const
+    {
+      return rep->getDY();
+    }
+    virtual int getXDimension() const
+    {
+      return rep->getXDimension();
+    }
+    virtual int getYDimension() const
+    {
+      return rep->getYDimension();
+    }
 
     virtual LSIFilter getInverse(int sizex, int sizey) const;
     virtual LSIFilter getInverse(int size) const
@@ -252,7 +264,7 @@ namespace ice
 // functions for generation of LSIFilters
   LSIFilter makeMexicanHatFilter(double sigma, int size);
   LSIFilter makePolynomFilter(int size, int grad, int ii, int jj);
- 
+
   LSIFilter makeOrientedSmearFilter(int n, double dir, double len, double width);
   LSIFilter makeOrientedDoBFilter(int n, double dir, double len, double width);
   LSIFilter makeOrientedEdgeFilter(int n, double dir, double rad);

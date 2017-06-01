@@ -11,12 +11,12 @@ namespace ice
   public:
     LsiRepresentation(int nx, int ny);
     virtual ~LsiRepresentation() {}
-    
+
     int getXDimension() const
     {
       return dimx;
     }
-    
+
     int getYDimension() const
     {
       return dimy;
@@ -39,16 +39,16 @@ namespace ice
       double range = p - m;
       return RoundInt(-m / range * img.maxval);
     }
-    
+
     virtual void sumPlusSumMinus(double& sump, double& summ) const = 0;
     virtual void normalize() = 0;
 
     virtual void Filter(const Image& src, const Image& dst, int offset) const = 0;
     virtual void Filter(const Image& src, ImageD dst) const = 0;
     virtual void Filter(ImageD src, ImageD dst) const = 0;
-    
+
     virtual double getMask(int i, int j) const = 0;
-    
+
     virtual void getMask(matrix<double>& m) const = 0;
     virtual void negateMask() = 0;
     virtual void reflectMask() = 0;
@@ -58,10 +58,10 @@ namespace ice
     {
       return y * dimx + x;
     }
-    
+
     int dimx;
     int dimy;
   };
 }
 #endif
-  
+

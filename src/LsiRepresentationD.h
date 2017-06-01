@@ -1,7 +1,8 @@
 #ifndef LSI_FILTER_REPRESENTATION_D_H
 #define LSI_FILTER_REPRESENTATION_D_H
 
-namespace ice {
+namespace ice
+{
   class LsiRepresentationD: public LsiRepresentation
   {
   public:

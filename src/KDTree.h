@@ -143,7 +143,7 @@ namespace ice
     void create(const std::vector<T>& s)
     {
       if (tree != nullptr)
-          delete tree;
+        delete tree;
 
       create(tree, s);
     }

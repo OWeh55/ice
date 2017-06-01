@@ -4,8 +4,9 @@
 #include "matrixtemplate.h"
 #include "Matrix.h"
 
-namespace ice {
- class LsiRepresentationI: public LsiRepresentation
+namespace ice
+{
+  class LsiRepresentationI: public LsiRepresentation
   {
   public:
     LsiRepresentationI(const LsiRepresentationI& r);
