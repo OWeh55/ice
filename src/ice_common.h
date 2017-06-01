@@ -123,7 +123,6 @@
 #include "matrix_function.h"
 #include "Matrix.h"
 #include "matrixtemplate.h"
-#include "matrixarith.h"
 #include "matrixtools.h"
 #include "MaxSrch.h"
 #include "IceException.h"

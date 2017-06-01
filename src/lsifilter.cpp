@@ -144,8 +144,8 @@ namespace ice
 
   int GetVal(const Image& img, int x, int y, const LSIFilter& f)
   {
-    int dx = f.rep->getdx();
-    int dy = f.rep->getdy();
+    int dx = f.rep->getDX();
+    int dy = f.rep->getDY();
 
     if (!img.inside(x, y))
       {
