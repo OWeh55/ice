@@ -44,6 +44,9 @@ int main(int argc, char* argv[])
         case 'S':
           f = makeOrientedSmearFilter(fSize, Arcus(alpha), length, width);
           break;
+	case 'm':
+	  f = makeMexicanHatFilter(width,fSize);
+	  break;
         }
 
       Image img;
@@ -57,19 +60,36 @@ int main(int argc, char* argv[])
 
       double min = 0;
       double max = 0;
-
+      
+      double sum=0;
+      double summ=0;
+      double sump=0;
       for (int y = -dy; y <= dy; y++)
         for (int x = -dx; x <= dx; x++)
           {
             double maskValue = f.getMask(x + dx, y + dy);
+	    sum += maskValue;
+	    if (maskValue<0)
+	      summ +=maskValue;
+	    else
+	      sump +=maskValue;
             if (maskValue < min)
               min = maskValue;
             if (maskValue > max)
               max = maskValue;
           }
 
-      int nValue = (0 - min) * 255 / (max - min);
-      img.set(nValue);
+      if (verbose)
+	{
+	  cout << "minimaler Wert der Maske: " << min << endl;
+	  cout << "maximaler Wert der Maske: " << max << endl;
+	  cout << "Summe der Werte der Maske: " << sum << endl;
+	  cout << "Summe der positiven Werte der Maske: " << sump << endl;
+	  cout << "Summe der negativen Werte der Maske: " << summ << endl;
+	}
+      
+      int nullValue = (0 - min) * 255 / (max - min);
+      img.set(nullValue);
 
       const int border = 5;
       int ySizeB = ySize - border * 2;

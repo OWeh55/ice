@@ -250,9 +250,12 @@ namespace ice
                int norm, int offset/*=0*/);
 
 // functions for generation of LSIFilters
+  LSIFilter makeMexicanHatFilter(double sigma, int size);
+  LSIFilter makePolynomFilter(int size, int grad, int ii, int jj);
+ 
   LSIFilter makeOrientedSmearFilter(int n, double dir, double len, double width);
   LSIFilter makeOrientedDoBFilter(int n, double dir, double len, double width);
   LSIFilter makeOrientedEdgeFilter(int n, double dir, double rad);
-  LSIFilter makePolynomFilter(int size, int grad, int ii, int jj);
+
 }
 #endif
