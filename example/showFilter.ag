@@ -12,12 +12,16 @@
  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
  % para: dir, optional, string, dir, Verzeichnis mit Bildern, "."
  %
- opt: x, xsize, int, xSize, Größe der Darstellung x, 512
- opt: y, ysize, int, ySize, Größe der Darstellung y, 512
+ opt: t, type, char, fType, Filter-Typ, 'D'
+ opt2:   t = 'S' orientedSmearFilter
+ opt2:   t = 'D' orientedDobFilter
+ opt2:   t = 'E' orientedEdgeFilter
  opt: s, filtersize, int, fSize, Filtergröße, 13
  opt: w, width, double, width, Filter-Breite, 5
  opt: l, length, double, length, Filter-Länge, 11
  opt: a, alpha, double, alpha, Winkel, 33
+ opt: x, xsize, int, xSize, Größe der Darstellung x, 512
+ opt: y, ysize, int, ySize, Größe der Darstellung y, 512
  opt: v, verbose, void, verbose, Anzeige der Abarbeitung, false
  opt: h, help, usage, help, Hilfe
 AppGen*/
@@ -25,51 +29,65 @@ AppGen*/
 int main(int argc, char* argv[])
 {
   /*AppGen:MainEnd*/
-  try {
-    LSIFilter f=makeOrientedDoBFilter(fSize,Arcus(alpha),length,width);
+  try
+    {
+      LSIFilter f;
+      switch (fType)
+        {
+        case 'D':
+          f = makeOrientedDoBFilter(fSize, Arcus(alpha), length, width);
+          break;
+        case 'E':
+          // width == radius
+          f = makeOrientedEdgeFilter(fSize, Arcus(alpha), width);
+          break;
+        case 'S':
+          f = makeOrientedSmearFilter(fSize, Arcus(alpha), length, width);
+          break;
+        }
 
-    Image img;
-    img.create(xSize,ySize,255);
-    Show(ON,img,"filter");
+      Image img;
+      img.create(xSize, ySize, 255);
+      Show(ON, img, "filter");
 
-    int dx=f.getDX();
-    int dy=f.getDY();
-    int dimx=f.getXDimension();
-    int dimy=f.getYDimension();
-    
-    double min=0;
-    double max=0;
+      int dx = f.getDX();
+      int dy = f.getDY();
+      int dimx = f.getXDimension();
+      int dimy = f.getYDimension();
 
-    for (int y=-dy;y<=dy;y++)
-      for (int x=-dx;x<=dx;x++)
-	{
-	  double maskValue=f.getMask(x+dx,y+dy);
-	  if (maskValue<min)
-	    min=maskValue;
-	  if (maskValue>max)
-	    max=maskValue;
-	}
+      double min = 0;
+      double max = 0;
 
-    int nValue=(0-min)*255/(max-min);
-    img.set(nValue);
+      for (int y = -dy; y <= dy; y++)
+        for (int x = -dx; x <= dx; x++)
+          {
+            double maskValue = f.getMask(x + dx, y + dy);
+            if (maskValue < min)
+              min = maskValue;
+            if (maskValue > max)
+              max = maskValue;
+          }
 
-    const int border=5;
-    int ySizeB=ySize-border*2;
-    int xSizeB=xSize-border*2;
+      int nValue = (0 - min) * 255 / (max - min);
+      img.set(nValue);
 
-    for (int y=border;y<ySize-border;y++)
-      {
-	int yf=(y-border)*dimy/(ySizeB);
-	for (int x=border;x<xSize-border;x++)
-	  {
-	    int xf=(x-border)*dimx/xSizeB;
-	    double mValue=f.getMask(xf,yf);
-	    img.setPixel(x,y,(mValue-min)*255/(max-min));
-	}
-      }
-    GetChar();
-    return 1;
-  }
+      const int border = 5;
+      int ySizeB = ySize - border * 2;
+      int xSizeB = xSize - border * 2;
+
+      for (int y = border; y < ySize - border; y++)
+        {
+          int yf = (y - border) * dimy / (ySizeB);
+          for (int x = border; x < xSize - border; x++)
+            {
+              int xf = (x - border) * dimx / xSizeB;
+              double mValue = f.getMask(xf, yf);
+              img.setPixel(x, y, (mValue - min) * 255 / (max - min));
+            }
+        }
+      GetChar();
+      return 1;
+    }
   catch (IceException ex)
     {
       cout << " Exception " << ex.what() << endl;

@@ -25,7 +25,7 @@ int main(int argc, char** argv)
       skeletonImg(src, dst, 2);
     }
   double tg = TimeD() - ta;
-  Printf("Zeit: %4.2lf s\n", tg/10);
+  Printf("Zeit: %4.2lf s\n", tg / 10);
 
   GetChar();
 

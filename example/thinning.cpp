@@ -9,10 +9,10 @@ int main(int argc, char* argv[])
   Image i1 = ReadImg("test_gray.jpg");
   Image i2;
   i2.create(i1.xsize, i1.ysize, 255);
-  
+
   Show(ON, i1, "Ausgangsbild");
   Show(ON, i2, "Ergebnisbild");
-  
+
   GradImg(i1, i1, 1);
 
   binImg(i1, 15, i1);

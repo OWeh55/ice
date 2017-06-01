@@ -263,20 +263,20 @@ int main(int argc, char** argv)
     {
       int dimx, dimy, maxval, channels;
 
-      if (!fn[0]=='%')
-	{
-	  InfImgFile(fn, dimx, dimy, maxval, channels);
-	}  
+      if (!fn[0] == '%')
+        {
+          InfImgFile(fn, dimx, dimy, maxval, channels);
+        }
       else
-	{
-	  dimx=50;
-	  dimy=50;
-	  maxval=255;
-	  channels=1;
-	}
+        {
+          dimx = 50;
+          dimy = 50;
+          maxval = 255;
+          channels = 1;
+        }
 
       Window valid(hsize, hsize, dimx - hsize - 1, dimy - hsize - 1);
-		
+
       if (verbose)
         {
           cout << "Bearbeite " << fn << ": " << dimx << "*" << dimy;
@@ -289,74 +289,74 @@ int main(int argc, char** argv)
       if (gray)
         {
           Image src, direction, filtered;
-	  
-	  if (!fn[0]=='%')
-	    {
-	      src.read(fn);
-	    }
-	  else
-	    {
-	      src.create(50,50,255);
-	      src.set(0);
-	      src.setPixel(25,25,255);
-	    }
-	      filtered.create(src);
-	      filtered.set(maxval);
-	      
-	      direction.create(src.xsize, src.ysize, 90);
-	      
-	      Show(ON, src, "Original");
-	      Show(ON, filtered, "Gefiltered");
-	      
-	      double ta = TimeD(TM_WORLD);
-	      
-	      CalcDirectionImg2(src, direction, dsize, typ);
-	      
-	      if (verbose)
-		cout << "Nach Richtungsbestimmung " << TimeD(TM_WORLD) - ta << endl;
-	      
-	      FilterImg(src, direction, filtered, typ, fsize, flen, fwidth);
 
-	      if (gnorm)
-		{
-		  Image timg(filtered, valid);
-		  GrayNormalize(timg);
-		}
-	      
-	      if (hequal)
-		{
-		  Image timg(filtered, valid);
-		  HistogramEqualization(timg);
-		}
-	      
-	      
-	      if (verbose)
-		cout << ((TimeD(TM_WORLD) - ta) * 1000) << " ms" << endl;
-	      
-	      if (!ofn.empty())
-		WriteImg(filtered, ofn);
-	      
-	      if (wait)
-		Enter("Press Enter to continue");
-	    }
-	  else
-	    {
-	      ColorImage src;
-	      src.read(fn);
-	      Image direction;
-	      direction.create(src.xsize, src.ysize, 90);
-	      ColorImage filtered;
-	      filtered.create(dimx, dimy, maxval);
-	      setImg(filtered, maxval);
-	      
-	      Show(ON, src, "Original");
-	      Show(ON, filtered, "Gefiltered");
-	      
-	      /*
-            Show(ON,filtered.R(),"Rot");
-            Show(ON,filtered.G(),"Gruen");
-            Show(ON,filtered.B(),"Blau");
-          */
+          if (!fn[0] == '%')
+            {
+              src.read(fn);
+            }
+          else
+            {
+              src.create(50, 50, 255);
+              src.set(0);
+              src.setPixel(25, 25, 255);
+            }
+          filtered.create(src);
+          filtered.set(maxval);
+
+          direction.create(src.xsize, src.ysize, 90);
+
+          Show(ON, src, "Original");
+          Show(ON, filtered, "Gefiltered");
+
+          double ta = TimeD(TM_WORLD);
+
+          CalcDirectionImg2(src, direction, dsize, typ);
+
+          if (verbose)
+            cout << "Nach Richtungsbestimmung " << TimeD(TM_WORLD) - ta << endl;
+
+          FilterImg(src, direction, filtered, typ, fsize, flen, fwidth);
+
+          if (gnorm)
+            {
+              Image timg(filtered, valid);
+              GrayNormalize(timg);
+            }
+
+          if (hequal)
+            {
+              Image timg(filtered, valid);
+              HistogramEqualization(timg);
+            }
+
+
+          if (verbose)
+            cout << ((TimeD(TM_WORLD) - ta) * 1000) << " ms" << endl;
+
+          if (!ofn.empty())
+            WriteImg(filtered, ofn);
+
+          if (wait)
+            Enter("Press Enter to continue");
+        }
+      else
+        {
+          ColorImage src;
+          src.read(fn);
+          Image direction;
+          direction.create(src.xsize, src.ysize, 90);
+          ColorImage filtered;
+          filtered.create(dimx, dimy, maxval);
+          setImg(filtered, maxval);
+
+          Show(ON, src, "Original");
+          Show(ON, filtered, "Gefiltered");
+
+          /*
+              Show(ON,filtered.R(),"Rot");
+              Show(ON,filtered.G(),"Gruen");
+              Show(ON,filtered.B(),"Blau");
+            */
 
           //     Show(ON,direction,"Richtung");
 
