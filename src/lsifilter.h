@@ -39,17 +39,13 @@ namespace ice
   class LSIFilter
   {
   public:
-    typedef enum {it_int, it_double} impl_type;
 
-    impl_type typ;
-    LsiRepresentation* rep;
-
-    LSIFilter(): typ(it_int), rep(nullptr) {}
-    LSIFilter(const LSIFilter& f): typ(f.typ)
+    LSIFilter(): type(it_int), rep(nullptr) {}
+    LSIFilter(const LSIFilter& f): type(f.type)
     {
       if (f.rep != nullptr)
         {
-          switch (typ)
+          switch (type)
             {
             case it_int:
               rep = new LsiRepresentationI(*(LsiRepresentationI*)f.rep);
@@ -65,7 +61,7 @@ namespace ice
         }
     }
 
-    explicit LSIFilter(const Matrix& m, bool convolution = false): typ(it_double)
+    explicit LSIFilter(const Matrix& m, bool convolution = false): type(it_double)
     {
       rep = new LsiRepresentationD(m);
       if (convolution)
@@ -74,7 +70,7 @@ namespace ice
         }
     }
 
-    LSIFilter(const IMatrix& m, int norm, bool convolution = false): typ(it_int)
+    LSIFilter(const IMatrix& m, int norm, bool convolution = false): type(it_int)
     {
       rep = new LsiRepresentationI(m, norm);
       if (convolution)
@@ -83,7 +79,7 @@ namespace ice
         }
     }
 
-    explicit LSIFilter(const matrix<double>& m, bool convolution = false): typ(it_double)
+    explicit LSIFilter(const matrix<double>& m, bool convolution = false): type(it_double)
     {
       rep = new LsiRepresentationD(m);
       if (convolution)
@@ -92,7 +88,7 @@ namespace ice
         }
     }
 
-    LSIFilter(const matrix<int>& m, int norm, bool convolution = false): typ(it_int)
+    LSIFilter(const matrix<int>& m, int norm, bool convolution = false): type(it_int)
     {
       rep = new LsiRepresentationI(m, norm);
       if (convolution)
@@ -101,7 +97,7 @@ namespace ice
         }
     }
 
-    LSIFilter(int* m, int sizex, int sizey, int norm, bool convolution = false): typ(it_int)
+    LSIFilter(int* m, int sizex, int sizey, int norm, bool convolution = false): type(it_int)
     {
       rep = new LsiRepresentationI(m, sizex, sizey, norm);
       if (convolution)
@@ -160,6 +156,11 @@ namespace ice
       return rep->getYDimension();
     }
 
+    virtual const LsiRepresentation* getRepresentation() const
+    {
+      return rep;
+    }
+
     virtual LSIFilter getInverse(int sizex, int sizey) const;
     virtual LSIFilter getInverse(int size) const
     {
@@ -171,7 +172,16 @@ namespace ice
       return rep->proposeoffset(img);
     }
 
-    virtual LSIFilter& operator=(const LSIFilter& f);
+    virtual LSIFilter& operator=(LSIFilter f);
+
+    typedef enum {it_int, it_double} impl_type;
+    impl_type getImplementationType() const
+    {
+      return type;
+    }
+  private:
+    impl_type type;
+    LsiRepresentation* rep;
   };
 
   std::ostream& operator<<(std::ostream& os, const LSIFilter& f);
