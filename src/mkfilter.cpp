@@ -28,19 +28,6 @@ namespace ice
 // functions for generation of LSIFilters
 
 #define FNAME "makePolynomFilter"
-#if 0
-  static int powi(int b, int e)
-  {
-    int p = 1;
-
-    for (int i = 0; i < e; i++)
-      {
-        p *= b;
-      }
-
-    return p;
-  }
-#else
   static int powi(int b, int e)
   {
     if (e < 1)
@@ -62,7 +49,7 @@ namespace ice
           }
       }
   }
-#endif
+
   static int kidx(int n, int i, int j)
   {
     int idx = 0;
@@ -75,7 +62,7 @@ namespace ice
     return idx + i;
   }
 
-  LSIFilter makePolynomFilter(int size, int grad, int ii, int jj)
+  LSIFilter makePolynomFilter(const int size, int grad, int ii, int jj)
   {
     // Parametertest
     if (
@@ -87,18 +74,17 @@ namespace ice
     )
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    int m = size;
-    Matrix f(m * m, (grad + 1) * (grad + 2) / 2);
+    Matrix f(size * size, (grad + 1) * (grad + 2) / 2);
 
-    for (int k = 0; k < m; k++)
-      for (int l = 0; l < m; l++)
+    for (int k = 0; k < size; k++)
+      for (int l = 0; l < size; l++)
         {
-          int zidx = k * m + l;
+          int zidx = k * size + l;
 
           for (int i = 0; i <= grad; i++)
             for (int j = 0; j + i <= grad; j++)
               {
-                f[zidx][kidx(grad, i, j)] = powi(k - m / 2, i) * powi(l - m / 2, j);
+                f[zidx][kidx(grad, i, j)] = powi(k - size / 2, i) * powi(l - size / 2, j);
               }
         }
 
@@ -107,12 +93,12 @@ namespace ice
     Matrix iftf = Inverse(ftf);
     Matrix az = iftf * ft;
     int zidx = kidx(grad, ii, jj);
-    Matrix mask(m, m);
+    Matrix mask(size, size);
 
-    for (int j = 0; j < m; j++)
-      for (int i = 0; i < m; i++)
+    for (int j = 0; j < size; j++)
+      for (int i = 0; i < size; i++)
         {
-          mask[i][j] = az[zidx][j * m + i];
+          mask[i][j] = az[zidx][j * size + i];
         }
 
     return LSIFilter(mask);
@@ -337,4 +323,115 @@ namespace ice
 
     return LSIFilter(mask);
   }
+
+  void makeLoG(matrix<double>& f, double sigma)
+  {
+    int sx = f.cols();
+    int sy = f.rows();
+    int xm = sx / 2;
+    int ym = sy / 2;
+    double sigma2 = sigma * sigma;
+
+    double sumPositive = 0;
+
+    for (int y = 0; y < sy; y++)
+      {
+        double dy = y - ym;
+        double dy2 = dy * dy;
+
+        for (int x = 0; x < sx; x++)
+          {
+            double dx = x - xm;
+            double r2 = dx * dx + dy2;
+
+            double ex = - r2 / (2 * sigma2);
+            double fac = 1 + ex;
+            double c = fac * exp(ex);
+
+            f[y][x] = c;
+            if (c > 0)
+              {
+                sumPositive += c;
+              }
+          }
+      }
+
+    for (int y = 0; y < sy; y++)
+      for (int x = 0; x < sx; x++)
+        {
+          f[y][x] /= sumPositive;
+        }
+  }
+
+  void makeGauss(matrix<double>& f, double sigma)
+  {
+    int sx = f.cols();
+    int sy = f.rows();
+    int xm = sx / 2;
+    int ym = sy / 2;
+    double sigma2 = sigma * sigma;
+
+    double sumPositive = 0;
+
+    for (int y = 0; y < sy; y++)
+      {
+        double dy = y - ym;
+        double dy2 = dy * dy;
+
+        for (int x = 0; x < sx; x++)
+          {
+            double dx = x - xm;
+            double r2 = dx * dx + dy2;
+
+            double ex = -r2 / (2 * sigma2);
+            double c = exp(ex);
+
+            f[y][x] = c;
+            if (c > 0)
+              {
+                sumPositive += c;
+              }
+          }
+      }
+
+    for (int y = 0; y < sy; y++)
+      for (int x = 0; x < sx; x++)
+        {
+          f[y][x] /= sumPositive;
+        }
+  }
+
+#define FNAME "makeMexicanHatFilter"
+  LSIFilter makeMexicanHatFilter(int size, double sigma)
+  {
+    if (size < 0 || sigma < 0)
+      throw IceException(FNAME, M_WRONG_PARAM);
+
+    if (size == 0)
+      {
+        size = (int)(sigma * 7) | 1;
+      }
+
+    matrix<double> fc(size, size);
+    makeLoG(fc, sigma);
+    return LSIFilter(fc);
+  }
+#undef FNAME
+
+#define FNAME "makeGaussFilter"
+  LSIFilter makeGaussFilter(int size, double sigma)
+  {
+    if (size < 0 || sigma < 0)
+      throw IceException(FNAME, M_WRONG_PARAM);
+
+    if (size == 0)
+      {
+        size = (int)(sigma * 5) | 1;
+      }
+
+    matrix<double> fc(size, size);
+    makeGauss(fc, sigma);
+    return LSIFilter(fc);
+  }
+#undef FNAME
 }

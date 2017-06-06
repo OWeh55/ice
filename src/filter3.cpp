@@ -948,68 +948,13 @@ namespace ice
    *  Mexican-Hat as LoG - Laplace of Gaussian
    *  (x*x+y*y - 2 * sigma^2)/sigma^4 * exp(-(x*x+y*y)/(2*sigma^2)
    */
-
-  void makeLoG(Matrix& f, double sigma)
-  {
-    int sx = f.cols();
-    int sy = f.rows();
-    int xm = sx / 2;
-    int ym = sy / 2;
-    double sigma2 = sigma * sigma;
-
-    double sump = 0;
-
-    for (int y = 0; y < sy; y++)
-      {
-        double dy = y - ym;
-        double dy2 = dy * dy;
-
-        for (int x = 0; x < sx; x++)
-          {
-            double dx = x - xm;
-            double r2 = dx * dx + dy2;
-            double h = -r2 / sigma2;
-            double c = (1 + h) * exp(h);
-            f[y][x] = c;
-
-            if (c > 0)
-              {
-                sump += c;
-              }
-          }
-      }
-
-    for (int y = 0; y < sy; y++)
-      {
-        for (int x = 0; x < sx; x++)
-          {
-            f[y][x] /= sump;
-          }
-      }
-  }
-
 #define FNAME "MexicanHatImg"
-  LSIFilter makeMexicanHatFilter(double sigma, int size)
-  {
-    if (size < 0 || sigma < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    if (size == 0)
-      {
-        size = (int)(sigma * 5) | 1;
-      }
-
-    Matrix fc(size, size);
-    makeLoG(fc, sigma);
-    return LSIFilter(fc);
-  }
-
   void MexicanHatImg(const Image& img1, const Image& img2,
                      double sigma, int size)
   {
     try
       {
-        LSIFilter f = makeMexicanHatFilter(sigma, size);
+        LSIFilter f = makeMexicanHatFilter(size, sigma);
         f.filter(img1, img2, img2.maxval / 2);
       }
     RETHROW;
@@ -1020,7 +965,7 @@ namespace ice
   {
     try
       {
-        LSIFilter f = makeMexicanHatFilter(sigma, size);
+        LSIFilter f = makeMexicanHatFilter(size, sigma);
         f.filter(img1, img2);
       }
     RETHROW;
@@ -1031,11 +976,10 @@ namespace ice
   {
     try
       {
-        LSIFilter f = makeMexicanHatFilter(sigma, size);
+        LSIFilter f = makeMexicanHatFilter(size, sigma);
         f.filter(img1, img2);
       }
     RETHROW;
   }
-
 #undef FNAME
 }

@@ -13,9 +13,11 @@
  % para: dir, optional, string, dir, Verzeichnis mit Bildern, "."
  %
  opt: t, type, char, fType, Filter-Typ, 'D'
- opt2:   t = 'S' orientedSmearFilter
- opt2:   t = 'D' orientedDobFilter
- opt2:   t = 'E' orientedEdgeFilter
+ opt2:   t = 'S' makeOrientedSmearFilter
+ opt2:   t = 'D' makeOrientedDobFilter
+ opt2:   t = 'E' makeOrientedEdgeFilter
+ opt2:   t = 'm' makeMexicanHatFilter
+ opt2:   t = 'g' makeGaussFilter
  opt: s, filtersize, int, fSize, Filtergröße, 13
  opt: w, width, double, width, Filter-Breite, 5
  opt: l, length, double, length, Filter-Länge, 11
@@ -24,6 +26,7 @@
  opt: y, ysize, int, ySize, Größe der Darstellung y, 512
  opt: f, filterimage, void, filter, Wende Filter an, false
  opt: v, verbose, void, verbose, Anzeige der Abarbeitung, false
+ opt: n, nowait, void, nowait, Kein Warten am Ende, false
  opt: h, help, usage, help, Hilfe
 AppGen*/
 /*AppGen:Main*/
@@ -46,7 +49,10 @@ int main(int argc, char* argv[])
           f = makeOrientedSmearFilter(fSize, Arcus(alpha), length, width);
           break;
         case 'm':
-          f = makeMexicanHatFilter(width, fSize);
+          f = makeMexicanHatFilter(fSize, width);
+          break;
+        case 'g':
+          f = makeGaussFilter(fSize, width);
           break;
         }
 
@@ -113,18 +119,17 @@ int main(int argc, char* argv[])
           double time = TimeD();
           src.read("test_gray.jpg");
           Show(ON, src, "Source");
-          dst.create(src);
+          dst.copy(src);
           Show(ON, dst, "Destination");
-          //    int offset=0;
-          //    if (fType=='D')
-          //      offset=dst.maxval/2;
-          int offset = RoundInt(-summ / (sump - summ) * dst.maxval);
+          int offset = f.proposeOffset(dst);
           cout << "Filter-Offset: " << offset << endl;
           f.filter(src, dst, offset);
+          // f.filter(src, src, offset);
           cout << "Zeit für Filterung: " << TimeD() - time << endl;
         }
 
-      GetChar();
+      if (!nowait)
+        GetChar();
       return 1;
     }
   catch (IceException ex)

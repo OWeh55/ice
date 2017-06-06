@@ -32,7 +32,7 @@ namespace ice
       return (dimy - 1) / 2;
     }
 
-    int proposeoffset(const Image& img) const
+    int proposeOffset(const Image& img) const
     {
       double p, m;
       sumPlusSumMinus(p, m);
@@ -50,6 +50,7 @@ namespace ice
     virtual double getMask(int i, int j) const = 0;
 
     virtual void getMask(matrix<double>& m) const = 0;
+
     virtual void negateMask() = 0;
     virtual void reflectMask() = 0;
 
@@ -64,4 +65,3 @@ namespace ice
   };
 }
 #endif
-

@@ -82,6 +82,7 @@ namespace ice
 
   void GaussImg(const Image& imgs, const Image& imgd, int neighb, double sigma);
   void GaussImg(const ImageD& imgs, const ImageD& imgd, int neighb, double sigma);
+
   void MexicanHatImg(const Image& imgs, const Image& imgd, double sigma, int size = 0);
   void MexicanHatImg(const Image& imgs, ImageD imgd, double sigma, int size = 0);
   void MexicanHatImg(ImageD imgs, ImageD imgd, double sigma, int size = 0);

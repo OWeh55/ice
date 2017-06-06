@@ -150,7 +150,7 @@ namespace ice
 
     virtual double proposeOffset(const Image& img) const
     {
-      return rep->proposeoffset(img);
+      return rep->proposeOffset(img);
     }
 
     virtual LSIFilter& operator=(LSIFilter f);
@@ -253,7 +253,8 @@ namespace ice
                int norm, int offset/*=0*/);
 
 // functions for generation of LSIFilters
-  LSIFilter makeMexicanHatFilter(double sigma, int size);
+  LSIFilter makeGaussFilter(int size, double sigma);
+  LSIFilter makeMexicanHatFilter(int size, double sigma);
   LSIFilter makePolynomFilter(int size, int grad, int ii, int jj);
 
   LSIFilter makeOrientedSmearFilter(int n, double dir, double len, double width);

@@ -133,7 +133,7 @@ namespace ice
     // we need to copy the source image if it shares its pixelarray with the destination image
     if (src == dest)
       {
-        tmp = Image::createImage(dest, true);
+        tmp.copy(src);
       }
 
     lsiimgcyc(src, dest, nx, ny, mask, offset);

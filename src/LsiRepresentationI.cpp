@@ -110,15 +110,12 @@ namespace ice
     summ = 0;
 
     for (int i = 0; i < dimx * dimy; i++)
-      if (mask[i] > 0)
-        {
+      {
+        if (mask[i] > 0)
           sump += mask[i];
-        }
-      else
-        {
+        else
           summ += mask[i];
-        }
-
+      }
     sump /= norm;
     summ /= norm;
   }
