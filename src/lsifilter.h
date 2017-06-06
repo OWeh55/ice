@@ -61,49 +61,29 @@ namespace ice
         }
     }
 
-    explicit LSIFilter(const Matrix& m, bool convolution = false): type(it_double)
+    explicit LSIFilter(const Matrix& m): type(it_double)
     {
       rep = new LsiRepresentationD(m);
-      if (convolution)
-        {
-          rep->reflectMask();
-        }
     }
 
-    LSIFilter(const IMatrix& m, int norm, bool convolution = false): type(it_int)
+    LSIFilter(const IMatrix& m, int norm): type(it_int)
     {
       rep = new LsiRepresentationI(m, norm);
-      if (convolution)
-        {
-          rep->reflectMask();
-        }
     }
 
-    explicit LSIFilter(const matrix<double>& m, bool convolution = false): type(it_double)
+    explicit LSIFilter(const matrix<double>& m): type(it_double)
     {
       rep = new LsiRepresentationD(m);
-      if (convolution)
-        {
-          rep->reflectMask();
-        }
     }
 
-    LSIFilter(const matrix<int>& m, int norm, bool convolution = false): type(it_int)
+    LSIFilter(const matrix<int>& m, int norm): type(it_int)
     {
       rep = new LsiRepresentationI(m, norm);
-      if (convolution)
-        {
-          rep->reflectMask();
-        }
     }
 
-    LSIFilter(int* m, int sizex, int sizey, int norm, bool convolution = false): type(it_int)
+    LSIFilter(int* m, int sizex, int sizey, int norm): type(it_int)
     {
       rep = new LsiRepresentationI(m, sizex, sizey, norm);
-      if (convolution)
-        {
-          rep->reflectMask();
-        }
     }
 
     ~LSIFilter()
@@ -111,17 +91,17 @@ namespace ice
       delete rep;
     }
 
-    virtual void Filter(const Image& src, const Image& dst, int offset/*=0*/) const
+    virtual void filter(const Image& src, const Image& dst, int offset/*=0*/) const
     {
-      rep->Filter(src, dst, offset);
+      rep->filter(src, dst, offset);
     }
-    virtual void Filter(const Image& src, ImageD dst) const
+    virtual void filter(const Image& src, ImageD dst) const
     {
-      rep->Filter(src, dst);
+      rep->filter(src, dst);
     }
-    virtual void Filter(ImageD src, ImageD dst) const
+    virtual void filter(ImageD src, ImageD dst) const
     {
-      rep->Filter(src, dst);
+      rep->filter(src, dst);
     }
 
     virtual double getMask(int x, int y) const
@@ -147,6 +127,7 @@ namespace ice
     {
       return rep->getDY();
     }
+
     virtual int getXDimension() const
     {
       return rep->getXDimension();
@@ -208,8 +189,8 @@ namespace ice
   void lsiimgcyc(const Image& src, const Image& dest,
                  int nx, int ny, double* mask, int off);
 
-  // second level function - with parameter check
-  // use not recommended
+  // second level functions - with parameter check
+  // public use not recommended
   void LSIImg(const Image& src, const Image& dst,
               int nx, int ny, int* mask, int norm, int off);
   void LSIImg(const Image& src, const Image& dst,
@@ -240,8 +221,8 @@ namespace ice
                  int nx, int ny, double* mask, int off);
 
   // special access to pixel value through filter
-  int GetVal(const Image& img, int x, int y, const LSIFilter& f);
-  int GetVal(const Image& img, IPoint p, const LSIFilter& f);
+  int getValueFiltered(const Image& img, int x, int y, const LSIFilter& f);
+  int getValueFiltered(const Image& img, IPoint p, const LSIFilter& f);
 
   // Filtering with mask given as matrix
   void LSIImg(const Image&, const Image&,
@@ -253,7 +234,7 @@ namespace ice
   void LSIImg(const Image& imgs, const Matrix& m, int off, const Image& imgd);
 
   // !! Preferred filter function with LSIFilter class parameter
-  // equivalent to f.Filter(src,dest)
+  // equivalent to f.filter(src, dest)
   void LSIImg(const Image& src, const Image& dest,
               const LSIFilter& f, int offset);
 
@@ -278,6 +259,5 @@ namespace ice
   LSIFilter makeOrientedSmearFilter(int n, double dir, double len, double width);
   LSIFilter makeOrientedDoBFilter(int n, double dir, double len, double width);
   LSIFilter makeOrientedEdgeFilter(int n, double dir, double rad);
-
 }
 #endif

@@ -123,7 +123,7 @@ namespace ice
    * Bildpunktzugriff mit Filterung
    */
 
-  int GetVal(const Image& img, int x, int y, const LSIFilter& f)
+  int getValueFiltered(const Image& img, int x, int y, const LSIFilter& f)
   {
     const LsiRepresentation* rep = f.getRepresentation();
     int dx = rep->getDX();
@@ -183,8 +183,8 @@ namespace ice
     return g;
   }
 
-  int GetVal(const Image& img, IPoint p, const LSIFilter& f)
+  int getValueFiltered(const Image& img, IPoint p, const LSIFilter& f)
   {
-    return GetVal(img, p.x, p.y, f);
+    return getValueFiltered(img, p.x, p.y, f);
   }
 }

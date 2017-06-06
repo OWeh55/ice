@@ -903,8 +903,8 @@ namespace ice
         gf = !gf;
         LSIFilter gaussv(gf);
 
-        gaussv.Filter(img1, himg, 0.0);
-        gaussh.Filter(himg, img2, 0.0);
+        gaussv.filter(img1, himg, 0.0);
+        gaussh.filter(himg, img2, 0.0);
       }
     RETHROW;
   };
@@ -936,9 +936,9 @@ namespace ice
 
         LSIFilter gaussv(gf);
 
-        gaussv.Filter(img1, img2);
+        gaussv.filter(img1, img2);
 
-        gaussh.Filter(img2, img2);
+        gaussh.filter(img2, img2);
       }
     RETHROW;
   };
@@ -1010,7 +1010,7 @@ namespace ice
     try
       {
         LSIFilter f = makeMexicanHatFilter(sigma, size);
-        f.Filter(img1, img2, img2.maxval / 2);
+        f.filter(img1, img2, img2.maxval / 2);
       }
     RETHROW;
   }
@@ -1021,7 +1021,7 @@ namespace ice
     try
       {
         LSIFilter f = makeMexicanHatFilter(sigma, size);
-        f.Filter(img1, img2);
+        f.filter(img1, img2);
       }
     RETHROW;
   }
@@ -1032,7 +1032,7 @@ namespace ice
     try
       {
         LSIFilter f = makeMexicanHatFilter(sigma, size);
-        f.Filter(img1, img2);
+        f.filter(img1, img2);
       }
     RETHROW;
   }

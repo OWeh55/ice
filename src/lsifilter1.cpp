@@ -52,8 +52,8 @@ namespace ice
           throw IceException(FNAME, M_WRONG_PARAM);
 
         // test if both images have valid pixel arrays and
-        // equal size of the active windows
-        MatchImg(src, dest);
+        // equal size
+        checkSizes(src, dest);
 
         lsiimg(src, dest, nx, ny, mask, norm, offset);
       }
@@ -73,10 +73,14 @@ namespace ice
               int nx, int ny, double* mask,
               int offset)
   {
-    // test if both images have valid pixel arrays and
-    // equal size of the active windows
-    RETURN_ERROR_IF_FAILED(MatchImg(src, dest));
-    lsiimg(src, dest, nx, ny, mask, offset);
+    try
+      {
+        // test if both images have valid pixel arrays and
+        // equal size
+        checkSizes(src, dest);
+        lsiimg(src, dest, nx, ny, mask, offset);
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "LSIImgCyc"
@@ -239,7 +243,7 @@ namespace ice
 //####################################################################################################
   void LSIImg(const Image& src, const Image& dest, const LSIFilter& f, int offset)
   {
-    f.Filter(src, dest, offset);
+    f.filter(src, dest, offset);
   }
 
 // old versions with different parameter order
@@ -266,13 +270,13 @@ namespace ice
   void LSIImg(const Image& src, const Image& dest, const Matrix& mask, int off)
   {
     LSIFilter fm(mask);
-    fm.Filter(src, dest, off);
+    fm.filter(src, dest, off);
   }
 
   void LSIImg(const Image& src, const Image& dest, const IMatrix& mask, int norm, int off)
   {
     LSIFilter fm(mask, norm);
-    fm.Filter(src, dest, off);
+    fm.filter(src, dest, off);
   }
 #undef FNAME
 }

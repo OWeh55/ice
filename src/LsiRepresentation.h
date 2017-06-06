@@ -43,9 +43,9 @@ namespace ice
     virtual void sumPlusSumMinus(double& sump, double& summ) const = 0;
     virtual void normalize() = 0;
 
-    virtual void Filter(const Image& src, const Image& dst, int offset) const = 0;
-    virtual void Filter(const Image& src, ImageD dst) const = 0;
-    virtual void Filter(ImageD src, ImageD dst) const = 0;
+    virtual void filter(const Image& src, const Image& dst, int offset) const = 0;
+    virtual void filter(const Image& src, ImageD dst) const = 0;
+    virtual void filter(ImageD src, ImageD dst) const = 0;
 
     virtual double getMask(int i, int j) const = 0;
 

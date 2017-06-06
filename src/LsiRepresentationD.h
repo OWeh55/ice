@@ -17,9 +17,9 @@ namespace ice
     virtual void normalize();
     virtual void reflectMask();
 
-    virtual void Filter(const Image& src, const Image& dst, int offset) const;
-    virtual void Filter(const Image& src, ImageD dst) const;
-    virtual void Filter(ImageD src, ImageD dst) const;
+    virtual void filter(const Image& src, const Image& dst, int offset) const;
+    virtual void filter(const Image& src, ImageD dst) const;
+    virtual void filter(ImageD src, ImageD dst) const;
 
     virtual ~LsiRepresentationD()
     {
