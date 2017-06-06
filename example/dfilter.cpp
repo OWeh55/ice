@@ -66,7 +66,7 @@ void FilterImg(const Image& src, const Image& direction, const Image& filtered,
       break;
     case 'S':
       cout << flen << endl;
-      SmearImg(src, filtered, int(flen) | 1);
+      smearImg(src, filtered, int(flen) | 1);
       break;
 
     case 'd':
@@ -100,7 +100,7 @@ void FilterImg(const ColorImage& src, const Image& direction, const ColorImage& 
       break;
     case 'S':
       cout << flen << endl;
-      SmearImg(src, filtered, int(flen) | 1);
+      smearImg(src, filtered, int(flen) | 1);
       break;
     case 'd':
       OrientedDoBImg(src, direction, filtered, fsize, flen, fwidth);
@@ -262,7 +262,18 @@ int main(int argc, char** argv)
   if (!video)
     {
       int dimx, dimy, maxval, channels;
-      InfImgFile(fn, dimx, dimy, maxval, channels);
+
+      if (!fn[0] == '%')
+        {
+          InfImgFile(fn, dimx, dimy, maxval, channels);
+        }
+      else
+        {
+          dimx = 50;
+          dimy = 50;
+          maxval = 255;
+          channels = 1;
+        }
 
       Window valid(hsize, hsize, dimx - hsize - 1, dimy - hsize - 1);
 
@@ -279,11 +290,20 @@ int main(int argc, char** argv)
         {
           Image src, direction, filtered;
 
-          src = ReadImg(fn);
+          if (!fn[0] == '%')
+            {
+              src.read(fn);
+            }
+          else
+            {
+              src.create(50, 50, 255);
+              src.set(0);
+              src.setPixel(25, 25, 255);
+            }
+          filtered.create(src);
+          filtered.set(maxval);
 
-          filtered = NewImg(src, false);
-          SetImg(filtered, maxval);
-          direction = NewImg(src->xsize, src->ysize, 90);
+          direction.create(src.xsize, src.ysize, 90);
 
           Show(ON, src, "Original");
           Show(ON, filtered, "Gefiltered");
@@ -306,7 +326,7 @@ int main(int argc, char** argv)
           if (hequal)
             {
               Image timg(filtered, valid);
-              HistogramEqual(timg);
+              HistogramEqualization(timg);
             }
 
 
@@ -323,19 +343,20 @@ int main(int argc, char** argv)
         {
           ColorImage src;
           src.read(fn);
-          Image direction = NewImg(src.redImage()->xsize, src.redImage()->ysize, 90);
+          Image direction;
+          direction.create(src.xsize, src.ysize, 90);
           ColorImage filtered;
           filtered.create(dimx, dimy, maxval);
-          SetImg(filtered, maxval);
+          setImg(filtered, maxval);
 
           Show(ON, src, "Original");
           Show(ON, filtered, "Gefiltered");
 
           /*
-            Show(ON,filtered.R(),"Rot");
-            Show(ON,filtered.G(),"Gruen");
-            Show(ON,filtered.B(),"Blau");
-          */
+              Show(ON,filtered.R(),"Rot");
+              Show(ON,filtered.G(),"Gruen");
+              Show(ON,filtered.B(),"Blau");
+            */
 
           //     Show(ON,direction,"Richtung");
 
@@ -358,7 +379,7 @@ int main(int argc, char** argv)
           if (hequal)
             {
               ColorImage timg(filtered, valid);
-              HistogramEqual(timg);
+              HistogramEqualization(timg);
             }
 
           if (verbose)
@@ -398,12 +419,12 @@ int main(int argc, char** argv)
           // Einzelbild
           int fnr = 0;
 
-          while (fnr < framenumber && vin.Read(src))
+          while (fnr < framenumber && vin.read(src))
             {
               fnr++;
             }
 
-          if (vin.Read(src))
+          if (vin.read(src))
             {
 
               CalcDirectionImg2(src.greenImage(), direction, dsize, typ);
@@ -419,7 +440,7 @@ int main(int argc, char** argv)
               if (hequal)
                 {
                   ColorImage timg(filtered, valid);
-                  HistogramEqual(timg);
+                  HistogramEqualization(timg);
                 }
 
               if (!ofn.empty())
@@ -440,7 +461,7 @@ int main(int argc, char** argv)
           if (!ofn.empty())
             vout.open(ofn, ios_base::out);
 
-          while (vin.Read(src))
+          while (vin.read(src))
             {
               if (verbose)
                 cout << "Bildnr: " << vin.FrameNumber() << endl;
@@ -459,11 +480,11 @@ int main(int argc, char** argv)
               if (hequal)
                 {
                   ColorImage timg(filtered, valid);
-                  HistogramEqual(timg);
+                  HistogramEqualization(timg);
                 }
 
               if (!ofn.empty())
-                vout.Write(filtered);
+                vout.write(filtered);
             }
         }
 #endif

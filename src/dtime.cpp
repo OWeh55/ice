@@ -26,18 +26,6 @@
 #include <sys/times.h>
 #endif
 
-#if 0
-#ifndef _MSC_VER
-#include <sys/time.h>
-#include <unistd.h>
-#endif
-
-#ifndef _WIN32
-#include <sys/times.h>
-#include <sys/resource.h>
-#endif
-#endif
-
 #include "defs.h"
 #include "dtime.h"
 #include "IceException.h"

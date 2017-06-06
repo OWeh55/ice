@@ -18,10 +18,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <math.h>
-#include <malloc.h>
+
 #include <memory.h>
-#include <limits.h>
 
 #ifndef WIN32
 #include <stdlib.h>
@@ -29,12 +27,8 @@
 
 #include "defs.h"
 #include "IceException.h"
-#include "conturfunctions.h"
-#include "histogram.h"
-#include "arith.h"
-#include "fitfn.h"
+#include "WindowWalker.h"
 #include "morph.h"
-#include "filter.h"
 
 #include "icefunc.h"
 
@@ -51,37 +45,39 @@ namespace ice
 //////////////////////////////////////////////////////////////////////////
 // Lesen der dx x dy -Umgebung des Punktes (x,y) im Bild img.
 // In mask[] wird die Umgebung eingetragen und die Funktion liefert
-// die Anzahl der Nachbarn des Aufsetzpunktes mit einem Grauwert!=0 zurck.
+// die Anzahl der Nachbarn des Aufsetzpunktes mit einem Grauwert!=0 zurueck.
 
-  int GetEnviron(Image img, int x, int y, int dx, int dy, int mask[])
+  int getNeighbours(const Image& img, int x, int y, int dx, int dy, int mask[5][5])
   {
-    int xx, yy, xi, yi, xa, ya, index = 0, count = 0;
+    int index = 0, count = 0;
 
-    xi = -(dx - 1) / 2 + x;
-    yi = -(dy - 1) / 2 + y;
-    xa = (dx - 1) / 2 + x;
-    ya = (dy - 1) / 2 + y;
+    int x0 = -(dx - 1) / 2 + x;
+    int y0 = -(dy - 1) / 2 + y;
 
-    for (yy = yi; yy <= ya; yy++)
-      for (xx = xi; xx <= xa; xx++)
-        {
-          if (!mask[index] || xx > img->xsize || yy > img->ysize || xx < 0 || yy < 0)
-            {
-              mask[index] = -1;
-            }
-          else if ((mask[index] = GetVal(img, xx, yy)) && (abs(xx - x) < 2) && (abs(yy - y) < 2))
-            {
-              count++;
-            }
+    for (int yi = 0; yi < dy; yi++)
+      {
+        int yy = y0 + yi;
+        for (int xi = 0; xi < dx; xi++)
+          {
+            int xx = x0 + xi;
+            if (!mask[xi][yi] || xx > img->xsize || yy > img->ysize || xx < 0 || yy < 0)
+              {
+                mask[xi][yi] = -1;
+              }
+            else if ((mask[xi][yi] = GetVal(img, xx, yy)) && (abs(xx - x) < 2) && (abs(yy - y) < 2))
+              {
+                count++;
+              }
 
-          index++;
-        }
+            index++;
+          }
+      }
 
     return count - 1;
   }
 
 /////////////////////////////////////////////////////////////////////////
-// Bestimmen der 0 zu >0 Uebergaenge in der Zahlenfolge p1,p2,...,p8,p1
+// Bestimmen der 0 zu >0 Uebergaenge in der Zahlenfolge p1, p2, ..., p8, p1
 
   int Trans(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
   {
@@ -134,9 +130,6 @@ namespace ice
 
       Thinning nach JAIN
       Die Objekte im Binaerbild img1 werden verduennt.
-      Ist der Zeiger auf das Ergebnisbild (img2) NULL, so wird das Ergebnis-
-      bild neu angelegt. Bei fehlerfreier Ausfuehrung wird ein Zeiger auf
-      das Ergebnisbild, ansonsten NULL zurueckgegeben.
 
   ***********************************************************************/
 
@@ -146,40 +139,28 @@ namespace ice
   {
     try
       {
-        Image imgs, imgd;
-        int x, y, changed, neighbors, m[5][5];
+        int x, y, changed, neighbors;
+
         int dx, dy;
+        checkSizes(img1, img2, dx, dy);
 
-        MatchImg(img1, img2, dx, dy);
+        Image imgd;
+        imgd.create(img1.xsize, img1.ysize, 1);
 
-        imgd = NewImg(img1->xsize, img1->ysize, 1);
+        binImg(img1, imgd);
 
-        imgs = img2;
-
-        for (int y = 0; y < img1.ysize; y++)
-          for (int x = 0; x < img1.xsize; x++)
-            {
-              if (GetVal(img1, x, y) > 0)
-                {
-                  PutVal(imgd, x, y, 1);
-                }
-              else
-                {
-                  PutVal(imgd, x, y, 0);
-                }
-            }
-
+        int m[5][5];
         do
           {
-            CopyImg(imgd, imgs);
+            CopyImg(imgd, img2);
             changed = 0;
 
             for (x = 2; x < imgd->xsize - 2; x++)
               for (y = 2; y < imgd->ysize - 2; y++)
-                if (GetVal(imgs, x, y))
+                if (GetVal(img2, x, y))
                   {
                     memset(m, 1, 25 * sizeof(int));
-                    neighbors = GetEnviron(imgs, x, y, 5, 5, &m[0][0]);
+                    neighbors = getNeighbours(img2, x, y, 5, 5, m);
 
                     if ((2 <= neighbors) && (neighbors <= 6))
                       {
@@ -199,16 +180,16 @@ namespace ice
           }
         while (changed);
 
-        for (int y = 0; y < imgs.ysize; y++)
-          for (int x = 0; x < imgs.xsize; x++)
+        for (int y = 0; y < img2.ysize; y++)
+          for (int x = 0; x < img2.xsize; x++)
             {
               memset(m, 1, 25 * sizeof(int));
 
-              if (GetVal(imgs, x, y) > 0)
+              if (GetVal(img2, x, y) > 0)
                 {
-                  int val = imgs.maxval;
+                  int val = img2.maxval;
 
-                  if ((neighbors = GetEnviron(imgs, x, y, 3, 3, &m[0][0])) > 1)
+                  if ((neighbors = getNeighbours(img2, x, y, 3, 3, m)) > 1)
                     {
                       for (int i = 0; i < 5; i++)
                         for (int j = 0; j < 5; j++)
@@ -231,914 +212,11 @@ namespace ice
                         }
                     }
 
-                  PutVal(imgs, x, y, val);
+                  PutVal(img2, x, y, val);
                 }
             }
       }
     RETHROW;
-  }
-#undef FNAME
-
-  /**********************************************************************
-
-        Interne Funktion fuer Skeleton
-
-  ***********************************************************************/
-
-//////////////////////////////////////////////////////////////////////////
-// Rotation eines Bildes
-// (typ=RI_90GRAD,RI_180GRAD,RI_270GRAD)
-
-#define RI_0GRAD    0
-#define RI_90GRAD   1
-#define RI_180GRAD  2
-#define RI_270GRAD  3
-
-#define FNAME "RotateImg"
-  void RotateImg(Image& img, int typ)
-  {
-    if (!IsImg(img) || 
-	(typ != RI_0GRAD && typ != RI_90GRAD && typ != RI_180GRAD && typ != RI_270GRAD))
-      throw IceException(FNAME, M_WRONG_PARAM);
-    
-    try
-      {
-	int xs=img.xsize;
-	int ys=img.ysize;
-
-        Image img2;
-
-        if (typ != RI_180GRAD && typ !=RI_0GRAD)
-          {
-            img2.create(ys, xs, img.maxval);
-	    
-            if (typ == RI_270GRAD)
-              {
-                for (int y = 0; y < ys; y++)
-                  for (int x = 0; x < xs; x++)
-                    img2.setPixelUnchecked(ys - y - 1, x, 
-					   img.getPixelUnchecked(x, y));
-              }
-            else
-              for (int y = 0; y < ys; y++)
-                for (int x = 0; x < xs; x++)
-                  img2.setPixelUnchecked(y, xs - x - 1, 
-					 img.getPixelUnchecked(x, y));
-            img = img2;
-          }
-        else if (typ==RI_180GRAD)
-          {
-            int yend = ys / 2;
-	    
-            for (int y = 0; y < yend; y++)
-	      {
-		int y1=ys-1-y;
-              for (int x = 0; x < img->xsize; x++)
-                {
-		  int x1=xs-1-x;
-                  int val1 = img.getPixelUnchecked(x, y);
-		  int val2 = img.getPixelUnchecked(x1,y1);
-		  img.setPixelUnchecked(x,y,val2);
-		  img.setPixelUnchecked(x1,y1,val1);
-                }
-		}
-          }
-      }
-    RETHROW;
-  }
-
-#undef FNAME
-
-  /*********************************************************************
-
-      Skeleton
-
-      Skeletierung des Binaerbildes img nach _imgd.
-      Ist _imgd==NULL wird das Ergebnisbild neu angelegt.
-      Rueckgabe: NULL bei Fehler, sonst Zeiger auf das Ergebnisbild.
-      mode3 gibt die Richtung (VERT,HORZ oder HORZ_VERT) an.
-      Mit mode wird die Behandlung der Minima angegeben:
-          Eintragen des ersten Minima eines Plateus: FIRST_EXTREMA
-          letztes:                                   LAST_EXTREMA
-          mittlerer:                                 MID_EXTREMA
-          Gesamtes Plateau:                          ALL_EXTREMA
-      Dito mode2 fuer die Maxima.
-      thresh gibt die Grauwertdifferenz an, um die sich zwei
-      aufeinanderfolgende Extrema unterscheiden mussen.
-      diff ist nur im Zusammenhang mit dem Modus ALL_EXTREMA fuer
-      die Maxima interessant. diff muss aus [0,1] sein und bestimmt
-      die relative zulaessige Grauwertdifferenz fuer Pixel neben dem
-      Plateau, die noch zum Plateau zugehoerig zaehlen.
-
-  **********************************************************************/
-
-#define FNAME "Skeleton"
-
-  void Skeleton(const Image& img,
-                int mode, int mode2, int mode3,
-                int thresh, double diff, const Image& imgd)
-  {
-    // Parameter pruefen
-    if (!IsImg(img) ||
-        (fabs(diff) >= 1) ||
-        (thresh < 0 || thresh >= img.maxval) ||
-        (mode != ALL_EXTREMA && mode != FIRST_EXTREMA && mode != LAST_EXTREMA && mode != MID_EXTREMA && mode != NO_EXTREMA) ||
-        (mode2 != ALL_EXTREMA && mode2 != FIRST_EXTREMA && mode2 != LAST_EXTREMA && mode2 != MID_EXTREMA && mode2 != NO_EXTREMA) ||
-        (mode == NO_EXTREMA && mode2 == NO_EXTREMA))
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    // Initalisierung
-
-    if (!IsImg(imgd) || imgd.maxval != 1 || imgd->xsize != img->xsize || imgd->ysize != img->ysize)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    clearImg(imgd);
-
-    int* vec = NULL, *vecl = NULL, mem = 0, thr, flag = mode3 > HORZ_VERT;
-
-    if (mode3 > HORZ_VERT)
-      {
-        mode3 -= HORZ_VERT;
-      }
-
-    if (diff < 0)
-      {
-        vec = (int*)malloc(mem = max(img->xsize, img->ysize) * sizeof(int));
-        vecl = (int*)malloc(mem);
-      }
-
-    int lookfor, pos = 0, posl = 0, max = 0, min = INT_MAX, val, l = 0, y, x;
-    double d;
-
-    if (mode3 == HORZ || mode3 == HORZ_VERT)
-      {
-
-        for (y = 0; y < img->ysize; y++)
-          {
-
-            pos = posl = 0;
-            lookfor = 0;
-            max = min = GetVal(img, 0, y);
-
-            if (diff < 0)
-              {
-                memset(vec, 0, mem);
-              }
-
-            for (x = 1; x < img->xsize; x++)
-              {
-
-                val = GetVal(img, x, y);
-
-                if (lookfor != -1)   // suche maxima
-                  {
-
-                    if (val > max)
-                      {
-                        max = val;
-                        pos = x;
-                      }
-
-                    if (val == max)
-                      {
-                        posl = x;
-                      }
-
-                    if (max - val > thresh || (lookfor && x == img->xsize - 1))
-                      {
-
-                        // wesentliches Maxima gefunden
-
-                        if (diff > 0 && mode2 != NO_EXTREMA)
-                          {
-
-                            d = max * diff;
-
-                            for (l = pos - 1; l >= 0; l--)
-                              {
-                                if (abs(max - GetVal(img, l, y)) <= d)
-                                  {
-                                    pos = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-
-                            for (l = posl + 1; l < img->xsize; l++)
-                              {
-                                if (abs(max - GetVal(img, l, y)) <= d)
-                                  {
-                                    posl = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-                          }
-
-                        if (diff >= 0)
-                          {
-
-                            switch (mode2)
-                              {
-
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, pos, y, 1);
-                                break;
-                              case MID_EXTREMA   :
-                                PutVal(imgd, (pos + posl) / 2, y, 1);
-                                break;
-                              case LAST_EXTREMA  :
-                                PutVal(imgd, posl, y, 1);
-                                break;
-                              case ALL_EXTREMA   :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, l, y, 1);
-                                  }
-
-                                break;
-                              }
-                          }
-                        else
-                          {
-                            vec[(pos + posl) / 2] = 1;
-                            //vecl[(pos+posl)/2]=val;
-                          }
-
-                        max = 0;
-                        min = val;
-                        pos = x;
-                        posl = x;
-                        lookfor = -1;
-                      }
-                  }
-
-                if (lookfor != 1)
-                  {
-
-                    if (val < min)
-                      {
-                        min = val;
-                        pos = x;
-                      }
-
-                    if (val == min)
-                      {
-                        posl = x;
-                      }
-
-                    if (val - min > thresh || (lookfor && x == img->xsize - 1))
-                      {
-
-                        if (diff > 0 && mode != NO_EXTREMA)
-                          {
-
-                            d = min * diff;
-
-                            for (l = pos - 1; l >= 0; l--)
-                              {
-                                if (abs(min - GetVal(img, l, y)) <= d)
-                                  {
-                                    pos = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-
-                            for (l = posl + 1; l < img->xsize; l++)
-                              {
-                                if (abs(min - GetVal(img, l, y)) <= d)
-                                  {
-                                    posl = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-                          }
-
-                        if (diff >= 0)
-                          {
-
-                            switch (mode)
-                              {
-
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, pos, y, 1);
-                                break;
-                              case MID_EXTREMA   :
-                                PutVal(imgd, (pos + posl) / 2, y, 1);
-                                break;
-                              case LAST_EXTREMA  :
-                                PutVal(imgd, posl, y, 1);
-                                break;
-                              case ALL_EXTREMA   :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, l, y, 1);
-                                  }
-
-                                break;
-                              }
-                          }
-                        else
-                          {
-                            vec[(pos + posl) / 2] = -1;
-                            //vecl[(pos+posl)/2]=pl;
-                          }
-
-                        min = INT_MAX;
-                        max = val;
-                        pos = x;
-                        posl = x;
-                        lookfor = 1;
-                      }
-                  }
-              }
-
-            if (diff < 0)
-              {
-
-                for (x = 0; x < img->xsize; x++)
-                  {
-
-                    if (vec[x] != 0)
-                      {
-
-                        val = GetVal(img, x, y);
-                        max = GetVal(img, 0, y);
-
-                        pos = posl = x;
-
-                        for (l = x - 1; l >= 0; l--)
-                          if (vec[l] != 0)
-                            {
-                              max = GetVal(img, l, y);
-                              break;
-                            }
-
-                        if (l > 0)
-                          {
-                            if (vec[x] > 0)
-                              {
-
-                                thr = (int)(val - (val - max) * fabs(diff));
-
-                                for (l = x - 1; l >= 0; l--)
-                                  if (GetVal(img, l, y) <= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      pos = l;
-                                    }
-
-                              }
-                            else
-                              {
-
-                                thr = (int)(val + (max - val) * fabs(diff));
-
-                                for (l = x - 1; l >= 0; l--)
-                                  if (GetVal(img, l, y) >= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      pos = l;
-                                    }
-                              }
-                          }
-
-                        max = GetVal(img, img->xsize - 1, y);
-
-                        for (l = x + 1; l < img->xsize; l++)
-                          if (vec[l] != 0)
-                            {
-                              max = GetVal(img, l, y);
-                              break;
-                            }
-
-                        if (l < img->xsize - 1)
-                          {
-
-                            if (vec[x] > 0)
-                              {
-
-                                thr = (int)(val - (val - max) * fabs(diff));
-
-                                for (l = x + 1; l < img->xsize; l++)
-                                  if (GetVal(img, l, y) <= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      posl = l;
-                                    }
-
-                              }
-                            else
-                              {
-
-                                thr = (int)(val + (max - val) * fabs(diff));
-
-                                for (l = x + 1; l < img->xsize; l++)
-                                  if (GetVal(img, l, y) >= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      posl = l;
-                                    }
-                              }
-                          }
-
-                        if (vec[x] > 0)
-                          {
-
-                            switch (mode2)
-                              {
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, pos, y, 1);
-                                break;
-                              case MID_EXTREMA   :
-                                PutVal(imgd, (pos + posl) / 2, y, 1);
-                                break;
-                              case LAST_EXTREMA  :
-                                PutVal(imgd, posl, y, 1);
-                                break;
-                              case ALL_EXTREMA   :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, l, y, 1);
-                                  }
-
-                                break;
-                              }
-                          }
-                        else
-                          {
-
-                            switch (mode)
-                              {
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, pos, y, 1);
-                                break;
-                              case MID_EXTREMA   :
-                                PutVal(imgd, (pos + posl) / 2, y, 1);
-                                break;
-                              case LAST_EXTREMA  :
-                                PutVal(imgd, posl, y, 1);
-                                break;
-                              case ALL_EXTREMA   :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, l, y, 1);
-                                  }
-
-                                break;
-                              }
-
-                          }
-                      }
-                  }
-              }
-          }
-      }
-
-    if (mode3 == VERT || mode3 == HORZ_VERT)
-      {
-
-        for (x = 0; x < img->xsize; x++)
-          {
-
-            pos = posl = 0;
-            lookfor = 0;
-            max = min = GetVal(img, x, 0);
-
-            if (diff < 0)
-              {
-                memset(vec, 0, mem);
-              }
-
-            for (y = 1; y < img->ysize; y++)
-              {
-
-                val = GetVal(img, x, y);
-
-                if (lookfor == 1)   // suche maxima
-                  {
-
-                    if (val > max)
-                      {
-                        max = val;
-                        pos = y;
-                      }
-
-                    if (val == max)
-                      {
-                        posl = y;
-                      }
-
-                    if (max - val > thresh || (lookfor && y == img->ysize - 1))
-                      {
-
-                        // wesentliches Maxima gefunden
-                        if (diff > 0 && mode2 != NO_EXTREMA)
-                          {
-
-                            d = max * diff;
-
-                            for (l = pos - 1; l >= 0; l--)
-                              {
-                                if (abs(max - GetVal(img, x, l)) <= d)
-                                  {
-                                    pos = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-
-                            for (l = posl + 1; l < img->ysize; l++)
-                              {
-                                if (abs(max - GetVal(img, x, l)) <= d)
-                                  {
-                                    posl = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-                          }
-
-                        if (diff >= 0)
-                          {
-
-                            switch (mode2)
-                              {
-
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, x, pos, 1);
-                                break;
-                              case MID_EXTREMA   :
-                                PutVal(imgd, x, (pos + posl) / 2, 1);
-                                break;
-                              case LAST_EXTREMA  :
-                                PutVal(imgd, x, posl, 1);
-                                break;
-                              case ALL_EXTREMA   :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, x, l, 1);
-                                  }
-
-                                break;
-                              }
-                          }
-                        else
-                          {
-                            vec[(pos + posl) / 2] = 1;
-                            //vecl[(pos+posl)/2]=posl;
-                          }
-
-                        max = 0;
-                        min = val;
-                        pos = y;
-                        posl = y;
-                        lookfor = -1;
-                      }
-                  }
-                else
-                  {
-
-                    if (val < min)
-                      {
-                        min = val;
-                        pos = y;
-                      }
-
-                    if (val == min)
-                      {
-                        posl = y;
-                      }
-
-                    if (val - min > thresh || (lookfor && y == img->ysize - 1))
-                      {
-
-                        if (diff > 0 && mode != NO_EXTREMA)
-                          {
-
-                            d = min * diff;
-
-                            for (l = pos - 1; l >= 0; l--)
-                              {
-                                if (abs(min - GetVal(img, x, l)) <= d)
-                                  {
-                                    pos = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-
-                            for (l = posl + 1; l < img->ysize; l++)
-                              {
-                                if (abs(min - GetVal(img, x, l)) <= d)
-                                  {
-                                    posl = l;
-                                  }
-                                else
-                                  {
-                                    break;
-                                  }
-                              }
-                          }
-
-                        if (diff >= 0)
-                          {
-
-                            switch (mode)
-                              {
-
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, x, pos, 1);
-                                break;
-                              case MID_EXTREMA :
-                                PutVal(imgd, x, (pos + posl) / 2, 1);
-                                break;
-                              case LAST_EXTREMA :
-                                PutVal(imgd, x, posl, 1);
-                                break;
-                              case ALL_EXTREMA :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, x, l, 1);
-                                  }
-
-                                break;
-                              }
-                          }
-                        else
-                          {
-                            vec[(pos + posl) / 2] = -1;
-                            //vecl[(pos+posl)/2]=posl;
-                          }
-
-                        min = INT_MAX;
-                        max = val;
-                        pos = y;
-                        posl = y;
-                        lookfor = 1;
-                      } // if (minima gefunden)
-
-                  } // else fuer Suche nach minima
-
-              } // for (y)
-
-            if (diff < 0)
-              {
-
-                for (y = 0; y < img->ysize; y++)
-                  {
-
-                    if (vec[y] != 0)
-                      {
-
-                        val = GetVal(img, x, y);
-                        max = GetVal(img, x, 0);
-
-                        pos = posl = y;
-
-                        for (l = y - 1; l >= 0; l--)
-                          if (vec[l] != 0)
-                            {
-                              max = GetVal(img, x, l);
-                              break;
-                            }
-
-                        if (l > 0)
-                          {
-
-                            if (vec[y] > 0)
-                              {
-
-                                thr = (int)(val - (val - max) * fabs(diff));
-
-                                for (l = y - 1; l >= 0; l--)
-                                  if (GetVal(img, x, l) <= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      pos = l;
-                                    }
-
-                              }
-                            else
-                              {
-
-                                thr = (int)(val + (max - val) * fabs(diff));
-
-                                for (l = y - 1; l >= 0; l--)
-                                  if (GetVal(img, x, l) >= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      pos = l;
-                                    }
-                              }
-                          }
-
-                        max = GetVal(img, x, img->ysize - 1);
-
-                        for (l = y + 1; l < img->ysize; l++)
-                          if (vec[l] != 0)
-                            {
-                              max = GetVal(img, x, l);
-                              break;
-                            }
-
-                        if (l < img->ysize - 1)
-                          {
-
-                            if (vec[y] > 0)
-                              {
-
-                                thr = (int)(val - (val - max) * fabs(diff));
-
-                                for (l = y + 1; l < img->ysize; l++)
-                                  if (GetVal(img, x, l) <= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      posl = l;
-                                    }
-
-                              }
-                            else
-                              {
-
-                                thr = (int)(val + (max - val) * fabs(diff));
-
-                                for (l = y + 1; l < img->ysize; l++)
-                                  if (GetVal(img, x, l) >= thr)
-                                    {
-                                      break;
-                                    }
-                                  else
-                                    {
-                                      posl = l;
-                                    }
-                              }
-                          }
-
-                        if (vec[y] > 0)
-                          {
-
-                            switch (mode2)
-                              {
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, x, pos, 1);
-                                break;
-                              case MID_EXTREMA   :
-                                PutVal(imgd, x, (pos + posl) / 2, 1);
-                                break;
-                              case LAST_EXTREMA  :
-                                PutVal(imgd, x, posl, 1);
-                                break;
-                              case ALL_EXTREMA   :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, x, l, 1);
-                                  }
-
-                                break;
-                              }
-                          }
-                        else
-                          {
-
-                            switch (mode)
-                              {
-                              case FIRST_EXTREMA :
-                                PutVal(imgd, x, pos, 1);
-                                break;
-                              case MID_EXTREMA   :
-                                PutVal(imgd, x, (pos + posl) / 2, 1);
-                                break;
-                              case LAST_EXTREMA  :
-                                PutVal(imgd, x, posl, 1);
-                                break;
-                              case ALL_EXTREMA   :
-
-                                for (l = pos; l <= posl; l++)
-                                  {
-                                    PutVal(imgd, x, l, 1);
-                                  }
-
-                                break;
-                              }
-
-                          }
-                      }
-                  }
-              }
-          } // for(x)
-
-      } // if (vertikale suche)
-
-    if (diff < 0)
-      {
-        free(vec);
-        free(vecl);
-      }
-
-    if (!flag)
-      {
-        Image temp = NewImg(img, true);
-        Image temp2 = NewImg(temp);
-
-        RotateImg(temp, RI_180GRAD);
-
-        Skeleton(temp, (mode == FIRST_EXTREMA) ? LAST_EXTREMA : (mode == LAST_EXTREMA) ? FIRST_EXTREMA : mode, (mode2 == FIRST_EXTREMA) ? LAST_EXTREMA : (mode2 == LAST_EXTREMA) ? FIRST_EXTREMA : mode2, HORZ_VERT + mode3, thresh, diff, temp2);
-
-        RotateImg(temp2, RI_180GRAD);
-
-        maxImg(imgd, temp2, imgd);
-      }
-  }
-
-#undef FNAME
-
-  /**********************************************************************
-
-      Histogrammausgleich
-
-  ***********************************************************************/
-
-#define FNAME "HistogramEqual"
-  void HistogramEqual(const Image& img, Image& imgd)
-  {
-    try
-      {
-
-        int dx, dy;
-        MatchImg(img, imgd, dx, dy);
-
-        Histogram h(img);
-
-        vector<int> histx(img.maxval + 1);
-
-        double maxval = double(imgd.maxval) / img->xsize / img->ysize;
-        int sum = 0;
-
-        for (int i = 0; i <= img.maxval; i++)
-          {
-            sum += h.getCount(i);
-            histx[i] = RoundInt(sum * maxval);
-          }
-
-        IPoint p;
-        for (p.y = 0; p.y < imgd->ysize; p.y++)
-          for (p.x = 0; p.x < imgd->xsize; p.x++)
-            {
-              PutVal(imgd, p, histx[GetVal(img, p)]);
-            }
-
-      }
-    RETHROW;
-  }
-
-  void HistogramEqual(Image& imgd)
-  {
-    HistogramEqual(imgd, imgd);
   }
 #undef FNAME
 
@@ -1148,62 +226,30 @@ namespace ice
 
   *******************************************************************/
 
-///////////////////////////////////////////////////////////////////////////
-// Interne Hilfsfunktion
-// Bestimmt minimalen/maximalen Grauwert in der se x se - Umgebung des
-// Bildpunktes (x,y) im Bild img.
-
-  void EnvColors(const Image& img,
-                 int x, int y, int se, int& mini, int& maxi)
-  {
-    int xi = max(x - se, 0);
-    int yi = max(y - se, 0);
-    int xa = min(x + se, img->xsize - 1);
-    int ya = min(y + se, img->ysize - 1);
-    maxi = 0;
-    mini = img.maxval;
-
-    for (int xx = xi; xx <= xa; xx++)
-      for (int yy = yi; yy <= ya; yy++)
-        {
-          int val = GetVal(img, xx, yy);
-
-          if (val > maxi)
-            {
-              maxi = val;
-            }
-
-          if (val < mini)
-            {
-              mini = val;
-            }
-        }
-  }
-
 #define FNAME "RelaxImg"
   void RelaxImg(const Image& img, const Image& imgd, int n)
   {
     try
       {
-        int dx, dy;
-        MatchImg(img, imgd, dx, dy);
+        int dx, dy, maxval;
+        checkImage(img, imgd, dx, dy, maxval);
         Image maxImage;
         maxImage.create(img);
         Image minImage;
         minImage.create(img);
         MinMaxImg(img, n, n, minImage, maxImage);
 
-        for (int y = 0; y < dy; y++)
-          for (int x = 0; x < dx; x++)
-            {
-              int min = minImage.getPixel(x, y);
-              int max = maxImage.getPixel(x, y);
-              int mean = (max + min) / 2;
-              if (img.getPixel(x, y) <= mean)
-                imgd.setPixel(x, y, min);
-              else
-                imgd.setPixel(x, y, max);
-            }
+        WindowWalker ww(img);
+        for (ww.init(); !ww.ready(); ww.next())
+          {
+            int min = minImage.getPixel(ww);
+            int max = maxImage.getPixel(ww);
+            int mean = (max + min) / 2;
+            if (img.getPixel(ww) <= mean)
+              imgd.setPixel(ww, min);
+            else
+              imgd.setPixel(ww, max);
+          }
 
       }
     RETHROW;

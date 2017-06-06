@@ -61,7 +61,7 @@ namespace ice
           for (int x = 0; x < dimx; x++)
             {
               int richtungs_index = GetVal(dir, x, y);
-              int g = GetVal(pic, x, y, fsmear[richtungs_index]);
+              int g = getValueFiltered(pic, x, y, fsmear[richtungs_index]);
               PutVal(dest, x, y, limited(g, dest));
             }
       }
@@ -114,7 +114,7 @@ namespace ice
       for (int x = 0; x < dimx; x++)
         {
           int richtungs_index = GetVal(dir, x, y);
-          int g = GetVal(pic, x, y, fedge[richtungs_index]) + dest.maxval / 2;
+          int g = getValueFiltered(pic, x, y, fedge[richtungs_index]) + dest.maxval / 2;
           PutVal(dest, x, y, limited(g, dest));
         }
 
@@ -165,7 +165,7 @@ namespace ice
       for (int x = 0; x < dimx; x++)
         {
           int richtungs_index = GetVal(dir, x, y);
-          int g = GetVal(pic, x, y, fdob[richtungs_index]) + dest.maxval / 2;
+          int g = getValueFiltered(pic, x, y, fdob[richtungs_index]) + dest.maxval / 2;
           PutVal(dest, x, y, limited(g, dest));
         }
 

@@ -282,18 +282,10 @@ namespace ice
     return himg;
   }
 // RGB
-  int Buffer2Image(ibuffer& ib, const Image& imgr, const Image& imgg, const Image& imgb,
-                   int flags)
+  void Buffer2Image(ibuffer& ib,
+                    const Image& imgr, const Image& imgg, const Image& imgb,
+                    int flags)
   {
-
-    int xs, ys;
-    int x, y;
-    int valr = 0, valg = 0, valb = 0;
-    unsigned char* rptr = NULL, *gptr = NULL, *bptr = NULL;
-    int xm, ym;
-    int norm = 0;
-    int scal = 1; // keine skalierung
-
     valfunc* valueFunction;
 
     if (ib.byteorder == IB_LSB_FIRST)
@@ -336,191 +328,131 @@ namespace ice
     if (ib.planes == 1)
       {
         // kein RGB-Bild
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
         throw IceException(FNAME, M_WRONG_FILETYPE);
+      }
 
-        if (ib.can_delete)
+    try
+      {
+        int xsb = ib.width;
+        int ysb = ib.height; // Bildgroesse im Puffer
+        int xs, ys, maxval;
+        checkImage(imgr, imgg, imgb, xs, ys, maxval);
+
+        int norm = (maxval != ib.maxval);
+
+        int scal = 1;
+        if (flags & IB_SCALE)
           {
-            free(ib.data);
-          }
-
-        return WRONG_FILE;
-      }
-
-    int xsb = ib.width;
-    int ysb = ib.height; // Bildgroesse im Puffer
-
-    if (IsImg(imgr))
-      {
-        xs = imgr->xsize;
-        ys = imgr->ysize;
-      }
-    else if (IsImg(imgg))
-      {
-        xs = imgg->xsize;
-        ys = imgg->ysize;
-      }
-    else if (IsImg(imgb))
-      {
-        xs = imgb->xsize;
-        ys = imgb->ysize;
-      }
-    else
-      {
-        xs = xsb;
-        ys = ysb;
-      }
-
-#if 0
-    if (!IsImg(imgr))
-      {
-        imgr = NewImg(xs, ys, ib.maxval);
-      }
-
-    if (!IsImg(imgg))
-      {
-        imgg = NewImg(xs, ys, ib.maxval);
-      }
-
-    if (!IsImg(imgb))
-      {
-        imgb = NewImg(xs, ys, ib.maxval);
-      }
-#endif
-    RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
-
-    if ((imgr.maxval != imgg.maxval) || (imgr.maxval != imgb.maxval))
-      {
-        throw IceException(FNAME, M_WRONG_IMAGE);
-
-        if (ib.can_delete)
-          {
-            free(ib.data);
-          }
-
-        return WRONG_PARAM;
-      }
-
-    norm = (imgr.maxval != ib.maxval);
-
-    if (flags & IB_SCALE)
-      {
-        while ((xsb / scal > xs) || (ysb / scal > ys))
-          {
-            scal++;
-          }
-      }
-
-    xm = Min(xs, xsb / scal);
-    ym = Min(ys, ysb / scal);
-
-    if (ib.planes == 1)
-      {
-        // kein RGB-Bild
-        throw IceException(FNAME, M_WRONG_FILETYPE);
-
-        if (ib.can_delete)
-          {
-            free(ib.data);
-          }
-
-        return WRONG_FILE;
-      }
-
-    if (ib.planes == 3)
-      {
-        for (y = 0; y < ym; y++)
-          {
-            switch (ib.packmethod)
+            while ((xsb / scal > xs) || (ysb / scal > ys))
               {
-              case IB_RGB:
-                rptr = ib.data + (y * scal) * ib.linelength;
-                gptr = rptr + ib.valuesize;
-                bptr = gptr + ib.valuesize;
-                break;
-              case IB_BGR:
-                bptr = ib.data + (y * scal) * ib.linelength;
-                gptr = bptr + ib.valuesize;
-                rptr = gptr + ib.valuesize;
-                break;
-              case IB_RGB_PLANES:
-                rptr = ib.data + (y * scal) * ib.linelength;
-                gptr = rptr + ib.height * ib.linelength;
-                bptr = gptr + ib.height * ib.linelength;
-                break;
-              case IB_BGR_PLANES:
-                bptr = ib.data + (y * scal) * ib.linelength;
-                gptr = bptr + ib.width * ib.linelength;
-                rptr = gptr + ib.width * ib.linelength;
-                break;
-              default:
-                throw IceException(FNAME, M_WRONG_PARAM);
-
-                if (ib.can_delete)
-                  {
-                    free(ib.data);
-                  }
-
-                return WRONG_PARAM;
+                scal++;
               }
+          }
 
-            for (x = 0; x < xm; x++)
+        int xm = Min(xs, xsb / scal);
+        int ym = Min(ys, ysb / scal);
+
+        if (ib.planes == 1)
+          {
+            // no colorimage in buffer
+            throw IceException(FNAME, M_WRONG_FILETYPE);
+          }
+
+        if (ib.planes == 3)
+          {
+            for (int y = 0; y < ym; y++)
               {
-                valr = valueFunction(rptr);
-                valg = valueFunction(gptr);
-                valb = valueFunction(bptr);
-
-                if (ib.intensity)
-                  {
-                    valr = ib.maxval - valr;
-                    valg = ib.maxval - valg;
-                    valb = ib.maxval - valb;
-                  }
-
-                if (norm)
-                  {
-                    valr = MulDiv(valr, imgr.maxval, ib.maxval);
-                    valg = MulDiv(valg, imgg.maxval, ib.maxval);
-                    valb = MulDiv(valb, imgb.maxval, ib.maxval);
-                  }
-
-                PutVal(imgr, x, y, Min(imgr.maxval, Max(0, valr)));
-                PutVal(imgg, x, y, Min(imgg.maxval, Max(0, valg)));
-                PutVal(imgb, x, y, Min(imgb.maxval, Max(0, valb)));
-
+                unsigned char* rptr = nullptr;
+                unsigned char* gptr = nullptr;
+                unsigned char* bptr = nullptr;
                 switch (ib.packmethod)
                   {
                   case IB_RGB:
+                    rptr = ib.data + (y * scal) * ib.linelength;
+                    gptr = rptr + ib.valuesize;
+                    bptr = gptr + ib.valuesize;
+                    break;
                   case IB_BGR:
-                    rptr = rptr + ib.valuesize * 3 * scal;
-                    gptr = gptr + ib.valuesize * 3 * scal;
-                    bptr = bptr + ib.valuesize * 3 * scal;
+                    bptr = ib.data + (y * scal) * ib.linelength;
+                    gptr = bptr + ib.valuesize;
+                    rptr = gptr + ib.valuesize;
                     break;
                   case IB_RGB_PLANES:
+                    rptr = ib.data + (y * scal) * ib.linelength;
+                    gptr = rptr + ib.height * ib.linelength;
+                    bptr = gptr + ib.height * ib.linelength;
+                    break;
                   case IB_BGR_PLANES:
-                    rptr = rptr + ib.valuesize * scal;
-                    gptr = gptr + ib.valuesize * scal;
-                    bptr = bptr + ib.valuesize * scal;
+                    bptr = ib.data + (y * scal) * ib.linelength;
+                    gptr = bptr + ib.width * ib.linelength;
+                    rptr = gptr + ib.width * ib.linelength;
                     break;
                   default:
                     throw IceException(FNAME, M_WRONG_PARAM);
+                  }
 
-                    if (ib.can_delete)
+                for (int x = 0; x < xm; x++)
+                  {
+                    int valr = valueFunction(rptr);
+                    int valg = valueFunction(gptr);
+                    int valb = valueFunction(bptr);
+
+                    if (ib.intensity)
                       {
-                        free(ib.data);
+                        valr = ib.maxval - valr;
+                        valg = ib.maxval - valg;
+                        valb = ib.maxval - valb;
                       }
 
-                    return WRONG_PARAM;
+                    if (norm)
+                      {
+                        valr = MulDiv(valr, imgr.maxval, ib.maxval);
+                        valg = MulDiv(valg, imgg.maxval, ib.maxval);
+                        valb = MulDiv(valb, imgb.maxval, ib.maxval);
+                      }
+
+                    PutVal(imgr, x, y, Min(imgr.maxval, Max(0, valr)));
+                    PutVal(imgg, x, y, Min(imgg.maxval, Max(0, valg)));
+                    PutVal(imgb, x, y, Min(imgb.maxval, Max(0, valb)));
+
+                    switch (ib.packmethod)
+                      {
+                      case IB_RGB:
+                      case IB_BGR:
+                        rptr = rptr + ib.valuesize * 3 * scal;
+                        gptr = gptr + ib.valuesize * 3 * scal;
+                        bptr = bptr + ib.valuesize * 3 * scal;
+                        break;
+                      case IB_RGB_PLANES:
+                      case IB_BGR_PLANES:
+                        rptr = rptr + ib.valuesize * scal;
+                        gptr = gptr + ib.valuesize * scal;
+                        bptr = bptr + ib.valuesize * scal;
+                        break;
+                      default:
+                        throw IceException(FNAME, M_WRONG_PARAM);
+                      }
                   }
               }
           }
-      }
 
-    if (ib.can_delete)
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
+      }
+    catch (IceException& ex)
       {
-        free(ib.data);
+        if (ib.can_delete)
+          {
+            free(ib.data);
+          }
+        throw IceException(ex, FNAME);
       }
-
-    return OK;
   }
 
   /*

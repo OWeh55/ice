@@ -27,7 +27,6 @@
 #include <set>
 #include <vector>
 
-#include "matrixarith.h"
 #include "matrixtools.h"
 #include "Classifier.h"
 
@@ -126,13 +125,12 @@ namespace ice
                             }
                         }
                     }
-                  //      std::cout << lv.size() << " " << rv.size() << " " << splitValue << std::endl;
+                  // std::cout<<lv.size()<<" "<<rv.size()<<" "<<splitValue<<std::endl;
                   create(tree->left, lv);
                   create(tree->right, rv);
                 }
               else
                 {
-                  //      std::cout << "all equal" << std::endl;
                   // no split possible
                   // we use the first sample as leaf value
                   // and ignore the others (which are the same)
@@ -145,9 +143,8 @@ namespace ice
     void create(const std::vector<T>& s)
     {
       if (tree != nullptr)
-        {
-          delete tree;
-        }
+        delete tree;
+
       create(tree, s);
     }
 
@@ -638,8 +635,6 @@ namespace ice
 
           // at least the max element should be >= sValue than
           assert(higherIdx >= 0);
-
-          //    std::cout << "next higher value  " << higherValue << std::endl;
 
           sampleIdx = higherIdx;
           return true;

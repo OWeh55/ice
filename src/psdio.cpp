@@ -484,7 +484,8 @@ namespace ice
         imgb = NewImg(ib.width, ib.height, ib.maxval);
       }
 
-    return Buffer2Image(ib, imgr, imgg, imgb, flag);
+    Buffer2Image(ib, imgr, imgg, imgb, flag);
+    return OK;
   }
 
 }

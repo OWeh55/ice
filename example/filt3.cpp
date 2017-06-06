@@ -42,13 +42,13 @@ int main(int argc, char** argv)
   Show(ON, rek);
 
   LSIFilter f(m);
-  f.Filter(source, dest, 0);
+  f.filter(source, dest, 0);
   cout << fixed << setprecision(3) << setw(7) << f << endl;
 
   LSIFilter fi = f.getInverse(39);
   cout << setprecision(3) << setw(7) << fi << endl;
 
-  fi.Filter(dest, rek, 0);
+  fi.filter(dest, rek, 0);
   GetChar();
   return 0;
 }

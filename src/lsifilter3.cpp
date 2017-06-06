@@ -40,7 +40,7 @@ namespace ice
               const Matrix& m)
   {
     LSIFilter lsif(m);
-    lsif.Filter(pn1, pn2);
+    lsif.filter(pn1, pn2);
   }
 #undef FNAME
 }

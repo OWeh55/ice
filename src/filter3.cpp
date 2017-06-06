@@ -874,7 +874,7 @@ namespace ice
    *   return: img2, NULL bei Fehler
    */
 #define FNAME "GaussImg"
-  int GaussImg(const Image& img1, const Image& img2, int size, double sigma)
+  void GaussImg(const Image& img1, const Image& img2, int size, double sigma)
   {
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
@@ -882,60 +882,65 @@ namespace ice
         throw IceException(FNAME, M_WRONG_PARAM);
       };
 
-    /* Bildgrößen ueberpruefen */
-    int dx, dy;
+    try
+      {
 
-    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, dx, dy));
+        /* Bildgrößen ueberpruefen */
+        int dx, dy;
+        checkSizes(img1, img2, dx, dy);
 
-    Image himg = NewImg(img1);
+        Image himg;
+        himg.create(img1);
 
-    /* eindimensionale Gaussfunktion berechnen */
-    Matrix gf(1, size);
+        // eindimensionale Gaussfunktion berechnen
+        // Zeile
+        Matrix gf(1, size);
 
-    calcGaussFunction(gf, sigma);
+        calcGaussFunction(gf, sigma);
+        LSIFilter gaussh(gf);
 
-    LSIFilter gaussh(gf);
+        // Spalte
+        gf = !gf;
+        LSIFilter gaussv(gf);
 
-    gf = !gf;
-
-    LSIFilter gaussv(gf);
-
-    gaussv.Filter(img1, himg, 0.0);
-
-    gaussh.Filter(himg, img2, 0.0);
-
-    return OK;
+        gaussv.filter(img1, himg, 0.0);
+        gaussh.filter(himg, img2, 0.0);
+      }
+    RETHROW;
   };
 
-  int GaussImg(const ImageD& img1, const ImageD& img2, int size, double sigma)
+  void GaussImg(const ImageD& img1, const ImageD& img2, int size, double sigma)
   {
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
         throw IceException(FNAME, M_WRONG_PARAM);
       };
+    try
+      {
+        /* Bildgrößen ueberpruefen */
+        int dx = img1.xsize;
+        int dy = img1.ysize;
 
-    /* Bildgrößen ueberpruefen */
-    int dx, dy;
+        if (dx != img2.xsize || dy != img2.ysize)
+          throw IceException(FNAME, M_WRONG_IMGSIZE);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(img1, img2, dx, dy));
+        /* eindimensionale Gaussfunktion berechnen */
+        Matrix gf(1, size);
 
-    /* eindimensionale Gaussfunktion berechnen */
-    Matrix gf(1, size);
+        calcGaussFunction(gf, sigma);
 
-    calcGaussFunction(gf, sigma);
+        LSIFilter gaussh(gf);
 
-    LSIFilter gaussh(gf);
+        gf = !gf;
 
-    gf = !gf;
+        LSIFilter gaussv(gf);
 
-    LSIFilter gaussv(gf);
+        gaussv.filter(img1, img2);
 
-    gaussv.Filter(img1, img2);
-
-    gaussh.Filter(img2, img2);
-
-    return OK;
+        gaussh.filter(img2, img2);
+      }
+    RETHROW;
   };
 #undef FNAME
 
@@ -943,89 +948,38 @@ namespace ice
    *  Mexican-Hat as LoG - Laplace of Gaussian
    *  (x*x+y*y - 2 * sigma^2)/sigma^4 * exp(-(x*x+y*y)/(2*sigma^2)
    */
-
-  void makeLoG(Matrix& f, double sigma)
-  {
-    int sx = f.cols();
-    int sy = f.rows();
-    int xm = sx / 2;
-    int ym = sy / 2;
-    double sigma2 = sigma * sigma;
-
-    double sump = 0;
-
-    for (int y = 0; y < sy; y++)
-      {
-        double dy = y - ym;
-        double dy2 = dy * dy;
-
-        for (int x = 0; x < sx; x++)
-          {
-            double dx = x - xm;
-            double r2 = dx * dx + dy2;
-            double h = -r2 / sigma2;
-            double c = (1 + h) * exp(h);
-            f[y][x] = c;
-
-            if (c > 0)
-              {
-                sump += c;
-              }
-          }
-      }
-
-    for (int y = 0; y < sy; y++)
-      {
-        for (int x = 0; x < sx; x++)
-          {
-            f[y][x] /= sump;
-          }
-      }
-  }
-
 #define FNAME "MexicanHatImg"
-  int makeMexicanHatFilter(double sigma, int size, LSIFilter& f)
+  void MexicanHatImg(const Image& img1, const Image& img2,
+                     double sigma, int size)
   {
-    if (size < 0 || sigma < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    if (size == 0)
+    try
       {
-        size = (int)(sigma * 5) | 1;
+        LSIFilter f = makeMexicanHatFilter(size, sigma);
+        f.filter(img1, img2, img2.maxval / 2);
       }
-
-    Matrix fc(size, size);
-    makeLoG(fc, sigma);
-    f = LSIFilter(fc);
-    return OK;
+    RETHROW;
   }
 
-  int MexicanHatImg(const Image& img1, const Image& img2,
-                    double sigma, int size)
+  void MexicanHatImg(const Image& img1, ImageD img2,
+                     double sigma, int size)
   {
-    LSIFilter f;
-    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
-    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2, img2.maxval / 2));
-    return OK;
+    try
+      {
+        LSIFilter f = makeMexicanHatFilter(size, sigma);
+        f.filter(img1, img2);
+      }
+    RETHROW;
   }
 
-  int MexicanHatImg(const Image& img1, ImageD img2,
-                    double sigma, int size)
+  void MexicanHatImg(ImageD img1, ImageD img2,
+                     double sigma, int size)
   {
-    LSIFilter f;
-    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
-    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
-    return OK;
+    try
+      {
+        LSIFilter f = makeMexicanHatFilter(size, sigma);
+        f.filter(img1, img2);
+      }
+    RETHROW;
   }
-
-  int MexicanHatImg(ImageD img1, ImageD img2,
-                    double sigma, int size)
-  {
-    LSIFilter f;
-    RETURN_ERROR_IF_FAILED(makeMexicanHatFilter(sigma, size, f));
-    RETURN_ERROR_IF_FAILED(f.Filter(img1, img2));
-    return OK;
-  }
-
 #undef FNAME
 }

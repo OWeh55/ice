@@ -18,370 +18,217 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "macro.h"
-#include "filter.h"
+#include <array>
+
+#include "morph.h"
+#include "WindowWalker.h"
 
 namespace ice
 {
-  bool clearpixel1(int bitmask)
+  int getWhite(int bitmask)
   {
-    int white = 0; /* Anzahl der weissen Nachbarn */
-
+    int white = 0;
     for (int i = 0x1; i < 0x100; i = i << 1)
       {
         if (!(i & bitmask))
-          {
-            white++;
-          }
+          white++;
       }
+    return white;
+  }
 
-    /* diese erste Bedingung weicht von Zhang/Suen ab*/
-    if ((white < 3) || (white > 6))
-      {
-        return false;
-      }
-
-    if ((bitmask & 0x15) == 0x15)
-      {
-        return false;
-      }
-
-    if (((bitmask & 0x54) == 0x54))
-      {
-        return false;
-      }
-
+  int getTransitions(int bitmask)
+  {
     int transitions = 0;
-
-    for (int i = 0x01, j = 0x02; i < 0x100; i = i << 1, j = j << 1)
+    int mask1 = 1;
+    int mask2 = 2;
+    for (int i = 0; i < 8; i++)
       {
-        if (((bitmask & i) == 0) && ((bitmask & j) == j))
+        if (((bitmask & mask1) == 0) && ((bitmask & mask2) > 0))
           {
             transitions++; /* 01-Muster */
           }
+        mask1 <<= 1;
+        mask2 <<= 1;
+        if (mask2 > 255)
+          mask2 = 1;
+      }
+    return transitions;
+  }
+
+  bool clearpixel1(int bitmask)
+  {
+    int white = getWhite(bitmask);
+
+    /* diese erste Bedingung weicht von Zhang/Suen ab*/
+    if ((white < 3) || (white > 6))
+      // if ((white < 2) || (white > 6))  // Zhang/Suen
+      {
+        return false;
       }
 
-    return transitions == 1;
+    if ((bitmask & 0x15) == 0x15) // ORU
+      {
+        return false;
+      }
+
+    if (((bitmask & 0x54) == 0x54)) // LUR
+      {
+        return false;
+      }
+
+    return getTransitions(bitmask) == 1;
   }
 
   bool clearpixel2(int bitmask)
   {
-    int white = 0; /* Anzahl der weissen Nachbarn */
-
-    for (int i = 0x1; i < 0x100; i = i << 1)
-      {
-        if (!(i & bitmask))
-          {
-            white++;
-          }
-      }
+    int white = getWhite(bitmask);
 
     /* diese erste Bedingung weicht von Zhang/Suen ab*/
     if ((white < 3) || (white > 6))
+      // if ((white < 2) || (white > 6))  // Zhang/Suen
       {
         return false;
       }
 
-    if ((bitmask & 0x51) == 0x51)
+    if ((bitmask & 0x51) == 0x51) // LOU
       {
         return false;
       }
 
-    if (((bitmask & 0x45) == 0x45))
+    if (((bitmask & 0x45) == 0x45)) //LOR
       {
         return false;
       }
 
-    int transitions = 0;
-
-    for (int i = 1, j = 2; i < 0x100; i = i << 1, j = j << 1)
-      {
-        if (((bitmask & i) == 0) && ((bitmask & j) == j))
-          {
-            transitions++; /* 01-Muster */
-          }
-      }
-
-    return transitions == 1;
+    return getTransitions(bitmask) == 1;
   }
 
-  int getNeighbors(const Image& img, int x, int y)
-  {
-    int p = 0;
-
-    /* Nachbarn ermitteln -> bitmaske */
-    if (GetValUnchecked(img, x, y - 1))
-      {
-        p |= 0x101;
-      }
-
-    if (GetValUnchecked(img, x + 1, y - 1))
-      {
-        p |= 0x02;
-      }
-
-    if (GetValUnchecked(img, x + 1, y))
-      {
-        p |= 0x04;
-      }
-
-    if (GetValUnchecked(img, x + 1, y + 1))
-      {
-        p |= 0x08;
-      }
-
-    if (GetValUnchecked(img, x, y + 1))
-      {
-        p |= 0x10;
-      }
-
-    if (GetValUnchecked(img, x - 1, y + 1))
-      {
-        p |= 0x20;
-      }
-
-    if (GetValUnchecked(img, x - 1, y))
-      {
-        p |= 0x40;
-      }
-
-    if (GetValUnchecked(img, x - 1, y - 1))
-      {
-        p |= 0x80;
-      }
-
-    return p;
-  }
-
+#if 0
   int getNeighbors(PixelType1** tdata, int x, int y)
   {
     int p = 0;
 
     /* Nachbarn ermitteln -> bitmaske */
-    if (tdata[y - 1][x])
-      {
-        p |= 0x101;
-      }
-
-    if (tdata[y - 1][x + 1])
-      {
-        p |= 0x02;
-      }
-
-    if (tdata[y][x + 1])
-      {
-        p |= 0x04;
-      }
-
-    if (tdata[y + 1][x + 1])
-      {
-        p |= 0x08;
-      }
-
-    if (tdata[y + 1][x])
-      {
-        p |= 0x10;
-      }
-
-    if (tdata[y + 1][x - 1])
-      {
-        p |= 0x20;
-      }
-
-    if (tdata[y][x - 1])
-      {
-        p |= 0x40;
-      }
-
-    if (tdata[y - 1][x - 1])
-      {
-        p |= 0x80;
-      }
+    if (tdata[y - 1][x]) p |= 0x01;
+    if (tdata[y - 1][x + 1])  p |= 0x02;
+    if (tdata[y][x + 1]) p |= 0x04;
+    if (tdata[y + 1][x + 1]) p |= 0x08;
+    if (tdata[y + 1][x]) p |= 0x10;
+    if (tdata[y + 1][x - 1]) p |= 0x20;
+    if (tdata[y][x - 1]) p |= 0x40;
+    if (tdata[y - 1][x - 1]) p |= 0x80;
 
     return p;
   }
-
-#define FNAME "SkeletonImg"
-  int SkeletonImg(const Image& pic, const Image& skelett, int lvl)
+#else
+  int getNeighbors(PixelType1** tdata, int x, int y)
   {
-    int dimx, dimy;
-    RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
-
-    int maxv = skelett.maxval;
-
-    if (maxv < 2)
-      throw IceException(FNAME, M_LOWRANGE);
-
-    binImg(pic, lvl, skelett); // Ausgangsbild binarisieren
-
-    /* Iterativ verduennen nach modifiziertem Zhang/Suen-Algorith. */
-
-    int nIteration = 0;
-    int changes;
-
-    do
-      {
-        nIteration++;
-
-        changes = 0;
-
-        for (int x = 1; x < dimx - 1; x++)
-          {
-            for (int y = 1; y < dimy - 1; y++)
-              {
-                if (GetValUnchecked(skelett, x, y) > 0)
-                  {
-                    int p = getNeighbors(skelett, x, y);
-
-                    if (clearpixel1(p))
-                      {
-                        PutVal(skelett, x, y, 1); /* Pixel mark.*/
-                        changes++;
-                      }
-                  }
-              }
-          }
-
-        /* Nach einem Durchlauf nun alle markierten Pixel loeschen */
-        for (int y = 0; y < dimy; y++)
-          for (int x = 0; x < dimx; x++)
-            {
-              if (GetValUnchecked(skelett, x, y) == 1)
-                {
-                  PutVal(skelett, x, y, 0);
-                }
-            }
-
-        // Nun von rechts unten nach links oben Skelett berechnen
-
-        for (int x = dimx - 2; x >= 1; x--)
-          {
-            for (int y = dimy - 2; y >= 1; y--)
-              {
-                if (GetValUnchecked(skelett, x, y) > 0)
-                  {
-                    int p = getNeighbors(skelett, x, y);
-
-                    if (clearpixel2(p))
-                      {
-                        PutVal(skelett, x, y, 1); // Pixel mark.
-                        changes++;
-                      }
-                  }
-              }
-          }
-
-        // Nach einem Durchlauf nun alle markierten Pixel loeschen
-        for (int y = 0; y < dimy; y++)
-          for (int x = 0; x < dimx; x++)
-            {
-              if (GetValUnchecked(skelett, x, y) == 1)
-                {
-                  PutVal(skelett, x, y, 0);
-                }
-            }
-      }
-    while (changes > 0);   // Ende erst, falls keine Aenderung mehr
-
-    return 0;
+    return (tdata[y - 1][x] & 1) * 0x01 |
+           (tdata[y - 1][x + 1] & 1) * 0x02 |
+           (tdata[y][x + 1] & 1) * 0x04 |
+           (tdata[y + 1][x + 1] & 1) * 0x08 |
+           (tdata[y + 1][x] & 1) * 0x10 |
+           (tdata[y + 1][x - 1] & 1) * 0x20 |
+           (tdata[y][x - 1] & 1) * 0x40 |
+           (tdata[y - 1][x - 1] & 1) * 0x80;
   }
+#endif
 
-  int skeletonImg(const Image& pic, const Image& skelett, int lvl)
+  void clearMarkedPixel(PixelType1** tempData, int dimx, int dimy)
   {
-    int dimx, dimy;
-    RETURN_ERROR_IF_FAILED(MatchImg(pic, skelett, dimx, dimy));
-
-    int maxv = skelett.maxval;
-
-    Image timg = NewImg(dimx, dimy, 3);
-
-    binImg(pic, lvl, timg); // binarisieren und im Zwischenbild speichern
-
-    PixelType1** tdata = (PixelType1**)timg->getDataPtr();
-
-    /* Iterativ verduennen nach modifiziertem Zhang/Suen-Algorith. */
-
-    int nIteration = 0;
-    int changes;
-
-    do
-      {
-        nIteration++;
-
-        changes = 0;
-
-        for (int y = 1; y < dimy - 1; y++)
-          {
-            for (int x = 1; x < dimx - 1; x++)
-              {
-                if (tdata[y][x] > 0)
-                  {
-                    int p = getNeighbors(tdata, x, y);
-
-                    if (clearpixel1(p))
-                      {
-                        tdata[y][x] = 1; /* Pixel mark.*/
-                        changes++;
-                      }
-                  }
-              }
-          }
-
-        /* Nach einem Durchlauf nun alle markierten Pixel loeschen */
-        for (int y = 0; y < dimy; y++)
-          for (int x = 0; x < dimx; x++)
-            {
-              if (tdata[y][x] == 1)
-                {
-                  tdata[y][x] = 0;
-                }
-            }
-
-        // Nun von rechts unten nach links oben Skelett berechnen
-
-        for (int y = dimy - 2; y >= 1; y--)
-          {
-            for (int x = dimx - 2; x >= 1; x--)
-              {
-                if (tdata[y][x] > 0)
-                  {
-                    int p = getNeighbors(tdata, x, y);
-
-                    if (clearpixel2(p))
-                      {
-                        tdata[y][x] = 1;
-                        changes++;
-                      }
-                  }
-              }
-          }
-
-        // Nach einem Durchlauf nun alle markierten Pixel loeschen
-        for (int y = 0; y < dimy; y++)
-          for (int x = 0; x < dimx; x++)
-            {
-              if (tdata[y][x] == 1)
-                {
-                  tdata[y][x] = 0;
-                }
-            }
-      }
-    while (changes > 0);   // Ende erst, falls keine Aenderung mehr
-
+    // clear marked pixel
     for (int y = 0; y < dimy; y++)
       for (int x = 0; x < dimx; x++)
         {
-          if (tdata[y][x] > 0)
+          if (tempData[y][x] == 1)
             {
-              PutVal(skelett, x, y, maxv);
-            }
-          else
-            {
-              PutVal(skelett, x, y, 0);
+              tempData[y][x] = 0;
             }
         }
+  }
 
-    return 0;
+#define FNAME "skeletonImg"
+  void skeletonImg(const Image& pic, const Image& skelett, int lvl, int nIter)
+  {
+    try
+      {
+        int dimx, dimy;
+        checkSizes(pic, skelett, dimx, dimy);
+        int maxv = skelett.maxval;
+
+        Image tempImage;
+        tempImage.create(dimx, dimy, 3);
+
+        binImg(pic, lvl, tempImage); // binarisieren und im Zwischenbild speichern
+        // objects in tempImage have value 3 ( == tempImage.maxval)
+
+        PixelType1** tempData = (PixelType1**)tempImage->getDataPtr();
+
+        std::array<bool, 256> clearPixel1;
+        std::array<bool, 256> clearPixel2;
+
+        for (int mask = 0; mask < 256; mask++)
+          {
+            clearPixel1[mask] = clearpixel1(mask);
+            clearPixel2[mask] = clearpixel2(mask);
+          }
+
+        /* Iterativ verduennen nach modifiziertem Zhang/Suen-Algorith. */
+
+        int nIterations = 0;
+        int changes = 0;
+        do
+          {
+            nIterations++;
+            changes = 0;
+
+            // only inner points (left upper to right lower)
+            for (int y = 1; y < dimy - 1; y++)
+              for (int x = 1; x < dimx - 1; x++)
+                if (tempData[y][x] > 0) // object point
+                  {
+                    // get binary pattern of neighbours as int
+                    int p = getNeighbors(tempData, x, y);
+
+                    if (clearPixel1[p])
+                      {
+                        tempData[y][x] = 1; // mark pixel to "remove"
+                        changes++;
+                      }
+                  }
+
+            // clear marked pixel
+            clearMarkedPixel(tempData, dimx, dimy);
+
+            // only inner points (right lower to left upper)
+            for (int y = dimy - 2; y >= 1; y--)
+              for (int x = dimx - 2; x >= 1; x--)
+                if (tempData[y][x] > 0)
+                  {
+                    int p = getNeighbors(tempData, x, y);
+
+                    if (clearPixel2[p])
+                      {
+                        tempData[y][x] = 1;
+                        changes++;
+                      }
+                  }
+
+            // clear marked pixel
+            clearMarkedPixel(tempData, dimx, dimy);
+          }
+        while (changes > 0 && nIterations < nIter);   // until no more changes occur
+
+        WindowWalker ww(skelett);
+        for (ww.init(); !ww.ready(); ww.next())
+          {
+            if (tempData[ww.y][ww.x] > 0)
+              skelett.setPixel(ww, maxv);
+            else
+              skelett.setPixel(ww, 0);
+          }
+      }
+    RETHROW;
   }
 }
 

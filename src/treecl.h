@@ -22,7 +22,6 @@
 
 #include <vector>
 #include "vectortools.h"
-#include "matrixarith.h"
 #include "Classifier.h"
 
 namespace ice

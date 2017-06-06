@@ -491,7 +491,8 @@ namespace ice
         blue = NewImg(ib.width, ib.height, ib.maxval);
       }
 
-    return Buffer2Image(ib, red, green, blue, flag);
+    Buffer2Image(ib, red, green, blue, flag);
+    return OK;
   }
 
   /*******************************************/

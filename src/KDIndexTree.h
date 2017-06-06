@@ -27,7 +27,6 @@
 #include <set>
 #include <vector>
 
-#include "matrixarith.h"
 #include "matrixtools.h"
 #include "Classifier.h"
 

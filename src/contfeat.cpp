@@ -251,30 +251,7 @@ namespace ice
         double n3 = n2 * n;
         double n4 = n3 * n;
         double n5 = n4 * n;
-#if 0
-        double x0, x1, x2, x3, x4;
-        x0 = n - m + 1;
-        x1 = (1 - m + n) * (m + n) / 2;
-        x2 = (-m + 3 * m2 - 2 * m3 + n + 3 * n2 + 2 * n3) / 6;
-        x3 = (-m2 + 2 * m3 - m4 + n2 + 2 * n3 +  n4) / 4;
-        x4 = m / 30 - m3 / 3 + m4 / 2 - m5 / 5 - n / 30 + n3 / 3 + n4 / 2 + n5 / 5;
 
-        mm[i00] += x0;
-        mm[i10] += x1;
-        mm[i01] += x0 * y;
-        mm[i02] += x0 * y2;
-        mm[i03] += x0 * y3;
-        mm[i04] += x0 * y4;
-        mm[i11] += x1 * y;
-        mm[i12] += x1 * y2;
-        mm[i13] += x1 * y3;
-        mm[i20] += x2;
-        mm[i21] += x2 * y;
-        mm[i22] += x2 * y2;
-        mm[i30] += x3;
-        mm[i31] += x3 * y;
-        mm[i40] += x4;
-#else
         // neue berechnung "quasi-flächenmomente"
 
         // double Y0 = 1;
@@ -310,8 +287,6 @@ namespace ice
         mm[i22] += X2 * Y2;
         mm[i13] += X1 * Y3;
         mm[i04] += X0 * Y4;
-
-#endif
       }
 
     if (fabs(mm[0]) > 1e-20)

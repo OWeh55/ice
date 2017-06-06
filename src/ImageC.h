@@ -81,10 +81,10 @@ namespace ice
      * "named constructors" which create a real image
      * @param src image, that ist used as "template"\n
      *  new image has the same sizes and maximum values as src.
-     * @param copy Shall content of src be copied to the new image.
+    //     * @param copy Shall content of src be copied to the new image.
      * @param title name of image used in visualization
      */
-    static Image createImage(const Image& src, bool copy = false,
+    static Image createImage(const Image& src, // bool copy = false,
                              const std::string& title = "");
 
     /*
@@ -102,7 +102,6 @@ namespace ice
      * image parameters are given by a template image
      * @param src image, that ist used as "template"\n
      *  new image has the same sizes and maximum values as src.
-     * @param copy Shall content of src be copied to the new image.
      * @param title name of image used in visualization
      */
 

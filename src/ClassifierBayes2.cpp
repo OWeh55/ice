@@ -21,7 +21,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "matrixarith.h"
+#include "vectorarith.h"
 #include "macro.h"
 #include "IceException.h"
 #include "numbase.h"

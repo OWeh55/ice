@@ -93,14 +93,11 @@ namespace ice
 #undef FNAME
 #define FNAME "Image::copy"
   // copy =
-  //   recreate if image size changes
+  //   [re-]create image
   //   + deep copy of source data
   void Image::copy(const Image& src)
   {
-    if (xsize != src.xsize || ysize != src.ysize || maxval != src.maxval)
-      {
-        create(src);
-      }
+    create(src);
     copyData(src);
   }
 #undef FNAME
@@ -113,15 +110,17 @@ namespace ice
     return result;
   }
 
-  Image Image::createImage(const Image& src, bool copy,
+  Image Image::createImage(const Image& src, // bool copy,
                            const std::string& title)
   {
     Image result;
     result.create(src, title);
+    /*
     if (copy)
       {
         result.copyData(src);
       }
+    */
     return result;
   }
 #undef FNAME

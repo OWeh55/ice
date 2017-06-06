@@ -24,7 +24,7 @@
  */
 
 #include <limits.h>
-#include "lsifilter.h"
+#include "LsiRepresentation.h"
 
 using namespace std;
 

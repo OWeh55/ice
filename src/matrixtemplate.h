@@ -34,6 +34,7 @@ namespace ice
      * init to create a real matrix
      */
     matrix() {}
+
     /**
      * constructor with size and optional initialization.
      * A matrix of the given size is created and possibly initialized.
@@ -124,7 +125,7 @@ namespace ice
             {
               data[i] = 0.0;
             }
-          if (mode == 1)
+          if (mode == 1) // unity matrix
             for (int i = 0; i < nColumns * nRows; i += nColumns + 1)
               {
                 data[i] = 1.0;
@@ -185,6 +186,27 @@ namespace ice
         {
           data[i] = value;
         }
+    }
+
+    //*****************************************************
+
+    /**
+     * Get row of matrix as T* .
+     * This allows element access with indices row and column
+     * like m[r][c] = 13;
+     */
+    T* operator[](int r)
+    {
+      return &data[r * nColumns];
+    }
+    /**
+     * Get row of matrix as const T* .
+     * This allows element access with indices row and column
+     * like m[r][c] = 13;
+     */
+    const T* operator[](int r) const
+    {
+      return &data[r * nColumns];
     }
 
     /**
@@ -249,7 +271,7 @@ namespace ice
     }
 
     /**
-     * Create matrix from part of original matrix.
+     * Create matrix from part of *this matrix.
      * @param r1, r2 range of rows
      * @param c1, c2 range of columns
      */
@@ -468,26 +490,6 @@ namespace ice
       return rhs * lhs;
     }
 
-    //*****************************************************
-
-    /**
-     * Get row of matrix as T* .
-     * This allows element access with indices row and column
-     * like m[r][c] = 13;
-     */
-    T* operator[](int r)
-    {
-      return &data[r * nColumns];
-    }
-    /**
-     * Get row of matrix as const T* .
-     * This allows element access with indices row and column
-     * like m[r][c] = 13;
-     */
-    const T* operator[](int r) const
-    {
-      return &data[r * nColumns];
-    }
   };
 }
 #endif

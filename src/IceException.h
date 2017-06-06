@@ -44,5 +44,5 @@ namespace ice
   };
 }
 
-#define RETHROW catch (IceException &ex) { throw IceException(ex,FNAME); }
+#define RETHROW catch (IceException &ex) { throw IceException(ex, FNAME); }
 #endif

@@ -28,7 +28,6 @@
 
 namespace ice
 {
-
 #define FNAME "lsiimg"
   /**
    * This template function applies a LSI filter to an image, typically used
@@ -110,7 +109,6 @@ namespace ice
               }
           }
       }
-
   }
 
   void lsiimg_std(const Image& src, const Image& dest,
@@ -147,7 +145,7 @@ namespace ice
    * internally, not by user.
    * no parameter check here !
    * @param src the source image
-   * @param dest the destination image (doesn't need to differ from src)
+   * @param dest the destination image
    * @param nx the horizontal size of the filter mask
    * @param ny the vertical size of the filter mask
    * @param mask the filter mask (scaling factor included in the double values)
@@ -173,17 +171,16 @@ namespace ice
         for (int x = 0; x < src->xsize + 1 - nx; x++)
           {
             double tmpVal = offset;
-
             for (int j = 0; j < ny; j++)
-              for (int i = 0; i < nx; i++)
-                {
-                  tmpVal += mask[j * nx + i] * PixelSource[y + j][x + i];
-                }
-
+              {
+                for (int i = 0; i < nx; i++)
+                  {
+                    tmpVal += mask[j * nx + i] * PixelSource[y + j][x + i];
+                  }
+              }
             PixelDestination[y + ny2][x + nx2] = limited(RoundInt(tmpVal), dmax);
           }
       }
-
   }
 
   void lsiimg_std(const Image& src, const Image& dest,
@@ -224,35 +221,35 @@ namespace ice
         tmp = NewImg(src, true);
       }
 
-    switch ((src->ImageType() << 4) + dest->ImageType())
+    switch ((src->ImageType() * 16) + dest->ImageType())
       {
-      case 17:
+      case 1*16+1:
         lsiimg<PixelType1, PixelType1>(tmp, dest, nx, ny, mask, norm, off);
         break;
-      case 18:
+      case 1*16+2:
         lsiimg<PixelType1, PixelType2>(tmp, dest, nx, ny, mask, norm, off);
         break;
-      case 19:
+      case 1*16+3:
         lsiimg<PixelType1, PixelType3>(tmp, dest, nx, ny, mask, norm, off);
         break;
 
-      case 33:
+      case 2*16+1:
         lsiimg<PixelType2, PixelType1>(tmp, dest, nx, ny, mask, norm, off);
         break;
-      case 34:
+      case 2*16+2:
         lsiimg<PixelType2, PixelType2>(tmp, dest, nx, ny, mask, norm, off);
         break;
-      case 35:
+      case 2*16+3:
         lsiimg<PixelType2, PixelType3>(tmp, dest, nx, ny, mask, norm, off);
         break;
 
-      case 49:
+      case 3*16+1:
         lsiimg<PixelType3, PixelType1>(tmp, dest, nx, ny, mask, norm, off);
         break;
-      case 50:
+      case 3*16+2:
         lsiimg<PixelType3, PixelType2>(tmp, dest, nx, ny, mask, norm, off);
         break;
-      case 51:
+      case 3*16+3:
         lsiimg<PixelType3, PixelType3>(tmp, dest, nx, ny, mask, norm, off);
         break;
 
@@ -272,33 +269,33 @@ namespace ice
         tmp = NewImg(src, true);
       }
 
-    switch ((src->ImageType() << 4) + dest->ImageType())
+    switch ((src->ImageType() * 16) + dest->ImageType())
       {
-      case 17:
+      case 1*16+1:
         lsiimg<PixelType1, PixelType1>(tmp, dest, nx, ny, mask, off);
         break;
-      case 18:
+      case 1*16+2:
         lsiimg<PixelType1, PixelType2>(tmp, dest, nx, ny, mask, off);
         break;
-      case 19:
+      case 1*16+3:
         lsiimg<PixelType1, PixelType3>(tmp, dest, nx, ny, mask, off);
         break;
-      case 33:
+      case 2*16+1:
         lsiimg<PixelType2, PixelType1>(tmp, dest, nx, ny, mask, off);
         break;
-      case 34:
+      case 2*16+2:
         lsiimg<PixelType2, PixelType2>(tmp, dest, nx, ny, mask, off);
         break;
-      case 35:
+      case 2*16+3:
         lsiimg<PixelType2, PixelType3>(tmp, dest, nx, ny, mask, off);
         break;
-      case 49:
+      case 3*16+1:
         lsiimg<PixelType3, PixelType1>(tmp, dest, nx, ny, mask, off);
         break;
-      case 50:
+      case 3*16+2:
         lsiimg<PixelType3, PixelType2>(tmp, dest, nx, ny, mask, off);
         break;
-      case 51:
+      case 3*16+3:
         lsiimg<PixelType3, PixelType3>(tmp, dest, nx, ny, mask, off);
         break;
 
@@ -547,10 +544,10 @@ namespace ice
             for (int j = 0; j < ny; j++)
               for (int i = 0; i < nx; i++)
                 {
-                  tmpVal += mask[j * nx + i] * GetValD(tmp, x + i, y + j);
+                  tmpVal += mask[j * nx + i] * tmp.getPixel(x + i, y + j);
                 }
 
-            PutValD(dest, x + offset_dest_x, y + offset_dest_y, tmpVal / norm);
+            dest.setPixel(x + offset_dest_x, y + offset_dest_y, tmpVal / norm);
           }
       }
   }

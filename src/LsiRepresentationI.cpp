@@ -110,15 +110,12 @@ namespace ice
     summ = 0;
 
     for (int i = 0; i < dimx * dimy; i++)
-      if (mask[i] > 0)
-        {
+      {
+        if (mask[i] > 0)
           sump += mask[i];
-        }
-      else
-        {
+        else
           summ += mask[i];
-        }
-
+      }
     sump /= norm;
     summ /= norm;
   }
@@ -249,7 +246,7 @@ namespace ice
       }
   }
 
-  void LsiRepresentationI::Filter(const Image& src,
+  void LsiRepresentationI::filter(const Image& src,
                                   const Image& dest, int offset) const
   {
     LsiRepresentationI n = normalized(src.maxval);
@@ -260,14 +257,14 @@ namespace ice
            offset);
   }
 
-  void LsiRepresentationI::Filter(const Image& src, ImageD dest) const
+  void LsiRepresentationI::filter(const Image& src, ImageD dest) const
   {
     LSIImg(src, dest,
            dimx, dimy, mask,
            norm);
   }
 
-  void LsiRepresentationI::Filter(ImageD src, ImageD dest) const
+  void LsiRepresentationI::filter(ImageD src, ImageD dest) const
   {
     LSIImg(src, dest,
            dimx, dimy, mask,

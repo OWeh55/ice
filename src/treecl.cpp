@@ -22,7 +22,7 @@
 #include <set>
 #include <limits>
 #include "matrixtools.h"
-#include "matrixarith.h"
+#include "vectorarith.h"
 #include "mateigen.h"
 #include "treecl.h"
 
@@ -183,14 +183,14 @@ namespace ice
     std::vector<double> v2 = classFeatureSum[max2] * (1.0 / nElements[max2]);
 
     std::vector<double> dv = v2 - v1;
-    double norm = length(dv);
+    double dnorm = norm(dv);
 
-    if (norm < 1e-10)   // !!!! besseren Wert finden
+    if (dnorm < 1e-10)   // !!!! besseren Wert finden
       {
         return false;
       }
 
-    weights = dv * (1 / norm);
+    weights = dv * (1 / dnorm);
 
     std::vector<double> center = (v1 + v2) * 0.5;
 

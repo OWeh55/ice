@@ -1,0 +1,139 @@
+/*
+ * stellt LSI-Filter-Masken dar
+ */
+
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Darstellung von Filtermasken
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ % para: dir, optional, string, dir, Verzeichnis mit Bildern, "."
+ %
+ opt: t, type, char, fType, Filter-Typ, 'D'
+ opt2:   t = 'S' makeOrientedSmearFilter
+ opt2:   t = 'D' makeOrientedDobFilter
+ opt2:   t = 'E' makeOrientedEdgeFilter
+ opt2:   t = 'm' makeMexicanHatFilter
+ opt2:   t = 'g' makeGaussFilter
+ opt: s, filtersize, int, fSize, Filtergröße, 13
+ opt: w, width, double, width, Filter-Breite, 5
+ opt: l, length, double, length, Filter-Länge, 11
+ opt: a, alpha, double, alpha, Winkel, 33
+ opt: x, xsize, int, xSize, Größe der Darstellung x, 512
+ opt: y, ysize, int, ySize, Größe der Darstellung y, 512
+ opt: f, filterimage, void, filter, Wende Filter an, false
+ opt: v, verbose, void, verbose, Anzeige der Abarbeitung, false
+ opt: n, nowait, void, nowait, Kein Warten am Ende, false
+ opt: h, help, usage, help, Hilfe
+AppGen*/
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      LSIFilter f;
+      switch (fType)
+        {
+        case 'D':
+          f = makeOrientedDoBFilter(fSize, Arcus(alpha), length, width);
+          break;
+        case 'E':
+          // width == radius
+          f = makeOrientedEdgeFilter(fSize, Arcus(alpha), width);
+          break;
+        case 'S':
+          f = makeOrientedSmearFilter(fSize, Arcus(alpha), length, width);
+          break;
+        case 'm':
+          f = makeMexicanHatFilter(fSize, width);
+          break;
+        case 'g':
+          f = makeGaussFilter(fSize, width);
+          break;
+        }
+
+      Image img;
+      img.create(xSize, ySize, 255);
+      Show(ON, img, "filter");
+
+      int dx = f.getDX();
+      int dy = f.getDY();
+      int dimx = f.getXDimension();
+      int dimy = f.getYDimension();
+
+      double min = 0;
+      double max = 0;
+
+      double sum = 0;
+      double summ = 0;
+      double sump = 0;
+      for (int y = -dy; y <= dy; y++)
+        for (int x = -dx; x <= dx; x++)
+          {
+            double maskValue = f.getMask(x + dx, y + dy);
+            sum += maskValue;
+            if (maskValue < 0)
+              summ += maskValue;
+            else
+              sump += maskValue;
+            if (maskValue < min)
+              min = maskValue;
+            if (maskValue > max)
+              max = maskValue;
+          }
+
+      if (verbose)
+        {
+          cout << "minimaler Wert der Maske: " << min << endl;
+          cout << "maximaler Wert der Maske: " << max << endl;
+          cout << "Summe der Werte der Maske: " << sum << endl;
+          cout << "Summe der positiven Werte der Maske: " << sump << endl;
+          cout << "Summe der negativen Werte der Maske: " << summ << endl;
+        }
+
+      int nullValue = (0 - min) * 255 / (max - min);
+      img.set(nullValue);
+
+      const int border = 5;
+      int ySizeB = ySize - border * 2;
+      int xSizeB = xSize - border * 2;
+
+      for (int y = border; y < ySize - border; y++)
+        {
+          int yf = (y - border) * dimy / (ySizeB);
+          for (int x = border; x < xSize - border; x++)
+            {
+              int xf = (x - border) * dimx / xSizeB;
+              double mValue = f.getMask(xf, yf);
+              img.setPixel(x, y, (mValue - min) * 255 / (max - min));
+            }
+        }
+
+      Image src, dst;
+      if (filter)
+        {
+          double time = TimeD();
+          src.read("test_gray.jpg");
+          Show(ON, src, "Source");
+          dst.copy(src);
+          Show(ON, dst, "Destination");
+          int offset = f.proposeOffset(dst);
+          cout << "Filter-Offset: " << offset << endl;
+          f.filter(src, dst, offset);
+          // f.filter(src, src, offset);
+          cout << "Zeit für Filterung: " << TimeD() - time << endl;
+        }
+
+      if (!nowait)
+        GetChar();
+      return 1;
+    }
+  catch (IceException ex)
+    {
+      cout << " Exception " << ex.what() << endl;
+    }
+}
