@@ -248,56 +248,60 @@ namespace ice
 //////////////////////////////////////////////////////////////////////////
 // Rotation eines Bildes
 // (typ=RI_90GRAD,RI_180GRAD,RI_270GRAD)
-// Achtung! Bildzeiger wird veraendert!
 
+#define RI_0GRAD    0
 #define RI_90GRAD   1
 #define RI_180GRAD  2
 #define RI_270GRAD  3
 
 #define FNAME "RotateImg"
-
-  void RotateImg(Image& img, short typ)
+  void RotateImg(Image& img, int typ)
   {
-    if (!IsImg(img) || (typ != RI_90GRAD && typ != RI_180GRAD && typ != RI_270GRAD))
+    if (!IsImg(img) || 
+	(typ != RI_0GRAD && typ != RI_90GRAD && typ != RI_180GRAD && typ != RI_270GRAD))
       throw IceException(FNAME, M_WRONG_PARAM);
-
+    
     try
       {
-
-        int val, xx, yy, x, y;
+	int xs=img.xsize;
+	int ys=img.ysize;
 
         Image img2;
 
-        if (typ != RI_180GRAD)
+        if (typ != RI_180GRAD && typ !=RI_0GRAD)
           {
-            img2 = NewImg(img->ysize, img->xsize, img.maxval);
-
-            if (!IsImg(img2))
-              throw IceException(FNAME, M_NO_MEM);
-
+            img2.create(ys, xs, img.maxval);
+	    
             if (typ == RI_270GRAD)
               {
-                for (int y = 0; y < img.ysize; y++)
-                  for (int x = 0; x < img.xsize; x++)
-                    PutVal(img2, img->ysize - y - 1, x, GetVal(img, x, y));
+                for (int y = 0; y < ys; y++)
+                  for (int x = 0; x < xs; x++)
+                    img2.setPixelUnchecked(ys - y - 1, x, 
+					   img.getPixelUnchecked(x, y));
               }
             else
-              for (int y = 0; y < img.ysize; y++)
-                for (int x = 0; x < img.xsize; x++)
-                  PutVal(img2, y, img->xsize - x - 1, GetVal(img, x, y));
+              for (int y = 0; y < ys; y++)
+                for (int x = 0; x < xs; x++)
+                  img2.setPixelUnchecked(y, xs - x - 1, 
+					 img.getPixelUnchecked(x, y));
             img = img2;
           }
-        else
+        else if (typ==RI_180GRAD)
           {
-            int yend = (img->ysize % 2 == 0) ? img->ysize / 2 : (img->ysize + 1) / 2;
-
-            for (y = 0; y < yend; y++)
-              for (x = 0; x < img->xsize; x++)
+            int yend = ys / 2;
+	    
+            for (int y = 0; y < yend; y++)
+	      {
+		int y1=ys-1-y;
+              for (int x = 0; x < img->xsize; x++)
                 {
-                  val = GetVal(img, x, y);
-                  PutVal(img, x, y, GetVal(img, (xx = img->xsize - x - 1), (yy = img->ysize - y - 1)));
-                  PutVal(img, xx, yy, val);
+		  int x1=xs-1-x;
+                  int val1 = img.getPixelUnchecked(x, y);
+		  int val2 = img.getPixelUnchecked(x1,y1);
+		  img.setPixelUnchecked(x,y,val2);
+		  img.setPixelUnchecked(x1,y1,val1);
                 }
+		}
           }
       }
     RETHROW;
