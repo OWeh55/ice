@@ -27,16 +27,16 @@ int main(int argc, char** argv)
 #ifndef DOUBLE
   int maskI[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
 #else
-  double maskD[] = {1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9};
+  double maskD[] = {1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9};
 #endif
 
-  Image h,s,i;
+  Image h, s, i;
   h.create(src.redImage());
   s.create(src.redImage());
   i.create(src.redImage());
-  ColorImageToHsi(src, h,s,i);
+  ColorImageToHsi(src, h, s, i);
 
-  Image h1,s1,i1;
+  Image h1, s1, i1;
   h1.create(src.redImage());
   s1.create(src.redImage());
   i1.create(src.redImage());
@@ -53,27 +53,27 @@ int main(int argc, char** argv)
   printf("standard filtering: time elapsed: %f\n\n", TimeD() - start);
   ColorImage dest1;
   dest1.create(src);
-  HsiToColorImage(h1,s1,i1,dest1);
+  HsiToColorImage(h1, s1, i1, dest1);
   Show(ON, dest1, "normal filtering");
 
-  Image h2,s2,i2;
+  Image h2, s2, i2;
   h2.create(src.redImage());
   s2.create(src.redImage());
   i2.create(src.redImage());
   start = TimeD();
 #ifndef DOUBLE
-  LSIImgCyc(h,h2, 3, 3, maskI, 9, 0);
-  LSIImg(s,s2, 3, 3, maskI, 9, 0);
-  LSIImg(i,i2, 3, 3, maskI, 9, 0);
+  LSIImgCyc(h, h2, 3, 3, maskI, 9, 0);
+  LSIImg(s, s2, 3, 3, maskI, 9, 0);
+  LSIImg(i, i2, 3, 3, maskI, 9, 0);
 #else
-  LSIImgCyc(h,h2, 3, 3, maskD, 0);
-  LSIImg(s,s2, 3, 3, maskD, 0);
-  LSIImg(i,i2, 3, 3, maskD, 0);
+  LSIImgCyc(h, h2, 3, 3, maskD, 0);
+  LSIImg(s, s2, 3, 3, maskD, 0);
+  LSIImg(i, i2, 3, 3, maskD, 0);
 #endif
   printf("special filtering: time elapsed: %f\n\n", TimeD() - start);
   ColorImage dest2;
   dest2.create(src);
-  HsiToColorImage(h2,s2,i2,dest2);
+  HsiToColorImage(h2, s2, i2, dest2);
   Show(ON, dest2, "special filtering");
 
   GetChar();
