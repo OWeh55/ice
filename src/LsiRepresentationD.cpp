@@ -24,7 +24,7 @@
  */
 
 #include <limits.h>
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 using namespace std;
 
@@ -33,56 +33,28 @@ namespace ice
 // -- Methoden der Klasse LsiRepresentationD für Gleitkomma-Repraesentation von LSI-Filtern
 
   LsiRepresentationD::LsiRepresentationD(const LsiRepresentationD& r):
-    LsiRepresentation(r.dimx, r.dimy)
+    LsiRepresentation(r.dimx, r.dimy), mask(r.mask)
   {
-    mask = new double[dimx * dimy];
-
-    for (int i = 0; i < dimx * dimy; i++)
-      {
-        mask[i] = r.mask[i];
-      }
   }
 
   LsiRepresentationD::LsiRepresentationD(const Matrix& m):
-    LsiRepresentation(m.cols(), m.rows())
+    LsiRepresentation(m.cols(), m.rows()), mask(m.rows(), m.cols())
   {
-    //    cout << dimx << "x" << dimy << endl;
-    mask = new double[dimx * dimy];
-    int i = 0;
-
     for (int y = 0; y < dimy; ++y)
       for (int x = 0; x < dimx; ++x)
         {
-          mask[i] = m[y][x];
-          i++;
+          mask[y][x] = m[y][x];
         }
   }
 
   LsiRepresentationD::LsiRepresentationD(const matrix<double>& m):
-    LsiRepresentation(m.cols(), m.rows())
+    LsiRepresentation(m.cols(), m.rows()), mask(m)
   {
-    //    cout << dimx << "x" << dimy << endl;
-    mask = new double[dimx * dimy];
-    int i = 0;
-
-    for (int y = 0; y < dimy; ++y)
-      for (int x = 0; x < dimx; ++x)
-        {
-          mask[i] = m[y][x];
-          i++;
-        }
   }
 
   void LsiRepresentationD::getMask(matrix<double>& m) const
   {
-    m.resize(dimy, dimx);
-    int i = 0;
-    for (int y = 0; y < dimy; ++y)
-      for (int x = 0; x < dimx; ++x)
-        {
-          m[y][x] = static_cast<double>(mask[i]);
-          ++i;
-        }
+    m = mask;
   }
 
   void LsiRepresentationD::sumPlusSumMinus(double& sump, double& summ) const
@@ -90,14 +62,14 @@ namespace ice
     sump = 0;
     summ = 0;
 
-    for (int i = 0; i < dimx * dimy; i++)
-      if (mask[i] > 0)
+    for (int x = 0; x < dimx; x++)
+      for (int y = 0; y < dimy; y++)
         {
-          sump += mask[i];
-        }
-      else
-        {
-          summ += mask[i];
+          double val = mask[y][x];
+          if (val > 0)
+            sump += val;
+          else
+            summ += val;
         }
   }
 
@@ -107,50 +79,53 @@ namespace ice
     sumPlusSumMinus(p, m);
     double range = p - m;
 
-    for (int i = 0; i < dimx * dimy; i++)
-      {
-        mask[i] /= range;
-      }
+    for (int x = 0; x < dimx; x++)
+      for (int y = 0; y < dimy; y++)
+        {
+          mask[y][x] /= range;
+        }
   }
 
   void LsiRepresentationD::negateMask()
   {
-    for (int i = 0; i < dimy * dimy; i++)
-      {
-        mask[i] = -mask[i];
-      }
+    for (int x = 0; x < dimx; x++)
+      for (int y = 0; y < dimy; y++)
+        {
+          mask[y][x] = -mask[y][x];
+        }
   }
 
   void LsiRepresentationD::reflectMask()
   {
-    double* mask2 = new double[dimx * dimy];
+    matrix<double> mask2(dimy, dimx);
     for (int y = 0; y < dimy; ++y)
-      for (int x = 0; x < dimx; ++x)
-        {
-          int idx1 = idx(x, y);
-          int idx2 = idx(dimx - 1 - x, dimy - 1 - y);
-          mask2[idx2] = mask[idx1];
-        }
-    delete [] mask;
+      {
+        int y2 = dimy - 1 - y;
+        for (int x = 0; x < dimx; ++x)
+          {
+            int x2 = dimx - 1 - x;
+            mask2[y][x] = mask[y2][x2];
+          }
+      }
     mask = mask2;
   }
 
   void LsiRepresentationD::filter(const Image& src, const Image& dest, int offset) const
   {
     LSIImg(src, dest,
-           dimx, dimy, mask,
+           dimx, dimy, mask.getData(),
            offset);
   }
 
   void LsiRepresentationD::filter(const Image& src, ImageD dest) const
   {
     LSIImg(src, dest,
-           dimx, dimy, mask);
+           dimx, dimy, mask.getData());
   }
 
   void LsiRepresentationD::filter(ImageD src, ImageD dest) const
   {
     LSIImg(src, dest,
-           dimx, dimy, mask);
+           dimx, dimy, mask.getData());
   }
 }

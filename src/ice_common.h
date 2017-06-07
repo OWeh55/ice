@@ -114,7 +114,7 @@
 #include "lmdif.h"
 #include "LMSolver.h"
 #include "lseg.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 #include "matchimg.h"
 #include "matdef.h"
 #include "mateigen.h"

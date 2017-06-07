@@ -30,7 +30,7 @@
 
 #include "util.h"
 
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 using namespace std;
 

@@ -21,7 +21,7 @@
 #include "based.h"
 #include "util.h"
 #include "filter.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 // Elementare Filterfunktionen
 // werden typischerweise über LSIImg aufgerufen
@@ -43,7 +43,7 @@ namespace ice
    */
   template<typename SrcType, typename DestType>
   void lsiimg(const Image& src, const Image& dest,
-              int nx, int ny, int* mask,
+              int nx, int ny, const int* mask,
               int norm, int offset)
   {
     int offset_dest_x = nx / 2;
@@ -68,7 +68,7 @@ namespace ice
 
             for (int x = 0; x < src->xsize + 1 - nx; x++)
               {
-                int* mi = mask;
+                const int* mi = mask;
                 int xe = x + nx;
                 int tmpVal = 0;
 
@@ -112,7 +112,7 @@ namespace ice
   }
 
   void lsiimg_std(const Image& src, const Image& dest,
-                  int nx, int ny, int* mask,
+                  int nx, int ny, const int* mask,
                   int norm, int offset)
   {
     int offset_dest_x = nx / 2;
@@ -153,7 +153,7 @@ namespace ice
    */
   template<typename SrcType, typename DestType>
   void lsiimg(const Image& src, const Image& dest,
-              int nx, int ny, double* mask,
+              int nx, int ny, const double* mask,
               int offset)
   {
     int nx2 = nx / 2;
@@ -184,7 +184,7 @@ namespace ice
   }
 
   void lsiimg_std(const Image& src, const Image& dest,
-                  int nx, int ny, double* mask,
+                  int nx, int ny, const double* mask,
                   int offset)
   {
     int nx2 = nx / 2;
@@ -211,7 +211,7 @@ namespace ice
 
   }
 
-  void lsiimg(const Image& src, const Image& dest, int nx, int ny, int* mask, int norm, int off)
+  void lsiimg(const Image& src, const Image& dest, int nx, int ny, const int* mask, int norm, int off)
   {
     // if source == dest we need a copy !
     Image tmp = src;
@@ -259,7 +259,7 @@ namespace ice
       }
   }
 
-  void lsiimg(const Image& src, const Image& dest, int nx, int ny, double* mask, int off)
+  void lsiimg(const Image& src, const Image& dest, int nx, int ny, const double* mask, int off)
   {
     // if source == dest we need a copy !
     Image tmp = src;
@@ -319,7 +319,7 @@ namespace ice
    */
   template<typename SrcType>
   void lsiimg(const Image& src, ImageD dest,
-              int nx, int ny, int* mask,
+              int nx, int ny, const int* mask,
               int norm)
   {
     int offset_dest_x = nx / 2;
@@ -340,7 +340,7 @@ namespace ice
 
             for (int x = 0; x < src->xsize + 1 - nx; x++)
               {
-                int* mi = mask;
+                const int* mi = mask;
                 int xe = x + nx;
                 int tmpVal = 0;
 
@@ -384,7 +384,7 @@ namespace ice
   }
 
   void lsiimg_std(const Image& src, ImageD dest,
-                  int nx, int ny, int* mask,
+                  int nx, int ny, const int* mask,
                   int norm)
   {
     int offset_dest_x = nx / 2;
@@ -424,7 +424,7 @@ namespace ice
    */
   template<typename SrcType>
   void lsiimg(const Image& src, ImageD dest,
-              int nx, int ny, double* mask)
+              int nx, int ny, const double* mask)
   {
     int nx2 = nx / 2;
     int ny2 = ny / 2;
@@ -454,7 +454,7 @@ namespace ice
   }
 
   void lsiimg_std(const Image& src, ImageD dest,
-                  int nx, int ny, double* mask)
+                  int nx, int ny, const double* mask)
   {
     int nx2 = nx / 2;
     int ny2 = ny / 2;
@@ -479,7 +479,7 @@ namespace ice
       }
   }
 
-  void lsiimg(const Image& src, ImageD dest, int nx, int ny, int* mask, int norm)
+  void lsiimg(const Image& src, ImageD dest, int nx, int ny, const int* mask, int norm)
   {
     switch (src->ImageType())
       {
@@ -497,7 +497,7 @@ namespace ice
       }
   }
 
-  void lsiimg(const Image& src, ImageD dest, int nx, int ny, double* mask)
+  void lsiimg(const Image& src, ImageD dest, int nx, int ny, const double* mask)
   {
     switch (src->ImageType())
       {
@@ -516,7 +516,7 @@ namespace ice
   }
 
   void lsiimg(ImageD src, ImageD dest,
-              int nx, int ny, int* mask,
+              int nx, int ny, const int* mask,
               int norm)
   {
     ImageD tmp = src;
@@ -553,7 +553,7 @@ namespace ice
   }
 
   void lsiimg(ImageD src, ImageD dest,
-              int nx, int ny, double* mask)
+              int nx, int ny, const double* mask)
   {
     ImageD tmp = src;
 

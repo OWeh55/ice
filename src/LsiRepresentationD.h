@@ -23,24 +23,26 @@ namespace ice
 
     virtual ~LsiRepresentationD()
     {
-      delete [] mask;
+      //      delete [] mask;
     }
 
     // several forms of access to the filter mask
     virtual double getMask(int x, int y) const
     {
-      return mask[idx(x, y)];
+      //      return mask[idx(x, y)];
+      return mask[y][x];
     };
 
     virtual const double* getMask() const
     {
-      return mask;
+      return mask.getData();
     }
 
     virtual void getMask(matrix<double>& m) const;
 
   protected:
-    double* mask;
+    matrix<double> mask;
+    //    double* mask;
   };
 }
 #endif

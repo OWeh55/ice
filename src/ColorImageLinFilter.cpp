@@ -46,7 +46,7 @@
 
 #include "ColorImageFunctions.h"
 #include "filter.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 #include "macro.h"
 
 namespace ice

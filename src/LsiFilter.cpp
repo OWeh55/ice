@@ -30,7 +30,7 @@
 #include "LsiRepresentation.h"
 #include "LsiRepresentationD.h"
 #include "LsiRepresentationI.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 using namespace std;
 

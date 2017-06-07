@@ -21,7 +21,7 @@
 
 #include "matrixtemplate.h"
 #include "MatrixAlgebra.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 namespace ice
 {

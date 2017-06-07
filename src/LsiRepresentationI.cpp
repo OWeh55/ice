@@ -24,7 +24,7 @@
  */
 
 #include <limits.h>
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 using namespace std;
 
@@ -33,61 +33,50 @@ namespace ice
   // -- Methoden der Klasse LsiRepresentationI für ganzzahlige Repraesentation von LSI-Filtern
 
   LsiRepresentationI::LsiRepresentationI(const IMatrix& m, int normp):
-    LsiRepresentation(m.cols(), m.rows()), norm(normp)
+    LsiRepresentation(m.cols(), m.rows()), mask(m.rows(), m.cols()), norm(normp)
   {
-    mask = new int[dimx * dimy];
     int teiler = norm;
-    int i = 0;
 
     for (int y = 0; y < dimy; ++y)
       for (int x = 0; x < dimx; ++x)
         {
           int v = m[y][x];
-          mask[i] = v;
+          mask[y][x] = v;
           teiler = ggt(teiler, v);
-          i++;
         }
 
     if (teiler > 1)
       {
         norm /= teiler;
-        i = 0;
 
         for (int y = 0; y < dimy; ++y)
           for (int x = 0; x < dimx; ++x)
             {
-              mask[i] /= teiler;
-              i++;
+              mask[y][x] /= teiler;
             }
       }
   }
 
   LsiRepresentationI::LsiRepresentationI(const matrix<int>& m, int normp):
-    LsiRepresentation(m.cols(), m.rows()), norm(normp)
+    LsiRepresentation(m.cols(), m.rows()), mask(m), norm(normp)
   {
-    mask = new int[dimx * dimy];
     int teiler = norm;
-    int i = 0;
 
     for (int y = 0; y < dimy; ++y)
       for (int x = 0; x < dimx; ++x)
         {
-          int v = m[y][x];
-          mask[i] = v;
+          int v = mask[y][x];
           teiler = ggt(teiler, v);
-          i++;
         }
 
     if (teiler > 1)
       {
-        norm = norm / teiler;
-        i = 0;
+        norm /= teiler;
 
         for (int y = 0; y < dimy; ++y)
           for (int x = 0; x < dimx; ++x)
             {
-              mask[i] /= teiler;
-              i++;
+              mask[y][x] /= teiler;
             }
       }
   }
@@ -95,12 +84,10 @@ namespace ice
   void LsiRepresentationI::getMask(matrix<double>& m) const
   {
     m.resize(dimy, dimx);
-    int i = 0;
     for (int y = 0; y < dimy; ++y)
       for (int x = 0; x < dimx; ++x)
         {
-          m[y][x] = static_cast<double>(mask[i]) / norm;
-          ++i;
+          m[y][x] = static_cast<double>(mask[y][x]) / norm;
         }
   }
 
@@ -109,13 +96,15 @@ namespace ice
     sump = 0;
     summ = 0;
 
-    for (int i = 0; i < dimx * dimy; i++)
-      {
-        if (mask[i] > 0)
-          sump += mask[i];
-        else
-          summ += mask[i];
-      }
+    for (int y = 0; y < dimy; ++y)
+      for (int x = 0; x < dimx; ++x)
+        {
+          int val = mask[y][x];
+          if (val > 0)
+            sump += val;
+          else
+            summ += val;
+        }
     sump /= norm;
     summ /= norm;
   }
@@ -128,56 +117,51 @@ namespace ice
     norm = RoundInt(norm / range);
   }
 
-  LsiRepresentationI::LsiRepresentationI(int* m, int xsize, int ysize,
+  LsiRepresentationI::LsiRepresentationI(const int* m, int xsize, int ysize,
                                          int normp):
-    LsiRepresentation(xsize, ysize), norm(normp)
+    LsiRepresentation(xsize, ysize), mask(ysize, xsize), norm(normp)
   {
-    mask = new int [dimx * dimy];
     int teiler = norm;
-    for (int i = 0; i < dimx * dimy; i++)
-      {
-        int v = m[i];
-        teiler = ggt(teiler, v);
-        mask[i] = v;
-      }
+    int i = 0;
+    for (int y = 0; y < dimy; ++y)
+      for (int x = 0; x < dimx; ++x)
+        {
+          int v = m[i];
+          mask[y][x] = v;
+          teiler = ggt(teiler, v);
+          i++;
+        }
 
     if (teiler > 1)
       {
-        norm = norm / teiler;
-        int i = 0;
+        norm /= teiler;
 
         for (int y = 0; y < dimy; ++y)
           for (int x = 0; x < dimx; ++x)
             {
-              mask[i] /= teiler;
-              i++;
+              mask[y][x] /= teiler;
             }
       }
   }
 
 
   LsiRepresentationI::LsiRepresentationI(const LsiRepresentationI& r):
-    LsiRepresentation(r.dimx, r.dimy), norm(r.norm)
+    LsiRepresentation(r.dimx, r.dimy), mask(r.mask), norm(r.norm)
   {
-    mask = new int[dimx * dimy];
-
-    for (int i = 0; i < dimx * dimy; i++)
-      {
-        mask[i] = r.mask[i];
-      }
   }
 
   void LsiRepresentationI::reflectMask()
   {
-    int* mask2 = new int[dimx * dimy];
+    matrix<int> mask2(dimy, dimx);
     for (int y = 0; y < dimy; ++y)
-      for (int x = 0; x < dimx; ++x)
-        {
-          int idx1 = idx(x, y);
-          int idx2 = idx(dimx - 1 - x, dimy - 1 - y);
-          mask2[idx2] = mask[idx1];
-        }
-    delete [] mask;
+      {
+        int y2 = dimy - 1 - y;
+        for (int x = 0; x < dimx; ++x)
+          {
+            int x2 = dimx - 1 - x;
+            mask2[y][x] = mask[y2][x2];
+          }
+      }
     mask = mask2;
   }
 
@@ -202,20 +186,7 @@ namespace ice
 
     double sump = 0.0;
     double summ = 0.0;
-
-    for (int i = 0; i < dimx * dimy; i++)
-      {
-        int v = mask[i];
-
-        if (v > 0)
-          {
-            sump += v;
-          }
-        else
-          {
-            summ -= v;
-          }
-      }
+    sumPlusSumMinus(sump, summ);
 
     double sumc = Max(sump, summ);
     double mv = sumc * max;
@@ -229,10 +200,12 @@ namespace ice
 
     // cout << "normalisiere mit " << nfac << endl;
 
-    for (int i = 0; i < dimy * dimy; i++)
-      {
-        res.mask[i] = mask[i] / nfac;
-      }
+
+    for (int y = 0; y < dimy; ++y)
+      for (int x = 0; x < dimx; ++x)
+        {
+          res.mask[y][x] = mask[y][x] / nfac;
+        }
 
     res.norm = norm / nfac;
     return res;
@@ -240,10 +213,12 @@ namespace ice
 
   void LsiRepresentationI::negateMask()
   {
-    for (int i = 0; i < dimy * dimy; i++)
-      {
-        mask[i] = -mask[i];
-      }
+
+    for (int y = 0; y < dimy; ++y)
+      for (int x = 0; x < dimx; ++x)
+        {
+          mask[y][x] = -mask[y][x];
+        }
   }
 
   void LsiRepresentationI::filter(const Image& src,
@@ -252,7 +227,7 @@ namespace ice
     LsiRepresentationI n = normalized(src.maxval);
 
     LSIImg(src, dest,
-           n.dimx, n.dimy, n.mask,
+           n.dimx, n.dimy, n.mask.getData(),
            n.norm,
            offset);
   }
@@ -260,14 +235,14 @@ namespace ice
   void LsiRepresentationI::filter(const Image& src, ImageD dest) const
   {
     LSIImg(src, dest,
-           dimx, dimy, mask,
+           dimx, dimy, mask.getData(),
            norm);
   }
 
   void LsiRepresentationI::filter(ImageD src, ImageD dest) const
   {
     LSIImg(src, dest,
-           dimx, dimy, mask,
+           dimx, dimy, mask.getData(),
            norm);
   }
 

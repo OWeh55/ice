@@ -26,7 +26,7 @@
 #include "util.h"
 
 #include "filter.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 namespace ice
 {
@@ -43,7 +43,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(const Image& src, const Image& dest,
-              int nx, int ny, int* mask,
+              int nx, int ny, const int* mask,
               int norm, int offset)
   {
     try
@@ -70,7 +70,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(const Image& src, const Image& dest,
-              int nx, int ny, double* mask,
+              int nx, int ny, const double* mask,
               int offset)
   {
     try
@@ -96,7 +96,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImgCyc(const Image& src, const Image& dest,
-                 int nx, int ny, int* mask,
+                 int nx, int ny, const int* mask,
                  int norm, int offset)
   {
     if (norm == 0)
@@ -120,7 +120,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImgCyc(const Image& src, const Image& dest,
-                 int nx, int ny, double* mask,
+                 int nx, int ny, const double* mask,
                  int offset)
   {
     // test if both images have valid pixel arrays and
@@ -152,7 +152,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(const Image& src, ImageD dest,
-              int nx, int ny, int* mask,
+              int nx, int ny, const int* mask,
               int norm)
   {
     if (norm == 0)
@@ -180,7 +180,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(const Image& src, ImageD dest,
-              int nx, int ny, double* mask)
+              int nx, int ny, const double* mask)
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
@@ -208,7 +208,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(ImageD src, ImageD dest,
-              int nx, int ny, int* mask,
+              int nx, int ny, const int* mask,
               int norm)
   {
     if (norm == 0)
@@ -231,7 +231,7 @@ namespace ice
    * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(ImageD src, ImageD dest,
-              int nx, int ny, double* mask)
+              int nx, int ny, const double* mask)
   {
     // test if both images have valid pixel arrays and
     // equal size of the active windows
@@ -247,12 +247,12 @@ namespace ice
   }
 
 // old versions with different parameter order
-  void LSIImg(const Image& src, int nx, int ny, int* kernel, int norm, int off, const Image& dest)
+  void LSIImg(const Image& src, int nx, int ny, const int* kernel, int norm, int off, const Image& dest)
   {
     LSIImg(src, dest, nx, ny, kernel, norm, off);
   }
 
-  void LSIImg(const Image& src, int nx, int ny, double* kernel, int off, const Image& dest)
+  void LSIImg(const Image& src, int nx, int ny, const double* kernel, int off, const Image& dest)
   {
     LSIImg(src, dest, nx, ny, kernel, off);
   }

@@ -81,7 +81,7 @@ namespace ice
       rep = new LsiRepresentationI(m, norm);
     }
 
-    LSIFilter(int* m, int sizex, int sizey, int norm): type(it_int)
+    LSIFilter(const int* m, int sizex, int sizey, int norm): type(it_int)
     {
       rep = new LsiRepresentationI(m, sizex, sizey, norm);
     }
@@ -170,55 +170,55 @@ namespace ice
   // basic implementation functions - lsifilter0.cpp
   // not for public use, no parameter check
   void lsiimg(const Image& src, const Image& dest,
-              int nx, int ny, int* mask, int norm, int off);
+              int nx, int ny, const int* mask, int norm, int off);
   void lsiimg(const Image& src, const Image& dest,
-              int nx, int ny, double* mask, int off);
+              int nx, int ny, const double* mask, int off);
 
   void lsiimg(const Image& src, ImageD dest,
-              int nx, int ny, int* mask, int norm);
+              int nx, int ny, const int* mask, int norm);
   void lsiimg(const Image& src, ImageD dest,
-              int nx, int ny, double* mask);
+              int nx, int ny, const double* mask);
 
   void lsiimg(ImageD src, ImageD dest, int nx, int ny,
-              int* mask, int norm);
+              const int* mask, int norm);
   void lsiimg(ImageD src, ImageD dest,
-              int nx, int ny, double* mask);
+              int nx, int ny, const double* mask);
 
   void lsiimgcyc(const Image& src, const Image& dest,
-                 int nx, int ny, int* mask, int norm, int off);
+                 int nx, int ny, const int* mask, int norm, int off);
   void lsiimgcyc(const Image& src, const Image& dest,
-                 int nx, int ny, double* mask, int off);
+                 int nx, int ny, const double* mask, int off);
 
   // second level functions - with parameter check
   // public use not recommended
   void LSIImg(const Image& src, const Image& dst,
-              int nx, int ny, int* mask, int norm, int off);
+              int nx, int ny, const int* mask, int norm, int off);
   void LSIImg(const Image& src, const Image& dst,
-              int nx, int ny, double* mask, int off);
+              int nx, int ny, const double* mask, int off);
 
   void LSIImg(const Image& src, ImageD dst,
-              int nx, int ny, int* mask, int norm = 1);
+              int nx, int ny, const int* mask, int norm = 1);
   void LSIImg(const Image& src, ImageD dst,
-              int nx, int ny, double* mask);
+              int nx, int ny, const double* mask);
 
   void LSIImg(ImageD src, ImageD dst,
-              int nx, int ny, int* mask, int norm = 1);
+              int nx, int ny, const int* mask, int norm = 1);
   void LSIImg(ImageD src, ImageD dst,
-              int nx, int ny, double* mask);
+              int nx, int ny, const double* mask);
 
   // different parameter order (for compatibility)
   void LSIImg(const Image& imgs,
-              int nx, int ny, int* mask, int norm,
+              int nx, int ny, const int* mask, int norm,
               int off, const Image& imgd);
   void LSIImg(const Image& imgs,
-              int nx, int ny, double* mask,
+              int nx, int ny, const double* mask,
               int off, const Image& imgd);
 
 // variants with "cyclic" interpretation of values (like hue or angles)
   void LSIImgCyc(const Image&, const Image&,
-                 int nx, int ny, int* mask, int norm, int off);
+                 int nx, int ny, const int* mask, int norm, int off);
   void LSIImgCyc(const Image&, const Image&,
-                 int nx, int ny, double* mask, int off);
+                 int nx, int ny, const double* mask, int off);
 
   // special access to pixel value through filter
   int getValueFiltered(const Image& img, int x, int y, const LSIFilter& f);

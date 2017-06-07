@@ -21,7 +21,7 @@
 #include "based.h"
 #include "util.h"
 #include "filter.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 namespace ice
 {
@@ -41,7 +41,7 @@ namespace ice
      */
   template<typename SrcType, typename DestType>
   void lsiimgcyc(const Image& src, const Image& dest,
-                 int nx, int ny, int* mask,
+                 int nx, int ny, const int* mask,
                  int norm, int offset)
   {
     Image tmp = src;
@@ -138,7 +138,7 @@ namespace ice
   }
 
   void lsiimgcyc_std(const Image& src, const Image& dest,
-                     int nx, int ny, int* mask,
+                     int nx, int ny, const int* mask,
                      int norm, int offset)
   {
     Image tmp = src;
@@ -242,7 +242,7 @@ namespace ice
    */
   template<typename SrcType, typename DestType>
   void lsiimgcyc(const Image& src, const Image& dest,
-                 int nx, int ny, double* mask,
+                 int nx, int ny, const double* mask,
                  int offset)
   {
     Image tmp = src;
@@ -338,7 +338,7 @@ namespace ice
   }
 
   void lsiimgcyc_std(const Image& src, const Image& dest,
-                     int nx, int ny, double* mask,
+                     int nx, int ny, const double* mask,
                      int offset)
   {
     Image tmp = src;
@@ -431,7 +431,7 @@ namespace ice
   }
 #undef FNAME
 
-  void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, int* mask, int norm, int off)
+  void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, const int* mask, int norm, int off)
   {
     switch ((src->ImageType() << 4) + dest->ImageType())
       {
@@ -458,7 +458,7 @@ namespace ice
       }
   }
 
-  void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, double* mask, int off)
+  void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, const double* mask, int off)
   {
     switch ((src->ImageType() << 4) + dest->ImageType())
       {

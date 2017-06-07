@@ -12,7 +12,7 @@ namespace ice
     LsiRepresentationI(const LsiRepresentationI& r);
     LsiRepresentationI(const IMatrix& m, int normp);
     LsiRepresentationI(const matrix<int>& m, int normp);
-    LsiRepresentationI(int* m, int sizex, int sizey, int normp);
+    LsiRepresentationI(const int* m, int sizex, int sizey, int normp);
 
     virtual void sumPlusSumMinus(double& sump, double& summ) const;
     virtual LsiRepresentationI normalized(int max) const;
@@ -27,20 +27,19 @@ namespace ice
 
     virtual ~LsiRepresentationI()
     {
-      delete [] mask;
     }
 
     // several forms of access to the filter mask
     virtual const int* getMask() const
     {
-      return mask;
+      return mask.getData();
     }
 
     virtual void getMask(matrix<double>& m) const;
 
     virtual double getMask(int x, int y) const
     {
-      return static_cast<double>(mask[idx(x, y)]) / norm;
+      return static_cast<double>(mask[y][x]) / norm;
     };
 
     virtual int getNorm() const
@@ -48,7 +47,7 @@ namespace ice
       return norm;
     }
   protected:
-    int* mask;
+    matrix<int> mask;
     int norm;
 
     int ggt(int a, int b) const;

@@ -22,7 +22,7 @@
 #include "defs.h"
 #include "macro.h"
 
-#include "lsifilter.h"
+#include "LsiFilter.h"
 #include "filter.h"
 #include "util.h"
 

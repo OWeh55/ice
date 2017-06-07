@@ -31,7 +31,7 @@
 #include "arith.h"
 #include "util.h"
 #include "filter.h"
-#include "lsifilter.h"
+#include "LsiFilter.h"
 
 namespace ice
 {
