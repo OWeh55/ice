@@ -9,42 +9,73 @@
 #include <image.h>
 #include <iostream>
 
-#define SRCIMG "input/church.jpg"
+#define DOUBLE 1
+#define SRCIMG "test_rgb.jpg"
 
 int main(int argc, char** argv)
 {
-  ColorImage srcStd, srcSpe;
-  srcStd.read(SRCIMG);
-  srcSpe.read(SRCIMG);
-  Display(ON);
-  Show(ON, srcStd, "standard filtering");
-  Show(ON, srcSpe, "special filtering");
+  ColorImage src;
+  src.read(SRCIMG);
 
-  printf("This demo shows, how the difference between LSI filtering\nan image in hsi colorspace with the normal LSI filter and\na special version, that keeps mind of the special structure\nof the hue channel\n");
-  printf("click to apply the Mean filter to both images\n\n");
-  SelPoint(srcStd);
+  Show(ON, src, "original image");
+
+  Printf("This demo shows, how the difference between LSI filtering\nan image in hsi colorspace with the normal LSI filter and\na special version, that keeps mind of the special structure\nof the hue channel\n");
+  Printf("<ENTER> to apply the Mean filter to both images\n\n");
+
+  GetChar();
+
+#ifndef DOUBLE
   int maskI[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+#else
+  double maskD[] = {1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9, 1.0/9};
+#endif
 
-  srcStd.convertTo(csHSI);
+  Image h,s,i;
+  h.create(src.redImage());
+  s.create(src.redImage());
+  i.create(src.redImage());
+  ColorImageToHsi(src, h,s,i);
+
+  Image h1,s1,i1;
+  h1.create(src.redImage());
+  s1.create(src.redImage());
+  i1.create(src.redImage());
   double start = TimeD();
-  LSIImg(srcStd.C1(), srcStd.C1(), 3, 3, maskI, 9, 0);
-  LSIImg(srcStd.C2(), srcStd.C2(), 3, 3, maskI, 9, 0);
-  LSIImg(srcStd.C3(), srcStd.C3(), 3, 3, maskI, 9, 0);
+#ifndef DOUBLE
+  LSIImg(h, h1, 3, 3, maskI, 9, 0);
+  LSIImg(s, s1, 3, 3, maskI, 9, 0);
+  LSIImg(i, i1, 3, 3, maskI, 9, 0);
+#else
+  LSIImg(h, h1, 3, 3, maskD, 0);
+  LSIImg(s, s1, 3, 3, maskD, 0);
+  LSIImg(i, i1, 3, 3, maskD, 0);
+#endif
   printf("standard filtering: time elapsed: %f\n\n", TimeD() - start);
-  srcStd.convertTo(csRGB);
+  ColorImage dest1;
+  dest1.create(src);
+  HsiToColorImage(h1,s1,i1,dest1);
+  Show(ON, dest1, "normal filtering");
 
-  srcSpe.convertTo(csHSI);
+  Image h2,s2,i2;
+  h2.create(src.redImage());
+  s2.create(src.redImage());
+  i2.create(src.redImage());
   start = TimeD();
-  LSIImgCyc(srcSpe.H(), srcSpe.H(), 3, 3, maskI, 9, 0);
-  LSIImg(srcSpe.S(), srcSpe.S(), 3, 3, maskI, 9, 0);
-  LSIImg(srcSpe.I(), srcSpe.I(), 3, 3, maskI, 9, 0);
+#ifndef DOUBLE
+  LSIImgCyc(h,h2, 3, 3, maskI, 9, 0);
+  LSIImg(s,s2, 3, 3, maskI, 9, 0);
+  LSIImg(i,i2, 3, 3, maskI, 9, 0);
+#else
+  LSIImgCyc(h,h2, 3, 3, maskD, 0);
+  LSIImg(s,s2, 3, 3, maskD, 0);
+  LSIImg(i,i2, 3, 3, maskD, 0);
+#endif
   printf("special filtering: time elapsed: %f\n\n", TimeD() - start);
-  srcSpe.convertTo(csRGB);
+  ColorImage dest2;
+  dest2.create(src);
+  HsiToColorImage(h2,s2,i2,dest2);
+  Show(ON, dest2, "special filtering");
 
-  printf("As shown, the standard LSI filtering does not reach an\nacceptable result, but the special filter version takes\nmuch more time\n");
-  printf("click to exit...\n");
-  SelPoint(srcStd);
-
-  Display(OFF);
+  GetChar();
   return 0;
 }

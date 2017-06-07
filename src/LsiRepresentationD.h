@@ -33,9 +33,9 @@ namespace ice
       return mask[y][x];
     };
 
-    virtual const double* getMask() const
+    virtual const matrix<double>& getMask() const
     {
-      return mask.getData();
+      return mask;
     }
 
     virtual void getMask(matrix<double>& m) const;

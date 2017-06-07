@@ -48,7 +48,7 @@ namespace ice
     virtual void filter(ImageD src, ImageD dst) const = 0;
 
     virtual double getMask(int i, int j) const = 0;
-
+    virtual const matrix<double>& getMask() const = 0;
     virtual void getMask(matrix<double>& m) const = 0;
 
     virtual void negateMask() = 0;

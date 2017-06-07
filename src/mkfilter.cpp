@@ -25,7 +25,7 @@
 
 namespace ice
 {
-// functions for generation of LSIFilters
+// functions for generation of LsiFilters
 
 #define FNAME "makePolynomFilter"
   static int powi(int b, int e)
@@ -62,7 +62,7 @@ namespace ice
     return idx + i;
   }
 
-  LSIFilter makePolynomFilter(const int size, int grad, int ii, int jj)
+  LsiFilter makePolynomFilter(const int size, int grad, int ii, int jj)
   {
     // Parametertest
     if (
@@ -101,7 +101,7 @@ namespace ice
           mask[i][j] = az[zidx][j * size + i];
         }
 
-    return LSIFilter(mask);
+    return LsiFilter(mask);
   }
 #undef FNAME
 
@@ -133,7 +133,7 @@ namespace ice
       }
   }
 
-  LSIFilter makeOrientedSmearFilter(int size, double dir, double len, double width)
+  LsiFilter makeOrientedSmearFilter(int size, double dir, double len, double width)
   {
     // generate huge (int-)matrix (quasi boolean)
     int xsize = sizeFactor * size;
@@ -177,10 +177,10 @@ namespace ice
     // convert huge matrix to size of filter
     matrix<double> mask(size, size);
     reducematrix(hm, mask);
-    return LSIFilter(mask);
+    return LsiFilter(mask);
   }
 
-  LSIFilter makeOrientedDoBFilter(int size, double dir, double len, double width)
+  LsiFilter makeOrientedDoBFilter(int size, double dir, double len, double width)
   {
     // generate huge (int-)matrix (quasi boolean)
     int xsize = sizeFactor * size;
@@ -252,11 +252,11 @@ namespace ice
           mask[yi][xi] = mv;
         }
     */
-    return LSIFilter(mask);
+    return LsiFilter(mask);
 
   }
 
-  LSIFilter makeOrientedEdgeFilter(int size, double alpha, double rad)
+  LsiFilter makeOrientedEdgeFilter(int size, double alpha, double rad)
   {
     int xsize = sizeFactor * size;
     double xrad = 0.5 * rad * sizeFactor;
@@ -321,7 +321,7 @@ namespace ice
     matrix<double> mask(size, size);
     reducematrix(hm, mask);
 
-    return LSIFilter(mask);
+    return LsiFilter(mask);
   }
 
   void makeLoG(matrix<double>& f, double sigma)
@@ -402,7 +402,7 @@ namespace ice
   }
 
 #define FNAME "makeMexicanHatFilter"
-  LSIFilter makeMexicanHatFilter(int size, double sigma)
+  LsiFilter makeMexicanHatFilter(int size, double sigma)
   {
     if (size < 0 || sigma < 0)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -414,12 +414,12 @@ namespace ice
 
     matrix<double> fc(size, size);
     makeLoG(fc, sigma);
-    return LSIFilter(fc);
+    return LsiFilter(fc);
   }
 #undef FNAME
 
 #define FNAME "makeGaussFilter"
-  LSIFilter makeGaussFilter(int size, double sigma)
+  LsiFilter makeGaussFilter(int size, double sigma)
   {
     if (size < 0 || sigma < 0)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -431,7 +431,7 @@ namespace ice
 
     matrix<double> fc(size, size);
     makeGauss(fc, sigma);
-    return LSIFilter(fc);
+    return LsiFilter(fc);
   }
 #undef FNAME
 }

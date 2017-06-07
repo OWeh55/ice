@@ -20,7 +20,7 @@
  */
 
 /*
- * Implementation of methods for class LSIFilter and helpers
+ * Implementation of methods for class LsiFilter and helpers
  */
 
 #include <utility>
@@ -29,16 +29,16 @@
 #include "matrixtools.h"
 #include "LsiRepresentation.h"
 #include "LsiRepresentationD.h"
-#include "LsiRepresentationI.h"
+//#include "LsiRepresentationI.h"
 #include "LsiFilter.h"
 
 using namespace std;
 
 namespace ice
 {
-// -- Methoden der Klasse LSIFilter
+// -- Methoden der Klasse LsiFilter
 
-  LSIFilter& LSIFilter::operator=(LSIFilter f)
+  LsiFilter& LsiFilter::operator=(LsiFilter f)
   {
     std::swap(type, f.type);
     std::swap(rep, f.rep);
@@ -98,8 +98,8 @@ namespace ice
     return 0;
   }
 
-#define FNAME "LSIFilter::getInverse"
-  LSIFilter LSIFilter::getInverse(int sizex, int sizey) const
+#define FNAME "LsiFilter::getInverse"
+  LsiFilter LsiFilter::getInverse(int sizex, int sizey) const
   {
     matrix<double> m;
     getMask(m);
@@ -107,11 +107,11 @@ namespace ice
     matrix<double> m1(sizex, sizey);
     if (mInvert(m, m1) != 0)
       throw IceException(FNAME, M_MATRIXFORMAT);
-    return LSIFilter(m1);
+    return LsiFilter(m1);
   }
 #undef FNAME
 
-  std::ostream& operator<<(std::ostream& os, const ice::LSIFilter& f)
+  std::ostream& operator<<(std::ostream& os, const ice::LsiFilter& f)
   {
     matrix<double> mat;
     f.getMask(mat);
@@ -123,7 +123,7 @@ namespace ice
    * Bildpunktzugriff mit Filterung
    */
 
-  int getValueFiltered(const Image& img, int x, int y, const LSIFilter& f)
+  int getValueFiltered(const Image& img, int x, int y, const LsiFilter& f)
   {
     const LsiRepresentation* rep = f.getRepresentation();
     int dx = rep->getDX();
@@ -139,51 +139,23 @@ namespace ice
         return 0;
       }
 
-    int g = 0;
+    matrix<double> mask;
+    f.getRepresentation()->getMask(mask);
+    int mi = 0;
+    double sum = 0;
+    const double* maskp = mask.getData();
 
-    switch (f.getImplementationType())
-      {
-      case LSIFilter::it_int:
-      {
-        int mi = 0;
-        double sum = 0; // größerer Wertebereich fuer Summe !!
-        const LsiRepresentationI* r = (const LsiRepresentationI*) f.getRepresentation();
-        const int* maskp = r->getMask();
-        const int norm = r->getNorm();
+    for (int yi = y - dy; yi <= y + dy; yi++)
+      for (int xi = x - dx; xi <= x + dx; xi++)
+        {
+          sum += img.getPixelUnchecked(xi, yi) * maskp[mi];
+          ++mi;
+        }
 
-        for (int yi = y - dy; yi <= y + dy; yi++)
-          for (int xi = x - dx; xi <= x + dx; xi++)
-            {
-              sum += img.getPixelUnchecked(xi, yi) * maskp[mi];
-              ++mi;
-            }
-
-        g = (int)(sum / norm);
-        break;
-      }
-      case LSIFilter::it_double:
-      {
-        LsiRepresentationD* r = (LsiRepresentationD*) f.getRepresentation();
-        int mi = 0;
-        double sum = 0;
-        const double* maskp = r->getMask();
-
-        for (int yi = y - dy; yi <= y + dy; yi++)
-          for (int xi = x - dx; xi <= x + dx; xi++)
-            {
-              sum += img.getPixelUnchecked(xi, yi) * maskp[mi];
-              ++mi;
-            }
-
-        g = (int)sum;
-        break;
-      }
-      }
-
-    return g;
+    return sum;
   }
 
-  int getValueFiltered(const Image& img, IPoint p, const LSIFilter& f)
+  int getValueFiltered(const Image& img, IPoint p, const LsiFilter& f)
   {
     return getValueFiltered(img, p.x, p.y, f);
   }

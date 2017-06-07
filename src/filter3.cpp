@@ -897,11 +897,11 @@ namespace ice
         Matrix gf(1, size);
 
         calcGaussFunction(gf, sigma);
-        LSIFilter gaussh(gf);
+        LsiFilter gaussh(gf);
 
         // Spalte
         gf = !gf;
-        LSIFilter gaussv(gf);
+        LsiFilter gaussv(gf);
 
         gaussv.filter(img1, himg, 0.0);
         gaussh.filter(himg, img2, 0.0);
@@ -930,11 +930,11 @@ namespace ice
 
         calcGaussFunction(gf, sigma);
 
-        LSIFilter gaussh(gf);
+        LsiFilter gaussh(gf);
 
         gf = !gf;
 
-        LSIFilter gaussv(gf);
+        LsiFilter gaussv(gf);
 
         gaussv.filter(img1, img2);
 
@@ -954,7 +954,7 @@ namespace ice
   {
     try
       {
-        LSIFilter f = makeMexicanHatFilter(size, sigma);
+        LsiFilter f = makeMexicanHatFilter(size, sigma);
         f.filter(img1, img2, img2.maxval / 2);
       }
     RETHROW;
@@ -965,7 +965,7 @@ namespace ice
   {
     try
       {
-        LSIFilter f = makeMexicanHatFilter(size, sigma);
+        LsiFilter f = makeMexicanHatFilter(size, sigma);
         f.filter(img1, img2);
       }
     RETHROW;
@@ -976,7 +976,7 @@ namespace ice
   {
     try
       {
-        LSIFilter f = makeMexicanHatFilter(size, sigma);
+        LsiFilter f = makeMexicanHatFilter(size, sigma);
         f.filter(img1, img2);
       }
     RETHROW;

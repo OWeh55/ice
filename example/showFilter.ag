@@ -25,6 +25,7 @@
  opt: x, xsize, int, xSize, Größe der Darstellung x, 512
  opt: y, ysize, int, ySize, Größe der Darstellung y, 512
  opt: f, filterimage, void, filter, Wende Filter an, false
+ opt: F, getValueFiltered, void, pixelFiltered, Benutze punktweise Filterung, false
  opt: v, verbose, void, verbose, Anzeige der Abarbeitung, false
  opt: n, nowait, void, nowait, Kein Warten am Ende, false
  opt: h, help, usage, help, Hilfe
@@ -35,7 +36,7 @@ int main(int argc, char* argv[])
   /*AppGen:MainEnd*/
   try
     {
-      LSIFilter f;
+      LsiFilter f;
       switch (fType)
         {
         case 'D':
@@ -113,18 +114,38 @@ int main(int argc, char* argv[])
             }
         }
 
-      Image src, dst;
-      if (filter)
+      Image src, dst1, dst2;
+      if (filter || pixelFiltered)
         {
-          double time = TimeD();
           src.read("test_gray.jpg");
           Show(ON, src, "Source");
-          dst.copy(src);
-          Show(ON, dst, "Destination");
-          int offset = f.proposeOffset(dst);
+          dst1.copy(src);
+          dst2.copy(src);
+        }
+
+      if (filter)
+        {
+          Show(ON, dst1, "filtered");
+          double time = TimeD();
+          int offset = f.proposeOffset(dst1);
           cout << "Filter-Offset: " << offset << endl;
-          f.filter(src, dst, offset);
+          f.filter(src, dst1, offset);
           // f.filter(src, src, offset);
+          cout << "Zeit für Filterung: " << TimeD() - time << endl;
+        }
+
+      if (pixelFiltered)
+        {
+          Show(ON, dst2, "pixelweise gefiltert");
+          double time = TimeD();
+          int offset = f.proposeOffset(dst1);
+          cout << "Filter-Offset: " << offset << endl;
+          WindowWalker ww(dst2);
+          for (ww.init(); !ww.ready(); ww.next())
+            {
+              int val = getValueFiltered(src, ww, f);
+              dst2.setPixelLimited(ww, val + offset);
+            }
           cout << "Zeit für Filterung: " << TimeD() - time << endl;
         }
 

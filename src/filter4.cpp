@@ -45,7 +45,7 @@ namespace ice
         double dirfac = M_PI / dirsteps;
 
         // Filter-Bank Smear
-        vector<LSIFilter> fsmear;
+        vector<LsiFilter> fsmear;
 
         for (int i = 0; i < dirsteps; ++i)
           {
@@ -98,7 +98,7 @@ namespace ice
     double dirfac = 2 * M_PI / dirsteps;
 
     // Filter-Bank Smear
-    vector<LSIFilter> fedge;
+    vector<LsiFilter> fedge;
 
     for (int i = 0; i < dirsteps; ++i)
       {
@@ -149,7 +149,7 @@ namespace ice
     double dirfac = M_PI / dirsteps;
 
     // Filter-Bank DoB
-    vector<LSIFilter> fdob;
+    vector<LsiFilter> fdob;
 
     for (int i = 0; i < dirsteps; ++i)
       {

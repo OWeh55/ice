@@ -39,7 +39,7 @@ namespace ice
   void LSIImg(ImageD pn1, ImageD pn2,
               const Matrix& m)
   {
-    LSIFilter lsif(m);
+    LsiFilter lsif(m);
     lsif.filter(pn1, pn2);
   }
 #undef FNAME

@@ -110,11 +110,28 @@ namespace ice
     mask = mask2;
   }
 
-  void LsiRepresentationD::filter(const Image& src, const Image& dest, int offset) const
+  void LsiRepresentationD::filter(const Image& src, const Image& dest,
+                                  int offset) const
   {
-    LSIImg(src, dest,
-           dimx, dimy, mask.getData(),
-           offset);
+    // we use int mask if possible
+    double sump = 0.0;
+    double summ = 0.0;
+    sumPlusSumMinus(sump, summ);
+
+    double sumc = Max(sump, summ);
+
+    int norm = RoundInt(INT_MAX / 2.0 / sumc / src.maxval);
+
+    if (norm > 0)
+      {
+        matrix<int> imask(dimy, dimx);
+        for (int y = 0; y < dimy; y++)
+          for (int x = 0; x < dimx; x++)
+            imask[y][x] = RoundInt(mask[y][x] * norm);
+        LSIImg(src, dest, dimx, dimy, imask.getData(), norm, offset);
+      }
+    else
+      LSIImg(src, dest, dimx, dimy, mask.getData(), offset);
   }
 
   void LsiRepresentationD::filter(const Image& src, ImageD dest) const

@@ -18,13 +18,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <vector>
+#include <algorithm>
 #include "based.h"
 #include "util.h"
 #include "filter.h"
 #include "LsiFilter.h"
+#include "vectortools.h"
 
+using namespace std;
 namespace ice
 {
+
+  template<typename T>
+  int getBest(vector<T>& v, int modulo)
+  {
+    // find biggest "hole" in distribution
+    sort(v.begin(), v.end());
+    int i_best = 0;
+    int diff_best = modulo + v[0] - v.back();
+    for (int i = 1; i < v.size(); i++)
+      {
+        int ndiff = v[i] - v[i - 1];
+        if (ndiff > diff_best)
+          {
+            diff_best = ndiff;
+            i_best = i;
+          }
+      }
+    return modulo - v[i_best];
+  }
+
 // Elementare Filterfunktionen mit zyklischer Behandlung der Werte
 // werden typischerweise über LSIImg aufgerufen
 
@@ -55,8 +79,8 @@ namespace ice
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
-    int maxVal = dest.maxval;
-    int maxVal1 = maxVal + 1;
+    int maxVal = src.maxval;
+    int modulo = maxVal + 1;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
@@ -65,77 +89,35 @@ namespace ice
     const SrcType** Pixels = (const SrcType**)tmp->getDataPtr();
     DestType** Pixeld = (DestType**)dest->getDataPtr();
 
-    for (int y = 0; y < src->ysize - (ny2 + 1); y++)
-      {
-        for (int x = 0; x < src->xsize - (nx2 + 1); x++)
-          {
-            int tmpVal = 0;
-            int xBest = 0;
-            int xBVal = 0;
+    std::vector<SrcType> v(nx * ny);
 
-            // get sme without shifting
-            int mid = 0;
-
-            // get mean value
+    for (int y = 0; y < src.ysize - ny; y++)
+      for (int x = 0; x < src.xsize - nx; x++)
+        {
+          // read pixels in neighbourhood
+          int i = 0;
+          for (int b = 0; b < ny; b++)
             for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                {
-                  mid += Pixels[y + b][x + a];
-                }
+              {
+                v[i] = Pixels[y + b][x + a];
+                i++;
+              }
 
-            mid /= (nx * ny);
+          SrcType xBest = getBest(v, modulo);
 
-            // get the square mean error
-            for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                xBVal += (Pixels[y + b][x + a] - mid)
-                         * (Pixels[y + b][x + a] - mid);
-
-            xBVal /= (nx * ny - 1);
-
-            // test the nx*ny different shifts xAkt
+          int sum = 0;
+          for (int j = 0; j < ny; j++)
             for (int i = 0; i < nx; i++)
-              for (int j = 0; j < ny; j++)
-                {
-                  int xAkt = maxVal - Pixels[y + j][x + i] + 1;
-                  int mid = 0;
-                  int sme = 0;
+              {
+                int val = (Pixels[y + j][x + i] + xBest) % modulo;
+                sum += mask[j * nx + i] * val;
+              }
 
-                  // get mean value by shifting pixelvalues by xAkt
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      {
-                        mid += (xAkt + Pixels[y + b][x + a]) % maxVal1;
-                      }
-
-                  mid /= (nx * ny);
-
-                  // get the square mean error
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      sme += (((xAkt + Pixels[y + b][x + a]) % maxVal1) - mid)
-                             * (((xAkt + Pixels[y + b][x + a]) % maxVal1) - mid);
-
-                  sme /= (nx * ny - 1);
-
-                  if (sme < xBVal)
-                    {
-                      xBVal = sme;
-                      xBest = xAkt;
-                    }
-                }
-
-            for (int j = 0; j < ny; j++)
-              for (int i = 0; i < nx; i++)
-                {
-                  tmpVal += (mask[j * nx + i] * ((xBest + Pixels[y + j][x + i]) % maxVal1));
-                }
-
-            Pixeld[y + ny2][x + nx2] = limited(offset + (((tmpVal / norm) - xBest) % maxVal1), maxVal);
-          }
-      }
-
+          int val = offset + sum / norm - xBest;
+          Pixeld[y + ny2][x + nx2] = (val % modulo + modulo) % modulo;
+        }
   }
+
 
   void lsiimgcyc_std(const Image& src, const Image& dest,
                      int nx, int ny, const int* mask,
@@ -153,81 +135,38 @@ namespace ice
     int nx2 = nx / 2;
     int ny2 = ny / 2;
     int maxVal = dest.maxval;
+    int modulo = maxVal + 1;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
     setborder(dest, nx2, ny2, (dest.maxval + 1) / 2);
 
-    for (int y = 0; y < src->ysize - (ny2 + 1); y++)
-      {
-        for (int x = 0; x < src->xsize - (nx2 + 1); x++)
-          {
-            int tmpVal = 0;
-            int xBest = 0;
-            int xBVal = 0;
+    std::vector<int> v(nx * ny);
 
-            // get sme without shifting
-            int mid = 0;
-
-            // get mean value
+    for (int y = 0; y < src.ysize - ny; y++)
+      for (int x = 0; x < src.xsize - nx; x++)
+        {
+          // read pixels in neighbourhood
+          int i = 0;
+          for (int b = 0; b < ny; b++)
             for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                {
-                  mid += tmp.getPixelUnchecked(x + a, y + b);
-                }
+              {
+                v[i] = src.getPixelUnchecked(x + a, y + b);
+                i++;
+              }
 
-            mid /= (nx * ny);
+          int xBest = getBest(v, modulo);
 
-            // get the square mean error
-            for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                xBVal += tmp.getPixelUnchecked(x + a, y + b)
-                         * tmp.getPixelUnchecked(x + a, y + b);
-
-            xBVal /= (nx * ny - 1);
-
-            // test the nx*ny different shifts xAkt
+          int sum = 0;
+          for (int j = 0; j < ny; j++)
             for (int i = 0; i < nx; i++)
-              for (int j = 0; j < ny; j++)
-                {
-                  int xAkt = maxVal - tmp.getPixelUnchecked(x + i, y + j) + 1;
-                  int mid = 0;
-                  int sme = 0;
-
-                  // get mean value by shifting pixelvalues by xAkt
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      {
-                        mid += (xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal;
-                      }
-
-                  mid /= (nx * ny);
-
-                  // get the square mean error
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      sme += ((xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal - mid)
-                             * ((xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal - mid);
-
-                  sme /= (nx * ny - 1);
-
-                  if (sme < xBVal)
-                    {
-                      xBVal = sme;
-                      xBest = xAkt;
-                    }
-                }
-
-            for (int i = 0; i < nx; i++)
-              for (int j = 0; j < ny; j++)
-                {
-                  tmpVal += mask[i] * ((xBest + tmp.getPixelUnchecked(x + i, y + j)) % maxVal);
-                }
-
-            dest.setPixelUnchecked(x + nx2, y + ny2, limited(offset + tmpVal / norm, maxVal));
-          }
-      }
-
+              {
+                int val = (src.getPixelUnchecked(x + i, y + j) + xBest) % modulo;
+                sum += mask[j * nx + i] * val;
+              }
+          int val = offset + sum / norm - xBest;
+          dest.setPixelUnchecked(x + nx2, y + ny2, (val % modulo + modulo) % modulo);
+        }
   }
 
   /**
@@ -240,6 +179,7 @@ namespace ice
    * @param mask the filter mask (scaling factor included in the double values)
    * @param offset the value representing 0 (to handle negative results)
    */
+
   template<typename SrcType, typename DestType>
   void lsiimgcyc(const Image& src, const Image& dest,
                  int nx, int ny, const double* mask,
@@ -256,85 +196,43 @@ namespace ice
 
     int nx2 = nx / 2;
     int ny2 = ny / 2;
-    int maxVal = dest.maxval;
+    int maxVal = src.maxval;
+    int modulo = maxVal + 1;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
-    setborder(dest, nx2, ny2, (dest.maxval + 1) / 2);
+    setborder(dest, nx2, ny2, offset);
 
     const SrcType** Pixels = (const SrcType**)tmp->getDataPtr();
     DestType** Pixeld = (DestType**)dest->getDataPtr();
 
-    for (int y = 0; y < src->ysize - (ny2 + 1); y++)
-      {
-        for (int x = 0; x < src->xsize - (nx2 + 1); x++)
-          {
-            double tmpVal = offset;
-            int xBest = 0;
-            int xBVal = 0;
+    std::vector<SrcType> v(nx * ny);
 
-            // get sme without shifting
-            int mid = 0;
-
-            // get mean value
+    for (int y = 0; y < src.ysize - ny; y++)
+      for (int x = 0; x < src.xsize - nx; x++)
+        {
+          // read pixels in neighbourhood
+          int i = 0;
+          for (int b = 0; b < ny; b++)
             for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                {
-                  mid += Pixels[y + b][x + a];
-                }
+              {
+                v[i] = Pixels[y + b][x + a];
+                i++;
+              }
 
-            mid /= (nx * ny);
+          SrcType xBest = getBest(v, modulo);
 
-            // get the square mean error
-            for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                xBVal += (Pixels[y + b][x + a] - mid)
-                         * (Pixels[y + b][x + a] - mid);
-
-            xBVal /= (nx * ny - 1);
-
-            // test the nx*ny different shifts xAkt
+          double sum = 0;
+          for (int j = 0; j < ny; j++)
             for (int i = 0; i < nx; i++)
-              for (int j = 0; j < ny; j++)
-                {
-                  int xAkt = maxVal - Pixels[y + j][x + i] + 1;
-                  int mid = 0;
-                  int sme = 0;
+              {
+                int val = (Pixels[y + j][x + i] + xBest) % modulo;
+                sum += mask[j * nx + i] * val;
+              }
 
-                  // get mean value by shifting pixelvalues by xAkt
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      {
-                        mid += (xAkt + Pixels[y + b][x + a]) % maxVal;
-                      }
-
-                  mid /= (nx * ny);
-
-                  // get the square mean error
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      sme += ((xAkt + Pixels[y + b][x + a]) % maxVal - mid)
-                             * ((xAkt + Pixels[y + b][x + a]) % maxVal - mid);
-
-                  sme /= (nx * ny - 1);
-
-                  if (sme < xBVal)
-                    {
-                      xBVal = sme;
-                      xBest = xAkt;
-                    }
-                }
-
-            for (int i = 0; i < nx; i++)
-              for (int j = 0; j < ny; j++)
-                {
-                  tmpVal += mask[i] * ((xBest + Pixels[y + j][x + i]) % maxVal);
-                }
-
-            Pixeld[y + ny2][x + nx2] = limited(RoundInt(tmpVal), maxVal);
-          }
-      }
-
+          int val = offset + sum - xBest;
+          Pixeld[y + ny2][x + nx2] = (val % modulo + modulo) % modulo;
+        }
   }
 
   void lsiimgcyc_std(const Image& src, const Image& dest,
@@ -353,135 +251,115 @@ namespace ice
     int nx2 = nx / 2;
     int ny2 = ny / 2;
     int maxVal = dest.maxval;
+    int modulo = maxVal + 1;
 
     // the border of width nx/2 and height ny/2 around
     // the image will be filled with maxval/2
     setborder(dest, nx2, ny2, (dest.maxval + 1) / 2);
 
-    for (int y = 0; y < src->ysize - (ny2 + 1); y++)
-      {
-        for (int x = 0; x < src->xsize - (nx2 + 1); x++)
-          {
-            double tmpVal = offset;
-            int xBest = 0;
-            int xBVal = 0;
+    std::vector<int> v(nx * ny);
 
-            // get sme without shifting
-            int mid = 0;
-
-            // get mean value
+    for (int y = 0; y < src.ysize - ny; y++)
+      for (int x = 0; x < src.xsize - nx; x++)
+        {
+          // read pixels in neighbourhood
+          int i = 0;
+          for (int b = 0; b < ny; b++)
             for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                {
-                  mid += tmp.getPixelUnchecked(x + a, y + b);
-                }
+              {
+                v[i] = src.getPixelUnchecked(x + a, y + b);
+                i++;
+              }
 
-            mid /= (nx * ny);
+          int xBest = getBest(v, modulo);
 
-            // get the square mean error
-            for (int a = 0; a < nx; a++)
-              for (int b = 0; b < ny; b++)
-                xBVal += tmp.getPixelUnchecked(x + a, y + b)
-                         * tmp.getPixelUnchecked(x + a, y + b);
-
-            xBVal /= (nx * ny - 1);
-
-            // test the nx*ny different shifts xAkt
+          double sum = 0;
+          for (int j = 0; j < ny; j++)
             for (int i = 0; i < nx; i++)
-              for (int j = 0; j < ny; j++)
-                {
-                  int xAkt = maxVal - tmp.getPixelUnchecked(x + i, y + j) + 1;
-                  int mid = 0;
-                  int sme = 0;
-
-                  // get mean value by shifting pixelvalues by xAkt
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      {
-                        mid += (xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal;
-                      }
-
-                  mid /= (nx * ny);
-
-                  // get the square mean error
-                  for (int a = 0; a < nx; a++)
-                    for (int b = 0; b < ny; b++)
-                      sme += ((xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal - mid)
-                             * ((xAkt + tmp.getPixelUnchecked(x + a, y + b)) % maxVal - mid);
-
-                  sme /= (nx * ny - 1);
-
-                  if (sme < xBVal)
-                    {
-                      xBVal = sme;
-                      xBest = xAkt;
-                    }
-                }
-
-            for (int i = 0; i < nx; i++)
-              for (int j = 0; j < ny; j++)
-                {
-                  tmpVal += mask[i] * ((xBest + tmp.getPixelUnchecked(x + i, y + j)) % maxVal);
-                }
-
-            dest.setPixelUnchecked(x + nx2, y + ny2, limited(RoundInt(tmpVal), maxVal));
-          }
-      }
-
+              {
+                int val = (src.getPixelUnchecked(x + i, y + j) + xBest) % modulo;
+                sum += mask[j * nx + i] * val;
+              }
+          int val = offset + sum - xBest;
+          dest.setPixelUnchecked(x + nx2, y + ny2, (val % modulo + modulo) % modulo);
+        }
   }
-#undef FNAME
 
   void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, const int* mask, int norm, int off)
   {
-    switch ((src->ImageType() << 4) + dest->ImageType())
+    int typSelector = (src->ImageType() * 16) + dest->ImageType();
+
+    switch (typSelector)
       {
-      case 17:
+      case 1*16+1:
         lsiimgcyc<PixelType1, PixelType1>(src, dest, nx, ny, mask, norm, off);
-      case 18:
+        break;
+      case 1*16+2:
         lsiimgcyc<PixelType1, PixelType2>(src, dest, nx, ny, mask, norm, off);
-      case 19:
+        break;
+      case 1*16+3:
         lsiimgcyc<PixelType1, PixelType3>(src, dest, nx, ny, mask, norm, off);
-      case 33:
+        break;
+      case 2*16+1:
         lsiimgcyc<PixelType2, PixelType1>(src, dest, nx, ny, mask, norm, off);
-      case 34:
+        break;
+      case 2*16+2:
         lsiimgcyc<PixelType2, PixelType2>(src, dest, nx, ny, mask, norm, off);
-      case 35:
+        break;
+      case 2*16+3:
         lsiimgcyc<PixelType2, PixelType3>(src, dest, nx, ny, mask, norm, off);
-      case 49:
+        break;
+      case 3*16+1:
         lsiimgcyc<PixelType3, PixelType1>(src, dest, nx, ny, mask, norm, off);
-      case 50:
+        break;
+      case 3*16+2:
         lsiimgcyc<PixelType3, PixelType2>(src, dest, nx, ny, mask, norm, off);
-      case 51:
+        break;
+      case 3*16+3:
         lsiimgcyc<PixelType3, PixelType3>(src, dest, nx, ny, mask, norm, off);
+        break;
       default:
         lsiimgcyc_std(src, dest, nx, ny, mask, norm, off);
+        break;
       }
   }
 
   void lsiimgcyc(const Image& src, const Image& dest, int nx, int ny, const double* mask, int off)
   {
-    switch ((src->ImageType() << 4) + dest->ImageType())
+    int typSelector = (src->ImageType() * 16) + dest->ImageType();
+
+    switch (typSelector)
       {
       case 17:
         lsiimgcyc<PixelType1, PixelType1>(src, dest, nx, ny, mask, off);
+        break;
       case 18:
         lsiimgcyc<PixelType1, PixelType2>(src, dest, nx, ny, mask, off);
+        break;
       case 19:
         lsiimgcyc<PixelType1, PixelType3>(src, dest, nx, ny, mask, off);
+        break;
       case 33:
         lsiimgcyc<PixelType2, PixelType1>(src, dest, nx, ny, mask, off);
+        break;
       case 34:
         lsiimgcyc<PixelType2, PixelType2>(src, dest, nx, ny, mask, off);
+        break;
       case 35:
         lsiimgcyc<PixelType2, PixelType3>(src, dest, nx, ny, mask, off);
+        break;
       case 49:
         lsiimgcyc<PixelType3, PixelType1>(src, dest, nx, ny, mask, off);
+        break;
       case 50:
         lsiimgcyc<PixelType3, PixelType2>(src, dest, nx, ny, mask, off);
+        break;
       case 51:
         lsiimgcyc<PixelType3, PixelType3>(src, dest, nx, ny, mask, off);
+        break;
       default:
         lsiimgcyc_std(src, dest, nx, ny, mask, off);
+        break;
       }
   }
 #undef FNAME

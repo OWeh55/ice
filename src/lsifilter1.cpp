@@ -241,7 +241,7 @@ namespace ice
   }
 
 //####################################################################################################
-  void LSIImg(const Image& src, const Image& dest, const LSIFilter& f, int offset)
+  void LSIImg(const Image& src, const Image& dest, const LsiFilter& f, int offset)
   {
     f.filter(src, dest, offset);
   }
@@ -269,13 +269,13 @@ namespace ice
 
   void LSIImg(const Image& src, const Image& dest, const Matrix& mask, int off)
   {
-    LSIFilter fm(mask);
+    LsiFilter fm(mask);
     fm.filter(src, dest, off);
   }
 
   void LSIImg(const Image& src, const Image& dest, const IMatrix& mask, int norm, int off)
   {
-    LSIFilter fm(mask, norm);
+    LsiFilter fm(mask, norm);
     fm.filter(src, dest, off);
   }
 #undef FNAME

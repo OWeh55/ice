@@ -49,32 +49,5 @@ int main(int argc, char* argv[])
 
   cout << "---------------------------------------------" << endl;
 
-// alte Matrizen
-  MatrixStruct A = NewMatrix(MAT_DOUBLE, DIM, DIM);
-  MatrixStruct U = NewMatrix(MAT_DOUBLE, DIM, DIM);
-  MatrixStruct D = NewMatrix(MAT_DOUBLE, DIM, DIM);
-  MatrixStruct V = NewMatrix(MAT_DOUBLE, DIM, DIM);
-
-  MatrixStruct R1 = NewMatrix(MAT_DOUBLE, DIM, DIM);
-  MatrixStruct R2 = NewMatrix(MAT_DOUBLE, DIM, DIM);
-  MatrixStruct R3 = NewMatrix(MAT_DOUBLE, DIM, DIM);
-
-
-  for (i = 0; i < DIM; i++)
-    for (j = 0; j < DIM; j++)
-      A->data[i][j] = a[i][j];
-
-  SingularValueDcmp(A, &U, &D, &V);
-
-//   PrintMatrix(A);
-  PrintMatrix(U);
-  PrintMatrix(D);
-  PrintMatrix(V);
-  cout << "-" << endl;
-  TranspMat(V, R1);
-  MulMat(D, R1, R2);
-  MulMat(U, R2, R3);
-  PrintMatrix(R3);
-
   return 0;
 }
