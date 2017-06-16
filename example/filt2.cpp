@@ -102,8 +102,8 @@ int main(int argc, char* argv[])
   m[2][1] = 0;
   m[2][2] = 1;
 
-  LSIFilter gradx(m, 6);
-  LSIFilter grady(!m, 6);
+  LsiFilter gradx(m, 6);
+  LsiFilter grady(!m, 6);
 
   if (argc > optind)
     filename = argv[optind];

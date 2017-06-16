@@ -29,7 +29,7 @@
 #include "lmdif.h"
 
 #include "MatrixAlgebra.h"
-
+#include "vectortools.h"
 #include "geo.h"
 
 using namespace std;
@@ -128,7 +128,7 @@ namespace ice
 
         //    cout << a << endl;
 
-        rv = SolveLinearEquation(a, r);
+        rv = solveLinearEquation(a, r);
 
         matrix<double> tmatrix(dim1 + 1, dim2 + 1);
         for (int k = 0; k < dim2 + 1; k++)
@@ -330,40 +330,48 @@ namespace ice
               }
           }
           break;
+
           case TRM_SIMILARITY_NOR:
-            // dim1=dim2=2
+            // dim1 == dim2 == 2
           {
-            Matrix a(2 * nPoints, 4);
-            Vector r(2 * nPoints);
-            Vector rv(4);
+            matrix<double> a(2 * nPoints, 4);
+            vector<double> r(2 * nPoints);
 
             for (int j = 0; j < nPoints; j++)
               {
-                a[j * 2][0] = p1[j][0] * weights[j];
-                a[j * 2][1] = p1[j][1] * weights[j];
-                a[j * 2][2] = weights[j];
+                double weight = weights[j];
+
+                a[j * 2][0] = p1[j][0] * weight;
+                a[j * 2][1] = p1[j][1] * weight;
+                a[j * 2][2] = weight;
                 a[j * 2][3] = 0;
-                r[j * 2] = p2[j][0] * weights[j];
-                a[j * 2 + 1][0] = p1[j][1] * weights[j];
-                a[j * 2 + 1][1] = -p1[j][0] * weights[j];
+
+                r[j * 2] = p2[j][0] * weight;
+
+                a[j * 2 + 1][0] = p1[j][1] * weight;
+                a[j * 2 + 1][1] = -p1[j][0] * weight;
                 a[j * 2 + 1][2] = 0;
-                a[j * 2 + 1][3] = weights[j];
-                r[j * 2 + 1] = p2[j][1] * weights[j];
+                a[j * 2 + 1][3] = weight;
+
+                r[j * 2 + 1] = p2[j][1] * weight;
               }
 
-            SolveLinEqu(a, r);
+            vector<double> rv = solveLinearEquation(a, r);
 
+            cout << rv << endl;
             res.m[0][0] = rv[0];
             res.m[0][1] = rv[1];
             res.m[1][0] = -rv[1];
             res.m[1][1] = rv[0];
             res.m[0][2] = rv[2];
             res.m[1][2] = rv[3];
+
             break;
           }
+
           case TRM_AFFINE:
-          {
             // problem is separable
+          {
             Matrix a(nPoints, dim1 + 1);
             Vector r(nPoints);
             Vector rv(dim1 + 1);
@@ -392,20 +400,18 @@ namespace ice
                     res.m[k][i] = rv[i];
                   }
               }
-
-            break;
           }
+          break;
 
           case TRM_PROJECTIVE:
-          {
+
             // affine transformation as first approximation
             res = MatchPointlists(p1, p2, TRM_AFFINE, weights);
 
             // iterative refinement to projective transformation
             res = iterateProjective(res, p1, p2, weights);
-            return res;
-          }
-          break;
+
+            break;
 
           default:
             throw IceException(FNAME, M_WRONG_MODE);
@@ -460,15 +466,15 @@ namespace ice
                         int mode)
   {
     Trafo res;
-    unsigned int pnumber = pl1.size();
+    int nPoints = pl1.size();
 
-    if (pl2.size() != pnumber)
+    if ((int)pl2.size() != nPoints)
       throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
-    Matrix p1(pnumber, 2);
-    Matrix p2(pnumber, 2);
+    Matrix p1(nPoints, 2);
+    Matrix p2(nPoints, 2);
 
-    for (unsigned int i = 0; i < pnumber; i++)
+    for (int i = 0; i < nPoints; i++)
       {
         p1[i][0] = pl1[i].x;
         p1[i][1] = pl1[i].y;

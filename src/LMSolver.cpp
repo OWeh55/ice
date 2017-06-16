@@ -102,7 +102,7 @@ namespace ice
         vector<double> b = !jm * functionValue;
         // cout << "b: " << b << endl;
 
-        vector<double> deltaX = SolveLinearEquation(A, b);
+        vector<double> deltaX = solveLinearEquation(A, b);
         // cout << "deltaX: " << deltaX << endl;
 
         // evaluate step

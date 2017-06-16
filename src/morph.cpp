@@ -358,13 +358,13 @@ namespace ice
       {
         int dx, dy;
         checkSizes(imgs, destinationImage, dx, dy);
-	
+
         if (imgs.maxval < MHISTSIZE)
           {
             dilateImgO(imgs, sx, sy, destinationImage);
             return;
           }
-	  
+
         need_temp = (destinationImage == imgs);
 
         if (need_temp)

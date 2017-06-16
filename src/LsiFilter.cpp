@@ -89,7 +89,7 @@ namespace ice
               }
         }
 
-    vector<double> res = SolveLinearEquation(A, i);
+    vector<double> res = solveLinearEquation(A, i);
     for (int r2 = -s2r; r2 <= s2r; ++r2)
       for (int c2 = -s2c; c2 <= s2c; ++c2)
         {

@@ -47,7 +47,7 @@ namespace ice
   matrix<double> Inverse(const matrix<double>& m);
 
   // solve Ax = b
-  std::vector<double> SolveLinearEquation(const matrix<double>& m,
+  std::vector<double> solveLinearEquation(const matrix<double>& m,
                                           const std::vector<double>& b);
 } // namespace ice
 #endif

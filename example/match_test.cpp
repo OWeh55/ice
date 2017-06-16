@@ -29,7 +29,7 @@ void mkPointLists(const Trafo& tr, vector<Point>& p1,
 {
   p1.clear();
   generatePoints(p1, n, mode);
-  Transform(tr, p1, p2);
+  transform(tr, p1, p2);
 }
 
 void drawPoints(const Image& img, const vector<Point>& pl, int color)
@@ -67,43 +67,66 @@ int main(int argc, char** argv)
   Image imgd;
   imgd.create(800, 800, 255);
   imgd.set(0);
+
   Show(OVERLAY, imgd);
+
   vector<Point> p1;
   vector<Point> p2;
+
   matrix<double> m(3, 3, 1);
   m[0][1] = -0.1;
-  m[0][2] = 300;
-  m[1][0] = 0.1;
-  m[1][2] = 250;
+  m[0][2] =   300;
+  m[1][0] =  0.1;
+  m[1][2] =   250;
   m[2][0] = 1e-5;
   m[2][1] = -9e-4;
   m[2][2] = 1.7;
 
   Trafo tr(m);
-  cout << tr.Tmatrix() << endl;
+  cout << tr.getMatrix() << endl;
 
   mkPointLists(tr, p1, p2, 1500, 1);
-  addNoise(p2, 150);
-  drawPoints(imgd, p1, 1);
-  drawPoints(imgd, p2, 2);
+
+  addNoise(p2, 15);
 
   vector<Point> pid;
-  Transform(tr, p1, pid);
-  drawPoints(imgd, pid, 1);
+  transform(tr, p1, pid);
 
-  Trafo res1 = MatchPointlists(p1, p2, TRM_AFFINE);
-  cout << res1.getMatrix() << endl;
-  vector<Point> pres1;
-  Transform(res1, p1, pres1);
-  drawPoints(imgd, pres1, 3);
-  cout << "Abweichung: " << getDistance(pid, pres1) << endl;
+  vector<int> modelist{TRM_SHIFT, TRM_SCALE_SHIFT,
+                       TRM_SIMILARITY_NOR,
+                       TRM_AFFINE,
+                       TRM_PROJECTIVE};
 
-  Trafo res2 = MatchPointlists(p1, p2, TRM_PROJECTIVE);
-  cout << res2.getMatrix() << endl;
-  vector<Point> pres2;
-  Transform(res2, p1, pres2);
-  drawPoints(imgd, pres2, 4);
+  vector<string> modename{"TRM_SHIFT",
+                          "TRM_SCALE_SHIFT",
+                          "TRM_SIMILARITY_NOR",
+                          "TRM_AFFINE",
+                          "TRM_PROJECTIVE"};
 
-  GetChar();
+  cout << "point list 1 - red" << endl;
+  cout << "point list 2 - green" << endl;
+  cout << "ideally transformed list 1 - red " << endl;
+  cout << "matched point list 1 - blue" << endl;
+  cout << "--------------------------------------------" << endl;
+  for (int i = 0; i < modelist.size(); i++)
+    {
+      drawPoints(imgd, p1, 1);
+      drawPoints(imgd, p2, 2);
+      drawPoints(imgd, pid, 1);
+
+      Trafo res1 = MatchPointlists(p1, p2, modelist[i]);
+
+      vector<Point> pres1;
+      transform(res1, p1, pres1);
+      drawPoints(imgd, pres1, 3);
+
+      cout << "mode " << modelist[i] << ": " << modename[i] << endl;
+      cout << res1.getMatrix() << endl;
+      cout << "Abweichung: " << getDistance(pid, pres1) << endl;
+      cout << "--------------------------------------------" << endl;
+      GetChar();
+      imgd.set(0);
+    }
+
   return OK;
 }

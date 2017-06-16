@@ -513,9 +513,9 @@ namespace ice
     RETHROW;
   }
 
-  int SolveLinearEquation1(const matrix<double>& A,
-                           const std::vector<double>& b,
-                           std::vector<double>& x)
+  void SolveLinearEquation1(const matrix<double>& A,
+                            const std::vector<double>& b,
+                            std::vector<double>& x)
   {
     // Matrix is square, v has correct size
     try
@@ -527,7 +527,6 @@ namespace ice
         LUDecompositionPacked(A, LU, index, true);
         // Lösen von L*U*x=b
         x = LUSolve(LU, index, b);
-        return OK;
       }
     RETHROW;
   }
@@ -560,7 +559,7 @@ namespace ice
 
 #undef FNAME
 #define FNAME "SolveLinearEquation"
-  std::vector<double> SolveLinearEquation(const matrix<double>& m,
+  std::vector<double> solveLinearEquation(const matrix<double>& m,
                                           const std::vector<double>& b)
   {
     std::vector<double> res(m.cols());
@@ -575,8 +574,6 @@ namespace ice
         ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
       }
 
-    int rc;
-
     // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
     if (m.cols() < m.rows())
       {
@@ -590,15 +587,12 @@ namespace ice
                 bb[i] += m[k][i] * b[k];
               }
           }
-        rc = SolveLinearEquation1(a, bb, res);
+        SolveLinearEquation1(a, bb, res);
       }
     else
       {
-        rc = SolveLinearEquation1(m, b, res);
+        SolveLinearEquation1(m, b, res);
       }
-
-    if (rc != OK)
-      throw IceException(FNAME, M_0);
 
     return res;
   }

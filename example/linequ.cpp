@@ -32,13 +32,15 @@ int main(int argc, char* argv[])
               Vector(2, 1, 7, 1, 5) &&
               Vector(1, 1, 0, 1, 1);
 
-  Matrix A = A3;
+  Matrix A = A1;
   Vector x = Vector(1, 2, 3, 4, 5);
 
   Vector x1, x2;
   Vector b = A * x; // Inhomogenität passend zur Lösung konstruieren
 
   x1 = SolveLinEqu(A, b);
+  cout << "Matrix: " << A;
+  cout << "Lösung:      Abweichung:" << endl;
   cout << x1 << " " << x1 - x << endl;
 
   if (A.cols() != A.rows())
@@ -51,6 +53,9 @@ int main(int argc, char* argv[])
   IVector indx;
   LUDecompositionPacked(A, LU, indx, true);
   x2 = LUSolve(LU, indx, b);
+
+  cout << "Matrix: " << A;
+  cout << "Lösung:      Abweichung:" << endl;
   cout << x2 << " " << x2 - x << endl;
 
   // Test mit klasse matrix<T>
@@ -59,15 +64,19 @@ int main(int argc, char* argv[])
   for (int r = 0; r < A.rows(); ++r)
     for (int c = 0; c < A.cols(); ++c)
       Am[r][c] = A[r][c];
+
   vector<double> bv(b.size());
   for (int i = 0; i < b.size(); i++)
     bv[i] = b[i];
 
-  vector<double> xv = SolveLinearEquation(Am, bv);
-  for (int i = 0; i < xv.size(); ++i)
-    {
-      cout << xv[i] << " " << x[i] - xv[i] << endl;
-    }
+  vector<double> xx(x.size());
+  for (int i = 0; i < x.size(); i++)
+    xx[i] = x[i];
+
+  vector<double> xv = solveLinearEquation(Am, bv);
+  cout << "matrix<double>: " << Am;
+  cout << "Lösung:      Abweichung:" << endl;
+  cout << xv << " " << (xv - xx) << endl;
 
   return 0;
 }
