@@ -30,7 +30,7 @@ namespace ice
       // SuccessFlag (false)
       Button(NOPRESS)
   {
-    window = imageWindow->GetImageRect();
+    window = imageWindow->getImageRect();
   }
 
   IPoint InteractionHandler::makeValid(IPoint p)

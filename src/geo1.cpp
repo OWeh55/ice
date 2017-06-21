@@ -358,7 +358,7 @@ namespace ice
 
             vector<double> rv = solveLinearEquation(a, r);
 
-            cout << rv << endl;
+            // cout << rv << endl;
             res.m[0][0] = rv[0];
             res.m[0][1] = rv[1];
             res.m[1][0] = -rv[1];

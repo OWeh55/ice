@@ -104,7 +104,7 @@ namespace ice
       }
   }
 
-  Visual ImageManager::GetVisual(ImageBase* img) const
+  Visual ImageManager::getVisual(ImageBase* img) const
   {
     Visual result = nullptr;
     // find Visual showing given Image
@@ -120,7 +120,7 @@ namespace ice
     return result;
   }
 
-  Visual ImageManager::GetVisual(ImageD* img) const
+  Visual ImageManager::getVisual(ImageD* img) const
   {
     Visual result = nullptr;
     // find Visual showing given Image
@@ -343,7 +343,7 @@ namespace ice
       {
       case OFF:
       {
-        Visual v = GetVisual(Img);
+        Visual v = getVisual(Img);
         while (v != nullptr)
           {
             // Delete the corresponding image window
@@ -352,7 +352,7 @@ namespace ice
             Event.SetEventObject((wxObject*)v);
             AddPendingEvent(Event);
             WaitForMainThread();
-            v = GetVisual(Img);
+            v = getVisual(Img);
           }
         return v;
       }
@@ -412,7 +412,7 @@ namespace ice
       {
       case OFF:
       {
-        Visual v = GetVisual(Img);
+        Visual v = getVisual(Img);
         while (v != nullptr)
           {
             // Delete the corresponding image window
@@ -421,7 +421,7 @@ namespace ice
             Event.SetEventObject((wxObject*)v);
             AddPendingEvent(Event);
             WaitForMainThread();
-            v = GetVisual(Img);
+            v = getVisual(Img);
           }
         return v;
       }
@@ -652,7 +652,7 @@ namespace ice
         ImageManager* im = wxGetApp().GetImageManager();
         if (im != nullptr)
           {
-            v = wxGetApp().GetImageManager()->GetVisual(img);
+            v = wxGetApp().GetImageManager()->getVisual(img);
             if (v != nullptr)
               {
                 wxGetApp().GetImageManager()->Show(OFF, v);
@@ -669,7 +669,7 @@ namespace ice
     Visual v;
     do
       {
-        v = wxGetApp().GetImageManager()->GetVisual(img);
+        v = wxGetApp().GetImageManager()->getVisual(img);
         if (v != nullptr)
           {
             wxGetApp().GetImageManager()->Show(OFF, v);

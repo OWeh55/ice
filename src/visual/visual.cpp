@@ -51,7 +51,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PARAM);
 
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(Img));
 
     // if the image is not visualized, do nothing
 
@@ -82,7 +82,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PARAM);
 
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(Img));
 
     // if the image is not visualized, do nothing
 
@@ -128,7 +128,7 @@ namespace ice
   int Zoom(Image Img, int ZoomFactor, int, int)
   {
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(Img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(Img));
     if (v == NULL)
       throw IceException(FNAME, M_NOT_VIS);
     return v->Zoom(ZoomFactor);
@@ -151,7 +151,7 @@ namespace ice
                    unsigned char Red, unsigned char Green, unsigned char Blue)
   {
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == NULL)
       throw IceException(FNAME, M_NOT_VIS);
 
@@ -163,7 +163,7 @@ namespace ice
   int SetGreyLUT(Image img, unsigned int First, unsigned int Last)
   {
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == NULL)
       throw IceException(FNAME, M_NOT_VIS);
 
@@ -190,7 +190,7 @@ namespace ice
                       unsigned char Red, unsigned char Green, unsigned char Blue)
   {
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == NULL)
       throw IceException(FNAME, M_NOT_VIS);
 
@@ -203,7 +203,7 @@ namespace ice
                    unsigned char& Red, unsigned char& Green, unsigned char& Blue)
   {
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == NULL)
       throw IceException(FNAME, M_NOT_VIS);
     RETURN_ERROR_IF_FAILED(v->GetGreyColor(Entry, Red, Green, Blue));
@@ -216,7 +216,7 @@ namespace ice
                       unsigned char& Red, unsigned char& Green, unsigned char& Blue)
   {
     Visual v;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == NULL)
       throw IceException(FNAME, M_NOT_VIS);
     RETURN_ERROR_IF_FAILED(v->GetOverlayColor(Entry, Red, Green, Blue));
@@ -371,7 +371,7 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "GetVisual"
-  Visual GetVisual(const Image& img)
+  Visual getVisual(const Image& img)
   {
     //    std::cout << "GetVisual" << std::endl;
     if (!IsImg(img))
@@ -379,17 +379,17 @@ namespace ice
         return NULL;
       }
     //    std::cout << "GetVisual(isImage!)" << std::endl;
-    return wxGetApp().GetImageManager()->GetVisual(img.Img());
+    return wxGetApp().GetImageManager()->getVisual(img.Img());
   }
 
-  Visual GetVisual(const ColorImage& img)
+  Visual getVisual(const ColorImage& img)
   {
     Visual v = NULL;
     if (!img.isValid())
       {
         return v;
       }
-    v = wxGetApp().GetImageManager()->GetVisual(img.redImage().Img());
+    v = wxGetApp().GetImageManager()->getVisual(img.redImage().Img());
     return v;
   }
 

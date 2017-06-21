@@ -74,7 +74,10 @@ namespace ice
     {
     }
 
-    virtual ~ImageStructDouble() {};
+    virtual ~ImageStructDouble()
+    {
+      delete img;
+    };
 
     void StopVis()
     {
@@ -93,7 +96,9 @@ namespace ice
 
     unsigned char getValueShifted(int x, int y) const
     {
-      double normalizedValue = (img->maxval - img->getPixel(x, y)) / (img->maxval - img->minval) * 255 ;
+      double range = img->maxval - img->minval;
+      double shiftedValue = img->maxval - img->getPixel(x, y);
+      double normalizedValue = shiftedValue / range * 255 ;
       return limited(normalizedValue, 0, 255);
     }
 

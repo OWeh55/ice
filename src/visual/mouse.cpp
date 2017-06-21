@@ -32,7 +32,7 @@ namespace ice
 #define FNAME "Mouse"
   int Mouse(ImageWindow& wndw, int& x, int& y)
   {
-    return wndw.GetMousePosition(x, y);
+    return wndw.getMousePosition(x, y);
   }
 
   int Mouse(const Image& img, int& x, int& y)
@@ -42,7 +42,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     Visual p;
-    RETURN_ERROR_IF_FAILED(p = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(p = getVisual(img));
     if (p == NULL)
       throw IceException(FNAME, M_NOT_VIS);
 

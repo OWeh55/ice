@@ -70,11 +70,9 @@ namespace ice
     ~ImageManager();
 
     /* Show can be used to control the visualization mode of images.
-       There are three different versions of Show, thanks to the
-       overloading mechanism. Depending on the parameter >Mode<,
-       Show () needs a different number of images.
+       Depending on the parameter >Mode<, Show () needs a different
+       number of images.
        \param Mode Specifies the kind of manipulation.
-
     */
 
     Visual Show(int Mode, Visual vis);
@@ -105,8 +103,8 @@ namespace ice
 
     // Get the visual that shows the image img, returns NULL if image
     // is not displayed
-    Visual GetVisual(ImageBase* img) const;
-    Visual GetVisual(ImageD* img) const;
+    Visual getVisual(ImageBase* img) const;
+    Visual getVisual(ImageD* img) const;
 
     // Those are kept for backward compatibility. They work just like the
     // corresponding function in the subclasses of iceImageWindow, but

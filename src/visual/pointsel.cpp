@@ -50,7 +50,7 @@ namespace ice
     Visual v;
     IPoint p;
     int rc;
-    RETURN_ERROR_IF_FAILED(v = GetVisual(img));
+    RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == NULL)
       throw IceException(FNAME, M_NOT_VIS);
     rc = v->SelPoint(mode, p);
@@ -118,7 +118,7 @@ namespace ice
 
   IPoint SelPoint(const ColorImage& img)
   {
-    Visual v = GetVisual(img);
+    Visual v = getVisual(img);
     if (NULL == v)
       throw IceException(FNAME, M_NOT_VIS);
     IPoint p(0, 0);

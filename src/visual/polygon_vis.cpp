@@ -42,7 +42,7 @@ namespace ice
   {
     try
       {
-        Visual v = GetVisual(img);
+        Visual v = getVisual(img);
         return v->SelectLine(p1, p2);
       }
     RETHROW;
@@ -52,7 +52,7 @@ namespace ice
   {
     try
       {
-        Visual v = GetVisual(img);
+        Visual v = getVisual(img);
         v->SelectLineFromStart(p1, p2);
         return OK;
       }

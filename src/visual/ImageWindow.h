@@ -94,11 +94,11 @@ namespace ice
     bool CursorIsEnabled;
 
     /* This integer holds the flags concerning the mouse events
-       that have happened since the last call of GetMousePosition.
+       that have happened since the last call of getMousePosition.
     */
     int MouseFlags;
 
-    // The position of the mouse. We'll need this member for GetMousePosition.
+    // The position of the mouse. We'll need this member for getMousePosition.
     wxPoint MousePosition;
 
     // Images belonging to this window
@@ -135,16 +135,16 @@ namespace ice
     //! Zooms the window.
     virtual int Zoom(int ZoomFactor);
     // Get the zoom factor. Setting the zoom factor can be done with Zoom().
-    virtual int GetZoomFactor() const;
+    virtual int getZoomFactor() const;
 
     //! Get the image size.
-    virtual IPoint GetImageSize() const;
+    virtual IPoint getImageSize() const;
 
     /* Get image size as rectangle. The image rectangle will have
-       corners (0, 0) and (GetImageSize().GetWidth()-1,
-       GetImageSize().GetHeight () - 1). This method is quite useful
+       corners (0, 0) and (getImageSize().GetWidth()-1,
+       getImageSize().GetHeight () - 1). This method is quite useful
        for checking, whether a given point lies inside the image.*/
-    virtual Window GetImageRect() const;
+    virtual Window getImageRect() const;
 
     // Does the Window display the given image?
     virtual bool showsImage(ImageBase* img) const;
@@ -184,7 +184,7 @@ namespace ice
     virtual void RunInteraction(class InteractionHandler& interaktion);
 
     //! Returns the current mouse position
-    virtual int GetMousePosition(int& x, int& y);
+    virtual int getMousePosition(int& x, int& y);
 
     // Interactively select Point
     virtual int SelPoint(int Mode, IPoint& p);
@@ -298,17 +298,17 @@ namespace ice
   //            inline implementations
   //
 
-  inline int ImageWindow::GetZoomFactor() const
+  inline int ImageWindow::getZoomFactor() const
   {
     return ZoomFactor;
   }
 
-  inline IPoint ImageWindow::GetImageSize() const
+  inline IPoint ImageWindow::getImageSize() const
   {
     return IPoint(SizeX, SizeY);
   }
 
-  inline Window ImageWindow::GetImageRect() const
+  inline Window ImageWindow::getImageRect() const
   {
     return Window(0, 0, SizeX - 1, SizeY - 1);
   }

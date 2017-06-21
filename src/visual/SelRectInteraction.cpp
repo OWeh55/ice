@@ -87,8 +87,8 @@ namespace ice
                                          min<int> (FirstPoint.y, SecondPoint.y)));
     ClientDC.DrawRectangle(TopLeftCornerWin.x,  // wxCoord x
                            TopLeftCornerWin.y, // wxCoord y
-                           (abs(FirstPoint.x - SecondPoint.x) + 1) * imageWindow->GetZoomFactor(),   // wxCoord width
-                           (abs(FirstPoint.y - SecondPoint.y) + 1) * imageWindow->GetZoomFactor());   // wxCoord height
+                           (abs(FirstPoint.x - SecondPoint.x) + 1) * imageWindow->getZoomFactor(),   // wxCoord width
+                           (abs(FirstPoint.y - SecondPoint.y) + 1) * imageWindow->getZoomFactor());   // wxCoord height
   }
 
   void iceSelectRectInteraction::OnPaint(wxPaintEvent& PaintEvent)

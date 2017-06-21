@@ -70,7 +70,7 @@ namespace ice
     // We use logical function wxXOR (see explanation at iceSelectPointInteraction::DrawCursor).
     wxClientDC ClientDC(imageWindow);
     ClientDC.SetLogicalFunction(wxXOR);
-    unsigned int LineWidth = max<int> (1, imageWindow->GetZoomFactor());
+    unsigned int LineWidth = max<int> (1, imageWindow->getZoomFactor());
     wxPen Pen(wxColor(128, 128, 128),  // const wxColour& colour
               LineWidth, // int width
               wxSOLID); // int style

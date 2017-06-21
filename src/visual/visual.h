@@ -138,8 +138,8 @@ namespace ice
               const ice::ColorImage& Image2,
               const std::string& name = "");
 
-  Visual GetVisual(const Image& img);
-  Visual GetVisual(const ColorImage& img);
+  Visual getVisual(const Image& img);
+  Visual getVisual(const ColorImage& img);
 
   // Manipulation of the image windows cursor (will only have effects,
   // if the image is visualized).

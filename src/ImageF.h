@@ -249,7 +249,7 @@ namespace ice
     }
 
     /**
-     * get the matrix as reference
+     * get the matrix as pointer
      */
     const rcMatrix<T>* getMatrixPointer() const
     {
@@ -526,6 +526,20 @@ namespace ice
     void set(T val) const
     {
       return mat->set(val);
+    }
+
+    void adaptLimits()
+    {
+      minval = maxval = (*mat)[0][0];
+      for (int y = 0; y < ysize; y++)
+        for (int x = 0; x < xsize; x++)
+          {
+            T value = (*mat)[y][x];
+            if (value > maxval)
+              maxval = value;
+            if (value < minval)
+              minval = value;
+          }
     }
 
     // set call back function, that is called, if the image is destroyed

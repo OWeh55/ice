@@ -56,7 +56,7 @@ namespace ice
                img.blueImage().Img(), wname);
 
       case OFF:
-        return wxGetApp().GetImageManager()->Show(OFF, GetVisual(img));
+        return wxGetApp().GetImageManager()->Show(OFF, getVisual(img));
       default:
         throw IceException(FNAME, M_WRONG_PARAM);
       }

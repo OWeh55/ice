@@ -665,7 +665,7 @@ namespace ice
     // This just swapes the most significant bit of the destination color.
     wxClientDC ClientDC(this);
     ClientDC.SetLogicalFunction(wxXOR);
-    unsigned int LineWidth = max<int>(1, GetZoomFactor());
+    unsigned int LineWidth = max<int>(1, getZoomFactor());
     ClientDC.SetPen(wxPen(wxColor(128, 128, 128), // const  wxColour& colour
                           LineWidth, // int width
                           wxSOLID)); // int style
@@ -727,7 +727,7 @@ namespace ice
 
   int ImageWindow::SetCursor(int x, int y)
   {
-    if (!GetImageRect().inside(x, y))
+    if (!getImageRect().inside(x, y))
       {
         return WRONG_PARAM;
       }
@@ -741,12 +741,12 @@ namespace ice
     return OK;
   }
 
-  int ImageWindow::GetMousePosition(int& x, int& y)
+  int ImageWindow::getMousePosition(int& x, int& y)
   {
     // Translate the mouse position into image coordinates
     IPoint MousePosImg = translateWin2ImagePos(MousePosition);
 
-    if (GetImageRect().inside(MousePosImg))
+    if (getImageRect().inside(MousePosImg))
       {
         MouseFlags |= M_IN_WINDOW;
       }

@@ -32,19 +32,6 @@ using namespace std;
 
 namespace ice
 {
-  /*
-  bool operator==(const Image::const_iterator &lhs,
-           const Image::const_iterator& rhs)
-  {
-    return lhs.x == rhs.x && lhs.y == rhs.y;
-  }
-
-  bool operator!=(const Image::const_iterator &lhs,
-           const Image::const_iterator& rhs)
-  {
-    return lhs.x != rhs.x || lhs.y != rhs.y;
-  }
-  */
 #define FNAME "Image::create"
   void Image::create(int SizeX, int SizeY,
                      int MaxValue, const std::string& title)
@@ -62,19 +49,22 @@ namespace ice
     maxval = MaxValue;
 
     ImageBase* imag = nullptr;
-    if (UCHAR_MAX >= MaxValue)
+    //    if (UCHAR_MAX >= MaxValue)
+    if (numeric_limits<PixelType1>::max() >= MaxValue)
       {
         imag = new iceImage1(SizeX, SizeY, MaxValue, title);
       }
     else
       {
-        if (USHRT_MAX >= MaxValue)
+        if (numeric_limits<PixelType2>::max() >= MaxValue)
+          // if (USHRT_MAX >= MaxValue)
           {
             imag = new iceImage2(SizeX, SizeY, MaxValue, title);
           }
         else
           {
-            if (INT_MAX >= MaxValue)
+            if (numeric_limits<PixelType3>::max() >= MaxValue)
+              // if (INT_MAX >= MaxValue)
               {
                 imag = new iceImage3(SizeX, SizeY, MaxValue, title);
               }
@@ -97,7 +87,8 @@ namespace ice
   //   + deep copy of source data
   void Image::copy(const Image& src)
   {
-    create(src);
+    if (xsize != src.xsize || ysize != src.ysize || maxval != src.maxval)
+      create(src);
     copyData(src);
   }
 #undef FNAME
