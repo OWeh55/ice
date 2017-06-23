@@ -20,6 +20,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
+#include <exception>
+#include <string>
 #include <iostream>
 
 #include "defs.h"
@@ -27,11 +31,81 @@
 
 #include "VideoReader.h"
 
+using namespace std;
+
 namespace ice
 {
+  constexpr int BUFSIZE = 2000;
+
   VideoReader::VideoReader(const std::string& fn): framenr(0)
   {
+    // look for info first
+    try
+      {
+        // default values
+        width = -1;
+        height = -1;
+        fps = 25;
+        maxval = 255;
+
+        string cmd = "ffprobe -v error -show_streams -select_streams V \"" + fn + "\"";
+
+        FILE* fd = popen(cmd.c_str(), "r");
+        if (fd != nullptr)
+          {
+            char buffer[BUFSIZE];
+            while (fgets(buffer, BUFSIZE - 1, fd))
+              {
+                buffer[BUFSIZE - 1] = 0; // force string end here
+                int size = strlen(buffer);
+                if (buffer[size - 1] == '\n') // substitute linefeed with string end
+                  buffer[size - 1] = 0;
+                std::string input = buffer;
+                size_t pos = input.find('=');
+                if (pos != string::npos)  // line contains '='
+                  {
+                    // split in key and value
+                    string key = input.substr(0, pos);
+                    string value = input.substr(pos + 1);
+
+                    if (key == "width")
+                      {
+                        width = stoi(value);
+                      }
+                    else if (key == "height")
+                      {
+                        height = stoi(value);
+                      }
+                    else if (key == "r_frame_rate")
+                      {
+                        // value is <numerator>/<denominator>
+                        pos = value.find("/");
+                        if (pos != string::npos)
+                          {
+                            int z = stoi(value.substr(0, pos));
+                            int n = stoi(value.substr(pos + 1));
+                            fps = RoundInt(1.0 * z / n);
+                          }
+                      }
+                  }
+              }
+            pclose(fd);
+          }
+      }
+    catch (exception& ex)
+      {
+        // we ignore errors in detection of size etc. and open video file nevertheless
+
+      }
+    // now really open file
     pr.open("|ffmpeg -i " + fn + " -y -codec:v ppm -f rawvideo -an -sn -v error - ");
+
+    // if use of ffprobe failed we try rd.getInfo() instead
+    if (width < 0 || height < 0)
+      {
+        int nChannels;
+        pr.getInfo(width, height, maxval, nChannels);
+      }
   }
 
   void VideoReader::freeall()
@@ -44,9 +118,10 @@ namespace ice
 
   void VideoReader::getPara(int& xsize, int& ysize, int& maxval, int& fps) const
   {
-    int nChannels;
-    pr.getInfo(xsize, ysize, maxval, nChannels);
-    fps = 25; // unknown, dummy value !!!
+    xsize = width;
+    ysize = height;
+    maxval = this->maxval;
+    fps = this->fps;
   }
 #define FNAME "VideoReader::read"
   bool VideoReader::read(const Image& r, const Image& g, const Image& b)
@@ -72,10 +147,18 @@ namespace ice
 
   bool VideoReader::read()
   {
-    pr.getImage();
-    pr.nextImage();
-    framenr++;
-    return true;
+    try
+      {
+        pr.getImage();
+        pr.nextImage();
+        framenr++;
+        return true;
+      }
+    catch (const std::exception& ex)
+      {
+        // read failed (eof..)
+        return false;
+      }
   }
 #undef FNAME
 }

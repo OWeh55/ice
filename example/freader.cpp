@@ -7,6 +7,7 @@ void usage(const string& pn)
   cout << "eine eventuelle Tonspur wird ignoriert" << endl;
   cout << "Aufruf: " << pn << " [<optionen>] <infilename> [<outfilename>]" << endl;
   cout << "Optionen:" << endl;
+  cout << " -i           Videoinformationen ausgeben" << endl;
   cout << " -t <format>  Ausgabeformat format" << endl;
   cout << " -f <rate>    Ausgabe-Framerate rate" << endl;
   cout << " -b <rate>    Ausgabe-Bitrate rate" << endl;
@@ -22,11 +23,12 @@ int main(int argc, char* argv[])
   string outfile;
   string format;
   int brate = 0;
+  bool showInfo = false;
   int verbose = 0;
 
   int rc;
 
-  while ((rc = getopt(argc, argv, "ht:f:b:lv")) >= 0)
+  while ((rc = getopt(argc, argv, "ht:f:b:iv")) >= 0)
     {
       switch (rc)
         {
@@ -38,6 +40,9 @@ int main(int argc, char* argv[])
           break;
         case 'b':
           brate = atol(optarg);
+          break;
+        case 'i':
+          showInfo = true;
           break;
         case 'v':
           verbose++;
@@ -67,7 +72,7 @@ int main(int argc, char* argv[])
   int sfps;
   vf.getPara(xs, ys, mv, sfps);
 
-  if (verbose > 0)
+  if (showInfo || verbose > 0)
     cout << xs << "x" << ys << " " << mv << " " << sfps << endl;
 
   if (fps == 0)

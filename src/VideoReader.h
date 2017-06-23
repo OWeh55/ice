@@ -60,8 +60,9 @@ namespace ice
     VideoReader(const VideoReader& v) = delete;
 
   private:
-    int framenr; // frame number to be read
+    int framenr; // number of frame to read
     PbmReader pr;
+    int width, height, maxval, fps;
     void freeall();
   };
 }
