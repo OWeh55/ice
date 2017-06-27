@@ -75,8 +75,8 @@ namespace ice
   {
     try
       {
-        std::vector<double> h1, h2;
         int s = s1.size();
+        std::vector<double> h1(s), h2(s);
         double efac = sqrt((double)s);
 
         // "mixed" FFT s1->real,s2->imag
@@ -170,11 +170,12 @@ namespace ice
     RETHROW;
   }
 
-  int InvConvolution(const std::vector<double>& s1, const std::vector<double>& s2,
+  int InvConvolution(const std::vector<double>& s1, 
+		     const std::vector<double>& s2,
                      double noise, std::vector<double>& d)
   {
-    std::vector<double> h1, h2;
     int s = s1.size();
+    std::vector<double> h1(s), h2(s);
 
     double efac = 1.0 / sqrt((double)s);
     double noise2 = noise * noise;
