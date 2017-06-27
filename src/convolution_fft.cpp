@@ -43,27 +43,31 @@ namespace ice
     double r1, i1, r2, i2;
     double efac = sqrt((double)s);
     // "mixed" FFT s1->real,s2->imag
-    RETURN_ERROR_IF_FAILED(Fourier(s1, s2, NORMAL, h1, h2));
-    d = Vector(s);
-
-    for (i = 0; i < s; i++)
+    try
       {
-        ii = negfa(i, s);
-        rr = h1[i];
-        ir = h2[i];
-        rq = h1[ii];
-        iq = h2[ii];
-        // calculate complex FT-parameter from result of mixed FT
-        r1 = (rr + rq) / 2;
-        i1 = (ir - iq) / 2;
-        r2 = (ir + iq) / 2;
-        i2 = (rq - rr) / 2;
-        // complex multiplication + dif --> Hartley-transformed
-        d[i] = (r1 * r2 - i1 * i2 - r1 * i2 - r2 * i1) * efac;
-      }
+        Fourier(s1, s2, NORMAL, h1, h2);
+        d = Vector(s);
 
-    RETURN_ERROR_IF_FAILED(Hartley(d));
-    return OK;
+        for (i = 0; i < s; i++)
+          {
+            ii = negfa(i, s);
+            rr = h1[i];
+            ir = h2[i];
+            rq = h1[ii];
+            iq = h2[ii];
+            // calculate complex FT-parameter from result of mixed FT
+            r1 = (rr + rq) / 2;
+            i1 = (ir - iq) / 2;
+            r2 = (ir + iq) / 2;
+            i2 = (rq - rr) / 2;
+            // complex multiplication + dif --> Hartley-transformed
+            d[i] = (r1 * r2 - i1 * i2 - r1 * i2 - r2 * i1) * efac;
+          }
+
+        Hartley(d);
+        return OK;
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "InvConvolution"
@@ -80,49 +84,53 @@ namespace ice
     double noise2 = noise * noise;
 
     // "mixed" FFT s1->real,s2->imag
-    RETURN_ERROR_IF_FAILED(Fourier(s1, s2, NORMAL, h1, h2));
-    d = Vector(s);
-
-    for (i = 0; i < s; i++)
+    try
       {
-        ii = negfa(i, s);
-        rr = h1[i];
-        ir = h2[i];
-        rq = h1[ii];
-        iq = h2[ii];
+        Fourier(s1, s2, NORMAL, h1, h2);
+        d = Vector(s);
 
-        // calculate complex FT-parameter from result of mixed FT
-        r1 = (rr + rq) / 2;
-        im1 = (ir - iq) / 2;
-        r2 = (ir + iq) / 2;
-        im2 = (rq - rr) / 2;
-
-        b1 = r1 * r1 + im1 * im1;
-
-        if (noise == 0)
+        for (i = 0; i < s; i++)
           {
-            if (b1 == 0)
+            ii = negfa(i, s);
+            rr = h1[i];
+            ir = h2[i];
+            rq = h1[ii];
+            iq = h2[ii];
+
+            // calculate complex FT-parameter from result of mixed FT
+            r1 = (rr + rq) / 2;
+            im1 = (ir - iq) / 2;
+            r2 = (ir + iq) / 2;
+            im2 = (rq - rr) / 2;
+
+            b1 = r1 * r1 + im1 * im1;
+
+            if (noise == 0)
               {
-                r3 = im3 = 0;
+                if (b1 == 0)
+                  {
+                    r3 = im3 = 0;
+                  }
+                else
+                  {
+                    r3 = (r2 * r1 + im2 * im1) / b1 * efac;
+                    im3 = (r1 * im2 - r2 * im1) / b1 * efac;
+                  }
               }
             else
               {
+                b1 += noise2;
                 r3 = (r2 * r1 + im2 * im1) / b1 * efac;
                 im3 = (r1 * im2 - r2 * im1) / b1 * efac;
               }
-          }
-        else
-          {
-            b1 += noise2;
-            r3 = (r2 * r1 + im2 * im1) / b1 * efac;
-            im3 = (r1 * im2 - r2 * im1) / b1 * efac;
+
+            d[i] = r3 - im3;
           }
 
-        d[i] = r3 - im3;
+        Hartley(d);
+        return OK;
       }
-
-    RETURN_ERROR_IF_FAILED(Hartley(d));
-    return OK;
+    RETHROW;
   }
 #undef FNAME
 
@@ -248,9 +256,8 @@ namespace ice
   {
     try
       {
-        int xs, ys, x0, y0;
+        int xs, ys;
 
-        ImageD rc;
         double rr, rq, ir, iq;
         double r1, r2, im1, im2;
         double r3 = 0, im3 = 0;
@@ -265,8 +272,10 @@ namespace ice
 
         MatchImgD(is1, is2, xs, ys);
 
-        x0 = xs / 2;
-        y0 = ys / 2;
+        int x0 = xs / 2;
+        int y0 = ys / 2;
+
+        ImageD rc;
 
         if (id.isValid())
           {
