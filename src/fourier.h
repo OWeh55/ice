@@ -51,6 +51,7 @@ namespace ice
   int Fourier(const std::vector<double>& srcre, const std::vector<double>& srcim,
               std::vector<double>& dstre, std::vector<double>& dstim,
               int option = NORMAL);
+
   // inplace  vector + vector
   int Fourier(std::vector<double>& srcre, std::vector<double>& srcim,
               int option = NORMAL);
@@ -73,6 +74,9 @@ namespace ice
 
   void Hartley(const Vector& s, Vector& d);
   void Hartley(Vector& s);
+
+  void Hartley(const std::vector<double>& s, std::vector<double>& d);
+  void Hartley(std::vector<double>& s);
 
   // constants for parameter dir in 2d-functions
 #define XY 0

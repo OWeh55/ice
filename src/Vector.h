@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <iomanip>
 
 #include "defs.h"
 #include "IceException.h"
@@ -739,13 +740,16 @@ namespace ice
 
     friend std::ostream& operator<<(std::ostream& os, const VectorT& v)
     {
+      std::locale cLocale("C");
+      std::locale oldLocale = os.imbue(cLocale);
+      std::streamsize width = os.width(0);
       os << "<";
 
       if (v.dim > 0)
         {
           for (unsigned int i = 0; i < v.dim - 1; i++)
             {
-              os << v.data[i] << FILE_SEP ;
+              os << std::setw(width) << v.data[i] << FILE_SEP ;
             }
 
           os << v.data[v.dim - 1];

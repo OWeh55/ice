@@ -165,7 +165,26 @@ namespace ice
     RETHROW;
   }
 
+  void Hartley(const std::vector<double>& src, std::vector<double>& dst)
+  {
+    try
+      {
+        dst.resize(src.size());
+        const double* s = src.data();
+        double* d = dst.data();
+
+        int n = src.size();
+        HartleyD(s, n, d);
+      }
+    RETHROW;
+  }
+
   void Hartley(Vector& vec)
+  {
+    Hartley(vec, vec);
+  }
+
+  void Hartley(std::vector<double>& vec)
   {
     Hartley(vec, vec);
   }

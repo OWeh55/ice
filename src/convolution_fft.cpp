@@ -69,6 +69,43 @@ namespace ice
       }
     RETHROW;
   }
+
+  int Convolution(const std::vector<double>& s1,
+                  const std::vector<double>& s2, std::vector<double>& d)
+  {
+    try
+      {
+        std::vector<double> h1, h2;
+        int s = s1.size();
+        double efac = sqrt((double)s);
+
+        // "mixed" FFT s1->real,s2->imag
+        Fourier(s1, s2, h1, h2, NORMAL);
+
+        d.resize(s);
+
+        for (int i = 0; i < s; i++)
+          {
+            int ii = negfa(i, s);
+            double rr = h1[i];
+            double ir = h2[i];
+            double rq = h1[ii];
+            double iq = h2[ii];
+            // calculate complex FT-parameter from result of mixed FT
+            double r1 = (rr + rq) / 2;
+            double i1 = (ir - iq) / 2;
+            double r2 = (ir + iq) / 2;
+            double i2 = (rq - rr) / 2;
+            // complex multiplication + dif --> Hartley-transformed
+            d[i] = (r1 * r2 - i1 * i2 - r1 * i2 - r2 * i1) * efac;
+          }
+
+        Hartley(d);
+        return OK;
+      }
+    RETHROW;
+  }
+
 #undef FNAME
 #define FNAME "InvConvolution"
   int InvConvolution(const Vector& s1, const Vector& s2,
@@ -105,6 +142,67 @@ namespace ice
 
             b1 = r1 * r1 + im1 * im1;
 
+            if (noise == 0)
+              {
+                if (b1 == 0)
+                  {
+                    r3 = im3 = 0;
+                  }
+                else
+                  {
+                    r3 = (r2 * r1 + im2 * im1) / b1 * efac;
+                    im3 = (r1 * im2 - r2 * im1) / b1 * efac;
+                  }
+              }
+            else
+              {
+                b1 += noise2;
+                r3 = (r2 * r1 + im2 * im1) / b1 * efac;
+                im3 = (r1 * im2 - r2 * im1) / b1 * efac;
+              }
+
+            d[i] = r3 - im3;
+          }
+
+        Hartley(d);
+        return OK;
+      }
+    RETHROW;
+  }
+
+  int InvConvolution(const std::vector<double>& s1, const std::vector<double>& s2,
+                     double noise, std::vector<double>& d)
+  {
+    std::vector<double> h1, h2;
+    int s = s1.size();
+
+    double efac = 1.0 / sqrt((double)s);
+    double noise2 = noise * noise;
+
+    // "mixed" FFT s1->real,s2->imag
+    try
+      {
+        Fourier(s1, s2, h1, h2, NORMAL);
+        d.resize(s);
+
+        for (int i = 0; i < s; i++)
+          {
+            int ii = negfa(i, s);
+            double rr = h1[i];
+            double ir = h2[i];
+            double rq = h1[ii];
+            double iq = h2[ii];
+
+            // calculate complex FT-parameter from result of mixed FT
+            double r1 = (rr + rq) / 2;
+            double im1 = (ir - iq) / 2;
+            double r2 = (ir + iq) / 2;
+            double im2 = (rq - rr) / 2;
+
+            double b1 = r1 * r1 + im1 * im1;
+
+            double r3;
+            double im3;
             if (noise == 0)
               {
                 if (b1 == 0)

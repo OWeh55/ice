@@ -8,7 +8,7 @@
 #include <string.h>
 #include <fstream>
 
-#define SIZE 8
+#define SIZE 16
 
 int main(int argc, char* argv[])
 {
@@ -28,11 +28,14 @@ int main(int argc, char* argv[])
 
   cout.setf(ios::fixed);
   cout.precision(4);
+  cout << "Original (real):" << endl;
   cout << v1 << endl << "----------------------------" << endl;
   Fourier(v1, v2);
+  cout << "Transformed (complex)" << endl;
   cout << v1 << endl;
   cout << v2 << endl << "----------------------------" << endl;
   Fourier(v1, v2, INVERS);
+  cout << "inverse transformed (complex)"  << endl;
   cout << v1 << endl;
   cout << v2 << endl << "----------------------------" << endl;
 
@@ -46,9 +49,9 @@ int main(int argc, char* argv[])
 
   Convolution(v1, v2, v3);
 
-  cout << v1 << endl;
-  cout << v2 << endl;
-  cout << v3 << endl << "----------------------------" << endl;
+  cout << "v1:   " << v1 << endl;
+  cout << "v2:   " << v2 << endl;
+  cout << "v1*v2:" << v3 << endl << "----------------------------" << endl;
 
   for (i = 0; i < SIZE; i++)
     {
@@ -57,9 +60,9 @@ int main(int argc, char* argv[])
     }
 
   InvConvolution(v1, v2, 0.001, v3);
-  cout << v1 << endl;
-  cout << v2 << endl;
-  cout << v3 << endl << "----------------------------" << endl;
+  cout << "v1:   " << v1 << endl;
+  cout << "S(v1):" << v2 << endl;
+  cout << "S:    " << v3 << endl << "----------------------------" << endl;
 
   return 0;
 }

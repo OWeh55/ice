@@ -23,7 +23,7 @@
 
 #ifndef CONVOLUTION_FFT_H
 #define CONVOLUTION_FFT_H
-
+#include <vector>
 #include <cmath>
 
 #include "defs.h"
@@ -39,9 +39,13 @@ namespace ice
   // d = s1 * s2
   int Convolution(const Vector& s1, const Vector& s2,
                   Vector& d);
+  int Convolution(const std::vector<double>& s1, const std::vector<double>& s2,
+                  std::vector<double>& d);
   // s1 * d = s2
   int InvConvolution(const Vector& s1, const Vector& s2,
                      double noise, Vector& d);
+  int InvConvolution(const std::vector<double>& s1, const std::vector<double>& s2,
+                     double noise, std::vector<double>& d);
 
   // id = is1 * is2
   ImageD ConvolutionImgD(ImageD is1, ImageD is2,
