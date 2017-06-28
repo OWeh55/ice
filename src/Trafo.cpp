@@ -34,36 +34,16 @@
 namespace ice
 {
 #define FNAME "Trafo::Trafo"
-  Trafo::Trafo()
+  Trafo::Trafo(): m(3, 3, 1), dimSource(2), dimTarget(2)
   {
-    dimSource = 2;
-    dimTarget = 2;
-    m.init(3, 3);
-    m[0][0] = 1;
-    m[0][1] = 0;
-    m[0][2] = 0;
-    m[1][0] = 0;
-    m[1][1] = 1;
-    m[1][2] = 0;
-    m[2][0] = 0;
-    m[2][1] = 0;
-    m[2][2] = 1;
   }
 
-  Trafo::Trafo(const Trafo& tr)
+  Trafo::Trafo(const Trafo& tr): m(tr.m), dimSource(tr.dimSource), dimTarget(tr.dimTarget)
   {
-    dimSource = tr.dimSource;
-    dimTarget = tr.dimTarget;
-    m = tr.m;
   }
 
-  Trafo::Trafo(const Matrix& mp)
+  Trafo::Trafo(const Matrix& mp): m(mp.rows(), mp.cols()), dimSource(mp.cols() - 1), dimTarget(mp.rows() - 1)
   {
-    dimSource = mp.cols() - 1;
-    dimTarget = mp.rows() - 1;
-
-    m.init(dimTarget + 1, dimSource + 1);
-
     for (int i = 0; i < mp.rows(); i++)
       for (int j = 0; j < mp.cols(); j++)
         {
@@ -72,11 +52,8 @@ namespace ice
     normalize();
   }
 
-  Trafo::Trafo(const matrix<double>& mp)
+  Trafo::Trafo(const matrix<double>& mp): m(mp), dimSource(mp.cols() - 1), dimTarget(mp.rows() - 1)
   {
-    dimSource = mp.cols() - 1;
-    dimTarget = mp.rows() - 1;
-    m = mp;
     normalize();
   }
 
@@ -142,6 +119,7 @@ namespace ice
   {
     return dimSource;
   }
+
   int Trafo::DimTarget() const
   {
     return dimTarget;
@@ -151,24 +129,12 @@ namespace ice
   {
     return m[i][j];
   }
+
   const double& Trafo::operator()(int i, int j) const
   {
     return m[i][j];
   }
-  /*
-  Matrix Trafo::Tmatrix() const
-  {
-    Matrix res(dimTarget + 1, dimSource + 1);
 
-    for (int i = 0; i <= dimTarget; i++)
-      for (int k = 0; k <= dimSource; k++)
-        {
-          res[i][k] = m[i][k];
-        }
-
-    return res;
-  }
-  */
   Trafo::~Trafo()
   {
   }
@@ -176,14 +142,9 @@ namespace ice
 #define FNAME "Trafo:normalize"
   void Trafo::normalize()
   {
-    //    double sum=0.0;
-    //    for (int i=0;i<=dimSource;i++)
-    //      sum+=Sqr(m[dimTarget][i]);
-    //    if (sum==0)
     if (m[dimTarget][dimSource] == 0.0)
       throw IceException(FNAME, M_WRONG_TRAFO);
 
-    //    m *= 1/sqrt(sum);
     m *= 1 / m[dimTarget][dimSource];
   }
 #undef FNAME
@@ -192,12 +153,15 @@ namespace ice
   {
     if (dimTarget != 2)
       throw IceException(FNAME, M_WRONG_DIM);
-
-    matrix<double> h(3, 3, 1);
-    h[0][2] = x;
-    h[1][2] = y;
-    m = h * m;
-    RETURN_ERROR_IF_FAILED(normalize());
+    try
+      {
+        matrix<double> h(3, 3, 1);
+        h[0][2] = x;
+        h[1][2] = y;
+        m = h * m;
+        normalize();
+      }
+    RETHROW;
   }
 
   void Trafo::shift(double x, double y, double z)
@@ -205,14 +169,18 @@ namespace ice
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    matrix<double> h(4, 4, 1);
-    h[0][3] = x;
-    h[1][3] = y;
-    h[2][3] = z;
+    try
+      {
+        matrix<double> h(4, 4, 1);
+        h[0][3] = x;
+        h[1][3] = y;
+        h[2][3] = z;
 
-    m = h * m;
+        m = h * m;
 
-    RETURN_ERROR_IF_FAILED(normalize());
+        normalize();
+      }
+    RETHROW;
   }
 
   void Trafo::shift(Vector3d s)
@@ -224,18 +192,20 @@ namespace ice
   {
     if (dimTarget != s.Size())
       throw IceException(FNAME, M_WRONG_DIM);
-
-    // generate translation matrix
-    matrix<double> h(dimTarget + 1, dimTarget + 1, 1);
-
-    for (int i = 0; i < dimTarget; i++)
+    try
       {
-        h[i][dimTarget] = s[i];
+        // generate translation matrix
+        matrix<double> h(dimTarget + 1, dimTarget + 1, 1);
+
+        for (int i = 0; i < dimTarget; i++)
+          {
+            h[i][dimTarget] = s[i];
+          }
+
+        m = h * m;
+        normalize();
       }
-
-    m = h * m;
-
-    RETURN_ERROR_IF_FAILED(normalize());
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Trafo::flip"
@@ -257,19 +227,23 @@ namespace ice
     if (dimTarget != 2)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    shift(-x0, -y0);
+    try
+      {
+        shift(-x0, -y0);
 
-    double si = sin(phi);
-    double co = cos(phi);
+        double si = sin(phi);
+        double co = cos(phi);
 
-    matrix<double> h(3, 3, 1);
-    h[0][0] = co;
-    h[0][1] = -si;
-    h[1][0] = si;
-    h[1][1] = co;
-    m = h * m;
+        matrix<double> h(3, 3, 1);
+        h[0][0] = co;
+        h[0][1] = -si;
+        h[1][0] = si;
+        h[1][1] = co;
+        m = h * m;
 
-    shift(x0, y0);
+        shift(x0, y0);
+      }
+    RETHROW;
   }
 
   void Trafo::rotate(Vector3d p, Vector3d dir, double phi)
@@ -278,32 +252,36 @@ namespace ice
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    shift(-p);
+    try
+      {
+        shift(-p);
 
-    double sind = sin(phi);
-    double cosd = cos(phi);
+        double sind = sin(phi);
+        double cosd = cos(phi);
 
-    double cosd1 = 1 - cosd;
+        double cosd1 = 1 - cosd;
 
-    double dirx = dir.x / dir.Length();
-    double diry = dir.y / dir.Length();
-    double dirz = dir.z / dir.Length();
+        double dirx = dir.x / dir.Length();
+        double diry = dir.y / dir.Length();
+        double dirz = dir.z / dir.Length();
 
-    matrix<double> h(4, 4, 1);
-    h[0][0] = dirx * dirx * cosd1 + cosd;
-    h[0][1] = dirx * diry * cosd1 + dirz * sind;
-    h[0][2] = dirx * dirz * cosd1 - diry * sind;
+        matrix<double> h(4, 4, 1);
+        h[0][0] = dirx * dirx * cosd1 + cosd;
+        h[0][1] = dirx * diry * cosd1 + dirz * sind;
+        h[0][2] = dirx * dirz * cosd1 - diry * sind;
 
-    h[1][0] = diry * dirx * cosd1 - dirz * sind;
-    h[1][1] = diry * diry * cosd1 + cosd;
-    h[1][0] = diry * dirz * cosd1 + dirx * sind;
+        h[1][0] = diry * dirx * cosd1 - dirz * sind;
+        h[1][1] = diry * diry * cosd1 + cosd;
+        h[1][0] = diry * dirz * cosd1 + dirx * sind;
 
-    h[2][0] = dirz * dirx * cosd1 + diry * sind;
-    h[2][1] = dirz * diry * cosd1 - dirx * sind;
-    h[2][1] = dirz * dirz * cosd1 + cosd;
+        h[2][0] = dirz * dirx * cosd1 + diry * sind;
+        h[2][1] = dirz * diry * cosd1 - dirx * sind;
+        h[2][1] = dirz * dirz * cosd1 + cosd;
 
-    m = h * m;
-    shift(p);
+        m = h * m;
+        shift(p);
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -313,17 +291,20 @@ namespace ice
   {
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
+    try
+      {
+        double sind = sin(phi);
+        double cosd = cos(phi);
 
-    double sind = sin(phi);
-    double cosd = cos(phi);
-
-    matrix<double> h(4, 4, 1);
-    h[1][1] = cosd;
-    h[1][2] = -sind;
-    h[2][1] = sind;
-    h[2][2] = cosd;
-    m = h * m;
-    RETURN_ERROR_IF_FAILED(normalize());
+        matrix<double> h(4, 4, 1);
+        h[1][1] = cosd;
+        h[1][2] = -sind;
+        h[2][1] = sind;
+        h[2][2] = cosd;
+        m = h * m;
+        normalize();
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -333,19 +314,22 @@ namespace ice
   {
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
+    try
+      {
+        double sind = sin(phi);
+        double cosd = cos(phi);
 
-    double sind = sin(phi);
-    double cosd = cos(phi);
+        matrix<double> h(4, 4, 1);
 
-    matrix<double> h(4, 4, 1);
+        h[0][0] = cosd;
+        h[0][2] = sind;
+        h[2][0] = -sind;
+        h[2][2] = cosd;
 
-    h[0][0] = cosd;
-    h[0][2] = sind;
-    h[2][0] = -sind;
-    h[2][2] = cosd;
-
-    m = h * m;
-    RETURN_ERROR_IF_FAILED(normalize());
+        m = h * m;
+        normalize();
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -355,18 +339,21 @@ namespace ice
   {
     if (dimTarget != 3)
       throw IceException(FNAME, M_WRONG_DIM);
+    try
+      {
+        double sind = sin(phi);
+        double cosd = cos(phi);
 
-    double sind = sin(phi);
-    double cosd = cos(phi);
+        matrix<double> h(4, 4, 1);
+        h[0][0] = cosd;
+        h[0][1] = -sind;
+        h[1][0] = sind;
+        h[1][1] = cosd;
 
-    matrix<double> h(4, 4, 1);
-    h[0][0] = cosd;
-    h[0][1] = -sind;
-    h[1][0] = sind;
-    h[1][1] = cosd;
-
-    m = h * m;
-    RETURN_ERROR_IF_FAILED(normalize());
+        m = h * m;
+        normalize();
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -398,25 +385,28 @@ namespace ice
   {
     if (dimTarget < 2)
       throw IceException(FNAME, M_WRONG_DIM);
+    try
+      {
+        matrix<double> h(dimTarget, dimTarget + 1);
 
-    matrix<double> h(dimTarget, dimTarget + 1);
-
-    for (int i = 0; i < dimTarget; i++)
-      for (int j = 0; j < dimTarget + 1; j++)
-        {
-          if (i == j)
+        for (int i = 0; i < dimTarget; i++)
+          for (int j = 0; j < dimTarget + 1; j++)
             {
-              h[i][j] = 1.0;
+              if (i == j)
+                {
+                  h[i][j] = 1.0;
+                }
+              else
+                {
+                  h[i][j] = 0.0;
+                }
             }
-          else
-            {
-              h[i][j] = 0.0;
-            }
-        }
 
-    m = h * m;
-    dimTarget--;
-    RETURN_ERROR_IF_FAILED(normalize());
+        m = h * m;
+        dimTarget--;
+        normalize();
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -426,11 +416,14 @@ namespace ice
     // Scherung in Y-Richtung (in Ebene!)
     if (dimTarget != 2)
       throw IceException(FNAME, M_WRONG_DIM);
-
-    matrix<double> h(3, 3, 1);
-    h[1][0] = dyx;
-    m = h * m;
-    RETURN_ERROR_IF_FAILED(normalize());
+    try
+      {
+        matrix<double> h(3, 3, 1);
+        h[1][0] = dyx;
+        m = h * m;
+        normalize();
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -440,13 +433,15 @@ namespace ice
     // Scherung in X-Richtung (in Ebene!)
     if (dimTarget != 2)
       throw IceException(FNAME, M_WRONG_DIM);
+    try
+      {
+        matrix<double> h(3, 3, 1);
 
-    matrix<double> h(3, 3, 1);
-
-    h[0][1] = dxy;
-    m = h * m;
-
-    RETURN_ERROR_IF_FAILED(normalize());
+        h[0][1] = dxy;
+        m = h * m;
+        normalize();
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -527,11 +522,14 @@ namespace ice
   {
     if (t2.dimSource != dimTarget)
       throw IceException(FNAME, M_WRONG_DIM);
-
-    Trafo res(dimSource, t2.dimTarget);
-    res.m = t2.m * m;
-    res.normalize();
-    *this = res;
+    try
+      {
+        Trafo res(dimSource, t2.dimTarget);
+        res.m = t2.m * m;
+        res.normalize();
+        *this = res;
+      }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "Trafo::prepend"
@@ -539,11 +537,14 @@ namespace ice
   {
     if (t2.dimSource != dimTarget)
       throw IceException(FNAME, M_WRONG_DIM);
-
-    Trafo res(dimSource, t2.dimTarget);
-    res.m = m * t2.m;
-    res.normalize();
-    *this = res;
+    try
+      {
+        Trafo res(dimSource, t2.dimTarget);
+        res.m = m * t2.m;
+        res.normalize();
+        *this = res;
+      }
+    RETHROW;
   }
 #undef FNAME
 
@@ -577,11 +578,14 @@ namespace ice
   {
     if (t1.dimSource != t2.dimTarget)
       throw IceException(FNAME, M_WRONG_DIM);
-
-    Trafo res(t2.dimSource, t1.dimTarget);
-    res.m = t1.m * t2.m;
-    res.normalize();
-    return res;
+    try
+      {
+        Trafo res(t2.dimSource, t1.dimTarget);
+        res.m = t1.m * t2.m;
+        res.normalize();
+        return res;
+      }
+    RETHROW;
   }
 
   Vector operator *(const Trafo& t, const Vector& v)
@@ -687,12 +691,10 @@ namespace ice
     if ((tr.dimSource != 3) || (tr.dimTarget != 3))
       throw IceException(FNAME, M_WRONG_DIM);
 
-    double hf, xt, yt, zt;
-
-    hf = x * tr.m[3][0] + y * tr.m[3][1] + z * tr.m[3][2] + tr.m[3][3];
-    xt = (x * tr.m[0][0] + y * tr.m[0][1] + z * tr.m[0][2] + tr.m[0][3]) / hf;
-    yt = (x * tr.m[1][0] + y * tr.m[1][1] + z * tr.m[1][2] + tr.m[1][3]) / hf;
-    zt = (x * tr.m[2][0] + y * tr.m[2][1] + z * tr.m[2][2] + tr.m[2][3]) / hf;
+    double hf = x * tr.m[3][0] + y * tr.m[3][1] + z * tr.m[3][2] + tr.m[3][3];
+    double xt = (x * tr.m[0][0] + y * tr.m[0][1] + z * tr.m[0][2] + tr.m[0][3]) / hf;
+    double yt = (x * tr.m[1][0] + y * tr.m[1][1] + z * tr.m[1][2] + tr.m[1][3]) / hf;
+    double zt = (x * tr.m[2][0] + y * tr.m[2][1] + z * tr.m[2][2] + tr.m[2][3]) / hf;
     x = xt;
     y = yt;
     z = zt;
@@ -711,17 +713,25 @@ namespace ice
                          int& xt, int& yt)
   {
     double xtf, ytf;
-    RETURN_ERROR_IF_FAILED(transform(tr, xt, yt, xtf, ytf));
-    xt = RoundInt(xtf);
-    yt = RoundInt(ytf);
+    try
+      {
+        transform(tr, xt, yt, xtf, ytf);
+        xt = RoundInt(xtf);
+        yt = RoundInt(ytf);
+      }
+    RETHROW;
   }
 
   void transformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt)
   {
-    double xs, ys;
-    RETURN_ERROR_IF_FAILED(transform(tr, x, y, xs, ys));
-    xt = RoundInt(xs);
-    yt = RoundInt(ys);
+    try
+      {
+        double xs, ys;
+        transform(tr, x, y, xs, ys);
+        xt = RoundInt(xs);
+        yt = RoundInt(ys);
+      }
+    RETHROW;
   }
 
   void transform(const Trafo& tr,

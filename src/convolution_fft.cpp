@@ -170,8 +170,8 @@ namespace ice
     RETHROW;
   }
 
-  int InvConvolution(const std::vector<double>& s1, 
-		     const std::vector<double>& s2,
+  int InvConvolution(const std::vector<double>& s1,
+                     const std::vector<double>& s2,
                      double noise, std::vector<double>& d)
   {
     int s = s1.size();

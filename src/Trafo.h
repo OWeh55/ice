@@ -115,6 +115,7 @@ namespace ice
 
     // append another Trafo
     virtual void append(const Trafo& tr);
+
     // prepend another Trafo
     virtual void prepend(const Trafo& tr);
 
@@ -122,13 +123,16 @@ namespace ice
 
     virtual Trafo inverse() const;
 
-    //    virtual Matrix Tmatrix() const;
+    //    virtual Matrix getMatrix() const;
+    // matrix must not / cannot be changed
     virtual const matrix<double>& getMatrix() const
     {
       return m;
     }
 
-    friend Trafo operator *(const Trafo&, const Trafo&);
+    // product t1 * t2 is trafo t2 followed by t1 (like matrix product)!!!
+    friend Trafo operator *(const Trafo& t1, const Trafo& t2);
+    // apply trafo to vector
     friend ice::Vector operator *(const Trafo&, const ice::Vector&);
     friend ice::Vector3d operator *(const Trafo&, const ice::Vector3d&);
     friend ice::Point operator *(const Trafo&, const ice::Point&);
@@ -155,7 +159,6 @@ namespace ice
 
     friend Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
                                  int mode, const ice::Vector& weight);
-
 
   protected:
     void normalize();
@@ -187,6 +190,5 @@ namespace ice
 // transform 3d to 2d
   void transform(const Trafo&, double x, double y, double z,
                  double& xt, double& yt);
-
 }
 #endif
