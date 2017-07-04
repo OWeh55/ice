@@ -52,6 +52,7 @@ namespace ice
     rcMatrix(int r, int c, int init = -1) : matrix<T>(r, c, init), refcount(0) {}
     //private:
     int refcount;
+    T minValue, maxValue;
   };
 
   /**
