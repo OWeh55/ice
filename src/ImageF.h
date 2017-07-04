@@ -33,13 +33,14 @@ namespace ice
 
 //----------------- class ImageF ----------------------------------------
   /**
-   * matrix with reference count.
+   * matrix with reference count and min-/max-value
    * used in classes image as pixel memory
    * @tparam T type of elements (pixel)
    */
   template<typename T>
   class rcMatrix: public matrix<T>
   {
+    static constexpr double epsilon = 1e-33;
   public:
     rcMatrix() : matrix<T>(), refcount(0) {}
     /**
@@ -49,10 +50,37 @@ namespace ice
      * @param c number of columns of the matrix.
      * @param init mode of initialization.
      */
-    rcMatrix(int r, int c, int init = -1) : matrix<T>(r, c, init), refcount(0) {}
+    rcMatrix(int r, int c, int init = -1) : matrix<T>(r, c, init) {}
+
+    rcMatrix(int r, int c, int init, T min, T max) :
+      matrix<T>(r, c, init),
+      minValue(min), maxValue(max) {}
     //private:
-    int refcount;
-    T minValue, maxValue;
+    int refcount = 0;
+    T minValue = -1, maxValue = 1;
+
+    void adaptLimits()
+    {
+      double min = (*this)[0][0];
+      double max = min;
+      for (int r = 0; r < matrix<T>::nRows; r++)
+        for (int c = 0; c < matrix<T>::nColumns; c++)
+          {
+            T value = (*this)[r][c];
+            if (value > max)
+              max = value;
+            if (value < min)
+              min = value;
+          }
+
+      if (min == max)
+        {
+          min -= epsilon;
+          max += epsilon;
+        }
+      maxValue = max;
+      minValue = min;
+    }
   };
 
   /**
@@ -80,7 +108,7 @@ namespace ice
      * *this and i point to the same image (shallow copy)
      */
     ImageF(const ImageF& i): xsize(i.xsize), ysize(i.ysize),
-      minval(i.minval), maxval(i.maxval), dfp(nullptr)
+      dfp(nullptr)
     {
       assign(i.mat);
     }
@@ -134,10 +162,8 @@ namespace ice
 
       xsize = SizeX;
       ysize = SizeY;
-      maxval = max;
-      minval = min;
 
-      rcMatrix<T>* mat = new rcMatrix<T>(SizeY, SizeX);
+      rcMatrix<T>* mat = new rcMatrix<T>(SizeY, SizeX, -1, min, max);
       assign(mat);
     }
 
@@ -149,7 +175,7 @@ namespace ice
     void create(const ImageF<T>& templateImg, bool shallCopy = false)
     {
       create(templateImg.xsize, templateImg.ysize,
-             templateImg.minval, templateImg.maxval);
+             templateImg.minValue(), templateImg.maxValue());
       if (shallCopy)
         {
           copy(templateImg);
@@ -529,18 +555,18 @@ namespace ice
       return mat->set(val);
     }
 
+    T minValue() const
+    {
+      return mat->minValue;
+    }
+    T maxValue() const
+    {
+      return mat->maxValue;
+    }
+
     void adaptLimits()
     {
-      minval = maxval = (*mat)[0][0];
-      for (int y = 0; y < ysize; y++)
-        for (int x = 0; x < xsize; x++)
-          {
-            T value = (*mat)[y][x];
-            if (value > maxval)
-              maxval = value;
-            if (value < minval)
-              minval = value;
-          }
+      mat->adaptLimits();
     }
 
     // set call back function, that is called, if the image is destroyed
@@ -579,7 +605,7 @@ namespace ice
 
   public:
     int xsize, ysize;
-    T minval, maxval;
+    // T minval, maxval;
 
   protected:
     int nVis;

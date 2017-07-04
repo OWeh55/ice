@@ -99,8 +99,10 @@ namespace ice
 
     unsigned char getValueShifted(int x, int y) const
     {
-      double range = img->maxval - img->minval;
-      double shiftedValue = img->maxval - img->getPixel(x, y);
+      double max = img->getMatrix().maxValue;
+      double min = img->getMatrix().minValue;
+      double range = max - min;
+      double shiftedValue = max - img->getPixel(x, y);
       double normalizedValue = shiftedValue / range * 255 ;
       return limited(normalizedValue, 0, 255);
     }

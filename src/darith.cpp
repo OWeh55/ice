@@ -489,9 +489,6 @@ namespace ice
 #define FNAME "PolarImgD"
   ImageD PolarImgD(ImageD imgs, ImageD imgd, double r1, double r2, int sym)
   {
-    ImageD himgd;
-    int hx, hy;
-    double xs, ys;
     int dsx, dsy;
     int x0, y0;
     double r, fi, p[2];
@@ -503,16 +500,17 @@ namespace ice
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    hx = imgs.xsize;
-    hy = imgs.ysize;
+    double hx = imgs.xsize;
+    double hy = imgs.ysize;
 
     x0 = hx / 2;
     y0 = hy / 2;
 
+    ImageD himgd;
     if (! imgd.isValid())
       {
         /* Neues Bild anlegen */
-        himgd = NewImgD(hx, hy, imgs.minval, imgs.maxval);
+        himgd.create(imgs);
       }
     else
       {
@@ -535,19 +533,19 @@ namespace ice
           fi = (x) * M_PI * 2 / sym / dsx;
           r = (y) * rfac + r1;
           ConvPolarCartes(r, fi, p);
-          xs = p[0] + x0;
-          ys = p[1] + y0;
+          double xs = p[0] + x0;
+          double ys = p[1] + y0;
 
           if (
             (xs >= 0) && (xs < imgs.xsize) &&
             (ys >= 0) && (ys < imgs.ysize)
           )
             {
-              PutValD(himgd, x, y, GetInterpolValD(imgs, xs, ys));
+              himgd.setPixel(x, y, imgs.getPixelInterpol(xs, ys));
             }
           else
             {
-              PutValD(himgd, x, y, 0.0);
+              himgd.setPixel(x, y, 0.0);
             }
         }
     return himgd;

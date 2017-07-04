@@ -110,7 +110,7 @@ int Main(int argc, char* argv[])
   Print("Gleitkomma-Bild mit eingeschränktem Min-/Max-Werten\n");
   GetChar();
 
-  UpdateLimitImgD(imgd);
+  imgd.adaptLimits();
   Print("Gleitkomma-Bild mit angepassten Min-/Max-Werten\n");
   GetChar();
 

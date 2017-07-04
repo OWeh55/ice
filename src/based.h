@@ -46,14 +46,14 @@ namespace ice
     return img;
   }
 
-  inline   ImageD NewImgD(const ImageD& im, bool copy = false)
+  inline ImageD NewImgD(const ImageD& im, bool copy = false)
   {
     ImageD res;
 
     if (! im.isValid())
       throw IceException(FNAME, M_WRONG_IMAGED);
 
-    res.create(im.xsize, im.ysize, im.minval, im.maxval);
+    res.create(im.xsize, im.ysize, im.minValue(), im.maxValue());
 
     if (copy)
       {

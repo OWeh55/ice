@@ -22,7 +22,7 @@ namespace ice
   template<typename T>
   class matrix
   {
-  private:
+  protected:
     int nColumns = 0;
     int nRows = 0;
     T* data = nullptr;

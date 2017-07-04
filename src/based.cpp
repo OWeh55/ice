@@ -81,46 +81,6 @@ namespace ice
 #undef FNAME
 
   /*******************************************************************/
-  /* Aktualisieren der Eintraege minval, maxval                      */
-  /*******************************************************************/
-#define FNAME "UpdateLimitImgD"
-  int UpdateLimitImgD(ImageD& img)
-  {
-    double max, min, val;
-
-    if (!img.isValid())
-      throw IceException(FNAME, M_WRONG_IMAGED);
-
-    max = img.getPixelUnchecked(0, 0);
-    min = max;
-
-    for (int y = 0; y < img.ysize; ++y)
-      for (int x = 0; x < img.xsize; ++x)
-        {
-          val = img.getPixelUnchecked(x, y);
-          if (max < val)
-            {
-              max = val;
-            }
-          if (min > val)
-            {
-              min = val;
-            }
-        }
-
-    if (min == max)
-      {
-        min -= 1e-150;
-        max += 1e-150;
-      }
-
-    img.minval = min;
-    img.maxval = max;
-    return OK;
-  }
-#undef FNAME
-
-  /*******************************************************************/
   /* Konvertierung Int-Bild in Double-Bild                           */
   /*******************************************************************/
 #define FNAME "ConvImgImgD"
@@ -194,7 +154,7 @@ namespace ice
 
     if (modus == ADAPTIVE)
       {
-        UpdateLimitImgD(inp);
+        inp.adaptLimits();
       }
 
     if (sign == SIGNED)
@@ -202,7 +162,7 @@ namespace ice
         switch (modus)
           {
           case ADAPTIVE:
-            inmaxval = Max(inp.maxval, -inp.minval);
+            inmaxval = Max(inp.maxValue(), -inp.minValue());
             factor = (outmaxval / 2) / inmaxval;
             offset = (outmaxval + 1) / factor / 2.0;
             break;
@@ -221,8 +181,8 @@ namespace ice
         switch (modus)
           {
           case ADAPTIVE:
-            offset = -inp.minval;
-            factor = outmaxval / (inp.maxval - inp.minval);
+            offset = -inp.minValue();
+            factor = outmaxval / (inp.maxValue() - inp.minValue());
             break;
           case RAW:
             factor = 1;
