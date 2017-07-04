@@ -69,14 +69,17 @@ namespace ice
   {
   private:
     ImageD* img;
+    ImageD* img_duplicate;
   public:
-    ImageStructDouble(ImageD* imgp): img(new ImageD(*imgp))
+    ImageStructDouble(ImageD* imgp): img(imgp) //?? img(new ImageD(*imgp))
     {
+      // duplicate image avoid destruction of image buffer during paint
+      img_duplicate = new ImageD(*imgp);
     }
 
     virtual ~ImageStructDouble()
     {
-      delete img;
+      delete img_duplicate;
     };
 
     void StopVis()
