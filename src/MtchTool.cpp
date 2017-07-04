@@ -368,8 +368,8 @@ namespace ice
             {
               if (GetVal(img, x, y) && !GetVal(mark, x, y) &&
                   (!img.getPixelClipped(x - 1, y) ||
-                   !img.getPixelClipped(x  , y - 1) ||
-                   !img.getPixelClipped(x  , y + 1) ||
+                   !img.getPixelClipped(x, y - 1) ||
+                   !img.getPixelClipped(x, y + 1) ||
                    !img.getPixelClipped(x + 1, y)))
                 {
                   x0 = x;

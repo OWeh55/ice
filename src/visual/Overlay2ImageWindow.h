@@ -34,7 +34,8 @@ namespace ice
   public:
     Overlay2ImageWindow(ice::ImageBase* BaseImage,
                         ice::ImageBase* OverlayImage,
-                        const std::string& windowname = "ICE Image", int transparenz = 128);
+                        const std::string& windowname,
+                        int transparency = 128);
 
     virtual char ShowType() const
     {

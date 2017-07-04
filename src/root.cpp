@@ -157,7 +157,7 @@ namespace ice
 
             if (hc2.real() < 0)
               {
-                cv[2] = Complex(0.0 , sqrt(-hc2.real()));
+                cv[2] = Complex(0.0, sqrt(-hc2.real()));
               }
             else
               {

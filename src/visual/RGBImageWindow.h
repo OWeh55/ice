@@ -32,7 +32,7 @@ namespace ice
     RGBImageWindow(ice::ImageBase* RedImage,
                    ice::ImageBase* GreenImage,
                    ice::ImageBase* BlueImage,
-                   const std::string& windowname = "ICE Image");
+                   const std::string& windowname);
 
     virtual ~RGBImageWindow() {};
 

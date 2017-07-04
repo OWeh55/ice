@@ -124,7 +124,7 @@ namespace ice
 
         if (xsize == 0)   // image size already set ?
           {
-            setPara(xa, ya, 255, 0 , 0);
+            setPara(xa, ya, 255, 0, 0);
           }
 
         if (framenr == 0)   // first frame

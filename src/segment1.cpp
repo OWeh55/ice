@@ -43,7 +43,7 @@ namespace ice
   };
 
   // Punktprioritaetswarteschlange
-  typedef priority_queue<IPointValue, deque<IPointValue> , ComparePoints> PointQueueMin;
+  typedef priority_queue<IPointValue, deque<IPointValue>, ComparePoints> PointQueueMin;
   typedef priority_queue<IPointValue, deque<IPointValue> > PointQueueMax;
 
   typedef deque<struct STPoint> FIFOList;

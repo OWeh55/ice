@@ -163,7 +163,7 @@ namespace ice
             /*naechste Zeile*/
             v1 = GetVal(imgv, x - 2, y);
             v2 = GetVal(imgv, x - 1, y);
-            v3 = GetVal(imgv, x  , y);
+            v3 = GetVal(imgv, x, y);
             v4 = GetVal(imgv, x + 1, y);
 
             do                            /*naechster Punkt*/

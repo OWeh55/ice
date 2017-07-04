@@ -684,12 +684,12 @@ namespace ice
             x = pl->x;
             y = pl->y;
             TestAndAdd2_zykl(x + 1, y - 1, mask, pl);
-            TestAndAdd2_zykl(x + 1, y  , mask, pl);
+            TestAndAdd2_zykl(x + 1, y, mask, pl);
             TestAndAdd2_zykl(x + 1, y + 1, mask, pl);
-            TestAndAdd2_zykl(x  , y - 1, mask, pl);
-            TestAndAdd2_zykl(x  , y + 1, mask, pl);
+            TestAndAdd2_zykl(x, y - 1, mask, pl);
+            TestAndAdd2_zykl(x, y + 1, mask, pl);
             TestAndAdd2_zykl(x - 1, y - 1, mask, pl);
-            TestAndAdd2_zykl(x - 1, y  , mask, pl);
+            TestAndAdd2_zykl(x - 1, y, mask, pl);
             TestAndAdd2_zykl(x - 1, y + 1, mask, pl);
             DDelPoint(pl, point);
           }
@@ -725,12 +725,12 @@ namespace ice
             x = pl->x;
             y = pl->y;
             TestAndAdd2(x + 1, y - 1, mask, pl);
-            TestAndAdd2(x + 1, y  , mask, pl);
+            TestAndAdd2(x + 1, y, mask, pl);
             TestAndAdd2(x + 1, y + 1, mask, pl);
-            TestAndAdd2(x  , y - 1, mask, pl);
-            TestAndAdd2(x  , y + 1, mask, pl);
+            TestAndAdd2(x, y - 1, mask, pl);
+            TestAndAdd2(x, y + 1, mask, pl);
             TestAndAdd2(x - 1, y - 1, mask, pl);
-            TestAndAdd2(x - 1, y  , mask, pl);
+            TestAndAdd2(x - 1, y, mask, pl);
             TestAndAdd2(x - 1, y + 1, mask, pl);
             DDelPoint(pl, point);
           }
@@ -934,11 +934,11 @@ namespace ice
           if (!GetVal(src, x, y))
             {
               int g1 = GetValDef(src, x - 1, y - 1) ? 1 : 0;
-              int g2 = GetValDef(src, x  , y - 1) ? 1 : 0;
+              int g2 = GetValDef(src, x, y - 1) ? 1 : 0;
               int g3 = GetValDef(src, x + 1, y - 1) ? 1 : 0;
               int g4 = GetValDef(src, x + 1, y) ? 1 : 0;
               int g5 = GetValDef(src, x + 1, y + 1) ? 1 : 0;
-              int g6 = GetValDef(src, x  , y + 1) ? 1 : 0;
+              int g6 = GetValDef(src, x, y + 1) ? 1 : 0;
               int g7 = GetValDef(src, x - 1, y + 1) ? 1 : 0;
               int g8 = GetValDef(src, x - 1, y) ? 1 : 0;
               int s1 = g2 - g1, s2 = g3 - g2, s3 = g4 - g3, s4 = g5 - g4, s5 = g6 - g5, s6 = g7 - g6, s7 = g8 - g7, s8 = g1 - g8;

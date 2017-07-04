@@ -333,7 +333,7 @@ namespace ice
     streampara.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     streampara.parm.capture.timeperframe = mode.framerate;
 
-    if (xioctl(fd, VIDIOC_S_PARM , &streampara) != 0)
+    if (xioctl(fd, VIDIOC_S_PARM, &streampara) != 0)
       {
         errno_exit("VIDIOC_S_PARM");
       }

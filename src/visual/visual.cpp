@@ -285,11 +285,11 @@ namespace ice
     return wxGetApp().GetImageManager()->Show(Mode, Img.Img(), name);
   }
 
-  Visual Show(int Mode,
-              ImageD& Img,
+  Visual Show(int mode,
+              ImageD& img,
               const std::string& name)
   {
-    return wxGetApp().GetImageManager()->Show(Mode, &Img, name);
+    return wxGetApp().GetImageManager()->Show(mode, &img, name);
   }
 
   Visual Show(int Mode,

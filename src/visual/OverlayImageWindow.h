@@ -34,7 +34,7 @@ namespace ice
   public:
     OverlayImageWindow(ice::ImageBase* BaseImage,
                        ice::ImageBase* OverlayImage,
-                       const std::string& windowname = "ICE Image");
+                       const std::string& windowname);
     virtual bool Destroy();
 
     int GetGreyColor(unsigned int Entry,

@@ -136,7 +136,7 @@ namespace ice
     else
       {
         maxdist1.insert(maxdist1.begin() + ipos, 0);
-        maxi1.insert(maxi1.begin() + ipos , 0);
+        maxi1.insert(maxi1.begin() + ipos, 0);
       }
 
     if (ipos >= (int)maxdist2.size())
@@ -392,7 +392,7 @@ namespace ice
       {
         idx.insert(idx.begin() + pos + 1, baseindex);
         maxdist1.insert(maxdist1.begin() + pos + 1, 0);
-        maxi1.insert(maxi1.begin() + pos + 1 , 0);
+        maxi1.insert(maxi1.begin() + pos + 1, 0);
         maxdist2.insert(maxdist2.begin() + pos + 1, 0);
       }
 

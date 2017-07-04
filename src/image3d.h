@@ -291,7 +291,7 @@ namespace ice
       zi = RoundInt(z / scale_z);
     }
 
-    void i2d(int xi, int yi, int zi , double& x, double& y, double& z) const
+    void i2d(int xi, int yi, int zi, double& x, double& y, double& z) const
     {
       x = xi * scale_x;
       y = yi * scale_y;

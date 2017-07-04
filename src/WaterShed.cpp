@@ -291,7 +291,8 @@ check:
                         WshedNb = true;
                       }
                   }
-                else {      // Nachbarpunkt ist in aktuellem Grauwertlevel und noch nicht verarbeitet
+                else        // Nachbarpunkt ist in aktuellem Grauwertlevel und noch nicht verarbeitet
+                  {
                     if ((labelNb == MASK) && (distNb == 0))
                       {
                         // Distanz erhoehen
@@ -653,7 +654,8 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
                         WshedNb = true;
                       }
                   }
-                else {
+                else
+                  {
                     if (labelNb == MASK)
                       {
                         // Nachbarpunkt ist in aktuellem Grauwertlevel und noch nicht verarbeitet

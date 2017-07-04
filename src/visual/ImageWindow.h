@@ -122,10 +122,10 @@ namespace ice
 
   public:
     ImageWindow(ImageBase* img,
-                const std::string& windowname = "ICE Image");
+                const std::string& windowname);
 
     ImageWindow(ImageD* img,
-                const std::string& windowname = "ICE Image");
+                const std::string& windowname);
 
     virtual bool addImage(ImageBase* img);
     virtual bool addImage(ImageD* img);

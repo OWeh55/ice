@@ -37,7 +37,7 @@ namespace ice
       ice::ImageBase* RedImageR,
       ice::ImageBase* GreenImageR,
       ice::ImageBase* BlueImageR,
-      const std::string& windowname = "ICE Image");
+      const std::string& windowname);
 
     virtual char ShowType() const
     {

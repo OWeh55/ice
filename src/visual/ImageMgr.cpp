@@ -396,11 +396,11 @@ namespace ice
     throw IceException(FNAME, M_WRONG_PARAM);
   }
 
-  Visual ImageManager::Show(int Mode, ImageD* Img,
+  Visual ImageManager::Show(int mode, ImageD* img,
                             const std::string& name)
   {
     ImageData id;
-    id.imgd = Img;
+    id.imgd = img;
     id.title = name;
     //    if (id.title.empty()) id.title = Img->getTitle();
     if (id.title.empty())
@@ -408,11 +408,11 @@ namespace ice
         id.title = ICEGRAFICNAME;
       }
 
-    switch (Mode)
+    switch (mode)
       {
       case OFF:
       {
-        Visual v = getVisual(Img);
+        Visual v = getVisual(img);
         while (v != nullptr)
           {
             // Delete the corresponding image window
@@ -421,7 +421,7 @@ namespace ice
             Event.SetEventObject((wxObject*)v);
             AddPendingEvent(Event);
             WaitForMainThread();
-            v = getVisual(Img);
+            v = getVisual(img);
           }
         return v;
       }

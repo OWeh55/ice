@@ -343,17 +343,17 @@ namespace ice
           {
             vy1 = GetValUnchecked(pn1, x - 2, 0)
                   + GetValUnchecked(pn1, x - 1, 0)
-                  + GetValUnchecked(pn1, x  , 0);
+                  + GetValUnchecked(pn1, x, 0);
             vy2 = GetValUnchecked(pn1, x - 2, 1)
                   + GetValUnchecked(pn1, x - 1, 1)
-                  + GetValUnchecked(pn1, x  , 1);
+                  + GetValUnchecked(pn1, x, 1);
             vy3 = GetValUnchecked(pn1, x - 2, 2)
                   + GetValUnchecked(pn1, x - 1, 2)
-                  + GetValUnchecked(pn1, x  , 2);
+                  + GetValUnchecked(pn1, x, 2);
 
             vx = GetValUnchecked(pn1, x, 0)
-                 + GetValUnchecked(pn1, x  , 1)
-                 + GetValUnchecked(pn1, x  , 2)
+                 + GetValUnchecked(pn1, x, 1)
+                 + GetValUnchecked(pn1, x, 2)
                  - GetValUnchecked(pn1, x - 2, 0)
                  - GetValUnchecked(pn1, x - 2, 1)
                  - GetValUnchecked(pn1, x - 2, 2);
@@ -369,13 +369,13 @@ namespace ice
                 vx = vx
                      + GetValUnchecked(pn1, x - 2, y - 3)
                      - GetValUnchecked(pn1, x - 2, y)
-                     - GetValUnchecked(pn1, x  , y - 3)
-                     + GetValUnchecked(pn1, x  , y);
+                     - GetValUnchecked(pn1, x, y - 3)
+                     + GetValUnchecked(pn1, x, y);
                 vy1 = vy2;
                 vy2 = vy3;
                 vy3 = GetValUnchecked(pn1, x - 2, y)
                       + GetValUnchecked(pn1, x - 1, y)
-                      + GetValUnchecked(pn1, x  , y);
+                      + GetValUnchecked(pn1, x, y);
                 vy = vy3 - vy1;
                 val = RoundInt(sqrt((double)(vy * vy + vx * vx)));
                 PutValUnchecked(pn2, x + xoff, y + yoff,
@@ -674,17 +674,17 @@ namespace ice
       {
         int vy1 = pn1.getPixelUnchecked(x - 2, 0)
                   + pn1.getPixelUnchecked(x - 1, 0)
-                  + pn1.getPixelUnchecked(x  , 0);
+                  + pn1.getPixelUnchecked(x, 0);
         int vy2 = pn1.getPixelUnchecked(x - 2, 1)
                   + pn1.getPixelUnchecked(x - 1, 1)
-                  + pn1.getPixelUnchecked(x  , 1);
+                  + pn1.getPixelUnchecked(x, 1);
         int vy3 = pn1.getPixelUnchecked(x - 2, 2)
                   + pn1.getPixelUnchecked(x - 1, 2)
-                  + pn1.getPixelUnchecked(x  , 2);
+                  + pn1.getPixelUnchecked(x, 2);
         // force cast here
-        double deltax = pn1.getPixelUnchecked(x  , 0)
-                        + pn1.getPixelUnchecked(x  , 1)
-                        + pn1.getPixelUnchecked(x  , 2)
+        double deltax = pn1.getPixelUnchecked(x, 0)
+                        + pn1.getPixelUnchecked(x, 1)
+                        + pn1.getPixelUnchecked(x, 2)
                         - pn1.getPixelUnchecked(x - 2, 0)
                         - pn1.getPixelUnchecked(x - 2, 1)
                         - pn1.getPixelUnchecked(x - 2, 2);
@@ -704,13 +704,13 @@ namespace ice
             deltax = deltax
                      + pn1.getPixelUnchecked(x - 2, y - 3)
                      - pn1.getPixelUnchecked(x - 2, y)
-                     - pn1.getPixelUnchecked(x  , y - 3)
-                     + pn1.getPixelUnchecked(x  , y);
+                     - pn1.getPixelUnchecked(x, y - 3)
+                     + pn1.getPixelUnchecked(x, y);
             vy1 = vy2;
             vy2 = vy3;
             vy3 = pn1.getPixelUnchecked(x - 2, y)
                   + pn1.getPixelUnchecked(x - 1, y)
-                  + pn1.getPixelUnchecked(x  , y);
+                  + pn1.getPixelUnchecked(x, y);
             deltay = vy3 - vy1;
 
             // rotation by M_PI/8

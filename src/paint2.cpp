@@ -373,8 +373,8 @@ namespace ice
                 func(parray, xx, yy) >= 0 &&
                 (func(parray, xx - 1, yy) < 0 ||
                  func(parray, xx + 1, yy) < 0 ||
-                 func(parray, xx  , yy + 1) < 0 ||
-                 func(parray, xx  , yy - 1) < 0)
+                 func(parray, xx, yy + 1) < 0 ||
+                 func(parray, xx, yy - 1) < 0)
               )
                 {
                   PutVal(img, xx, yy, val);
@@ -386,8 +386,8 @@ namespace ice
                 func(parray, xx, yy) >= 0 &&
                 (func(parray, xx - 1, yy) < 0 ||
                  func(parray, xx + 1, yy) < 0 ||
-                 func(parray, xx  , yy + 1) < 0 ||
-                 func(parray, xx  , yy - 1) < 0)
+                 func(parray, xx, yy + 1) < 0 ||
+                 func(parray, xx, yy - 1) < 0)
               )
                 {
                   PutVal(img, xx, yy, val);
@@ -399,8 +399,8 @@ namespace ice
                 func(parray, xx, yy) >= 0 &&
                 (func(parray, xx - 1, yy) < 0 ||
                  func(parray, xx + 1, yy) < 0 ||
-                 func(parray, xx  , yy + 1) < 0 ||
-                 func(parray, xx  , yy - 1) < 0)
+                 func(parray, xx, yy + 1) < 0 ||
+                 func(parray, xx, yy - 1) < 0)
               )
                 {
                   PutVal(img, xx, yy, val);
@@ -412,8 +412,8 @@ namespace ice
                 func(parray, xx, yy) >= 0 &&
                 (func(parray, xx - 1, yy) < 0 ||
                  func(parray, xx + 1, yy) < 0 ||
-                 func(parray, xx  , yy + 1) < 0 ||
-                 func(parray, xx  , yy - 1) < 0)
+                 func(parray, xx, yy + 1) < 0 ||
+                 func(parray, xx, yy - 1) < 0)
               )
                 {
                   PutVal(img, xx, yy, val);

@@ -35,11 +35,11 @@ namespace ice
   protected:
     ~GreyImageWindow() {};
   public:
-    GreyImageWindow(ice::ImageBase* Img,
-                    const std::string& windowname = "ICE Image");
+    GreyImageWindow(ice::ImageBase* img,
+                    const std::string& windowname);
 
-    GreyImageWindow(ice::ImageD* Img,
-                    const std::string& windowname = "ICE Image");
+    GreyImageWindow(ice::ImageD* img,
+                    const std::string& windowname);
 
     virtual char ShowType() const
     {

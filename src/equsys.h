@@ -39,7 +39,7 @@ namespace ice
   (double A[], double b[], double x[],
    int row, int col, double* pdet, int* prang);
   int OverEquSys
-  (double* a, double* b, int row , int col, double* x, double* mse);
+  (double* a, double* b, int row, int col, double* x, double* mse);
   int NonLinEquSys
   (FuncD*, int, int*, double*, double*);
   int NormalEqu(double* a, double* b, int row, int col, double* c, double* d);
