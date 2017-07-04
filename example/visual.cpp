@@ -48,7 +48,7 @@ int Main(int argc, char* argv[])
 
   for (int z = 0; z < (int)p.size(); ++z)
     {
-      string bn = "image " + to_string(z+1);
+      string bn = "image " + to_string(z + 1);
       p[z] = n_image(60 + z * 70, 60 + z * 70);
       Show(GRAY, p[z], bn);
       Delay(0.11);
@@ -91,7 +91,7 @@ int Main(int argc, char* argv[])
       int cv = (i % 16) * 16;
       v->SetGreyColor(i, ii & 1 ? cv : 0, ii & 2 ? cv : 0, ii & 4 ? cv : 0);
     }
-  
+
   GetChar();
 
   ImageD imgd;
@@ -112,7 +112,7 @@ int Main(int argc, char* argv[])
 
   UpdateLimitImgD(imgd);
   Print("Gleitkomma-Bild mit angepassten Min-/Max-Werten\n");
-    GetChar();
+  GetChar();
 
   Show(OFF, imgd);
 
@@ -122,21 +122,21 @@ int Main(int argc, char* argv[])
   Show(_RGB, r, b, g, "three images as rgb color image");
   Print("RGB-Bild erzeugen\n");
 
-  IPoint pRed(512,111);
-  IPoint pGreen(111,888);
-  IPoint pBlue(888,888);
+  IPoint pRed(512, 111);
+  IPoint pGreen(111, 888);
+  IPoint pBlue(888, 888);
 
   WindowWalker wwc(r);
   for (wwc.init(); !wwc.ready(); wwc.next())
     {
-      double dRed=(pRed-wwc).length();
-      double dGreen=(pGreen-wwc).length();
-      double dBlue=(pBlue-wwc).length();
-      double dSum=dRed+dGreen+dBlue;
+      double dRed = (pRed - wwc).length();
+      double dGreen = (pGreen - wwc).length();
+      double dBlue = (pBlue - wwc).length();
+      double dSum = dRed + dGreen + dBlue;
 
-      b.setIntensity(wwc, dBlue/dSum*255);
-      g.setIntensity(wwc, dGreen/dSum*255);
-      r.setIntensity(wwc, dRed/dSum*255);
+      b.setIntensity(wwc, dBlue / dSum * 255);
+      g.setIntensity(wwc, dGreen / dSum * 255);
+      r.setIntensity(wwc, dRed / dSum * 255);
 
       /*
       int xc = wwc.x / 4;

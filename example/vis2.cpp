@@ -386,12 +386,12 @@ void PrintParameter(const FRange& r, int maxcount)
   SetAlphaCursor(x1, ya++);
   Printf("X: %f ... %f", (double)r.a1(), (double)r.a2());
   SetAlphaCursor(x1, ya++);
-  Printf("X0: %+8.3e  DX: %g  ", (double)(r.a2() + r.a1()) / 2 , (double)(r.a2() - r.a1()) / 2);
+  Printf("X0: %+8.3e  DX: %g  ", (double)(r.a2() + r.a1()) / 2, (double)(r.a2() - r.a1()) / 2);
   ya++;
   SetAlphaCursor(x1, ya++);
   Printf("Y: %f ... %f", (double)r.b1(), (double)r.b2());
   SetAlphaCursor(x1, ya++);
-  Printf("Y0: %+8.3e  DY: %g  ", (double)(r.b2() + r.b1()) / 2 , (double)(r.b2() - r.b1()) / 2);
+  Printf("Y0: %+8.3e  DY: %g  ", (double)(r.b2() + r.b1()) / 2, (double)(r.b2() - r.b1()) / 2);
   ya++;
   SetAlphaCursor(x1, ya++);
   Printf("Max: %6d", maxcount);

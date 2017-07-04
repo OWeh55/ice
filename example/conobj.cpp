@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
   nDraw(triangle, imgm, 1);
 
   Point center2(800, 300);
-  CircleSeg circleSeg(center2, 200 , 0.3, 5.0);
+  CircleSeg circleSeg(center2, 200, 0.3, 5.0);
 
   Fill(circleSeg, img, 127);
   nDraw(circleSeg, imgm, 1);

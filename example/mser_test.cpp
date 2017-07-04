@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 
       root->Shorten();
 
-      Printf("Reduce regs:%d\n" , root->Draw(mrk));
+      Printf("Reduce regs:%d\n", root->Draw(mrk));
 
 #if 0
 

@@ -476,19 +476,19 @@ int main(int argc, char* argv[])
                   phi += deltaPhi;
                   break;
                 case'b':
-                  beta /= sqrt(10);
+                    beta /= sqrt(10);
                   break;
                 case'B':
-                  beta *= sqrt(10);
+                    beta *= sqrt(10);
                   break;
                 case'f':
-                  if (factor == 0)
-                    factor = 0.001;
+                    if (factor == 0)
+                      factor = 0.001;
                   factor /= sqrt(sqrt(10));
                   break;
                 case'F':
-                  if (factor == 0)
-                    factor = 0.001;
+                    if (factor == 0)
+                      factor = 0.001;
                   factor *= sqrt(sqrt(10));
                   break;
                 case'X':
