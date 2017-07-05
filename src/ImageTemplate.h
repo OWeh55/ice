@@ -142,8 +142,6 @@ namespace ice
   template<typename ValueType>
   inline iceImage<ValueType>::~iceImage()
   {
-    destroy();
-
     if (can_delete)
       {
         delete [] Pixelarray;

@@ -20,62 +20,60 @@
 #ifndef MIN_MAX_HISTOGRAM_H
 #define MIN_MAX_HISTOGRAM_H
 
-class MinMaxHistogram
+namespace ice
 {
-  // very simple and fast histogram
-  // used for incremental calculation of min and max
-
-  int* data;
-  int size;
-  int min, max;
-
-public:
-  MinMaxHistogram(int maxval)
+  class MinMaxHistogram
   {
-    size = maxval + 1;
-    data = new int[size];
-    reset();
-  }
+    // very simple and fast histogram
+    // used for incremental calculation of min and max
+  public:
+    MinMaxHistogram(int maxval)
+    {
+      size = maxval + 1;
+      data = new int[size];
+      reset();
+    }
 
-  void reset()
+    void reset()
+    {
+      for (int i = 0; i < size; i++)
+        {
+          data[i] = 0;
+        }
+
+      min = size - 1;
+      max = 0;
+    }
+
+    ~MinMaxHistogram()
+    {
+      delete [] data;
+    }
+
+    void inc(int i);
+
+    void dec(int i);
+
+    int getMin() const
+    {
+      return min;
+    }
+    int getMax() const
+    {
+      return max;
+    }
+
+  private:
+    int* data;
+    int size;
+    int min, max;
+
+  };
+
+  void MinMaxHistogram::dec(int i)
   {
-    for (int i = 0; i < size; i++)
-      {
-        data[i] = 0;
-      }
-
-    min = size - 1;
-    max = 0;
-  }
-
-  ~MinMaxHistogram()
-  {
-    delete [] data;
-  }
-
-  inline void inc(int i)
-  {
-    int oldValue = data[i]++;
-
-    if (oldValue == 0)
-      {
-        // was empty
-        if (i < min)   // new min?
-          {
-            min = i;
-          }
-
-        if (i > max)   // new max?
-          {
-            max = i;
-          }
-      }
-  }
-
-  inline void dec(int i)
-  {
-    int newValue = --data[i];
-    if (newValue == 0)
+    data[i]--;
+    if (data[i] == 0)
       {
         // now empty
         if (i == min)   // if i was min
@@ -97,13 +95,27 @@ public:
           }
       }
   }
-  int getMin() const
+
+  void MinMaxHistogram::inc(int i)
   {
-    return min;
+    int oldValue = data[i];
+    data[i]++;
+
+    if (oldValue == 0)
+      {
+        // was empty
+        if (i < min)   // new min?
+          {
+            min = i;
+          }
+
+        if (i > max)   // new max?
+          {
+            max = i;
+          }
+      }
   }
-  int getMax() const
-  {
-    return max;
-  }
-};
+
+
+}
 #endif

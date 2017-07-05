@@ -56,17 +56,6 @@ namespace ice
 
     // initialize color table for the overlay image
     OverlayColorTable.setTable(0);
-
-    // set the image status
-    BaseImage->startVis(DestroyWindows);
-    OverlayImage->startVis(DestroyWindows);
-  }
-
-  bool OverlayImageWindow::Destroy()
-  {
-    BaseImage->stopVis();
-    OverlayImage->stopVis();
-    return ImageWindow::Destroy();
   }
 
   int OverlayImageWindow::SetGreyColor(unsigned int Entry,

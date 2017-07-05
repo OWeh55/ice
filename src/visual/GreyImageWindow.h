@@ -41,7 +41,7 @@ namespace ice
     GreyImageWindow(ice::ImageD* img,
                     const std::string& windowname);
 
-    virtual char ShowType() const
+    virtual char getVisualizationType() const
     {
       return 1;
     }

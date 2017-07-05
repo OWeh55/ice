@@ -18,8 +18,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef __ICERGBIMAGEWIN_H
-#define __ICERGBIMAGEWIN_H
+#ifndef _ICE_RGB_IMAGE_WIN_H
+#define _ICE_RGB_IMAGE_WIN_H
 
 #include "visual/ImageWindow.h"
 #include "visual/ImageMgr.h"
@@ -37,7 +37,7 @@ namespace ice
     virtual ~RGBImageWindow() {};
 
 
-    virtual char ShowType() const
+    virtual char getVisualizationType() const
     {
       return 3;
     }
@@ -53,4 +53,4 @@ namespace ice
   };
 
 }
-#endif // #ifndef __ICERGBIMAGEWIN_H
+#endif

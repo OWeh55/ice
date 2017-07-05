@@ -16,9 +16,8 @@ namespace ice
 
     virtual ~ImageStruct() {}
 
-    virtual void StopVis() = 0;
     virtual int ImageType() const = 0;
-
+    virtual int getReferenceCount() const = 0;
     virtual unsigned char getValueShifted(int x, int y) const = 0;
     virtual int getPixel(int x, int y) const = 0;
   };
@@ -31,22 +30,31 @@ namespace ice
   public:
     ImageStructInt(ImageBase* imgp): img(imgp)
     {
+      imgp->refcount++;
       shift = 0;
       while ((imgp->maxval >> shift) > 255)
         {
           shift++;
         }
     }
-    virtual ~ImageStructInt() {};
 
-    void StopVis()
+    virtual ~ImageStructInt()
     {
-      img -> stopVis();
-    }
+      img->refcount--;
+      if (img->refcount == 0)
+        {
+          delete img;
+        }
+    };
 
     virtual int ImageType() const
     {
       return 1;
+    }
+
+    virtual int getReferenceCount() const
+    {
+      return img->refcount;
     }
 
     const ImageBase* Img() const
@@ -69,23 +77,18 @@ namespace ice
   {
   private:
     ImageD* img;
-    ImageD* img_duplicate;
   public:
-    ImageStructDouble(ImageD* imgp): img(imgp) //?? img(new ImageD(*imgp))
+    ImageStructDouble(ImageD* imgp): img(imgp)
     {
-      // duplicate image avoid destruction of image buffer during paint
-      img_duplicate = new ImageD(*imgp);
+      img->getMatrix().refcount++;
     }
 
     virtual ~ImageStructDouble()
     {
-      delete img_duplicate;
+      img->getMatrix().refcount--;
+      if (img->getMatrix().refcount == 0)
+        delete img;
     };
-
-    void StopVis()
-    {
-      img -> stopVis();
-    }
 
     virtual int ImageType() const
     {
@@ -95,6 +98,11 @@ namespace ice
     const ImageD* Img() const
     {
       return img;
+    }
+
+    virtual int getReferenceCount() const
+    {
+      return img->getMatrix().refcount;
     }
 
     unsigned char getValueShifted(int x, int y) const

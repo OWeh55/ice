@@ -125,7 +125,7 @@ namespace ice
           }
       }
 
-    UpdateLimitImgD(out);
+    out.adaptLimits();
     return OK;
   }
 #undef FNAME

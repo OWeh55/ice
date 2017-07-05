@@ -165,61 +165,6 @@ namespace ice
      */
     virtual void copyData(ImageBase* src) = 0;
 
-  public:
-
-    /**
-     * type of function to be called by destructor
-     * This is typically used by visualisation to close open windows and
-     * is not usable for different purposes
-     */
-    typedef void (*DestroyFPtr)(ImageBase*);
-
-  protected:
-
-    int VisNumber; /**< Number of current visualisations */
-
-  protected:
-    /**
-     * pointer to the registered call back function
-     * must be set to nullptr by constructor
-     */
-    DestroyFPtr dfp = nullptr;
-
-  public:
-
-    /*
-     * set call back function, that is called, if the image is destroyed.
-     * used by visualisation to switch off before the image is gone
-     */
-
-    virtual void startVis(DestroyFPtr af)
-    {
-      VisNumber++;
-      dfp = af;
-    }
-
-    virtual void stopVis()
-    {
-      VisNumber++;
-
-      if (VisNumber == 0)
-        {
-          dfp = nullptr;
-        }
-    }
-
-    /* do the callback */
-    virtual void destroy()
-    {
-      if (dfp != nullptr)
-        {
-          (*dfp)(this);
-        }
-
-      dfp = nullptr;
-      VisNumber = 0;
-    }
-
   protected:
     //! Reference counter
     /*!
@@ -227,6 +172,7 @@ namespace ice
       to this instance
     */
     int refcount; // number of references to Image
+
     //! Pointer to parent
     /*! in case of an subimage this pointer points to the base image.
       it is nullptr otherwise
@@ -238,6 +184,7 @@ namespace ice
      */
     std::string title;
 
+    friend class ImageStructInt;
     friend class Image;
   };
 

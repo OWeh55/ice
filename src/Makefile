@@ -71,7 +71,8 @@ endif
 # optimize (OPT allows to override this)
 # debug symbols
 # "all" warnings, but not unused-local-typedefs (since wxWidgets uses these)
-COPT := $(COPT) -O4 -g -Wno-unused-local-typedefs -Wall
+COPT := $(COPT) -O4 -g -Wno-unused-local-typedefs 
+# -Wall
 
 # now allow OPT to override previous flags
 COPT := $(COPT) $(OPT)

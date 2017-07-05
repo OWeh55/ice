@@ -38,7 +38,7 @@ namespace ice
     GreyImageColorTableWindow(ice::ImageBase* Img,
                               const std::string& windowname);
 
-    virtual char ShowType() const
+    virtual char getVisualizationType() const
     {
       return 1;
     }

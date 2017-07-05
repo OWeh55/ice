@@ -41,21 +41,26 @@ namespace ice
     ThreadCommHelper();
     ~ThreadCommHelper();
 
-    /*! Wait until the main thread has finished processing. That could be the case if input
-      from the main thread has become available, or the main thread has finished some
-      GUI critical operations. This method can only be called from inside the user thread.*/
+    /*! Wait until the main thread has finished processing.
+      That could be the case if input from the main thread has
+      become available, or the main thread has finished some
+      GUI critical operations. This method can only be called
+      from inside the user thread.*/
     void WaitForMainThread();
 
-    /*! Wake up the user thread. This method must be called from inside the main thread.*/
+    /*! Wake up the user thread. This method must be called from
+      inside the main thread.*/
     void WakeUpUserThread();
   private:
     //! The mutexes for communication with the user thread.
     wxMutex MutexA, MutexB;
 
-    //! This index tells us which Mutex should be used for the next communication cycle
-    // Each communication partner must have it's own index, else they could get confused
-    int CurrMutexMain,
-        CurrMutexUser;
+    /*! This index tells us which Mutex should be used for the next
+      communication cycle
+      Each communication partner must have it's own index, else
+      they could get confused */
+    int CurrMutexMain;
+    int CurrMutexUser;
   };
 
   class EventHelper: private ThreadCommHelper

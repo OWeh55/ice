@@ -1,6 +1,5 @@
 #include <image.h>
 #include <ClassSample.h>
-#include <sKDTree.h>
 
 using namespace ice;
 using namespace std;

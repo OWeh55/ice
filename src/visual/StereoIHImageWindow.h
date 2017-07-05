@@ -39,7 +39,7 @@ namespace ice
       ice::ImageBase* BlueImageR,
       const std::string& windowname);
 
-    virtual char ShowType() const
+    virtual char getVisualizationType() const
     {
       return 4;
     }

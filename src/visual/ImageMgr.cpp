@@ -46,7 +46,6 @@ using namespace std;
 
 namespace ice
 {
-
   DEFINE_EVENT_TYPE(DESTROY_WIN)
   DEFINE_EVENT_TYPE(CREATE_GREY_WIN)
   DEFINE_EVENT_TYPE(CREATE_GREY_COLORTABLE_WIN)
@@ -247,55 +246,48 @@ namespace ice
 
     // we destroy the image window
     imageWindow -> Destroy();
-
     WakeUpUserThread();
   }
 
   // Changes color at "Entry" in ALL colortables
   // This send the command to all Windows. Windows without color table
-  // have to ignore this (by not overwriting the methods of ImageBase)
-  int ImageManager::SetGreyColor(unsigned int Entry,
-                                 unsigned char RedValue,
-                                 unsigned char GreenValue,
-                                 unsigned char BlueValue)
+  // have to ignore this (by not overwriting the methods of ImageWindow)
+  int ImageManager::SetGreyColor(unsigned int entry,
+                                 unsigned char redValue,
+                                 unsigned char greenValue,
+                                 unsigned char blueValue)
   {
-    // Tell all image windows to use this color definition(only if possible)
-    for (std::list<ImageWindow*>::iterator it = WindowList.begin();
-         it != WindowList.end();
-         it++)
+    // Tell all image windows to use this color definition
+    for (auto it = WindowList.begin(); it != WindowList.end(); it++)
       {
-        (*it)->SetGreyColor(Entry, RedValue, GreenValue, BlueValue);
+        (*it)->SetGreyColor(entry, redValue, greenValue, blueValue);
       }
     return OK;
   }
 
-  int ImageManager::SetGreyLUT(unsigned int First, unsigned int Last)
+  int ImageManager::SetGreyLUT(unsigned int first, unsigned int last)
   {
-    // Tell all image windows to use this color definition (only if possible)
+    // Tell all image windows to set color table to grey in range first..last
     // This send the command to all Windows. Windows without color table
-    // have to ignore this (by not overwriting the methods of ImageBase)
-    for (std::list<ImageWindow*>::iterator it = WindowList.begin();
-         it != WindowList.end();
-         it++)
+    // have to ignore this (by not overwriting the methods of ImageWindow)
+    for (auto it = WindowList.begin(); it != WindowList.end(); it++)
       {
-        (*it)->SetGreyLUT(First, Last);
+        (*it)->SetGreyLUT(first, last);
       }
     return OK;
   }
 
-  int ImageManager::SetOverlayColor(unsigned int Entry,
-                                    unsigned char RedValue,
-                                    unsigned char GreenValue,
-                                    unsigned char BlueValue)
+  int ImageManager::SetOverlayColor(unsigned int entry,
+                                    unsigned char redValue,
+                                    unsigned char greenValue,
+                                    unsigned char blueValue)
   {
-    // Tell all images to adjust their overlay color tables (only if possible)
+    // Tell all images to adjust their overlay color tables
     // This send the command to all Windows. Windows without color table
-    // have to ignore this (by not overwriting the methods of ImageBase)
-    for (std::list<ImageWindow*>::iterator it = WindowList.begin();
-         it != WindowList.end();
-         it++)
+    // have to ignore this (by not overwriting the methods of ImageWindow)
+    for (auto it = WindowList.begin(); it != WindowList.end(); it++)
       {
-        (*it)->SetOverlayColor(Entry, RedValue, GreenValue, BlueValue);
+        (*it)->SetOverlayColor(entry, redValue, greenValue, blueValue);
       }
     return OK;
   }
@@ -329,14 +321,14 @@ namespace ice
   {
     ImageData id;
     id.img1 = Img;
-    id.title = name;
+    id.title = name; // given name
     if (id.title.empty())
       {
-        id.title = Img->getTitle();
+        id.title = Img->getTitle(); // name from image
       }
     if (id.title.empty())
       {
-        id.title = ICEGRAFICNAME;
+        id.title = ICEGRAFICNAME; // default name
       }
 
     switch (Mode)
@@ -392,7 +384,7 @@ namespace ice
       }
       }
 
-    // if no valid Mode was specified, there must be some error
+    // if no valid Mode was specified
     throw IceException(FNAME, M_WRONG_PARAM);
   }
 
@@ -437,7 +429,7 @@ namespace ice
       }
 
       default:
-        // if no valid Mode was specified, there must be some error
+        // no valid Mode was specified
         throw IceException(FNAME, M_WRONG_PARAM);
       }
   }
@@ -470,8 +462,8 @@ namespace ice
       {
       case OVERLAY:
       {
-        // if no base image is provided we redirect the request to the
-        // "one image" Show()
+        // if no base image is provided we redirect the request to
+        // Show with one image
         if (Image1 == nullptr)
           {
             return Show(Mode, Image2, name);
@@ -564,7 +556,7 @@ namespace ice
 
       } // switch(Mode)
 
-    // if no valid Mode was specified, there must be some error
+    // no valid Mode was specified
     throw IceException(FNAME, M_WRONG_PARAM);
   }
 
@@ -596,7 +588,6 @@ namespace ice
 
     switch (Mode)
       {
-      // TODO: RGB is also a macro in wx, renamed it to _RGB(see defs.h)
       case STEREO_IH:
 
         // Check if the images match in size
@@ -617,7 +608,7 @@ namespace ice
 
       } // switch(Mode)
 
-    // if no valid Mode was specified, there must be some error
+    // no valid Mode was specified
     throw IceException(FNAME, M_WRONG_PARAM);
   }
 #undef FNAME
@@ -628,53 +619,50 @@ namespace ice
     cout << "IT ";
     cout.flush();
 #endif
-    // do something only if the refersh is enabled
+    std::list<ImageWindow*> currentWindowList(WindowList);
+    WindowList.clear();
+    // do something only if the refresh is enabled
     if (RefreshEnabled)
       {
         // send an update message to all image windows
         //    wxCommandEvent Event(REGULAR_UPDATE);
-        for (std::list<ImageWindow*>::iterator it = WindowList.begin();
-             it != WindowList.end();
+        for (auto it = currentWindowList.begin();
+             it != currentWindowList.end();
              it++)
           {
-            (*it)->RegularUpdate();
+            if (!(*it)->RegularUpdate())
+              {
+                (*it) -> Destroy();
+              }
+            else
+              WindowList.push_back(*it);
           }
       }
-    // only Restart timer, time is already set
+    // _restart_ only, time is already set
     RefreshTimer.Start(-1, true);
   }
 
   void DestroyWindows(ice::ImageBase* img)
   {
-    Visual v;
-    do
+    ImageManager* im = wxGetApp().GetImageManager();
+
+    Visual v = im -> getVisual(img);
+    while (v != nullptr)
       {
-        ImageManager* im = wxGetApp().GetImageManager();
-        if (im != nullptr)
-          {
-            v = wxGetApp().GetImageManager()->getVisual(img);
-            if (v != nullptr)
-              {
-                wxGetApp().GetImageManager()->Show(OFF, v);
-              }
-          }
-        else
-          v = nullptr;
+        im->Show(OFF, v);
+        v = im -> getVisual(img);
       }
-    while (v != nullptr);
   }
 
   void DestroyWindowsD(ice::ImageD* img)
   {
-    Visual v;
-    do
+    ImageManager* im = wxGetApp().GetImageManager();
+
+    Visual v = im -> getVisual(img);
+    while (v != nullptr)
       {
-        v = wxGetApp().GetImageManager()->getVisual(img);
-        if (v != nullptr)
-          {
-            wxGetApp().GetImageManager()->Show(OFF, v);
-          }
+        im->Show(OFF, v);
+        v = im -> getVisual(img);
       }
-    while (v != nullptr);
   }
 }

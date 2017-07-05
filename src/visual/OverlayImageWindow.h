@@ -35,7 +35,6 @@ namespace ice
     OverlayImageWindow(ice::ImageBase* BaseImage,
                        ice::ImageBase* OverlayImage,
                        const std::string& windowname);
-    virtual bool Destroy();
 
     int GetGreyColor(unsigned int Entry,
                      unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal);
@@ -49,9 +48,7 @@ namespace ice
     int SetOverlayColor(unsigned int Entry,
                         unsigned char RedVal, unsigned char GreenVal, unsigned char BlueVal);
 
-    //    bool ShowsImage(ImageBase *img) const;
-
-    virtual char ShowType() const
+    virtual char getVisualizationType() const
     {
       return 2;
     }

@@ -93,22 +93,19 @@ namespace ice
   template<typename T>
   class ImageF
   {
-    typedef void (*DestroyFPtr)(ImageF<T>*);
-
   public:
     typedef T ValueType;
 
     /**
     * standard constructor, no real image yet.
     */
-    ImageF() : mat(nullptr), xsize(0), ysize(0), nVis(0), dfp(nullptr) {};
+    ImageF() : mat(nullptr), xsize(0), ysize(0) {};
 
     /**
      * copy constructor.
      * *this and i point to the same image (shallow copy)
      */
-    ImageF(const ImageF& i): xsize(i.xsize), ysize(i.ysize),
-      dfp(nullptr)
+    ImageF(const ImageF& i): xsize(i.xsize), ysize(i.ysize)
     {
       assign(i.mat);
     }
@@ -572,31 +569,8 @@ namespace ice
     // set call back function, that is called, if the image is destroyed
     // used by visualisation to switch off before the image is gone
 
-    void startVis(DestroyFPtr af)
-    {
-      nVis++;
-      dfp = af;
-    }
-
-    void stopVis()
-    {
-      nVis++;
-      if (nVis == 0)
-        {
-          dfp = nullptr;
-        }
-    }
-
-    /* does the callback */
     void destroy()
     {
-      if (dfp != nullptr)
-        {
-          (*dfp)(this);
-        }
-
-      dfp = nullptr;
-      nVis = 0;
       freemat();
     }
 
@@ -608,11 +582,6 @@ namespace ice
     // T minval, maxval;
 
   protected:
-    int nVis;
-    // pointer to the registered call back function
-    // must be set to nullptr by constructor
-    DestroyFPtr dfp;
-    int* tsp;
 
 // free the reference,
 // delete image if no other reference exist

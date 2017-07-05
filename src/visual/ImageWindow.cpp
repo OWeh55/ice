@@ -22,7 +22,6 @@
 #include <wx/image.h>       // for class wxImage
 #include <wx/dcbuffer.h>    // needed for wxGTK >= 2.5.x
 
-
 #include "visual/ImageWindow.h"
 #include "visual/Interaction.h"
 #include "visual/SelPntInteraction.h"
@@ -151,15 +150,7 @@ namespace ice
 
   bool ImageWindow::Destroy()
   {
-    while (PaintIsRunning)
-      {
-        usleep(1000);
-      }
-
-    for (unsigned int i = 0; i < imgs.size(); i++)
-      {
-        imgs[i]->StopVis();
-      }
+    while (PaintIsRunning) usleep(1000);
 
     ParentFrame->Destroy();
     return wxScrolledWindow::Destroy();
@@ -171,7 +162,7 @@ namespace ice
       {
         return false;
       }
-    img->startVis(DestroyWindows);
+
     imgs.push_back(new ImageStructInt(img));
 
     return true;
@@ -183,7 +174,6 @@ namespace ice
       {
         return false;
       }
-    img->startVis(DestroyWindowsD);
     imgs.push_back(new ImageStructDouble(img));
 
     return true;
@@ -315,29 +305,21 @@ namespace ice
     // for zooming (the rest will do the scroll helper class for us)
     if (KeyEvent.GetKeyCode() == '>')
       {
-        // ZoomFactor -1 is essentially the same as ZoomFactor +1, so it can be skipped
+        // ZoomFactor -1 is the same as ZoomFactor +1, so it can be skipped
         if (ZoomFactor == -2)
-          {
-            DoZoom(1);
-          }
+          DoZoom(1);
         else
-          {
-            DoZoom(ZoomFactor + 1);
-          }
+          DoZoom(ZoomFactor + 1);
         return;
       }
 
     if (KeyEvent.GetKeyCode() == '<')
       {
-        // ZoomFactor -1 is essentially the same as ZoomFactor +1, so it can be skipped
+        // ZoomFactor -1 is the same as ZoomFactor +1, so it can be skipped
         if (ZoomFactor == 1)
-          {
-            DoZoom(-2);
-          }
+          DoZoom(-2);
         else
-          {
-            DoZoom(ZoomFactor - 1);
-          }
+          DoZoom(ZoomFactor - 1);
         return;
       }
 
@@ -352,7 +334,8 @@ namespace ice
         DoZoom(1);
         return;
       }
-    // if there was any other key pressed, we don't care and pass it through to the console
+
+    // any other key is passed through to the console
     // window
 #if wxMAJOR_VERSION == 2
 #if wxMINOR_VERSION <= 8
@@ -449,27 +432,16 @@ namespace ice
     int wx1 = wx0 + width - 1;
     int wy1 = wy0 + height - 1;
 
-    //  cout << "window: " << wx0 << "," << wy0 << " -- " << wx1 << "," << wy1 << endl;
-
-    // alles grau als Untergrund
-    // machen wir lieber nicht: es gibt noch langsame Grafikkarten, z.B. virtuelle
-    //    dc.SetBrush(*wxGREY_BRUSH);
-    //    dc.SetPen(*wxGREY_PEN);
-    //    dc.DrawRectangle(wx0 + scrolloffset_x, wy0 + scrolloffset_y, width, height);
-
     // We compute the part of the Image, that has to be painted,
     // let's call it the visible area.
     // x0 and y0 denote the left upper corner of the visible area,
     // x1 and y1 the lower right corner.
 
-    int ix0;
-    int iy0;
-    int ix1;
-    int iy1;
+    int ix0, iy0;
     translateWin2ImagePos(wx0, wy0, ix0, iy0);
+    int ix1, iy1;
     translateWin2ImagePos(wx1, wy1, ix1, iy1);
 
-    //  cout << "Image: " << ix0 << "," << iy0 << " -- " << ix1 << "," << iy1 << endl;
     // limit to image size
     if (ix0 < 0)
       {
@@ -488,8 +460,6 @@ namespace ice
         iy1 = SizeY - 1;
       }
 
-    // cout << "Image: " << ix0 << "," << iy0 << " -- " << ix1 << "," << iy1 << endl;
-
     int bmx0, bmy0, bmx1, bmy1; // position of bitmap to draw
     translateImage2WinPos(ix0, iy0, bmx0, bmy0);
 
@@ -499,19 +469,17 @@ namespace ice
     bmx1 += PixelSize - 1;
     bmy1 += PixelSize - 1;
 
-    // cout << "Bitmap: " << bmx0 << "," << bmy0 << " -- " << bmx1 << "," << bmy1 << endl;
-
     int bmwidth = bmx1 - bmx0 + 1;
     int bmheight = bmy1 - bmy0 + 1;
 
     if ((bmwidth > 0) && (bmheight > 0))
       {
         // Create an array that is compatible to wxImage.
-        unsigned char* PixelArray = NULL;
+        unsigned char* PixelArray = nullptr;
         try
           {
             PixelArray = new unsigned char[bmwidth * bmheight * 3];
-            if (PixelArray == NULL)
+            if (PixelArray == nullptr)
               {
                 throw std::bad_alloc();
               }
@@ -564,7 +532,6 @@ namespace ice
               }
           }
 
-        //  cout << "****: " << bmx0 << "," << bmy0 << " " << bmwidth << "*" << bmheight << endl;
         // We transform the image to a bitmap, that can be painted.
         wxImage PaintImage(bmwidth, bmheight, PixelArray, true);
 
@@ -643,11 +610,21 @@ namespace ice
     WakeUpUserThread();
   }
 
-  void ImageWindow::RegularUpdate()
+  bool ImageWindow::RegularUpdate()
   {
-    // check if there is any need to refresh
-    Refresh();
-    Update(); // Update enforces repainting of windows
+    // check if images still exist
+
+    if (!existImages())
+      {
+        return false;
+      }
+    else
+      {
+        // check if there is any need to refresh
+        Refresh();
+        Update(); // Update enforces repainting of windows
+        return true;
+      }
   }
 
   void ImageWindow::DrawCursor(const IPoint& Position)

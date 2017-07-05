@@ -35,8 +35,6 @@ namespace ice
     : xsize(SizeX),
       ysize(SizeY),
       maxval(MaxIntensity),
-      VisNumber(0),
-      dfp(nullptr),
       refcount(0),
       parent(par),
       title(titleP)

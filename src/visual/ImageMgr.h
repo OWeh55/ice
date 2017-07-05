@@ -128,6 +128,7 @@ namespace ice
     void OnCreateOverlay2Win(wxCommandEvent& Event);
     void OnCreateRGBWin(wxCommandEvent& Event);
     void OnCreateStereoIHWin(wxCommandEvent& Event);
+
     //! The event handlers.
     void OnRefreshTimer(wxTimerEvent& TimerEvent);
 

@@ -1,6 +1,5 @@
 /**************************************************************/
 /* Testprogramm zur Visualisierung von Bildern          */
-/* mit ergänzungen für für die wxWidgets-Variante             */
 /**************************************************************/
 
 #include <image.h>

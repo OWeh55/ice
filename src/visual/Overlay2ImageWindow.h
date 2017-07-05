@@ -37,7 +37,7 @@ namespace ice
                         const std::string& windowname,
                         int transparency = 128);
 
-    virtual char ShowType() const
+    virtual char getVisualizationType() const
     {
       return 5;
     }

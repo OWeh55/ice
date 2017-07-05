@@ -1,7 +1,7 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2002 - 2017 FSU Jena, Digital Image Processing Group
  * Contact: ice@pandora.inf.uni-jena.de
  *
  * This library is free software; you can redistribute it and/or
@@ -18,8 +18,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef __ICEIMAGEWINDOW_H
-#define __ICEIMAGEWINDOW_H
+#ifndef _ICE_IMAGE_WINDOW_H
+#define _ICE_IMAGE_WINDOW_H
 
 #include <unistd.h>
 #include <string>
@@ -39,7 +39,6 @@
 #include "visual/pointsel.h"
 
 #define SCROLLUNIT 1
-
 namespace ice
 {
   BEGIN_DECLARE_EVENT_TYPES()
@@ -52,9 +51,9 @@ namespace ice
   class ImageWindow : public wxScrolledWindow, private ThreadCommHelper
   {
   protected:
-    static const int border = 10; // grey border around Image (in pixels)
+    static constexpr int BORDER = 10; // grey border around Image (in pixels)
 
-    //! The Caption for image windows.
+    //! The Caption for image window.
     std::string Caption;
 
     //! The parent frame, that hosts this window as a child.
@@ -110,14 +109,16 @@ namespace ice
     //! This flag tells us whether the window is displayed in full screen mode
     bool isFullScreen;
 
-  protected:
+  public:
     virtual ~ImageWindow()
     {
       for (unsigned int i = 0; i < imgs.size(); ++i)
         {
           delete imgs[i];
         }
+      imgs.clear();
     };
+
     virtual bool Create(unsigned int SizeX, unsigned int SizeY);
 
   public:
@@ -157,7 +158,7 @@ namespace ice
     //     3=RGBImageWin,
     //     4=StereoIHImageWin
     //     5=Overlay2ImgWin)
-    virtual char ShowType() const = 0;
+    virtual char getVisualizationType() const = 0;
 
     /* Translates image pixel position PixelPos to window pixel
        position WindowPos, that means the pixel at PixelPos in
@@ -240,7 +241,7 @@ namespace ice
       return ParentFrame->AddMenuItem(menu, item, userid);
     }
 
-    void RegularUpdate();
+    bool RegularUpdate();
 
     virtual bool SwitchFullScreen();
 
@@ -250,6 +251,21 @@ namespace ice
     }
 
   protected:
+
+    virtual bool existImages() const
+    {
+      bool exist = true;
+      for (int i = 0; i < imgs.size() && exist; i++)
+        {
+          if (imgs[i]->getReferenceCount() <= 1)
+            {
+              // we hold the only reference, the "real" Image is gone
+              exist = false;
+            }
+        }
+      return exist;
+    }
+
     // event handlers
     void OnPaint(wxPaintEvent& PaintEvent);
 
@@ -317,11 +333,11 @@ namespace ice
   {
     if (ZoomFactor > 0)
       {
-        return SizeX * ZoomFactor + 2 * border;
+        return SizeX * ZoomFactor + 2 * BORDER;
       }
     if (ZoomFactor < 0)
       {
-        return SizeX / -ZoomFactor + 2 * border;
+        return SizeX / -ZoomFactor + 2 * BORDER;
       }
     return 0;
   }
@@ -330,11 +346,11 @@ namespace ice
   {
     if (ZoomFactor > 0)
       {
-        return SizeY * ZoomFactor + 2 * border;
+        return SizeY * ZoomFactor + 2 * BORDER;
       }
     if (ZoomFactor < 0)
       {
-        return SizeY / -ZoomFactor + 2 * border;
+        return SizeY / -ZoomFactor + 2 * BORDER;
       }
     return 0;
   }
