@@ -53,8 +53,8 @@ namespace ice
 
     /**
      * c'tor with given center and window size.
-     * @center center of window.
-     * @sizeX, sizeY size of window (in pixel). If sizeY is
+     * @param center center of window.
+     * @param sizeX, sizeY size of window (in pixel). If sizeY is
      * not given a square window is assumed.
      */
     WindowWalker(IPoint center, int sizex, int sizey = -1);
