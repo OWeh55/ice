@@ -34,7 +34,7 @@ namespace ice
   {
   public:
     FourierTrafo(int size, bool forward = true, bool centered = false):
-      size(0), forward(true), // correct values will be set in setParameter
+      size(0), forward(true),     // the correct values will be set in setParameter
       centered(centered), state(sNull)
     {
       setParameter(size, forward);
@@ -54,11 +54,12 @@ namespace ice
     void setParameter(int newSize, bool newForward = true);
 
     // assign input data in different forms
+    void setInput(const double *v, int n);
+    void setInput(const double *vr, const double *vi, int n);
     void setInput(const std::vector<double>& v);
     void setInput(const std::vector<double>& vr, const std::vector<double>& vi);
     void setInput(const std::vector<int>& v, double factor = 1.0);
-    void setInput(const std::vector<int>& vr, const std::vector<int>& vi,
-                  double factor = 1.0);
+    void setInput(const std::vector<int>& vr, const std::vector<int>& vi, double factor = 1.0);
 
     // input from row of 2d matrix
     //   pure real
@@ -82,6 +83,12 @@ namespace ice
     void setInputFromColumn(const ice::matrix<int>& vr,
                             const ice::matrix<int>& vi,
                             int col, double factor = 1.0);
+
+    
+    void getResult(double *dstre,
+                   double *dstim,int n) const;
+
+    double getResult(double *dstre,int n) const;
 
     void getResult(std::vector<double>& dstre,
                    std::vector<double>& dstim) const;
@@ -119,6 +126,9 @@ namespace ice
   private:
     void transform();
 
+    void setSource(const double* src,int n);
+    void setSource(const double* srcre,
+                   const double* srcim, int n);
     void setSource(const std::vector<double>& src);
     void setSource(const std::vector<double>& srcre,
                    const std::vector<double>& srcim);
