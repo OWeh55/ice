@@ -27,8 +27,8 @@ void ShowDiff(ImageD d1, ImageD d2, Image i)
 
 void PrintRange(string p, ImageD d)
 {
-  UpdateLimitImgD(d);
-  Printf((p + ": %g .. %g\n").c_str(), d.minval, d.maxval);
+  d.adaptLimits();
+  Printf((p + ": %g .. %g\n").c_str(), d.minValue(), d.maxValue());
 }
 
 void PrintDiffRange(string p, ImageD d1, ImageD d2)
@@ -38,8 +38,8 @@ void PrintDiffRange(string p, ImageD d1, ImageD d2)
   for (int y = 0; y < diff.ysize; y++)
     for (int x = 0; x < diff.xsize; x++)
       PutValD(diff, x, y, GetValD(d1, x, y) - GetValD(d2, x, y));
-  UpdateLimitImgD(diff);
-  Printf((p + ": %g .. %g\n").c_str(), diff.minval, diff.maxval);
+  diff.adaptLimits();
+  Printf((p + ": %g .. %g\n").c_str(), diff.minValue(), diff.maxValue());
 }
 
 void Enter(void)

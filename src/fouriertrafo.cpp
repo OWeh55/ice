@@ -78,7 +78,7 @@ namespace ice
             size = newSize;
             norm = 1.0 / sqrt((double)newSize);
 #ifdef OPENMP
-#pragma omp critical
+            #pragma omp critical
 #endif
             {
               fftw_p = fftw_plan_dft_1d(size, in, out,
@@ -90,7 +90,7 @@ namespace ice
           {
             in = nullptr;
             out = nullptr;
-	    size = 0;
+            size = 0;
           }
       }
     state = sPara;
@@ -104,41 +104,41 @@ namespace ice
 
   // -------- getResult -----
 
-    void FourierTrafo::getResult(double *destinationReal,
-                   double *destinationImag,int n) const
-    {
-      if (state != sDone)
-	{
-	  throw IceException(FNAME, "data incomplete");
-	}
-      else if (size != n)
-	{
-          throw IceException(FNAME, M_VECTORDIM);
-	}
-      else
-	{
-	  int dest = getIndexFromFrequency(0);
-	  //    cout << dest << endl;
-	  for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
-	    {
-	      destinationReal[dest] = out[i][0] * norm;
-	      destinationImag[dest] = out[i][1] * norm;
-	    }
-	}
-    }
- 
-    double FourierTrafo::getResult(double *destinationReal,int n) const
-    {
-      if (state != sDone)
-	{
-	  throw IceException(FNAME, "data incomplete");
-	}
-      else if (size != n)
-	{
-          throw IceException(FNAME, M_VECTORDIM);
-	}
-      else
-	{
+  void FourierTrafo::getResult(double* destinationReal,
+                               double* destinationImag, int n) const
+  {
+    if (state != sDone)
+      {
+        throw IceException(FNAME, "data incomplete");
+      }
+    else if (size != n)
+      {
+        throw IceException(FNAME, M_VECTORDIM);
+      }
+    else
+      {
+        int dest = getIndexFromFrequency(0);
+        //    cout << dest << endl;
+        for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
+          {
+            destinationReal[dest] = out[i][0] * norm;
+            destinationImag[dest] = out[i][1] * norm;
+          }
+      }
+  }
+
+  double FourierTrafo::getResult(double* destinationReal, int n) const
+  {
+    if (state != sDone)
+      {
+        throw IceException(FNAME, "data incomplete");
+      }
+    else if (size != n)
+      {
+        throw IceException(FNAME, M_VECTORDIM);
+      }
+    else
+      {
         double imagSum = 0.0;
         int dest = getIndexFromFrequency(0);
         for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
@@ -150,7 +150,7 @@ namespace ice
         return sqrt(imagSum);
       }
     return 0.0;
-    }
+  }
 
   void FourierTrafo::getResult(std::vector<double>& destinationReal,
                                std::vector<double>& destinationImag) const
@@ -242,7 +242,7 @@ namespace ice
   // -------- setSource (privat) ---------------------------
   // get source data and transform data
 
-  void FourierTrafo::setSource(const double* source,int n)
+  void FourierTrafo::setSource(const double* source, int n)
   {
     if (checkParameter(n))
       {
@@ -257,7 +257,7 @@ namespace ice
   }
 
   void FourierTrafo::setSource(const double* sourceReal,
-		 const double* sourceImag, int n)
+                               const double* sourceImag, int n)
   {
     if (checkParameter(n))
       {
@@ -410,7 +410,7 @@ namespace ice
     int ln = 0;
     for (int i = 1; i < size; i = i + i)
       ln++;
-      
+
 
     doBitReversal();
 
@@ -723,14 +723,14 @@ namespace ice
   void FourierTrafo::setInput(const double* v, int n)
   {
     checkParameter(n);
-    setSource(v,n);
+    setSource(v, n);
   }
 
   void FourierTrafo::setInput(const double* vr,
                               const double* vi, int n)
   {
     checkParameter(n);
-    setSource(vr, vi,n);
+    setSource(vr, vi, n);
   }
 
   void FourierTrafo::setInput(const std::vector<double>& v)

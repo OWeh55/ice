@@ -37,14 +37,14 @@ using namespace std;
 namespace ice
 {
 #define FNAME "Fourier"
-  int Fourier(const Vector& re, const Vector& im,
+  void Fourier(const Vector& re, const Vector& im,
               int option,
               Vector& rre, Vector& rim)
   {
     int dim = re.size();
     if (dim != (int)im.size())
       throw IceException(FNAME, M_WRONG_DIM);
-
+    try{
     vector<double> real(dim);
     vector<double> imag(dim);
 
@@ -65,21 +65,20 @@ namespace ice
         rre[i] = real[i];
         rim[i] = imag[i];
       }
-
-    return OK;
+    }
+    RETHROW;
   }
 
-  int Fourier(Vector& re, Vector& im, int option)
+  void Fourier(Vector& re, Vector& im, int option)
   {
-    RETURN_ERROR_IF_FAILED(Fourier(re, im, option, re, im));
-    return OK;
+    Fourier(re, im, option, re, im);
   }
 
-  int Fourier(const Matrix& ms, int option, Matrix& md)
+  void Fourier(const Matrix& ms, int option, Matrix& md)
   {
     if ((ms.rows() != 2) && (ms.cols() != 2))
       throw IceException(FNAME, M_MATRIXFORMAT);
-
+    
     if (ms.rows() != 2)
       {
         md = !ms;
@@ -89,20 +88,17 @@ namespace ice
         md = ms;
       }
 
-    RETURN_ERROR_IF_FAILED(Fourier(md[0], md[1], option));
+    Fourier(md[0], md[1], option);
 
     if (ms.rows() != 2)
       {
         md = !md;
       }
-
-    return OK;
   }
 
-  int Fourier(Matrix& ms, int option)
+  void Fourier(Matrix& ms, int option)
   {
-    RETURN_ERROR_IF_FAILED(Fourier(ms, option, ms));
-    return OK;
+    Fourier(ms, option, ms);
   }
 #undef FNAME
 }

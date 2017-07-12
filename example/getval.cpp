@@ -4,78 +4,115 @@
 #include <visual/timing.h>
 
 #define TIMES 1000
+#define SIZEX 1024
+#define SIZEY 2048
 
 int main(int argc, char* argv[])
 {
   Image img;
-  img.create(1024, 1024, 255);
-  BEGIN(1, "GetVal(img,x,y)");
+  img.create(SIZEX, SIZEY, 255);
+  for (int y = 0; y < img.ysize; y++)
+    for (int x = 0; x < img.xsize; x++)
+      img.setPixel(x, y, (x + y) % 256);
+  ImageD imgd;
+  imgd.create(SIZEX, SIZEY, 0, 10);
+  for (int y = 0; y < imgd.ysize; y++)
+    for (int x = 0; x < imgd.xsize; x++)
+      imgd.setPixel(x, y, (x + y) / 256.0);
+  unsigned char cf[SIZEX * SIZEY];
+  matrix<int> mat(SIZEY, SIZEX);
+  matrix<double> matd(SIZEY, SIZEX);
+  matrix<unsigned char> matc(SIZEY, SIZEX);
 
-  for (int i = 0; i < TIMES; i++)
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        GetVal(img, x, y);
+  Print("Timing of pixel access methods\n");
 
-  END(1, "");
+  volatile int vol;
+  volatile double dvol;
 
-  BEGIN(1, "GetValUnchecked(img,x,y)");
-
-  for (int i = 0; i < TIMES; i++)
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        GetValUnchecked(img, x, y);
-
-  END(1, "");
-
-  BEGIN(1, "GetVal(img,x,y)");
-
-  for (int i = 0; i < TIMES; i++)
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        GetVal(img, x, y);
-
-  END(1, "");
-
-  BEGIN(1, "GetValUnchecked(img,x,y)");
-
-  for (int i = 0; i < TIMES; i++)
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        GetValUnchecked(img, x, y);
-
-  END(1, "");
-
-  BEGIN(1, "img->GetVal(x,y)");
-
-  for (int i = 0; i < TIMES; i++)
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        img.getPixel(x, y);
-
-  END(1, "");
-
-  BEGIN(1, "img->GetValUnchecked(x,y)");
-
-  for (int i = 0; i < TIMES; i++)
-    for (int y = 0; y < img.ysize; y++)
-      for (int x = 0; x < img.xsize; x++)
-        img.getPixelUnchecked(x, y);
-
-  END(1, "");
-
-  volatile unsigned char cf[1024 * 1024];
-
-  BEGIN(0, "C array");
-
-  for (int i = 0; i < TIMES; i++)
+  for (int c = 0; c < 2; c++)
     {
-      for (int k = 0; k < 1024; k++)
-        for (int j = 0; j < 1024; j++)
-          cf[j + k * 1024];
+      BEGIN(1, "Function GetVal(img,x,y)");
+      for (int i = 0; i < TIMES; i++)
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            vol = GetVal(img, x, y);
+      END(1, "");
+
+      BEGIN(1, "Function GetValUnchecked(img,x,y)");
+      for (int i = 0; i < TIMES; i++)
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            vol = GetValUnchecked(img, x, y);
+      END(1, "");
+
+      BEGIN(1, "Method Image::getPixel(x,y)");
+      for (int i = 0; i < TIMES; i++)
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            vol = img.getPixel(x, y);
+      END(1, "");
+
+      BEGIN(1, "Method Image::getPixelUnchecked(x,y)");
+      for (int i = 0; i < TIMES; i++)
+        for (int y = 0; y < img.ysize; y++)
+          for (int x = 0; x < img.xsize; x++)
+            vol = img.getPixelUnchecked(x, y);
+      END(1, "");
+
+      BEGIN(1, "Method ImageD::getPixel(x,y)");
+      for (int i = 0; i < TIMES; i++)
+        for (int y = 0; y < imgd.ysize; y++)
+          for (int x = 0; x < imgd.xsize; x++)
+            dvol = imgd.getPixel(x, y);
+
+      END(1, "");
+
+      BEGIN(1, "operator[] in c array");
+      for (int i = 0; i < TIMES; i++)
+        {
+          for (int k = 0; k < SIZEY; k++)
+            for (int j = 0; j < SIZEX; j++)
+              vol = cf[j + k * SIZEX];
+        }
+      END(1, "");
+
+      BEGIN(1, "operator[] in matrix<int>");
+      for (int i = 0; i < TIMES; i++)
+        {
+          for (int k = 0; k < SIZEY; k++)
+            for (int j = 0; j < SIZEX; j++)
+              vol = mat[k][j];
+        }
+      END(1, "");
+
+      BEGIN(1, "operator[] in matrix<unsigned char>");
+      for (int i = 0; i < TIMES; i++)
+        {
+          for (int k = 0; k < SIZEY; k++)
+            for (int j = 0; j < SIZEX; j++)
+              vol = matc[k][j];
+        }
+      END(1, "");
+
+      BEGIN(1, "operator[] in matrix<double>");
+      for (int i = 0; i < TIMES; i++)
+        {
+          for (int k = 0; k < SIZEY; k++)
+            for (int j = 0; j < SIZEX; j++)
+              dvol = matd[k][j];
+        }
+      END(1, "");
+
+      BEGIN(1, "operator[] in matrix<double> (column first)");
+      for (int i = 0; i < TIMES; i++)
+        {
+          for (int j = 0; j < SIZEX; j++)
+            for (int k = 0; k < SIZEY; k++)
+              dvol = matd[k][j];
+        }
+      END(1, "");
     }
-
-  END(0, "");
-
+  Print("Done.\n");
   GetChar();
   return 0;
 }

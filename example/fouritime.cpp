@@ -44,13 +44,15 @@ public:
 
     if (imgd.isValid())
       {
-        UpdateLimitImgD(imgd);
+        imgd.adaptLimits();
         ConvImgDImg(imgd, img);
       }
   }
 };
 
-void FourierImgDH(ImageD sr, ImageD si, int mode, ImageD dr, ImageD di)
+void FourierImgDH(ImageD sr, ImageD si,
+                  int mode,
+                  ImageD dr, ImageD di)
 {
   fftw_iodim dim[2];
   dim[0].n = sr.xsize;
@@ -58,7 +60,7 @@ void FourierImgDH(ImageD sr, ImageD si, int mode, ImageD dr, ImageD di)
   dim[0].os = 1;
   dim[1].n = sr.ysize;
   dim[1].is = sr.xsize;
-  dim[1].os = sr.ysize;
+  dim[1].os = sr.xsize;
 
   fftw_plan p;
 
@@ -72,6 +74,7 @@ void FourierImgDH(ImageD sr, ImageD si, int mode, ImageD dr, ImageD di)
                                  FFTW_ESTIMATE);
   //             FFTW_MEASURE);
   else
+    // swap real <-> imag makes fft inverse
     p = fftw_plan_guru_split_dft(2, dim,
                                  0, NULL,
                                  si.getMatrix().getData(),
@@ -93,7 +96,7 @@ void HartleyImgDH(ImageD src, ImageD dst)
   dim[0].os = 1;
   dim[1].n = src.ysize;
   dim[1].is = src.xsize;
-  dim[1].os = src.ysize;
+  dim[1].os = src.xsize;
 
   fftw_r2r_kind kind[2] = {FFTW_DHT, FFTW_DHT};
 
@@ -117,8 +120,8 @@ int main(int argc, char* argv[])
   bool wait = false;
 
   int times = 1;
-  int xsize = 512;
-  int ysize = 512;
+  int xsize = 1024;
+  int ysize = 768;
 
   while ((rc = getopt(argc, argv, "m:dwx:y:t:")) >= 0)
     {
@@ -186,9 +189,9 @@ int main(int argc, char* argv[])
   for (int y = 0; y < tests.ysize; y++)
     for (int x = 0; x < tests.xsize; x++)
       {
-        PutVal(tests, x, y, Random(255));
+        tests.setPixel(x, y, Random(255));
       }
-
+  Text("Test-Bild", 41, ysize / 2 - 11, 240, 3, tests);
   smearImg(tests);
 
   switch (mode)
@@ -200,8 +203,8 @@ int main(int argc, char* argv[])
       for (int i = 0; i < times; i++)
         {
           FourierImgD(srcr, srci, NORMAL, dstr, dsti);
-          PutValD(dstr, xsize / 2, ysize / 2, 0);
-          PutValD(dsti, xsize / 2, ysize / 2, 0);
+          dstr.setPixel(xsize / 2, ysize / 2, 0.0);
+          dsti.setPixel(xsize / 2, ysize / 2, 0.0);
 
           if (display)
             {

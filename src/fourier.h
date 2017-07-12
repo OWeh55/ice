@@ -40,7 +40,7 @@ namespace ice
   // implementations in fourier_fftw.cpp and fourier_nofftw.cpp
   // define NOFFTW3 if you do not want or can not use library fftw3
   //
-  int FourierD(const double* srcre, const double* srcim,
+  void FourierD(const double* srcre, const double* srcim,
                int dim, int option,
                double* dstre, double* dstim);
 
@@ -48,25 +48,25 @@ namespace ice
   // (prefer to use class FourierTrafo for Fourier transform!)
   // implementation in fourier.cpp
   // vector + vector -> vector + vector
-  int Fourier(const std::vector<double>& srcre, const std::vector<double>& srcim,
+  void Fourier(const std::vector<double>& srcre, const std::vector<double>& srcim,
               std::vector<double>& dstre, std::vector<double>& dstim,
               int option = NORMAL);
 
   // inplace  vector + vector
-  int Fourier(std::vector<double>& srcre, std::vector<double>& srcim,
+  void Fourier(std::vector<double>& srcre, std::vector<double>& srcim,
               int option = NORMAL);
 
   // Vector + Vector -> Vector + Vector
-  int Fourier(const Vector& re, const Vector& im,
+  void Fourier(const Vector& re, const Vector& im,
               int option,
               Vector& rre, Vector& rim);
 
   // inplace  Vector + Vector
-  int Fourier(Vector& re, Vector& im, int option = NORMAL);
+  void Fourier(Vector& re, Vector& im, int option = NORMAL);
 
   // complex Numbers as row in a Matrix
-  int Fourier(const Matrix& ms, int option, Matrix& md);
-  int Fourier(Matrix& ms, int option = NORMAL);
+  void Fourier(const Matrix& ms, int option, Matrix& md);
+  void Fourier(Matrix& ms, int option = NORMAL);
 
   // (prefer to use class HartleyTrafo for Hartley transform!)
   // low level 1d Hartley transform

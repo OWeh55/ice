@@ -54,8 +54,8 @@ namespace ice
     void setParameter(int newSize, bool newForward = true);
 
     // assign input data in different forms
-    void setInput(const double *v, int n);
-    void setInput(const double *vr, const double *vi, int n);
+    void setInput(const double* v, int n);
+    void setInput(const double* vr, const double* vi, int n);
     void setInput(const std::vector<double>& v);
     void setInput(const std::vector<double>& vr, const std::vector<double>& vi);
     void setInput(const std::vector<int>& v, double factor = 1.0);
@@ -84,11 +84,11 @@ namespace ice
                             const ice::matrix<int>& vi,
                             int col, double factor = 1.0);
 
-    
-    void getResult(double *dstre,
-                   double *dstim,int n) const;
 
-    double getResult(double *dstre,int n) const;
+    void getResult(double* dstre,
+                   double* dstim, int n) const;
+
+    double getResult(double* dstre, int n) const;
 
     void getResult(std::vector<double>& dstre,
                    std::vector<double>& dstim) const;
@@ -126,7 +126,7 @@ namespace ice
   private:
     void transform();
 
-    void setSource(const double* src,int n);
+    void setSource(const double* src, int n);
     void setSource(const double* srcre,
                    const double* srcim, int n);
     void setSource(const std::vector<double>& src);

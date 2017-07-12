@@ -30,6 +30,7 @@
 #include "IceException.h"
 #include "macro.h"
 
+#include "fourier.h"
 #include "fouriertrafo.h"
 
 using namespace std;
@@ -37,20 +38,20 @@ using namespace std;
 namespace ice
 {
 #define FNAME "FourierD"
-  int FourierD(const double* srcre, const double* srcim,
+  void FourierD(const double* srcre, const double* srcim,
                int n, int option,
                double* re, double* im)
   {
-    try {
-      FourierTrafo ft(n, option==NORMAL);
-      ft.setInput(srcre,srcim,n);
-      ft.getResult(re,im,n);
-    }
+    try
+      {
+        FourierTrafo ft(n, option == NORMAL);
+        ft.setInput(srcre, srcim, n);
+        ft.getResult(re, im, n);
+      }
     RETHROW;
-    return OK;
   }
 
-  int Fourier(const vector<double>& srcre, const vector<double>& srcim,
+  void Fourier(const vector<double>& srcre, const vector<double>& srcim,
               vector<double>& re, vector<double>& im,
               int option)
   {
@@ -62,33 +63,33 @@ namespace ice
     if (option != NORMAL && option != INVERS)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    try {
-      FourierTrafo ft(dim, option==NORMAL);
-      ft.setInput(srcre,srcim);
-      ft.getResult(re,im);
-    }
+    try
+      {
+        FourierTrafo ft(dim, option == NORMAL);
+        ft.setInput(srcre, srcim);
+        ft.getResult(re, im);
+      }
     RETHROW;
-    return OK;
   }
 
-  int Fourier(vector<double>& re, vector<double>& im,
+  void Fourier(vector<double>& re, vector<double>& im,
               int option)
   {
     int dim = re.size();
-    
+
     if (dim < 1 || dim != (int)im.size())
       throw IceException(FNAME, M_WRONG_PARAM);
-    
+
     if (option != NORMAL && option != INVERS)
       throw IceException(FNAME, M_WRONG_PARAM);
-    
-    try {
-      FourierTrafo ft(dim, option==NORMAL);
-      ft.setInput(re,im);
-      ft.getResult(re,im);
-    }
+
+    try
+      {
+        FourierTrafo ft(dim, option == NORMAL);
+        ft.setInput(re, im);
+        ft.getResult(re, im);
+      }
     RETHROW;
-    return OK;
   }
 #undef FNAME
 }

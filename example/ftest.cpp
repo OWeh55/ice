@@ -4,7 +4,7 @@ const int ss = 2;
 
 void Update(ImageD d, Image& i)
 {
-  UpdateLimitImgD(d);
+  d.adaptLimits();
   ConvImgDImg(d, i);
 }
 

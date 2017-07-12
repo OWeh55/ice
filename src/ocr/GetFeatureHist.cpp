@@ -86,7 +86,7 @@ int GetFeatureHist::get_feature(const Image& pic,
     {
       phi_1 = atan2(pl2->yptr[1], pl2->xptr[1]);  // Phase des 1. FK
     }
-  
+
   // die ersten 2*fd-2 Merkmale berechnen
   for (i = 0; i < fd / 2; ++i)
     {
