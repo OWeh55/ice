@@ -33,9 +33,8 @@
 
 #define PRECISION 1e-200
 
-#define ERR(f,m,r,ret) { throw IceException(f,m); }
-
 using std::vector;
+
 namespace ice
 {
 
@@ -140,7 +139,7 @@ namespace ice
             {
               if (sum <= 0.0)
                 {
-                  ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+		  throw IceException(FNAME, M_WRONG_MATRIX);
                 }
 
               res.at(i).at(i) = sqrt(sum);
@@ -247,12 +246,12 @@ namespace ice
 
     if (m.rows() == 0)
       {
-        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, -1);
+	throw IceException(FNAME, M_WRONG_MATRIX);
       }
 
     if ((j1 < 0) || (j1 >= m.cols()))
       {
-        ERR(FNAME, M_WRONG_PARAM, WRONG_PARAM, -1);
+	throw IceException(FNAME, M_WRONG_PARAM);
       }
 
     for (int j = j1; j < m.rows(); j++)
@@ -279,7 +278,7 @@ namespace ice
 
     if (m.cols() != m.rows())
       {
-        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+	throw IceException(FNAME, M_NO_SQUARE);
       }
 
     if (m.rows() == 1)
@@ -376,7 +375,7 @@ namespace ice
   {
     if (m.cols() != m.rows())
       {
-        ERR(FNAME, M_NO_SQUARE, WRONG_PARAM, 0);
+	throw IceException(FNAME, M_NO_SQUARE);
       }
 
     if (m.rows() == 1)
@@ -494,8 +493,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "SolveLinEqu"
-  int SolveLinEqu1(const Matrix& m, const Vector& v, Vector& res)
+#define FNAME "solveLinEqu"
+  int solveLinEqu1(const Matrix& m, const Vector& v, Vector& res)
   {
     // Matrix is square, v has correct size
     try
@@ -513,7 +512,7 @@ namespace ice
     RETHROW;
   }
 
-  void SolveLinearEquation1(const matrix<double>& A,
+  void solveLinearEquation1(const matrix<double>& A,
                             const std::vector<double>& b,
                             std::vector<double>& x)
   {
@@ -545,11 +544,11 @@ namespace ice
           {
             Matrix a = m.MulTrans(m); // m^T * m
             Vector i = m.MulTrans(v); // m^T * v
-            SolveLinEqu1(a, i, res);
+            solveLinEqu1(a, i, res);
           }
         else
           {
-            SolveLinEqu1(m, v, res);
+            solveLinEqu1(m, v, res);
           }
 
         return res;
@@ -558,7 +557,7 @@ namespace ice
   }
 
 #undef FNAME
-#define FNAME "SolveLinearEquation"
+#define FNAME "solveLinearEquation"
   std::vector<double> solveLinearEquation(const matrix<double>& m,
                                           const std::vector<double>& b)
   {
@@ -566,17 +565,17 @@ namespace ice
 
     if ((int)b.size() != m.rows())
       {
-        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+	throw IceException(FNAME,M_WRONG_MATRIX);
       }
 
     if (m.cols() > m.rows())
       {
-        ERR(FNAME, M_WRONG_MATRIX, WRONG_PARAM, res);
+	throw IceException(FNAME,M_WRONG_MATRIX);
       }
 
-    // Ausgleichsrechnung bei überbestimmten Gleichungsystemen
     if (m.cols() < m.rows())
       {
+	// Ausgleichsrechnung bei überbestimmten Gleichungsystemen
         matrix<double> a = !m * m; // m^T * m
         std::vector<double> bb(m.cols());
         for (int i = 0; i < m.cols(); ++i)
@@ -587,11 +586,12 @@ namespace ice
                 bb[i] += m[k][i] * b[k];
               }
           }
-        SolveLinearEquation1(a, bb, res);
+        solveLinearEquation1(a, bb, res);
       }
     else
       {
-        SolveLinearEquation1(m, b, res);
+	// Ausgleichsrechnung bei überbestimmten Gleichungsystemen
+        solveLinearEquation1(m, b, res);
       }
 
     return res;

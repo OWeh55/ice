@@ -349,16 +349,15 @@ namespace ice
   double* InvertMatrix(double* m1, int dim, double* m2)
   {
     double* mptr = NULL;
-    int c, i, j, k, col, colh, row, rowh, offs, ret;
-    double maxa, max, fh, fha;
+    int c, i, j, k, colh, rowh, offs, ret;
+    double max, fh, fha;
+
     double epsinst = 1e-100; // Grenze der Instabilitaet
     double epsnull = 1e-200; // Definition 0
-    double* dpa, *dpc;
-    int size_a;
 
-    col = 0;
-    row = 0;
-    maxa = 0;
+    int col = 0;
+    int row = 0;
+    double maxa = 0;
 
     if (m1 == NULL)
       throw IceException(FNAME, M_WRONG_VECTOR);
@@ -368,10 +367,10 @@ namespace ice
     else
       mptr = m2;
 
-    size_a = dim * dim * sizeof(double);
+    int size_a = dim * dim * sizeof(double);
     // Anforderung des dynamischen Speichers
-    dpa = (double*) malloc(size_a);
-    dpc = (double*)malloc(size_a);
+    double *dpa = (double*) malloc(size_a);
+    double *dpc = (double*) malloc(size_a);
 
     // kopieren in dynamischen speicherbereich
     memcpy(dpa, m1, size_a);

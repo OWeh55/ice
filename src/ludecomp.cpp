@@ -38,7 +38,7 @@ namespace ice
 #define LU(i,j) LU.at(i).at(j)
   //#define LU(i,j) LU[i][j]
 
-  int LUDecompositionPacked(const Matrix& a,
+  void LUDecompositionPacked(const Matrix& a,
                             Matrix& LU,
                             IVector& indx,
                             bool pivot)
@@ -55,6 +55,7 @@ namespace ice
     if (dim != a.rows())   // auf quadratische Matrix testen
       throw IceException(FNAME, M_NO_SQUARE);
 
+    try {
     LU = a;
 
     Vector vv(dim);
@@ -147,11 +148,11 @@ namespace ice
               }
           }
       } // all columns
-
-    return OK;
+  }
+  RETHROW;
   }
 
-  int LUDecompositionPacked(const matrix<double>& a,
+  void LUDecompositionPacked(const matrix<double>& a,
                             matrix<double>& LU,
                             std::vector<int>& indx,
                             bool pivot)
@@ -168,6 +169,7 @@ namespace ice
     if (dim != a.rows())   // auf quadratische Matrix testen
       throw IceException(FNAME, M_NO_SQUARE);
 
+    try {
     LU = a;
 
     std::vector<double> vv(dim);
@@ -263,207 +265,203 @@ namespace ice
               }
           }
       } // all columns
-
-    return OK;
+    }
+    RETHROW;
   }
 
-  int LUDecompositionPacked(const Matrix& a, Matrix& LU)
+  void LUDecompositionPacked(const Matrix& a, Matrix& LU)
   {
     IVector ndx; // dummy, ungenutzt weil ohne Pivotisierung
-    return LUDecompositionPacked(a, LU, ndx, false);
+    LUDecompositionPacked(a, LU, ndx, false);
   }
 
-  int LUDecompositionPacked(const matrix<double>& a, matrix<double>& LU)
+  void LUDecompositionPacked(const matrix<double>& a, matrix<double>& LU)
   {
     std::vector<int> ndx; // dummy, ungenutzt weil ohne Pivotisierung
-    return LUDecompositionPacked(a, LU, ndx, false);
+    LUDecompositionPacked(a, LU, ndx, false);
   }
 #undef FNAME
 #define FNAME "LUDecomposition"
-  int LUDecomposition(const Matrix& a, Matrix& L, Matrix& U)
+  void LUDecomposition(const Matrix& a, Matrix& L, Matrix& U)
   {
-    Matrix LU;
-    int rc = LUDecompositionPacked(a, LU);
+    try {
+      Matrix LU;
+      LUDecompositionPacked(a, LU);
 
-    if (rc == OK)
-      {
-        int i, j;
-        L = LU;
-        U = LU;
+      int i, j;
+      L = LU;
+      U = LU;
 
-        // entpacken
-        // U ist obere Dreiecksmatrix
-        for (i = 0; i < U.cols(); i++)
-          {
-            for (j = i + 1; j < U.rows(); j++)
-              {
-                U[j][i] = 0;
-              }
-          }
+      // entpacken
+      // U ist obere Dreiecksmatrix
+      for (i = 0; i < U.cols(); i++)
+	{
+	  for (j = i + 1; j < U.rows(); j++)
+	    {
+	      U[j][i] = 0;
+	    }
+	}
 
-        // L ist untere Dreiecksmatrix
-        for (i = 0; i < L.cols(); i++)
-          {
-            for (j = 0; j < i; j++)
-              {
-                L[j][i] = 0;
-              }
-            L[i][i] = 1.0;
-          }
-      }
-
-    return rc;
+      // L ist untere Dreiecksmatrix
+      for (i = 0; i < L.cols(); i++)
+	{
+	  for (j = 0; j < i; j++)
+	    {
+	      L[j][i] = 0;
+	    }
+	  L[i][i] = 1.0;
+	}
+    }
+    RETHROW;
   }
 
-  int LUDecomposition(const matrix<double>& a,
-                      matrix<double>& L,
-                      matrix<double>& U)
+  void LUDecomposition(const matrix<double>& a,
+		       matrix<double>& L,
+		       matrix<double>& U)
   {
-    matrix<double> LU;
-    int rc = LUDecompositionPacked(a, LU);
+    matrix<double> LU;  // packed LU matrix
+    try {
+      LUDecompositionPacked(a, LU);
 
-    if (rc == OK)
-      {
-        int i, j;
-        L = LU;
-        U = LU;
+      int i, j;
+      L = LU;
+      U = LU;
 
-        // entpacken
-        // U ist obere Dreiecksmatrix
-        for (i = 0; i < U.cols(); i++)
-          {
-            for (j = i + 1; j < U.rows(); j++)
-              {
-                U[j][i] = 0;
-              }
-          }
+      // unpack
+      // U ist obere Dreiecksmatrix
+      for (i = 0; i < U.cols(); i++)
+	{
+	  for (j = i + 1; j < U.rows(); j++)
+	    {
+	      U[j][i] = 0;
+	    }
+	}
 
-        // L ist untere Dreiecksmatrix
-        for (i = 0; i < L.cols(); i++)
-          {
-            for (j = 0; j < i; j++)
-              {
-                L[j][i] = 0;
-              }
-            L[i][i] = 1.0;
-          }
-      }
-
-    return rc;
+      // L ist untere Dreiecksmatrix
+      for (i = 0; i < L.cols(); i++)
+	{
+	  for (j = 0; j < i; j++)
+	    {
+	      L[j][i] = 0;
+	    }
+	  L[i][i] = 1.0;
+	}
+    }
+    RETHROW;
   }
 #undef FNAME
 #define FNAME "LUSolve"
-  Vector LUSolve(const Matrix& LU, const IVector& indx, const Vector& b)
-  {
-    // lösung eines linearen Gleichungssystems, nachdem die Matrix A
-    // in die gepackte LU-Matrix transformiert wurde.
-    Vector res(b);
+    Vector LUSolve(const Matrix& LU, const IVector& indx, const Vector& b)
+    {
+      // lösung eines linearen Gleichungssystems, nachdem die Matrix A
+      // in die gepackte LU-Matrix transformiert wurde.
+      Vector res(b);
 
-    int dim = LU.cols(); // Dimension merken
+      int dim = LU.cols(); // Dimension merken
 
-    if (dim != LU.rows())   // auf quadratische Matrix testen
-      throw IceException(FNAME, M_NO_SQUARE);
+      if (dim != LU.rows())   // auf quadratische Matrix testen
+	throw IceException(FNAME, M_NO_SQUARE);
 
-    if (indx.Size() != dim)   // Größe permutation korrekt
-      throw IceException(FNAME, M_WRONG_DIM);
+      if (indx.Size() != dim)   // Größe permutation korrekt
+	throw IceException(FNAME, M_WRONG_DIM);
 
-    if (b.Size() != dim)   // Größe inhomogenität korrekt
-      throw IceException(FNAME, M_WRONG_DIM);
+      if (b.Size() != dim)   // Größe inhomogenität korrekt
+	throw IceException(FNAME, M_WRONG_DIM);
 
-    int ii = -1;
+      int ii = -1;
 
-    for (int i = 0; i < dim; i++)
-      {
-        int ip = indx[i];
-        double sum = res[ip];
-        res[ip] = res[i];
+      for (int i = 0; i < dim; i++)
+	{
+	  int ip = indx[i];
+	  double sum = res[ip];
+	  res[ip] = res[i];
 
-        if (ii >= 0)
-          {
-            for (int j = ii; j < i; j++)
-              {
-                sum -= LU(i, j) * res[j];
-              }
-          }
-        else if (sum)
-          {
-            ii = i;
-          }
+	  if (ii >= 0)
+	    {
+	      for (int j = ii; j < i; j++)
+		{
+		  sum -= LU(i, j) * res[j];
+		}
+	    }
+	  else if (sum)
+	    {
+	      ii = i;
+	    }
 
-        res[i] = sum;
-      }
+	  res[i] = sum;
+	}
 
-    for (int i = dim - 1; i >= 0; i--)
-      {
-        double sum = res[i];
+      for (int i = dim - 1; i >= 0; i--)
+	{
+	  double sum = res[i];
 
-        for (int j = i + 1; j < dim; j++)
-          {
-            sum -= LU(i, j) * res[j];
-          }
+	  for (int j = i + 1; j < dim; j++)
+	    {
+	      sum -= LU(i, j) * res[j];
+	    }
 
-        res[i] = sum / LU(i, i);
-      }
+	  res[i] = sum / LU(i, i);
+	}
 
-    return res;
-  }
+      return res;
+    }
 
-  std::vector<double> LUSolve(const matrix<double>& LU,
-                              const std::vector<int>& indx,
-                              const std::vector<double>& b)
-  {
-    // lösung eines linearen Gleichungssystems, nachdem die Matrix A
-    // in die gepackte LU-Matrix transformiert wurde.
-    std::vector<double> res(b);
+    std::vector<double> LUSolve(const matrix<double>& LU,
+				const std::vector<int>& indx,
+				const std::vector<double>& b)
+    {
+      // lösung eines linearen Gleichungssystems, nachdem die Matrix A
+      // in die gepackte LU-Matrix transformiert wurde.
+      std::vector<double> res(b);
 
-    int dim = LU.cols(); // Dimension merken und auf quadratische Matrix testen
+      int dim = LU.cols(); // Dimension merken und auf quadratische Matrix testen
 
-    if (dim != LU.rows())
-      throw IceException(FNAME, M_NO_SQUARE);
+      if (dim != LU.rows())
+	throw IceException(FNAME, M_NO_SQUARE);
 
-    if ((int)indx.size() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      if ((int)indx.size() != dim)
+	throw IceException(FNAME, M_WRONG_DIM);
 
-    if ((int)b.size() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      if ((int)b.size() != dim)
+	throw IceException(FNAME, M_WRONG_DIM);
 
-    int ii = -1;
+      int ii = -1;
 
-    for (int i = 0; i < dim; i++)
-      {
-        int ip = indx[i];
-        double sum = res[ip];
-        res[ip] = res[i];
+      for (int i = 0; i < dim; i++)
+	{
+	  int ip = indx[i];
+	  double sum = res[ip];
+	  res[ip] = res[i];
 
-        if (ii >= 0)
-          {
-            for (int j = ii; j < i; j++)
-              {
-                sum -= LU[i][j] * res[j];
-              }
-          }
-        else if (sum)
-          {
-            ii = i;
-          }
+	  if (ii >= 0)
+	    {
+	      for (int j = ii; j < i; j++)
+		{
+		  sum -= LU[i][j] * res[j];
+		}
+	    }
+	  else if (sum)
+	    {
+	      ii = i;
+	    }
 
-        res[i] = sum;
-      }
+	  res[i] = sum;
+	}
 
-    for (int i = dim - 1; i >= 0; i--)
-      {
-        double sum = res[i];
+      for (int i = dim - 1; i >= 0; i--)
+	{
+	  double sum = res[i];
 
-        for (int j = i + 1; j < dim; j++)
-          {
-            sum -= LU[i][j] * res[j];
-          }
+	  for (int j = i + 1; j < dim; j++)
+	    {
+	      sum -= LU[i][j] * res[j];
+	    }
 
-        res[i] = sum / LU[i][i];
-      }
+	  res[i] = sum / LU[i][i];
+	}
 
-    return res;
-  }
+      return res;
+    }
 
 #undef FNAME
-}
+  }
