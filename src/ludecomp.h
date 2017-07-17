@@ -32,16 +32,16 @@
 namespace ice
 {
   void LUDecompositionPacked(const Matrix& a, Matrix& res,
-                            IVector& indx, bool pivot = true);
+                             IVector& indx, bool pivot = true);
   void LUDecompositionPacked(const Matrix& a, Matrix& res);
   void LUDecomposition(const Matrix& a, Matrix& L, Matrix& U);
   Vector LUSolve(const Matrix& LU, const IVector& indx, const Vector& b);
 
   void LUDecompositionPacked(const matrix<double>& a, matrix<double>& res,
-                            std::vector<int>& index, bool pivot = true);
+                             std::vector<int>& index, bool pivot = true);
   void LUDecompositionPacked(const matrix<double>& a, matrix<double>& res);
   void LUDecomposition(const matrix<double>& a,
-                      matrix<double>& L, matrix<double>& U);
+                       matrix<double>& L, matrix<double>& U);
   std::vector<double> LUSolve(const matrix<double>& LU,
                               const std::vector<int>& index,
                               const std::vector<double>& b);

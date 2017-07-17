@@ -39,8 +39,8 @@ namespace ice
 {
 #define FNAME "FourierD"
   void FourierD(const double* srcre, const double* srcim,
-               int n, int option,
-               double* re, double* im)
+                int n, int option,
+                double* re, double* im)
   {
     try
       {
@@ -52,8 +52,8 @@ namespace ice
   }
 
   void Fourier(const vector<double>& srcre, const vector<double>& srcim,
-              vector<double>& re, vector<double>& im,
-              int option)
+               vector<double>& re, vector<double>& im,
+               int option)
   {
     int dim = srcre.size();
 
@@ -73,7 +73,7 @@ namespace ice
   }
 
   void Fourier(vector<double>& re, vector<double>& im,
-              int option)
+               int option)
   {
     int dim = re.size();
 

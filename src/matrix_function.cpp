@@ -369,8 +369,8 @@ namespace ice
 
     int size_a = dim * dim * sizeof(double);
     // Anforderung des dynamischen Speichers
-    double *dpa = (double*) malloc(size_a);
-    double *dpc = (double*) malloc(size_a);
+    double* dpa = (double*) malloc(size_a);
+    double* dpc = (double*) malloc(size_a);
 
     // kopieren in dynamischen speicherbereich
     memcpy(dpa, m1, size_a);

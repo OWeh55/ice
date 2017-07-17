@@ -38,34 +38,35 @@ namespace ice
 {
 #define FNAME "Fourier"
   void Fourier(const Vector& re, const Vector& im,
-              int option,
-              Vector& rre, Vector& rim)
+               int option,
+               Vector& rre, Vector& rim)
   {
     int dim = re.size();
     if (dim != (int)im.size())
       throw IceException(FNAME, M_WRONG_DIM);
-    try{
-    vector<double> real(dim);
-    vector<double> imag(dim);
-
-    FourierTrafo ft(dim, option == NORMAL, false);
-    for (int i = 0; i < dim; ++i)
+    try
       {
-        real[i] = re[i];
-        imag[i] = im[i];
-      }
+        vector<double> real(dim);
+        vector<double> imag(dim);
 
-    ft.setInput(real, imag);
-    ft.getResult(real, imag);
+        FourierTrafo ft(dim, option == NORMAL, false);
+        for (int i = 0; i < dim; ++i)
+          {
+            real[i] = re[i];
+            imag[i] = im[i];
+          }
 
-    rre.Resize(dim);
-    rim.Resize(dim);
-    for (int i = 0; i < dim; ++i)
-      {
-        rre[i] = real[i];
-        rim[i] = imag[i];
+        ft.setInput(real, imag);
+        ft.getResult(real, imag);
+
+        rre.Resize(dim);
+        rim.Resize(dim);
+        for (int i = 0; i < dim; ++i)
+          {
+            rre[i] = real[i];
+            rim[i] = imag[i];
+          }
       }
-    }
     RETHROW;
   }
 
@@ -78,7 +79,7 @@ namespace ice
   {
     if ((ms.rows() != 2) && (ms.cols() != 2))
       throw IceException(FNAME, M_MATRIXFORMAT);
-    
+
     if (ms.rows() != 2)
       {
         md = !ms;

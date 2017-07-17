@@ -50,6 +50,7 @@ namespace ice
 
     void resize(int rows, int cols);
 
+    operator matrix<double> () const;
     /* Element-Operator */
     const Vector& operator[](int) const;
     Vector& operator[](int);

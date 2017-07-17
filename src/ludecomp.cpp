@@ -39,9 +39,9 @@ namespace ice
   //#define LU(i,j) LU[i][j]
 
   void LUDecompositionPacked(const Matrix& a,
-                            Matrix& LU,
-                            IVector& indx,
-                            bool pivot)
+                             Matrix& LU,
+                             IVector& indx,
+                             bool pivot)
   {
     // liefert die gepackte Darstellung der Zerlegung einer Matrix
     // in eine untere Dreiecksmatrix L und eine obere Dreieckmatrix U
@@ -55,107 +55,108 @@ namespace ice
     if (dim != a.rows())   // auf quadratische Matrix testen
       throw IceException(FNAME, M_NO_SQUARE);
 
-    try {
-    LU = a;
-
-    Vector vv(dim);
-    indx.Resize(dim);
-
-    int dsign = 1;
-
-    for (int i = 0; i < dim; i++)
+    try
       {
-        double big = 0.0;
+        LU = a;
 
-        for (int j = 0; j < dim; j++)
+        Vector vv(dim);
+        indx.Resize(dim);
+
+        int dsign = 1;
+
+        for (int i = 0; i < dim; i++)
           {
-            double temp = fabs(LU(i, j));
+            double big = 0.0;
 
-            if (temp > big)
+            for (int j = 0; j < dim; j++)
               {
-                big = temp;
+                double temp = fabs(LU(i, j));
+
+                if (temp > big)
+                  {
+                    big = temp;
+                  }
               }
+
+            if (big == 0)
+              throw IceException(FNAME, M_MATRIX_SINGULAR);
+
+            vv[i] = 1.0 / big;
           }
 
-        if (big == 0)
-          throw IceException(FNAME, M_MATRIX_SINGULAR);
+        for (int j = 0; j < dim; j++)   // loop over all columns
+          {
+            for (int i = 0; i < j; i++)
+              {
+                double sum = LU(i, j);
 
-        vv[i] = 1.0 / big;
+                for (int k = 0; k < i; k++)
+                  {
+                    sum -= LU(i, k) * LU(k, j);
+                  }
+
+                LU(i, j) = sum;
+              }
+
+            double big = 0.0;
+            int imax = 0; // avoid warning
+
+            for (int i = j; i < dim; i++)
+              {
+                double sum = LU(i, j);
+
+                for (int k = 0; k < j; k++)
+                  {
+                    sum -= LU(i, k) * LU(k, j);
+                  }
+
+                LU(i, j) = sum;
+                double dum = vv[i] * fabs(sum);
+
+                if (dum >= big)
+                  {
+                    big = dum;
+                    imax = i;
+                  }
+              }
+
+            if (pivot)
+              {
+                if (j != imax)
+                  {
+                    LU.ExchangeRow(j, imax);
+                    dsign = -dsign;
+                    vv[imax] = vv[j];
+                  }
+
+                indx[j] = imax;
+              }
+            else
+              {
+                indx[j] = j;
+              }
+
+            if (LU(j, j) == 0)
+              throw IceException(FNAME, M_MATRIX_SINGULAR);
+
+            if (j < dim - 1)
+              {
+                double dum = 1.0 / LU(j, j);
+
+                for (int i = j + 1; i < dim; i++)
+                  {
+                    LU(i, j) *= dum;
+                  }
+              }
+          } // all columns
       }
-
-    for (int j = 0; j < dim; j++)   // loop over all columns
-      {
-        for (int i = 0; i < j; i++)
-          {
-            double sum = LU(i, j);
-
-            for (int k = 0; k < i; k++)
-              {
-                sum -= LU(i, k) * LU(k, j);
-              }
-
-            LU(i, j) = sum;
-          }
-
-        double big = 0.0;
-        int imax = 0; // avoid warning
-
-        for (int i = j; i < dim; i++)
-          {
-            double sum = LU(i, j);
-
-            for (int k = 0; k < j; k++)
-              {
-                sum -= LU(i, k) * LU(k, j);
-              }
-
-            LU(i, j) = sum;
-            double dum = vv[i] * fabs(sum);
-
-            if (dum >= big)
-              {
-                big = dum;
-                imax = i;
-              }
-          }
-
-        if (pivot)
-          {
-            if (j != imax)
-              {
-                LU.ExchangeRow(j, imax);
-                dsign = -dsign;
-                vv[imax] = vv[j];
-              }
-
-            indx[j] = imax;
-          }
-        else
-          {
-            indx[j] = j;
-          }
-
-        if (LU(j, j) == 0)
-          throw IceException(FNAME, M_MATRIX_SINGULAR);
-
-        if (j < dim - 1)
-          {
-            double dum = 1.0 / LU(j, j);
-
-            for (int i = j + 1; i < dim; i++)
-              {
-                LU(i, j) *= dum;
-              }
-          }
-      } // all columns
-  }
-  RETHROW;
+    RETHROW;
   }
 
   void LUDecompositionPacked(const matrix<double>& a,
-                            matrix<double>& LU,
-                            std::vector<int>& indx,
-                            bool pivot)
+                             matrix<double>& LU,
+                             std::vector<int>& indx,
+                             bool pivot)
   {
     // liefert die gepackte Darstellung der Zerlegung einer Matrix
     // in eine untere Dreiecksmatrix L und eine obere Dreieckmatrix U
@@ -169,103 +170,104 @@ namespace ice
     if (dim != a.rows())   // auf quadratische Matrix testen
       throw IceException(FNAME, M_NO_SQUARE);
 
-    try {
-    LU = a;
-
-    std::vector<double> vv(dim);
-    indx.resize(dim);
-
-    int dsign = 1;
-
-    for (int i = 0; i < dim; i++)
+    try
       {
-        double big = 0.0;
+        LU = a;
 
-        for (int j = 0; j < dim; j++)
+        std::vector<double> vv(dim);
+        indx.resize(dim);
+
+        int dsign = 1;
+
+        for (int i = 0; i < dim; i++)
           {
-            double temp = fabs(LU[i][j]);
+            double big = 0.0;
 
-            if (temp > big)
+            for (int j = 0; j < dim; j++)
               {
-                big = temp;
-              }
-          }
+                double temp = fabs(LU[i][j]);
 
-        if (big == 0)
-          throw IceException(FNAME, M_MATRIX_SINGULAR);
-
-        vv[i] = 1.0 / big;
-      }
-
-    for (int j = 0; j < dim; j++)   // loop over all columns
-      {
-        for (int i = 0; i < j; i++)
-          {
-            double sum = LU[i][j];
-
-            for (int k = 0; k < i; k++)
-              {
-                sum -= LU[i][k] * LU[k][j];
-              }
-
-            LU[i][j] = sum;
-          }
-
-        double big = 0.0;
-        int imax = 0;
-
-        for (int i = j; i < dim; i++)
-          {
-            double sum = LU[i][j];
-
-            for (int k = 0; k < j; k++)
-              {
-                sum -= LU[i][k] * LU[k][j];
-              }
-            LU[i][j] = sum;
-
-            double dum = vv[i] * fabs(sum);
-
-            if (dum >= big)
-              {
-                big = dum;
-                imax = i;
-              }
-          }
-
-        if (pivot)
-          {
-            if (j != imax)
-              {
-                for (int c = 0; c < LU.cols(); ++c)
+                if (temp > big)
                   {
-                    std::swap(LU[j][c], LU[imax][c]);
+                    big = temp;
                   }
-                dsign = -dsign;
-                vv[imax] = vv[j];
               }
 
-            indx[j] = imax;
+            if (big == 0)
+              throw IceException(FNAME, M_MATRIX_SINGULAR);
+
+            vv[i] = 1.0 / big;
           }
-        else
+
+        for (int j = 0; j < dim; j++)   // loop over all columns
           {
-            indx[j] = j;
-          }
-
-        if (LU[j][j] == 0.0)
-          throw IceException(FNAME, M_MATRIX_SINGULAR);
-
-        if (j < dim - 1)
-          {
-            double dum = 1.0 / LU[j][j];
-
-            for (int i = j + 1; i < dim; i++)
+            for (int i = 0; i < j; i++)
               {
-                LU[i][j] *= dum;
+                double sum = LU[i][j];
+
+                for (int k = 0; k < i; k++)
+                  {
+                    sum -= LU[i][k] * LU[k][j];
+                  }
+
+                LU[i][j] = sum;
               }
-          }
-      } // all columns
-    }
+
+            double big = 0.0;
+            int imax = 0;
+
+            for (int i = j; i < dim; i++)
+              {
+                double sum = LU[i][j];
+
+                for (int k = 0; k < j; k++)
+                  {
+                    sum -= LU[i][k] * LU[k][j];
+                  }
+                LU[i][j] = sum;
+
+                double dum = vv[i] * fabs(sum);
+
+                if (dum >= big)
+                  {
+                    big = dum;
+                    imax = i;
+                  }
+              }
+
+            if (pivot)
+              {
+                if (j != imax)
+                  {
+                    for (int c = 0; c < LU.cols(); ++c)
+                      {
+                        std::swap(LU[j][c], LU[imax][c]);
+                      }
+                    dsign = -dsign;
+                    vv[imax] = vv[j];
+                  }
+
+                indx[j] = imax;
+              }
+            else
+              {
+                indx[j] = j;
+              }
+
+            if (LU[j][j] == 0.0)
+              throw IceException(FNAME, M_MATRIX_SINGULAR);
+
+            if (j < dim - 1)
+              {
+                double dum = 1.0 / LU[j][j];
+
+                for (int i = j + 1; i < dim; i++)
+                  {
+                    LU[i][j] *= dum;
+                  }
+              }
+          } // all columns
+      }
     RETHROW;
   }
 
@@ -284,184 +286,186 @@ namespace ice
 #define FNAME "LUDecomposition"
   void LUDecomposition(const Matrix& a, Matrix& L, Matrix& U)
   {
-    try {
-      Matrix LU;
-      LUDecompositionPacked(a, LU);
+    try
+      {
+        Matrix LU;
+        LUDecompositionPacked(a, LU);
 
-      int i, j;
-      L = LU;
-      U = LU;
+        int i, j;
+        L = LU;
+        U = LU;
 
-      // entpacken
-      // U ist obere Dreiecksmatrix
-      for (i = 0; i < U.cols(); i++)
-	{
-	  for (j = i + 1; j < U.rows(); j++)
-	    {
-	      U[j][i] = 0;
-	    }
-	}
+        // entpacken
+        // U ist obere Dreiecksmatrix
+        for (i = 0; i < U.cols(); i++)
+          {
+            for (j = i + 1; j < U.rows(); j++)
+              {
+                U[j][i] = 0;
+              }
+          }
 
-      // L ist untere Dreiecksmatrix
-      for (i = 0; i < L.cols(); i++)
-	{
-	  for (j = 0; j < i; j++)
-	    {
-	      L[j][i] = 0;
-	    }
-	  L[i][i] = 1.0;
-	}
-    }
+        // L ist untere Dreiecksmatrix
+        for (i = 0; i < L.cols(); i++)
+          {
+            for (j = 0; j < i; j++)
+              {
+                L[j][i] = 0;
+              }
+            L[i][i] = 1.0;
+          }
+      }
     RETHROW;
   }
 
   void LUDecomposition(const matrix<double>& a,
-		       matrix<double>& L,
-		       matrix<double>& U)
+                       matrix<double>& L,
+                       matrix<double>& U)
   {
     matrix<double> LU;  // packed LU matrix
-    try {
-      LUDecompositionPacked(a, LU);
+    try
+      {
+        LUDecompositionPacked(a, LU);
 
-      int i, j;
-      L = LU;
-      U = LU;
+        int i, j;
+        L = LU;
+        U = LU;
 
-      // unpack
-      // U ist obere Dreiecksmatrix
-      for (i = 0; i < U.cols(); i++)
-	{
-	  for (j = i + 1; j < U.rows(); j++)
-	    {
-	      U[j][i] = 0;
-	    }
-	}
+        // unpack
+        // U ist obere Dreiecksmatrix
+        for (i = 0; i < U.cols(); i++)
+          {
+            for (j = i + 1; j < U.rows(); j++)
+              {
+                U[j][i] = 0;
+              }
+          }
 
-      // L ist untere Dreiecksmatrix
-      for (i = 0; i < L.cols(); i++)
-	{
-	  for (j = 0; j < i; j++)
-	    {
-	      L[j][i] = 0;
-	    }
-	  L[i][i] = 1.0;
-	}
-    }
+        // L ist untere Dreiecksmatrix
+        for (i = 0; i < L.cols(); i++)
+          {
+            for (j = 0; j < i; j++)
+              {
+                L[j][i] = 0;
+              }
+            L[i][i] = 1.0;
+          }
+      }
     RETHROW;
   }
 #undef FNAME
 #define FNAME "LUSolve"
-    Vector LUSolve(const Matrix& LU, const IVector& indx, const Vector& b)
-    {
-      // lösung eines linearen Gleichungssystems, nachdem die Matrix A
-      // in die gepackte LU-Matrix transformiert wurde.
-      Vector res(b);
+  Vector LUSolve(const Matrix& LU, const IVector& indx, const Vector& b)
+  {
+    // lösung eines linearen Gleichungssystems, nachdem die Matrix A
+    // in die gepackte LU-Matrix transformiert wurde.
+    Vector res(b);
 
-      int dim = LU.cols(); // Dimension merken
+    int dim = LU.cols(); // Dimension merken
 
-      if (dim != LU.rows())   // auf quadratische Matrix testen
-	throw IceException(FNAME, M_NO_SQUARE);
+    if (dim != LU.rows())   // auf quadratische Matrix testen
+      throw IceException(FNAME, M_NO_SQUARE);
 
-      if (indx.Size() != dim)   // Größe permutation korrekt
-	throw IceException(FNAME, M_WRONG_DIM);
+    if (indx.Size() != dim)   // Größe permutation korrekt
+      throw IceException(FNAME, M_WRONG_DIM);
 
-      if (b.Size() != dim)   // Größe inhomogenität korrekt
-	throw IceException(FNAME, M_WRONG_DIM);
+    if (b.Size() != dim)   // Größe inhomogenität korrekt
+      throw IceException(FNAME, M_WRONG_DIM);
 
-      int ii = -1;
+    int ii = -1;
 
-      for (int i = 0; i < dim; i++)
-	{
-	  int ip = indx[i];
-	  double sum = res[ip];
-	  res[ip] = res[i];
+    for (int i = 0; i < dim; i++)
+      {
+        int ip = indx[i];
+        double sum = res[ip];
+        res[ip] = res[i];
 
-	  if (ii >= 0)
-	    {
-	      for (int j = ii; j < i; j++)
-		{
-		  sum -= LU(i, j) * res[j];
-		}
-	    }
-	  else if (sum)
-	    {
-	      ii = i;
-	    }
+        if (ii >= 0)
+          {
+            for (int j = ii; j < i; j++)
+              {
+                sum -= LU(i, j) * res[j];
+              }
+          }
+        else if (sum)
+          {
+            ii = i;
+          }
 
-	  res[i] = sum;
-	}
+        res[i] = sum;
+      }
 
-      for (int i = dim - 1; i >= 0; i--)
-	{
-	  double sum = res[i];
+    for (int i = dim - 1; i >= 0; i--)
+      {
+        double sum = res[i];
 
-	  for (int j = i + 1; j < dim; j++)
-	    {
-	      sum -= LU(i, j) * res[j];
-	    }
+        for (int j = i + 1; j < dim; j++)
+          {
+            sum -= LU(i, j) * res[j];
+          }
 
-	  res[i] = sum / LU(i, i);
-	}
+        res[i] = sum / LU(i, i);
+      }
 
-      return res;
-    }
+    return res;
+  }
 
-    std::vector<double> LUSolve(const matrix<double>& LU,
-				const std::vector<int>& indx,
-				const std::vector<double>& b)
-    {
-      // lösung eines linearen Gleichungssystems, nachdem die Matrix A
-      // in die gepackte LU-Matrix transformiert wurde.
-      std::vector<double> res(b);
+  std::vector<double> LUSolve(const matrix<double>& LU,
+                              const std::vector<int>& indx,
+                              const std::vector<double>& b)
+  {
+    // lösung eines linearen Gleichungssystems, nachdem die Matrix A
+    // in die gepackte LU-Matrix transformiert wurde.
+    std::vector<double> res(b);
 
-      int dim = LU.cols(); // Dimension merken und auf quadratische Matrix testen
+    int dim = LU.cols(); // Dimension merken und auf quadratische Matrix testen
 
-      if (dim != LU.rows())
-	throw IceException(FNAME, M_NO_SQUARE);
+    if (dim != LU.rows())
+      throw IceException(FNAME, M_NO_SQUARE);
 
-      if ((int)indx.size() != dim)
-	throw IceException(FNAME, M_WRONG_DIM);
+    if ((int)indx.size() != dim)
+      throw IceException(FNAME, M_WRONG_DIM);
 
-      if ((int)b.size() != dim)
-	throw IceException(FNAME, M_WRONG_DIM);
+    if ((int)b.size() != dim)
+      throw IceException(FNAME, M_WRONG_DIM);
 
-      int ii = -1;
+    int ii = -1;
 
-      for (int i = 0; i < dim; i++)
-	{
-	  int ip = indx[i];
-	  double sum = res[ip];
-	  res[ip] = res[i];
+    for (int i = 0; i < dim; i++)
+      {
+        int ip = indx[i];
+        double sum = res[ip];
+        res[ip] = res[i];
 
-	  if (ii >= 0)
-	    {
-	      for (int j = ii; j < i; j++)
-		{
-		  sum -= LU[i][j] * res[j];
-		}
-	    }
-	  else if (sum)
-	    {
-	      ii = i;
-	    }
+        if (ii >= 0)
+          {
+            for (int j = ii; j < i; j++)
+              {
+                sum -= LU[i][j] * res[j];
+              }
+          }
+        else if (sum)
+          {
+            ii = i;
+          }
 
-	  res[i] = sum;
-	}
+        res[i] = sum;
+      }
 
-      for (int i = dim - 1; i >= 0; i--)
-	{
-	  double sum = res[i];
+    for (int i = dim - 1; i >= 0; i--)
+      {
+        double sum = res[i];
 
-	  for (int j = i + 1; j < dim; j++)
-	    {
-	      sum -= LU[i][j] * res[j];
-	    }
+        for (int j = i + 1; j < dim; j++)
+          {
+            sum -= LU[i][j] * res[j];
+          }
 
-	  res[i] = sum / LU[i][i];
-	}
+        res[i] = sum / LU[i][i];
+      }
 
-      return res;
-    }
+    return res;
+  }
 
 #undef FNAME
-  }
+}

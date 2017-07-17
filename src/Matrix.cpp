@@ -307,6 +307,17 @@ namespace ice
     swap(newmat);
   }
 
+  Matrix::operator matrix<double>() const
+  {
+    matrix<double> res(nRows, nColumns);
+    for (int r = 0; r < nRows; ++r)
+      for (int c = 0; c < nColumns; ++c)
+        {
+          res[r][c] = (*this)[r][c];
+        }
+    return res;
+  }
+
   void Matrix::set(double val)
   {
     for (int i = 0; i < nRows; i++)

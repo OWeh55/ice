@@ -267,7 +267,7 @@ namespace ice
     B[2][2] = V[5][min_col] / V[5][min_col];
 
     // compute A from B
-    if (!IsPositivDefinit(B))
+    if (!isPositivDefinit(B))
       throw IceException(FNAME, M_INTERN);
 
     Matrix A = CholeskyDecomposition(B);

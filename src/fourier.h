@@ -41,25 +41,25 @@ namespace ice
   // define NOFFTW3 if you do not want or can not use library fftw3
   //
   void FourierD(const double* srcre, const double* srcim,
-               int dim, int option,
-               double* dstre, double* dstim);
+                int dim, int option,
+                double* dstre, double* dstim);
 
   // Fourier transform for c++ and ice datatypes
   // (prefer to use class FourierTrafo for Fourier transform!)
   // implementation in fourier.cpp
   // vector + vector -> vector + vector
   void Fourier(const std::vector<double>& srcre, const std::vector<double>& srcim,
-              std::vector<double>& dstre, std::vector<double>& dstim,
-              int option = NORMAL);
+               std::vector<double>& dstre, std::vector<double>& dstim,
+               int option = NORMAL);
 
   // inplace  vector + vector
   void Fourier(std::vector<double>& srcre, std::vector<double>& srcim,
-              int option = NORMAL);
+               int option = NORMAL);
 
   // Vector + Vector -> Vector + Vector
   void Fourier(const Vector& re, const Vector& im,
-              int option,
-              Vector& rre, Vector& rim);
+               int option,
+               Vector& rre, Vector& rim);
 
   // inplace  Vector + Vector
   void Fourier(Vector& re, Vector& im, int option = NORMAL);
