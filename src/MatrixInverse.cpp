@@ -28,14 +28,10 @@
 #include "matrix_function.h"
 #include "numbase.h"
 
-#include "Matrix.h"
+#include "MatrixAlgebra.h"
 #include "matrixtemplate.h"
 
 #define PRECISION 1e-200
-
-#define ERR(f,m,r,ret) { Message(f,m,r); return ret; }
-
-using namespace std;
 
 namespace ice
 {
@@ -43,95 +39,9 @@ namespace ice
 #define FNAME "Inverse"
   Matrix Inverse(const Matrix& m)
   {
-    int dim = m.cols();
-
-    Matrix h(m);
-
-    if (dim != m.rows())
-      throw IceException(FNAME, M_NO_SQUARE);
-
-    double max, s, q, pivot;
-    vector<int> p_k(dim);
-
-    for (int k = 0; k < dim; k++)
-      {
-        max = 0;
-        p_k[k] = 0;
-
-        for (int i = k; i < dim; i++)
-          {
-            s = 0;
-
-            for (int j = k; j < dim; j++)
-              {
-                s = s + fabs(h[i][j]);
-              }
-
-            if (s != 0)
-              {
-                q = fabs(h[i][k]) / s;
-              }
-            else
-              {
-                q = 0;
-              }
-
-            if (q > max)
-              {
-                max = q;
-                p_k[k] = i;
-              }
-          }
-
-        if (max == 0)
-          throw IceException(FNAME, M_NO_INVERSE);
-
-        if (p_k[k] != k)
-          {
-            for (int j = 0; j < dim; j++)
-              {
-                std::swap(h[k][j], h[p_k[k]][j]);
-              }
-          }
-
-        pivot = h[k][k];
-
-        for (int j = 0; j < dim; j++)
-          {
-            if (j != k)
-              {
-                h[k][j] = (-h[k][j]) / pivot;
-
-                for (int i = 0; i < dim; i++)
-                  {
-                    if (i != k)
-                      {
-                        h[i][j] = h[i][j] + (h[i][k] * h[k][j]);
-                      }
-                  }
-              }
-          }
-
-        for (int i = 0; i < dim; i++)
-          {
-            h[i][k] = h[i][k] / pivot;
-          }
-
-        h[k][k] = 1 / pivot;
-      }
-
-    for (int k = (dim - 2); k >= 0; k--)
-      {
-        if (p_k[k] != k)
-          {
-            for (int i = 0; i < dim; i++)
-              {
-                std::swap(h[i][k], h[i][p_k[k]]);
-              }
-          }
-      }
-
-    return h;
+    matrix<double> mat(m);
+    matrix<double> inverse = Inverse(mat);
+    return Matrix(inverse);
   }
 
 #define FNAME "Inverse"
@@ -145,7 +55,7 @@ namespace ice
       throw IceException(FNAME, M_NO_SQUARE);
 
     double max, s, q, pivot;
-    vector<int> p_k(dim);
+    std::vector<int> p_k(dim);
 
     for (int k = 0; k < dim; k++)
       {
@@ -157,18 +67,12 @@ namespace ice
             s = 0;
 
             for (int j = k; j < dim; j++)
-              {
-                s = s + fabs(h[i][j]);
-              }
+              s += fabs(h[i][j]);
 
             if (s != 0)
-              {
-                q = fabs(h[i][k]) / s;
-              }
+              q = fabs(h[i][k]) / s;
             else
-              {
-                q = 0;
-              }
+              q = 0;
 
             if (q > max)
               {

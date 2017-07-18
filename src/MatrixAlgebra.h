@@ -32,6 +32,7 @@ namespace ice
   int FindPivot(const Matrix&, int i, int j);
 
   Matrix CholeskyInverse(const Matrix& m);
+  matrix<double> CholeskyInverse(const matrix<double>& mat);
 
   matrix<double> CholeskyDecomposition(const matrix<double>& m);
   Matrix CholeskyDecomposition(const Matrix& m);

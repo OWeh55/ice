@@ -99,18 +99,36 @@ int main(int argc, char* argv[])
 
   mat2 = mat2 * !mat2;
   cout << "mat2 = rand()" << endl;
-  cout << mat2 << endl;
+  cout << setw(5) << mat2 << endl;
 
   Matrix mat(mat2);
   cout << "Matrix mat(mat2)"<<endl;
-  cout << mat << endl;
+  cout << setw(5) << mat << endl;
 
   cout << "Determinant(mat2)"<<endl;
-  cout << Determinant(mat2) <<endl;
-  cout << CholeskyDeterminant(mat2) <<endl;
+  cout << setw(5) << Determinant(mat2) <<endl;
+  cout << setw(5) << CholeskyDeterminant(mat2) <<endl;
 
   cout << "Determinant(mat)"<<endl;
-  cout << Determinant(mat) <<endl;
-  cout << CholeskyDeterminant(mat) <<endl;
+  cout << setw(5) << Determinant(mat) <<endl;
+  cout << setw(5) << CholeskyDeterminant(mat) <<endl;
+
+  Matrix cimat;
+  matrix<double> cimat2;
+  cout << "CholeskyInverse(Matrix mat): " << endl;
+  cout << setw(5) << (cimat=CholeskyInverse(mat)) << endl;
+  cout << "CholeskyInverse(matrix<double> mat2): " << endl;
+  cout << setw(5) << (cimat2=CholeskyInverse(mat2)) << endl;
+
+  Matrix imat;
+  matrix<double> imat2;
+  cout << "Inverse(Matrix mat): " << endl;
+  cout << setw(5) << (imat=Inverse(mat)) << endl;
+  cout << "Inverse(matrix<double> mat2): " << endl;
+  cout << setw(5) << (imat2=Inverse(mat2)) << endl;
+
+  cout << "CholeskyInverse - Inverse" << endl;
+  cout << setw(5) << (cimat-imat) <<endl;
+  cout << setw(5) << (cimat2-imat2) <<endl;
   return OK;
 }
