@@ -5,11 +5,11 @@ int main(int argc, char* argv[])
   matrix<double> mat1(5, 5, 1);
   matrix<double> mat2(5, 5, 1);
   matrix<double> mat3;
-  
+
   for (int i = 0; i < 5; ++i)
     for (int j = 0; j < 5; ++j)
       mat2[i][j] = i - j;
-  
+
   // unary operators
   cout << "mat1:" << endl;
   cout /*<< setw(3)*/ << mat1 << endl;
@@ -93,42 +93,56 @@ int main(int argc, char* argv[])
   cout << "mi = (matrix<int>)md;" << endl;
   cout << setw(5) << mi << endl;
 
-  for (int r=0;r<mat2.rows();r++)
-    for (int c=0;c<mat2.cols();c++)
-      mat2[r][c]=(drand48()-0.5)*10;
+  do
+    {
+      for (int r = 0; r < mat1.rows(); r++)
+        for (int c = 0; c < mat1.cols(); c++)
+          mat1[r][c] = (drand48() - 0.5) * 10;
+    }
+  while (isPositivDefinit(mat1));
 
-  mat2 = mat2 * !mat2;
-  cout << "mat2 = rand()" << endl;
+  mat2 = mat1 * !mat1;
+  cout << "mat1 = rand()" << endl;
+  cout << setw(5) << mat1 << endl;
+
+  cout << "mat2 = mat1*!mat1" << endl;
   cout << setw(5) << mat2 << endl;
 
+  cout << boolalpha << "mat1 is positiv definit: " << isPositivDefinit(mat1) << endl;
+  cout << "mat2 is positiv definit: " << isPositivDefinit(mat2) << endl;
+
   Matrix mat(mat2);
-  cout << "Matrix mat(mat2)"<<endl;
+  cout << "Matrix mat(mat2)" << endl;
   cout << setw(5) << mat << endl;
+  cout << "Matrix mat is positiv definit: " << isPositivDefinit(mat) << endl;
 
-  cout << "Determinant(mat2)"<<endl;
-  cout << setw(5) << Determinant(mat2) <<endl;
-  cout << setw(5) << CholeskyDeterminant(mat2) <<endl;
+  cout << "Determinant(mat1)" << endl;
+  cout << setw(5) << Determinant(mat1) << endl;
 
-  cout << "Determinant(mat)"<<endl;
-  cout << setw(5) << Determinant(mat) <<endl;
-  cout << setw(5) << CholeskyDeterminant(mat) <<endl;
+  cout << "Determinant(mat2)" << endl;
+  cout << setw(5) << Determinant(mat2) << endl;
+  cout << setw(5) << CholeskyDeterminant(mat2) << endl;
+
+  cout << "Determinant(mat)" << endl;
+  cout << setw(5) << Determinant(mat) << endl;
+  cout << setw(5) << CholeskyDeterminant(mat) << endl;
 
   Matrix cimat;
   matrix<double> cimat2;
   cout << "CholeskyInverse(Matrix mat): " << endl;
-  cout << setw(5) << (cimat=CholeskyInverse(mat)) << endl;
+  cout << setw(5) << (cimat = CholeskyInverse(mat)) << endl;
   cout << "CholeskyInverse(matrix<double> mat2): " << endl;
-  cout << setw(5) << (cimat2=CholeskyInverse(mat2)) << endl;
+  cout << setw(5) << (cimat2 = CholeskyInverse(mat2)) << endl;
 
   Matrix imat;
   matrix<double> imat2;
   cout << "Inverse(Matrix mat): " << endl;
-  cout << setw(5) << (imat=Inverse(mat)) << endl;
+  cout << setw(5) << (imat = Inverse(mat)) << endl;
   cout << "Inverse(matrix<double> mat2): " << endl;
-  cout << setw(5) << (imat2=Inverse(mat2)) << endl;
+  cout << setw(5) << (imat2 = Inverse(mat2)) << endl;
 
   cout << "CholeskyInverse - Inverse" << endl;
-  cout << setw(5) << (cimat-imat) <<endl;
-  cout << setw(5) << (cimat2-imat2) <<endl;
+  cout << setw(5) << (cimat - imat) << endl;
+  cout << setw(5) << (cimat2 - imat2) << endl;
   return OK;
 }

@@ -27,33 +27,32 @@
 
 namespace ice
 {
-  Vector SolveLinEqu(const Matrix&, const Vector&);
-
-  int FindPivot(const Matrix&, int i, int j);
-
-  Matrix CholeskyInverse(const Matrix& m);
-  matrix<double> CholeskyInverse(const matrix<double>& mat);
-
   matrix<double> CholeskyDecomposition(const matrix<double>& m);
   Matrix CholeskyDecomposition(const Matrix& m);
 
-  bool   isPositivDefinit(const Matrix& m);
-  bool   isPositivDefinit(const matrix<double>& m);
+  matrix<double> CholeskyInverse(const matrix<double>& mat);
+  Matrix CholeskyInverse(const Matrix& m);
+
+  bool   isPositiveDefinite(const matrix<double>& m);
+  bool   isPositiveDefinite(const Matrix& m);
 
   bool   hasInverse(const matrix<double>& m);
   bool   hasInverse(const Matrix& m);
 
-  double Determinant(const Matrix& m);
   double Determinant(const matrix<double>& m);
+  double Determinant(const Matrix& m);
 
   double CholeskyDeterminant(const matrix<double>& m);
   double CholeskyDeterminant(const Matrix& m);
 
-  Matrix Inverse(const Matrix& m);
+
   matrix<double> Inverse(const matrix<double>& m);
+  Matrix Inverse(const Matrix& m);
 
   // solve Ax = b
   std::vector<double> solveLinearEquation(const matrix<double>& A,
                                           const std::vector<double>& b);
+  Vector SolveLinEqu(const Matrix&, const Vector&);
+
 } // namespace ice
 #endif

@@ -183,18 +183,17 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "Matrix::IsPositivDefinit()"
-  bool IsPositivDefinit(const Matrix& mat)
+#define FNAME "Matrix::isPositiveDefinite()"
+  bool isPositiveDefinite(const matrix<double>& mat)
   {
     int dimension = mat.cols();
-
+    
     if (dimension != mat.rows())
       throw IceException(FNAME, M_WRONG_MATRIX);
+    
+    matrix<double> hilf2(mat);
 
-    Matrix hilf2(mat);
-
-    Matrix h(dimension, dimension);
-    h.set(0);
+    vector<double> h(dimension);
 
     double sum;
 
@@ -216,17 +215,24 @@ namespace ice
                     return false;
                   }
 
-                h[i][i] = sqrt(sum);
+                h[i] = sqrt(sum);
               }
             else
               {
-                hilf2[j][i] = sum / h[i][i];
+                hilf2[j][i] = sum / h[i];
               }
           }
       }
 
     return true;
   }
+
+  bool isPositiveDefinite(const Matrix& mat)
+  {
+    matrix<double> m(mat);
+    return isPositiveDefinite(m);
+  }
+
 #undef FNAME
 
   bool hasInverse(const Matrix& mat)
