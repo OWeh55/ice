@@ -1,22 +1,21 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 1992..2016 FSU Jena, Digital Image Processing Group
+ * Contact: ice@uni-jena.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "macro.h"
@@ -37,16 +36,16 @@ namespace ice
 
   int Mouse(const Image& img, int& x, int& y)
   {
-    // check if the parameters are valid
-    if (!IsImg(img))
-      throw IceException(FNAME, M_WRONG_IMAGE);
+    try
+      {
+        Visual p;
+        p = getVisual(img);
+        if (p == nullptr)
+          throw IceException(FNAME, M_NOT_VIS);
 
-    Visual p;
-    RETURN_ERROR_IF_FAILED(p = getVisual(img));
-    if (p == NULL)
-      throw IceException(FNAME, M_NOT_VIS);
-
-    return Mouse(*p, x, y);
+        return Mouse(*p, x, y);
+      }
+    RETHROW;
   }
 
   int Mouse(const Image& img, IPoint& p)

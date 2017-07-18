@@ -619,26 +619,25 @@ namespace ice
     cout << "IT ";
     cout.flush();
 #endif
-    std::list<ImageWindow*> currentWindowList(WindowList);
-    WindowList.clear();
     // do something only if the refresh is enabled
     if (RefreshEnabled)
       {
-        // send an update message to all image windows
-        //    wxCommandEvent Event(REGULAR_UPDATE);
-        for (auto it = currentWindowList.begin();
-             it != currentWindowList.end();
+        for (auto it = WindowList.begin();
+             it != WindowList.end();
              it++)
           {
-            if (!(*it)->RegularUpdate())
+            if (*it != nullptr)
               {
-                (*it) -> Destroy();
+                if (!(*it)->RegularUpdate())
+                  {
+                    (*it) -> Destroy();
+                    *it = nullptr;
+                  }
               }
-            else
-              WindowList.push_back(*it);
           }
       }
-    // _restart_ only, time is already set
+    WindowList.remove(nullptr);
+    // we need to _restart_ only, time is already set
     RefreshTimer.Start(-1, true);
   }
 
