@@ -1210,12 +1210,12 @@ namespace ice
 
   ostream& operator<<(ostream& os, const Matrix& m)
   {
-    int i;
+    std::streamsize width = os.width(0);
     os << "<" << endl ;
 
-    for (i = 0; i < m.nRows; i++)
+    for (int i = 0; i < m.nRows; i++)
       {
-        os << " " << *m.data[i];
+        os << " " << std::setw(width) << *m.data[i];
 
         if (i < m.nRows - 1)
           {

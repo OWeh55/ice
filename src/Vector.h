@@ -752,7 +752,7 @@ namespace ice
               os << std::setw(width) << v.data[i] << FILE_SEP ;
             }
 
-          os << v.data[v.dim - 1];
+          os << std::setw(width) << v.data[v.dim - 1];
         }
 
       os << ">";
