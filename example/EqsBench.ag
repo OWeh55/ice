@@ -1,0 +1,182 @@
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Test and benchmark of matrices and equation systems
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ % para: dir, optional, string, dir, Verzeichnis mit Bildern, "."
+ %
+ opt: d, dimension, int, dim, Dimension of matrices, 5
+
+ opt: s, seed, int, seed, Seed value for drand48, 0
+ opt2:   -s 0 uses time for seed
+ opt: c, check, void, check, Test mode, false
+ opt: b, benchmark, void, bench, Benchmark mode, false
+ opt2: if neither test mode nor benchmark mode is selected,
+ opt2: both are executed
+ opt: t, times, int, times, Number of repetitions, 100000
+ opt: h, help, usage, help, Hilfe
+AppGen*/
+
+typedef matrix<double> dMatrix;
+//typedef Matrix dMatrix;
+
+typedef vector<double> dVector;
+
+dMatrix mkNPM(int dim)
+{
+  dMatrix matrix(dim, dim);
+  do
+    {
+      for (int r = 0; r < dim; r++)
+        for (int c = 0; c < dim; c++)
+          matrix[r][c] = (drand48() - 0.5);
+    }
+  while (isPositiveDefinite(matrix));
+  return matrix;
+}
+
+dMatrix mkPM(int dim)
+{
+  dMatrix matrix(dim, dim);
+  do
+    {
+      for (int r = 0; r < dim; r++)
+        for (int c = 0; c < dim; c++)
+          matrix[r][c] = (drand48() - 0.5);
+    }
+  while (!isPositiveDefinite(matrix));
+  return matrix;
+}
+
+void printTime(const string& p, double ta)
+{
+  cout << p << ": ";
+  if (ta >= 0.1)
+    cout << ta << " s" << endl;
+  else if (ta >= 0.0001)
+    cout << ta * 1000 << " ms" << endl;
+  else
+    cout << ta * 1e6 << " us" << endl;
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  if (!(bench || check))
+    bench = check = true;
+
+  if (seed == 0)
+    srand48(time(nullptr));
+  else
+    srand48(seed);
+
+  dMatrix matrix1 = mkNPM(dim);
+  //  dMatrix matrix2 = mkPM(dim);
+  dMatrix matrix2 = matrix1 * !matrix1;
+
+  if (check)
+    {
+      cout << "matrix1 = rand()" << endl;
+      cout << setw(5) << matrix1 << endl;
+
+      cout << "matrix2 = matrix1 * !matrix1" << endl;
+      cout << setw(5) << matrix2 << endl;
+    }
+
+  if (check)
+    {
+      cout << boolalpha;
+      cout << "matrix1 is positiv definit: " << isPositiveDefinite(matrix1) << endl;
+      cout << "matrix2 is positiv definit: " << isPositiveDefinite(matrix2) << endl;
+    }
+
+  if (bench)
+    {
+      volatile bool pd;
+      double ta = TimeD();
+      for (int i = 0; i < times; i++)
+        {
+          pd = isPositiveDefinite(matrix1);
+        }
+      printTime("isPositiveDefinite (false)", (TimeD() - ta) / times);
+      ta = TimeD();
+      for (int i = 0; i < times; i++)
+        {
+          pd = isPositiveDefinite(matrix2);
+        }
+      printTime("isPositiveDefinite (true)", (TimeD() - ta) / times);
+    }
+
+  if (check)
+    {
+      cout << "Determinant(matrix1)" << endl;
+      cout << setw(5) << Determinant(matrix1) << endl;
+
+      cout << "Determinant(matrix2)" << endl;
+      cout << setw(5) << Determinant(matrix2) << endl;
+      cout << setw(5) << CholeskyDeterminant(matrix2) << endl;
+    }
+  if (bench)
+    {
+      volatile double det;
+      double ta = TimeD();
+      for (int i = 0; i < times; i++)
+        det = Determinant(matrix2);
+      printTime("Determinant", (TimeD() - ta) / times);
+      ta = TimeD();
+      for (int i = 0; i < times; i++)
+        det = CholeskyDeterminant(matrix2);
+      printTime("CholeskyDeterminant", (TimeD() - ta) / times);
+    }
+
+  if (check)
+    {
+      dMatrix imatrix2;
+      cout << "Inverse(matrix<double> matrix2): " << endl;
+      cout << setw(5) << (imatrix2 = Inverse(matrix2)) << endl;
+
+      dMatrix cimatrix2;
+      cout << "CholeskyInverse(matrix2): " << endl;
+      cout << setw(5) << (cimatrix2 = CholeskyInverse(matrix2)) << endl;
+
+      cout << "CholeskyInverse - Inverse" << endl;
+      cout << setw(5) << (cimatrix2 - imatrix2) << endl;
+    }
+
+  if (bench)
+    {
+      dMatrix inv;
+      double ta = TimeD();
+      for (int i = 0; i < times; i++)
+        inv = Inverse(matrix2);
+      printTime("Inverse", (TimeD() - ta) / times);
+
+      ta = TimeD();
+      for (int i = 0; i < times; i++)
+        inv = CholeskyInverse(matrix2);
+      printTime("CholeskyInverse", (TimeD() - ta) / times);
+    }
+
+  if (bench)
+    {
+      dVector iv(dim);
+      for (int i=0;i<dim;i++)
+	iv[i]=drand48();
+      dVector x(dim);
+      double ta = TimeD();
+#if 0
+      for (int i = 0; i < times; i++)
+	x = solveLinearEquation(matrix1,iv);
+      printTime("solveLinearEquation", (TimeD() - ta) / times);
+      ta = TimeD();
+#endif
+      for (int i = 0; i < times; i++)
+	x = solveLinearEquation(matrix2,iv);
+      printTime("solveLinearEquation", (TimeD() - ta) / times);
+    }
+  return OK;
+}
