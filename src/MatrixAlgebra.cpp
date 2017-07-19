@@ -44,7 +44,14 @@ namespace ice
   
     if (mat.rows() != dimension)
       throw IceException(FNAME, M_NO_SQUARE);
-  
+
+    for (int i = 0; i < dimension; i++)
+      for (int j = 0; j < i; j++)
+	{
+	  if (fabs(mat[i][j]-mat[j][i])>1e-14) // symmetric?
+	    return false;
+	}
+
     for (int i = 0; i < dimension; i++)
       for (int j = 0; j <= i; j++)
 	{

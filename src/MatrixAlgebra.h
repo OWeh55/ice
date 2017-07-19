@@ -29,7 +29,7 @@ namespace ice
 {
   /* special Cholesky decomposition. 
      Works in situ m -> m.
-     if m is positive definite:
+     if m is symmetric and positive definite:
          return true and m is Cholesky decomposition
      else
          return false and m is indetermined
