@@ -142,7 +142,7 @@ namespace ice
               sum[i][j] = sum[j][i];
             }
 
-        para = SolveLinEqu(Matrix(sum), Vector(gsum));
+        para = SolveLinearEquation(Matrix(sum), Vector(gsum));
 
         // calculate variance
         var = gsquare;

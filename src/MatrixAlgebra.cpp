@@ -37,15 +37,46 @@ using std::vector;
 
 namespace ice
 {
-
-#define FNAME "Matrix::CholeskyDecomposition"
-  Matrix CholeskyDecomposition(const Matrix& mat)
+#define FNAME "Cholesky"
+  bool Cholesky(matrix<double>& mat)
   {
     int dimension = mat.cols();
-
+  
     if (mat.rows() != dimension)
       throw IceException(FNAME, M_NO_SQUARE);
+  
+    for (int i = 0; i < dimension; i++)
+      for (int j = 0; j <= i; j++)
+	{
+	  double sum = mat[i][j];
+  
+	  for (int k = 0; k < j; k++)
+              sum -= mat[i][k] * mat[j][k];
+	  
+	  if (j < i)
+	    mat[i][j] = sum / mat[j][j];
+	  else
+            {
+              if (sum <= 0.0)
+                {
+                  return false;
+                }
+              mat[i][i] = sqrt(sum);
+            }
+        }
+    
+    for (int i = 0; i < dimension; i++)
+      for (int j = (i + 1); j < dimension; j++)
+        {
+	  mat[i][j]=0.0;
+        }
 
+    return true;
+  }
+#undef FNAME
+#define FNAME "CholeskyDecomposition"
+  Matrix CholeskyDecomposition(const Matrix& mat)
+  {
     matrix<double> m(mat);
     m = CholeskyDecomposition(m);
     return Matrix(m);
@@ -53,50 +84,14 @@ namespace ice
 
   matrix<double> CholeskyDecomposition(const matrix<double>& mat)
   {
-    int dimension = mat.cols();
-
-    if (mat.rows() != dimension)
-      throw IceException(FNAME, M_NO_SQUARE);
-
-    matrix<double> res(dimension, dimension);
-    res.set(0.0);
-
-    matrix<double> hilf2(mat);
-
-    double sum;
-
-    for (int i = 0; i < dimension; i++)
-      for (int j = i; j < dimension; j++)
-        {
-          sum = hilf2[i][j];
-
-          for (int k = i - 1; k >= 0; k--)
-            {
-              sum -= hilf2[i][k] * hilf2[j][k];
-            }
-
-          if (i == j)
-            {
-              if (sum <= 0.0)
-                {
-                  throw IceException(FNAME, M_WRONG_MATRIX);
-                }
-
-              res[i][i] = sqrt(sum);
-            }
-          else
-            {
-              hilf2[j][i] = sum / res[i][i];
-            }
-        }
-
-    for (int i = 0; i < dimension; i++)
-      for (int j = (i + 1); j < dimension; j++)
-        {
-          res[j][i] = hilf2[j][i];
-        }
-
-    return res;
+    try {
+      matrix<double> result(mat);
+      if (Cholesky(result))
+	return result;
+      else
+	throw IceException(FNAME, M_WRONG_MATRIX);
+    }
+    RETHROW;
   }
 #undef FNAME
 
@@ -232,39 +227,7 @@ namespace ice
     matrix<double> m(mat);
     return isPositiveDefinite(m);
   }
-
 #undef FNAME
-
-  bool hasInverse(const Matrix& mat)
-  {
-    int dim = mat.cols();
-
-    if (dim != mat.rows())
-      {
-        return false;
-      }
-
-    double* Mat = new double[dim * dim];
-
-    for (int j = 0; j < dim; j++)
-      for (int i = 0; i < dim; i++)
-        {
-          Mat[j * dim + i] = mat[j][i];
-        }
-
-    try
-      {
-        InvertMatrix(Mat, dim, Mat);
-      }
-    catch (IceException& ex)
-      {
-        delete [] Mat;
-        return false;
-      }
-
-    delete [] Mat;
-    return true;
-  }
 
 #define FNAME "FindPivot"
   int FindPivot(const Matrix& m, int i, int j1)
@@ -425,7 +388,7 @@ namespace ice
 #undef FNAME
 
 #define FNAME "solveLinEqu"
-  int solveLinEqu1(const Matrix& m, const Vector& v, Vector& res)
+  int solveLinearEquation1(const Matrix& m, const Vector& v, Vector& res)
   {
     // Matrix is square, v has correct size
     try
@@ -461,7 +424,7 @@ namespace ice
     RETHROW;
   }
 
-  Vector SolveLinEqu(const Matrix& m, const Vector& v)
+  Vector SolveLinearEquation(const Matrix& m, const Vector& v)
   {
     try
       {
@@ -475,11 +438,11 @@ namespace ice
           {
             Matrix a = m.MulTrans(m); // m^T * m
             Vector i = m.MulTrans(v); // m^T * v
-            solveLinEqu1(a, i, res);
+            solveLinearEquation1(a, i, res);
           }
         else
           {
-            solveLinEqu1(m, v, res);
+            solveLinearEquation1(m, v, res);
           }
 
         return res;

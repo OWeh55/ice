@@ -37,7 +37,7 @@ namespace ice
 
 #define LU(i,j) LU.at(i).at(j)
   //#define LU(i,j) LU[i][j]
-
+  
   void LUDecompositionPacked(const Matrix& a,
                              Matrix& LU,
                              IVector& indx,
@@ -179,7 +179,7 @@ namespace ice
 
         int dsign = 1;
 
-        for (int i = 0; i < dim; i++)
+        for (int i = 0; i < dim; i++)   // loop over all rows
           {
             double big = 0.0;
 

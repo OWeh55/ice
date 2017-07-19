@@ -27,6 +27,20 @@
 
 namespace ice
 {
+  /* special Cholesky decomposition. 
+     Works in situ m -> m.
+     if m is positive definite:
+         return true and m is Cholesky decomposition
+     else
+         return false and m is indetermined
+  */
+  bool Cholesky(matrix<double>& m);
+
+  /*
+   * Cholesky decomposition 
+   * return Cholesky decomposition of m
+   * if m is not positive definite throws
+   */
   matrix<double> CholeskyDecomposition(const matrix<double>& m);
   Matrix CholeskyDecomposition(const Matrix& m);
 
@@ -36,15 +50,11 @@ namespace ice
   bool   isPositiveDefinite(const matrix<double>& m);
   bool   isPositiveDefinite(const Matrix& m);
 
-  bool   hasInverse(const matrix<double>& m);
-  bool   hasInverse(const Matrix& m);
-
   double Determinant(const matrix<double>& m);
   double Determinant(const Matrix& m);
 
   double CholeskyDeterminant(const matrix<double>& m);
   double CholeskyDeterminant(const Matrix& m);
-
 
   matrix<double> Inverse(const matrix<double>& m);
   Matrix Inverse(const Matrix& m);
@@ -52,7 +62,7 @@ namespace ice
   // solve Ax = b
   std::vector<double> solveLinearEquation(const matrix<double>& A,
                                           const std::vector<double>& b);
-  Vector SolveLinEqu(const Matrix&, const Vector&);
+  Vector SolveLinearEquation(const Matrix&, const Vector&);
 
 } // namespace ice
 #endif

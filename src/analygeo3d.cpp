@@ -53,7 +53,7 @@ namespace ice
     Vector p1v(l.Pos());
     Vector dv(l.DP());
     Matrix m = MakeMatrix(dv, 3, 1);
-    Vector res = SolveLinEqu(m, pv - p1v);
+    Vector res = SolveLinearEquation(m, pv - p1v);
     par = res[0];
     return ((res[0] * dv + p1v) - pv).Length();
   }
@@ -80,7 +80,7 @@ namespace ice
 
     try
       {
-        res = SolveLinEqu(m, p2v - p1v);
+        res = SolveLinearEquation(m, p2v - p1v);
       }
     catch (IceException& ex)
       {
@@ -102,7 +102,7 @@ namespace ice
 
     try
       {
-        res = SolveLinEqu(m, p2v - p1v);
+        res = SolveLinearEquation(m, p2v - p1v);
       }
     catch (IceException& ex)
       {
