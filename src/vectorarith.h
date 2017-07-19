@@ -120,6 +120,23 @@ namespace ice
   }
 
   template<typename T>
+  double length2(const std::vector<T>& v)
+  {
+    double l = 0;
+    for (int i = 0; i < v.size(); ++i)
+      {
+        l += v[i] * v[i];
+      }
+    return l;
+  }
+
+  template<typename T>
+  double length(const std::vector<T>& v)
+  {
+    return sqrt(length2(v));
+  }
+
+  template<typename T>
   std::vector<T> normalized(const std::vector<T>& v1)
   {
     std::vector<T> res(v1);
