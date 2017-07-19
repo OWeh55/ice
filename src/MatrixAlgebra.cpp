@@ -101,8 +101,8 @@ namespace ice
     try
       {
         matrix<double> m(mat);
-        matrix<double> res = CholeskyInverse(m);
-        return Matrix(res);
+        m = CholeskyInverse(m);
+        return Matrix(m);
       }
     RETHROW;
   }
@@ -111,16 +111,12 @@ namespace ice
   {
     try
       {
-        int dimension = mat.cols();
-
-        if (dimension != mat.rows())
-          throw IceException(FNAME, M_NO_SQUARE);
-
         matrix<double> l = CholeskyDecomposition(mat);
 
+	int dimension=l.rows();
         matrix<double> h(dimension, dimension);
         matrix<double> lt(dimension, dimension);
-
+	
         for (int k = 0; k < dimension; k++)
           {
             for (int i = 0; i < dimension; i++)
@@ -139,7 +135,6 @@ namespace ice
           }
 
         matrix<double> inverse(dimension, dimension);
-
 
         for (int n = 0; n < dimension; n++)
           {
