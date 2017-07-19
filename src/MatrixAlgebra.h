@@ -27,7 +27,7 @@
 
 namespace ice
 {
-  /* special Cholesky decomposition. 
+  /* special Cholesky decomposition.
      Works in situ m -> m.
      if m is symmetric and positive definite:
          return true and m is Cholesky decomposition
@@ -37,7 +37,7 @@ namespace ice
   bool Cholesky(matrix<double>& m);
 
   /*
-   * Cholesky decomposition 
+   * Cholesky decomposition
    * return Cholesky decomposition of m
    * if m is not positive definite throws
    */

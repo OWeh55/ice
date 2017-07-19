@@ -16,6 +16,8 @@
  opt: b, benchmark, void, bench, Benchmark mode, false
  opt2: if neither test mode nor benchmark mode is selected,
  opt2: both are executed
+ opt: e, epsilon, Double, epsilon, Allowed error for double values, 1e-14
+ opt: v, verbose, Void, verbose, Output matrices, false
  opt: t, times, int, times, Number of repetitions, 100000
  opt: h, help, usage, help, Hilfe
 AppGen*/
@@ -38,19 +40,6 @@ dMatrix mkNPM(int dim)
   return matrix;
 }
 
-dMatrix mkPM(int dim)
-{
-  dMatrix matrix(dim, dim);
-  do
-    {
-      for (int r = 0; r < dim; r++)
-        for (int c = 0; c < dim; c++)
-          matrix[r][c] = (drand48() - 0.5);
-    }
-  while (!isPositiveDefinite(matrix));
-  return matrix;
-}
-
 void printTime(const string& p, double ta)
 {
   cout << p << ": ";
@@ -60,6 +49,49 @@ void printTime(const string& p, double ta)
     cout << ta * 1000 << " ms" << endl;
   else
     cout << ta * 1e6 << " us" << endl;
+}
+
+void printMatrix(const string& p, const dMatrix& mat, bool verb = verbose)
+{
+  if (verb)
+    {
+      cout << p << endl;
+      cout << fixed;
+      cout << setw(5) << mat << endl;
+      cout << scientific;
+    }
+}
+
+bool equal(double d1, double d2, double eps = epsilon)
+{
+  return fabs(d1 - d2) < eps;
+}
+
+double diffUnity(const matrix<double>& m)
+{
+  double maxdiff = 0.0;
+  for (int r = 0; r < m.rows(); r++)
+    for (int c = 0; c < m.cols(); c++)
+      {
+        double v = (r == c) ? 1.0 : 0.0;
+        double diff = fabs(m[r][c] - v);
+        if (diff > maxdiff)
+          maxdiff = diff;
+      }
+  return maxdiff;
+}
+
+double diffZero(const matrix<double>& m)
+{
+  double maxdiff = 0.0;
+  for (int r = 0; r < m.rows(); r++)
+    for (int c = 0; c < m.cols(); c++)
+      {
+        double diff = fabs(m[r][c]);
+        if (diff > maxdiff)
+          maxdiff = diff;
+      }
+  return maxdiff;
 }
 
 /*AppGen:Main*/
@@ -74,24 +106,31 @@ int main(int argc, char* argv[])
   else
     srand48(seed);
 
+  dMatrix unity(dim, dim, 1);
   dMatrix matrix1 = mkNPM(dim);
-  //  dMatrix matrix2 = mkPM(dim);
   dMatrix matrix2 = matrix1 * !matrix1;
+
+  cout << boolalpha;
 
   if (check)
     {
-      cout << "matrix1 = rand()" << endl;
-      cout << setw(5) << matrix1 << endl;
-
-      cout << "matrix2 = matrix1 * !matrix1" << endl;
-      cout << setw(5) << matrix2 << endl;
+      printMatrix("matrix1", matrix1);
+      printMatrix("matrix2", matrix2);
     }
 
   if (check)
     {
-      cout << boolalpha;
-      cout << "matrix1 is positiv definit: " << isPositiveDefinite(matrix1) << endl;
-      cout << "matrix2 is positiv definit: " << isPositiveDefinite(matrix2) << endl;
+      bool pd = isPositiveDefinite(matrix1);
+      if (pd)
+        cout << "Error: matrix1 isPositiveDefinite false positive" << endl;
+      pd = isPositiveDefinite(matrix2);
+      if (!pd)
+        cout << "Error: matrix2 isPositiveDefinite false negative" << endl;
+      if (verbose)
+        {
+          cout << "matrix1 is positiv definit: " << isPositiveDefinite(matrix1) << endl;
+          cout << "matrix2 is positiv definit: " << isPositiveDefinite(matrix2) << endl;
+        }
     }
 
   if (bench)
@@ -113,12 +152,25 @@ int main(int argc, char* argv[])
 
   if (check)
     {
-      cout << "Determinant(matrix1)" << endl;
-      cout << setw(5) << Determinant(matrix1) << endl;
-
-      cout << "Determinant(matrix2)" << endl;
-      cout << setw(5) << Determinant(matrix2) << endl;
-      cout << setw(5) << CholeskyDeterminant(matrix2) << endl;
+      double det1 = Determinant(matrix1);
+      if (verbose)
+        {
+          cout << "Determinant(matrix1)" << endl;
+          cout << setw(5) << det1 << endl;
+        }
+      double det2 = Determinant(matrix2);
+      double det2c = CholeskyDeterminant(matrix2);
+      if (verbose)
+        {
+          cout << "Determinant(matrix2)" << endl;
+          cout << setw(5) << det2 << endl;
+          cout << setw(5) << det2c << endl;
+        }
+      if (!equal(det2, det2c))
+        {
+          cout << "Determinant(matrix2) and CholeskyDeterminant(matrix2) differ by " << fabs(det2 - det2c) << endl;
+          cout << det2 << " <-> " << det2c << endl;
+        }
     }
   if (bench)
     {
@@ -135,16 +187,31 @@ int main(int argc, char* argv[])
 
   if (check)
     {
-      dMatrix imatrix2;
-      cout << "Inverse(matrix<double> matrix2): " << endl;
-      cout << setw(5) << (imatrix2 = Inverse(matrix2)) << endl;
+      dMatrix imatrix2 = Inverse(matrix2);
+      if (verbose)
+        printMatrix("Inverse(matrix2)", imatrix2);
+      dMatrix m = imatrix2 * matrix2;
+      double diff = diffUnity(m);
+      if (diff > epsilon)
+        {
+          cout << "Inverse(matrix2) * matrix2 differs from unity by " << diff << endl;
+          if (dim < 8)
+            printMatrix("diff:", m - unity, true);
+        }
 
-      dMatrix cimatrix2;
-      cout << "CholeskyInverse(matrix2): " << endl;
-      cout << setw(5) << (cimatrix2 = CholeskyInverse(matrix2)) << endl;
-
-      cout << "CholeskyInverse - Inverse" << endl;
-      cout << setw(5) << (cimatrix2 - imatrix2) << endl;
+      dMatrix cimatrix2 = CholeskyInverse(matrix2);
+      if (verbose)
+        printMatrix("CholeskyInverse(matrix2)", cimatrix2);
+      m = cimatrix2 * matrix2;
+      diff = diffUnity(m);
+      if (diff > epsilon)
+        {
+          cout << "CholeskyInverse(matrix2) * matrix2 differs from unity by " << diff << endl;
+          if (dim < 8)
+            printMatrix("diff:", m - unity, true);
+        }
+      if (verbose)
+        printMatrix("CholeskyInverse - Inverse", (cimatrix2 - imatrix2));
     }
 
   if (bench)
@@ -159,6 +226,28 @@ int main(int argc, char* argv[])
       for (int i = 0; i < times; i++)
         inv = CholeskyInverse(matrix2);
       printTime("CholeskyInverse", (TimeD() - ta) / times);
+    }
+
+  if (check)
+    {
+      dVector iv(dim);
+      for (int i = 0; i < dim; i++)
+        iv[i] = drand48();
+      dVector x = solveLinearEquation(matrix1, iv);
+      dVector diff = iv - matrix1 * x;
+      double error = length(diff);
+      if (error > epsilon)
+        {
+          cout << "solveLinearEquation: b and A * x differ by " << error << endl;
+        }
+
+      x = solveLinearEquation(matrix2, iv);
+      diff = iv - matrix2 * x;
+      error = length(diff);
+      if (error > epsilon)
+        {
+          cout << "solveLinearEquation: b and A * x differ by " << error << endl;
+        }
     }
 
   if (bench)

@@ -41,28 +41,28 @@ namespace ice
   bool Cholesky(matrix<double>& mat)
   {
     int dimension = mat.cols();
-  
+
     if (mat.rows() != dimension)
       throw IceException(FNAME, M_NO_SQUARE);
 
     for (int i = 0; i < dimension; i++)
       for (int j = 0; j < i; j++)
-	{
-	  if (fabs(mat[i][j]-mat[j][i])>1e-14) // symmetric?
-	    return false;
-	}
+        {
+          if (fabs(mat[i][j] - mat[j][i]) > 1e-14) // symmetric?
+            return false;
+        }
 
     for (int i = 0; i < dimension; i++)
       for (int j = 0; j <= i; j++)
-	{
-	  double sum = mat[i][j];
-  
-	  for (int k = 0; k < j; k++)
-              sum -= mat[i][k] * mat[j][k];
-	  
-	  if (j < i)
-	    mat[i][j] = sum / mat[j][j];
-	  else
+        {
+          double sum = mat[i][j];
+
+          for (int k = 0; k < j; k++)
+            sum -= mat[i][k] * mat[j][k];
+
+          if (j < i)
+            mat[i][j] = sum / mat[j][j];
+          else
             {
               if (sum <= 0.0)
                 {
@@ -71,11 +71,11 @@ namespace ice
               mat[i][i] = sqrt(sum);
             }
         }
-    
+
     for (int i = 0; i < dimension; i++)
       for (int j = (i + 1); j < dimension; j++)
         {
-	  mat[i][j]=0.0;
+          mat[i][j] = 0.0;
         }
 
     return true;
@@ -91,13 +91,14 @@ namespace ice
 
   matrix<double> CholeskyDecomposition(const matrix<double>& mat)
   {
-    try {
-      matrix<double> result(mat);
-      if (Cholesky(result))
-	return result;
-      else
-	throw IceException(FNAME, M_WRONG_MATRIX);
-    }
+    try
+      {
+        matrix<double> result(mat);
+        if (Cholesky(result))
+          return result;
+        else
+          throw IceException(FNAME, M_WRONG_MATRIX);
+      }
     RETHROW;
   }
 #undef FNAME
@@ -120,10 +121,10 @@ namespace ice
       {
         matrix<double> l = CholeskyDecomposition(mat);
 
-	int dimension=l.rows();
+        int dimension = l.rows();
         matrix<double> h(dimension, dimension);
         matrix<double> lt(dimension, dimension);
-	
+
         for (int k = 0; k < dimension; k++)
           {
             for (int i = 0; i < dimension; i++)
@@ -184,10 +185,10 @@ namespace ice
   bool isPositiveDefinite(const matrix<double>& mat)
   {
     int dimension = mat.cols();
-    
+
     if (dimension != mat.rows())
       throw IceException(FNAME, M_WRONG_MATRIX);
-    
+
     matrix<double> hilf2(mat);
 
     vector<double> h(dimension);

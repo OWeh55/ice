@@ -37,7 +37,7 @@ namespace ice
 
 #define LU(i,j) LU.at(i).at(j)
   //#define LU(i,j) LU[i][j]
-  
+
   void LUDecompositionPacked(const Matrix& a,
                              Matrix& LU,
                              IVector& indx,
