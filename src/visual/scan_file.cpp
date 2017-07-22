@@ -82,13 +82,13 @@ namespace ice
     Channel[ch].wxi = -1;
     Channel[ch].flags = SC_SCAN | SC_RGB;
     Channel[ch].info = info_file;
-    Channel[ch].dialog = NULL;
-    Channel[ch].preview = NULL;
+    Channel[ch].dialog = nullptr;
+    Channel[ch].preview = nullptr;
     Channel[ch].grab = grab_file;
     Channel[ch].getproperties = getproperties_file;
     Channel[ch].setproperties = setproperties_file;
-    Channel[ch].setdriverextdata = NULL;
-    Channel[ch].getdriverextdata = NULL;
+    Channel[ch].setdriverextdata = nullptr;
+    Channel[ch].getdriverextdata = nullptr;
     return true;
   }
 
@@ -106,7 +106,7 @@ namespace ice
       {
         x = y = 0;
         FILE* f = fopen((DD(ch)->filename).c_str(), "r");
-        if (f != NULL)
+        if (f != nullptr)
           {
             fclose(f);
             int nr;

@@ -387,7 +387,7 @@ namespace ice
     }
 
 #define FNAME "setPixel"
-    void setPixel(int x, int y, double val) const
+    void setPixel(int x, int y, double value) const
     {
       if ((unsigned int)x >= (unsigned int)xsize)
         throw IceException(FNAME, M_X_OUT_OF_RANGE);
@@ -395,10 +395,10 @@ namespace ice
       if ((unsigned int)y >= (unsigned int)ysize)
         throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
-      (*mat)[y][x] = val;
+      (*mat)[y][x] = value;
     }
 
-    void setPixel(IPoint p, double val) const
+    void setPixel(IPoint p, double value) const
     {
       if ((unsigned int)p.x >= (unsigned int)xsize)
         throw IceException(FNAME, M_X_OUT_OF_RANGE);
@@ -406,7 +406,7 @@ namespace ice
       if ((unsigned int)p.y >= (unsigned int)ysize)
         throw IceException(FNAME, M_Y_OUT_OF_RANGE);
 
-      (*mat)[p.y][p.x] = val;
+      (*mat)[p.y][p.x] = value;
     }
 
     void setPixelClipped(IPoint p, double value) const
