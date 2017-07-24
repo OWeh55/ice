@@ -35,13 +35,9 @@ void usage(const string& pn)
   cout << "-z <n>   Zeitraffer, schreibt jedes n. Bild" << endl;
   cout << "-x <x>   Zeitlich abklingender Mittelwert (default:0)" << endl;
   cout << "-d       Zeige Differenzbild an" << endl;
-  cout << "-m       Zeige maskiertes Originalbild an" << endl;
-  cout << "-M <m>   Verwende m als Masken-Schwellwert" << endl;
-  cout << "-4       Zeige 2*2 Bilder (Original, Mittelwert, Differenz, maskiertes Bild) an" << endl;
-  cout << "-a       Aktivitätsmaß ablegen" << endl;
   cout << "-e       Wende Histogramm-Egalisierung auf Eingabebilder an" << endl;
   cout << "-n       Normalisiere Eingabebilder (Strecken auf 0..255)" << endl;
-  cout << "-s       Sättige Eingabebilder" << endl;
+  cout << "-s <f>   Erhöhe Sättigung der Eingabebilder um Faktor f" << endl;
   cout << "-i       Setze Intensität auf 0.5" << endl;
   exit(1);
 }
@@ -59,23 +55,19 @@ int main(int argc, char* argv[])
 
   bool hequal = false;
   bool normalise = false;
+  double saturateFactor = 1.0;
   bool saturate = false;
   bool intensify = false;
 
-  bool activity = false;
-
   const int dMittel = 1;
   const int dDifference = 2;
-  const int dMasked = 3;
-  const int d4 = 4;
 
   int output = dMittel;
 
   double expire = 0;
-  double maskLevel2 = 400;
 
   int rc;
-  while ((rc = getopt(argc, argv, "mM:o:z:ef:l:x:O:4nashdi")) >= 0)
+  while ((rc = getopt(argc, argv, "mM:o:z:ef:l:x:O:4nas:hdi")) >= 0)
     {
       switch (rc)
         {
@@ -104,6 +96,7 @@ int main(int argc, char* argv[])
           normalise = true;
           break;
         case 's':
+          saturateFactor = atof(optarg);
           saturate = true;
           break;
         case 'i':
@@ -111,19 +104,6 @@ int main(int argc, char* argv[])
           break;
         case 'd':
           output = dDifference;
-          break;
-        case 'm':
-          output = dMasked;
-          break;
-        case 'M':
-          maskLevel2 = atof(optarg);
-          maskLevel2 *= maskLevel2;
-          break;
-        case '4':
-          output = d4;
-          break;
-        case 'a':
-          activity = true;
           break;
         case 'h':
         default:
@@ -175,40 +155,39 @@ int main(int argc, char* argv[])
   while (ok && first > vf.FrameNumber())
     if (!vf.read(in1)) ok = false;
 
-  bool preprocess=false;
+  bool preprocess = false;
 
   //  cout << xs << " " << ys << endl;
   if (normalise || saturate || hequal || intensify)
     {
-      preprocess=true;
+      preprocess = true;
       Show(ON, in1t, "Vorverarbeitet");
     }
-  
+
   cImage summe(xs, ys, 0, 20000000);
   summe.clear();
 
   ColorImage result;
   result.create(xs, ys, mv);
   result.clear();
-  Show(ON, result);
-
-  Image mask;
-  mask.create(xs, ys, 4);
-  mask.set(0);
+  Show(ON, result, "Resultat");
 
   double ct = 0;
   double expire1 = 1.0 - expire;
   int frameNr = 0;
   do
     {
-      ok = true;
-      if (!vf.read(in1)) 
-	ok = false;
+      ok = vf.read(in1);
 
       ct = ct * expire1 + 1.0;
+
       Printf("Frame: %d ", vf.FrameNumber());
+
       if (ok)
         {
+          // create copy
+          in1t.copy(in1);
+
           // color manipulation
           if (saturate || intensify)
             {
@@ -223,7 +202,11 @@ int main(int argc, char* argv[])
                   if (intensify)
                     i = 0.5;
                   if (saturate)
-                    s = 1.0;
+                    {
+                      s = s * saturateFactor;
+                      if (s > 1.0)
+                        s = 1.0;
+                    }
                   HsiToRgb(h, s, i, v, mv);
                   in1t.setPixelLimited(w, v);
                 }
@@ -243,115 +226,45 @@ int main(int argc, char* argv[])
               GrayNormalize(in1.blueImage(), in1t.blueImage(), GV_QUANTILE);
             }
 
-          WindowWalker w(in1);
-          double dd = 0;
-          int nMasked = 0;
+          WindowWalker w(in1t);
+
           for (w.init(); !w.ready(); w.next())
             {
               ColorValue v1 = preprocess ? in1t.getPixel(w) : in1.getPixel(w);
-	      
+
               double sr = summe.r.getPixel(w) * expire1 + v1.red;
               double sg = summe.g.getPixel(w) * expire1 + v1.green;
               double sb = summe.b.getPixel(w) * expire1 + v1.blue;
 
-              summe.r.setPixel(w, sr);
-              summe.g.setPixel(w, sg);
-              summe.b.setPixel(w, sb);
-            }
+              summe.r.setPixelUnchecked(w, sr);
+              summe.g.setPixelUnchecked(w, sg);
+              summe.b.setPixelUnchecked(w, sb);
 
-	  if (dMasked || d4)
-	    {
-	      // Maske aus änderung errechnen
-	      for (w.init(); !w.ready(); w.next())
-		{
-		  ColorValue iv = in1t.getPixel(w);
-
-		  double r = summe.r.getPixel(w) / ct;
-		  double g = summe.g.getPixel(w) / ct;
-		  double b = summe.b.getPixel(w) / ct;
-
-		  double dr = iv.red - r;
-		  double dg = iv.green - g;
-		  double db = iv.blue - b;
-
-		  double mag = dr * dr + dg * dg + db * db;
-		  dd += mag;
-		  if (mag > maskLevel2)
-		    {
-		      mask.setPixel(w, 1);
-		      ++nMasked;
-		    }
-		  else
-		    mask.setPixel(w, 0);
-		}
-
-	      erodeImg(mask, mask);
-	      dilateImg(mask, mask);
-	    }
-
-          // ergebnis-darstellung
-
-          IPoint hx(in1t.xsize / 2, 0);
-          IPoint hy(0, in1t.ysize / 2);
-          for (w.init(); !w.ready(); w.next())
-            {
-              ColorValue iv = preprocess ? in1t.getPixel(w) :in1.getPixel(w);
-
-              double r = summe.r.getPixel(w) / ct;
-              double g = summe.g.getPixel(w) / ct;
-              double b = summe.b.getPixel(w) / ct;
-
-              double dr = iv.red - r;
-              double dg = iv.green - g;
-              double db = iv.blue - b;
+              double r = sr / ct;
+              double g = sg / ct;
+              double b = sb / ct;
+              double dr = r - v1.red;
+              double dg = g - v1.green;
+              double db = b - v1.blue;
 
               switch (output)
                 {
                 case dMittel:
-                  result.setPixelLimited(w, ColorValue(r, g, b));
+                  // result.setPixelLimited(w, ColorValue(r, g, b));
+                  result.setPixelUnchecked(w, ColorValue(r, g, b));
                   break;
                 case dDifference:
                   result.setPixelLimited(w, ColorValue(dr, dg, db) + ColorValue(mv / 2));
 
                   break;
-                case dMasked:
-                  if (mask.getPixel(w) > 0)
-                    result.setPixel(w, in1.getPixel(w));
-                  else
-                    result.setPixel(w, ColorValue(mv));
-                  break;
-
-                case d4:
-                  if ((w.x % 2) == 0 && (w.y % 2) == 0)
-                    {
-                      IPoint p = w / 2;
-                      result.setPixel(p, in1.getPixel(w));
-                      result.setPixelLimited(p + hx, ColorValue(r, g, b));
-                      result.setPixelLimited(p + hx + hy, ColorValue(dr, dg, db) + ColorValue(mv / 2));
-                      if (mask.getPixel(w) > 0)
-                        result.setPixel(p + hy, in1.getPixel(w));
-                      else
-                        result.setPixel(p + hy, ColorValue(0));
-                    }
-                  break;
                 } // switch
             }
-
-          if (activity)
-            {
-              ofstream os;
-              os.open("activity.txt", ios_base::out | ios_base::app);
-              os << frameNr << " ";
-              os << (sqrt(dd) / xs1 / ys1) << " ";
-              os << ((double)nMasked / xs1 / ys1) << endl;
-            }
-
 
           zcount++;
           if (zcount == zeitraffer)
             {
               Print("+");
-              if (!videoFileName.empty())
+              if (!videoFileName.empty()) // if video output file given
                 {
                   vfd.write(result);
                 }
@@ -363,11 +276,12 @@ int main(int argc, char* argv[])
     }
   while (ok && ((last == 0) || (last > vf.FrameNumber())));
 
-  if (!imageFileName.empty())
+  if (!imageFileName.empty()) // if image output file given
     {
       result.write(imageFileName);
     }
 
-  if (videoFileName.empty() && imageFileName.empty()) GetChar();
+  if (videoFileName.empty() && imageFileName.empty()) // interactive usage ?
+    GetChar();
   return OK;
 }
