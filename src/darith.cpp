@@ -353,7 +353,7 @@ namespace ice
 
     if (r2 == 0.0)
       {
-        r2 = Min(hx, hy) / 2.0;
+        r2 = std::min(hx, hy) / 2.0;
       }
 
     rfac = (log(r2) - log(r1)) / dsy;
@@ -413,7 +413,7 @@ namespace ice
 
     if (r2 == 0.0)
       {
-        r2 = Min(hx, hy) / 2.0;
+        r2 = std::min(hx, hy) / 2.0;
       }
 
     rfac = (log(r2) - log(r1)) / dsy;
@@ -470,7 +470,7 @@ namespace ice
 
     if (r2 == 0)
       {
-        r2 = Min(imgs.xsize, imgs.ysize) / 2.0;
+        r2 = std::min(imgs.xsize, imgs.ysize) / 2.0;
       }
 
     dsx = imgd.xsize;
@@ -521,7 +521,7 @@ namespace ice
 
     if (r2 == 0.0)
       {
-        r2 = Min(hx, hy) / 2.0;
+        r2 = std::min(hx, hy) / 2.0;
       }
 
     rfac = (r2 - r1) / dsy;
@@ -584,7 +584,7 @@ namespace ice
 
     if (r2 == 0.0)
       {
-        r2 = Min(hx, hy) / 2.0;
+        r2 = std::min(hx, hy) / 2.0;
       }
 
     rfac = (r2 - r1) / dsy;
@@ -636,7 +636,7 @@ namespace ice
 
     if (r2 == 0)
       {
-        r2 = Min(imgs.xsize, imgs.ysize) / 2.0;
+        r2 = std::min(imgs.xsize, imgs.ysize) / 2.0;
       }
 
     dsx = imgd.xsize;

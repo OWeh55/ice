@@ -474,7 +474,7 @@ namespace ice
         *psi2 = 2 * M_PI;
       }
 
-    if (a_min != Min(*psi1, *psi2) || a_max != Max(*psi1, *psi2))
+    if (a_min != std::min(*psi1, *psi2) || a_max != std::max(*psi1, *psi2))
       {
         // voellig entarteter Fall
         // negative Werte dienen als Markierung fuer Entartungen
@@ -1464,8 +1464,8 @@ namespace ice
       }
 
     /* Entartung wird bestraft ! */
-    if ((Max((int)*major_axis, (int)*minor_axis) /
-         Min((int)*major_axis, (int)*minor_axis)) > 300)
+    if ((std::max((int)*major_axis, (int)*minor_axis) /
+         std::min((int)*major_axis, (int)*minor_axis)) > 300)
       {
         *ratio = DBL_MAX;
       }
@@ -1670,7 +1670,7 @@ namespace ice
 
   int all_seg_gr(int pa, int pb, int pi)
   {
-    if (Min(pi - pa, pb - pi) < MIN_LNG)
+    if (std::min(pi - pa, pb - pi) < MIN_LNG)
       {
         return (false);
       }
@@ -1709,14 +1709,14 @@ namespace ice
             return (-1);
           }
 
-        if (sig < Min(sig1, sig2))
+        if (sig < std::min(sig1, sig2))
           {
             /* setze Flag fuer Abbruch nach Lowe */
             act->flag = LOWE_STOP;
           }
         else
           {
-            sig = Min(sig1, sig2);
+            sig = std::min(sig1, sig2);
           }
       }
     else
@@ -2491,7 +2491,7 @@ namespace ice
                         break;  // gesamte Punktliste segmentiert
                       }
 
-                    ende = Min(ende + step, pl->lng - 1);
+                    ende = std::min(ende + step, pl->lng - 1);
                   }
                 else     // maximaler Abstand war zu gross
                   {
@@ -2557,7 +2557,7 @@ namespace ice
                             break;  // gesamte Punktliste segmentiert
                           }
 
-                        ende = Min(ende + step, pl->lng - 1);
+                        ende = std::min(ende + step, pl->lng - 1);
                       }
                     else
                       {
@@ -2620,7 +2620,7 @@ namespace ice
                                 break;  // gesamte Punktliste segmentiert
                               }
 
-                            ende = Min(ende + step, pl->lng - 1);
+                            ende = std::min(ende + step, pl->lng - 1);
                           }
                         else
                           {
@@ -2724,7 +2724,7 @@ namespace ice
                             break;  // gesamte Punktliste segmentiert
                           }
 
-                        ende = Min(ende + step, stop);
+                        ende = std::min(ende + step, stop);
                       }
                     else     // maximaler Abstand war zu gross
                       {
@@ -2790,7 +2790,7 @@ namespace ice
                                 break;  // gesamte Punktliste segmentiert
                               }
 
-                            ende = Min(ende + step, stop);
+                            ende = std::min(ende + step, stop);
                           }
                         else
                           {
@@ -2854,7 +2854,7 @@ namespace ice
                                     break;  // gesamte Punktliste segmentiert
                                   }
 
-                                ende = Min(ende + step, stop);
+                                ende = std::min(ende + step, stop);
                               }
                             else
                               {

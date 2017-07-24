@@ -24,6 +24,8 @@
 /* ttbb 18.06.1998 */
 /* Wolfgang Ortmann 2016 */
 
+#include <algorithm>
+
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
@@ -169,15 +171,15 @@ namespace ice
         if (pnum == 0)
           {
             value = pg0 = (grwd[pnum] -
-                           noise * (atan(Max(plptr->sx, plptr->sy) * 256.0 /
-                                         Min(img.xsize, img.ysize)) / M_PI + 0.5));
+                           noise * (atan(std::max(plptr->sx, plptr->sy) * 256.0 /
+                                         std::min(img.xsize, img.ysize)) / M_PI + 0.5));
 
           }
 
         else
           {
 
-            double b1 = grwd[pnum] + noise * (0.5 - atan(Max(plptr->sx, plptr->sy) * 256.0 / Min(img.xsize, img.ysize)) / M_PI);
+            double b1 = grwd[pnum] + noise * (0.5 - atan(std::max(plptr->sx, plptr->sy) * 256.0 / std::min(img.xsize, img.ysize)) / M_PI);
 
             value += (pow(b1, 8) / pow((double)pnum, 4));
 

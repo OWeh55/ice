@@ -118,7 +118,7 @@ namespace ice
     double summ = 0.0;
     sumPlusSumMinus(sump, summ);
 
-    double sumc = Max(sump, summ);
+    double sumc = std::max(sump, summ);
 
     int norm = RoundInt(INT_MAX / 2.0 / sumc / src.maxval);
 

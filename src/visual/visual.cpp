@@ -241,7 +241,7 @@ namespace ice
 
       case VIRTUAL_X:
       {
-        return Min(Width, wxGetApp().DefXSize());
+        return std::min(Width, wxGetApp().DefXSize());
       }
 
       case MAXY:
@@ -251,7 +251,7 @@ namespace ice
 
       case VIRTUAL_Y:
       {
-        return Min(Height, wxGetApp().DefYSize());
+        return std::min(Height, wxGetApp().DefYSize());
       }
 
       case IMAGES:

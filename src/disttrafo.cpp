@@ -61,7 +61,7 @@ namespace ice
         PutVal(inr, x, y, rindex);
 
         if (step2 == 0) PutVal(dist, x + x0, y + y0,
-                                 Min(RoundInt(sqrt((double)dist2)*fac), dist.maxval));
+                                 std::min(RoundInt(sqrt((double)dist2)*fac), dist.maxval));
         else
           {
             if (step2 < 0)

@@ -439,7 +439,7 @@ L30:
                     ij += 1; /* fjac[i+m*j] */
                   }
 
-                gnorm = Max(gnorm, fabs(sum / wa2[l]));
+                gnorm = std::max(gnorm, fabs(sum / wa2[l]));
               }
 
             jj += funcdim;
@@ -466,7 +466,7 @@ L30:
       {
         for (j = 0; j < n; j++)
           {
-            diag[j] = Max(diag[j], wa2[j]);
+            diag[j] = std::max(diag[j], wa2[j]);
           }
       }
 
@@ -496,7 +496,7 @@ L200:
      */
     if (*iter == 1)
       {
-        delta = Min(delta, pnorm);
+        delta = std::min(delta, pnorm);
       }
 
     /*
@@ -578,7 +578,7 @@ L200:
             temp = p1;
           }
 
-        delta = temp * Min(delta, pnorm / p1);
+        delta = temp * std::min(delta, pnorm / p1);
         par = par / temp;
       }
     else
@@ -961,15 +961,15 @@ L300:
 
     if (paru == 0.0)
       {
-        paru = DWARF / Min(delta, p1);
+        paru = DWARF / std::min(delta, p1);
       }
 
     /*
      *     if the input par lies outside of the interval (parl,paru),
      *     set par to the closer endpoint.
      */
-    *par = Max(*par, parl);
-    *par = Min(*par, paru);
+    *par = std::max(*par, parl);
+    *par = std::min(*par, paru);
 
     if (*par == 0.0)
       {
@@ -987,7 +987,7 @@ L150:
      */
     if (*par == 0.0)
       {
-        *par = Max(DWARF, p001 * paru);
+        *par = std::max(DWARF, p001 * paru);
       }
 
     temp = sqrt(*par);
@@ -1059,18 +1059,18 @@ L150:
      */
     if (fp > 0.0)
       {
-        parl = Max(parl, *par);
+        parl = std::max(parl, *par);
       }
 
     if (fp < 0.0)
       {
-        paru = Min(paru, *par);
+        paru = std::min(paru, *par);
       }
 
     /*
      *   compute an improved estimate for par.
      */
-    *par = Max(parl, *par + parc);
+    *par = std::max(parl, *par + parc);
     /*
      *   end of an iteration.
      */
@@ -1184,7 +1184,7 @@ L220:
     /*
      *     reduce a to r with householder transformations.
      */
-    minmn = Min(rows, cols);
+    minmn = std::min(rows, cols);
 
     for (j = 0; j < minmn; j++)
       {
@@ -1284,7 +1284,7 @@ L220:
                     if ((pivot != 0) && (rdiag[k] != 0.0))
                       {
                         temp = a[j + rows * k] / rdiag[k];
-                        temp = Max(0.0, 1.0 - temp * temp);
+                        temp = std::max(0.0, 1.0 - temp * temp);
                         rdiag[k] *= sqrt(temp);
                         temp = rdiag[k] / wa[k];
 
@@ -1768,7 +1768,7 @@ L150:
     //  wa is a work array of length m.
     double* wa = new double[m];
 
-    eps = sqrt(Max(epsfcn, MACHEP));
+    eps = sqrt(std::max(epsfcn, MACHEP));
     ij = 0;
 
     *iflag = fcn(m, n, x, wa); //!!!

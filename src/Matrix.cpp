@@ -297,8 +297,8 @@ namespace ice
   void Matrix::resize(int r, int c)
   {
     Matrix newmat(r, c);
-    int nr = Min(r, nRows);
-    int nc = Min(c, nColumns);
+    int nr = std::min(r, nRows);
+    int nc = std::min(c, nColumns);
     for (int r = 0; r < nr; ++r)
       for (int c = 0; c < nc; ++c)
         {
@@ -1441,7 +1441,7 @@ namespace ice
         switch (mode)
           {
           case ADAPTIVE:
-            inmaxval = Max(maxv, -minv);
+            inmaxval = std::max(maxv, -minv);
             factor = (img.maxval / 2) / inmaxval;
             offset = (img.maxval + 1) / factor / 2.0;
             break;
@@ -1480,7 +1480,7 @@ namespace ice
       for (int x = 0; x < sx; x++)
         {
           ival = RoundInt((m[y][x] + offset) * factor);
-          ival = Min(Max(0, ival), img.maxval);
+          ival = std::min(std::max(0, ival), img.maxval);
           PutVal(img, x, y, ival);
         }
   }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 #include <initializer_list>
 
 #include "defs.h"
@@ -145,8 +146,8 @@ namespace ice
       if (data != nullptr)   // copy needed ?
         {
           // common range
-          int nr = Min(r, nRows);
-          int nc = Min(c, nColumns);
+          int nr = std::min(r, nRows);
+          int nc = std::min(c, nColumns);
           for (int r = 0; r < nr; ++r)
             for (int c = 0; c < nc; ++c)
               {

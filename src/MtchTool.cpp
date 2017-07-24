@@ -22,12 +22,12 @@
 
 #include <float.h>
 #include <limits.h>
-
+#include "WindowWalker.h"
 #include "contlist.h"
 
 #include "MtchTool.h"
 #include "DPList.h"
-#include "hist.h"
+#include "histogram.h"
 
 namespace ice
 {
@@ -47,60 +47,61 @@ namespace ice
 
   /*****************************************************************************/
   /*****************************************************************************/
-
-  void Get2DGaussParamsD(ImageD imgd, Image imgo,
-                         double& x0, double& y0,
-                         double& sx, double& sy, double& sxy,
-                         double& a, double& b)
+#define FNAME "getGaussParameters"
+  void getGaussParameters(const ImageD& imgd, const Image& imgo,
+                          double& x0, double& y0,
+                          double& sx, double& sy, double& sxy,
+                          double& a, double& b)
   {
 
-    double g, volume = 0, gmax = -1, gmin = DBL_MAX;
+    int xsize = imgd.xsize;
+    int ysize = imgd.ysize;
+    if ((imgo.xsize != xsize) || (imgo.ysize != ysize))
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
-    for (int y = 0; y < imgo.ysize; y++)
-      for (int x = 0; x < imgo.xsize; x++)
-        {
+    WindowWalker ww(imgd);
+    double gmax = -DBL_MAX;
+    double gmin = DBL_MAX;
+    for (ww.init(); !ww.ready(); ww.next())
+      {
+        if (imgo.getPixel(ww))
+          {
+            double g = imgd.getPixel(ww);
 
-          if (GetVal(imgo, x, y))
-            {
-              g = GetValD(imgd, x, y);
+            if (gmax < g)
+              gmax = g;
 
-              if (gmax < g)
-                {
-                  gmax = g;
-                }
+            if (gmin > g)
+              gmin = g;
+          }
+      }
 
-              if (gmin > g)
-                {
-                  gmin = g;
-                }
-            }
-        }
-
-    for (int y = 0; y < imgo.ysize; y++)
-      for (int x = 0; x < imgo.xsize; x++)
-        {
-          if (GetVal(imgo, x, y))
-            {
-              volume += (GetValD(imgd, x, y) - gmin);
-            }
-        }
+    double volume = 0.0;
+    for (ww.init(); !ww.ready(); ww.next())
+      {
+        if (imgo.getPixel(ww))
+          {
+            volume += imgd.getPixel(ww) - gmin;
+          }
+      }
 
     if (x0 == -1 || y0 == -1)   // Mittelwert bestimmen
       {
-        x0 = 0;
-        y0 = 0;
-
-        for (int y = 0; y < imgo.ysize; y++)
-          for (int x = 0; x < imgo.xsize; x++)
-            {
-              if (GetVal(imgo, x, y))
-                {
-                  x0 += (g = (GetValD(imgd, x, y) - gmin)) * x;
-                  y0 += g * y;
-                }
-            }
         if (volume != 0)
           {
+            x0 = 0;
+            y0 = 0;
+
+            for (ww.init(); !ww.ready(); ww.next())
+              {
+                if (imgo.getPixel(ww))
+                  {
+                    double g = imgd.getPixel(ww) - gmin;
+                    x0 += g * ww.x;
+                    y0 += g * ww.y;
+                  }
+              }
+
             x0 /= volume;
             y0 /= volume;
           }
@@ -113,16 +114,16 @@ namespace ice
 
     sx = sy = sxy = 0;
 
-    for (int y = 0; y < imgo.ysize; y++)
-      for (int x = 0; x < imgo.xsize; x++)
-        {
-          if (GetVal(imgo, x, y))
-            {
-              sx += Sqr(x - x0) * (g = GetValD(imgd, x, y) - gmin);
-              sy += Sqr(y - y0) * g;
-              sxy += (x - x0) * (y - y0) * g;
-            }
-        }
+    for (ww.init(); !ww.ready(); ww.next())
+      {
+        if (imgo.getPixel(ww))
+          {
+            double g = imgd.getPixel(ww) - gmin;
+            sx += Sqr(ww.x - x0) * g;
+            sy += Sqr(ww.y - y0) * g;
+            sxy += (ww.x - x0) * (ww.y - y0) * g;
+          }
+      }
 
     if (volume != 0)
       {
@@ -170,57 +171,9 @@ namespace ice
     b = -min * a;
   }
 
-  /****************************************************************************/
-  /****************************************************************************/
-#if 0
-#define FNAME "AmplitudeImgD"
-
-  ImageD AmplitudeImgD(ImageD re, ImageD im, ImageD dest, int smear)
-  {
-    if (re == NULL || im == NULL ||
-        re->xsize != im->xsize || re->ysize != im->ysize)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    if (dest == NULL)
-      {
-        dest = NewImgD(re->xsize, re->ysize, -DBL_MAX, DBL_MAX);
-
-        if (dest == NULL)
-          throw IceException(FNAME, M_NO_MEM);
-      }
-    else if (dest->xsize != re->xsize || dest->ysize != re->ysize)
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    if (smear)
-      {
-        for (int y = 0; y < re.ysize; y++)
-          for (int x = 0; x < re.xsize; x++)
-            {
-              double g1 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
-              double g2 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, y)));
-              double g3 = sqrt(Sqr(GetValD(re, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x - 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
-              double g4 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y - 1 + re->ysize) % re->ysize)));
-              double g5 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, y)) +  Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, y)));
-              double g6 = sqrt(Sqr(GetValD(re, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)) + Sqr(GetValD(im, (x + 1 + re->xsize) % re->xsize, (y + 1 + re->ysize) % re->ysize)));
-              double g7 = sqrt(Sqr(GetValD(re, x, (y - 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y - 1 + re->ysize) % re->ysize)));
-              double g8 = sqrt(Sqr(GetValD(re, x, y)) +    Sqr(GetValD(im, x, y)));
-              double g9 = sqrt(Sqr(GetValD(re, x, (y + 1 + re->ysize) % re->ysize)) +  Sqr(GetValD(im, x, (y + 1 + re->ysize) % re->ysize)));
-              PutValD(dest, x, y, (g1 + g2 + g3 + g4 + g5 + g6 + g7 + g8 + g9 + g9) / 10);
-            }
-      }
-    else
-      {
-        for (int y = 0; y < re.ysize; y++)
-          for (int x = 0; x < re.xsize; x++)
-            PutValD(dest, x, y, sqrt(Sqr(GetValD(re, x, y)) + Sqr(GetValD(im, x, y))));
-      }
-
-    return dest;
-  }
 #undef FNAME
-#endif
-  /************************************************************************/
-  /************************************************************************/
+  /****************************************************************************/
+  /****************************************************************************/
 #define FNAME "CutFrameImg"
 
   int CutFrameImg(Image img, int dx, int dy, int mode, Image dest)
@@ -252,84 +205,31 @@ namespace ice
   }
 #undef FNAME
 
-//
-//
+  //
+  //
 
 #define FNAME "EntropyImg"
-
-  double EntropyImg(Image img)
+  double EntropyImg(const Image& img)
   {
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    double entropy = 0.0;
-    double p;
-    double l2 = log(2.0);
-    int i;
-
-    Hist h = HistImg(img);
-
-    for (i = 1; i <= h.getNClasses(); i++)
+    try
       {
-        p = h.Rel(i);
+        Histogram h(img);
 
-        if (p > 0)
+        double entropy = 0.0;
+        for (int i = 0; i < h.nClasses(); i++)
           {
-            entropy -= p * log(p) / l2;
+            double p = h.getRelative(i);
+
+            if (p > 0)
+              entropy -= p * log2(p);
           }
+
+        return entropy;
       }
-
-    return entropy;
-  }
-
-#undef FNAME
-
-//
-//
-
-#define FNAME "EntropyImgD"
-
-  double EntropyImgD(ImageD img, double& maxentro)
-  {
-    if (!img.isValid())
-      throw IceException(FNAME, M_WRONG_PARAM);
-
-    double entropy = 0.0;
-    int i, j, g;
-
-    double hist[256];
-    memset(hist, 0, 256 * sizeof(double));
-    maxentro = 0;
-
-    for (j = 0; j < img.ysize; ++j)
-      for (i = 0; i < img.xsize; ++i)
-        {
-          g = Min(Max((int)(GetValD(img, i, j) * 255), 0), 255);
-
-          if (hist[g] == 0)
-            {
-              maxentro++;
-            }
-
-          hist[g]++;
-        }
-
-    double anz = (img.xsize) * (img.ysize);
-    double l2 = log(2.0);
-
-    for (i = 0; i < 256; i++)
-      {
-        hist[i] = (double)hist[i] / anz;
-
-        if (hist[i] > 0)
-          {
-            entropy -= (double)hist[i] * log((double)hist[i]) / l2;
-          }
-      }
-
-    maxentro = (log(Max(maxentro - 1.0, 1.0)) / log(2.0));
-
-    return entropy;
+    RETHROW;
   }
 
 #undef FNAME

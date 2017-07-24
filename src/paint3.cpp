@@ -142,7 +142,7 @@ namespace ice
     sprintf(smax, "%g", max);
     l1 = strlen(smin);
     l2 = strlen(smax);
-    l = Max(l1, l2);
+    l = std::max(l1, l2);
     sizey = (int)((double)(fi->nbr) * fac);
     img = NewImg(fi->nbr + l * CHARX + 3 * GAPX + LAST + 1, sizey + 4 * CHARY + 6 * GAPY + 1, 255);
     img.set(0);

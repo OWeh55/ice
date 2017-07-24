@@ -139,7 +139,7 @@ namespace ice
         tr.shift(dx, dy);
       }
 
-    int bs = Min(sx, sy) / 5;
+    int bs = std::min(sx, sy) / 5;
 
     int blocksize = 32; // kleinste Blockgröße
 

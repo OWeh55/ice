@@ -161,8 +161,8 @@ namespace ice
           }
       }
 
-    xm = Min(xs, xsb / scal);
-    ym = Min(ys, ysb / scal);
+    xm = std::min(xs, xsb / scal);
+    ym = std::min(ys, ysb / scal);
 
     if (ib.planes == 1)
       {
@@ -353,8 +353,8 @@ namespace ice
               }
           }
 
-        int xm = Min(xs, xsb / scal);
-        int ym = Min(ys, ysb / scal);
+        int xm = std::min(xs, xsb / scal);
+        int ym = std::min(ys, ysb / scal);
 
         if (ib.planes == 1)
           {
@@ -415,9 +415,9 @@ namespace ice
                         valb = MulDiv(valb, imgb.maxval, ib.maxval);
                       }
 
-                    PutVal(imgr, x, y, Min(imgr.maxval, Max(0, valr)));
-                    PutVal(imgg, x, y, Min(imgg.maxval, Max(0, valg)));
-                    PutVal(imgb, x, y, Min(imgb.maxval, Max(0, valb)));
+                    PutVal(imgr, x, y, std::min(imgr.maxval, std::max(0, valr)));
+                    PutVal(imgg, x, y, std::min(imgg.maxval, std::max(0, valg)));
+                    PutVal(imgb, x, y, std::min(imgb.maxval, std::max(0, valb)));
 
                     switch (ib.packmethod)
                       {

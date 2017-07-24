@@ -450,7 +450,7 @@ namespace ice
     /*** Transformation von (A,b) in Trapezform
        Modifikation des Permutationsvektors */
     rang = 0;
-    dim = Min(row, col);
+    dim = std::min(row, col);
     cont1 = 1;
 
     for (i = 0; i < dim - 1 && cont1 == 1; i++)

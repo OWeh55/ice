@@ -140,13 +140,13 @@ namespace ice
     switch (smode)
       {
       case SMD_ABSOLUTE:
-        gmax1 = Max(pn1.maxval, pn2.maxval);
+        gmax1 = std::max(pn1.maxval, pn2.maxval);
         break;
       case SMD_POSITIVE:
         gmax1 = pn1.maxval;
         break;
       case SMD_SHIFT:
-        gmax1 = Max(pn1.maxval, pn2.maxval) * 2 + 1;
+        gmax1 = std::max(pn1.maxval, pn2.maxval) * 2 + 1;
         break;
       default:
         throw IceException(FNAME, M_WRONG_MODE);
@@ -165,7 +165,7 @@ namespace ice
             LOOP { PutVal(pn3, x, y, abs(VAL1 - VAL2)); };
             break;
           case SMD_POSITIVE:
-            LOOP { PutVal(pn3, x, y, Max(VAL1 - VAL2, 0)); };
+            LOOP { PutVal(pn3, x, y, std::max(VAL1 - VAL2, 0)); };
             break;
           case SMD_SHIFT:
             LOOP { PutVal(pn3, x, y, VAL1 - VAL2 + pn2.maxval); };
@@ -253,20 +253,20 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = Max(pn1.maxval, pn2.maxval); /*maximaler wert*/
+    gmax1 = std::max(pn1.maxval, pn2.maxval); /*maximaler wert*/
     gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Maximum-Bild erzeugen */
     if (gmax == gmax1)   /* keine Normierung noetig */
       {
-        LOOP { PutVal(pn3, x, y, Max(VAL1, VAL2)); }
+        LOOP { PutVal(pn3, x, y, std::max(VAL1, VAL2)); }
       }
     else
       {
         LOOP
         {
           gzahl = gmax + 1;
-          val = Max(VAL1, VAL2);
+          val = std::max(VAL1, VAL2);
 
           switch (mode)
             {
@@ -301,20 +301,20 @@ namespace ice
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, pn3, dx, dy));
 
-    gmax1 = Min(pn1.maxval, pn2.maxval); /*maximaler wert*/
+    gmax1 = std::min(pn1.maxval, pn2.maxval); /*maximaler wert*/
     gmax = pn3.maxval; /* maximalwert aus Zielbild ermitteln */
 
     /* jetzt Minimum-Bild erzeugen */
     if (gmax == gmax1)   /* keine Normierung noetig */
       {
-        LOOP { PutVal(pn3, x, y, Min(VAL1, VAL2)); }
+        LOOP { PutVal(pn3, x, y, std::min(VAL1, VAL2)); }
       }
     else
       {
         LOOP
         {
           gzahl = gmax + 1;
-          val = Min(VAL1, VAL2);
+          val = std::min(VAL1, VAL2);
 
           switch (mode)
             {

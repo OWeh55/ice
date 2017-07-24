@@ -773,7 +773,7 @@ namespace ice
     memcpy(hA, m, size);
     /*** Transformation von (m,b) in Trapezform */
     rang = 0;
-    dim = Min(row, col);
+    dim = std::min(row, col);
     cont1 = 1;
 
     for (i = 0; i < dim - 1 && cont1 == 1; i++)
@@ -1040,7 +1040,7 @@ namespace ice
     /* Kopieren des Orginalbereiches in Hilfsbereich */
     memcpy(ha, a, row * col * sizeof(double));
 
-    r = Min(row, col);
+    r = std::min(row, col);
     perm = 0;
 
     if (NormMatrix(ha, row, col, DEFAULT, &eps) != OK)
@@ -1193,7 +1193,7 @@ namespace ice
     for (i = 0; i < row; i++)
       for (j = 0; j < col; j++)
         {
-          val = Max(val, fabs(m[i * col + j]));
+          val = std::max(val, fabs(m[i * col + j]));
         }
 
     if (val < *eps)
@@ -1225,11 +1225,11 @@ namespace ice
       for (j = 0; j < dim; j++)
         if (i == j)
           {
-            val = Max(val, fabs(m[i * dim + j] - 1));
+            val = std::max(val, fabs(m[i * dim + j] - 1));
           }
         else
           {
-            val = Max(val, fabs(m[i * dim + j]));
+            val = std::max(val, fabs(m[i * dim + j]));
           }
 
     if (val < *eps)
@@ -1292,7 +1292,7 @@ namespace ice
       for (j = 0; j < dim; j++)
         if (i != j)
           {
-            val = Max(val, fabs(m[i * dim + j]));
+            val = std::max(val, fabs(m[i * dim + j]));
           }
 
     if (val < *eps)
@@ -1324,7 +1324,7 @@ namespace ice
       for (j = i + 1; j < dim; j++)
         if (i != j)
           {
-            val = Max(val, fabs(m[i * dim + j] - m[j * dim + i]));
+            val = std::max(val, fabs(m[i * dim + j] - m[j * dim + i]));
           }
 
     if (val < *eps)
@@ -1356,7 +1356,7 @@ namespace ice
       for (j = i + 1; j < dim; j++)
         if (i != j)
           {
-            val = Max(val, fabs(m[i * dim + j] + m[j * dim + i]));
+            val = std::max(val, fabs(m[i * dim + j] + m[j * dim + i]));
           }
 
     if (val < *eps)

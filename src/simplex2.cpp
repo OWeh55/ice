@@ -168,7 +168,7 @@ namespace ice
 
     for (i = 0; i < n; i++)
       {
-        maxv = Max(maxv, Abs(x[i]));
+        maxv = std::max(maxv, Abs(x[i]));
       }
 
     return (maxv);

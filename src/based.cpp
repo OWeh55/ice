@@ -113,8 +113,8 @@ namespace ice
         factor = 4.0 / (inp.maxval + 1);
       }
 
-    sx = Min(sx, out.xsize);
-    sy = Min(sy, out.ysize);
+    sx = std::min(sx, out.xsize);
+    sy = std::min(sy, out.ysize);
 
     for (int y = 0; y < sy; ++y)
       {
@@ -162,7 +162,7 @@ namespace ice
         switch (modus)
           {
           case ADAPTIVE:
-            inmaxval = Max(inp.maxValue(), -inp.minValue());
+            inmaxval = std::max(inp.maxValue(), -inp.minValue());
             factor = (outmaxval / 2) / inmaxval;
             offset = (outmaxval + 1) / factor / 2.0;
             break;

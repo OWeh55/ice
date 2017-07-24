@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <algorithm>
+
 #include "defs.h"
 #include "IceException.h"
 #include "macro.h"
@@ -40,7 +42,7 @@ namespace ice
           for (int x = 0; x < img.xsize; x++)
             {
               int v = RoundInt(fn(x, y));
-              PutValUnchecked(img, x, y, Max(0, limited(v, img)));
+              PutValUnchecked(img, x, y, std::max(0, limited(v, img)));
             }
       }
     RETHROW;

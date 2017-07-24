@@ -90,7 +90,7 @@ namespace ice
 
         double r = sqrt(fabs(b2 / 3.0)) * b3sign;
         double x = b3 / 2.0 / r / r / r;
-        double y = sqrt(Max(-x * x + 1.0, 0.0));
+        double y = sqrt(std::max(-x * x + 1.0, 0.0));
 
         double phi;
         ConvCartesPolar(x, y, h, phi);
@@ -206,7 +206,7 @@ namespace ice
 
     if (fabs(mm) < 0.0001)
       {
-        mm = Max(mm, 0.0);
+        mm = std::max(mm, 0.0);
       }
 
     if (mm < 0.0)
@@ -218,7 +218,7 @@ namespace ice
 
     if (fabs(nn) < 0.0001)
       {
-        nn = Max(nn, 0.0);
+        nn = std::max(nn, 0.0);
       }
 
     if (nn < 0.0)

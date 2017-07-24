@@ -190,9 +190,10 @@ namespace ice
   }
 
   //=====================================================================
-  double gauss(double my, double sigma, double x)
+  double gaussian(double x, double my, double sigma)
   {
-    return M_SQRT1_2 / sigma * exp(- x * x / (2 * sigma * sigma)) + my;
+    double xr = x - my;
+    return M_SQRT1_2 / sigma * exp(- (xr) * (xr) / (2 * sigma * sigma));
   }
 
   bool Solve2(double a1, double b1, double i1, // erste Gleichung

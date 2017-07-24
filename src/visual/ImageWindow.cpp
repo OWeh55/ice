@@ -134,8 +134,8 @@ namespace ice
 
     // set the appropiate height and width
     ParentFrame->SetClientSize(
-      Min(wxGetApp().DefXSize(), getVirtualSizeX()),
-      Min(wxGetApp().DefYSize(), getVirtualSizeY()));
+      std::min(wxGetApp().DefXSize(), getVirtualSizeX()),
+      std::min(wxGetApp().DefYSize(), getVirtualSizeY()));
 
     Show(true);
     SetFocus();
@@ -265,8 +265,8 @@ namespace ice
     SetZoomFactor(NewZoomFactor);
 
     ParentFrame->SetClientSize(
-      Min(wxGetApp().DefXSize(), getVirtualSizeX()),
-      Min(wxGetApp().DefYSize(), getVirtualSizeY())
+      std::min(wxGetApp().DefXSize(), getVirtualSizeX()),
+      std::min(wxGetApp().DefYSize(), getVirtualSizeY())
     );
 
     SetVirtualSize(getVirtualSizeX(), getVirtualSizeY());

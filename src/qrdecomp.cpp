@@ -29,7 +29,7 @@ namespace ice
 
         for (i = k; i < dim; i++)
           {
-            scale = Max(scale, fabs(a[i][k]));
+            scale = std::max(scale, fabs(a[i][k]));
           }
 
         if (scale == 0.0)

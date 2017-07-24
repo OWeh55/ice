@@ -243,7 +243,7 @@ namespace ice
     free(t);
     free(e);
 
-    if (Min(m, n) < anz_pairs)
+    if (std::min(m, n) < anz_pairs)
       {
         return 1;
       }

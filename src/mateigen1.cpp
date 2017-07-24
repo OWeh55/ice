@@ -647,7 +647,7 @@ namespace ice
               }
           }
 
-        anorm = Max(anorm, (fabs(w.at(i)) + fabs(rv1.at(i))));
+        anorm = std::max(anorm, (fabs(w.at(i)) + fabs(rv1.at(i))));
       }
 
     for (int i = n - 1; i >= 0; i--)

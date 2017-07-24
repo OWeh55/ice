@@ -86,7 +86,7 @@ namespace ice
             double val = rel[i];
             for (int k = -ext; k <= ext; ++k)
               {
-                filteredRel[i + k + ext] += val * gauss(0.0, sigma, k);
+                filteredRel[i + k + ext] += val * gaussian(k, 0.0, sigma);
               }
           }
 

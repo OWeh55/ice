@@ -18,6 +18,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <algorithm>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -1028,8 +1029,8 @@ end:
     * Update E and save col_out in E_d[e_iter]                   *
     *************************************************************/
 
-    REALLOC(si3_E, Max(E_NZ, si3_enz + ny), double);
-    REALLOC(si3_iE, Max(E_NZ, si3_enz + ny),    int);
+    REALLOC(si3_E, std::max(E_NZ, si3_enz + ny), double);
+    REALLOC(si3_iE, std::max(E_NZ, si3_enz + ny),    int);
 
     for (i = 0, k = si3_kE[si3_e_iter]; i < ny; i++, k++)
       {

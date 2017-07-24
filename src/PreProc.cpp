@@ -59,7 +59,7 @@ namespace ice
                 sum2 += g * mask[l + 1][k + 1];
               }
 
-          g = Min(imgd.maxval, Max(0, (int)(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0))));
+          g = std::min(imgd.maxval, std::max(0, (int)(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0))));
 
           if (gradmax < g)
             {
@@ -80,7 +80,7 @@ namespace ice
                 sum2 += g * mask[l + 1][k + 1];
               }
 
-          PutVal(imgd, x, y, Min(imgd.maxval, Max(0, (int)(imgd.maxval * sqrt(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0)) / gradmax))));
+          PutVal(imgd, x, y, std::min(imgd.maxval, std::max(0, (int)(imgd.maxval * sqrt(Sqr(sum1 / 9.0) + Sqr(sum2 / 9.0)) / gradmax))));
         }
 
     gmean /= (img->xsize * img->ysize);

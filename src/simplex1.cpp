@@ -191,7 +191,7 @@ namespace ice
       {
         nonbasics[j] = j;
         basicflag[j] = -j - 1;
-        y_N[j] = Max(c[j], 1.0); /* to force dual feasibility */
+        y_N[j] = std::max(c[j], 1.0); /* to force dual feasibility */
         y_N[j] += RandomD();     /* to ensure nondegeneracy   */
       }
 
@@ -931,7 +931,7 @@ namespace ice
       {
         nonbasics[j] = j;
         basicflag[j] = -j - 1;
-        y_N[j] = Max(c[j], 1.0); /* to force dual feasibility */
+        y_N[j] = std::max(c[j], 1.0); /* to force dual feasibility */
         y_N[j] += RandomD();     /* to ensure nondegeneracy   */
       }
 

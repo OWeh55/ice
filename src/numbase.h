@@ -40,50 +40,10 @@ namespace ice
   double  RandomD(double max = 1.0);
   double  GaussRandom(double sigma);
 
-  double  gauss(double my, double sigma, double x);
-
-#if 0
-  /* Numerische Konstanten */
-#ifndef M_E
-#define M_E         2.7182818284590452354
-#endif
-#ifndef M_LOG2E
-#define M_LOG2E     1.4426950408889634074
-#endif
-#ifndef M_LOG10E
-#define M_LOG10E    0.43429448190325182765
-#endif
-#ifndef M_LN2
-#define M_LN2       0.69314718055994530942
-#endif
-#ifndef M_LN10
-#define M_LN10      2.30258509299404568402
-#endif
-#ifndef M_PI
-#define M_PI        3.14159265358979323846
-#endif
-#ifndef M_PI_2
-#define M_PI_2      1.57079632679489661923
-#endif
-#ifndef M_1_PI
-#define M_1_PI      0.31830988618379067154
-#endif
-#ifndef M_PI_4
-#define M_PI_4      0.78539816339744830962
-#endif
-#ifndef M_2_PI
-#define M_2_PI      0.63661977236758134308
-#endif
-#ifndef M_2_SQRTPI
-#define M_2_SQRTPI  1.12837916709551257390
-#endif
-#ifndef M_SQRT2
-#define M_SQRT2     1.41421356237309504880
-#endif
-#ifndef M_SQRT1_2
-#define M_SQRT1_2   0.70710678118654752440
-#endif
-#endif
+  /**
+   * gaussian function / normal distribution
+   */
+  double  gaussian(double x, double my = 0.0, double sigma = 1.0);
 
 // Value for differences, that should be treated as zero
 // valid for distances of points ...
@@ -108,19 +68,10 @@ namespace ice
     return rint(val);
   }
 
-#if(defined(__i386)||defined(__i486)||defined(__x86_64))
-  inline int RoundInt(double val)
-  {
-    int ival;
-    __asm("fldl %1 \n fistpl %0 " : "=m"(ival) : "m"(val) : "memory");
-    return ival;
-  }
-#else
   inline int RoundInt(double val)
   {
     return lrint(val);
   }
-#endif
 #endif
 
   template<typename T>
@@ -130,56 +81,26 @@ namespace ice
   }
 
   template<typename T>
-  inline T Max(const T& val1, const T& val2)
-  {
-    if (val1 > val2)
-      {
-        return val1;
-      }
-
-    return val2;
-  }
-
-  template<typename T>
-  inline T Min(const T& val1, const T& val2)
-  {
-    if (val1 < val2)
-      {
-        return val1;
-      }
-
-    return val2;
-  }
-
-  template<typename T>
   inline void UpdateMax(T& var, T val)
   {
     if (val > var)
-      {
-        var = val;
-      }
+      var = val;
   }
 
   template<typename T>
   inline void UpdateMin(T& var, T val)
   {
     if (val < var)
-      {
-        var = val;
-      }
+      var = val;
   }
 
   template<typename T>
   inline void UpdateLimits(T& min, T& max, T val)
   {
     if (val < min)
-      {
-        min = val;
-      }
+      min = val;
     if (val > max)
-      {
-        max = val;
-      }
+      max = val;
   }
 
   template<typename T>
@@ -216,5 +137,6 @@ namespace ice
   bool Solve2(double a1, double b1, double i1,
               double a2, double b2, double i2,
               double& x1, double& x2);
+
 }
 #endif
