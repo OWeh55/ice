@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
 
   vf.getPara(xs1, ys1, mv, fps);
 
-  Printf("%d %d %d %d\n", xs1, ys1, mv, fps);
+  Printf("input format %d x %d    0 .. %d   %d fps\n", xs1, ys1, mv, fps);
   VideoFile vfd;
   if (!videoFileName.empty())
     {
@@ -175,10 +175,15 @@ int main(int argc, char* argv[])
   while (ok && first > vf.FrameNumber())
     if (!vf.read(in1)) ok = false;
 
+  bool preprocess=false;
+
   //  cout << xs << " " << ys << endl;
   if (normalise || saturate || hequal || intensify)
-    Show(ON, in1t, "Vorverarbeitet");
-
+    {
+      preprocess=true;
+      Show(ON, in1t, "Vorverarbeitet");
+    }
+  
   cImage summe(xs, ys, 0, 20000000);
   summe.clear();
 
@@ -197,25 +202,20 @@ int main(int argc, char* argv[])
   do
     {
       ok = true;
-      if (!vf.read(in1)) ok = false;
+      if (!vf.read(in1)) 
+	ok = false;
+
       ct = ct * expire1 + 1.0;
       Printf("Frame: %d ", vf.FrameNumber());
       if (ok)
         {
-          // create copy
-          WindowWalker wi(in1);
-          for (wi.init(); !wi.ready(); wi.next())
-            {
-              ColorValue v = in1.getPixel(wi);
-              in1t.setPixel(wi, v);
-            }
           // color manipulation
           if (saturate || intensify)
             {
-              WindowWalker w(in1t);
+              WindowWalker w(in1);
               for (w.init(); !w.ready(); w.next())
                 {
-                  ColorValue v = in1t.getPixel(w);
+                  ColorValue v = in1.getPixel(w);
                   double h, s, i;
                   RgbToHsi(v, h, s, i);
                   //h = 0.0;
@@ -231,25 +231,25 @@ int main(int argc, char* argv[])
 
           if (hequal)
             {
-              HistogramEqualization(in1t.redImage(), in1t.redImage());
-              HistogramEqualization(in1t.greenImage(), in1t.greenImage());
-              HistogramEqualization(in1t.blueImage(), in1t.blueImage());
+              HistogramEqualization(in1.redImage(), in1t.redImage());
+              HistogramEqualization(in1.greenImage(), in1t.greenImage());
+              HistogramEqualization(in1.blueImage(), in1t.blueImage());
             }
 
           if (normalise)
             {
-              GrayNormalize(in1t.redImage(), in1t.redImage(), GV_QUANTILE);
-              GrayNormalize(in1t.greenImage(), in1t.greenImage(), GV_QUANTILE);
-              GrayNormalize(in1t.blueImage(), in1t.blueImage(), GV_QUANTILE);
+              GrayNormalize(in1.redImage(), in1t.redImage(), GV_QUANTILE);
+              GrayNormalize(in1.greenImage(), in1t.greenImage(), GV_QUANTILE);
+              GrayNormalize(in1.blueImage(), in1t.blueImage(), GV_QUANTILE);
             }
 
-          WindowWalker w(in1t);
+          WindowWalker w(in1);
           double dd = 0;
           int nMasked = 0;
           for (w.init(); !w.ready(); w.next())
             {
-              ColorValue v1 = in1t.getPixel(w);
-
+              ColorValue v1 = preprocess ? in1t.getPixel(w) : in1.getPixel(w);
+	      
               double sr = summe.r.getPixel(w) * expire1 + v1.red;
               double sg = summe.g.getPixel(w) * expire1 + v1.green;
               double sb = summe.b.getPixel(w) * expire1 + v1.blue;
@@ -259,39 +259,43 @@ int main(int argc, char* argv[])
               summe.b.setPixel(w, sb);
             }
 
-          // Maske aus änderung errechnen
-          for (w.init(); !w.ready(); w.next())
-            {
-              ColorValue iv = in1t.getPixel(w);
+	  if (dMasked || d4)
+	    {
+	      // Maske aus änderung errechnen
+	      for (w.init(); !w.ready(); w.next())
+		{
+		  ColorValue iv = in1t.getPixel(w);
 
-              double r = summe.r.getPixel(w) / ct;
-              double g = summe.g.getPixel(w) / ct;
-              double b = summe.b.getPixel(w) / ct;
+		  double r = summe.r.getPixel(w) / ct;
+		  double g = summe.g.getPixel(w) / ct;
+		  double b = summe.b.getPixel(w) / ct;
 
-              double dr = iv.red - r;
-              double dg = iv.green - g;
-              double db = iv.blue - b;
+		  double dr = iv.red - r;
+		  double dg = iv.green - g;
+		  double db = iv.blue - b;
 
-              double mag = dr * dr + dg * dg + db * db;
-              dd += mag;
-              if (mag > maskLevel2)
-                {
-                  mask.setPixel(w, 1);
-                  ++nMasked;
-                }
-              else
-                mask.setPixel(w, 0);
-            }
+		  double mag = dr * dr + dg * dg + db * db;
+		  dd += mag;
+		  if (mag > maskLevel2)
+		    {
+		      mask.setPixel(w, 1);
+		      ++nMasked;
+		    }
+		  else
+		    mask.setPixel(w, 0);
+		}
 
-          erodeImg(mask, mask);
-          dilateImg(mask, mask);
+	      erodeImg(mask, mask);
+	      dilateImg(mask, mask);
+	    }
+
           // ergebnis-darstellung
 
           IPoint hx(in1t.xsize / 2, 0);
           IPoint hy(0, in1t.ysize / 2);
           for (w.init(); !w.ready(); w.next())
             {
-              ColorValue iv = in1t.getPixel(w);
+              ColorValue iv = preprocess ? in1t.getPixel(w) :in1.getPixel(w);
 
               double r = summe.r.getPixel(w) / ct;
               double g = summe.g.getPixel(w) / ct;
@@ -308,6 +312,7 @@ int main(int argc, char* argv[])
                   break;
                 case dDifference:
                   result.setPixelLimited(w, ColorValue(dr, dg, db) + ColorValue(mv / 2));
+
                   break;
                 case dMasked:
                   if (mask.getPixel(w) > 0)
@@ -315,6 +320,7 @@ int main(int argc, char* argv[])
                   else
                     result.setPixel(w, ColorValue(mv));
                   break;
+
                 case d4:
                   if ((w.x % 2) == 0 && (w.y % 2) == 0)
                     {
