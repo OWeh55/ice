@@ -256,7 +256,6 @@ namespace ice
     if (xSize != mark.xsize || ySize != mark.ysize)
       {
         throw IceException(FNAME, M_WRONG_IMAGE);
-
       }
 
     double max = -DBL_MAX;
