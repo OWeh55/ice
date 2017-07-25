@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
         for (int c = 0; c < mat1.cols(); c++)
           mat1[r][c] = (drand48() - 0.5) * 10;
     }
-  while (isPositivDefinit(mat1));
+  while (isPositiveDefinite(mat1));
 
   mat2 = mat1 * !mat1;
   cout << "mat1 = rand()" << endl;
@@ -108,13 +108,13 @@ int main(int argc, char* argv[])
   cout << "mat2 = mat1*!mat1" << endl;
   cout << setw(5) << mat2 << endl;
 
-  cout << boolalpha << "mat1 is positiv definit: " << isPositivDefinit(mat1) << endl;
-  cout << "mat2 is positiv definit: " << isPositivDefinit(mat2) << endl;
+  cout << boolalpha << "mat1 is positiv definit: " << isPositiveDefinite(mat1) << endl;
+  cout << "mat2 is positiv definit: " << isPositiveDefinite(mat2) << endl;
 
   Matrix mat(mat2);
   cout << "Matrix mat(mat2)" << endl;
   cout << setw(5) << mat << endl;
-  cout << "Matrix mat is positiv definit: " << isPositivDefinit(mat) << endl;
+  cout << "Matrix mat is positiv definit: " << isPositiveDefinite(mat) << endl;
 
   cout << "Determinant(mat1)" << endl;
   cout << setw(5) << Determinant(mat1) << endl;

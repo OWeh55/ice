@@ -193,10 +193,8 @@ int main(int argc, char* argv[])
 #endif
     }
 
-  int xs, ys;
-
-  xs = Min(xs1, xs2);
-  ys = Min(ys1, ys2);
+  int xs = min(xs1, xs2);
+  int ys = min(ys1, ys2);
 
   Printf("%s - %d*%d\n", filename1.c_str(), xs1, ys1);
 

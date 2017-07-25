@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 {
   std::vector<double> v1(SIZE), v2(SIZE), v3;
   // Vector v1(SIZE), v2(SIZE), v3;
-   for (int i = 0; i < SIZE; i++)
+  for (int i = 0; i < SIZE; i++)
     {
       v1[i] = sin(i * M_PI * 2 / SIZE);
       v2[i] = 0;
@@ -38,14 +38,14 @@ int main(int argc, char* argv[])
       v2[i] = v1[i] = 0;
     }
 
-    v1=vector<double>(SIZE,0);
-    v1[0]=1.0;
-    // v1.set(0);
-  for (int i=0;i<SIZE/2;i++)
-    v1[i]=1.0;
+  v1 = vector<double>(SIZE, 0);
+  v1[0] = 1.0;
+  // v1.set(0);
+  for (int i = 0; i < SIZE / 2; i++)
+    v1[i] = 1.0;
   //  v2.set(0);
-  v2 = vector<double>(SIZE,0);
-  for (int i=0;i<SIZE/2;i++)
+  v2 = vector<double>(SIZE, 0);
+  for (int i = 0; i < SIZE / 2; i++)
     v2[i] = 1.0;
 
   Convolution(v1, v2, v3);

@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
   Vector x1, x2;
   Vector b = A * x; // Inhomogenität passend zur Lösung konstruieren
 
-  x1 = SolveLinEqu(A, b);
+  x1 = SolveLinearEquation(A, b);
   cout << "Matrix: " << A;
   cout << "Lösung:      Abweichung:" << endl;
   cout << x1 << " " << x1 - x << endl;

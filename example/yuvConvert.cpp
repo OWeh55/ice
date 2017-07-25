@@ -52,7 +52,7 @@ int main(int argc, char** argv)
   cout << "error in G channel: " << findMin(imgdiff.greenImage()) << " " << findMax(imgdiff.greenImage()) << endl;
   cout << "error in B channel: " << findMin(imgdiff.blueImage()) << " " << findMax(imgdiff.blueImage()) << endl;
 
-  int maxdif = Max(findMax(imgdiff.redImage()), Max(findMax(imgdiff.greenImage()), findMax(imgdiff.blueImage())));
+  int maxdif = max(findMax(imgdiff.redImage()), max(findMax(imgdiff.greenImage()), findMax(imgdiff.blueImage())));
 
   cout << "maximaler Fehler: " << maxdif << endl;
 

@@ -64,9 +64,9 @@ int main(int argc, char* argv[])
   for (int y = 0; y < r.ysize; y++)
     for (int x = 0; x < r.xsize; x++)
       {
-        PutVal(b, x, y, Min(255, Max(x, 255 - y)));
-        PutVal(g, x, y, Min(255, Max(x, y)));
-        PutVal(r, x, y, Min(255, Max(255 - x, y)));
+        PutVal(b, x, y, std::min(255, std::max(x, 255 - y)));
+        PutVal(g, x, y, min(255, max(x, y)));
+        PutVal(r, x, y, min(255, max(255 - x, y)));
       }
   Delay(TIME);
   Display(OFF);

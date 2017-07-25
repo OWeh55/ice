@@ -101,9 +101,9 @@ int Main(int argc, char* argv[])
   for (int y = 0; y < r.ysize; y++)
     for (int x = 0; x < r.xsize; x++)
       {
-        PutVal(r, x, y, Min(255, Max(511 - x, y) / 2));
-        PutVal(g, x, y, Min(255, Max(x, y) / 2));
-        PutVal(b, x, y, Min(255, Max(x, 511 - y) / 2));
+        PutVal(r, x, y, min(255, max(511 - x, y) / 2));
+        PutVal(g, x, y, min(255, max(x, y) / 2));
+        PutVal(b, x, y, min(255, max(x, 511 - y) / 2));
       }
   GetChar();
   Print("RGB-Bild und Farbauszuege darstellen\n");
@@ -115,21 +115,21 @@ int Main(int argc, char* argv[])
   for (int y = 0; y < r.ysize; y++)
     for (int x = 0; x < r.xsize; x++)
       {
-        PutVal(r, x, y, Min(255, Max(x, y) / 2));
+        PutVal(r, x, y, min(255, max(x, y) / 2));
       }
   GetChar();
   Print("Grün-Bild ändern..\n");
   for (int y = 0; y < g.ysize; y++)
     for (int x = 0; x < g.xsize; x++)
       {
-        PutVal(g, x, y, Min(255, Max(x, 511 - y) / 2));
+        PutVal(g, x, y, min(255, max(x, 511 - y) / 2));
       }
   GetChar();
   Print("Blau-Bild ändern..\n");
   for (int y = 0; y < b.ysize; y++)
     for (int x = 0; x < b.xsize; x++)
       {
-        PutVal(b, x, y, Min(255, Max(511 - x, y) / 2));
+        PutVal(b, x, y, min(255, max(511 - x, y) / 2));
       }
   GetChar();
   Display(OFF);

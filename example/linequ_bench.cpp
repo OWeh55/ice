@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
   do
     {
-      x1 = SolveLinEqu(A, b);
+      x1 = SolveLinearEquation(A, b);
       i++;
       ta = TimeD();
     }

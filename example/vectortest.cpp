@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
   Vector ih = A * s;
   cout << "Inhomogenitaet: A * " << s << " = " << ih << endl;
 
-  Vector r = SolveLinEqu(v1 && v2 && v3 && v4, ih);
+  Vector r = SolveLinearEquation(v1 && v2 && v3 && v4, ih);
 
   cout << "Resultat: " << r << " =?= " << s << " " << boolalpha << (r.Distance(s) < 1e-10) << endl;
 
