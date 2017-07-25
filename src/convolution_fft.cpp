@@ -94,7 +94,8 @@ namespace ice
 #undef FNAME
 #define FNAME "InvConvolution"
   void InvConvolution(const Vector& s1, const Vector& s2,
-                      double noise, Vector& d)
+                      Vector& d,
+                      double noise)
   {
     try
       {
@@ -108,7 +109,7 @@ namespace ice
         for (int i = 0; i < size; i++)
           h2[i] = s2[i];
         std::vector<double> dh;
-        InvConvolution(s1, s2, noise, dh);
+        InvConvolution(s1, s2, dh, noise);
         d.Resize(size);
         for (int i = 0; i < size; i++)
           d[i] = dh[i];
@@ -118,7 +119,7 @@ namespace ice
 
   void InvConvolution(const std::vector<double>& s1,
                       const std::vector<double>& s2,
-                      double noise, std::vector<double>& d)
+                      std::vector<double>& d, double noise)
   {
     try
       {

@@ -33,16 +33,15 @@
 
 namespace ice
 {
-#define FNAME "ConvolutionImgD"
-  ImageD ConvolutionImgD(ImageD is1, ImageD is2,
-                         ImageD id, int mode)
+#define FNAME "Convolution"
+  void Convolution(const ImageD& is1, const ImageD& is2,
+                   ImageD& id, int mode)
   {
     try
       {
         int xs, ys;
 
-        ImageD rc;
-        MatchImgD(is1, is2, xs, ys);
+        MatchImgD(is1, is2, id, xs, ys);
 
         // center = \alpha_{0,0}
         int x0 = xs / 2;
@@ -52,15 +51,6 @@ namespace ice
         ds1.create(xs, ys, 0, 1);
         ImageD ds2;
         ds2.create(xs, ys, 0, 1);
-
-        if (! id.isValid())
-          {
-            rc.create(xs, ys, 0, 1);
-          }
-        else
-          {
-            rc = id;
-          }
 
         ImageD ddi;
         ddi.create(xs, ys, 0, 1);
@@ -88,30 +78,28 @@ namespace ice
                 double r2 = (ir + iq) / 2;
                 double i2 = (rq - rr) / 2;
                 // complex multiplication
-                PutValD(rc, x, y, (r1 * r2 - i1 * i2) * efac);
+                PutValD(id, x, y, (r1 * r2 - i1 * i2) * efac);
                 PutValD(ddi, x, y, (r1 * i2 + r2 * i1) * efac);
               }
           }
 
         if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
           {
-            PutValD(rc, x0, y0, 0.0);
+            PutValD(id, x0, y0, 0.0);
             PutValD(ddi, x0, y0, 0.0);
           }
 
         // inverse transform
-        FourierImgD(rc, ddi, INVERS, rc, ddi);
-
-        return rc;
+        FourierImgD(id, ddi, INVERS, id, ddi);
       }
     RETHROW;
   }
 #undef FNAME
 
-#define FNAME "ConvolutionImg"
+#define FNAME "Convolution"
 // ID = IS1 (*) IS2
-  int ConvolutionImg(const Image& is1, const Image& is2,
-                     Image& id, double factor, int mode)
+  void Convolution(const Image& is1, const Image& is2,
+                   Image& id, double factor, int mode)
   {
     try
       {
@@ -124,7 +112,7 @@ namespace ice
         ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
         ImageD dd = NewImgD(xs, ys, 0, 1);
 
-        ConvolutionImgD(ds1, ds2, dd, mode);
+        Convolution(ds1, ds2, dd, mode);
 
         if (factor != 0)
           {
@@ -141,7 +129,6 @@ namespace ice
           {
             ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
           }
-        return OK;
       }
     RETHROW;
   }
@@ -149,9 +136,9 @@ namespace ice
 
 #define FNAME "InvConvolutionImgD"
 // IS2 = ID (*) IS1
-  ImageD InvConvolutionImgD(ImageD is1, ImageD is2,
-                            ImageD id,
-                            double noise, int mode)
+  void InvConvolution(const ImageD& is1, const ImageD& is2,
+                      ImageD& id,
+                      double noise, int mode)
   {
     try
       {
@@ -242,17 +229,15 @@ namespace ice
           }
 
         HartleyImgD(rc, rc);
-
-        return rc;
       }
     RETHROW;
   }
 #undef FNAME
 
-#define FNAME "InvConvolutionImg"
-  int InvConvolutionImg(const Image& is1, const Image& is2,
-                        Image& id,
-                        double factor, double noise, int mode)
+#define FNAME "InvConvolution"
+  void InvConvolution(const Image& is1, const Image& is2,
+                      Image& id,
+                      double factor, double noise, int mode)
   {
     int xs, ys;
     RETURN_ERROR_IF_FAILED(MatchImg(is1, is2, id, xs, ys));
@@ -263,7 +248,7 @@ namespace ice
     ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
     ImageD dd = NewImgD(xs, ys);
 
-    InvConvolutionImgD(ds1, ds2, dd, noise, mode);
+    InvConvolution(ds1, ds2, dd, noise, mode);
 
     if (factor != 0.0)
       {
@@ -280,21 +265,23 @@ namespace ice
       {
         ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
       }
-
-    return OK;
   }
 
-  int InvConvolutionImg(const Image& is1, const Image& is2,
-                        ImageD dd,
-                        double noise, int mode)
+  void InvConvolutionImg(const Image& is1, const Image& is2,
+                         ImageD& dd,
+                         double noise, int mode)
   {
     int xs, ys;
 
-    RETURN_ERROR_IF_FAILED(MatchImg(is1, is2, xs, ys));
+    MatchImg(is1, is2, xs, ys);
+    if (dd.xsize != xs || dd.ysize != ys)
+      throw IceException(FNAME, M_SIZES_DIFFER);
 
-    ImageD ds1 = NewImgD(xs, ys);
+    ImageD ds1;
+    ds1.create(xs, ys);
     ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
-    ImageD ds2 = NewImgD(xs, ys);
+    ImageD ds2;
+    ds2.create(xs, ys);
     ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
 
     if (! dd.isValid())
@@ -307,9 +294,7 @@ namespace ice
           throw IceException(FNAME, M_WRONG_IMGSIZE);
       }
 
-    InvConvolutionImgD(ds1, ds2, dd, noise, mode);
-
-    return OK;
+    InvConvolution(ds1, ds2, dd, noise, mode);
   }
 #undef FNAME
 }

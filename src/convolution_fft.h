@@ -36,6 +36,8 @@ namespace ice
 #define MD_IGNORE_BIAS 1
 #define MD_USE_BIAS 0
 
+  /* ==== one dimensional ===
+   */
   // d = s1 * s2
   void Convolution(const Vector& s1, const Vector& s2,
                    Vector& d);
@@ -43,33 +45,36 @@ namespace ice
                    std::vector<double>& d);
 
   // s1 * d = s2
-  void InvConvolution(const Vector& s1, const Vector& s2,
-                      double noise, Vector& d);
-  void InvConvolution(const std::vector<double>& s1, const std::vector<double>& s2,
-                      double noise, std::vector<double>& d);
+  void InvConvolution(const Vector& s1, const Vector& s2, Vector& d,
+                      double noise = 0.0001);
+  void InvConvolution(const std::vector<double>& s1, const std::vector<double>& s2, std::vector<double>& d,
+                      double noise = 0.0001);
+
+  /* ==== two dimensional ===
+   */
 
   // id = is1 * is2
-  ImageD ConvolutionImgD(ImageD is1, ImageD is2,
-                         ImageD id, int mode = MD_USE_BIAS);
+  void Convolution(const ImageD& is1, const ImageD& is2,
+                   ImageD& id, int mode = MD_USE_BIAS);
 
-  int ConvolutionImg(const Image& is1, const Image& is2,
-                     Image& id, double factor = 0.0, int mode = MD_USE_BIAS);
+  void Convolution(const Image& is1, const Image& is2,
+                   Image& id, double factor = 0.0, int mode = MD_USE_BIAS);
 
-  int ConvolutionImg(const Image& is1, const Image& is2,
-                     ImageD id, int mode = MD_USE_BIAS);
+  void Convolution(const Image& is1, const Image& is2,
+                   ImageD& id, int mode = MD_USE_BIAS);
 
   // is1 * id = is2
-  ImageD InvConvolutionImgD(ImageD is1, ImageD is2,
-                            ImageD id,
-                            double noise = 0.000001, int mode = MD_USE_BIAS);
+  void InvConvolution(const ImageD& is1, const ImageD& is2,
+                      ImageD& id,
+                      double noise = 0.000001, int mode = MD_USE_BIAS);
 
-  int InvConvolutionImg(const Image& is1, const Image& is2,
-                        Image& id,
-                        double factor = 0.0, double noise = 0.000001,
-                        int mode = MD_USE_BIAS);
+  void InvConvolution(const Image& is1, const Image& is2,
+                      Image& id,
+                      double factor = 0.0, double noise = 0.000001,
+                      int mode = MD_USE_BIAS);
 
-  int InvConvolutionImg(const Image& is1, const Image& is2,
-                        ImageD id, double noise = 0.000001,
-                        int mode = MD_USE_BIAS);
+  void InvConvolution(const Image& is1, const Image& is2,
+                      ImageD& id, double noise = 0.000001,
+                      int mode = MD_USE_BIAS);
 }
 #endif

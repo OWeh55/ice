@@ -44,7 +44,7 @@ namespace ice
         Image imgr;
         imgr.create(sx, sy, 255);
 
-        InvConvolutionImg(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS);
+        InvConvolution(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS);
 
         val = PeakValuation(imgr, Image(), dx, dy);
 
