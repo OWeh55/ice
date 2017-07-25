@@ -157,10 +157,11 @@ namespace ice
     void transformIfNeeded() throw(std::logic_error);
     void checkParameter(int xs, int ys); // throws in case of error
 
-    static const int sNull = 0;
-    static const int sPara = 1;
-    static const int sInput = 2;
-    static const int sDone = 3;
+    // internal state
+    static const int sNull = 0; // created (without parameters set)
+    static const int sPara = 1; // parameters are set
+    static const int sInput = 2; // input specified
+    static const int sDone = 3; // transform done
 
     int rows, cols;
     bool forward;
