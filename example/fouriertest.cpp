@@ -2,7 +2,7 @@
 #include <image.h>
 #include <fouriertrafo.h>
 
-// test der neuen Klasse FourierTrafo
+// test class FourierTrafo
 
 void print(const vector<double>& v, bool index = true)
 {
@@ -38,8 +38,9 @@ int main(int argc, char** argv)
     {
       double fi = M_PI * 2 * i / vsize;
       f1[i] = sin(fi) + 0.5 * cos(2 * fi) + 0.2;
-      f2[i] = cos(fi) + 0.3 * cos(3 * fi) + 0.3;
+      f2[i] = cos(fi) + 0.3 * sin(3 * fi) + 0.3;
     }
+  cout << "two given functions" << endl;
   print(f1);
   print(f2, false);
 
@@ -50,9 +51,11 @@ int main(int argc, char** argv)
   // transform f1
   ft.setInput(f1);
   ft.getResult(s1r, s1i);
+
   // transform f2
   ft.setInput(f2);
   ft.getResult(s2r, s2i);
+  cout << "the fourier transformed fuctions" << endl;
   print(s1r);
   print(s1i, false);
 
@@ -66,6 +69,7 @@ int main(int argc, char** argv)
   ft.getResultFromReal(s1r, s1i);
   ft.getResultFromImag(s2r, s2i);
 
+  cout << "fourier transformed fuctions from combined transform" << endl;
   print(s1r);
   print(s1i, false);
 
@@ -79,7 +83,7 @@ int main(int argc, char** argv)
   // inverse transform f2
   ft.setInput(s2r, s2i);
   ft.getResult(f2);
-
+  cout << "the back transformed fuctions" << endl;
   print(f1);
   print(f2, false);
 

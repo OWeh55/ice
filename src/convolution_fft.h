@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // conv.h
-// Faltung und "Ent-"Faltung auf der Basis der FT
+// convolution and deconvolution based on fourier transform
 
 #ifndef CONVOLUTION_FFT_H
 #define CONVOLUTION_FFT_H
@@ -37,15 +37,16 @@ namespace ice
 #define MD_USE_BIAS 0
 
   // d = s1 * s2
-  int Convolution(const Vector& s1, const Vector& s2,
-                  Vector& d);
-  int Convolution(const std::vector<double>& s1, const std::vector<double>& s2,
-                  std::vector<double>& d);
+  void Convolution(const Vector& s1, const Vector& s2,
+                   Vector& d);
+  void Convolution(const std::vector<double>& s1, const std::vector<double>& s2,
+                   std::vector<double>& d);
+
   // s1 * d = s2
-  int InvConvolution(const Vector& s1, const Vector& s2,
-                     double noise, Vector& d);
-  int InvConvolution(const std::vector<double>& s1, const std::vector<double>& s2,
-                     double noise, std::vector<double>& d);
+  void InvConvolution(const Vector& s1, const Vector& s2,
+                      double noise, Vector& d);
+  void InvConvolution(const std::vector<double>& s1, const std::vector<double>& s2,
+                      double noise, std::vector<double>& d);
 
   // id = is1 * is2
   ImageD ConvolutionImgD(ImageD is1, ImageD is2,
