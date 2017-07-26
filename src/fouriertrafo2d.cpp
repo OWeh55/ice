@@ -203,7 +203,8 @@ namespace ice
     state = sInput;
   }
 
-  void FourierTrafo2D::checkParameter(int nRows, int nCols)
+  void FourierTrafo2D::
+  checkParameter(int nRows, int nCols)
   {
     if (state < sPara)   // not set
       {
@@ -216,5 +217,80 @@ namespace ice
             throw logic_error("wrong input dimension");
           }
       }
+  }
+
+  void FourierTrafo2D::getResult(ice::matrix<double>& dstre,
+                                 ice::matrix<double>& dstim) throw(std::logic_error)
+  {
+    transformIfNeeded();
+    dstre = real;
+    dstim = imag;
+  }
+
+  double FourierTrafo2D::getResult(ice::matrix<double>& dstre) throw(std::logic_error)
+  {
+    transformIfNeeded();
+    dstre = real;
+    double imagvalue = 0;
+    for (int i = 0; i < rows; ++i)
+      for (int j = 0; j < cols; ++j)
+        {
+          double iv = imag[i][j];
+          imagvalue += iv * iv;
+        }
+    return imagvalue;
+  }
+
+  void FourierTrafo2D::getResult(const Image& dstre,
+                                 const Image& dstim,
+                                 int mode, int sign) throw(std::logic_error)
+  {
+    ImageD resReal;
+    resReal.create(cols, rows);
+    ImageD resImag;
+    resImag.create(cols, rows);
+    getResult(resReal, resImag);
+    ConvImgDImg(resReal, dstre, mode, sign);
+    ConvImgDImg(resImag, dstim, mode, sign);
+  }
+
+  double FourierTrafo2D::getResult(const Image& dstre,
+                                   int mode, int sign) throw(std::logic_error)
+  {
+    ImageD resReal;
+    resReal.create(cols, rows);
+    double imagValue = getResult(resReal);
+    ConvImgDImg(resReal, dstre, mode, sign);
+    return imagValue;
+  }
+
+  void FourierTrafo2D::getResult(ImageD& dstre,
+                                 ImageD& dstim) throw(std::logic_error)
+  {
+    transformIfNeeded();
+
+    for (int y = 0; y < rows; ++y)
+      for (int x = 0; x < cols; ++x)
+        {
+          // std::cout << x << " " << y << std::endl;
+          dstre.setPixel(x, y, real[y][x]);
+          dstim.setPixel(x, y, imag[y][x]);
+        }
+  }
+
+  double FourierTrafo2D::getResult(ImageD& dstre) throw(std::logic_error)
+  {
+    transformIfNeeded();
+
+    double imagSum = 0;
+    for (int i = 0; i < rows; ++i)
+      for (int j = 0; j < cols; ++j)
+        {
+          // std::cout << i << " " << j << std::endl;
+          dstre.setPixel(j, i, real[i][j]);
+          double iv = imag[i][j];
+          imagSum += iv * iv;
+        }
+    return imagSum;
   }
 }

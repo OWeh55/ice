@@ -39,7 +39,7 @@ namespace ice
 #define FNAME "Inverse"
   Matrix Inverse(const Matrix& m)
   {
-    matrix<double> mat(m);
+    matrix<double> mat(m.toMatrix());
     matrix<double> inverse = Inverse(mat);
     return Matrix(inverse);
   }

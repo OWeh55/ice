@@ -111,7 +111,7 @@ namespace ice
     IMatrix segmente;
 
     if (!c.isValid())
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     int xmax, xmin, ymax, ymin;
     c.getRect(xmin, ymin, xmax, ymax);

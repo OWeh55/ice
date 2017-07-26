@@ -47,7 +47,7 @@ namespace ice
   void ClassifierTree::Init()
   {
     if (nClasses == 0)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     Init(nClasses, nFeatures);
   }

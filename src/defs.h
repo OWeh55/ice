@@ -88,7 +88,7 @@ namespace ice
 #define M_MATRIXFORMAT          "Falsches Matrixformat"
 
 // general errors
-#define M_NOT_INITIALISED       "Nicht initialisiert"
+#define M_NOT_INITIALIZED       "Nicht initialisiert"
 #define M_ALREADY_INITIALIZED   "Initialisierung bereits abgeschlossen"
 #define M_NO_DATA               "Keine Daten"
 #define M_WRONG_CODING          "Falsche String-Kodierung (utf8 benutzen)"

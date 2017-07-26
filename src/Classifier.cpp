@@ -32,7 +32,7 @@ namespace ice
   void Classifier::Init()
   {
     if (state == invalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
     _reset();
   }
 
@@ -52,7 +52,7 @@ namespace ice
   int Classifier::Train(const ClassSample& s)
   {
     if (state != training)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((int)s.features.size() != nFeatures)
       throw IceException(FNAME, M_WRONG_DIM);
@@ -85,7 +85,7 @@ namespace ice
       throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (state != training)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     for (int i = 0; i < m.rows(); i++)
       {
@@ -108,7 +108,7 @@ namespace ice
   int Classifier::Train(const Matrix& m, const IVector& classnr)
   {
     if (state != training)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((m.rows() < 1) || (m.cols() != nFeatures) ||
         (m.rows() != classnr.Size()))
@@ -127,7 +127,7 @@ namespace ice
   int Classifier::Finish()
   {
     if (state != training)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     bool allTrained = true;
     for (int i = 0; i < nClasses && allTrained; i++)

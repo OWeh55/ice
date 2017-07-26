@@ -43,7 +43,7 @@ namespace ice
     int i;
     int min, max;
     if (!h.isValid())
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     for (i = 0; i < h.nClasses(); i++)
       {

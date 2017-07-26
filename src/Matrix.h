@@ -44,13 +44,15 @@ namespace ice
     explicit Matrix(int rows, int cols, double* data);
     explicit Matrix(const std::vector<Point>& pl);
     explicit Matrix(const std::vector<std::vector<double> >& vv);
-    Matrix(const ice::matrix<double>& vv);
+    explicit Matrix(const ice::matrix<double>& vv);
     Matrix(const std::vector<Point>& pl, const std::vector<double>& weight);
     ~Matrix();
 
     void resize(int rows, int cols);
 
-    operator matrix<double> () const;
+    // operator matrix<double> () const;
+    matrix<double> toMatrix() const;
+
     /* Element-Operator */
     const Vector& operator[](int) const;
     Vector& operator[](int);

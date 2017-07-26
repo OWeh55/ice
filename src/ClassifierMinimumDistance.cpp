@@ -152,7 +152,7 @@ namespace ice
       throw IceException(FNAME, M_INVALID_CLASSNUMBER);
 
     if (nClasses == 0)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (par[cl][nFeatures] == 0)
       throw IceException(FNAME, M_NOT_TRAINED);

@@ -103,7 +103,7 @@ namespace ice
   Point Moments::Centre() const
   {
     if (mom[i00] == 0.0)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     return Point(mom[i10] / mom[i00], mom[i01] / mom[i00]);
   }
@@ -574,7 +574,7 @@ namespace ice
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Matrix trm = tr.getMatrix();
+    Matrix trm(tr.getMatrix());
 
     if (fabs(trm[2][0]) + fabs(trm[2][1]) > EPSILON)
       throw IceException(FNAME, M_TRAFO_NOTAFFINE);

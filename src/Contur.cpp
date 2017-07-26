@@ -135,7 +135,7 @@ namespace ice
   int Contur::add(Freeman dir)
   {
     if (!isvalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     data.push_back(dir);
     dir.move(endp);
@@ -180,7 +180,7 @@ namespace ice
   int Contur::add(IPoint p)
   {
     if (!isvalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     //    std::cout << "OK" << std::endl;
 
@@ -302,7 +302,7 @@ namespace ice
     int i;
 
     if (!c.isvalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     RETURN_ERROR_IF_FAILED(add(c.start));
 
@@ -407,7 +407,7 @@ namespace ice
   int Contur::invertDir()
   {
     if (!isvalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (nDirectionCodes == 0)
       {
@@ -472,7 +472,7 @@ namespace ice
     IPoint res;
 
     if (!isvalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     int currentIndex = 0;
     res = start;
@@ -523,7 +523,7 @@ namespace ice
     fc.clear();
 
     if (!isvalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (!isclosed)
       throw IceException(FNAME, M_CONTUR_NOT_CLOSED);
@@ -570,7 +570,7 @@ namespace ice
     upl.clear();
 
     if (!isvalid)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     std::vector<Freeman> cd;
 

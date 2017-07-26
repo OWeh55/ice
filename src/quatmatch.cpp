@@ -113,7 +113,7 @@ namespace ice
         c2 = c2 + !(lxi - myi);
       }
 
-    Matrix A = (1.0 / k) * (!c2) * c2 + 2 * c1;
+    Matrix A = (1.0 / k) * (!c2) * c2 + 2.0 * c1;
 
     Matrix eval;
     Matrix evec;
@@ -236,7 +236,7 @@ namespace ice
       }
 
     //Matrix A = (1.0/double(k))*(!c2)*c2 + 2*c1;
-    Matrix A = 2 * (!c2) * c3 * c2 + c1 + (!c1);
+    Matrix A = 2.0 * (!c2) * c3 * c2 + c1 + (!c1);
 
     Matrix eval;
     Matrix evec;

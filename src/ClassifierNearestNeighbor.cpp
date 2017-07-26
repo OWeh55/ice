@@ -102,9 +102,9 @@ namespace ice
       std::vector<double>& probs) const
   {
     const ClassSample* rp = tree.findNearest(fn);
-    if (rp == NULL)
+    if (rp == nullptr)
       {
-        throw IceException(FNAME, M_NOT_INITIALISED);
+        throw IceException(FNAME, M_NOT_INITIALIZED);
       }
     return rp->classNr;
   }

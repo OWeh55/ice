@@ -137,7 +137,7 @@ namespace ice
       pl.clear();
 
       if (!isvalid)
-        throw IceException(FNAME, M_NOT_INITIALISED);
+        throw IceException(FNAME, M_NOT_INITIALIZED);
 
       int nPoints = nDirectionCodes + 1;
 

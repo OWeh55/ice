@@ -46,7 +46,7 @@ namespace ice
     double kgrenzeneu = 0, kgrenzealt;
 
     if (!h.isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     Printf("          x<%7.3f          %d \n", h.lowerLimit, h.klasse[0]);
     kgrenzealt = h.lowerLimit;

@@ -471,7 +471,7 @@ namespace ice
       {
         // startlösung wird ohne Berücksichtigung der Verzeichnung berechnet
         Trafo tr = MatchPointlists(orig[listnr], marker[listnr]);
-        Matrix tm = tr.getMatrix();
+        Matrix tm(tr.getMatrix());
         // cout << tm << endl;
         parameterVector[k++] = tm[0][0] / tm[2][2];
         parameterVector[k++] = tm[0][1] / tm[2][2];

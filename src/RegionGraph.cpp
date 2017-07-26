@@ -1048,7 +1048,7 @@ ende:
     EG = RG.ComputeEdgeGraph();   // Kantengraph berechnen
 
     if (EG == nullptr)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     EG->ComputeWatershedTrans();  // WST auf Kantengraph ausfuehren
 

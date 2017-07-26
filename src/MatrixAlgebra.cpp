@@ -84,7 +84,7 @@ namespace ice
 #define FNAME "CholeskyDecomposition"
   Matrix CholeskyDecomposition(const Matrix& mat)
   {
-    matrix<double> m(mat);
+    matrix<double> m(mat.toMatrix());
     m = CholeskyDecomposition(m);
     return Matrix(m);
   }
@@ -108,7 +108,7 @@ namespace ice
   {
     try
       {
-        matrix<double> m(mat);
+        matrix<double> m(mat.toMatrix());
         m = CholeskyInverse(m);
         return Matrix(m);
       }
@@ -227,7 +227,7 @@ namespace ice
 
   bool isPositiveDefinite(const Matrix& mat)
   {
-    matrix<double> m(mat);
+    matrix<double> m(mat.toMatrix());
     return isPositiveDefinite(m);
   }
 #undef FNAME
@@ -270,7 +270,7 @@ namespace ice
 #define FNAME "Determinant"
   double Determinant(const Matrix& m)
   {
-    matrix<double> mat(m);
+    matrix<double> mat(m.toMatrix());
     return Determinant(mat);
   }
 
@@ -363,7 +363,7 @@ namespace ice
 #define FNAME "CholeskyDeterminant"
   double CholeskyDeterminant(const Matrix& m)
   {
-    matrix<double> mat(m);
+    matrix<double> mat(m.toMatrix());
     return CholeskyDeterminant(mat);
   }
 

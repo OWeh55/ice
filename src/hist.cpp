@@ -111,7 +111,7 @@ namespace ice
     int kl;
 
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     kl = (int)floor((val - lowerLimit) / classwidth) + 1;
 
@@ -169,7 +169,7 @@ namespace ice
   int Hist::count(int index) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((index < 0) || (index > nClasses + 1))
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -181,7 +181,7 @@ namespace ice
   double Hist::Rel(int index) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (index < 0 || index > nClasses + 1)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -197,7 +197,7 @@ namespace ice
   int Hist::Limits(double& minv, double& maxv) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     minv = min;
     maxv = max;
@@ -211,7 +211,7 @@ namespace ice
     int qabs;
 
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((q < 0.0) || (q > 0.5))
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -260,7 +260,7 @@ namespace ice
   double Hist::ClassValue(int nr) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (nr < 0 || nr > nClasses + 1)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -272,7 +272,7 @@ namespace ice
   {
     // hier nur "normale" Klassen
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (nr < 1 || nr > nClasses)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -290,7 +290,7 @@ namespace ice
     int i;
 
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (sum == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -320,7 +320,7 @@ namespace ice
   void Hist::getStatistics(int& n) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     n = sum;
   };
@@ -346,7 +346,7 @@ namespace ice
     char zahlstr[80];
 
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (!IsImg(b))
       throw IceException(FNAME, M_WRONG_IMAGE);

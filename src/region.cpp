@@ -39,7 +39,7 @@ namespace ice
     IMatrix segl;
 
     if (!c.isValid())
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     segl = ConturSegmentlist(c);
 

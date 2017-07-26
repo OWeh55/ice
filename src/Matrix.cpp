@@ -307,7 +307,7 @@ namespace ice
     swap(newmat);
   }
 
-  Matrix::operator matrix<double>() const
+  matrix<double> Matrix::toMatrix() const
   {
     matrix<double> res(nRows, nColumns);
     for (int r = 0; r < nRows; ++r)

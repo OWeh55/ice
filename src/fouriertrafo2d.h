@@ -22,6 +22,7 @@
 
 #include <stdexcept>
 #include <vector>
+#include "IceException.h"
 #include "fourier.h"
 #include "Matrix.h"
 #include "base.h"
@@ -76,79 +77,21 @@ namespace ice
     void setInput(const Matrix& vr, const Matrix& vi);
 
     void getResult(ice::matrix<double>& dstre,
-                   ice::matrix<double>& dstim) throw(std::logic_error)
-    {
-      transformIfNeeded();
-      dstre = real;
-      dstim = imag;
-    }
+                   ice::matrix<double>& dstim) throw(std::logic_error);
 
-    double getResult(ice::matrix<double>& dstre) throw(std::logic_error)
-    {
-      transformIfNeeded();
-      dstre = real;
-      double imagvalue = 0;
-      for (int i = 0; i < rows; ++i)
-        for (int j = 0; j < cols; ++j)
-          {
-            double iv = imag[i][j];
-            imagvalue += iv * iv;
-          }
-      return imagvalue;
-    }
+    double getResult(ice::matrix<double>& dstre) throw(std::logic_error);
 
     void getResult(const Image& dstre,
                    const Image& dstim,
-                   int mode = RAW, int sign = UNSIGNED) throw(std::logic_error)
-    {
-      ImageD resReal;
-      resReal.create(cols, rows);
-      ImageD resImag;
-      resImag.create(cols, rows);
-      getResult(resReal, resImag);
-      ConvImgDImg(resReal, dstre, mode, sign);
-      ConvImgDImg(resImag, dstim, mode, sign);
-    }
+                   int mode = RAW, int sign = UNSIGNED) throw(std::logic_error);
 
     double getResult(const Image& dstre,
-                     int mode = RAW, int sign = UNSIGNED) throw(std::logic_error)
-    {
-      ImageD resReal;
-      resReal.create(cols, rows);
-      double imagValue = getResult(resReal);
-      ConvImgDImg(resReal, dstre, mode, sign);
-      return imagValue;
-    }
+                     int mode = RAW, int sign = UNSIGNED) throw(std::logic_error);
 
     void getResult(ImageD& dstre,
-                   ImageD& dstim) throw(std::logic_error)
-    {
-      transformIfNeeded();
+                   ImageD& dstim) throw(std::logic_error);
 
-      for (int y = 0; y < rows; ++y)
-        for (int x = 0; x < cols; ++x)
-          {
-            // std::cout << x << " " << y << std::endl;
-            dstre.setPixel(x, y, real[y][x]);
-            dstim.setPixel(x, y, imag[y][x]);
-          }
-    }
-
-    double getResult(ImageD& dstre) throw(std::logic_error)
-    {
-      transformIfNeeded();
-
-      double imagSum = 0;
-      for (int i = 0; i < rows; ++i)
-        for (int j = 0; j < cols; ++j)
-          {
-            // std::cout << i << " " << j << std::endl;
-            dstre.setPixel(j, i, real[i][j]);
-            double iv = imag[i][j];
-            imagSum += iv * iv;
-          }
-      return imagSum;
-    }
+    double getResult(ImageD& dstre) throw(std::logic_error);
 
     FourierTrafo2D(const FourierTrafo2D& ft) = delete;
     const FourierTrafo2D& operator=(const FourierTrafo2D& ft) = delete;

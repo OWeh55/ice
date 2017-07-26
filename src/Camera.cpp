@@ -369,7 +369,7 @@ namespace ice
         create_trans(); // Transformation erzeugen
         Vector bpu(dist->Rect(bp));// Unverzeichneter Bildpunkt
         bpu.Append(1); // in homogene Koordinaten umwandeln
-        Matrix T = tr.getMatrix(); // Transformationsmatrix
+        Matrix T(tr.getMatrix()); // Transformationsmatrix
         Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)
         Vector a(3);
 

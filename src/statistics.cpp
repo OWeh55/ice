@@ -66,7 +66,7 @@ namespace ice
   int Statistics::Init()
   {
     if (dim < 1)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     sweight = 0.0;
 

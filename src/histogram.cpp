@@ -149,7 +149,7 @@ namespace ice
   int Histogram::addValue(int val, int count)
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((unsigned int)val < (unsigned int)nclasses)
       {
@@ -171,7 +171,7 @@ namespace ice
   int Histogram::getCount(int index) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((index < 0) || (index >= nclasses))
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -184,7 +184,7 @@ namespace ice
     vector<int> v(nclasses);
 
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     for (int i = 0; i < nclasses; i++)
       {
@@ -197,7 +197,7 @@ namespace ice
   void Histogram::getCount(vector<int>& v) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     v.resize(nclasses);
 
@@ -212,7 +212,7 @@ namespace ice
   double Histogram::getRelative(int index) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (index < 0 || index >= nclasses)
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -228,7 +228,7 @@ namespace ice
     vector<double> res(nclasses);
 
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (sum == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -244,7 +244,7 @@ namespace ice
   void Histogram::getRelative(vector<double>& v) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (sum == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -263,7 +263,7 @@ namespace ice
   int Histogram::getLimits(int& minv, int& maxv) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (sum == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -291,7 +291,7 @@ namespace ice
   int Histogram::getLimits(int& minv, int& maxv, double q) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((q < 0.0) || (q > 0.5))
       throw IceException(FNAME, M_WRONG_PARAM);
@@ -324,7 +324,7 @@ namespace ice
   void Histogram::getStatistics(int& n, double& xm, double& xs, double& skew) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (sum == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -356,7 +356,7 @@ namespace ice
   void Histogram::getStatistics(int& n) const
   {
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     n = sum;
   };
@@ -389,7 +389,7 @@ namespace ice
     char zahlstr[80];
 
     if (!isInit)
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (!IsImg(b))
       throw IceException(FNAME, M_WRONG_IMAGE);

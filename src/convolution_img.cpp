@@ -114,13 +114,13 @@ namespace ice
 
         Convolution(ds1, ds2, dd, mode);
 
-        if (factor != 0)
+        if (factor != 0) // gray value scaling given
           {
             if (factor != 1.0)
               for (int y = 0; y < dd.ysize; ++y)
                 for (int x = 0; x < dd.xsize; ++x)
                   {
-                    PutValD(dd, x, y, factor * GetValD(dd, x, y));
+                    dd.setPixel(x, y, factor * dd.getPixel(x, y));
                   }
 
             ConvImgDImg(dd, id, NORMALIZED, SIGNED);
@@ -134,7 +134,7 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "InvConvolutionImgD"
+#define FNAME "InvConvolution"
 // IS2 = ID (*) IS1
   void InvConvolution(const ImageD& is1, const ImageD& is2,
                       ImageD& id,
@@ -156,27 +156,18 @@ namespace ice
 
         double noise2 = noise * noise;
 
-        MatchImgD(is1, is2, xs, ys);
+        MatchImgD(is1, is2, id, xs, ys);
 
         int x0 = xs / 2;
         int y0 = ys / 2;
 
-        ImageD rc;
-
-        if (id.isValid())
-          {
-            MatchImgD(is1, id);
-            rc = id;
-          }
-        else
-          {
-            rc = NewImgD(xs, ys, 0, 1);
-          }
-
         efactor = sqrt((double)(xs * ys));
 
-        ImageD ds1 = NewImgD(xs, ys, 0, 1);
-        ImageD ds2 = NewImgD(xs, ys, 0, 1);
+        ImageD ds1;
+        ds1.create(xs, ys, 0, 1);
+        ImageD ds2;
+        ds2.create(xs, ys, 0, 1);
+
         //  ImageD ddi=NewImgD(xs,ys,0,1);
 
         FourierImgD(is1, is2, NORMAL, ds1, ds2);
@@ -218,17 +209,17 @@ namespace ice
                     im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
                   }
 
-                PutValD(rc, x, y, r3 - im3);
+                PutValD(id, x, y, r3 - im3);
                 //    PutValD(ddi,x,y,im3);
               }
           }
 
         if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
           {
-            PutValD(rc, x0, y0, 0.0);
+            PutValD(id, x0, y0, 0.0);
           }
 
-        HartleyImgD(rc, rc);
+        HartleyImgD(id, id);
       }
     RETHROW;
   }
@@ -239,62 +230,60 @@ namespace ice
                       Image& id,
                       double factor, double noise, int mode)
   {
-    int xs, ys;
-    RETURN_ERROR_IF_FAILED(MatchImg(is1, is2, id, xs, ys));
-
-    ImageD ds1 = NewImgD(xs, ys);
-    ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
-    ImageD ds2 = NewImgD(xs, ys);
-    ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
-    ImageD dd = NewImgD(xs, ys);
-
-    InvConvolution(ds1, ds2, dd, noise, mode);
-
-    if (factor != 0.0)
+    try
       {
-        if (factor != 1.0)
-          for (int y = 0; y < dd.ysize; ++y)
-            for (int x = 0; x < dd.xsize; ++x)
-              {
-                PutValD(dd, x, y, factor * GetValD(dd, x, y));
-              }
+        int xs, ys;
+        MatchImg(is1, is2, id, xs, ys);
 
-        ConvImgDImg(dd, id, NORMALIZED, SIGNED);
+        ImageD ds1 = NewImgD(xs, ys);
+        ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
+        ImageD ds2 = NewImgD(xs, ys);
+        ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
+        ImageD dd = NewImgD(xs, ys);
+
+        InvConvolution(ds1, ds2, dd, noise, mode);
+
+        if (factor != 0.0)
+          {
+            if (factor != 1.0)
+              for (int y = 0; y < dd.ysize; ++y)
+                for (int x = 0; x < dd.xsize; ++x)
+                  {
+                    dd.setPixel(x, y, factor * dd.getPixel(x, y));
+                  }
+
+            ConvImgDImg(dd, id, NORMALIZED, SIGNED);
+          }
+        else
+          {
+            ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
+          }
       }
-    else
-      {
-        ConvImgDImg(dd, id, ADAPTIVE, SIGNED);
-      }
+    RETHROW;
   }
 
   void InvConvolutionImg(const Image& is1, const Image& is2,
                          ImageD& dd,
                          double noise, int mode)
   {
-    int xs, ys;
-
-    MatchImg(is1, is2, xs, ys);
-    if (dd.xsize != xs || dd.ysize != ys)
-      throw IceException(FNAME, M_SIZES_DIFFER);
-
-    ImageD ds1;
-    ds1.create(xs, ys);
-    ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
-    ImageD ds2;
-    ds2.create(xs, ys);
-    ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
-
-    if (! dd.isValid())
+    try
       {
-        ImageD dd = NewImgD(xs, ys);
-      }
-    else
-      {
-        if (xs != dd.xsize || ys != dd.ysize)
-          throw IceException(FNAME, M_WRONG_IMGSIZE);
-      }
+        int xs, ys;
 
-    InvConvolution(ds1, ds2, dd, noise, mode);
+        MatchImg(is1, is2, xs, ys);
+        if (dd.xsize != xs || dd.ysize != ys)
+          throw IceException(FNAME, M_SIZES_DIFFER);
+
+        ImageD ds1;
+        ds1.create(xs, ys);
+        ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
+        ImageD ds2;
+        ds2.create(xs, ys);
+        ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
+
+        InvConvolution(ds1, ds2, dd, noise, mode);
+      }
+    RETHROW;
   }
 #undef FNAME
 }

@@ -50,7 +50,7 @@ namespace ice
     int topt;
 
     if (!hist.isValid())
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     int n = hist.getNClasses();
 
@@ -171,7 +171,7 @@ namespace ice
     int topt;
 
     if (!hist.isValid())
-      throw IceException(FNAME, M_NOT_INITIALISED);
+      throw IceException(FNAME, M_NOT_INITIALIZED);
 
     int n = hist.nClasses();
 
