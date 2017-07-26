@@ -18,35 +18,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef MATCHIMG_H
-#define MATCHIMG_H
+/* evaluate quality of a peak */
 
+#ifndef _PEAK_EVALUATION_
+#define _PEAK_EVALUATION_
+
+#include "defs.h"
 #include "base.h"
-#include "Trafo.h"
+#include "based.h"
 
 namespace ice
 {
-  void Windowing(const ImageD& source, ImageD& dest,
-                 int refValue = -1);
-
-  void Windowing(const Image& source, ImageD& dest,
-                 int refValue = -1);
-
-  void Windowing(const Image& source, Image& dest,
-                 int refValue = -1);
-
-  double DetectShift(const Image& img1, const Image& img2,
-                     double& dx, double& dy, double& val,
-                     double beta = 0.1);
-
-#define DT_NEARLY_SHIFT 1
-#define DT_REFINE 16
-  int DetectTrafo(const Image& img1, const Image& img2,
-                  Trafo& tr,
-                  double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
-
-  int DetectTrafo(const Image& img1, const Image& img2, const Image& himg,
-                  Trafo& tr,
-                  double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
+  double peakEvaluation(const ImageD& peakImage, Point& p);
 }
 #endif
+

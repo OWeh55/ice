@@ -235,11 +235,15 @@ namespace ice
         int xs, ys;
         MatchImg(is1, is2, id, xs, ys);
 
-        ImageD ds1 = NewImgD(xs, ys);
+        ImageD ds1;
+        ds1.create(xs, ys);
         ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
-        ImageD ds2 = NewImgD(xs, ys);
+        ImageD ds2;
+        ds2.create(xs, ys);
         ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
-        ImageD dd = NewImgD(xs, ys);
+
+        ImageD dd;
+        dd.create(xs, ys);
 
         InvConvolution(ds1, ds2, dd, noise, mode);
 

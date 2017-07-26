@@ -26,31 +26,98 @@
 #include "trafo_img.h"
 #include "geo.h"
 #include "simplex.h"
-#include "PeakVal.h"
+#include "peakEvaluation.h"
 #include "matchimg.h"
 
 namespace ice
 {
+#define FNAME "Windowing"
+  void Windowing(const ImageD& source, ImageD& dest,
+                 int refValue)
+  {
+    try
+      {
+        int xs, ys;
+        MatchImgD(source, dest, xs, ys);
+
+        if (refValue < 0)
+          {
+            double sum = 0;
+            for (int y = 0; y < ys; y++)
+              for (int x = 0; x < xs; x++)
+                sum += source.getPixelUnchecked(x, y);
+            refValue = sum / xs / ys;
+          }
+
+        for (int y = 0; y < ys; y++)
+          {
+            double fy = 1 - cos(2 * M_PI * y / ys);
+            for (int x = 0; x < xs; x++)
+              {
+                double fx = 1 - cos(2 * M_PI * x / xs);
+                dest.setPixelUnchecked(x, y, (source.getPixelUnchecked(x, y) - refValue) *fx * fy + refValue);
+              }
+          }
+      }
+    RETHROW;
+  }
+
+  void Windowing(const Image& source, ImageD& dest,
+                 int refValue)
+  {
+    try
+      {
+        ImageD dsource;
+        dsource.create(source.xsize, source.ysize);
+        ConvImgImgD(source, dsource, RAW, UNSIGNED);
+        Windowing(dsource, dest, refValue);
+      }
+    RETHROW;
+  }
+
+  void Windowing(const Image& source, Image& dest,
+                 int refValue)
+  {
+    try
+      {
+        ImageD h;
+        h.create(source.xsize, source.ysize);
+        Windowing(source, h);
+        ConvImgDImg(h, dest, RAW, UNSIGNED);
+      }
+    RETHROW;
+  }
+#undef FNAME
+
 #define FNAME "DetectShift"
-  int DetectShift(const Image& img1, const Image& img2,
-                  double& dx, double& dy, double& val,
-                  double beta)
+  double DetectShift(const Image& img1, const Image& img2,
+                     double& dx, double& dy, double& val,
+                     double beta)
   {
     try
       {
         int sx, sy;
         MatchImg(img1, img2, sx, sy);
 
-        Image imgr;
-        imgr.create(sx, sy, 255);
+        ImageD dimg1;
+        dimg1.create(img1.xsize, img1.ysize);
+        Windowing(img1, dimg1);
 
-        InvConvolution(img1, img2, imgr, 0.0, beta, MD_IGNORE_BIAS);
+        ImageD dimg2;
+        dimg2.create(img2.xsize, img2.ysize);
+        Windowing(img2, dimg2);
 
-        val = PeakValuation(imgr, Image(), dx, dy);
+        ImageD imgr;
+        imgr.create(sx, sy);
 
-        dx -= sx / 2;
-        dy -= sy / 2; // Peak coordinates -> Shift (of windows)
-        return OK;
+        InvConvolution(img1, img2, imgr, beta, MD_IGNORE_BIAS);
+
+        Point p;
+        val = peakEvaluation(imgr, p);
+
+        dx = p.x - sx / 2;
+        dy = p.y - sy / 2; // Peak coordinates -> Shift (of windows)
+        return val;
       }
     RETHROW;
   }
