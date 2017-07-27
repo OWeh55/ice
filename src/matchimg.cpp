@@ -1,8 +1,7 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 2002-2017 FSU Jena, Digital Image Processing Group
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +17,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 #include "macro.h"
 #include "IceException.h"
 #include "numbase.h"
@@ -55,7 +55,8 @@ namespace ice
             for (int x = 0; x < xs; x++)
               {
                 double fx = 1 - cos(2 * M_PI * x / xs);
-                dest.setPixelUnchecked(x, y, (source.getPixelUnchecked(x, y) - refValue) *fx * fy + refValue);
+                double value = source.getPixelUnchecked(x, y) - refValue;
+                dest.setPixelUnchecked(x, y, value * fx * fy + refValue);
               }
           }
       }
@@ -90,9 +91,8 @@ namespace ice
 #undef FNAME
 
 #define FNAME "DetectShift"
-  double DetectShift(const Image& img1, const Image& img2,
-                     double& dx, double& dy, double& val,
-                     double beta)
+  double detectShift(const Image& img1, const Image& img2,
+                     double& dx, double& dy, double beta)
   {
     try
       {
@@ -113,7 +113,7 @@ namespace ice
         InvConvolution(img1, img2, imgr, beta, MD_IGNORE_BIAS);
 
         Point p;
-        val = peakEvaluation(imgr, p);
+        double val = peakEvaluation(imgr, p);
 
         dx = p.x - sx / 2;
         dy = p.y - sy / 2; // Peak coordinates -> Shift (of windows)
@@ -123,9 +123,9 @@ namespace ice
   }
 #undef FNAME
 
-#define MINVAL (0.5)
+  constexpr int MINVAL = 0.5;
 
-#define FNAME "DetectTrafo"
+#define FNAME "detectTrafo"
 
   int inside(const Image& img, const Trafo& tr, IPoint p)
   {
@@ -134,25 +134,6 @@ namespace ice
     return img.inside(p);
   }
 
-  /*
-  static void TransformWindow(const Trafo &tr,
-            int wxi,int wyi,int wxa,int wya,
-            int &wxit,int &wyit,int &wxat,int &wyat)
-  {
-    int xt,yt;
-    TransformAndRound(tr,wxi,wyi,wxit,wyit);
-    wxat=wxit; wyat=wyit;
-    TransformAndRound(tr,wxi,wya,xt,yt);
-    wxit=Min(wxit,xt); wxat=Max(wxat,xt);
-    wyit=Min(wyit,yt); wyat=Max(wyat,yt);
-    TransformAndRound(tr,wxa,wya,xt,yt);
-    wxit=Min(wxit,xt); wxat=Max(wxat,xt);
-    wyit=Min(wyit,yt); wyat=Max(wyat,yt);
-    TransformAndRound(tr,wxa,wyi,xt,yt);
-    wxit=Min(wxit,xt); wxat=Max(wxat,xt);
-    wyit=Min(wyit,yt); wyat=Max(wyat,yt);
-  }
-  */
   void GetWindow2Img(const Image& img1, Window& w)
   {
     int sx = img1->xsize;
@@ -174,7 +155,7 @@ namespace ice
     w.p2.y = w.p1.y + sy2;
   }
 
-  int DetectTrafo(const Image& img1, const Image& img2, Image& himg,
+  int detectTrafo(const Image& img1, const Image& img2, Image& himg,
                   Trafo& tr,
                   double beta, int ct,
                   int mode)
@@ -196,7 +177,7 @@ namespace ice
         double dx, dy, val;
 
         // Detection der globalen Verschiebung
-        DetectShift(img1(w), img2(w), dx, dy, val, beta * 3);
+        val = detectShift(img1(w), img2(w), dx, dy, beta * 3);
 
         if (val < MINVAL)
           {
@@ -243,7 +224,7 @@ namespace ice
                   )
                     {
                       double dx, dy, val;
-                      DetectShift(himg(w), img2(w), dx, dy, val, beta);
+                      val = detectShift(himg(w), img2(w), dx, dy, beta);
 
                       if (val > MINVAL)
                         {
@@ -276,12 +257,12 @@ namespace ice
     return OK;
   }
 
-  int DetectTrafo(Image img1, Image img2, Trafo& tr,
+  int detectTrafo(const Image& img1, const Image& img2, Trafo& tr,
                   double beta, int ct,
                   int mode)
   {
     Image himg = NewImg(img2);
-    return DetectTrafo(img1, img2, himg, tr, beta, ct, mode);
+    return detectTrafo(img1, img2, himg, tr, beta, ct, mode);
   }
 
 #undef FNAME

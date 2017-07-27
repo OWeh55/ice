@@ -68,8 +68,7 @@ namespace ice
                       ImageD& id,
                       double noise = 0.000001, int mode = MD_USE_BIAS);
 
-  void InvConvolution(const Image& is1, const Image& is2,
-                      Image& id,
+  void InvConvolution(const Image& is1, const Image& is2, Image& id,
                       double factor = 0.0, double noise = 0.000001,
                       int mode = MD_USE_BIAS);
 

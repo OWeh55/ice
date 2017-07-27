@@ -18,11 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* Bewertung der Übereinstimmung eines Peak-Bildes mit dem
-   Einheitsimpuls */
+/* evaluation of peaks */
 
-/* ttbb 18.06.1998 */
-/* Wolfgang Ortmann 2016 */
+/* Wolfgang Ortmann 2017 */
 
 #include <algorithm>
 
@@ -33,13 +31,9 @@
 #include <PointListWalker.h>
 #include "peakEvaluation.h"
 
-// Gibt im Fehlerfall DBL_MAX zurück.
-// Wenn es kein Peak gibt (Markierungsbild vollständig gesetzt oder konstantes Bild),
-// gibt die Funktion als Peakkordinaten (-1,-1) und als Bewertung 0.0 zurück.
-
 namespace ice
 {
-#define FNAME "PeakEvaluation"
+#define FNAME "peakEvaluation"
 
   using namespace std;
 
@@ -94,69 +88,6 @@ namespace ice
       }
   }
 
-#if 0
-  double findMaxRegion(const ImageD& peakImage, const Image& mark,
-                       IPoint max, int markerValue)
-  {
-    priority_queue<IPointValue> cList;
-    cList.push(IPointValue(max, peakImage.getPixel(max)));
-    // vector<IPoint> rand;
-    double minV = peakImage.getPixel(max);
-    double sumV = 0;
-    while (!cList.empty())
-      {
-        IPointValue cPoint = cList.top();
-        cList.pop();
-        // cout << cPoint << endl;
-        if (mark.getPixel(cPoint) == 0) // unmarked ?
-          {
-
-            Neighbor8Walker w8(cPoint);
-            bool isMax = true;
-            for (w8.init(); isMax && !w8.ready(); w8.next())
-              {
-                // not max if unmarked point in neighborhoud
-                // has higher value
-                if (peakImage.inside(w8))
-                  if (mark.getPixelUnchecked(w8) == 0) // not part of maximum
-                    if (peakImage.getPixelUnchecked(w8) > cPoint.Value())
-                      isMax = false;
-              }
-            if (isMax)
-              {
-                mark.setPixel(cPoint, markerValue);
-                // pixel is part of maximum
-                sumV += cPoint.Value();
-                if (cPoint.Value() < minV)
-                  minV = cPoint.Value();
-
-                for (w8.init(); isMax && !w8.ready(); w8.next())
-                  {
-                    if (peakImage.inside(w8))
-                      if (mark.getPixelUnchecked(w8) == 0) // not part of maximum
-                        cList.push(IPointValue(w8, peakImage.getPixelUnchecked(w8)));
-                  }
-              }
-            else
-              {
-                while (!cList.empty())
-                  cList.pop();
-                cout << "rand: " << peakImage.getPixel(cPoint) << endl;
-                // mark.setPixel(cPoint, mark.maxval);
-                // rand.push_back(cPoint);
-              }
-          }
-      }
-
-    // remove marker for outside points
-    //  for (const auto& p : rand)
-    //    mark.setPixel(p, 0);
-
-    cout << "sum: " << sumV << "  minv: " << minV << endl;
-
-    return sumV;
-  }
-#endif
   double peakEvaluation(const ImageD& peakImage, Point& p)
   {
     p.x = -1;
@@ -174,21 +105,14 @@ namespace ice
         Image mark;
         mark.create(peakImage.xsize, peakImage.ysize, 255);
         mark.set(0);
-#ifdef MAXDEBUG
-        Image pp;
-        pp.create(peakImage.xsize, peakImage.ysize, 255);
-        ConvImgDImg(peakImage, pp);
-        Show(OVERLAY, pp, mark);
-#endif
+
         markMax(peakImage, mark, maxPoint, 1);
 
         // find second maximum
         IPoint secondMaxPoint = findMax(peakImage, mark);
         if (secondMaxPoint.x < 0 || secondMaxPoint.y < 0)
           return 0.99; // maximum fills whole image (is this good?)
-#ifdef MAXDEBUG
-        GetChar();
-#endif
+
         return (maxVal - peakImage.getPixel(secondMaxPoint)) / maxVal;
       }
     else return 0;

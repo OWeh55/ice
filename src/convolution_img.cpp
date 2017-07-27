@@ -136,8 +136,7 @@ namespace ice
 
 #define FNAME "InvConvolution"
 // IS2 = ID (*) IS1
-  void InvConvolution(const ImageD& is1, const ImageD& is2,
-                      ImageD& id,
+  void InvConvolution(const ImageD& is1, const ImageD& is2, ImageD& id,
                       double noise, int mode)
   {
     try
@@ -226,8 +225,7 @@ namespace ice
 #undef FNAME
 
 #define FNAME "InvConvolution"
-  void InvConvolution(const Image& is1, const Image& is2,
-                      Image& id,
+  void InvConvolution(const Image& is1, const Image& is2, Image& id,
                       double factor, double noise, int mode)
   {
     try
@@ -266,9 +264,8 @@ namespace ice
     RETHROW;
   }
 
-  void InvConvolutionImg(const Image& is1, const Image& is2,
-                         ImageD& dd,
-                         double noise, int mode)
+  void InvConvolution(const Image& is1, const Image& is2,
+                      ImageD& dd, double noise, int mode)
   {
     try
       {

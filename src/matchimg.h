@@ -35,17 +35,16 @@ namespace ice
   void Windowing(const Image& source, Image& dest,
                  int refValue = -1);
 
-  double DetectShift(const Image& img1, const Image& img2,
-                     double& dx, double& dy, double& val,
-                     double beta = 0.1);
+  double detectShift(const Image& img1, const Image& img2,
+                     double& dx, double& dy, double beta = 0.1);
 
 #define DT_NEARLY_SHIFT 1
 #define DT_REFINE 16
-  int DetectTrafo(const Image& img1, const Image& img2,
+  int detectTrafo(const Image& img1, const Image& img2,
                   Trafo& tr,
                   double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
 
-  int DetectTrafo(const Image& img1, const Image& img2, const Image& himg,
+  int detectTrafo(const Image& img1, const Image& img2, const Image& himg,
                   Trafo& tr,
                   double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
 }
