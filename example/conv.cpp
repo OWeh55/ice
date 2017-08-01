@@ -79,16 +79,16 @@ int main(int arc, char* argv[])
   InvConvolution(i1, i2, i6, 0.0, 1e102, MD_IGNORE_BIAS);
   double xf, yf;
   Printf("Verschiebung ist: %i, %i\n", (int)DX, (int)DY);
-  double val = PeakValuation(i3, Image(), xf, yf);
+  double val = peakEvaluation(i3, xf, yf);
   Printf("Ermittelt (beta=%f): %f,%f (%g)\n",
          BETA1, xf - SIZE / 2, yf - SIZE / 2, val);
-  val = PeakValuation(i4, Image(), xf, yf);
+  val = peakEvaluation(i4, xf, yf);
   Printf("Ermittelt (beta=%f): %f,%f (%g)\n",
          BETA2, xf - SIZE / 2, yf - SIZE / 2, val);
-  val = PeakValuation(i5, Image(), xf, yf);
+  val = peakEvaluation(i5, xf, yf);
   Printf("Ermittelt (PhaseCorrelation): %f,%f (%g)\n",
          xf - SIZE / 2, yf - SIZE / 2, val);
-  val = PeakValuation(i6, Image(), xf, yf);
+  val = peakEvaluation(i6, xf, yf);
   Printf("Ermittelt (CrossCorrelation): %f,%f (%g)\n",
          xf - SIZE / 2, yf - SIZE / 2, val);
 //  int p[2];

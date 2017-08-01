@@ -30,6 +30,9 @@
 namespace ice
 {
   double peakEvaluation(const ImageD& peakImage, Point& p);
+  double peakEvaluation(const ImageD& peakImage, double& dx, double& dy);
+  double peakEvaluation(const Image& peakImage, Point& p);
+  double peakEvaluation(const Image& peakImage, double& dx, double& dy);
 }
 #endif
 

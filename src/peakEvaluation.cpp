@@ -118,6 +118,30 @@ namespace ice
     else return 0;
   }
 
+  double peakEvaluation(const ImageD& peakImage, double& dx, double& dy)
+  {
+    Point p(dx, dy);
+    double res = peakEvaluation(peakImage, p);
+    dx = p.x;
+    dy = p.y;
+    return res;
+  }
 
+  double peakEvaluation(const Image& peakImage, double& dx, double& dy)
+  {
+    Point p(dx, dy);
+    double res = peakEvaluation(peakImage, p);
+    dx = p.x;
+    dy = p.y;
+    return res;
+  }
+
+  double peakEvaluation(const Image& peakImage, Point& p)
+  {
+    ImageD imgd;
+    imgd.create(peakImage.xsize, peakImage.ysize);
+    ConvImgImgD(peakImage, imgd);
+    return peakEvaluation(imgd, p);
+  }
 #undef FNAME
 }

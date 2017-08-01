@@ -40,12 +40,12 @@ namespace ice
 
 #define DT_NEARLY_SHIFT 1
 #define DT_REFINE 16
-  int detectTrafo(const Image& img1, const Image& img2,
-                  Trafo& tr,
-                  double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
+  bool detectTrafo(const Image& img1, const Image& img2,
+                   Trafo& tr,
+                   double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
 
-  int detectTrafo(const Image& img1, const Image& img2, const Image& himg,
-                  Trafo& tr,
-                  double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
+  bool detectTrafo(const Image& img1, const Image& img2, const Image& himg,
+                   Trafo& tr,
+                   double beta = 0.1, int iter = 5, int mode = DT_NEARLY_SHIFT);
 }
 #endif

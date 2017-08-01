@@ -383,7 +383,7 @@ int DetectShift1(Image img1, Image img2,
   InvConvolution(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS);
 
 
-  PeakValuation(imgr, Image(), dxy[0], dxy[1]);
+  peakEvaluation(imgr, dxy[0], dxy[1]);
 
   dxy[0] -= sx / 2;
   dxy[1] -= sy / 2;

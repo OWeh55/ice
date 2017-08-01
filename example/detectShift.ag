@@ -11,8 +11,11 @@
  opt: X, xsize, int, xSize, Image size x, 1111
  opt: Y, ysize, int, ySize, Image size y, 888
  opt: f, file, string, filename, Use image file, ""
+ opt: F, secondfile, string, filename2, Second image file, ""
  opt: x, deltax, double, deltaX, Offset x, 4.7
  opt: y, deltay, double, deltaY, Offset y, -2.3
+ opt: c, cyclic, void, cyclic, Use cyclic shift, false
+ opt: b, beta, double, beta, Parameter beta, 0.001
  opt: v, verbose, void, verbose, Many messages, false
  opt: h, help, usage, help, Hilfe
 AppGen*/
@@ -41,14 +44,27 @@ Image createImage(int sx, int sy, double dx, double dy, vector<int> freqs)
   return res;
 }
 
+void shift(Image& i1, Image& i2, double deltaX, double deltaY, bool cyclic)
+{
+  for (int y = 0; y < i1.ysize; y++)
+    for (int x = 0; x < i1.xsize; x++)
+      {
+        double xf = cyclic ? FMod(x - deltaX, i1.xsize) : x - deltaX;
+        double yf = cyclic ? FMod(y - deltaY, i1.ysize) : y - deltaY;
+        i2.setPixel(x, y, i1.getPixelInterpol(xf, yf));
+      }
+}
+
 /*AppGen:Main*/
 int main(int argc, char* argv[])
 {
   /*AppGen:MainEnd*/
+  bool shiftGiven = true;
+
   Image i1, i2;
   if (filename.empty())
     {
-      vector<int> freqs{1, 3, 11, 15, 17, 21, 25, 29, 35, 40, 45, 50, 55, 222, 333, 444};
+      vector<int> freqs{1, 3, 11};
       i1 = createImage(xSize, ySize, 0, 0, freqs);
       i2 = createImage(xSize, ySize, deltaX, deltaY, freqs);
     }
@@ -57,14 +73,16 @@ int main(int argc, char* argv[])
       i1.read(filename);
       xSize = i1.xsize;
       ySize = i1.ysize;
-      i2.create(xSize, ySize, i1.maxval);
-      for (int y = 0; y < ySize; y++)
-        for (int x = 0; x < xSize; x++)
-          {
-            double xf = FMod(x - deltaX, xSize);
-            double yf = FMod(y - deltaY, ySize);
-            i2.setPixel(x, y, i1.getPixelInterpol(xf, yf));
-          }
+      if (filename2.empty())
+        {
+          i2.create(xSize, ySize, i1.maxval);
+          shift(i1, i2, deltaX, deltaY, cyclic);
+        }
+      else
+        {
+          i2.read(filename2);
+          shiftGiven = false;
+        }
     }
 
   Show(GRAY, i1, "original");
@@ -73,21 +91,33 @@ int main(int argc, char* argv[])
   ImageD psf;
   psf.create(xSize, ySize);
 
-  InvConvolution(i1, i2, psf, 0.00001);
+  InvConvolution(i1, i2, psf, beta);
   psf.adaptLimits();
   Show(GRAY, psf, "psf");
 
+  if (shiftGiven)
+    cout << "given shift: " << deltaX << "," << deltaY << endl;
   double ex, ey;
-  double val = detectShift(i1, i2, ex, ey);
+  double val = detectShift(i1, i2, ex, ey, beta);
   cout << "detected shift: " << ex << "," << ey << endl;
+  if (shiftGiven)
+    cout << "error: " << ex - deltaX << "," << ey - deltaY << endl;
   cout << "quality: " << val << endl;
 
   GetChar();
+  Show(OFF, psf);
 
   Trafo tr;
-  detectTrafo(i1, i2, tr);
-  cout << "Trafo: " << tr.getMatrix() << endl;
+  if (detectTrafo(i1, i2, tr, beta))
+    {
+      cout << "Trafo: " << tr.getMatrix() << endl;
+    }
+  else
+    {
+      cout << "Cannot detect trafo" << endl;
+    }
 
   GetChar();
+
   return 1;
 }

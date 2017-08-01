@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <vector>
 #include "macro.h"
 #include "IceException.h"
 #include "numbase.h"
@@ -31,6 +32,7 @@
 
 namespace ice
 {
+  using namespace std;
 #define FNAME "Windowing"
   void Windowing(const ImageD& source, ImageD& dest,
                  int refValue)
@@ -155,113 +157,118 @@ namespace ice
     w.p2.y = w.p1.y + sy2;
   }
 
-  int detectTrafo(const Image& img1, const Image& img2, Image& himg,
-                  Trafo& tr,
-                  double beta, int ct,
-                  int mode)
+  bool detectTrafo(const Image& img1, const Image& img2, const Image& himg,
+                   Trafo& tr,
+                   double beta, int ct,
+                   int mode)
   {
-    int sx, sy;
-
-    RETURN_ERROR_IF_FAILED(MatchImg(img1, img2, himg, sx, sy));
-
-    Trafo tri; // Inverse Transformation zu tr;
-    Trafo trd; // "Korrektur-Transformation" während Iteration
-
-    if ((mode & DT_REFINE) == 0)
+    try
       {
-        tr = Trafo(); /* new transformation */
+        int sx, sy;
+        MatchImg(img1, img2, himg, sx, sy);
 
-        Window w;
-        GetWindow2Img(img1, w);
+        Trafo tri; // Inverse Transformation zu tr;
+        Trafo trd; // "Korrektur-Transformation" während Iteration
 
-        double dx, dy, val;
-
-        // Detection der globalen Verschiebung
-        val = detectShift(img1(w), img2(w), dx, dy, beta * 3);
-
-        if (val < MINVAL)
+        if ((mode & DT_REFINE) == 0)
           {
-            throw IceException(FNAME, "Can't detect global shift");
+            tr.init();                   // new transformation 
+
+            Window w;
+            GetWindow2Img(img1, w);
+
+            double dx, dy, val;
+
+            // Detection der globalen Verschiebung
+            val = detectShift(img1(w), img2(w), dx, dy, beta * 3);
+
+            if (val < MINVAL)
+              {
+                throw IceException(FNAME, "Can't detect global shift");
+              }
+
+            tr.shift(dx, dy);
           }
 
-        tr.shift(dx, dy);
-      }
+        int bs = std::min(sx, sy) / 5;
 
-    int bs = std::min(sx, sy) / 5;
+        int blocksize = 32; // kleinste Blockgröße
 
-    int blocksize = 32; // kleinste Blockgröße
-
-    while (blocksize * 2 <= bs)
-      {
-        blocksize = blocksize + blocksize;
-      }
-
-    int count = 0;
-
-    while (count < ct)
-      {
-        Transform(tr, img1, himg, INTERPOL);
-        tri = tr;
-        tri.invert();
-        int xi = sx / blocksize;
-        int yi = sy / blocksize;
-
-        if ((xi > 2) && (yi > 2))
+        while (blocksize * 2 <= bs)
           {
-            // Verfeinerung
-            Matrix pl1(0, 2); // Punktlisten
-            Matrix pl2(0, 2);
+            blocksize = blocksize + blocksize;
+          }
 
-            for (int j = 0; j < yi; j++)
-              for (int i = 0; i < xi; i++)
-                {
-                  Window w(i * blocksize, j * blocksize,
-                           (i + 1)*blocksize - 1, (j + 1)*blocksize - 1);
+        int cycleCount = 0;
 
-                  if (
-                    inside(img1, tri, w.p1) &&
-                    inside(img1, tri, w.p2)
-                  )
+        while (cycleCount < ct)
+          {
+            Transform(tr, img1, himg, INTERPOL);
+            tri = tr.inverse();
+
+            int xi = sx / blocksize;
+            int yi = sy / blocksize;
+
+            if ((xi > 2) && (yi > 2))
+              {
+                // Verfeinerung
+                vector<Point> pl1; // Punktlisten
+                vector<Point> pl2;
+
+                for (int j = 0; j < yi; j++)
+                  for (int i = 0; i < xi; i++)
                     {
-                      double dx, dy, val;
-                      val = detectShift(himg(w), img2(w), dx, dy, beta);
-
-                      if (val > MINVAL)
+                      Window w(i * blocksize, j * blocksize,
+                               (i + 1)*blocksize - 1, (j + 1)*blocksize - 1);
+		      
+                      if (
+			  inside(img1, tri, w.p1) &&
+			  inside(img1, tri, w.p2)
+			  )
                         {
-                          double xm = (w.p1.x + w.p2.x) / 2.0;
-                          double ym = (w.p1.y + w.p2.y) / 2.0;
-                          pl1 = pl1 && Vector(xm, ym);
-                          pl2 = pl2 && Vector(xm + dx, ym + dy);
+                          double dx, dy, val;
+                          val = detectShift(himg(w), img2(w), dx, dy, beta);
+			  
+                          if (val > MINVAL)
+                            {
+                              double xm = (w.p1.x + w.p2.x) / 2.0;
+                              double ym = (w.p1.y + w.p2.y) / 2.0;
+                              pl1.push_back(Point(xm, ym));
+                              pl2.push_back(Point(xm + dx, ym + dy));
+                            }
                         }
                     }
-                }
 
-            if (pl1.rows() > 4)
-              {
-                if (count < 3)
+                if (pl1.size() > 4)
                   {
-                    trd = MatchPointlists(pl1, pl2);  // erste iterationen nur affin
+                    if (cycleCount < 3)
+                      {
+                        trd = MatchPointlists(pl1, pl2);  // erste iterationen nur affin
+                      }
+                    else
+                      {
+                        trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);  // ..dann projektiv zulassen
+                      }
+		    
+                    tr.append(trd);
                   }
-                else
-                  {
-                    trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);  // ..dann projektiv zulassen
-                  }
-
-                tr = tr * trd;
+		else
+		  return false;
               }
+
+            cycleCount++;
           }
-
-        count++;
+        return true;
       }
-
-    return OK;
+    RETHROW;
   }
 
-  int detectTrafo(const Image& img1, const Image& img2, Trafo& tr,
-                  double beta, int ct,
-                  int mode)
+  bool detectTrafo(const Image& img1, const Image& img2, Trafo& tr,
+                   double beta, int ct,
+                   int mode)
   {
-    Image himg = NewImg(img2);
+    Image himg;
+    himg.create(img2.xsize, img2.ysize, img2.maxval);
     return detectTrafo(img1, img2, himg, tr, beta, ct, mode);
   }
 
