@@ -242,8 +242,8 @@ namespace ice
   Trafo matchPointListsShift(const vector<Point>& p1,
                              const vector<Point>& p2)
   {
-    vector<double> weights(p1.size(),1.0);
-    return matchPointListsShift(p1,p2,weights);
+    vector<double> weights(p1.size(), 1.0);
+    return matchPointListsShift(p1, p2, weights);
   }
 #undef FNAME
 #define FNAME "matchPointListsShiftScale"
@@ -295,7 +295,7 @@ namespace ice
   Trafo matchPointListsShiftScale(const vector<Point>& p1,
                                   const vector<Point>& p2)
   {
-    vector<double> weights(p1.size(),1.0);
+    vector<double> weights(p1.size(), 1.0);
     return matchPointListsShiftScale(p1, p2, weights);
   }
 #undef FNAME

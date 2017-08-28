@@ -47,29 +47,29 @@ namespace ice
 
 
   Trafo iterateProjective(const Trafo& tr,
-                          const std::vector<Point>& p1, 
-			  const std::vector<Point>& p2);
+                          const std::vector<Point>& p1,
+                          const std::vector<Point>& p2);
 
   Trafo matchPointListsProjective(const std::vector<Point>& pl1,
-				  const std::vector<Point>& pl2,
-				  const std::vector<double>& weight);
+                                  const std::vector<Point>& pl2,
+                                  const std::vector<double>& weight);
 
   Trafo matchPointListsProjective(const std::vector<Point>& pl1,
-				  const std::vector<Point>& pl2);
+                                  const std::vector<Point>& pl2);
 
   Trafo matchPointListsShift(const std::vector<Point>& pl1,
-				  const std::vector<Point>& pl2,
-				  const std::vector<double>& weight);
+                             const std::vector<Point>& pl2,
+                             const std::vector<double>& weight);
 
   Trafo matchPointListsShift(const std::vector<Point>& pl1,
-				  const std::vector<Point>& pl2);
+                             const std::vector<Point>& pl2);
 
   Trafo matchPointListsShiftScale(const std::vector<Point>& pl1,
-				  const std::vector<Point>& pl2,
-				  const std::vector<double>& weight);
+                                  const std::vector<Point>& pl2,
+                                  const std::vector<double>& weight);
 
   Trafo matchPointListsShiftScale(const std::vector<Point>& pl1,
-				  const std::vector<Point>& pl2);
+                                  const std::vector<Point>& pl2);
 
   Trafo matchPointLists(const std::vector<Point>& pl1,
                         const std::vector<Point>& pl2,
