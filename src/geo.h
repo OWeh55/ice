@@ -57,6 +57,13 @@ namespace ice
   Trafo matchPointListsProjective(const std::vector<Point>& pl1,
                                   const std::vector<Point>& pl2);
 
+  Trafo matchPointListsProjectiveLinear(const std::vector<Point>& pl1,
+                                        const std::vector<Point>& pl2,
+                                        const std::vector<double>& weight);
+
+  Trafo matchPointListsProjectiveLinear(const std::vector<Point>& pl1,
+                                        const std::vector<Point>& pl2);
+
   Trafo matchPointListsShift(const std::vector<Point>& pl1,
                              const std::vector<Point>& pl2,
                              const std::vector<double>& weight);
@@ -70,6 +77,20 @@ namespace ice
 
   Trafo matchPointListsShiftScale(const std::vector<Point>& pl1,
                                   const std::vector<Point>& pl2);
+
+  Trafo matchPointListsSimilarity(const std::vector<Point>& pl1,
+                                  const std::vector<Point>& pl2,
+                                  const std::vector<double>& weight);
+
+  Trafo matchPointListsSimilarity(const std::vector<Point>& pl1,
+                                  const std::vector<Point>& pl2);
+
+  Trafo matchPointListsAffine(const std::vector<Point>& pl1,
+                              const std::vector<Point>& pl2,
+                              const std::vector<double>& weight);
+
+  Trafo matchPointListsAffine(const std::vector<Point>& pl1,
+                              const std::vector<Point>& pl2);
 
   Trafo matchPointLists(const std::vector<Point>& pl1,
                         const std::vector<Point>& pl2,

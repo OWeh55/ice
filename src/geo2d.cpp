@@ -53,8 +53,8 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "matchPointlistsProjective"
-  Trafo matchPointListsProjective(
+#define FNAME "matchPointlistsProjectiveLinear"
+  Trafo matchPointListsProjectiveLinear(
     const vector<Point>& p1,
     const vector<Point>& p2,
     const vector<double>& weights)
@@ -117,11 +117,11 @@ namespace ice
     RETHROW;
   }
 
-  Trafo matchPointListsProjective(const vector<Point>& p1,
-                                  const vector<Point>& p2)
+  Trafo matchPointListsProjectiveLinear(const vector<Point>& p1,
+                                        const vector<Point>& p2)
   {
     vector<double> weights(p1.size(), 1.0);
-    return matchPointListsProjective(p1, p2, weights);
+    return matchPointListsProjectiveLinear(p1, p2, weights);
   }
 #undef FNAME
 
@@ -299,6 +299,145 @@ namespace ice
     return matchPointListsShiftScale(p1, p2, weights);
   }
 #undef FNAME
+#define FNAME "matchPointListsSimilarity"
+  Trafo matchPointListsSimilarity(const vector<Point>& p1,
+                                  const vector<Point>& p2,
+                                  const vector<double>& weights)
+  {
+    try
+      {
+        int nPoints = checkLists(p1, p2, weights);
+
+        matrix<double> a(2 * nPoints, 4);
+        vector<double> r(2 * nPoints);
+
+        for (int j = 0; j < nPoints; j++)
+          {
+            double weight = weights[j];
+
+            a[j * 2][0] = p1[j].x * weight;
+            a[j * 2][1] = p1[j].y * weight;
+            a[j * 2][2] = weight;
+            a[j * 2][3] = 0;
+
+            r[j * 2] = p2[j].x * weight;
+
+            a[j * 2 + 1][0] = p1[j].y * weight;
+            a[j * 2 + 1][1] = -p1[j].x * weight;
+            a[j * 2 + 1][2] = 0;
+            a[j * 2 + 1][3] = weight;
+
+            r[j * 2 + 1] = p2[j].y * weight;
+          }
+
+        vector<double> rv = solveLinearEquation(a, r);
+
+        // cout << rv << endl;
+        matrix<double> m(3, 3);
+        m[0][0] = rv[0];
+        m[0][1] = rv[1];
+        m[1][0] = -rv[1];
+        m[1][1] = rv[0];
+        m[0][2] = rv[2];
+        m[1][2] = rv[3];
+        m[2][0] = 0.0;
+        m[2][1] = 0.0;
+        m[2][2] = 1.0;
+        return Trafo(m);
+      }
+    RETHROW;
+  }
+
+  Trafo matchPointListsSimilarity(const vector<Point>& p1,
+                                  const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(), 1.0);
+    return matchPointListsSimilarity(p1, p2, weights);
+  }
+#undef FNAME
+#define FNAME "matchPointListsAffine"
+  Trafo matchPointListsAffine(const vector<Point>& p1,
+                              const vector<Point>& p2,
+                              const vector<double>& weights)
+  {
+    try
+      {
+        int nPoints = checkLists(p1, p2, weights);
+
+        matrix<double> a(nPoints, 3);
+        vector<double> r(nPoints);
+        vector<double> rv(3);
+        matrix<double> res(3, 3);
+
+        for (int j = 0; j < nPoints; j++)
+          {
+            a[j][0] = p1[j].x * weights[j];
+            a[j][1] = p1[j].y * weights[j];
+            a[j][2] = 1.0 * weights[j];
+          }
+
+        for (int j = 0; j < nPoints; j++)
+          r[j] = p2[j].x * weights[j];
+
+        rv = solveLinearEquation(a, r);
+
+        for (int i = 0; i < 3; i++)
+          res[0][i] = rv[i];
+
+        for (int j = 0; j < nPoints; j++)
+          r[j] = p2[j].y * weights[j];
+
+        rv = solveLinearEquation(a, r);
+
+        for (int i = 0; i < 3; i++)
+          res[1][i] = rv[i];
+
+        for (int j = 0; j < nPoints; j++)
+          r[j] = p2[j].x * weights[j];
+
+        rv = solveLinearEquation(a, r);
+
+        for (int i = 0; i < 3; i++)
+          res[0][i] = rv[i];
+
+        res[2][0] = 0.0;
+        res[2][1] = 0.0;
+        res[2][2] = 1.0;
+        return Trafo(res);
+      }
+    RETHROW;
+  }
+
+  Trafo matchPointListsAffine(const vector<Point>& p1,
+                              const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(), 1.0);
+    return matchPointListsAffine(p1, p2, weights);
+  }
+#undef FNAME
+#define FNAME "matchPointListsProjective"
+  Trafo matchPointListsProjective(const vector<Point>& p1,
+                                  const vector<Point>& p2,
+                                  const vector<double>& weights)
+  {
+    try
+      {
+        // affine transformation as first approximation
+        Trafo res = matchPointListsAffine(p1, p2, weights);
+
+        // iterative refinement to projective transformation
+        return iterateProjective(res, p1, p2, weights);
+      }
+    RETHROW;
+  }
+
+  Trafo matchPointListsProjective(const vector<Point>& p1,
+                                  const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(), 1.0);
+    return matchPointListsProjective(p1, p2, weights);
+  }
+#undef FNAME
 #define FNAME "matchPointLists"
   Trafo matchPointLists(const vector<Point>& p1,
                         const vector<Point>& p2,
@@ -319,86 +458,19 @@ namespace ice
           case TRM_SCALE_SHIFT:
             return matchPointListsShiftScale(p1, p2, weights);
             break;
-#if 0
+
           case TRM_SIMILARITY_NOR:
-            // dim1 == dim2 == 2
-          {
-            matrix<double> a(2 * nPoints, 4);
-            vector<double> r(2 * nPoints);
-
-            for (int j = 0; j < nPoints; j++)
-              {
-                double weight = weights[j];
-
-                a[j * 2][0] = p1[j][0] * weight;
-                a[j * 2][1] = p1[j][1] * weight;
-                a[j * 2][2] = weight;
-                a[j * 2][3] = 0;
-
-                r[j * 2] = p2[j][0] * weight;
-
-                a[j * 2 + 1][0] = p1[j][1] * weight;
-                a[j * 2 + 1][1] = -p1[j][0] * weight;
-                a[j * 2 + 1][2] = 0;
-                a[j * 2 + 1][3] = weight;
-
-                r[j * 2 + 1] = p2[j][1] * weight;
-              }
-
-            vector<double> rv = solveLinearEquation(a, r);
-
-            // cout << rv << endl;
-            res.m[0][0] = rv[0];
-            res.m[0][1] = rv[1];
-            res.m[1][0] = -rv[1];
-            res.m[1][1] = rv[0];
-            res.m[0][2] = rv[2];
-            res.m[1][2] = rv[3];
-
+            return matchPointListsSimilarity(p1, p2, weights);
             break;
-          }
 
           case TRM_AFFINE:
-            // problem is separable
-          {
-            matrix<double> a(nPoints, dim1 + 1);
-            vector<double> r(nPoints);
-            vector<double> rv(dim1 + 1);
-
-            for (int j = 0; j < nPoints; j++)
-              {
-                for (int i = 0; i < dim1; i++)
-                  a[j][i] = p1[j][i] * weights[j];
-
-                a[j][dim1] = 1.0 * weights[j];
-              }
-
-            for (int k = 0; k < dim2; k++)
-              {
-                for (int j = 0; j < nPoints; j++)
-                  r[j] = p2[j][k] * weights[j];
-
-                // cout << a << endl;
-                // cout << r << endl;
-                rv = solveLinearEquation(a, r);
-
-                for (int i = 0; i < dim1 + 1; i++)
-                  res.m[k][i] = rv[i];
-              }
-
-          }
-          break;
+            return matchPointListsAffine(p1, p2, weights);
+            break;
 
           case TRM_PROJECTIVE:
-
-            // affine transformation as first approximation
-            res = MatchPointlists(p1, p2, TRM_AFFINE, weights);
-
-            // iterative refinement to projective transformation
-            res = iterateProjective(res, p1, p2, weights);
-
+            return matchPointListsProjective(p1, p2, weights);
             break;
-#endif
+
           default:
             throw IceException(FNAME, M_WRONG_MODE);
           }
