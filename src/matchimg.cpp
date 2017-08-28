@@ -243,11 +243,11 @@ namespace ice
                   {
                     if (cycleCount < 3)
                       {
-                        trd = MatchPointlists(pl1, pl2);  // erste iterationen nur affin
+                        trd = matchPointLists(pl1, pl2);  // erste iterationen nur affin
                       }
                     else
                       {
-                        trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);  // ..dann projektiv zulassen
+                        trd = matchPointLists(pl1, pl2, TRM_PROJECTIVE);  // ..dann projektiv zulassen
                       }
 
                     tr.append(trd);

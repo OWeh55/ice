@@ -41,17 +41,27 @@ using namespace std;
 //--------------------------------------------
 namespace ice
 {
+#define FNAME "checkLists"
+  int checkLists(const vector<Point>& p1,
+                 const vector<Point>& p2,
+                 const vector<double>& weights)
+  {
+    int nPoints = p1.size();
+    if (p2.size() != nPoints || weights.size() != nPoints)
+      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
+    return nPoints;
+  }
+#undef FNAME
 
 #define FNAME "matchPointlistsProjective"
-  Trafo matchPointlistsProjective(const vector<Point>& p1,
-                                  const vector<Point>& p2,
-                                  const vector<double>& weights)
+  Trafo matchPointListsProjective(
+    const vector<Point>& p1,
+    const vector<Point>& p2,
+    const vector<double>& weights)
   {
     try
       {
-        int nPoints = p1.size();
-        if (p2.size() != nPoints)
-          throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
+        int nPoints = checkLists(p1, p2, weights);
 
         matrix<double> a(nPoints * 2 + 1, (2 + 1) * (2 + 1), 0);
         vector<double> r(nPoints * 2 + 1);
@@ -107,12 +117,13 @@ namespace ice
     RETHROW;
   }
 
-  Trafo matchPointlistsProjective(const vector<Point>& p1,
+  Trafo matchPointListsProjective(const vector<Point>& p1,
                                   const vector<Point>& p2)
   {
     vector<double> weights(p1.size(), 1.0);
-    return matchPointlistsProjective(p1, p2, weights);
+    return matchPointListsProjective(p1, p2, weights);
   }
+#undef FNAME
 
   static void trafo2vector(const Trafo& tr, vector<double>& v)
   {
@@ -203,114 +214,112 @@ namespace ice
     vector<double> weights(p1.size(), 1.0);
     return iterateProjective(tr, p1, p2, weights);
   }
-
-#if 0
-  Trafo MatchPointlists(const vector<Point>& p1, const vector<Point>& p2,
-                        int mode, const Vector& weights)
+#define FNAME "matchPointListsShift"
+  Trafo matchPointListsShift(const vector<Point>& p1,
+                             const vector<Point>& p2,
+                             const vector<double>& weights)
   {
     try
       {
-        int nPoints = p1.size();
+        int nPoints = checkLists(p1, p2, weights);
+        Point shift(0, 0);
+        double weightsum = 0;
+
+        for (int j = 0; j < nPoints; j++)
+          {
+            shift += (p2[j] - p1[j]) * weights[j];
+            weightsum += weights[j];
+          }
+
+        shift = shift * (1.0 / weightsum);
+
+        Trafo res;
+        res.shift(shift);
+        return res;
+      }
+    RETHROW;
+  }
+  Trafo matchPointListsShift(const vector<Point>& p1,
+                             const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(),1.0);
+    return matchPointListsShift(p1,p2,weights);
+  }
+#undef FNAME
+#define FNAME "matchPointListsShiftScale"
+  Trafo matchPointListsShiftScale(const vector<Point>& p1,
+                                  const vector<Point>& p2,
+                                  const vector<double>& weights)
+  {
+    try
+      {
+        int nPoints = checkLists(p1, p2, weights);
+        double weightsum = 0;
+        Point sum1(0, 0);
+        Point sum2(0, 0);
+
+        for (int j = 0; j < nPoints; j++)
+          {
+            sum1 += p1[j];
+            sum2 += p2[j];
+            weightsum += weights[j];
+          }
+
+        double s = 0.0;
+        double q = 0.0;
+
+        for (int j = 0; j < nPoints; j++)
+          {
+            s += weights[j] * (p2[j] * p1[j]);
+            q += weights[j] * (p1[j] * p1[j]);
+          }
+
+        double alpha = ((sum2 * sum1) / weightsum - s) / ((sum1 * sum1) / weightsum - q);
+        Point shift(0, 0);
+
+        for (int j = 0; j < nPoints; j++)
+          {
+            shift += (p2[j] - alpha * p1[j]) * weights[j];
+          }
+
+        shift = (1.0 / weightsum) * shift;
+
         Trafo res(2, 2);
+        res.scale(0, 0, alpha);
+        res.shift(shift);
+        return res;
+      }
+    RETHROW;
+  }
 
-        double weightsum;
+  Trafo matchPointListsShiftScale(const vector<Point>& p1,
+                                  const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(),1.0);
+    return matchPointListsShiftScale(p1, p2, weights);
+  }
+#undef FNAME
+#define FNAME "matchPointLists"
+  Trafo matchPointLists(const vector<Point>& p1,
+                        const vector<Point>& p2,
+                        int mode, const vector<double>& weights)
+  {
+    try
+      {
+        int nPoints = checkLists(p1, p2, weights);
 
-        if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
+        if ((nPoints != p2.size()) || (nPoints != weights.size()))
           throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
-
-        if (dim2 > dim1)
-          throw IceException(FNAME, M_WRONG_PARAM);
-
-        if ((dim1 != dim2) && (mode != TRM_AFFINE) && (mode != TRM_PROJECTIVE))
-          throw IceException(FNAME, M_WRONG_PARAM);
-
-        if ((mode == TRM_SIMILARITY_NOR) && ((dim1 != 2) || (dim2 != 2)))
-          throw IceException(FNAME, M_WRONG_PARAM);
 
         switch (mode)
           {
           case TRM_SHIFT:
-            // dim1==dim2 !!
-          {
-            Vector shift(dim1);
-            weightsum = 0;
-
-            for (int i = 0; i < dim1; i++)
-              {
-                shift[i] = 0;
-              }
-
-            for (int j = 0; j < nPoints; j++)
-              {
-                for (int i = 0; i < dim1; i++)
-                  {
-                    shift[i] += (p2[j][i] - p1[j][i]) * weights[j];
-                  }
-
-                weightsum += weights[j];
-              }
-
-            for (int i = 0; i < dim1; i++)
-              {
-                res.m[i][dim2] = shift[i] / weightsum;
-              }
-          }
-          break;
+            return matchPointListsShift(p1, p2, weights);
+            break;
           case TRM_SCALE_SHIFT:
-          {
-            weightsum = 0;
-            Vector sum1(dim1);
-            sum1.set(0);
-            Vector sum2(dim2);
-            sum2.set(0);
-
-            for (int j = 0; j < nPoints; j++)
-              for (int i = 0; i < dim2; i++)
-                {
-                  sum1[i] += weights[j] * p1[j][i];
-                }
-
-            for (int j = 0; j < nPoints; j++)
-              {
-                for (int i = 0; i < dim1; i++)
-                  {
-                    sum2[i] += weights[j] * p2[j][i];
-                  }
-
-                weightsum += weights[j];
-              }
-
-            double s = 0.0;
-            double q = 0.0;
-
-            for (int j = 0; j < nPoints; j++)
-              {
-                s += weights[j] * (p2[j] * p1[j]);
-                q += weights[j] * (p1[j] * p1[j]);
-              }
-
-            double alpha = ((sum2 * sum1) / weightsum - s) / ((sum1 * sum1) / weightsum - q);
-            Vector shift(dim1);
-
-            for (int i = 0; i < dim1; i++)
-              {
-                shift[i] = 0;
-              }
-
-            for (int j = 0; j < nPoints; j++)
-              for (int i = 0; i < dim1; i++)
-                {
-                  shift[i] += (p2[j][i] - alpha * p1[j][i]) * weights[j];
-                }
-
-            for (int i = 0; i < dim1; i++)
-              {
-                res.m[i][dim2] = shift[i] / weightsum;
-                res.m[i][i] = alpha;
-              }
-          }
-          break;
-
+            return matchPointListsShiftScale(p1, p2, weights);
+            break;
+#if 0
           case TRM_SIMILARITY_NOR:
             // dim1 == dim2 == 2
           {
@@ -389,79 +398,24 @@ namespace ice
             res = iterateProjective(res, p1, p2, weights);
 
             break;
-
+#endif
           default:
             throw IceException(FNAME, M_WRONG_MODE);
           }
 
-        return res;
+        return Trafo();
       }
     RETHROW;
   }
 
-  Trafo MatchPointlists(const vector<Point>& p1, const vector<Point>& p2,
+  Trafo matchPointLists(const vector<Point>& p1, const vector<Point>& p2,
                         int mode)
   {
-    Vector weights(p1.rows());
-    weights.set(1.0);
-    return MatchPointlists(p1, p2, mode, weights);
-  }
-
-  Trafo MatchPointlists(const PointList& pl1, const PointList& pl2, int mode)
-// compatibility function with struct PointList
-  {
-    try
-      {
-
-        if ((pl1 == NULL) || (pl2 == NULL))
-          throw IceException(FNAME, M_WRONG_PTR);
-
-        int pnumber = pl1->lng;
-
-        if (pl2->lng != pnumber)
-          throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
-
-        vector<Point> p1(pnumber, 2);
-        vector<Point> p2(pnumber, 2);
-        Vector w(pnumber);
-
-        for (int i = 0; i < pnumber; i++)
-          {
-            p1[i][0] = pl1->xptr[i];
-            p1[i][1] = pl1->yptr[i];
-            p2[i][0] = pl2->xptr[i];
-            p2[i][1] = pl2->yptr[i];
-            w[i] = pl2->wptr[i];
-          }
-
-        return MatchPointlists(p1, p2, mode, w);
-      }
-    RETHROW;
-  }
-
-  Trafo MatchPointlists(const vector<Point>& pl1, const vector<Point>& pl2,
-                        int mode)
-  {
-    Trafo res;
-    int nPoints = pl1.size();
-
-    if ((int)pl2.size() != nPoints)
-      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
-
-    vector<Point> p1(nPoints, 2);
-    vector<Point> p2(nPoints, 2);
-
-    for (int i = 0; i < nPoints; i++)
-      {
-        p1[i][0] = pl1[i].x;
-        p1[i][1] = pl1[i].y;
-        p2[i][0] = pl2[i].x;
-        p2[i][1] = pl2[i].y;
-      }
-
-    return MatchPointlists(p1, p2, mode);
+    vector<double> weights(p1.size(), 1);
+    return matchPointLists(p1, p2, mode, weights);
   }
 #undef FNAME
+#if 0
 #define FNAME "MatchPointlistsLinOpt"
   Trafo MatchPointlistsLinOpt(const vector<Point>& p1, const vector<Point>& p2,
                               int mode, const Vector& weights, double limit)
