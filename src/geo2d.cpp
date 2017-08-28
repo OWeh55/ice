@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/* 
+ * functions for 2d-2d-transformations
+ */
 #include "defs.h"
 #include "macro.h"
 #include "IceException.h"
@@ -38,104 +41,65 @@ using namespace std;
 //--------------------------------------------
 namespace ice
 {
-#define FNAME "MakeTransform"
-  Trafo CTransform(const Vector& param)
-  {
-    // erzeugt eine 3D-2D-Trafo (Kamera)
-    // Parameter in param
-    Trafo c(3, 3); // Null-Transformation
-    c.rotateZ(param[0]); // Rotation (Eulersche Winkel)
-    c.rotateY(param[1]);
-    c.rotateX(param[2]);
-    c.shift(Vector(param[3], param[4], param[5])); // Position im Raum
-    c.Projective();      // 3d-2d
-    c.scale(0, 0, param[6], param[6]*param[7]); // anisotrope Skalierung
-    c.shearX(param[8]);  // Scherung
-    c.shift(param[9], param[10]); // Hauptpunkt-Verschiebung
-    return c;
-  }
 
-  Trafo CCTransform(const Vector& param)
-  {
-    // erzeugt eine 2D-2D-Trafo, wie sie zwischen 2
-    // Bildern auftreten kann, die mit der *gleichen* Kamera
-    // vom *gleichen* Punkt aus aufgenommen wurden
-
-    Trafo R(3, 3); // "Externe Kamera-Parameter"
-    // translation entfällt
-    R.rotateZ(param[0]); // Rotation (Eulersche Winkel)
-    R.rotateY(param[1]);
-    R.rotateX(param[2]);
-    Matrix m = Matrix(R.getMatrix())(0, 0, 2, 2); // Rotationsmatrix
-
-    Matrix c(3, 3); // Kamera-Matrix (interne Parameter)
-    c[0][0] = param[3];
-    c[0][1] = param[5];
-    c[0][2] = param[6];
-    c[1][0] = 0.0;
-    c[1][1] = param[3] * param[4];
-    c[1][2] = param[7];
-    c[2][0] = 0.0;
-    c[2][1] = 0.0;
-    c[2][2] = 0.0;
-
-    return Trafo(c * m * Inverse(c));
-  }
-#undef FNAME
-
-#define FNAME "MatchPointlists"
-  Trafo MatchProjective(const Matrix& p1, const Matrix& p2,
-                        const Vector& weights)
+#define FNAME "matchPointlistsProjective"
+  Trafo matchPointlistsProjective(const vector<Point>& p1, 
+				  const vector<Point>& p2,
+				  const vector<double>& weights)
   {
     try
       {
-        int nPoints = p1.rows();
-        int dim1 = p1.cols();
-        int dim2 = p2.cols();
-
-        matrix<double> a(nPoints * dim2 + 1, (dim1 + 1) * (dim2 + 1), 0);
-        vector<double> r(nPoints * dim2 + 1);
+        int nPoints = p1.size();
+	if (p2.size()!=nPoints)
+	  throw IceException(FNAME,M_DIFFERENT_LISTSIZE);
+	
+        matrix<double> a(nPoints * 2 + 1, (2 + 1) * (2 + 1), 0);
+        vector<double> r(nPoints * 2 + 1);
         vector<double> rv;
 
+	int equNr=0;
         for (int j = 0; j < nPoints; j++)
           {
             double weight = weights[j];
 
-            for (int k = 0; k < dim2; k++)
-              {
-                for (int i = 0; i < dim1; i++)
-                  {
-                    a[j * dim2 + k][k * (dim1 + 1) + i] = p1[j][i] * weight;
-                  }
+	    a[equNr][0] = p1[j].x * weight;
+	    a[equNr][1] = p1[j].y * weight;
+	    a[equNr][2] = 1.0 * weight;
+	    	    
+	    a[equNr][6] = -p1[j].x * p2[j].x * weight;
+	    a[equNr][7] = -p1[j].y * p2[j].x * weight;
+	    a[equNr][8] = -p2[j].x * weight;
+	    r[equNr] = 0.0;
 
-                a[j * dim2 + k][k * (dim1 + 1) + dim1] = 1.0 * weight;
+	    equNr++;
 
-                for (int i = 0; i < dim1; i++)
-                  {
-                    a[j * dim2 + k][dim2 * (dim1 + 1) + i] = -p1[j][i] * p2[j][k] * weight;
-                  }
+	    a[equNr][3] = p1[j].x * weight;
+	    a[equNr][4] = p1[j].y * weight;
+	    a[equNr][5] = 1.0 * weight;
+	    	    
+	    a[equNr][6] = -p1[j].x * p2[j].y * weight;
+	    a[equNr][7] = -p1[j].y * p2[j].y * weight;
+	    a[equNr][8] = -p2[j].y * weight;
+	    r[equNr] = 0.0;
 
-                a[j * dim2 + k][(dim1 + 1) * (dim2 + 1) - 1] = -p2[j][k] * weight;
-                r[j * dim2 + k] = 0.0;
-              }
+	    equNr++;
           }
 
-        for (int i = 0; i < dim1 + 1; i++)
-          {
-            a[nPoints * dim2][dim2 * (dim1 + 1) + i] = 1.0;
-          }
+	//
+	a[equNr][6]=1.0;
+	a[equNr][7]=1.0;
+	a[equNr][8]=1.0;
+        r[equNr] = 1.0;
 
-        r[nPoints * dim2] = 1.0;
-
-        //    cout << a << endl;
+	//cout << a << endl;
 
         rv = solveLinearEquation(a, r);
 
-        matrix<double> tmatrix(dim1 + 1, dim2 + 1);
-        for (int k = 0; k < dim2 + 1; k++)
-          for (int i = 0; i < dim1 + 1; i++)
+        matrix<double> tmatrix(3,3);
+        for (int k = 0; k < 3; k++)
+          for (int i = 0; i < 3; i++)
             {
-              tmatrix[k][i] = rv[k * (dim1 + 1) + i];
+              tmatrix[k][i] = rv[k * 3 + i];
             }
 
         return tmatrix;
@@ -143,7 +107,14 @@ namespace ice
     RETHROW;
   }
 
-  void Trafo2Vector(const Trafo& tr, vector<double>& v)
+  Trafo matchPointlistsProjective(const vector<Point>& p1, 
+				  const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(),1.0);
+    return matchPointlistsProjective(p1,p2,weights);
+  }
+
+  static void trafo2vector(const Trafo& tr, vector<double>& v)
   {
     matrix<double> m = tr.getMatrix();
     int i = 0;
@@ -154,7 +125,7 @@ namespace ice
         }
   }
 
-  void Vector2Trafo(const vector<double>& v, Trafo& tr)
+  static void vector2trafo(const vector<double>& v, Trafo& tr)
   {
     matrix<double> m = tr.getMatrix();
     int i = 0;
@@ -166,46 +137,48 @@ namespace ice
     tr = Trafo(m);
   }
 
-  class LMProjective: public LMFunctionObject
+  class LMProjective2d: public LMFunctionObject
   {
   private:
-    const Matrix& p1;
-    const Matrix& p2;
-    const Vector& w;
+    const vector<Point>& p1;
+    const vector<Point>& p2;
+    const vector<double>& w;
     vector<double>& trpara;
   public:
-    LMProjective(const Matrix& pl1, const Matrix& pl2, const Vector& weights,
-                 vector<double>& trp):
+    LMProjective2d(const vector<Point>& pl1, 
+		   const vector<Point>& pl2, 
+		   const vector<double>& weights,
+		   vector<double>& trp):
       p1(pl1), p2(pl2), w(weights), trpara(trp) {};
-
+    
     int funcdim() const
     {
-      return p2.rows() * p2.cols();
+      return p2.size()*2;
     }
-
+    
     int operator()(Vector& result) const
     {
-      Trafo tr(p1.cols(), p2.cols());
-      Vector2Trafo(trpara, tr);
-      Matrix pointsTransformed;
-      transformList(tr, p1, pointsTransformed);
+      Trafo tr(2, 2);
+      vector2trafo(trpara, tr);
+      vector<Point> pointsTransformed;
+      transform(tr, p1, pointsTransformed);
       int k = 0;
-      for (int i = 0; i < (int)p2.rows(); ++i)
-        for (int l = 0; l < (int) p2.cols(); ++l)
-          {
-            result[k++] = (pointsTransformed[i][l] - p2[i][l]) * w[i];
-          }
+      for (int i = 0; i < (int)p2.size(); ++i)
+	{
+	  result[k++] = (pointsTransformed[i].x - p2[i].x) * w[i];
+	  result[k++] = (pointsTransformed[i].y - p2[i].y) * w[i];
+	}
       return 1;
     }
   };
 
   Trafo iterateProjective(const Trafo& tr,
-                          const Matrix& p1, const Matrix& p2,
-                          const Vector& weights)
+                          const vector<Point>& p1, const vector<Point>& p2,
+                          const vector<double>& weights)
   {
     matrix<double> m = tr.getMatrix();
     vector<double> trpara(m.cols()*m.rows());
-    Trafo2Vector(tr, trpara);
+    trafo2vector(tr, trpara);
 
     vector<double*> pp(trpara.size() - 1);
     for (int i = 0; i < (int)pp.size(); ++i)
@@ -215,24 +188,30 @@ namespace ice
 
     int inumber;
     LMDif(pp,      // Liste von Zeigern auf zu optimierende Parameter
-          LMProjective(p1, p2, weights, trpara), // Konstruktion des Funktors
+          LMProjective2d(p1, p2, weights, trpara), // Konstruktion des Funktors
           10000,      // maximale Zahl der Iterationsschritte
           inumber);  // Rückgabe der durchgeführten Iterationsschritte
 
-    Trafo res(tr);
-    Vector2Trafo(trpara, res);
+    Trafo res(2,2);
+    vector2trafo(trpara, res);
     return res;
   }
 
-  Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
+  Trafo iterateProjective(const Trafo& tr,
+                          const vector<Point>& p1, const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(),1.0);
+    return iterateProjective(tr,p1,p2,weights);
+  }
+
+#if 0
+  Trafo MatchPointlists(const vector<Point>& p1, const vector<Point>& p2,
                         int mode, const Vector& weights)
   {
     try
       {
-        int nPoints = p1.rows();
-        int dim1 = p1.cols();
-        int dim2 = p2.cols();
-        Trafo res(dim1, dim2);
+        int nPoints = p1.size();
+        Trafo res(2,2);
 
         double weightsum;
 
@@ -420,7 +399,7 @@ namespace ice
     RETHROW;
   }
 
-  Trafo MatchPointlists(const Matrix& p1, const Matrix& p2,
+  Trafo MatchPointlists(const vector<Point>& p1, const vector<Point>& p2,
                         int mode)
   {
     Vector weights(p1.rows());
@@ -442,8 +421,8 @@ namespace ice
         if (pl2->lng != pnumber)
           throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
-        Matrix p1(pnumber, 2);
-        Matrix p2(pnumber, 2);
+        vector<Point> p1(pnumber, 2);
+        vector<Point> p2(pnumber, 2);
         Vector w(pnumber);
 
         for (int i = 0; i < pnumber; i++)
@@ -460,7 +439,6 @@ namespace ice
     RETHROW;
   }
 
-#if 0
   Trafo MatchPointlists(const vector<Point>& pl1, const vector<Point>& pl2,
                         int mode)
   {
@@ -470,8 +448,8 @@ namespace ice
     if ((int)pl2.size() != nPoints)
       throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
-    Matrix p1(nPoints, 2);
-    Matrix p2(nPoints, 2);
+    vector<Point> p1(nPoints, 2);
+    vector<Point> p2(nPoints, 2);
 
     for (int i = 0; i < nPoints; i++)
       {
@@ -483,10 +461,9 @@ namespace ice
 
     return MatchPointlists(p1, p2, mode);
   }
-#endif
 #undef FNAME
 #define FNAME "MatchPointlistsLinOpt"
-  Trafo MatchPointlistsLinOpt(const Matrix& p1, const Matrix& p2,
+  Trafo MatchPointlistsLinOpt(const vector<Point>& p1, const vector<Point>& p2,
                               int mode, const Vector& weights, double limit)
   {
     // wrapper function to use old style MatchPointlistsLinOpt with classes
@@ -498,7 +475,7 @@ namespace ice
         PointList pl1, pl2;
         double tr[3][3];
 
-        Matrix tmatrix(3, 3);
+        vector<Point> tmatrix(3, 3);
         Trafo res(2, 2);
 
         nPoints = p1.rows();
@@ -537,7 +514,7 @@ namespace ice
     RETHROW;
   }
 
-  Trafo MatchPointlistsLinOpt(const Matrix& p1, const Matrix& p2,
+  Trafo MatchPointlistsLinOpt(const vector<Point>& p1, const vector<Point>& p2,
                               int mode)
   {
     Vector weights(p1.rows());
@@ -602,4 +579,5 @@ namespace ice
   }
 
 #undef FNAME
+#endif
 }
