@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* 
+/*
  * functions for 2d-2d-transformations
  */
 #include "defs.h"
@@ -43,59 +43,59 @@ namespace ice
 {
 
 #define FNAME "matchPointlistsProjective"
-  Trafo matchPointlistsProjective(const vector<Point>& p1, 
-				  const vector<Point>& p2,
-				  const vector<double>& weights)
+  Trafo matchPointlistsProjective(const vector<Point>& p1,
+                                  const vector<Point>& p2,
+                                  const vector<double>& weights)
   {
     try
       {
         int nPoints = p1.size();
-	if (p2.size()!=nPoints)
-	  throw IceException(FNAME,M_DIFFERENT_LISTSIZE);
-	
+        if (p2.size() != nPoints)
+          throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
+
         matrix<double> a(nPoints * 2 + 1, (2 + 1) * (2 + 1), 0);
         vector<double> r(nPoints * 2 + 1);
         vector<double> rv;
 
-	int equNr=0;
+        int equNr = 0;
         for (int j = 0; j < nPoints; j++)
           {
             double weight = weights[j];
 
-	    a[equNr][0] = p1[j].x * weight;
-	    a[equNr][1] = p1[j].y * weight;
-	    a[equNr][2] = 1.0 * weight;
-	    	    
-	    a[equNr][6] = -p1[j].x * p2[j].x * weight;
-	    a[equNr][7] = -p1[j].y * p2[j].x * weight;
-	    a[equNr][8] = -p2[j].x * weight;
-	    r[equNr] = 0.0;
+            a[equNr][0] = p1[j].x * weight;
+            a[equNr][1] = p1[j].y * weight;
+            a[equNr][2] = 1.0 * weight;
 
-	    equNr++;
+            a[equNr][6] = -p1[j].x * p2[j].x * weight;
+            a[equNr][7] = -p1[j].y * p2[j].x * weight;
+            a[equNr][8] = -p2[j].x * weight;
+            r[equNr] = 0.0;
 
-	    a[equNr][3] = p1[j].x * weight;
-	    a[equNr][4] = p1[j].y * weight;
-	    a[equNr][5] = 1.0 * weight;
-	    	    
-	    a[equNr][6] = -p1[j].x * p2[j].y * weight;
-	    a[equNr][7] = -p1[j].y * p2[j].y * weight;
-	    a[equNr][8] = -p2[j].y * weight;
-	    r[equNr] = 0.0;
+            equNr++;
 
-	    equNr++;
+            a[equNr][3] = p1[j].x * weight;
+            a[equNr][4] = p1[j].y * weight;
+            a[equNr][5] = 1.0 * weight;
+
+            a[equNr][6] = -p1[j].x * p2[j].y * weight;
+            a[equNr][7] = -p1[j].y * p2[j].y * weight;
+            a[equNr][8] = -p2[j].y * weight;
+            r[equNr] = 0.0;
+
+            equNr++;
           }
 
-	//
-	a[equNr][6]=1.0;
-	a[equNr][7]=1.0;
-	a[equNr][8]=1.0;
+        //
+        a[equNr][6] = 1.0;
+        a[equNr][7] = 1.0;
+        a[equNr][8] = 1.0;
         r[equNr] = 1.0;
 
-	//cout << a << endl;
+        //cout << a << endl;
 
         rv = solveLinearEquation(a, r);
 
-        matrix<double> tmatrix(3,3);
+        matrix<double> tmatrix(3, 3);
         for (int k = 0; k < 3; k++)
           for (int i = 0; i < 3; i++)
             {
@@ -107,11 +107,11 @@ namespace ice
     RETHROW;
   }
 
-  Trafo matchPointlistsProjective(const vector<Point>& p1, 
-				  const vector<Point>& p2)
+  Trafo matchPointlistsProjective(const vector<Point>& p1,
+                                  const vector<Point>& p2)
   {
-    vector<double> weights(p1.size(),1.0);
-    return matchPointlistsProjective(p1,p2,weights);
+    vector<double> weights(p1.size(), 1.0);
+    return matchPointlistsProjective(p1, p2, weights);
   }
 
   static void trafo2vector(const Trafo& tr, vector<double>& v)
@@ -145,17 +145,17 @@ namespace ice
     const vector<double>& w;
     vector<double>& trpara;
   public:
-    LMProjective2d(const vector<Point>& pl1, 
-		   const vector<Point>& pl2, 
-		   const vector<double>& weights,
-		   vector<double>& trp):
+    LMProjective2d(const vector<Point>& pl1,
+                   const vector<Point>& pl2,
+                   const vector<double>& weights,
+                   vector<double>& trp):
       p1(pl1), p2(pl2), w(weights), trpara(trp) {};
-    
+
     int funcdim() const
     {
-      return p2.size()*2;
+      return p2.size() * 2;
     }
-    
+
     int operator()(Vector& result) const
     {
       Trafo tr(2, 2);
@@ -164,10 +164,10 @@ namespace ice
       transform(tr, p1, pointsTransformed);
       int k = 0;
       for (int i = 0; i < (int)p2.size(); ++i)
-	{
-	  result[k++] = (pointsTransformed[i].x - p2[i].x) * w[i];
-	  result[k++] = (pointsTransformed[i].y - p2[i].y) * w[i];
-	}
+        {
+          result[k++] = (pointsTransformed[i].x - p2[i].x) * w[i];
+          result[k++] = (pointsTransformed[i].y - p2[i].y) * w[i];
+        }
       return 1;
     }
   };
@@ -192,7 +192,7 @@ namespace ice
           10000,      // maximale Zahl der Iterationsschritte
           inumber);  // Rückgabe der durchgeführten Iterationsschritte
 
-    Trafo res(2,2);
+    Trafo res(2, 2);
     vector2trafo(trpara, res);
     return res;
   }
@@ -200,8 +200,8 @@ namespace ice
   Trafo iterateProjective(const Trafo& tr,
                           const vector<Point>& p1, const vector<Point>& p2)
   {
-    vector<double> weights(p1.size(),1.0);
-    return iterateProjective(tr,p1,p2,weights);
+    vector<double> weights(p1.size(), 1.0);
+    return iterateProjective(tr, p1, p2, weights);
   }
 
 #if 0
@@ -211,7 +211,7 @@ namespace ice
     try
       {
         int nPoints = p1.size();
-        Trafo res(2,2);
+        Trafo res(2, 2);
 
         double weightsum;
 
@@ -355,24 +355,24 @@ namespace ice
             matrix<double> a(nPoints, dim1 + 1);
             vector<double> r(nPoints);
             vector<double> rv(dim1 + 1);
-	    
+
             for (int j = 0; j < nPoints; j++)
               {
                 for (int i = 0; i < dim1; i++)
                   a[j][i] = p1[j][i] * weights[j];
-		
+
                 a[j][dim1] = 1.0 * weights[j];
               }
-	    
+
             for (int k = 0; k < dim2; k++)
               {
                 for (int j = 0; j < nPoints; j++)
                   r[j] = p2[j][k] * weights[j];
-	
-		// cout << a << endl;
-		// cout << r << endl;
+
+                // cout << a << endl;
+                // cout << r << endl;
                 rv = solveLinearEquation(a, r);
-		
+
                 for (int i = 0; i < dim1 + 1; i++)
                   res.m[k][i] = rv[i];
               }

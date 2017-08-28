@@ -40,9 +40,9 @@ int main(int argc, char** argv)
   vector<Point> pl2;
   makePointlists(trafo, pl1, pl2);
 
-  for (int i=0;i<pl1.size();i++)
+  for (int i = 0; i < pl1.size(); i++)
     {
-      pl1[i] = pl1[i] + Point(0.01*drand48(),0.01*drand48());
+      pl1[i] = pl1[i] + Point(0.01 * drand48(), 0.01 * drand48());
     }
 
   // projective transformation, linearisation

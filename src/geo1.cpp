@@ -376,24 +376,24 @@ namespace ice
             matrix<double> a(nPoints, dim1 + 1);
             vector<double> r(nPoints);
             vector<double> rv(dim1 + 1);
-	    
+
             for (int j = 0; j < nPoints; j++)
               {
                 for (int i = 0; i < dim1; i++)
                   a[j][i] = p1[j][i] * weights[j];
-		
+
                 a[j][dim1] = 1.0 * weights[j];
               }
-	    
+
             for (int k = 0; k < dim2; k++)
               {
                 for (int j = 0; j < nPoints; j++)
                   r[j] = p2[j][k] * weights[j];
-	
-		// cout << a << endl;
-		// cout << r << endl;
+
+                // cout << a << endl;
+                // cout << r << endl;
                 rv = solveLinearEquation(a, r);
-		
+
                 for (int i = 0; i < dim1 + 1; i++)
                   res.m[k][i] = rv[i];
               }

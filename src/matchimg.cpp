@@ -172,7 +172,7 @@ namespace ice
 
         if ((mode & DT_REFINE) == 0)
           {
-            tr.init();                   // new transformation 
+            tr.init();                   // new transformation
 
             Window w;
             GetWindow2Img(img1, w);
@@ -220,15 +220,15 @@ namespace ice
                     {
                       Window w(i * blocksize, j * blocksize,
                                (i + 1)*blocksize - 1, (j + 1)*blocksize - 1);
-		      
+
                       if (
-			  inside(img1, tri, w.p1) &&
-			  inside(img1, tri, w.p2)
-			  )
+                        inside(img1, tri, w.p1) &&
+                        inside(img1, tri, w.p2)
+                      )
                         {
                           double dx, dy, val;
                           val = detectShift(himg(w), img2(w), dx, dy, beta);
-			  
+
                           if (val > MINVAL)
                             {
                               double xm = (w.p1.x + w.p2.x) / 2.0;
@@ -249,11 +249,11 @@ namespace ice
                       {
                         trd = MatchPointlists(pl1, pl2, TRM_PROJECTIVE);  // ..dann projektiv zulassen
                       }
-		    
+
                     tr.append(trd);
                   }
-		else
-		  return false;
+                else
+                  return false;
               }
 
             cycleCount++;
