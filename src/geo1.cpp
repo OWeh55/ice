@@ -459,31 +459,6 @@ namespace ice
       }
     RETHROW;
   }
-
-#if 0
-  Trafo MatchPointlists(const vector<Point>& pl1, const vector<Point>& pl2,
-                        int mode)
-  {
-    Trafo res;
-    int nPoints = pl1.size();
-
-    if ((int)pl2.size() != nPoints)
-      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
-
-    Matrix p1(nPoints, 2);
-    Matrix p2(nPoints, 2);
-
-    for (int i = 0; i < nPoints; i++)
-      {
-        p1[i][0] = pl1[i].x;
-        p1[i][1] = pl1[i].y;
-        p2[i][0] = pl2[i].x;
-        p2[i][1] = pl2[i].y;
-      }
-
-    return MatchPointlists(p1, p2, mode);
-  }
-#endif
 #undef FNAME
 #define FNAME "MatchPointlistsLinOpt"
   Trafo MatchPointlistsLinOpt(const Matrix& p1, const Matrix& p2,
@@ -600,6 +575,5 @@ namespace ice
 
     return tmatrix;
   }
-
 #undef FNAME
 }

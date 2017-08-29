@@ -78,6 +78,20 @@ namespace ice
   Trafo matchPointListsShiftScale(const std::vector<Point>& pl1,
                                   const std::vector<Point>& pl2);
 
+  Trafo matchPointListsRotate(const std::vector<Point>& pl1,
+                              const std::vector<Point>& pl2,
+                              const std::vector<double>& weight);
+
+  Trafo matchPointListsRotate(const std::vector<Point>& pl1,
+                              const std::vector<Point>& pl2);
+
+  Trafo matchPointListsEuclidean(const std::vector<Point>& pl1,
+                                 const std::vector<Point>& pl2);
+
+  Trafo matchPointListsEuclidean(const std::vector<Point>& pl1,
+                                 const std::vector<Point>& pl2,
+                                 const std::vector<double>& weight);
+
   Trafo matchPointListsSimilarity(const std::vector<Point>& pl1,
                                   const std::vector<Point>& pl2,
                                   const std::vector<double>& weight);

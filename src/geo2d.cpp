@@ -54,10 +54,9 @@ namespace ice
 #undef FNAME
 
 #define FNAME "matchPointlistsProjectiveLinear"
-  Trafo matchPointListsProjectiveLinear(
-    const vector<Point>& p1,
-    const vector<Point>& p2,
-    const vector<double>& weights)
+  Trafo matchPointListsProjectiveLinear(const vector<Point>& p1,
+                                        const vector<Point>& p2,
+                                        const vector<double>& weights)
   {
     try
       {
@@ -101,16 +100,12 @@ namespace ice
         a[equNr][8] = 1.0;
         r[equNr] = 1.0;
 
-        //cout << a << endl;
-
         rv = solveLinearEquation(a, r);
 
         matrix<double> tmatrix(3, 3);
         for (int k = 0; k < 3; k++)
           for (int i = 0; i < 3; i++)
-            {
-              tmatrix[k][i] = rv[k * 3 + i];
-            }
+            tmatrix[k][i] = rv[k * 3 + i];
 
         return tmatrix;
       }
@@ -125,6 +120,7 @@ namespace ice
   }
 #undef FNAME
 
+  // auxilary functions for Levenberg-Marquard-Algorithm
   static void trafo2vector(const Trafo& tr, vector<double>& v)
   {
     matrix<double> m = tr.getMatrix();
@@ -160,7 +156,10 @@ namespace ice
                    const vector<Point>& pl2,
                    const vector<double>& weights,
                    vector<double>& trp):
-      p1(pl1), p2(pl2), w(weights), trpara(trp) {};
+      p1(pl1), p2(pl2), w(weights), trpara(trp)
+    {
+      checkLists(p1, p2, weights);
+    };
 
     int funcdim() const
     {
@@ -170,9 +169,12 @@ namespace ice
     int operator()(Vector& result) const
     {
       Trafo tr(2, 2);
+      // create transformation from parameters
       vector2trafo(trpara, tr);
+      // transform pointlist p1
       vector<Point> pointsTransformed;
       transform(tr, p1, pointsTransformed);
+      // error function == distance vectors of transformed points to pointlist p2
       int k = 0;
       for (int i = 0; i < (int)p2.size(); ++i)
         {
@@ -183,6 +185,7 @@ namespace ice
     }
   };
 
+#define FNAME "iterateProjective"
   Trafo iterateProjective(const Trafo& tr,
                           const vector<Point>& p1, const vector<Point>& p2,
                           const vector<double>& weights)
@@ -198,12 +201,13 @@ namespace ice
       }
 
     int inumber;
-    LMDif(pp,      // Liste von Zeigern auf zu optimierende Parameter
-          LMProjective2d(p1, p2, weights, trpara), // Konstruktion des Funktors
-          10000,      // maximale Zahl der Iterationsschritte
-          inumber);  // Rückgabe der durchgeführten Iterationsschritte
+    LMDif(pp,      // vector of pointers to parameters
+          LMProjective2d(p1, p2, weights, trpara), // functor for error function
+          10000,      // maximum number of iterations
+          inumber);  // number of iterations executed
 
     Trafo res(2, 2);
+    // create transformation from parameters
     vector2trafo(trpara, res);
     return res;
   }
@@ -214,6 +218,92 @@ namespace ice
     vector<double> weights(p1.size(), 1.0);
     return iterateProjective(tr, p1, p2, weights);
   }
+#undef FNAME
+
+  class LMEuclidean2d: public LMFunctionObject
+  {
+  private:
+    const vector<Point>& p1;
+    const vector<Point>& p2;
+    const vector<double>& w;
+    vector<double>& trpara;
+  public:
+    LMEuclidean2d(const vector<Point>& pl1,
+                  const vector<Point>& pl2,
+                  const vector<double>& weights,
+                  vector<double>& trp):
+      p1(pl1), p2(pl2), w(weights), trpara(trp)
+    {
+      checkLists(p1, p2, weights);
+    };
+
+    int funcdim() const
+    {
+      return p2.size() * 2;
+    }
+
+    int operator()(Vector& result) const
+    {
+      Trafo tr(2, 2);
+      // create transformation from parameters
+      tr.rotate(0, 0, trpara[0]);
+      tr.shift(trpara[1], trpara[2]);
+      // transform pointlist p1
+      vector<Point> pointsTransformed;
+      transform(tr, p1, pointsTransformed);
+      // error function == distance vectors of transformed points to pointlist p2
+      int k = 0;
+      for (int i = 0; i < (int)p2.size(); ++i)
+        {
+          result[k++] = (pointsTransformed[i].x - p2[i].x) * w[i];
+          result[k++] = (pointsTransformed[i].y - p2[i].y) * w[i];
+        }
+      return 1;
+    }
+  };
+
+#define FNAME "iterateEuclidean"
+  Trafo iterateEuclidean(const Trafo& tr,
+                         const vector<Point>& p1, const vector<Point>& p2,
+                         const vector<double>& weights)
+  {
+    vector<double> trpara(3);
+
+    // initial values for shift and rotation
+    matrix<double> m = tr.getMatrix();
+    double c = m[0][0] + m[1][1];
+    double s = m[1][0] - m[0][1];
+
+    trpara[0] = atan2(s, c);
+    trpara[1] = m[0][2];
+    trpara[2] = m[1][2];
+
+    vector<double*> pp(3);
+    for (int i = 0; i < 3; ++i)
+      {
+        pp[i] = &trpara[i];
+      }
+
+    int inumber;
+    LMDif(pp,      // vector of pointers to parameters
+          LMEuclidean2d(p1, p2, weights, trpara), // functor for error function
+          10000,      // maximum number of iterations
+          inumber);  // number of iterations executed
+
+    // create transformation from parameters
+    Trafo res(2, 2);
+    res.rotate(0, 0, trpara[0]);
+    res.shift(trpara[1], trpara[2]);
+    return res;
+  }
+
+  Trafo iterateEuclidean(const Trafo& tr,
+                         const vector<Point>& p1, const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(), 1.0);
+    return iterateEuclidean(tr, p1, p2, weights);
+  }
+#undef FNAME
 #define FNAME "matchPointListsShift"
   Trafo matchPointListsShift(const vector<Point>& p1,
                              const vector<Point>& p2,
@@ -239,6 +329,7 @@ namespace ice
       }
     RETHROW;
   }
+
   Trafo matchPointListsShift(const vector<Point>& p1,
                              const vector<Point>& p2)
   {
@@ -247,6 +338,15 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "matchPointListsShiftScale"
+  /*
+   *  | a 0 dx |
+   *  | 0 a dy |
+   *  | 0 0 1  |
+   *  x' = a * x + dx
+   *  y' = a * y + dy
+   *  | x  1 0 |  | x' |
+   *  | y  0 1 |  | y' |
+   */
   Trafo matchPointListsShiftScale(const vector<Point>& p1,
                                   const vector<Point>& p2,
                                   const vector<double>& weights)
@@ -297,6 +397,55 @@ namespace ice
   {
     vector<double> weights(p1.size(), 1.0);
     return matchPointListsShiftScale(p1, p2, weights);
+  }
+#undef FNAME
+#define FNAME "matchPointListsRotate"
+  Trafo matchPointListsRotate(const vector<Point>& p1,
+                              const vector<Point>& p2,
+                              const vector<double>& weights)
+  {
+    try
+      {
+        int nPoints = checkLists(p1, p2, weights);
+        Trafo trs = matchPointListsSimilarity(p1, p2, weights);
+        matrix<double> m = trs.getMatrix();
+        double c = m[0][0] + m[1][1];
+        double s = m[1][0] - m[0][1];
+        double fi = atan2(s, c);
+        // cout << (fi*180/M_PI) << endl;
+        Trafo tr;
+        tr.rotate(0, 0, fi);
+        return tr;
+      }
+    RETHROW;
+  }
+
+  Trafo matchPointListsRotate(const vector<Point>& p1,
+                              const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(), 1.0);
+    return matchPointListsRotate(p1, p2, weights);
+  }
+#undef FNAME
+#define FNAME "matchPointListsEuclidean"
+  Trafo matchPointListsEuclidean(const vector<Point>& p1,
+                                 const vector<Point>& p2,
+                                 const vector<double>& weights)
+  {
+    try
+      {
+        int nPoints = checkLists(p1, p2, weights);
+        Trafo trs = matchPointListsSimilarity(p1, p2, weights);
+        return iterateEuclidean(trs, p1, p2, weights);
+      }
+    RETHROW;
+  }
+
+  Trafo matchPointListsEuclidean(const vector<Point>& p1,
+                                 const vector<Point>& p2)
+  {
+    vector<double> weights(p1.size(), 1.0);
+    return matchPointListsEuclidean(p1, p2, weights);
   }
 #undef FNAME
 #define FNAME "matchPointListsSimilarity"
@@ -355,6 +504,7 @@ namespace ice
     return matchPointListsSimilarity(p1, p2, weights);
   }
 #undef FNAME
+
 #define FNAME "matchPointListsAffine"
   Trafo matchPointListsAffine(const vector<Point>& p1,
                               const vector<Point>& p2,
@@ -369,21 +519,22 @@ namespace ice
         vector<double> rv(3);
         matrix<double> res(3, 3);
 
+        // first equation system for x coordinate
         for (int j = 0; j < nPoints; j++)
           {
             a[j][0] = p1[j].x * weights[j];
             a[j][1] = p1[j].y * weights[j];
             a[j][2] = 1.0 * weights[j];
-          }
 
-        for (int j = 0; j < nPoints; j++)
-          r[j] = p2[j].x * weights[j];
+            r[j] = p2[j].x * weights[j];
+          }
 
         rv = solveLinearEquation(a, r);
 
         for (int i = 0; i < 3; i++)
           res[0][i] = rv[i];
 
+        // second equation system for y coordinate with unchanged coefficient matrix
         for (int j = 0; j < nPoints; j++)
           r[j] = p2[j].y * weights[j];
 
@@ -392,18 +543,11 @@ namespace ice
         for (int i = 0; i < 3; i++)
           res[1][i] = rv[i];
 
-        for (int j = 0; j < nPoints; j++)
-          r[j] = p2[j].x * weights[j];
-
-        rv = solveLinearEquation(a, r);
-
-        for (int i = 0; i < 3; i++)
-          res[0][i] = rv[i];
-
         res[2][0] = 0.0;
         res[2][1] = 0.0;
         res[2][2] = 1.0;
         return Trafo(res);
+
       }
     RETHROW;
   }
@@ -487,123 +631,4 @@ namespace ice
     return matchPointLists(p1, p2, mode, weights);
   }
 #undef FNAME
-#if 0
-#define FNAME "MatchPointlistsLinOpt"
-  Trafo MatchPointlistsLinOpt(const vector<Point>& p1, const vector<Point>& p2,
-                              int mode, const Vector& weights, double limit)
-  {
-    // wrapper function to use old style MatchPointlistsLinOpt with classes
-    try
-      {
-        int nPoints;
-        int dim1 = p1.cols();
-        int dim2 = p2.cols();
-        PointList pl1, pl2;
-        double tr[3][3];
-
-        vector<Point> tmatrix(3, 3);
-        Trafo res(2, 2);
-
-        nPoints = p1.rows();
-
-        if ((nPoints != p2.rows()) || (nPoints != weights.Size()))
-          throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
-
-        nPoints = p1.rows();
-
-        if ((dim2 != 2) || (dim1 != 2)) // linear opt. only 2 dimensions
-          throw IceException(FNAME, M_WRONG_PARAM);
-
-        // construct pointlist
-        pl1 = NewPointList(nPoints);
-        pl2 = NewPointList(nPoints);
-
-        for (int i = 0; i < nPoints; i++)
-          {
-            PutPoint(pl1, i, p1[i][0], p1[i][1], weights[i]);
-            PutPoint(pl2, i, p2[i][0], p2[i][1], weights[i]);
-          }
-
-        MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
-
-        FreePointList(pl1);
-        FreePointList(pl2);
-
-        for (int i = 0; i < 3; i++)
-          for (int j = 0; j < 3; j++)
-            {
-              tmatrix[i][j] = tr[i][j];
-            }
-
-        return tmatrix;
-      }
-    RETHROW;
-  }
-
-  Trafo MatchPointlistsLinOpt(const vector<Point>& p1, const vector<Point>& p2,
-                              int mode)
-  {
-    Vector weights(p1.rows());
-    for (int i = 0; i < p1.rows(); i++)
-      {
-        weights[i] = 1.0;
-      }
-
-    return MatchPointlistsLinOpt(p1, p2, mode, weights);
-  }
-
-  Trafo MatchPointlistsLinOpt(const std::vector<Point>& p1, const std::vector<Point>& p2,
-                              int mode)
-  {
-    std::vector<double> weights(p1.size());
-
-    for (int i = 0; i < (int)p1.size(); i++)
-      {
-        weights[i] = 1.0;
-      }
-
-    return MatchPointlistsLinOpt(p1, p2, mode, weights);
-  }
-
-  Trafo MatchPointlistsLinOpt(const std::vector<Point>& p1, const std::vector<Point>& p2,
-                              int mode, const std::vector<double>& weights,
-                              double limit)
-  {
-    // wrapper function for old style MatchPointlistsLinOpt
-
-    int nPoints = p1.size();
-
-    Matrix tmatrix(3, 3, 1);
-    if ((nPoints != (int)p2.size()) || (nPoints != (int)weights.size()))
-      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
-
-    PointList pl1, pl2;
-    double tr[3][3];
-
-    // construct pointlist
-    pl1 = NewPointList(nPoints);
-    pl2 = NewPointList(nPoints);
-
-    for (int i = 0; i < nPoints; i++)
-      {
-        PutPoint(pl1, i, p1[i].x, p1[i].y, weights[i]);
-        PutPoint(pl2, i, p2[i].x, p2[i].y, weights[i]);
-      }
-
-    MatchPointlistsLinOpt(pl1, pl2, tr, mode, limit);
-
-    FreePointList(pl1);
-    FreePointList(pl2);
-
-    for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 3; j++)
-        {
-          tmatrix[i][j] = tr[i][j];
-        }
-
-    return tmatrix;
-  }
-
-#undef FNAME
-#endif
 }

@@ -722,7 +722,7 @@ namespace ice
     RETHROW;
   }
 
-  void transformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt)
+  void transformAndRound(const Trafo& tr, double x, double y, int& xt, int& yt)
   {
     try
       {

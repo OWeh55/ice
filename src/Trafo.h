@@ -178,8 +178,8 @@ namespace ice
   void transform(const Trafo&, std::vector<Point>& p);
   void transform(const Trafo&, const std::vector<Point>& p1, std::vector<Point>& p2);
 
-  // "round" in name of function to avoid accidentally rounding
-  void transformAndRound(const Trafo& tr, int x, int y, int& xt, int& yt);
+  // "Round" in name of function to avoid accidentally rounding
+  void transformAndRound(const Trafo& tr, double x, double y, int& xt, int& yt);
   void transformAndRound(const Trafo& tr, int& xt, int& yt);
 
 // transform in 3d
