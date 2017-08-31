@@ -57,6 +57,15 @@ void makePointlists(int mode, int nPoints,
     }
 }
 
+void tLine(Point p1, Point p2, int co, const Image& img)
+{
+  int x1 = (p1.x + range) / range / 2 * xsize;
+  int y1 = (p1.y + range) / range / 2 * ysize;
+  int x2 = (p2.x + range) / range / 2 * xsize;
+  int y2 = (p2.y + range) / range / 2 * ysize;
+  Line(x1, y1, x2, y2, co, img);
+}
+
 void showResult(int mode, const string& text,
                 const vector<Point>& pl1,
                 const vector<Point>& pl2,
@@ -92,12 +101,8 @@ void showResult(int mode, const string& text,
         {
           Point p1s;
           transform(trEstimated, pl1[i], p1s);
-          int x1s = (p1s.x + range) / range  / 2 * xsize;
-          int y1s = (p1s.y + range) / range / 2 * ysize;
-          int x2 = (pl2[i].x + range) / range / 2 * xsize;
-          int y2 = (pl2[i].y + range) / range / 2 * ysize;
-          // cout << x1s << " " << y1s << " " << x2 << " " << y2 << endl;
-          Line(x1s, y1s, x2, y2, 1, mark);
+          tLine(pl1[i], pl2[i], 2, mark); // real move
+          tLine(p1s, pl2[i], 1, mark); // error vector
         }
       GetChar();
     }
