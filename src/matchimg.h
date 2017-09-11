@@ -1,7 +1,7 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2002-2017 FSU Jena, Digital Image Processing Group
  * Contact: ice@pandora.inf.uni-jena.de
  *
  * This library is free software; you can redistribute it and/or
