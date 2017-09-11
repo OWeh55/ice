@@ -31,6 +31,7 @@
 #include "MatrixAlgebra.h"
 #include "vectortools.h"
 #include "geo.h"
+#include "matrixtools.h"
 
 using namespace std;
 
@@ -80,8 +81,8 @@ namespace ice
 
     return Trafo(c * m * Inverse(c));
   }
-
 #undef FNAME
+
 #define FNAME "MatchPointlists"
   Trafo MatchProjective(const Matrix& p1, const Matrix& p2,
                         const Vector& weights)
@@ -372,36 +373,6 @@ namespace ice
           case TRM_AFFINE:
             // problem is separable
           {
-            /*
-                  Matrix a(nPoints, dim1 + 1);
-                  Vector r(nPoints);
-                  Vector rv(dim1 + 1);
-
-                  for (int j = 0; j < nPoints; j++)
-                    {
-                      for (int i = 0; i < dim1; i++)
-                        {
-                          a[j][i] = p1[j][i] * weights[j];
-                        }
-
-                      a[j][dim1] = 1.0 * weights[j];
-                    }
-
-                  for (int k = 0; k < dim2; k++)
-                    {
-                      for (int j = 0; j < nPoints; j++)
-                        {
-                          r[j] = p2[j][k] * weights[j];
-                        }
-
-                      rv = SolveLinEqu(a, r);
-
-                      for (int i = 0; i < dim1 + 1; i++)
-                        {
-                          res.m[k][i] = rv[i];
-                        }
-                    }
-            */
             matrix<double> a(nPoints, dim1 + 1);
             vector<double> r(nPoints);
             vector<double> rv(dim1 + 1);
@@ -419,6 +390,8 @@ namespace ice
                 for (int j = 0; j < nPoints; j++)
                   r[j] = p2[j][k] * weights[j];
 
+                // cout << a << endl;
+                // cout << r << endl;
                 rv = solveLinearEquation(a, r);
 
                 for (int i = 0; i < dim1 + 1; i++)
@@ -456,7 +429,7 @@ namespace ice
   }
 
   Trafo MatchPointlists(const PointList& pl1, const PointList& pl2, int mode)
-// compatibility function with struct Pointlists
+// compatibility function with struct PointList
   {
     try
       {
@@ -485,29 +458,6 @@ namespace ice
         return MatchPointlists(p1, p2, mode, w);
       }
     RETHROW;
-  }
-
-  Trafo MatchPointlists(const vector<Point>& pl1, const vector<Point>& pl2,
-                        int mode)
-  {
-    Trafo res;
-    int nPoints = pl1.size();
-
-    if ((int)pl2.size() != nPoints)
-      throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
-
-    Matrix p1(nPoints, 2);
-    Matrix p2(nPoints, 2);
-
-    for (int i = 0; i < nPoints; i++)
-      {
-        p1[i][0] = pl1[i].x;
-        p1[i][1] = pl1[i].y;
-        p2[i][0] = pl2[i].x;
-        p2[i][1] = pl2[i].y;
-      }
-
-    return MatchPointlists(p1, p2, mode);
   }
 #undef FNAME
 #define FNAME "MatchPointlistsLinOpt"
@@ -625,6 +575,5 @@ namespace ice
 
     return tmatrix;
   }
-
 #undef FNAME
 }

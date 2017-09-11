@@ -1,0 +1,186 @@
+#include <image.h>
+#include <getopt.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+  prog: Tests for matching point lists
+  %% Beschreibung Optionen
+  %% short-opt, long-opt, Type, variable, helpstring, default
+  opt: T, transformationmode, int, transformationMode, How to create transformation, 1
+  opt2: mode = 1 - construction with rotation, scaling and shift
+  opt2:        (use -X -Y -R -F)
+  opt2: mode = 2 - special affine transformation
+  opt: X, xshift, double, deltax, x Shift, 0.0
+  opt: Y, yshift, double, deltay, y Shift, 0.0
+  opt: R, rotation, double, alpha, Rotationangle (degree), 0.0
+  opt: F, scale, double, scale, Scaling factor, 1.0
+  opt: g, generationmode, int, generationMode, Pointlist generation mode, 1
+  opt2:   mode = 1 - raster
+  opt: r, range, Double, range, Point coordinate range (-d ... d), 100.0
+  opt: n, pointnumber, int, nPointsGenerated, number os points, 1000
+  opt: N, noise, double, noise, Noise to add to coordinates, 0.0
+  opt: o, outputmode, int, outputMode, Mode of result display, 2
+  opt2:   Bit mask:
+  opt2:   1 - matrices
+  opt2:   2 - maximum transformation error
+  opt2:   4 - pattern
+AppGen*/
+
+int xsize = 1000;
+int ysize = xsize;
+Image gray;
+Image mark;
+
+void makePointlists(int mode, int nPoints,
+                    const Trafo& tr,
+                    vector<Point>& pl1,
+                    vector<Point>& pl2)
+{
+  pl1.clear();
+  pl2.clear();
+  if (mode == 1)
+    {
+      int steps = 1;
+      while (steps * steps < nPoints)
+        steps++;
+      double f = 2.0 * range / steps;
+      for (int x = 0; x < steps; x++)
+        for (int y = 0; y < steps; y++)
+          {
+            Point p1(f * x - range, f * y - range);
+            Point p2;
+            transform(tr, p1, p2);
+            pl1.push_back(p1);
+            pl2.push_back(p2);
+          }
+    }
+}
+
+void tLine(Point p1, Point p2, int co, const Image& img)
+{
+  int x1 = (p1.x + range) / range / 2 * xsize;
+  int y1 = (p1.y + range) / range / 2 * ysize;
+  int x2 = (p2.x + range) / range / 2 * xsize;
+  int y2 = (p2.y + range) / range / 2 * ysize;
+  Line(x1, y1, x2, y2, co, img);
+}
+
+void showResult(int mode, const string& text,
+                const vector<Point>& pl1,
+                const vector<Point>& pl2,
+                const Trafo& trReal,
+                const Trafo& trEstimated)
+{
+  cout << text << endl;
+  if (mode & 1) // matrices
+    {
+      cout << setw(8) << setprecision(5) << fixed;
+      cout << trEstimated.getMatrix() << endl;
+      cout << setw(9) << setprecision(2) << scientific;
+      cout << trEstimated.getMatrix() - trReal.getMatrix() << endl;
+    }
+  if (mode & 2) // maximum transformation error tr * pl1 - pl2
+    {
+      double maxError = 0;
+      for (int i = 0; i < pl1.size(); i++)
+        {
+          Point tp;
+          transform(trEstimated, pl1[i], tp);
+          double error = (pl2[i] - tp).length();
+          if (error > maxError)
+            maxError = error;
+        }
+      cout << "maxError: " << maxError << endl;
+    }
+
+  if (mode & 4)
+    {
+      mark.set(0);
+      for (int i = 0; i < pl1.size(); i++)
+        {
+          Point p1s;
+          transform(trEstimated, pl1[i], p1s);
+          tLine(pl1[i], pl2[i], 2, mark); // real move
+          tLine(p1s, pl2[i], 1, mark); // error vector
+        }
+      GetChar();
+    }
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  Trafo trafo;
+  switch (transformationMode)
+    {
+    case 1:
+      trafo.rotate(0, 0, alpha * M_PI / 180.0);
+      trafo.scale(0, 0, scale);
+      trafo.shift(deltax, deltay);
+      break;
+    case 2:
+    {
+      matrix<double> tm(3, 3,
+      {
+        0.9, -0.45, 1,
+        0.35, 0.9, 2,
+        0.0, 0.0, 1
+      });
+      trafo = Trafo(tm);
+    }
+    break;
+    }
+
+  vector<Point> pl1;
+  vector<Point> pl2;
+  makePointlists(generationMode, nPointsGenerated, trafo, pl1, pl2);
+
+  if (noise > 0)
+    for (int i = 0; i < pl1.size(); i++)
+      {
+        pl1[i] = pl1[i] + Point(noise * (drand48() - 0.5), noise * (drand48() - 0.5));
+      }
+
+  if (outputMode & 4)
+    {
+      gray.create(xsize, ysize);
+      gray.set(0);
+      mark.create(xsize, ysize);
+      mark.set(0);
+      Show(OVERLAY, gray, mark);
+    }
+
+// shift
+  Trafo res = matchPointListsShift(pl1, pl2);
+  showResult(outputMode, "Shift", pl1, pl2, trafo, res);
+
+// shift + scale
+  res = matchPointListsShiftScale(pl1, pl2);
+  showResult(outputMode, "Shift + Scale", pl1, pl2, trafo, res);
+
+// rotate
+  res = matchPointListsRotate(pl1, pl2);
+  showResult(outputMode, "Rotate", pl1, pl2, trafo, res);
+
+// euclidean
+  res = matchPointListsEuclidean(pl1, pl2);
+  showResult(outputMode, "Euclidean", pl1, pl2, trafo, res);
+
+  // similarity
+  res = matchPointListsSimilarity(pl1, pl2);
+  showResult(outputMode, "Similarity", pl1, pl2, trafo, res);
+
+  // affine
+  res = matchPointListsAffine(pl1, pl2);
+  showResult(outputMode, "Affine", pl1, pl2, trafo, res);
+
+  // projective transformation, linearisation
+  res = matchPointListsProjectiveLinear(pl1, pl2);
+  showResult(outputMode, "Projective (linear)", pl1, pl2, trafo, res);
+
+  // iterative, start with identity
+  res = matchPointListsProjective(pl1, pl2);
+  showResult(outputMode, "Projective", pl1, pl2, trafo, res);
+}

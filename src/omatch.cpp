@@ -386,7 +386,7 @@ namespace ice
                                         trmode);
             break;
           case MM_SQUARE:
-            res = MatchPointlists(OrderedPointList1, OrderedPointList2,
+            res = matchPointLists(OrderedPointList1, OrderedPointList2,
                                   trmode);
             break;
           default:

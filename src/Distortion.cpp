@@ -470,7 +470,7 @@ namespace ice
     for (int listnr = 0; listnr < nrlist; listnr++)
       {
         // startlösung wird ohne Berücksichtigung der Verzeichnung berechnet
-        Trafo tr = MatchPointlists(orig[listnr], marker[listnr]);
+        Trafo tr = matchPointLists(orig[listnr], marker[listnr]);
         Matrix tm(tr.getMatrix());
         // cout << tm << endl;
         parameterVector[k++] = tm[0][0] / tm[2][2];
@@ -576,7 +576,7 @@ namespace ice
 
   int Distortion::Calc(const vector<Point>& marker, const vector<Point>& orig)
   {
-    Trafo tr = MatchPointlists(orig, marker, TRM_PROJECTIVE);
+    Trafo tr = matchPointLists(orig, marker, TRM_PROJECTIVE);
     return Calc(marker, orig, tr);
   }
 
