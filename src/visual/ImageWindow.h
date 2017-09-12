@@ -255,7 +255,7 @@ namespace ice
     virtual bool existImages() const
     {
       bool exist = true;
-      for (int i = 0; i < imgs.size() && exist; i++)
+      for (unsigned int i = 0; i < imgs.size() && exist; i++)
         {
           if (imgs[i]->getReferenceCount() <= 1)
             {
