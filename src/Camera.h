@@ -8,53 +8,56 @@
 
 namespace ice
 {
-// sets of parameters
-#define CAM_BRENNWEITE 0
-#define CAM_ANISOTROPIE 1
-#define CAM_SCHERUNG 2
-#define CAM_HP_U 3
-#define CAM_HP_V 4
+  // intrinsic parameters
+#define CAM_FOCAL_LENGTH 0
+#define CAM_ASPECT_RATIO 1
+#define CAM_SKEW 2
+#define CAM_PRINCIPAL_POINT_U 3
+#define CAM_PRINCIPAL_POINT_V 4
 
+  // extrinsic parameters
+  // shift
 #define CAM_DX 5
 #define CAM_DY 6
 #define CAM_DZ 7
-
-#define CAM_GAMMA 8
+  // rotation
 #define CAM_BETA 9
 #define CAM_ALPHA 10
+#define CAM_GAMMA 8
 
-// alle Verzeichnungsmodelle
+  // distortion models
+  // center of distortion
 #define CAM_DIST_X 11
 #define CAM_DIST_Y 12
+  // nonlinearity parameters
 #define CAM_DIST_D2 13
 #define CAM_DIST_D4 14
-// Verzeichnungsmodelle Distortion2/Distortion3
+  // models Distortion2 / Distortion3
 #define CAM_DIST_D3 15
 #define CAM_DIST_D6 15
-
+  
   class Camera
   {
   public:
-    // Konstanten zur Auswahl von Teilparameter-Sätzen
-    enum { internal = 1, external = 2, all = 3 };
+    // constant to select subsets of parameters
+    enum { intrinsic = 1, extrinsic = 2, all = 3 };
 
   private:
-    double f; // "Kammerkonstante"
-    double a; // Anisotropie
-    double s; // Scherung
-    double u0, v0; // Hauptpunkt
-    // externe Parameter
-    double dx, dy, dz; // Translation
-    double alpha, beta, gamma; // Rotation um Z-, Y- und X-Achse
+    double f; // focal length
+    double a; // aspect ration
+    double s; // skew
+    double u0, v0; // principal point
+    // extrinsic parameters
+    double dx, dy, dz; // translation
+    double alpha, beta, gamma; // rotation around Z-, Y- and X-axis
 
-    mutable Trafo tr; // Transformation (ohne Verzeichnung)
-
-    mutable bool c_val; // ist die Transformation gültig?
+    mutable Trafo tr; // transformation matrix without distortion
+    mutable bool trValid; // matrix valid ?
 
     int disttyp;
-    Distortion* dist; // Verzeichnung
+    Distortion* dist; 
 
-    virtual void create_trans() const; // Transformation aus Parametern berechnen
+    virtual void create_trans() const; // parameters -> matrix 
     virtual void newdist(int dtyp);
     virtual void newdist(int dtyp, Distortion* d);
     virtual void assign(const Distortion& d);

@@ -73,7 +73,7 @@ namespace ice
   Camera::Camera(int dtyp): f(1000), a(1.0), s(0), u0(0), v0(0),
     dx(0), dy(0), dz(1000),
     alpha(0), beta(0), gamma(0),
-    c_val(false)
+    trValid(false)
   {
     newdist(dtyp);
   }
@@ -81,7 +81,7 @@ namespace ice
   Camera::Camera(const Camera& c): f(c.f), a(c.a), s(c.s), u0(c.u0), v0(c.v0),
     dx(c.dx), dy(c.dy), dz(c.dz),
     alpha(c.alpha), beta(c.beta), gamma(c.gamma),
-    c_val(false)
+    trValid(false)
   {
     newdist(c.disttyp, c.dist);
   }
@@ -99,8 +99,8 @@ namespace ice
     std::swap(alpha, c.alpha);
     std::swap(beta, c.beta);
     std::swap(gamma, c.gamma);
-    c_val = false;
-    c.c_val = false;
+    trValid = false;
+    c.trValid = false;
     std::swap(disttyp, c.disttyp);
     std::swap(dist, c.dist);
   }
@@ -141,8 +141,8 @@ namespace ice
   {
     // must be called, before trafo tr is used
     // all methods, that change parameters, must
-    // set c_val to false!
-    if (c_val)
+    // set trValid to false!
+    if (trValid)
       {
         return;
       }
@@ -172,7 +172,7 @@ namespace ice
     tr.scale(0, 0, f, -a * f);
     tr.shift(u0, v0);
 
-    c_val = true;
+    trValid = true;
   }
 
 // put camera parameters into Vector (for lmdiff,...)
@@ -180,7 +180,7 @@ namespace ice
   {
     Vector res(0);
 
-    if ((what == internal) || (what == all))
+    if ((what == intrinsic) || (what == all))
       {
         res.Append(f);
         res.Append(a);
@@ -190,7 +190,7 @@ namespace ice
         res.Append(v0);
       }
 
-    if ((what == external) || (what == all))
+    if ((what == extrinsic) || (what == all))
       {
         res.Append(dx);
         res.Append(dy);
@@ -201,7 +201,7 @@ namespace ice
         res.Append(gamma);
       }
 
-    if ((what == all) || (what == internal))
+    if ((what == all) || (what == intrinsic))
       {
         res.Append(dist->makeVector());
       }
@@ -214,7 +214,7 @@ namespace ice
   {
     int i = 0;
 
-    if ((what == internal) || (what == all))
+    if ((what == intrinsic) || (what == all))
       {
         f = res[i];
         i++;
@@ -228,7 +228,7 @@ namespace ice
         i++;
       }
 
-    if ((what == external) || (what == all))
+    if ((what == extrinsic) || (what == all))
       {
         dx = res[i];
         i++;
@@ -244,7 +244,7 @@ namespace ice
         i++;
       }
 
-    if ((what == all) || (what == internal))
+    if ((what == all) || (what == intrinsic))
       {
         switch (disttyp)
           {
@@ -263,7 +263,7 @@ namespace ice
           }
       }
 
-    c_val = false;
+    trValid = false;
   }
 
   void Camera::set(double fp, double ap, double sp, double u0p, double v0p)
@@ -275,7 +275,7 @@ namespace ice
     u0 = u0p;
     v0 = v0p;
 
-    c_val = false;
+    trValid = false;
   }
 
   void Camera::get(double& fp, double& ap, double& sp,
@@ -294,7 +294,7 @@ namespace ice
   {
     set(fp, ap, sp, u0p, v0p);
     assign(d);
-    c_val = false;
+    trValid = false;
   }
 
   void Camera::setExt(double dxp, double dyp, double dzp,
@@ -306,7 +306,7 @@ namespace ice
     alpha = ap;
     beta = bp;
     gamma = cp;
-    c_val = false;
+    trValid = false;
   }
 
   void Camera::getExt(double& dxp, double& dyp, double& dzp,
