@@ -1,0 +1,9 @@
+define:testmakro,x,y
+concat:x,y=z
+#return=z
+return
+
+testmakro:"Hallo ","Welt"=hallo1
+testmakro:"Willkommen in ","Jena"=hallo2
+testmakro:hallo1,hallo2=hallo
+getInfo:hallo

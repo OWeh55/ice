@@ -1,0 +1,47 @@
+define:highpass,pic,f
+getinfo:pic=dummy,nimg,xm,ym,mv
+fourier:pic=s,fac,rv,iv,mv
+getinfo:s=dummy,dummy,xm,ym,mvs
+eval:"a 2 /",mvs=m2
+eval:"a 2 /",xm=xm2
+eval:"a 2 /",ym=ym2
+eval:"x b - dup *  y c - dup * + d dup * > a e if",s,xm2,ym2,f,m2=fs
+fourierinv:fs,fac,rv,iv,mv=fpic
+fork:fpic=fpic
+return=fpic
+
+define:lowpass,pic,f
+getinfo:pic=dummy,nimg,xm,ym,mv
+fourier:pic=s,fac,rv,iv,mv
+getinfo:s=dummy,dummy,xm,ym,mvs
+eval:"a 2 /",mvs=m2
+eval:"a 2 /",xm=xm2
+eval:"a 2 /",ym=ym2
+eval:"x b - dup *  y c - dup * + d dup * < a e if",s,xm2,ym2,f,m2=fs
+fourierinv:fs,fac,rv,iv,mv=fpic
+fork:fpic=fpic
+return=fpic
+
+define:bandpass,pic,fu,fo
+getinfo:pic=dummy,nimg,xm,ym,mv
+fourier:pic=s,fac,rv,iv,mv
+getinfo:s=dummy,dummy,xm,ym,mvs
+eval:"a 2 /",mvs=m2
+eval:"a 2 /",xm=xm2
+eval:"a 2 /",ym=ym2
+eval:"x b - dup *  y c - dup * + d dup * < a e if",s,xm2,ym2,fo,m2=fs1
+eval:"x b - dup *  y c - dup * + d dup * > a e if",fs1,xm2,ym2,fu,m2=fs
+fourierinv:fs,fac,rv,iv,mv=fpic
+fork:fpic=fpic
+return=fpic
+
+read:"venus1.jpg"=src
+color2rgb:src=r,g,b
+dial:"fu",0,0,333,2=fu
+dial:"df",80,0,333,2=df
+evaluate:"a b +",fu,df=fo
+bandpass:r,fu,fo=r
+bandpass:g,fu,fo=g
+bandpass:b,fu,fo=b
+rgb2color:r,g,b=res
+display:res
