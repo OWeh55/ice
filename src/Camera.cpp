@@ -176,7 +176,7 @@ namespace ice
   }
 
 // put camera parameters into Vector (for lmdiff,...)
-  Vector Camera::MakeVector(int what) const
+  Vector Camera::makeVector(int what) const
   {
     Vector res(0);
 
@@ -209,6 +209,41 @@ namespace ice
     return res;
   }
 
+  vector<double> Camera::makeVectorDouble(int what) const
+  {
+    vector<double> res;
+
+    if ((what == intrinsic) || (what == all))
+      {
+        res.push_back(f);
+        res.push_back(a);
+        res.push_back(s);
+
+        res.push_back(u0);
+        res.push_back(v0);
+      }
+
+    if ((what == extrinsic) || (what == all))
+      {
+        res.push_back(dx);
+        res.push_back(dy);
+        res.push_back(dz);
+
+        res.push_back(alpha);
+        res.push_back(beta);
+        res.push_back(gamma);
+      }
+
+    if ((what == all) || (what == intrinsic))
+      {
+        vector<double> distortionParameter = dist->makeVectorDouble();
+        for (int i = 0; i < distortionParameter.size(); i++)
+          res.push_back(distortionParameter[i]);
+      }
+
+    return res;
+  }
+
 // Parameter nach Vektor setzen
   void Camera::set(const Vector& res, int what)
   {
@@ -216,32 +251,21 @@ namespace ice
 
     if ((what == intrinsic) || (what == all))
       {
-        f = res[i];
-        i++;
-        a = res[i];
-        i++;
-        s = res[i];
-        i++;
-        u0 = res[i];
-        i++;
-        v0 = res[i];
-        i++;
+        f = res[i++];
+        a = res[i++];
+        s = res[i++];
+        u0 = res[i++];
+        v0 = res[i++];
       }
 
     if ((what == extrinsic) || (what == all))
       {
-        dx = res[i];
-        i++;
-        dy = res[i];
-        i++;
-        dz = res[i];
-        i++;
-        alpha = res[i];
-        i++;
-        beta = res[i];
-        i++;
-        gamma = res[i];
-        i++;
+        dx = res[i++];
+        dy = res[i++];
+        dz = res[i++];
+        alpha = res[i++];
+        beta = res[i++];
+        gamma = res[i++];
       }
 
     if ((what == all) || (what == intrinsic))
@@ -261,6 +285,41 @@ namespace ice
             i += 5;
             break;
           }
+      }
+
+    trValid = false;
+  }
+
+// Parameter nach vector<double> setzen
+  void Camera::set(const vector<double>& res, int what)
+  {
+    int i = 0;
+
+    if ((what == intrinsic) || (what == all))
+      {
+        f = res[i++];
+        a = res[i++];
+        s = res[i++];
+        u0 = res[i++];
+        v0 = res[i++];
+      }
+
+    if ((what == extrinsic) || (what == all))
+      {
+        dx = res[i++];
+        dy = res[i++];
+        dz = res[i++];
+        alpha = res[i++];
+        beta = res[i++];
+        gamma = res[i++];
+      }
+
+    if ((what == all) || (what == intrinsic))
+      {
+        vector<double> distortionParameter(5);
+        for (int k = i; k < res.size() - i; k++)
+          distortionParameter[k] = res[i + k];
+        dist->set(distortionParameter);
       }
 
     trValid = false;

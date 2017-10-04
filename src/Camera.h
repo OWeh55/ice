@@ -35,7 +35,7 @@ namespace ice
   // models Distortion2 / Distortion3
 #define CAM_DIST_D3 15
 #define CAM_DIST_D6 15
-  
+
   class Camera
   {
   public:
@@ -55,9 +55,9 @@ namespace ice
     mutable bool trValid; // matrix valid ?
 
     int disttyp;
-    Distortion* dist; 
+    Distortion* dist;
 
-    virtual void create_trans() const; // parameters -> matrix 
+    virtual void create_trans() const; // parameters -> matrix
     virtual void newdist(int dtyp);
     virtual void newdist(int dtyp, Distortion* d);
     virtual void assign(const Distortion& d);
@@ -83,8 +83,10 @@ namespace ice
 
     Camera& operator=(Camera c);
 
-    virtual Vector MakeVector(int what = all) const; // Parameter in Vektor speichern
+    virtual Vector makeVector(int what = all) const; // Parameter in Vektor speichern
+    virtual std::vector<double> makeVectorDouble(int what = all) const; // Parameter in vector<double> speichern
     virtual void set(const Vector& res, int what = all); // Parameter nach Vektor setzen
+    virtual void set(const std::vector<double>& res, int what = all); // Parameter nach vector<double> setzen
 
     virtual void set(double fp, double ap, double sp,
                      double u0p, double v0p, const Distortion& d);

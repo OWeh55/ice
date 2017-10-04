@@ -137,15 +137,26 @@ namespace ice
   }
 #undef FNAME
 
-  Vector Distortion3::makeVector() const
+  vector<double> Distortion3::makeVectorDouble() const
   {
-    return Vector(x0, y0, d2, d4, d6);
+    return {x0, y0, d2, d4, d6};
   }
 
 #define FNAME "Distortion3::set"
   void Distortion3::set(const Vector& v)
   {
     if (v.size() != 5)
+      throw IceException(FNAME, M_WRONG_DIM);
+
+    x0 = v[0];
+    y0 = v[1];
+    d2 = v[2];
+    d4 = v[3];
+    d6 = v[4];
+  }
+  void Distortion3::set(const std::vector<double>& v)
+  {
+    if (v.size() < 5)
       throw IceException(FNAME, M_WRONG_DIM);
 
     x0 = v[0];

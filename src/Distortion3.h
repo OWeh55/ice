@@ -102,8 +102,11 @@ namespace ice
       return d6;
     }
 
-    virtual Vector makeVector() const;
+    // virtual Vector makeVector() const;
+    virtual std::vector<double> makeVectorDouble() const;
+
     virtual void set(const Vector& v);
+    virtual void set(const std::vector<double>& v);
 
     virtual std::string toString() const;
     virtual void set(const std::string& parastring);

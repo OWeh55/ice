@@ -154,7 +154,7 @@ namespace ice
         pnr.Append(IVector(1, 2));
       }
 
-    Vector camp = cam.MakeVector(Camera::all);
+    Vector camp = cam.makeVector(Camera::all);
 
     vector<double*> op;  // Pointer auf zu optimierende Parameter
 
