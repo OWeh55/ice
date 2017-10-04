@@ -20,9 +20,9 @@ void DiTest(Distortion& di)
 
   cout << "Gegebene Verzeichnung: " << di.toString() << endl;
   cout << "Original: " << x << " " << y << endl;
-  di.Distort(x, y, x1, y1);
+  di.distort(x, y, x1, y1);
   cout << "Verzeichnet: " << x1 << " " << y1 << endl;
-  di.Rect(x1, y1, x2, y2);
+  di.rectify(x1, y1, x2, y2);
   cout << "Entzerrt: " << x2 << " " << y2 << endl;
   cout << "Fehler: " << x - x2 << " " << y - y2 << endl;
 
@@ -39,8 +39,8 @@ void DiTest(Distortion& di)
         {
           x = (50.0 + i * 50.0 / HNUMBER);
           y = (50.0 + j * 50.0 / HNUMBER);
-          di.Distort(x, y, x1, y1);
-          di.Rect(x1, y1, x2, y2);
+          di.distort(x, y, x1, y1);
+          di.rectify(x1, y1, x2, y2);
           double dx = x2 - x;
           double dy = y2 - y;
           double fehler2 = dx * dx + dy * dy;

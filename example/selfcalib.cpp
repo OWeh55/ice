@@ -12,7 +12,7 @@
 
 void printInterpretedIntrinsic(Camera& camera)
 {
-  Vector v = camera.MakeVector();
+  Vector v = camera.makeVector();
 
 //   cout << "Intrinsic parameters:" << endl;
 //   cout << endl;
@@ -47,7 +47,7 @@ void printInterpretedExtrinsic(Camera& camera, int index, int xsize, int ysize)
 {
   //const double factor = std::max(double(xsize), double(double(ysize))) / 2.0;
 
-  Vector v = camera.MakeVector();
+  Vector v = camera.makeVector();
   cout << "Extrinsic parameters camera " << index << ":" << endl;
   cout << "t: " << v[5] << ", " << v[6] << ", " << v[7] << endl;
   cout << "angles: " << v[8] << ", " << v[9] << ", " << v[10] << endl;

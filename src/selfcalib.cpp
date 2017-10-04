@@ -1063,7 +1063,7 @@ namespace ice
 
             // Eingangsbilder entzeichnen
             Image temp_image = NewImg(image);
-            verzeichnung.RectImg(image, temp_image, INTERPOL);
+            verzeichnung.rectifyImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
             c.setDist(verzeichnung);
@@ -1074,7 +1074,7 @@ namespace ice
             for (int i = 0; i < number_of_points; i++)
               {
                 // OffMessage();
-                error = verzeichnung.Rect(imagepoints[i][0], imagepoints[i][1]);
+                error = verzeichnung.rectify(imagepoints[i][0], imagepoints[i][1]);
                 // SetOk();
                 // OnMessage();
               }
@@ -1085,7 +1085,7 @@ namespace ice
 
             // Eingangsbilder entzeichnen
             Image temp_image = NewImg(image);
-            verzeichnung.RectImg(image, temp_image, INTERPOL);
+            verzeichnung.rectifyImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
             c.setDist(verzeichnung);
@@ -1095,7 +1095,7 @@ namespace ice
             for (int i = 0; i < number_of_points; i++)
               {
                 // OffMessage();
-                error = verzeichnung.Rect(imagepoints[i][0], imagepoints[i][1]);
+                error = verzeichnung.rectify(imagepoints[i][0], imagepoints[i][1]);
                 // SetOk();
                 // OnMessage();
               }
@@ -1106,7 +1106,7 @@ namespace ice
 
             // Eingangsbilder entzeichnen
             Image temp_image = NewImg(image);
-            verzeichnung.RectImg(image, temp_image, INTERPOL);
+            verzeichnung.rectifyImg(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
             c.setDist(verzeichnung);
@@ -1116,7 +1116,7 @@ namespace ice
             for (int i = 0; i < number_of_points; i++)
               {
                 // OffMessage();
-                error = verzeichnung.Rect(imagepoints[i][0], imagepoints[i][1]);
+                error = verzeichnung.rectify(imagepoints[i][0], imagepoints[i][1]);
                 // SetOk();
                 // OnMessage();
               }

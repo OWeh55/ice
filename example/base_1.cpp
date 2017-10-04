@@ -17,7 +17,7 @@ using namespace ice;
 int main(int argc, char* argv[])
 {
   Image img, img2;
-  int sx = 512, sy = 512, x, y, z;
+  int sx = 512, sy = 512, z;
   double fx, fy, a, b, fh;
 
   ClearAlpha();

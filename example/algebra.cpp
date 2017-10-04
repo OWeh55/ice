@@ -24,7 +24,6 @@ int PrintMatrix(MatrixStruct m)
 
 int main(int argc, char* argv[])
 {
-  int i, j;
   Matrix a =
     Vector(1, 1, 0, 1) &&
     Vector(0, 1, 1, 0) &&

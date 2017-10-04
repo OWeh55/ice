@@ -47,7 +47,6 @@ namespace ice
 
     int operator()(const vector<double>& p, vector<double>& result) const
     {
-      //   cout << cam.makeVectorDouble() << endl;
       cam.set(p);
       int idx = 0;
       for (int i = 0; i < nPoints; i++)

@@ -400,7 +400,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_DIM);
 
     vh = tr * v;
-    vh = dist->Distort(vh);
+    vh = dist->distort(vh);
     return vh;
   }
 
@@ -409,7 +409,7 @@ namespace ice
     create_trans();
     Point res;
     ice::transform(tr, p.x, p.y, p.z, res.x, res.y);
-    dist->Distort(res.x, res.y);
+    dist->distort(res.x, res.y);
     return res;
   }
 
@@ -417,7 +417,7 @@ namespace ice
   {
     create_trans();
     ice::transform(tr, x, y, z, u, v);
-    dist->Distort(u, v);
+    dist->distort(u, v);
   }
 #undef FNAME
 #define FNAME "Camera::Ray"
@@ -426,7 +426,7 @@ namespace ice
     try
       {
         create_trans(); // Transformation erzeugen
-        Vector bpu(dist->Rect(bp));// Unverzeichneter Bildpunkt
+        Vector bpu(dist->rectify(bp));// Unverzeichneter Bildpunkt
         bpu.Append(1); // in homogene Koordinaten umwandeln
         Matrix T(tr.getMatrix()); // Transformationsmatrix
         Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)

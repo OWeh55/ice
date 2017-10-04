@@ -34,7 +34,6 @@ int main(int argc, char* argv[])
 //  Alpha(ON);
   Image img;
   img.create(5120, 5120, 255);
-  int x, y;
 
   img.set(0);
 

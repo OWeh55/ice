@@ -240,7 +240,7 @@ namespace ice
     virtual double operator()(double x, double y) const
     {
       double xt, yt;
-      dist->Rect(x, y, xt, yt);
+      dist->rectify(x, y, xt, yt);
       return basefunc(xt, yt);
     }
 
