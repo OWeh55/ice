@@ -148,8 +148,8 @@ namespace ice
     virtual Window getImageRect() const;
 
     // Does the Window display the given image?
-    virtual bool showsImage(ImageBase* img) const;
-    virtual bool showsImage(ImageD* img) const;
+    virtual bool showsImage(const ImageBase* img) const;
+    virtual bool showsImage(const ImageD* img) const;
 
     // returns the windowtype (
     //     0=GrayImage without Colormap,

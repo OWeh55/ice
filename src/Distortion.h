@@ -90,7 +90,7 @@ namespace ice
 
     virtual Image rectifyImg(const Image& source, int mode = DEFAULT) const;
     virtual int rectifyImg(const Image& source, const Image& dest,
-                        int mode = DEFAULT) const;
+                           int mode = DEFAULT) const;
 
     virtual std::vector<double> makeVectorDouble() const = 0;
     virtual Vector makeVector()

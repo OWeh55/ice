@@ -55,7 +55,7 @@ namespace ice
 
     // if the image is not visualized, do nothing
 
-    if (v == NULL)
+    if (v == nullptr)
       {
         return OK;
       }
@@ -86,7 +86,7 @@ namespace ice
 
     // if the image is not visualized, do nothing
 
-    if (v == NULL)
+    if (v == nullptr)
       {
         return OK;
       }
@@ -125,11 +125,23 @@ namespace ice
   }
 
 #define FNAME "Zoom"
-  int Zoom(Image Img, int ZoomFactor, int, int)
+  int Zoom(const Image& Img, int ZoomFactor, int x, int y)
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(Img));
-    if (v == NULL)
+    return Zoom(v, ZoomFactor, x, y);
+  }
+
+  int Zoom(const ImageD& Img, int ZoomFactor, int x, int y)
+  {
+    Visual v;
+    RETURN_ERROR_IF_FAILED(v = getVisual(Img));
+    return Zoom(v, ZoomFactor, x, y);
+  }
+
+  int Zoom(Visual v, int ZoomFactor, int x, int y)
+  {
+    if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
     return v->Zoom(ZoomFactor);
   }
@@ -152,7 +164,7 @@ namespace ice
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(img));
-    if (v == NULL)
+    if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
 
     RETURN_ERROR_IF_FAILED(v->SetGreyColor(Entry, Red, Green, Blue));
@@ -164,7 +176,7 @@ namespace ice
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(img));
-    if (v == NULL)
+    if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
 
     RETURN_ERROR_IF_FAILED(v->SetGreyLUT(First, Last));
@@ -191,7 +203,7 @@ namespace ice
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(img));
-    if (v == NULL)
+    if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
 
     RETURN_ERROR_IF_FAILED(v->SetOverlayColor(Entry, Red, Green, Blue));
@@ -204,7 +216,7 @@ namespace ice
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(img));
-    if (v == NULL)
+    if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
     RETURN_ERROR_IF_FAILED(v->GetGreyColor(Entry, Red, Green, Blue));
     return OK;
@@ -217,7 +229,7 @@ namespace ice
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(img));
-    if (v == NULL)
+    if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
     RETURN_ERROR_IF_FAILED(v->GetOverlayColor(Entry, Red, Green, Blue));
     return OK;
@@ -373,18 +385,21 @@ namespace ice
 #define FNAME "GetVisual"
   Visual getVisual(const Image& img)
   {
-    //    std::cout << "GetVisual" << std::endl;
     if (!IsImg(img))
       {
-        return NULL;
+        return nullptr;
       }
-    //    std::cout << "GetVisual(isImage!)" << std::endl;
     return wxGetApp().GetImageManager()->getVisual(img.Img());
+  }
+
+  Visual getVisual(const ImageD& img)
+  {
+    return wxGetApp().GetImageManager()->getVisual(&img);
   }
 
   Visual getVisual(const ColorImage& img)
   {
-    Visual v = NULL;
+    Visual v = nullptr;
     if (!img.isValid())
       {
         return v;
