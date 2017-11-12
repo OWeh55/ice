@@ -73,7 +73,7 @@ namespace ice
       // solange unverarbeitete Punkte: wähle nächsten Punkt
       while (findMin(isInTree, mini))
         {
-          std::cout << mini << std::endl;
+          // std::cout << mini << std::endl;
           // neue Kante: mini <-> qu[mini]
           tree.setFather(mini, qu[mini]);
           isInTree[mini] = true;
