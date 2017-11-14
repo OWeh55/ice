@@ -75,25 +75,31 @@ namespace ice
     virtual ~Distortion() {};
 
     // basic distortion and rectifying
-    virtual int Rect(double x, double y, double& xr, double& yr) const = 0;
-    virtual int Distort(double x, double y, double& xd, double& yd) const = 0;
+    virtual int rectify(double x, double y, double& xr, double& yr) const = 0;
+    virtual int distort(double x, double y, double& xd, double& yd) const = 0;
 
     // overloaded methods with different parameters
-    virtual int Rect(double& xr, double& yr) const;
-    virtual Point Rect(const Point& p) const;
-    virtual Vector Rect(const Vector& v) const;
+    virtual int rectify(double& xr, double& yr) const;
+    virtual Point rectify(const Point& p) const;
+    virtual Vector rectify(const Vector& v) const;
 
-    virtual int Distort(double& x, double& y) const;
-    virtual Vector Distort(const Vector& v) const;
-    virtual Point Distort(const Point& v) const;
-    virtual int Distort(std::vector<Point>& pl) const;
+    virtual int distort(double& x, double& y) const;
+    virtual Vector distort(const Vector& v) const;
+    virtual Point distort(const Point& v) const;
+    virtual int distort(std::vector<Point>& pl) const;
 
-    virtual Image RectImg(const Image& source, int mode = DEFAULT) const;
-    virtual int RectImg(const Image& source, const Image& dest,
-                        int mode = DEFAULT) const;
+    virtual Image rectifyImg(const Image& source, int mode = DEFAULT) const;
+    virtual int rectifyImg(const Image& source, const Image& dest,
+                           int mode = DEFAULT) const;
 
-    virtual Vector makeVector() const = 0;
+    virtual std::vector<double> makeVectorDouble() const = 0;
+    virtual Vector makeVector()
+    {
+      return Vector(makeVectorDouble());
+    }
+
     virtual void set(const Vector& v) = 0;
+    virtual void set(const std::vector<double>& v) = 0;
 
     virtual double X0() const
     {

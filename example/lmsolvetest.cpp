@@ -12,8 +12,7 @@ private:
 
 public:
   // Konstruktor
-  // übernimmt (als Referenz) die zu optimierenden
-  // Parameter der linearen Funktion und die Referenz-Liste
+  // übernimmt (als Referenz) die Referenz-Liste
   SinReg(const vector<double>& xp, const vector<double>& yp):
     x(xp), y(yp) { } ;
 
@@ -27,7 +26,7 @@ public:
   int operator()(const vector<double>& p, vector<double>& result) const
   {
     for (unsigned int i = 0; i < x.size(); i++) // für jede stützstelle
-      result[i] = p[2] * cos(x[i] * p[1] + p[0]) - y[i];
+      result[i] = p[2] * cos(x[i] * p[1] + p[0]) + p[3] - y[i];
 
     return 1;
   }
@@ -48,12 +47,15 @@ int main(int argc, char** argv)
   vector<double> y(x.size());
 
   for (unsigned int i = 0; i < x.size(); ++i)
-    y[i] = 3.107 * cos(x[i] * 1.111 + 0.5);
+    y[i] = 31.4159265 * cos(x[i] * 1.23456789 + 0.54321) - 1;
+  // + (drand48()-0.5)*0.001;
 
-  vector<double> n(3); // geschätzte Parameter der Funktion
+  cout << x.size() << " Stützstellen" << endl;
+  vector<double> n(4); // geschätzte Parameter der Funktion
   n[0] = 0;
   n[1] = 1;
   n[2] = 1;
+  n[3] = 0;
 
   SinReg sr(x, y);     // LMFunctor für Fehlerfunktion
 
@@ -71,12 +73,13 @@ int main(int argc, char** argv)
   while (n[0] < 0)
     n[0] += 2 * M_PI;
 
-  cout << "Funktion: y = " << n[2] << " * cos( x * " << n[1] << " + " << n[0] << " )" << endl;
+  cout << setprecision(9);
+  cout << "Funktion: y = " << n[2] << " * cos( x * " << n[1] << " + " << n[0] << " ) + " << n[3] << endl;
 
   // bis zu 20 Stützstellen approximierte Werte ausgeben
   for (unsigned int i = 0; i < x.size() && i < 20; ++i)
     {
-      double nval = n[2] * cos(x[i] * n[1] + n[0]);
+      double nval = n[2] * cos(x[i] * n[1] + n[0]) + n[3];
       cout << fixed << setw(10) << x[i] << " -> " << setw(9) << y[i] << " =? " << setw(9) << nval << " diff: " << scientific << setw(10) << (nval - y[i]) << endl;
     }
   return OK;

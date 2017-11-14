@@ -41,7 +41,7 @@ namespace ice
    */
 
 #define FNAME "DistortionR::Distort"
-  int DistortionR::Distort(double x, double y, double& xd, double& yd) const
+  int DistortionR::distort(double x, double y, double& xd, double& yd) const
   {
     double dx = x - x0;
     double dy = y - y0;
@@ -52,8 +52,8 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "DistortionR::Rect"
-  int DistortionR::Rect(double x, double y, double& xd, double& yd) const
+#define FNAME "DistortionR::rectify"
+  int DistortionR::rectify(double x, double y, double& xd, double& yd) const
   {
     double xr = x - x0;
     double yr = y - y0;

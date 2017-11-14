@@ -21,6 +21,8 @@
 #ifndef VECTOR_3D_H
 #define VECTOR_3D_H
 
+#include <initializer_list>
+
 #include "Vector.h"
 
 namespace ice
@@ -36,7 +38,6 @@ namespace ice
     vector3d(): x(0), y(0), z(0) {};
     vector3d(T xp, T yp, T zp): x(xp), y(yp), z(zp) {};
     vector3d(const vector3d& p): x(p.x), y(p.y), z(p.z) {};
-
 #define FNAME "Vector3d::Vector3d"
     explicit vector3d(const Vector& v)
     {
@@ -65,6 +66,16 @@ namespace ice
       y = v[1];
       z = v[2];
     }
+    vector3d(const std::initializer_list<double>& l)
+    {
+      if (l.size() != 3)
+        throw IceException(FNAME, M_WRONG_DIM);
+      auto p = l.begin();
+      x = p[0];
+      y = p[1];
+      z = p[2];
+    };
+
 #undef FNAME
 
     vector3d(T p[]): x(p[0]), y(p[1]), z(p[2]) {};

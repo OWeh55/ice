@@ -103,8 +103,8 @@ namespace ice
 
     // Get the visual that shows the image img, returns NULL if image
     // is not displayed
-    Visual getVisual(ImageBase* img) const;
-    Visual getVisual(ImageD* img) const;
+    Visual getVisual(const ImageBase* img) const;
+    Visual getVisual(const ImageD* img) const;
 
     // Those are kept for backward compatibility. They work just like the
     // corresponding function in the subclasses of iceImageWindow, but

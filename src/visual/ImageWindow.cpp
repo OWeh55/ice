@@ -180,7 +180,7 @@ namespace ice
   }
 
   // Does the Window display the given image?
-  bool ImageWindow::showsImage(ImageBase* img) const
+  bool ImageWindow::showsImage(const ImageBase* img) const
   {
     bool isShown = false;
     for (unsigned int i = 0; i < imgs.size() && ! isShown; i++)
@@ -193,7 +193,7 @@ namespace ice
     return isShown;
   }
 
-  bool ImageWindow::showsImage(ImageD* img) const
+  bool ImageWindow::showsImage(const ImageD* img) const
   {
     bool isShown = false;
     for (unsigned int i = 0; i < imgs.size() && ! isShown; i++)

@@ -1,0 +1,14 @@
+define:normal,img,size
+erode:img,size=min
+dilate:img,size=max
+normalize:img,min,max=nimg
+return=nimg
+
+read:"ks.jpg"=ks
+color2rgb:ks=kr,kg,kb
+dial:"neighbourhood size",55,3,333,2=nsize
+normal:kr,nsize=nr
+normal:kg,nsize=ng
+normal:kb,nsize=nb
+rgb2color:nr,ng,nb=nc
+display:nc

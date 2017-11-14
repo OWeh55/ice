@@ -53,8 +53,10 @@ namespace ice
   // some image points will not get drawn, that means for every drawn point there will be
   // ZoomFactor - 1 points skipped. ZoomFactor zero means that the greatest zoom
   // factor, such that the image still fits its window, will be used.
-  int Zoom(Image Img, int ZoomFactor, int = 0, int = 0);
-  int Zoom(Image img);
+  int Zoom(Visual v, int ZoomFactor, int = 0, int = 0);
+  int Zoom(const ImageD& Img, int ZoomFactor, int = 0, int = 0);
+  int Zoom(const Image& Img, int ZoomFactor, int = 0, int = 0);
+  int Zoom(const Image& img);
 
   // Sets the color for the grey value >Entry< to the RGB color (RedValue, GreenValue, BlueValue).
   int SetGreyColor(unsigned int Entry,
@@ -139,6 +141,7 @@ namespace ice
               const std::string& name = "");
 
   Visual getVisual(const Image& img);
+  Visual getVisual(const ImageD& img);
   Visual getVisual(const ColorImage& img);
 
   // Manipulation of the image windows cursor (will only have effects,

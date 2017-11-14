@@ -103,7 +103,7 @@ namespace ice
       }
   }
 
-  Visual ImageManager::getVisual(ImageBase* img) const
+  Visual ImageManager::getVisual(const ImageBase* img) const
   {
     Visual result = nullptr;
     // find Visual showing given Image
@@ -119,7 +119,7 @@ namespace ice
     return result;
   }
 
-  Visual ImageManager::getVisual(ImageD* img) const
+  Visual ImageManager::getVisual(const ImageD* img) const
   {
     Visual result = nullptr;
     // find Visual showing given Image

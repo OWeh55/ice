@@ -1,0 +1,238 @@
+#include <stdexcept>
+#include <deque>
+#include <fstream>
+
+#include <image.h>
+
+#include "file.h"
+
+#include "makefilter.h"
+
+#include "gdata.h"
+#include "gnumber.h"
+#include "gstring.h"
+
+#include "string.h"
+#include "f_constant.h"
+#include "f_info.h"
+
+#include "compile.h"
+
+#include "sdp.h"
+
+/*AppGen:Global*/
+
+/*AppGen
+  %%  Beschreibung des Programmes:
+  prog: Stream Data Processor
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  para: filter, optional, list, operators, Filter sequence,
+  %% Beschreibung der Optionen
+  % kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
+  opt: m, macro, string, macrofilename, Datei mit Makro-Definitionen, ""
+  opt: f, filterfromfile, string, infilename, Datei mit Filterdefinition - Kommandozeile wird ignoriert, ""
+  opt: I, includepath, string, includepath, Verzeichnis für Include-Dateien, ""
+  opt: M, nomacro, void, noDefaultMacro, Default Makro-Definitionen nicht lesen, false
+  opt2: Die standardmäßig eingelesenen Makro-Definitions-Dateien
+  opt2: sdp.macro und .sdp.macro werden nicht eingelesen
+  opt: g, graph, void, graphexport, Ausgabe des Graphen im graphviz-Format, false;
+  opt: v, verbose,  Void,   verbose,  Ausführliche Meldungen,  false
+  opt: V, scriptverbose,  void,   scriptVerbose,  Gibt beim Parsen den normalisierten Skript-Text aus,  false
+  opt: d, debug,  void,  debug,  Anzeige der Filteraufrufe zur Laufzeit, false
+  opt: w, nowait, void, nowait, Am Programmende nicht warten, false
+  opt: h, help,   usage,   ,    Hilfe
+  opt: l, listfilter, void, filterlist, Filterliste anzeigen, false
+AppGen*/
+
+std::vector<Dial *> dials; // controls for variable parameter
+
+std::vector<std::string> pathlist; // search path for includes ...
+
+int fdebug;
+
+/*AppGen:Main*/
+int main()
+{
+  /*AppGen:MainEnd*/
+
+  if (verbose)
+    scriptVerbose = true;
+
+  if (debug)
+    fdebug = 1;
+
+  if (filterlist)
+    {
+      mkFilter("");// special call that lists all filtertypes
+      exit(0);
+    }
+
+  // create pathlist
+  {
+    string path, basename, extension;
+    // current dir
+    pathlist.push_back(".");
+
+    // script path
+    if (!infilename.empty())
+      {
+        splitFileName(infilename, path, basename, extension);
+        pathlist.push_back(path);
+      }
+
+    // specified include path
+    if (!includepath.empty())
+      pathlist.push_back(includepath);
+
+    // home
+    char *home = getenv("HOME");
+    string sdphome = home;
+
+    sdphome += "/.sdp";
+
+    if (home != NULL)
+      pathlist.push_back(sdphome);
+
+    //
+    char *includepath = getenv("SDPINCLUDE");
+    if (includepath != NULL)
+      pathlist.push_back(includepath);
+#if 0
+    for (int i = 0; i < pathlist.size(); ++i)
+      cout << pathlist[i] << endl;
+#endif
+  }
+
+  Filter *filterChain = NULL;
+
+  deque<string> operations; // all operations
+
+  OutletMap outlet; // named filter outlets for
+  // use in folowing filters
+
+  if (infilename.empty())
+    {
+      // add filter definitions from commandline
+      for (unsigned int i = 0; i < operators.size(); ++i)
+        operations.push_back(operators[i]);
+    }
+  else
+    {
+      ifstream is(infilename);
+      if (!is.good())
+        throw SdpException("sdp", "Cannot open file " + infilename);
+      string line;
+      while (getline(is, line))
+        {
+          if (!line.empty())
+            if (line[0] != '#')
+              operations.push_back(line);
+        }
+      // if filters come from file, parameters are usabel in filters
+      for (unsigned int i = 0; i < operators.size(); ++i)
+        {
+          string pname = "parameter" + to_string(i);
+          outlet[pname] = new ConstantFilter(operators[i]);
+        }
+    }
+
+  try
+    {
+      // load standard macros
+      if (!noDefaultMacro)
+        {
+          if (fileexists("sdp.macro"))
+            compileMacro("sdp.macro", scriptVerbose);
+          if (fileexists(".sdp.macro"))
+            compileMacro(".sdp.macro", scriptVerbose);
+        }
+
+      // load specified macro definitions from file
+      if (!macrofilename.empty())
+        {
+          compileMacro(macrofilename, scriptVerbose);
+        }
+
+
+      filterChain = Compile(operations, outlet, scriptVerbose);
+
+      if (filterChain == NULL)
+        throw SdpException("Run", "no filter chain defined");
+
+      if (graphexport)
+        {
+          set<const Filter *> fs;
+          cout << "digraph graph1 {" << endl;
+          filterChain->graph_out(cout, fs);
+          cout << "}" << endl;
+        }
+      else
+        {
+          // process filter chain
+          if (dials.empty())
+            {
+              // single run, no variable parameters
+              const GData *result = filterChain->getData(0);
+
+              if (verbose)
+                {
+                  // result is image ?
+                  const GImage *iresult = dynamic_cast<const GImage *>(result);
+                  if (iresult != NULL)
+                    {
+                      // yes: give some info
+                      cout << "Result: " << iresult->xSize() << "x" << iresult->ySize();
+                      cout << " " << iresult->maxVal() << "  type:";
+                      cout << iresult->getType().getString() << endl;
+                    }
+                }
+
+              if (!nowait)
+                GetChar();
+            }
+          else
+            {
+              // repeated run, with varied parameters
+              bool continue_ = true;
+
+              // first run
+              const GData *result = filterChain->getData(0);
+
+              if (verbose)
+                {
+                  // result is image ?
+                  const GImage *iresult = dynamic_cast<const GImage *>(result);
+                  if (iresult != NULL)
+                    {
+                      // yes: give some info
+                      cout << "Result: " << iresult->xSize() << "x" << iresult->ySize();
+                      cout << " " << iresult->maxVal() << "  type:";
+                      cout << iresult->getType().getString() << endl;
+                    }
+                }
+
+              continue_ = handleDials();
+              while (continue_)
+                {
+                  filterChain->reset();
+                  result = filterChain->getData(0);
+                  continue_ = handleDials();
+                }
+            }
+
+        }
+      Filter::freeAll();
+    }
+  catch (const EndOfSeriesException &ex)
+    {
+      cout << "No more images" << endl;
+    }
+
+  catch (const exception &ex)
+    {
+      cerr << endl << "Exception: " << ex.what() << endl;
+    }
+
+  return 0;
+}

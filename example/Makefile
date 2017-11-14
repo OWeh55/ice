@@ -41,8 +41,7 @@ endif
 #CXX=g++
 #CXX=icc
 
-COPT := $(COPT) -O4 -g -fno-strict-aliasing 
-#-Wall
+COPT := $(COPT) -O4 -g -fno-strict-aliasing -Wall -Wno-unused-local-typedefs
 #-ffast-math
 
 INCLUDE := -I$(ICEDIR)/src `wx-config --cxxflags`

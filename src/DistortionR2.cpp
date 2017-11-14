@@ -37,7 +37,7 @@ using namespace std;
 namespace ice
 {
 #define FNAME "DistortionR::Distort"
-  int DistortionR2::Distort(double x, double y, double& xd, double& yd) const
+  int DistortionR2::distort(double x, double y, double& xd, double& yd) const
   {
     double dx = x - x0;
     double dy = y - y0;
@@ -48,8 +48,8 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "DistortionR::Rect"
-  int DistortionR2::Rect(double x, double y, double& xd, double& yd) const
+#define FNAME "DistortionR::rectify"
+  int DistortionR2::rectify(double x, double y, double& xd, double& yd) const
   {
     double xr = x - x0;
     double yr = y - y0;

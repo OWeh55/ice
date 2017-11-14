@@ -59,74 +59,74 @@ namespace ice
   }
 
 #define FNAME "Distortion::Distort"
-  int Distortion::Distort(double& xd, double& yd) const
+  int Distortion::distort(double& xd, double& yd) const
   {
-    return Distort(xd, yd, xd, yd);
+    return distort(xd, yd, xd, yd);
   }
 
-  Vector Distortion::Distort(const Vector& v) const
+  Vector Distortion::distort(const Vector& v) const
   {
     Vector res(2);
 
     if (v.size() != 2)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Distort(v[0], v[1], res[0], res[1]);
+    distort(v[0], v[1], res[0], res[1]);
     return res;
   }
 
-  Point Distortion::Distort(const Point& p) const
+  Point Distortion::distort(const Point& p) const
   {
     Point res;
-    Distort(p.x, p.y, res.x, res.y);
+    distort(p.x, p.y, res.x, res.y);
     return res;
   }
 
-  int Distortion::Distort(vector<Point>& pl) const
+  int Distortion::distort(vector<Point>& pl) const
   {
     for (unsigned int i = 0; i < pl.size(); i++)
       {
-        pl[i] = Distort(pl[i]);
+        pl[i] = distort(pl[i]);
       }
     return OK;
   }
 
 #undef FNAME
 #define FNAME "Distortion::rect"
-  int Distortion::Rect(double& xd, double& yd) const
+  int Distortion::rectify(double& xd, double& yd) const
   {
-    return Rect(xd, yd, xd, yd);
+    return rectify(xd, yd, xd, yd);
   }
 
-  Vector Distortion::Rect(const Vector& v) const
+  Vector Distortion::rectify(const Vector& v) const
   {
     Vector result = v;
 
     if (v.size() != 2)
       throw IceException(FNAME, M_WRONG_DIM);
 
-    Rect(v[0], v[1], result[0], result[1]);
+    rectify(v[0], v[1], result[0], result[1]);
     return result;
   }
 
-  Point Distortion::Rect(const Point& p) const
+  Point Distortion::rectify(const Point& p) const
   {
     Point result;
-    Rect(p.x, p.y, result.x, result.y);
+    rectify(p.x, p.y, result.x, result.y);
     return result;
   }
 
 #undef FNAME
-#define FNAME "Distortion::RectImg"
-  Image Distortion::RectImg(const Image& source, int mode) const
+#define FNAME "Distortion::rectifyImg"
+  Image Distortion::rectifyImg(const Image& source, int mode) const
   {
     Image dest = NewImg(source);
-    RectImg(source, dest, mode);
+    rectifyImg(source, dest, mode);
     CopyImg(dest, source);
     return source;
   }
 
-  int Distortion::RectImg(const Image& source, const Image& dest, int mode) const
+  int Distortion::rectifyImg(const Image& source, const Image& dest, int mode) const
   {
     if (!IsImg(source) || !IsImg(dest))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -137,7 +137,7 @@ namespace ice
     if (source == dest)
       {
         Image newimg = NewImg(source);
-        RectImg(source, newimg, mode);
+        rectifyImg(source, newimg, mode);
         CopyImg(newimg, dest);
         return OK;
       }
@@ -146,7 +146,7 @@ namespace ice
       for (int xd = 0; xd < dest->xsize; xd++)
         {
           double xo, yo;
-          Distort(xd, yd, xo, yo);
+          distort(xd, yd, xo, yo);
           int xoi = RoundInt(xo);
           int yoi = RoundInt(yo);
           // cout << xoi << " " << yoi << endl;
@@ -226,7 +226,7 @@ namespace ice
           double yi = (m21 * xo + m22 * yo + m23) / zh;
 
           double xv, yv;
-          di.Distort(xi, yi, xv, yv);           // apply Distortion
+          di.distort(xi, yi, xv, yv);           // apply Distortion
 
           res.at(r) = xv - xm; // error vector
           r++;
@@ -400,7 +400,7 @@ namespace ice
               double yi = (m21 * xo + m22 * yo + m23) / zh;
 
               double xv, yv;
-              di.Distort(xi, yi, xv, yv);           // apply Distortion
+              di.distort(xi, yi, xv, yv);           // apply Distortion
 
               res[residx++] = xv - xm; // error vector
               res[residx++] = yv - ym;

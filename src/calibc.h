@@ -1,8 +1,7 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 2002-2017 FSU Jena, Digital Image Processing Group
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,10 +17,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 #ifndef CALIBC_H_
 #define CALIBC_H_
 
+#include <vector>
 #include "Matrix.h"
 #include "Camera.h"
 
@@ -30,6 +29,11 @@ namespace ice
   extern Matrix CalibPoint;
 
   int Calib(Camera& cam, const Matrix& xyz, const Matrix& uv, int mode = 1);
+  void calibrate(Camera& cam,
+                 const std::vector<Vector3d>& xyz,
+                 const std::vector<Point>& uv,
+                 int mode = 1);
+
 }
 
 #endif

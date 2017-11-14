@@ -218,7 +218,6 @@ int main(int argc, char* argv[])
   Image r, g, b, m1, m2;
 
   int xs, ys, mv;
-  int x, y;
   int c;
 
   Display(ON);

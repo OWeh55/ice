@@ -1,0 +1,878 @@
+#ifndef WIN32
+#include <sys/time.h>
+#include <unistd.h>
+#else
+#include <time.h>
+#include <sys/timeb.h>
+#endif
+
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <string>
+#include <iomanip>
+#include <math.h>
+#ifndef WIN32
+#include <getopt.h>
+#else
+#include "getopt.h"
+#endif
+#include <GL/glut.h>
+
+/*AppGen:Global*/
+
+using namespace std;
+
+#include "cviewer.h"
+#include "objekte.h"
+#include "numbase.h"
+
+objekt * world = NULL;
+
+float VirtualTime = 0.0;
+float RealTime = 0.0;
+float frametime = 0.05;
+
+float rspeed = 40;
+
+float move_step = 10.0;
+float angle_step = 2.0;
+
+enum tm_stat {tm_halt, tm_slow, tm_normal, tm_fast};
+enum tm_stat timestat = tm_normal;
+
+// Kamera-Parameter (Mode 1,3)
+float camdistance;
+float camangle = 40;
+float leftrightrotate;
+float updownrotate;
+
+int visible = false;
+
+float window_ratio;
+
+int light_number;
+
+GLfloat globalambient[] = {0.3, 0.3, 0.3, 1.0};
+
+/* The specifications for 2 light sources */
+GLfloat pos0[] = {1.0, 1.0, 1.0, 0.0}; /* w = 0 == infinite distance */
+GLfloat dif0[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
+
+GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0};// ambient light for all light sources
+
+GLfloat pos1[] = { -1.0, .0, 5.0, 0.0}; /* w = 0 == infinite distance */
+GLfloat dif1[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
+
+GLfloat null[] = { 0.0, 0.0, 0.0, 1.0};
+GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
+
+/*AppGen
+%%  Beschreibung des Programmes:
+  prog: Programm zur Darstellung von 3D-Welten
+
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  para: welt, optional, string, fname, Weltbeschreibung, welt.cv
+
+  %% Beschreibung der Optionen
+  % kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
+
+  opt: f, worldfile, string, fname_opt, Dateiname Weltbeschreibung, ""
+  opt2:   Dies ist eine alternative Form, die auch die Angabe von
+  opt2:   -f - erlaubt, was die Standard-Eingabe als Quelle festlegt
+  opt: x, xsize,  Int,     window_width,    Bildgröße X,  1280
+  opt: y, ysize,  Int,     window_height,    Bildgröße Y,  1024
+
+  opt: c, camera, Int, cammode, Kamera-Modus,2
+  opt2:   1 - Kamera sieht auf den Ursprung
+  opt2:   2 - Kamera frei beweglich im Raum
+  opt2:   3 - Kamera rotiert um den Ursprung
+  opt: D, cameradistance, Double, cameraDistance, Abstand der Kamera, 30
+  opt: a, anglestep, double, angledelta, Winkel-Schrittweite, 2
+
+  opt: l, lights, int, std_lights, Zahl der Standard-Lichtquellen, 2
+  opt: m, minseg, Int, minseg, Segmentierung runder Objekte, 32
+
+  opt: o, optimize, void, optimize, Optimierung des Welt-Baumes, false
+
+  opt: v, verbose,  Void,   verbose,  Ausführliche Meldungen,  false
+  opt: b, benchmark, Void, benchmarking, Framerate anzeigen, false
+  opt: d, debug, Int, cdebug, Debug-Modus, 0
+  opt: p, parseonly, void, parseonly, Nur Weltbeschreibung analysieren, false
+  opt: h, help,   usage,   ,    Hilfe
+
+%% "l:st:"
+  AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char **argv)
+{
+  /*AppGen:MainEnd*/
+
+  if (fname=="welt.cv") // default
+    if (!fname_opt.empty()) // filename given as option
+      fname=fname_opt;
+
+  angle_step = angledelta;
+
+  int dummy_argc=1;
+  char arg0[]="cviewer";
+  char * dummy_argv[]={arg0,NULL};
+
+  glutInit(&dummy_argc, dummy_argv);
+
+  int mainmenu, anglemenu, speedmenu;
+
+  // ein oder zwei Standard-lichtquellen
+  // Szene-Beschreibung kann dies überschreiben
+  if (std_lights > 2) std_lights = 2;
+  if (std_lights < 1) std_lights = 1;
+
+  // verhältnis seitenlängen der Fenster
+  // (Pixel werden quadratisch angenommen)
+  window_ratio = ((float)window_width) / ((float)window_height);
+
+  // Lesen des Szene-Files, Aufbau der Welt
+  ReadWorld(fname);
+
+  // Optimierungen, wenn aktiviert
+  // z.B. konstante Werte vorausberechnen
+  if (optimize)
+    {
+      Optimize(world);
+    }
+
+  // Nur Parsen -> exit (Syntaxüberprüfung von Szenefiles)
+  if (parseonly) exit(0);
+
+  if (light_number == 0) // weltbeschreibung enthält keine Lichtquellen
+    {
+      // Standard-Lichtquellen aktivieren
+      light_number = std_lights;
+    }
+
+  /* Set things up and go */
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+  glutInitWindowSize(window_width, window_height);
+  glutCreateWindow("CViewer");
+  // call back funktionen setzen
+  glutDisplayFunc(Display);
+  glutIdleFunc(HandleIdle);
+  glutVisibilityFunc(HandleVisibility);
+  glutKeyboardFunc(HandleKeyboard);
+  glutSpecialFunc(HandleSpecialKeyboard);
+  glutMouseFunc(HandleMouse);
+  glutReshapeFunc(HandleReshape);
+
+  //  glutMotionFunc(HandleMouseMotion);
+
+  /* Set up some menus */
+
+  anglemenu = glutCreateMenu(HandleAngleMenu);
+  glutAddMenuEntry("Weit (w)", 1);
+  glutAddMenuEntry("Normal", 2);
+  glutAddMenuEntry("Tele (t)", 3);
+
+  speedmenu = glutCreateMenu(HandleSpeedMenu);
+  glutAddMenuEntry("Halt (p)", 1);
+  glutAddMenuEntry("Langsam (s)", 2);
+  glutAddMenuEntry("Normal (n)", 3);
+  glutAddMenuEntry("Schnell (f)", 4);
+
+  mainmenu = glutCreateMenu(HandleMainMenu);
+  glutAddSubMenu("Blickwinkel", anglemenu);
+  glutAddSubMenu("Geschwindigkeit", speedmenu);
+  glutAddMenuEntry("Startposition (Home)", 5);
+  glutAddMenuEntry("Quit", 100);
+
+  glutSetMenu(mainmenu);
+  glutAttachMenu(GLUT_RIGHT_BUTTON);
+  
+  CreateEnvironment();
+  
+  // Kamera-Parameter in Grundposition
+  Home();
+  
+  glutMainLoop();
+  return 0;
+}
+/*
+   Globale Einstellungen
+*/
+
+void CreateEnvironment(void)
+{
+  glEnable(GL_DEPTH_TEST);
+
+  glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_POINT_SMOOTH);
+  glEnable(GL_POLYGON_SMOOTH);
+
+  glShadeModel(GL_SMOOTH);
+  glDisable(GL_DITHER);         /* Assume RGBA capabilities */
+
+  glLineWidth(1.0);
+  glPointSize(1.0);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+  glFrontFace(GL_CCW);
+  glEnable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
+
+  // glEnable(GL_CULL_FACE); blendet eine Seite von Flächen aus
+  // glCullFace(GL_BACK);
+
+  glClearColor(0.0, 0.0, 0.0, 0.0);      /* Background colour */
+
+  glEnable(GL_COLOR_MATERIAL);
+  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, null);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, null);
+}
+
+/*
+   This is the basic display callback routine
+   It creates the geometry, lighting, and viewing position
+*/
+
+void Display(void)
+{
+//    cout << "display" << Time << endl;
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  MakeCamera();
+  MakeLighting();
+  MakeGeometry();
+
+  glutSwapBuffers();
+}
+
+/*
+   Create the geometry
+*/
+void MakeGeometry(void)
+{
+//    cout << "geometrie" << endl;
+  if (world != NULL)
+    world->Draw();
+}
+
+/*
+   Set up the lighting environment
+*/
+void MakeLighting(void)
+{
+  /* Set ambient globally, default ambient for light sources is 0 */
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalambient);
+
+  if (light_number > 0)
+    {
+      glLightfv(GL_LIGHT0, GL_POSITION, pos0);
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, dif0);
+      glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+      glLightfv(GL_LIGHT0, GL_SPECULAR, dif0);
+      glEnable(GL_LIGHT0);
+    }
+
+  if (light_number > 1)
+    {
+      glLightfv(GL_LIGHT1, GL_POSITION, pos1);
+      glLightfv(GL_LIGHT1, GL_DIFFUSE, dif1);
+      glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+      glLightfv(GL_LIGHT1, GL_SPECULAR, dif1);
+      glEnable(GL_LIGHT1);
+    }
+
+  glEnable(GL_LIGHTING);
+}
+
+/*
+   Set up the camera
+*/
+
+void Home()
+{
+  move_step=cameraDistance/20;
+  switch (cammode)
+    {
+    case 1: // no break
+    case 3:
+      camdistance = cameraDistance;
+      leftrightrotate = 80;
+      updownrotate = 70;
+      camangle = 40;
+      break;
+
+    case 2:
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      gluPerspective(camangle,     /* Field of view */
+                     window_ratio, /* aspect ratio  */
+                     0.1, 10000.0); /* near and far  */
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+      // initiale Position wie bei 1
+      gluLookAt(cameraDistance * Cos(80) * Sin(70),
+                cameraDistance * Cos(70),
+                cameraDistance * Sin(80) * Sin(70),
+                0.0, 0.0, 0.0,                                 /* Center   */
+                0.0, 1.0, 0.0);                                /* Up       */
+      break;
+    }
+}
+
+void MakeCamera()
+{
+  /* Camera setup */
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(camangle,     /* Field of view */
+                 window_ratio, /* aspect ratio  */
+                 0.1, 10000.0); /* near and far  */
+  glMatrixMode(GL_MODELVIEW);
+
+  if (cammode != 2)
+    {
+      glLoadIdentity();
+
+      switch (cammode)
+        {
+        case 1:
+        case 3:
+          gluLookAt(camdistance * Cos(leftrightrotate)*Sin(updownrotate),
+                    camdistance * Cos(updownrotate),
+                    camdistance * Sin(leftrightrotate)*Sin(updownrotate),
+                    0.0, 0.0, 0.0,                                 /* Center   */
+                    0.0, 1.0, 0.0);                                /* Up       */
+          break;
+        }
+    }
+}
+
+/*
+  Tastaturbehandlung
+*/
+void HandleKeyboard(unsigned char key, int x, int y)
+{
+  int modifier = glutGetModifiers();
+  switch (modifier)
+    {
+    case 0:
+      switch (key)
+        {
+        case 27: /* ESC */
+        case 'h':
+        case 'H':
+          Home();
+          break;
+        case 'Q':
+        case 'q':
+          exit(0);
+          break;
+        case 'P':
+        case 'p':
+          timestat = tm_halt;
+          break;
+        case 'S':
+        case 's':
+          timestat = tm_slow;
+          break;
+        case 'N':
+        case 'n':
+          timestat = tm_normal;
+          break;
+        case 'F':
+        case 'f':
+          timestat = tm_fast;
+          break;
+        case 'w':
+        case 'W':
+          camangle = 80;
+          break;
+        case 't':
+        case 'T':
+          camangle = 20;
+          break;
+          // Zoom
+        case '-':
+          if (camangle < 170) camangle++;
+          break;
+        case '+':
+          if (camangle > 1) camangle--;
+          break;
+
+        case 'M':
+          Trafo tr;
+          tr.glGet();
+          cout << tr.toString() << endl;
+          cout << "------------" << endl;
+
+          GLfloat m[16];
+          glGetFloatv(GL_PROJECTION_MATRIX, m);
+          cout << endl;
+          for (int i = 0; i < 4; i++)
+            {
+              for (int j = 0; j < 4; j++)
+                cout << setw(10) << setprecision(5) << m[j*4+i] << "\t";
+              cout << endl;
+            }
+
+          break;
+        }
+      break;
+
+    case GLUT_ACTIVE_CTRL:
+      switch (key)
+        {
+        case '+':
+          move_step *= 2;
+          cout << "Step: " << move_step << endl;
+          break;
+        case '-':
+          move_step *= 0.5;
+          cout << "Step: " << move_step << endl;
+          break;
+        }
+      break;
+    }
+}
+
+/*
+  Spezielle Tasten
+*/
+void CamControl1(int key, int modifier)
+{
+  switch (key)
+    {
+    case GLUT_KEY_LEFT:
+      leftrightrotate += 3;
+      break;
+    case GLUT_KEY_RIGHT:
+      leftrightrotate -= 3;
+      break;
+    case GLUT_KEY_UP:
+      updownrotate -= 2;
+      break;
+    case GLUT_KEY_DOWN:
+      updownrotate += 2;
+      break;
+    case GLUT_KEY_PAGE_UP:
+      camdistance *= 0.8;
+      break;
+    case GLUT_KEY_PAGE_DOWN:
+      camdistance *= 1.2;
+      break;
+    case GLUT_KEY_HOME:
+      Home();
+      break;
+    }
+  if (updownrotate > 179.9) updownrotate = 179.9;
+  if (updownrotate < 0.1) updownrotate = 0.1;
+}
+
+void CamControl3(int key, int modifier)
+{
+  switch (key)
+    {
+    case GLUT_KEY_LEFT:
+      rspeed -= 10;
+      break;
+    case GLUT_KEY_RIGHT:
+      rspeed += 10;
+      break;
+    case GLUT_KEY_UP:
+      updownrotate -= 2;
+      break;
+    case GLUT_KEY_DOWN:
+      updownrotate += 2;
+      break;
+    case GLUT_KEY_PAGE_UP:
+      camdistance *= 0.8;
+      break;
+    case GLUT_KEY_PAGE_DOWN:
+      camdistance *= 1.2;
+      break;
+    case GLUT_KEY_HOME:
+      Home();
+      break;
+    }
+  if (updownrotate > 179.9) updownrotate = 179.9;
+  if (updownrotate < 0.1) updownrotate = 0.1;
+}
+
+void Cam4RotLeft(float val)
+{
+  GLfloat m[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, m);
+  glLoadIdentity();
+  glRotated(val, 0, -1, 0);
+  glMultMatrixf(m);
+}
+
+void Cam4RotUp(float val)
+{
+  GLfloat m[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, m);
+  glLoadIdentity();
+  glRotated(val, -1, 0, 0);
+  glMultMatrixf(m);
+}
+
+void Cam4Roll(float val)
+{
+  GLfloat m[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, m);
+  glLoadIdentity();
+  glRotated(val, 0, 0, 1);
+  glMultMatrixf(m);
+}
+
+void Cam4MoveUp(float val)
+{
+  GLfloat m[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, m);
+  glLoadIdentity();
+  glTranslated(0, -val, 0);
+  glMultMatrixf(m);
+}
+
+void Cam4MoveLeft(float val)
+{
+  GLfloat m[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, m);
+  glLoadIdentity();
+  glTranslated(val, 0, 0);
+  glMultMatrixf(m);
+}
+
+void Cam4MoveForward(float val)
+{
+  GLfloat m[16];
+  glGetFloatv(GL_MODELVIEW_MATRIX, m);
+  glLoadIdentity();
+  glTranslated(0, 0, val);
+  glMultMatrixf(m);
+}
+
+void CamControl2(int key, int modifier)
+{
+  switch (modifier)
+    {
+    case 0:
+
+      switch (key)
+        {
+        case GLUT_KEY_LEFT:
+          Cam4RotLeft(angle_step);
+          break;
+        case GLUT_KEY_RIGHT:
+          Cam4RotLeft(-angle_step);
+          break;
+
+        case GLUT_KEY_UP:
+          Cam4RotUp(angle_step);
+          break;
+        case GLUT_KEY_DOWN:
+          Cam4RotUp(-angle_step);
+          break;
+
+        case GLUT_KEY_PAGE_UP:
+          Cam4MoveUp(move_step);
+          break;
+        case GLUT_KEY_PAGE_DOWN:
+          Cam4MoveUp(-move_step);
+          break;
+
+        case GLUT_KEY_HOME:
+          Home();
+          break;
+        }
+      break;
+
+    case GLUT_ACTIVE_CTRL:
+
+      switch (key)
+        {
+        case GLUT_KEY_LEFT:
+          Cam4MoveLeft(move_step);
+          break;
+        case GLUT_KEY_RIGHT:
+          Cam4MoveLeft(-move_step);
+          break;
+
+        case GLUT_KEY_UP:
+          Cam4MoveForward(move_step);
+          break;
+        case GLUT_KEY_DOWN:
+          Cam4MoveForward(-move_step);
+          break;
+
+        case GLUT_KEY_PAGE_UP:
+          Cam4MoveUp(move_step);
+          break;
+        case GLUT_KEY_PAGE_DOWN:
+          Cam4MoveUp(-move_step);
+          break;
+
+        case '+':
+          move_step *= 2;
+          break;
+        case '-':
+          move_step *= 0.5;
+          break;
+        }
+      break;
+
+    case GLUT_ACTIVE_SHIFT:
+      switch (key)
+        {
+        case GLUT_KEY_LEFT:
+          Cam4Roll(2);
+          break;
+        case GLUT_KEY_RIGHT:
+          Cam4Roll(-2);
+          break;
+        }
+
+      break;
+    }
+}
+
+void HandleSpecialKeyboard(int key, int x, int y)
+{
+  int modifier = glutGetModifiers();
+  // Masken GLUT_ACTIVE_SHIFT, GLUT_ACTIVE_CTRL, GLUT_ACTIVE_ALT
+  switch (cammode)
+    {
+    case 1:
+      CamControl1(key, modifier);
+      break;
+    case 2:
+      CamControl2(key, modifier);
+      break;
+    case 3:
+      CamControl3(key, modifier);
+      break;
+    }
+}
+
+/*
+   Handle mouse events
+*/
+void HandleMouse(int button, int state, int x, int y)
+{
+  if (state == GLUT_DOWN)
+    {
+    }
+}
+
+void HandleReshape(int width, int height)
+{
+  window_width = width;
+  window_height = height;
+  window_ratio = ((float)window_width) / ((float)window_height);
+  glViewport(0, 0, width, height);
+}
+/*
+   Handle the main menu
+*/
+void HandleMainMenu(int whichone)
+{
+  switch (whichone)
+    {
+    case 1:
+      timestat = tm_halt;
+      break;
+    case 2:
+      timestat = tm_slow;
+      break;
+    case 3:
+      timestat = tm_normal;
+      break;
+    case 5:
+      Home();
+      break;
+    case 100:
+      exit(0);
+      break;
+    }
+}
+
+/*
+  BlickWinkelMenu
+*/
+void HandleAngleMenu(int whichone)
+{
+  switch (whichone)
+    {
+    case 1:
+      camangle = 80;
+      break;
+    case 2:
+      camangle = 40;
+      break;
+    case 3:
+      camangle = 20;
+      break;
+    }
+}
+
+/*
+  Geschwindigkeitsmenu
+*/
+void HandleSpeedMenu(int whichone)
+{
+  switch (whichone)
+    {
+    case 1:
+      timestat = tm_halt;
+      break;
+    case 2:
+      timestat = tm_slow;
+      break;
+    case 3:
+      timestat = tm_normal;
+      break;
+    case 4:
+      timestat = tm_fast;
+      break;
+    }
+}
+
+/*
+   How to handle visibility
+*/
+void HandleVisibility(int gvisible)
+{
+//   cout << "visibility " << (visible==GLUT_VISIBLE) << endl;
+  if (gvisible == GLUT_VISIBLE)
+    visible = true;
+  else
+    visible = false;
+}
+
+void HandleIdle()
+{
+  double atime;
+  static double lasttime = -1;
+
+#ifndef WIN32
+  struct timeval tt;
+  struct timezone tz;
+
+  gettimeofday(&tt, &tz);
+  atime = tt.tv_sec + (double)tt.tv_usec / 1000000.0;
+#else
+  struct timeb tt;
+  ftime(&tt);
+  atime = tt.time + (double)tt.millitm / 1000;
+#endif
+  double dt;
+  if (lasttime < 0) 
+    dt = 0;
+  else 
+    dt = atime - lasttime;
+  //  if (dt > 1) 
+  //    dt = 1.0;
+  lasttime = atime;
+
+  if (benchmarking)
+    {
+      RealTime += dt;
+
+      if (RealTime < 10) 
+	frametime = dt;
+      else 
+	frametime = frametime * 0.999 + 0.001 * dt;
+
+      if (RealTime > 1)
+        cout << 1.0 / frametime << " fps " << endl;
+    }
+
+  switch (timestat)
+    {
+    case tm_halt:
+      break;
+    case tm_slow:
+      VirtualTime += 0.2 * dt;
+      break;
+    case tm_normal:
+      VirtualTime += dt;
+      break;
+    case tm_fast:
+      VirtualTime += 5 * dt;
+      break;
+    }
+
+  if (cammode == 3)
+    leftrightrotate += dt * rspeed;
+
+  if (visible)
+    {
+      if (!benchmarking)
+        usleep(20000);
+      glutPostRedisplay();
+    }
+}
+
+/*
+  Draw text in the x-y plane
+  The x,y,z coordinate is the bottom left corner (looking down -ve z axis)
+*/
+
+void DrawTextXY(float x, float y, float z, float scale, char *s)
+{
+  unsigned int i;
+
+  glPushMatrix();
+  glTranslated(x, y, z);
+  glScaled(scale, scale, scale);
+  for (i = 0; i < strlen(s); i++)
+    glutStrokeCharacter(GLUT_STROKE_ROMAN, s[i]);
+  glPopMatrix();
+}
+
+/*
+   Display the program usage information
+*/
+void Usage(const string &cmd, bool tasten)
+{
+  fprintf(stderr, "Anwendung:    %s <optionen> [<filename>]\n", cmd.c_str());
+  fprintf(stderr, "  -h Hilfe\n");
+  fprintf(stderr, "  -f <filename> Welt (welt.cv)\n");
+  fprintf(stderr, "  -c <n> Kameramodell\n");
+  fprintf(stderr, "     1 Kamera kann um Objekt (Ursprung) bewegt werden\n");
+  fprintf(stderr, "     2 Freie Kamerabewegung in der Welt\n");
+  fprintf(stderr, "     3 Kamera bewegt sich um Objekt (Ursprung) herum\n");
+  fprintf(stderr, "  -d Skript-Debugging\n");
+
+  fprintf(stderr, "  -t <time> Zeitvorgabe (stoppt Bewegungen)\n");
+  fprintf(stderr, "  -s langsamer Zeitablauf\n");
+  fprintf(stderr, "  -b Benchmark-Modus (Ausgabe von Frame-Raten\n");
+
+  fprintf(stderr, "  -x <width>  Breite des Bildfensters\n");
+  fprintf(stderr, "  -y <height> Höhe des Bildfensters\n");
+
+  fprintf(stderr, "  -p Nur Parsen\n");
+  fprintf(stderr, "  -o Optimierung durchführen\n");
+  fprintf(stderr, "  -m <nr> minimale Segmentanzahl runder Körper\n");
+  if (tasten)
+    {
+      fprintf(stderr, "\nTasten:\n");
+      fprintf(stderr, "               q - Beenden\n");
+      fprintf(stderr, "               p - Pause\n");
+      fprintf(stderr, "               s - langsam\n");
+      fprintf(stderr, "               n - normal\n");
+      fprintf(stderr, "               f - schnell\n");
+      fprintf(stderr, "Pfeiltasten: Bewegung bzw. Drehung (Mode-Abhängig)\n");
+    }
+  exit(-1);
+}
+
+void Usage(const string &cmd, const char *error)
+{
+  fprintf(stderr, "\n!!! %s !!!\n\n", error);
+  Usage(cmd, false);
+}

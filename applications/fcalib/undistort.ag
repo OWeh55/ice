@@ -1,0 +1,338 @@
+#include <unistd.h>
+#include <image.h>
+
+#include <fstream>
+#include <sstream>
+
+#include "getopt.h"
+
+#include "FileName.h"
+
+#include "filelist.h"
+#include "exifsig.h"
+
+/*AppGen
+  %%  Beschreibung des Programmes:
+  prog: Entzeichnung für Bilder
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  para: file, required, filelist, imgfile, Quelldateien,
+  %% Beschreibung der Optionen
+  % kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
+  opt: E, entry, string, kalibdata, manuelle Auswahl der Kalibrierungsdaten,
+  opt: X, extra, string, exifextra, Zusatz zu EXIF-Daten
+  opt2: Kennung für externes Zubehör/Adapter, die nicht in EXIF-Daten eingetragen sind
+  opt: k, keepimagesize, Void, oldsize, Alte Bildgröße beibehalten
+  opt: D, destination, string, destpath, Zielverzeichnis, ""
+  opt: w, wait,  Void,     wait, Warten nach Berechnung,  false
+  opt: v, verbose,  Void,   verbose,  Ausführliche Meldungen,  false
+  opt: d, display,  Void,   display,  Darstellung der Bilder,  false
+  opt: p, profiles, String, profiles, Datei mit Verzeichnungsdaten, ./dist.txt
+  opt: h, help,   usage,   ,    Hilfe
+AppGen*/
+
+/*AppGen:Global*/
+
+Distortion1 di;
+
+void Wait(const Image &img)
+{
+  int xc, yc;
+  if (wait)
+    {
+      GetAlphaCursor(&xc, &yc);
+      Print("<ENTER>");
+      GetChar();
+      SetAlphaCursor(xc, yc);
+      PutChar(0x10);
+    }
+}
+
+void error(const string &msg);
+
+void copyRGB(const Image &r1, const Image &g1, const Image &b1, 
+	     Image &r2, Image &g2, Image &b2)
+{
+  for (int y = 0; y < r2->ysize; y++)
+    for (int x = 0; x < r2->xsize; x++)
+      {
+        PutVal(r2, x, y, GetVal(r1, x, y));
+        PutVal(g2, x, y, GetVal(g1, x, y));
+        PutVal(b2, x, y, GetVal(b1, x, y));
+      }
+}
+
+bool findProfile(const string &exifsig, double focallength,
+                 double &u0, double &v0, double &d2, double &d4)
+{
+  ifstream ci(profiles.c_str());
+
+  bool profileFound = false;
+  string profile;
+  double f;
+
+  double flow = 0.0;
+  double u0low = 0.0;
+  double v0low = 0.0;
+  double d2low = 0.0;
+  double d4low = 0.0;
+
+  double fhigh = 0.0;
+  double u0high = 0.0;
+  double v0high = 0.0;
+  double d2high = 0.0;
+  double d4high = 0.0;
+
+  while (ci >> profile >> f >> u0 >> v0 >> d2 >> d4)
+    {
+      if (profile == exifsig)
+        {
+          //     cout << u0 << " " << v0 << " " << d2 << " " << d4 << endl;
+          profileFound = true;
+          if (f <= focallength)
+            {
+              flow = f;
+              u0low = u0;
+              v0low = v0;
+              d2low = d2;
+              d4low = d4;
+            }
+          if (f > focallength)
+            {
+              fhigh = f;
+              u0high = u0;
+              v0high = v0;
+              d2high = d2;
+              d4high = d4;
+            }
+        }
+    }
+  if (profileFound)
+    {
+      if (flow == 0.0) // es muss fhigh geben
+        {
+          f = fhigh;
+          u0 = u0high;
+          v0 = v0high;
+          d2 = d2high;
+          d4 = d4high;
+        }
+      else if (fhigh == 0.0) // es muss flow geben
+        {
+          f = flow;
+          u0 = u0low;
+          v0 = v0low;
+          d2 = d2low;
+          d4 = d4low;
+        }
+      else
+        {
+          // high und low existieren
+          double k1 = (focallength - flow) / (fhigh - flow);
+          double k2 = 1.0 - k1;
+          f = k2 * flow + k1 * fhigh;
+          u0 = k2 * u0low + k1 * u0high;
+          v0 = k2 * v0low + k1 * v0high;
+          d2 = k2 * d2low + k1 * d2high;
+          d4 = k2 * d4low + k1 * d4high;
+        }
+    }
+  return profileFound;
+}
+
+int rectify(const FileName &source, const FileName &dest,
+            string exifsig, const string &exifextra)
+{
+  double focallength = 0.0;
+  if (exifsig.empty())
+    {
+      // EXIF-daten ermitteln
+      if (verbose)
+        {
+          cout << "Originalbild erkennen" << endl;
+        }
+
+      if (!getExifSig(source.getFilename(), exifextra, exifsig, focallength))
+        error("EXIF-Daten nicht lesbar");
+    }
+
+  // Verzeichnung einlesen
+  if (verbose)
+    {
+      cout << "Verzeichnung lesen" << endl;
+    }
+
+  double u0;
+  double v0;
+  double d2;
+  double d4;
+
+  if (exifsig[0] != '#')
+    {
+      if (!findProfile(exifsig, focallength, u0, v0, d2, d4))
+        error("Kein geeignetes Profil gefunden");
+    }
+  else
+    {
+      string profile = exifsig.substr(1);
+      istringstream is(profile);
+      is >> u0 >> v0 >> d2 >> d4;
+    }
+
+  if (verbose)
+    {
+      cout << exifsig << ":" << endl;
+      cout << "u0: " << u0 << "  v0: " << v0;
+      cout << "  d2: " << d2 << "  d4: " << d4 << endl << endl;
+    }
+  // Bilder einlesen
+  int dimx, dimy, gm;
+
+  if (verbose)
+    cout << "Ermittle Bilddaten " << source.getFilename() << endl;
+
+  InfImgFile(source.getFilename(), dimx, dimy, gm);
+
+  if (verbose)
+    cout << "Lege Bilder an" << endl;
+
+  Image ro; ro.create(dimx, dimy, gm);
+  Image go; go.create(dimx, dimy, gm);
+  Image bo; bo.create(dimx, dimy, gm);
+
+  double refsize = Max(dimx, dimy) / 2.0;
+  double refsize2 = refsize * refsize;
+  double refsize4 = refsize2 * refsize2;
+
+  u0 = u0 * dimx;
+  v0 = v0 * dimy;
+  d2 = d2 / refsize2;
+  d4 = d4 / refsize4;
+
+  Distortion1 dist(u0, v0, d2, d4);
+  // cout << dist.toString() << endl;
+
+  double minx = u0;
+  double maxx = u0;
+  double miny = v0;
+  double maxy = v0;
+  int newdimx;
+  int newdimy;
+
+  if (!oldsize)
+    {
+
+      for (int yi = 0; yi < dimy; yi++)
+        for (int xi = 0; xi < dimx; xi++)
+          {
+            double x, y;
+            dist.Rect(xi, yi, x, y);
+            if (x < minx) minx = x;
+            if (x > maxx) maxx = x;
+            if (y < miny) miny = y;
+            if (y > maxy) maxy = y;
+          }
+
+      if (verbose)
+        cout << "entzerrter Bildbereich: " << minx << "..." << maxx << "   " << miny << "..." << maxy << endl;
+
+      newdimx = maxx - minx + 1;
+      newdimy = maxy - miny + 1;
+      if (verbose)
+        cout << "neue Bildgröße: " << newdimx << " x " << newdimy << endl;
+
+      if (newdimx > 2 * dimx || newdimy > 2 * dimy)
+        {
+          // Ausdehnung begrenzen
+          newdimx = 2 * dimx;
+          newdimy = 2 * dimy;
+
+          minx = (dimx - newdimx) / 2;
+          miny = (dimy - newdimy) / 2;
+          if (verbose)
+            {
+              cout << "korrigiere Bildgröße: " << newdimx << " x " << newdimy << endl;
+            }
+        }
+    }
+  else
+    {
+      newdimx = dimx;
+      newdimy = dimy;
+      minx = 0;
+      miny = 0;
+    }
+
+  Image re; re.create(newdimx, newdimy, gm);
+  Image ge; ge.create(newdimx, newdimy, gm);
+  Image be; be.create(newdimx, newdimy, gm);
+
+  if (verbose)
+    cout << "Lade " << source.getFilename() << endl;
+
+  ReadImg(source.getFilename(), ro, go, bo);
+
+  if (verbose)
+    cout << "Entzerre..    " << endl;
+
+  if (display)
+    {
+      Display(ON);
+      Show(_RGB, ro, go, bo, "original");
+      Show(_RGB, re, ge, be, "entzerrt");
+    }
+
+  for (int y = 0; y < newdimy; y++)
+    for (int x = 0; x < newdimx; x++)
+      {
+        double xs, ys;
+
+        dist.Distort(x + minx, y + miny, xs, ys);
+
+        re.setPixel(x, y, ro.getPixelInterpol(xs, ys));
+        ge.setPixel(x, y, go.getPixelInterpol(xs, ys));
+        be.setPixel(x, y, bo.getPixelInterpol(xs, ys));
+      }
+
+  if (verbose)
+    cout << "Fertig" << endl;
+  if (display && wait)
+    GetChar();
+
+  if (verbose)
+    cout << "Schreibe " << dest.getFilename() << endl;
+
+  WriteImg(re, ge, be, dest.getFilename());
+
+  if (verbose)
+    cout << "Done" << endl;
+  return OK;
+}
+
+/*AppGen:Main*/
+int main(int argc, char *argv[])
+{
+  /*AppGen:MainEnd*/
+  while (!imgfile.empty())
+    {
+      FileName infile = imgfile.back();
+
+      imgfile.pop_back();
+
+      string path=destpath;
+      if (path.empty())
+	path=infile.getPath();
+
+      FileName outfile(path, infile.getName() + ".rect", infile.getExtension());
+
+      if (verbose)
+        cout << infile.getFilename() << " -> " << outfile.getFilename() << endl;
+
+      if (rectify(infile, outfile, kalibdata, exifextra) != OK)
+        {
+          error("Fehler bei der Korrektur");
+          exit(1);
+        }
+    }
+  return 0;
+}
