@@ -50,6 +50,7 @@ namespace ice
 
         string cmd = "ffprobe -v error -show_streams -select_streams V \"" + fn + "\"";
 
+        // cout << cmd << endl;
         FILE* fd = popen(cmd.c_str(), "r");
         if (fd != nullptr)
           {
@@ -95,12 +96,11 @@ namespace ice
     catch (exception& ex)
       {
         // we ignore errors in detection of size etc. and open video file nevertheless
-
       }
     // now really open file
-    pr.open("|ffmpeg -i " + fn + " -y -codec:v ppm -f rawvideo -an -sn -v error - ");
+    pr.open("|ffmpeg -i \'" + fn + "\' -y -codec:v ppm -f rawvideo -an -sn -v error - ");
 
-    // if use of ffprobe failed we try rd.getInfo() instead
+    // if use of ffprobe failed we try getInfo() instead
     if (width < 0 || height < 0)
       {
         int nChannels;
