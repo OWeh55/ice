@@ -73,7 +73,7 @@ namespace ice
       // solange unverarbeitete Punkte: wähle nächsten Punkt
       while (findMin(isInTree, mini))
         {
-          std::cout << mini << std::endl;
+          // std::cout << mini << std::endl;
           // neue Kante: mini <-> qu[mini]
           tree.setFather(mini, qu[mini]);
           isInTree[mini] = true;
@@ -103,7 +103,7 @@ namespace ice
             const VectorDistance& vd = EuclideanVectorDistance());
     MinTree(const Matrix& distances);
     double getTree(Forest& f) const;
-    double getForest(Forest& f, double maxLength) const;
+    double getForest(Forest& f, double maxLength = 0.0) const;
     double getCluster(Forest& f, int nCluster) const;
 
   private:

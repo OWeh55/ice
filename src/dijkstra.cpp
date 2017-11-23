@@ -11,9 +11,9 @@ namespace ice
 {
 
 // Minimaler Wertbereich für Markierungsbild.
-// 0 = unbehandelt, 1= ziel, 2-9 = Richtungskode+2 für minimalen pfad
+// 0 = unbehandelt, 1= ziel, 2-9 = Richtungskode + 2 für minimalen pfad
 
-  const int minrange = 10;
+  constexpr int minrange = 10;
 
   struct PointX: public IPoint
   {
@@ -24,7 +24,7 @@ namespace ice
     PointX(IPoint s, double v, int d): IPoint(s), val(v), dir(d) {}
     bool operator<(const PointX& second) const
     {
-      // invers zu Operator < double, da priority_queue falsch herum arbeitet
+      // invers zu Operator < double, da priority_queue "falsch" herum arbeitet
       return val > second.val;
     }
   };
@@ -59,7 +59,7 @@ namespace ice
         //
         binImg(marker, marker, 1, 1);
 
-        if (GetVal(marker, start.x, start.y) != 0)
+        if (marker.getPixel(start) != 0)
           throw IceException(FNAME, M_WRONG_STARTPOINT);
 
         PointX ap(start, 0, 0);
@@ -71,7 +71,7 @@ namespace ice
           {
             ap = heap.top();
             heap.pop();
-            int state = GetVal(marker, ap);
+            int state = marker.getPixel(ap);
 
             if (state == 1)   // reached destination
               {
@@ -80,7 +80,7 @@ namespace ice
 
             if (state < 2)   // point unhandled
               {
-                PutVal(marker, ap, ap.dir.Int() + 2);
+                marker.setPixel(ap, ap.dir.Int() + 2);
 
                 if (!ready)
                   {
@@ -91,7 +91,7 @@ namespace ice
 
                         if (Inside(marker, np))
                           {
-                            int mrk = GetVal(marker, np);
+                            int mrk = marker.getPixel(np);
 
                             if (mrk < 2)   // unbehandelt
                               {
@@ -118,7 +118,7 @@ namespace ice
         while (!(ap == start))
           {
             res.add(ap.x, ap.y);
-            int dir = (GetVal(marker, ap) - 2 + 4) % 8;
+            int dir = (marker.getPixel(ap) - 2 + 4) % 8;
             Freeman(dir).move(ap);
           }
 
@@ -131,9 +131,10 @@ namespace ice
 
   Contur Dijkstra(const Image& img, IPoint start, IPoint end)
   {
-    Image mark = NewImg(img->xsize, img->ysize, minrange);
-    clearImg(mark);
-    PutVal(mark, end, 1);
+    Image mark;
+    mark.create(img.xsize, img.ysize, minrange);
+    mark.set(0);
+    mark.setPixel(end, 1);
     return Dijkstra(img, start, mark);
   }
 #undef FNAME
