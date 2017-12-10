@@ -6,7 +6,7 @@
 class cylinder: public point
 {
 public:
-  cylinder(vect *posp, vect *posp2, number *radp):
+  cylinder(vect* posp, vect* posp2, number* radp):
     point(posp), rad(radp), pos2(posp2) {};
   virtual ~cylinder() {};
 protected:
@@ -20,7 +20,7 @@ protected:
   };
   virtual void myDraw() const;
   numberp rad;
-  vect *pos2;
+  vect* pos2;
 };
 
 #endif

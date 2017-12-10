@@ -33,7 +33,7 @@ int is_number(int c)
   return (c >= '0') && (c <= '9');
 }
 
-int read_number(FILE *fd)
+int read_number(FILE* fd)
 {
 #define MAXNUMBERLEN 10
   int c;
@@ -51,7 +51,7 @@ int read_number(FILE *fd)
   return res;
 }
 
-EXFILE pbm_open_read(const string &fname, int &xsize, int &ysize, int &maxval, int &ch)
+EXFILE pbm_open_read(const string& fname, int& xsize, int& ysize, int& maxval, int& ch)
 {
   EXFILE fd;
   int c;
@@ -91,7 +91,7 @@ EXFILE pbm_open_read(const string &fname, int &xsize, int &ysize, int &maxval, i
   return fd;
 }
 
-bool pbmreadbuffer8(const string &fname, unsigned char *data)
+bool pbmreadbuffer8(const string& fname, unsigned char* data)
 {
   EXFILE fd;
   int xsize, ysize, maxval, ch;
@@ -106,13 +106,13 @@ bool pbmreadbuffer8(const string &fname, unsigned char *data)
   return true;
 }
 
-void swapb(unsigned short *p)
+void swapb(unsigned short* p)
 {
-  unsigned short h = *(unsigned char *)p * 256U + *(unsigned char *)(p + 1);
+  unsigned short h = *(unsigned char*)p * 256U + *(unsigned char*)(p + 1);
   *p = h;
 }
 
-bool pbmreadbuffer16(const string &fname, unsigned short *data)
+bool pbmreadbuffer16(const string& fname, unsigned short* data)
 {
   EXFILE fd;
   int xsize, ysize, maxval, ch;
@@ -124,17 +124,17 @@ bool pbmreadbuffer16(const string &fname, unsigned short *data)
 
   fread(data, ch * 2, xsize * ysize, fd.fd);
   exclose(fd);
-  for (unsigned short *p = data; p < data + xsize * ysize; p++)
+  for (unsigned short* p = data; p < data + xsize * ysize; p++)
     swapb(p);
   return true;
 }
 
-bool ReadPBM(const string &fname, unsigned char *data)
+bool ReadPBM(const string& fname, unsigned char* data)
 {
   return pbmreadbuffer8(fname, data);
 }
 
-bool ReadPBM8(const string &str, unsigned char *&buf, int &width, int &height)
+bool ReadPBM8(const string& str, unsigned char*& buf, int& width, int& height)
 {
   int nr;
   int maxval;
@@ -147,7 +147,7 @@ bool ReadPBM8(const string &str, unsigned char *&buf, int &width, int &height)
   return pbmreadbuffer8(str, buf);
 }
 
-bool ReadPBM16(const string &str, unsigned short *&buf, int &width, int &height)
+bool ReadPBM16(const string& str, unsigned short*& buf, int& width, int& height)
 {
   int nr;
   int maxval;
@@ -162,8 +162,8 @@ bool ReadPBM16(const string &str, unsigned short *&buf, int &width, int &height)
   return pbmreadbuffer16(str, buf);
 }
 
-bool InfPBMFile(const string &fname,
-                int &xsize, int &ysize, int &maxval, int &nr)
+bool InfPBMFile(const string& fname,
+                int& xsize, int& ysize, int& maxval, int& nr)
 {
   EXFILE fd;
   fd = pbm_open_read(fname, xsize, ysize, maxval, nr);
@@ -172,7 +172,7 @@ bool InfPBMFile(const string &fname,
   return true;
 }
 
-EXFILE exopen(const string &fn, const char *mode)
+EXFILE exopen(const string& fn, const char* mode)
 {
   EXFILE rc;
   rc.process = fn[0] == '|';
@@ -181,7 +181,7 @@ EXFILE exopen(const string &fn, const char *mode)
   return rc;
 }
 
-bool exclose(const EXFILE &fd)
+bool exclose(const EXFILE& fd)
 {
   if (fd.process) return pclose(fd.fd);
   else return fclose(fd.fd);

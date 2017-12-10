@@ -134,8 +134,8 @@
 #    include <alloc.h>
 #    define DYN_ALLOC
 /* Turbo C 2.0 does not accept static allocations of large arrays */
-void *fcalloc(unsigned items, unsigned size);
-void fcfree(void *ptr);
+void* fcalloc(unsigned items, unsigned size);
+void fcfree(void* ptr);
 #  else /* MSC */
 #    include <malloc.h>
 #    define fcalloc(nitems,itemsize) halloc((long)(nitems),(itemsize))
@@ -187,7 +187,7 @@ void fcfree(void *ptr);
 #    define NO_FCNTL_H
 #    include <fcntl.h> /* for read() and write() */
 #    define direct dirent
-extern void _expand_args(int *argc, char ***argv);
+extern void _expand_args(int* argc, char** *argv);
 #    define EXPAND(argc,argv) _expand_args(&argc,&argv);
 #    undef  O_BINARY /* disable useless --ascii option */
 #  endif

@@ -8,10 +8,10 @@ template <class T>
 class var
 {
 public:
-  var(var<T> *&first, const string &pname, T *pval):
+  var(var<T>*& first, const string& pname, T* pval):
     name(pname), hidden(false), val(pval), next(first)
   {
-    var<T> *varp = first;
+    var<T>* varp = first;
     while (varp != NULL)
       {
         if (varp->name == pname)
@@ -21,14 +21,14 @@ public:
     first = this;
   }
 
-  T *find(const string &pname)
+  T* find(const string& pname)
   {
     if ((name == pname) && (!hidden)) return val;
     if (next == NULL) return NULL;
     return next->find(pname);
   }
 
-  string find(T *v)
+  string find(T* v)
   {
     if (val == v) return name;
     if (next == NULL) return "?";
@@ -40,7 +40,7 @@ public:
     hidden = true;
   }
 
-  void Delete(const string &pname)
+  void Delete(const string& pname)
   {
     if (name == pname)
       {
@@ -52,7 +52,7 @@ public:
     next->Delete(pname);
   }
 
-  void Hide(var<T> *bis)
+  void Hide(var<T>* bis)
   {
     if (next != bis)
       {
@@ -63,17 +63,17 @@ public:
 
 protected:
   var() {};
-  var(const var &) {};
+  var(const var&) {};
   string name;
   bool hidden;
-  T *val;
-  var *next;
+  T* val;
+  var* next;
 };
 
 template < class T >
-T *find(const vector<var<T>* > stack, const string &pname)
+T* find(const vector<var<T>* > stack, const string& pname)
 {
-  T *res = NULL;
+  T* res = NULL;
   int i = stack.size() - 1;
   while ((res == NULL) && (i >= 0))
     {

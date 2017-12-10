@@ -7,9 +7,9 @@
 class box: public point
 {
 public:
-  box(vect *posp, vect *posp2):
+  box(vect* posp, vect* posp2):
     point(posp), pos2(posp2), tex(NULL) {};
-  box(vect *posp, vect *posp2, texture *texp):
+  box(vect* posp, vect* posp2, texture* texp):
     point(posp), pos2(posp2), tex(texp) {};
   virtual ~box() {};
 protected:
@@ -21,8 +21,8 @@ protected:
     DEBUGOUT(endl);
   };
   virtual void myDraw() const;
-  vect *pos2;
-  texture *tex;
+  vect* pos2;
+  texture* tex;
 };
 
 

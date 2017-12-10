@@ -23,7 +23,7 @@ void Texture::Make()
     {
       cerror("Kann Datei " + filename + " nicht öffnen");
     }
-  unsigned char *data = new unsigned char [width * height * 3];
+  unsigned char* data = new unsigned char [width * height * 3];
   ReadPBM(filename, data);
   // build our texture mipmaps
   gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height,

@@ -5,12 +5,12 @@
 
 struct EXFILE
 {
-  FILE *fd;
+  FILE* fd;
   bool process;
 };
 
-EXFILE exopen(const std::string &path, const char *mode);
-bool exclose(const EXFILE &df);
+EXFILE exopen(const std::string& path, const char* mode);
+bool exclose(const EXFILE& df);
 
 // lese und schreibmodi
 
@@ -22,14 +22,14 @@ bool exclose(const EXFILE &df);
 #define FRMODUS "r"
 #endif
 
-bool ReadPBM8(const std::string &str, unsigned char *&buf, int &width, int &height);
-bool ReadPBM16(const std::string &str, unsigned short *&buf, int &width, int &height);
+bool ReadPBM8(const std::string& str, unsigned char*& buf, int& width, int& height);
+bool ReadPBM16(const std::string& str, unsigned short*& buf, int& width, int& height);
 
-bool ReadPBM(const std::string &str, unsigned char *buf);
+bool ReadPBM(const std::string& str, unsigned char* buf);
 
-bool InfPBMFile(const std::string &fname,
-                int &xsize, int &ysize,
-                int &maxval,
-                int &nr);
+bool InfPBMFile(const std::string& fname,
+                int& xsize, int& ysize,
+                int& maxval,
+                int& nr);
 
 #endif

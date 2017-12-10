@@ -6,9 +6,9 @@
 class triangle: public point
 {
 public:
-  triangle(vect *posp, vect *posp2, vect *posp3):
+  triangle(vect* posp, vect* posp2, vect* posp3):
     point(posp), pos2(posp2), pos3(posp3), tex(NULL) {}
-  triangle(vect *posp, vect *posp2, vect *posp3, texture *texp):
+  triangle(vect* posp, vect* posp2, vect* posp3, texture* texp):
     point(posp), pos2(posp2), pos3(posp3), tex(texp) {}
   virtual ~triangle() {};
 
@@ -22,9 +22,9 @@ public:
 protected:
   virtual void MyOptimize();
   virtual void myDraw() const;
-  vect *pos2;
-  vect *pos3;
-  texture *tex;
+  vect* pos2;
+  vect* pos3;
+  texture* tex;
   // cache für vorberechnete konstante Werte
   mutable vector3 v0;
   mutable vector3 v1;

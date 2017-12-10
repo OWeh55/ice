@@ -4,7 +4,7 @@
 #include "vector3.h"
 #include "arith.h"
 
-void add(const vector3 &s1, const vector3 &s2, vector3 &s3)
+void add(const vector3& s1, const vector3& s2, vector3& s3)
 {
   for (int i = 0; i < 3; i++)
     {
@@ -12,7 +12,7 @@ void add(const vector3 &s1, const vector3 &s2, vector3 &s3)
     }
 }
 
-vector3 Normalize(const vector3 &v)
+vector3 Normalize(const vector3& v)
 {
 //  float l=v.Length();
   float l = sqrt(v.v[0] * v.v[0] + v.v[1] * v.v[1] + v.v[2] * v.v[2]);
@@ -20,8 +20,8 @@ vector3 Normalize(const vector3 &v)
   return vector3(v.v[0] / l, v.v[1] / l, v.v[2] / l);
 }
 
-vector3 rotate(const vector3 &p,
-               const vector3 &o, const vector3 &dir, float phi)
+vector3 rotate(const vector3& p,
+               const vector3& o, const vector3& dir, float phi)
 {
 // 3D-Rotation um einen durch Punkt und Richtung gegebenen Strahl
   double sind = Sin(phi);
@@ -51,8 +51,8 @@ vector3 rotate(const vector3 &p,
   return vector3(zx, zy, zz) + o;
 }
 
-vector3 rotate(const vector3 &p,
-               const vector3 &dir, float phi)
+vector3 rotate(const vector3& p,
+               const vector3& dir, float phi)
 {
 // 3D-Rotation um einen Strahl durch den Null-Punkt in Richtung dir
 // um phi GRAD
@@ -86,14 +86,14 @@ vector3 rotate(const vector3 &p,
   return vector3(zx, zy, zz);
 }
 
-string ToString(const vector3 &v)
+string ToString(const vector3& v)
 {
   return "<" + ToString(v.v[0]) + ","
          + ToString(v.v[1]) + ","
          + ToString(v.v[2]) + ">";
 }
 
-std::ostream &operator << (std::ostream &os, const vector3 &v)
+std::ostream& operator << (std::ostream& os, const vector3& v)
 {
   os << ToString(v);
   return os;

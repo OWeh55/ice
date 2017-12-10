@@ -1,6 +1,6 @@
 #include "matrix3.h"
 
-void mul(const matrix3 &m1, const matrix3 &m2, matrix3 &m)
+void mul(const matrix3& m1, const matrix3& m2, matrix3& m)
 {
   for (int i = 0; i < 3; i++)
     for (int j = 0; j < 3; j++)
@@ -12,7 +12,7 @@ void mul(const matrix3 &m1, const matrix3 &m2, matrix3 &m)
       }
 }
 
-void mul(const matrix3 &m, const vector3 &s1, vector3 &s2)
+void mul(const matrix3& m, const vector3& s1, vector3& s2)
 {
   for (int i = 0; i < 3; i++)
     {

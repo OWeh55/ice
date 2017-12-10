@@ -50,32 +50,32 @@ public:
     return v[2];
   }
 
-  const float &operator[](int i) const
+  const float& operator[](int i) const
   {
     return v[i];
   }
-  float &operator[](int i)
+  float& operator[](int i)
   {
     return v[i];
   }
 
-  float *carray()
+  float* carray()
   {
     return v;
   }
-  const float *carray() const
+  const float* carray() const
   {
     return v;
   }
 
   // Operatoren
 
-  vector3 operator+(const vector3 &sec) const
+  vector3 operator+(const vector3& sec) const
   {
     return vector3(v[0] + sec.v[0], v[1] + sec.v[1], v[2] + sec.v[2]);
   }
 
-  vector3 operator-(const vector3 &sec) const
+  vector3 operator-(const vector3& sec) const
   {
     return vector3(v[0] - sec.v[0], v[1] - sec.v[1], v[2] - sec.v[2]);
   }
@@ -85,7 +85,7 @@ public:
     return vector3(-v[0], -v[1], -v[2]);
   }
 
-  float operator*(const vector3 &p2) const
+  float operator*(const vector3& p2) const
   {
     return v[0] * p2.v[0] + v[1] * p2.v[1] + v[2] * p2.v[2];
   }
@@ -95,19 +95,19 @@ public:
     return vector3(v[0] * d, v[1] * d, v[2] * d);
   }
 
-  vector3 cross(const vector3 &b) const
+  vector3 cross(const vector3& b) const
   {
     return vector3(v[1] * b.v[2] - v[2] * b.v[1],
                    v[2] * b.v[0] - v[0] * b.v[2],
                    v[0] * b.v[1] - v[1] * b.v[0]);
   }
 
-  friend vector3 rotate(const vector3 &p,
-                        const vector3 &o, const vector3 &dir, float phi);
-  friend vector3 rotate(const vector3 &p,
-                        const vector3 &dir, float phi);
+  friend vector3 rotate(const vector3& p,
+                        const vector3& o, const vector3& dir, float phi);
+  friend vector3 rotate(const vector3& p,
+                        const vector3& dir, float phi);
 
-  friend void add(const vector3 &s1, const vector3 &s2, vector3 &s3);
+  friend void add(const vector3& s1, const vector3& s2, vector3& s3);
 
   //
   float Length() const
@@ -126,12 +126,12 @@ public:
       }
   }
 
-  friend vector3 Normalize(const vector3 &);
-  friend std::string ToString(const vector3 &v);
-  friend std::ostream &operator << (std::ostream &os, const vector3 &v);
+  friend vector3 Normalize(const vector3&);
+  friend std::string ToString(const vector3& v);
+  friend std::ostream& operator << (std::ostream& os, const vector3& v);
 
 
-  friend vector3 operator*(float d, const vector3 &p1)
+  friend vector3 operator*(float d, const vector3& p1)
   {
     return vector3(p1.v[0] * d, p1.v[1] * d, p1.v[2] * d);
   }

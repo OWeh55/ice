@@ -3,13 +3,13 @@
 #include <math.h>
 
 
-const vector3 &vnum3::Value() const
+const vector3& vnum3::Value() const
 {
   // Komposition eines Vektors aus 3 Floats
   return temp = vector3(val1->Value(), val2->Value(), val3->Value());
 }
 
-const vector3 &spline::Value(float idx) const
+const vector3& spline::Value(float idx) const
 {
 // berechnung eines Spline-Wertes
   int i0, i1, i2, i3; // indizees der benachbarten Werte
@@ -74,7 +74,7 @@ void vectlist::Invert()
     }
 }
 
-const vector3 &splineaccess::Value() const
+const vector3& splineaccess::Value() const
 {
 // berechnung eines Spline-Wertes
   float idx = index->Value();

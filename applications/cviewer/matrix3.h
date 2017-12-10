@@ -27,16 +27,16 @@ public:
     m[8] = 1.0f;
   }
 
-  float *operator[](int i)
+  float* operator[](int i)
   {
     return &m[i * 3];
   }
-  const float *operator[](int i) const
+  const float* operator[](int i) const
   {
     return &m[i * 3];
   }
 
-  friend void mul(const matrix3 &m1, const matrix3 &m2, matrix3 &m);
-  friend void mul(const matrix3 &m, const vector3 &s1, vector3 &s2);
+  friend void mul(const matrix3& m1, const matrix3& m2, matrix3& m);
+  friend void mul(const matrix3& m, const vector3& s1, vector3& s2);
 };
 #endif

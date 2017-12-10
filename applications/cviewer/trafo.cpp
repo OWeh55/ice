@@ -36,7 +36,7 @@ void Trafo::glSet(GLenum which) const
     }
 }
 
-vector3 Trafo::Transform(const vector3 &p) const
+vector3 Trafo::Transform(const vector3& p) const
 {
   vector3 res;
   mul(m, p, res);
@@ -51,12 +51,12 @@ void Trafo::Shift(float dx, float dy, float dz)
   s.v[2] += dz;
 }
 
-void Trafo::Shift(const vector3 &d)
+void Trafo::Shift(const vector3& d)
 {
   s = s + d;
 }
 
-void Trafo::Rotate(const vector3 &dir, float phi)
+void Trafo::Rotate(const vector3& dir, float phi)
 {
   // 3D-Rotation um einen Strahl durch den Null-Punkt in Richtung dir
   // um phi GRAD
@@ -90,14 +90,14 @@ void Trafo::Rotate(const vector3 &dir, float phi)
   mul(mr, t.s, s);
 }
 
-void Trafo::Rotate(const vector3 &o, const vector3 &dir, float phi)
+void Trafo::Rotate(const vector3& o, const vector3& dir, float phi)
 {
   Shift(-o);
   Rotate(dir, phi);
   Shift(o);
 }
 
-void Trafo::Append(const Trafo &tr)
+void Trafo::Append(const Trafo& tr)
 {
   Trafo t(*this); // Kopie wegen Multiplikation der Matrizen "in sich"
   mul(tr.m, t.m, m);
@@ -105,7 +105,7 @@ void Trafo::Append(const Trafo &tr)
   add(s, tr.s, s);
 }
 
-string ToString(const Trafo &tr)
+string ToString(const Trafo& tr)
 {
   return tr.toString();
 }

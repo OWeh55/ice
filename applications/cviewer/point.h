@@ -8,7 +8,7 @@ class point: public objekt
 protected:
   virtual void myDraw() const;
 public:
-  point(vect *posp): objekt(posp) { };
+  point(vect* posp): objekt(posp) { };
 
   virtual ~point() {};
 };

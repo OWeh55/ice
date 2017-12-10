@@ -14,7 +14,7 @@
 class color: public objekt
 {
 public:
-  color(vect *posp): objekt(posp) {};
+  color(vect* posp): objekt(posp) {};
   ~color() {};
 protected:
   virtual void myDraw() const;
@@ -29,7 +29,7 @@ protected:
 class ocall: public objekt
 {
 public:
-  ocall(objekt *ob, vect *shift, number *angle, vect *rot);
+  ocall(objekt* ob, vect* shift, number* angle, vect* rot);
 protected:
   void MyOptimize()
   {
@@ -40,9 +40,9 @@ protected:
     optvector(rot);
     DEBUGOUT(endl);
   }
-  objekt *ob;
-  number *angle;
-  vect *rot;
+  objekt* ob;
+  number* angle;
+  vect* rot;
 protected:
   virtual void myDraw() const;
 };
@@ -50,7 +50,7 @@ protected:
 class ocalltrafo: public objekt
 {
 public:
-  ocalltrafo(objekt *ob, trafo *shift);
+  ocalltrafo(objekt* ob, trafo* shift);
 protected:
   void MyOptimize()
   {
@@ -60,8 +60,8 @@ protected:
     //!!    opttrafo(tr);
     DEBUGOUT(endl);
   }
-  objekt *ob;
-  trafo *tr;
+  objekt* ob;
+  trafo* tr;
 protected:
   virtual void myDraw() const;
 };
@@ -69,7 +69,7 @@ protected:
 class CondObject: public objekt
 {
 public:
-  CondObject(boolean *cond, objekt *o1, objekt *o2):
+  CondObject(boolean* cond, objekt* o1, objekt* o2):
     condition(cond), thenobject(o1), elseobject(o2) {}
 protected:
   void MyOptimize()
@@ -78,9 +78,9 @@ protected:
     if (thenobject != NULL) Optimize(thenobject);
     if (elseobject != NULL) Optimize(elseobject);
   }
-  boolean *condition;
-  objekt *thenobject;
-  objekt *elseobject;
+  boolean* condition;
+  objekt* thenobject;
+  objekt* elseobject;
 protected:
   virtual void myDraw() const;
 };

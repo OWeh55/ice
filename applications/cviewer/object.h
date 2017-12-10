@@ -8,18 +8,18 @@
 class objekt
 {
 private:
-  objekt *next; // Verkettung
-  objekt *prev; // zeiger auf voriges Element der liste,
+  objekt* next; // Verkettung
+  objekt* prev; // zeiger auf voriges Element der liste,
   // zeigt beim ersten Element auf das letzte Element
 
 protected:
-  vect *pos;
+  vect* pos;
   bool noop; // objekt tut nichts
   bool constant;
 
-  static void setv(vect * (&p), vect *v);
-  static void setn(number * (&p), number *v);
-  static void settr(trafo * (&tr), trafo *trs);
+  static void setv(vect * (&p), vect* v);
+  static void setn(number * (&p), number* v);
+  static void settr(trafo * (&tr), trafo* trs);
 
   static void optnumber(number * (&n));
   static void optvector(vect * (&n));
@@ -32,13 +32,13 @@ protected:
   };
 
 private:
-  objekt(const objekt &o)
+  objekt(const objekt& o)
   {
     cerr << "copy constructor not implemented" << endl;
   }
 
 public:
-  objekt(vect *posp): next(this), prev(this), pos(posp), noop(false), constant(false) {}
+  objekt(vect* posp): next(this), prev(this), pos(posp), noop(false), constant(false) {}
   objekt(): next(this), prev(this), pos(NULL), noop(false), constant(false) {}
 
   virtual ~objekt()
@@ -51,7 +51,7 @@ public:
       }
   };
 
-  void Draw(const objekt *first) const
+  void Draw(const objekt* first) const
   {
     myDraw();
     if (next != first)
@@ -63,10 +63,10 @@ public:
     Draw(this);
   };
 
-  friend void Optimize(objekt *&ob);
-  friend void Append(objekt * (&ptr), objekt *ob);
+  friend void Optimize(objekt*& ob);
+  friend void Append(objekt * (&ptr), objekt* ob);
 };
 
-typedef objekt *optr;
+typedef objekt* optr;
 
 #endif

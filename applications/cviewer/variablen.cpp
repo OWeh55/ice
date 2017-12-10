@@ -1,8 +1,8 @@
 #include "cviewer.h"
 #include "variablen.h"
 
-var<value> *vari = NULL;
-var<objekt> *ovar = NULL;
+var<value>* vari = NULL;
+var<objekt>* ovar = NULL;
 
 vector<var<value> *> varstack;
 vector<var<objekt> *> ostack;

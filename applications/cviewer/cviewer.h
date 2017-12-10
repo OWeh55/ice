@@ -29,15 +29,15 @@ void HandleSpeedMenu(int);
 void HandleVisibility(int vis);
 void HandleIdle(void);
 
-void DrawTextXY(float, float, float, float, char *);
+void DrawTextXY(float, float, float, float, char*);
 
-void Usage(const string &cmd, bool tasten = true);
-void Usage(const string &cmd, const char *error);
+void Usage(const string& cmd, bool tasten = true);
+void Usage(const string& cmd, const char* error);
 
 /* Parser */
-void ReadWorld(const string &fname);
+void ReadWorld(const string& fname);
 
-extern objekt *world;
+extern objekt* world;
 
 int yylex(void);
 extern int yydebug;
@@ -53,5 +53,5 @@ extern GLfloat dif0[4];
 extern GLfloat pos1[4];
 extern GLfloat dif1[4];
 
-extern texture *text;
+extern texture* text;
 #endif

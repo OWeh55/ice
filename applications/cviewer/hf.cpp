@@ -2,14 +2,14 @@
 #include "pbmio.h"
 #include "hf.h"
 
-void heightfield::InitHF(const string &name)
+void heightfield::InitHF(const string& name)
 {
   int nr;
   if (InfPBMFile(name, xsize, ysize, maxval, nr))
     {
       if (maxval < 256)
         {
-          unsigned char *buf;
+          unsigned char* buf;
           if (!ReadPBM8(name, buf, xsize, ysize))
             {
               cerror("Kann " + name + " nicht lesen");
@@ -19,7 +19,7 @@ void heightfield::InitHF(const string &name)
               h.clear();
               h.resize(ysize, std::vector<int>(xsize));
               // buf => h
-              unsigned char *bufp = buf;
+              unsigned char* bufp = buf;
               for (int y = ysize - 1; y >= 0; y--)
                 for (int x = 0; x < xsize; x++)
                   {
@@ -31,7 +31,7 @@ void heightfield::InitHF(const string &name)
         }
       else
         {
-          unsigned short *buf;
+          unsigned short* buf;
           //    cout << sizeof(unsigned short)<<endl;
           if (!ReadPBM16(name, buf, xsize, ysize))
             {
@@ -42,7 +42,7 @@ void heightfield::InitHF(const string &name)
               h.clear();
               h.resize(ysize, std::vector<int>(xsize));
               // buf => h
-              unsigned short *bufp = buf;
+              unsigned short* bufp = buf;
               for (int y = ysize - 1; y >= 0; y--)
                 for (int x = 0; x < xsize; x++)
                   {

@@ -7,13 +7,13 @@
 class heightfield: public point
 {
 public:
-  heightfield(const string &namep, vect *posp, vect *dirxp = NULL, vect *diryp = NULL, vect *dirzp = NULL):
+  heightfield(const string& namep, vect* posp, vect* dirxp = NULL, vect* diryp = NULL, vect* dirzp = NULL):
     point(posp), dirx(dirxp), diry(diryp), dirz(dirzp), tex(NULL)
   {
     InitHF(namep);
   }
 
-  heightfield(const string &namep, vect *posp, vect *dirxp, vect *diryp, vect *dirzp, texture *texp):
+  heightfield(const string& namep, vect* posp, vect* dirxp, vect* diryp, vect* dirzp, texture* texp):
     point(posp), dirx(dirxp), diry(diryp), dirz(dirzp), tex(texp)
   {
     InitHF(namep);
@@ -21,7 +21,7 @@ public:
   virtual ~heightfield() {}
 
 private:
-  void InitHF(const string &n);
+  void InitHF(const string& n);
   void CalcV3D() const;
   void Vertex(int x, int y) const;
 
@@ -55,10 +55,10 @@ protected:
     return vz;
   }
 
-  vect *dirx;
-  vect *diry;
-  vect *dirz;
-  texture *tex;
+  vect* dirx;
+  vect* diry;
+  vect* dirz;
+  texture* tex;
 };
 
 #endif

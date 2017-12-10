@@ -6,7 +6,7 @@
 class polygon: public point
 {
 protected:
-  vectlist *points;
+  vectlist* points;
 
 // cache für vorberechnete konstante Normale
   vector3 normal;
@@ -16,7 +16,7 @@ protected:
   virtual void MyOptimize();
 
 public:
-  polygon(vectlist *vl, bool inverse): point(NULL), points(vl)
+  polygon(vectlist* vl, bool inverse): point(NULL), points(vl)
   {
     if (points->size() < 3)
       {

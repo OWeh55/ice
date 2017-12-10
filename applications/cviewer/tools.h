@@ -11,10 +11,10 @@
 #define DEBUGOUT(x) ;
 #endif
 
-void cerror(const std::string &mesg);
+void cerror(const std::string& mesg);
 
 template<class T>
-void exchange(T &i1, T &i2)
+void exchange(T& i1, T& i2)
 {
   T h = i1;
   i1 = i2;
@@ -22,7 +22,7 @@ void exchange(T &i1, T &i2)
 }
 
 template<class T>
-void sort(T &i1, T &i2)
+void sort(T& i1, T& i2)
 {
   if (i1 > i2) exchange(i1, i2);
 }

@@ -57,24 +57,24 @@ public:
   {
     return TypId;
   }
-  virtual const T &Value() const = 0;
+  virtual const T& Value() const = 0;
   virtual ~basetype() {};
 };
 
 typedef basetype<float, TypScalar> number;
-typedef number *numberp;
+typedef number* numberp;
 
 typedef basetype<bool, TypBoolean> boolean;
-typedef boolean *booleanp;
+typedef boolean* booleanp;
 
 typedef basetype<vector3, TypVector> vect;
-typedef vect *vectp;
+typedef vect* vectp;
 
 typedef basetype<Trafo, TypTrafo> trafo;
-typedef trafo *trafop;
+typedef trafo* trafop;
 
 typedef basetype<Texture, TypTexture> texture;
-typedef texture *texturep;
+typedef texture* texturep;
 
 /*
  * Basis-Klassen für spezielle Resultat-Typen
@@ -85,7 +85,7 @@ class vectlist: public value
 {
 public:
   vectlist() {} ;
-  vectlist(const vectlist &vl): vlist(vl.vlist) {} ;
+  vectlist(const vectlist& vl): vlist(vl.vlist) {} ;
   virtual int Type() const
   {
     return TypList;
@@ -109,11 +109,11 @@ public:
   {
     return vlist[i]->Value();
   }
-  vectp &operator[](int i)
+  vectp& operator[](int i)
   {
     return vlist[i];
   }
-  const vectp &operator[](int i) const
+  const vectp& operator[](int i) const
   {
     return vlist[i];
   }
@@ -135,7 +135,7 @@ template<class base, class valuetype>
 class constant: public base
 {
 public:
-  constant(const valuetype &v)
+  constant(const valuetype& v)
   {
     value = v;
   }
@@ -143,7 +143,7 @@ public:
   {
     return true;
   }
-  const valuetype &Value() const
+  const valuetype& Value() const
   {
     return value;
   }
@@ -167,7 +167,7 @@ template<class base, class valuetype>
 class namedExpression: public base
 {
 public:
-  namedExpression(base *p)
+  namedExpression(base* p)
   {
     val = p;
   }
@@ -179,7 +179,7 @@ public:
   {
     return val->Constant();
   }
-  virtual const valuetype &Value() const
+  virtual const valuetype& Value() const
   {
     return val->Value();
   }
@@ -188,7 +188,7 @@ public:
     return "(" + val->String() + ")";
   }
 protected:
-  base *val;
+  base* val;
 };
 
 typedef namedExpression<number, float> namednumber;
@@ -206,7 +206,7 @@ public:
   {
     return false;
   }
-  virtual const float &Value() const
+  virtual const float& Value() const
   {
     return VirtualTime;
   }
@@ -223,12 +223,12 @@ class nvar: public number
   // hat hier keinen Namen sondern muß in
   // Variablenliste eingetragen sein
 public:
-  nvar(const string &namep, float v = 0.0): name(namep), value(v) {}
+  nvar(const string& namep, float v = 0.0): name(namep), value(v) {}
   bool Constant() const
   {
     return false;
   }
-  const float &Value() const
+  const float& Value() const
   {
     return value;
   }
@@ -252,9 +252,9 @@ public:
   {
     return TypSpline;
   }
-  spline(const string &namep, int type): name(namep), typ(type) {};
-  spline(const string &namep, const vectlist &vl, int type): vectlist(vl), name(namep), typ(type) {};
-  const vector3 &Value(float i) const;
+  spline(const string& namep, int type): name(namep), typ(type) {};
+  spline(const string& namep, const vectlist& vl, int type): vectlist(vl), name(namep), typ(type) {};
+  const vector3& Value(float i) const;
   virtual string String() const
   {
     return name;
@@ -270,7 +270,7 @@ class vlaccess: public vect
 {
   // zugriff auf Vektorlisten-Element
 public:
-  vlvariable(vectlist *p, number *idx): val(p), index(idx) {}
+  vlvariable(vectlist* p, number* idx): val(p), index(idx) {}
   virtual ~vlvariable()
   {
     /* val nicht löschen!! */
@@ -279,7 +279,7 @@ public:
   {
     return (val->Constant() && index->Constant());
   }
-  virtual const vector3 &Value() const
+  virtual const vector3& Value() const
   {
     return val->Value((int)index->Value());
   }
@@ -288,8 +288,8 @@ public:
     return "(" + val->String() + ")";
   }
 protected:
-  vectlist *val;
-  number *index;
+  vectlist* val;
+  number* index;
 };
 #endif
 
@@ -297,7 +297,7 @@ class splineaccess: public vect
 {
   // Zugriff auf Spline
 public:
-  splineaccess(spline *p, number *idx): val(p), index(idx) {}
+  splineaccess(spline* p, number* idx): val(p), index(idx) {}
   virtual ~splineaccess()
   {
     /* val und index nicht löschen!! */
@@ -306,14 +306,14 @@ public:
   {
     return (val->Constant() && index->Constant());
   }
-  virtual const vector3 &Value() const;
+  virtual const vector3& Value() const;
   virtual string String() const
   {
     return val->String() + "[" + index->String() + "]";
   }
 protected:
-  spline *val;
-  number *index;
+  spline* val;
+  number* index;
 };
 
 class vnum3: public vect
@@ -332,7 +332,7 @@ public:
   {
     return false;
   }
-  virtual const vector3 &Value() const;
+  virtual const vector3& Value() const;
   virtual string String() const
   {
     return "<" + val1->String() + ","

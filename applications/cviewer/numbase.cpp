@@ -24,7 +24,7 @@ float Min(float p1, float p2)
   return p2;
 }
 #endif
-void CSInit(int n, float &sin, float &cos, float &dsin, float &dcos)
+void CSInit(int n, float& sin, float& cos, float& dsin, float& dcos)
 {
   float dfi = 360.0f / n;
   sin = 0.0f;

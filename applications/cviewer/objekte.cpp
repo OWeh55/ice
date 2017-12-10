@@ -13,7 +13,7 @@ void color::myDraw() const
   glColor3f(apos.X(), apos.Y(), apos.Z());
 }
 
-ocall::ocall(objekt *pob, vect *pshift, number *ang, vect *prot):
+ocall::ocall(objekt* pob, vect* pshift, number* ang, vect* prot):
   objekt(pshift)
 {
   rot = NULL;
@@ -37,7 +37,7 @@ void ocall::myDraw() const
   glPopMatrix();
 }
 
-ocalltrafo::ocalltrafo(objekt *pob, trafo *ptrafo): objekt()
+ocalltrafo::ocalltrafo(objekt* pob, trafo* ptrafo): objekt()
 {
   tr = NULL;
   settr(tr, ptrafo);
@@ -83,7 +83,7 @@ void CondObject::myDraw() const
     }
 }
 
-void Append(objekt * (&ptr), objekt *ob)
+void Append(objekt * (&ptr), objekt* ob)
 {
   if (ptr == NULL)
     {
@@ -93,7 +93,7 @@ void Append(objekt * (&ptr), objekt *ob)
     }
   else
     {
-      objekt *last = ptr->prev;
+      objekt* last = ptr->prev;
       last->next = ob;
       ob->prev = last;
       ob->next = ptr;
@@ -102,12 +102,12 @@ void Append(objekt * (&ptr), objekt *ob)
 }
 //========================================================================
 
-void Optimize(objekt *&ob)
+void Optimize(objekt*& ob)
 {
   if (ob != NULL)
     {
-      objekt *lasto = ob->prev;
-      objekt *aob = ob;
+      objekt* lasto = ob->prev;
+      objekt* aob = ob;
       if (aob == lasto)
         aob->MyOptimize();
       else

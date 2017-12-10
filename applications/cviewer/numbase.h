@@ -13,13 +13,13 @@ inline float Cos(float phi)
   return cos(phi * M_PI / 180);
 }
 
-void CSInit(int n, float &sin, float &cos, float &dsin, float &dcos);
-inline void CSReInit(float &sin, float &cos)
+void CSInit(int n, float& sin, float& cos, float& dsin, float& dcos);
+inline void CSReInit(float& sin, float& cos)
 {
   sin = 0;
   cos = 1;
 }
-inline void CSNext(float &sin, float &cos, float dsin, float dcos)
+inline void CSNext(float& sin, float& cos, float dsin, float dcos)
 {
   float h = sin * dcos + cos * dsin;
   cos = cos * dcos - sin * dsin;

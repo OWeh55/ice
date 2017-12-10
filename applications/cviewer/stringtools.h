@@ -5,8 +5,8 @@
 
 using namespace std;
 
-string Trim(const string &s);
-string Split(string &s, const string &ss);
+string Trim(const string& s);
+string Split(string& s, const string& ss);
 
 bool iswhite(char c);
 bool numberc(char c);

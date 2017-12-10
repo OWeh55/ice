@@ -6,7 +6,7 @@
 class sphere: public point
 {
 public:
-  sphere(vect *posp, number *radp): point(posp), rad(radp) {};
+  sphere(vect* posp, number* radp): point(posp), rad(radp) {};
   virtual ~sphere() {};
 
 protected:

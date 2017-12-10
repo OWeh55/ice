@@ -11,8 +11,8 @@ void sphere::MyOptimize()
 
 void sphere::myDraw() const
 {
-  const vector3 &vpos = pos->Value();
-  const float &arad = rad->Value();
+  const vector3& vpos = pos->Value();
+  const float& arad = rad->Value();
   glPushMatrix();
   glTranslatef(vpos.X(), vpos.Y(), vpos.Z());
   glutSolidSphere(arad, minseg, minseg / 2);

@@ -1,7 +1,7 @@
 #include "cviewer.h"
 #include <sstream>
 
-string Trim(const string &s)
+string Trim(const string& s)
 {
   string res = s;
   while (res[0] == ' ') res.erase(0, 1);
@@ -9,7 +9,7 @@ string Trim(const string &s)
   return res;
 }
 
-string Split(string &s, const string &ss)
+string Split(string& s, const string& ss)
 {
   string hs;
   string::size_type pos = s.find(ss);
