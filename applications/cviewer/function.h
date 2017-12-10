@@ -119,7 +119,7 @@ public:
   DegreeN(number* par): NFuncN(par) {}
   virtual const float& Value() const
   {
-    return temp = para->Value() * 360 / M_PI;
+    return temp = para->Value() * 180 / M_PI;
   }
   virtual string String() const
   {
@@ -133,7 +133,7 @@ public:
   RadianN(number* par): NFuncN(par) {}
   virtual const float& Value() const
   {
-    return temp = para->Value() * 360 / M_PI;
+    return temp = para->Value() * M_PI / 180;
   }
   virtual string String() const
   {
