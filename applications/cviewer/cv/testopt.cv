@@ -1,0 +1,42 @@
+FAK=10
+krad=0.09*FAK
+crad=(0.03*100+1)/100 *FAK
+
+n=3
+
+spline sp1 CUBIC
+<0,0,1>
+<0,1,0>
+<1,0,0>
+endspline
+
+x=X*FAK
+y=Y*FAK
+z=Z*FAK
+
+def gitter
+for i=-n to n
+ for j=-n to n
+  for k=-n to n
+    pos=i*x+j*y+k*z
+    color WEISS
+    sphere pos,krad
+    color BLAU
+    if i<n then
+       COLOR BLAU
+      cylinder pos,pos+x,crad 
+    endif
+    if j<n then 
+       COLOR GRUEN
+       cylinder pos,pos+y,crad 
+    endif
+    if k<n then 
+      COLOR ROT
+      cylinder pos,pos+z,crad 
+    endif
+  endfor
+ endfor
+endfor
+enddef
+
+gitter NULL,0,Y+0.7*X

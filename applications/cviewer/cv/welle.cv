@@ -1,0 +1,36 @@
+fi = TIME*360
+a = Y*1.5
+fx = 6
+fz = 12
+
+stepsize = 1.0
+sx=X*stepsize
+sz=Z*stepsize
+
+sfx=fx*stepsize
+sfz=fz*stepsize
+
+for i=-50 to 50 step stepsize
+ for j=-50 to 50 step stepsize
+
+  color ROT*(i+50)*0.01 + BLAU*(-j+50)*0.01
+
+  x00 = i*X+j*Z
+  x01 = x00 + sz
+  x10 = x00 + sx
+  x11 = x01 + sx
+
+  fi00=i*fx+j*fz+fi
+  fi01=fi00+sfz
+  fi10=fi00+sfx
+  fi11=fi01+sfx
+
+  polygon inverse
+   x00+a*sin(fi00)
+   x10+a*sin(fi10)
+   x11+a*sin(fi11)
+   x01+a*sin(fi01)
+  endpolygon
+
+ endfor
+endfor

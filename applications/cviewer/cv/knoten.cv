@@ -1,0 +1,29 @@
+# knoten
+
+rsphere = 0.2
+zfak = 0.3
+
+sfak = 5
+
+sf2 = sfak*2
+sfm = -sfak
+sf3 = sfak*3
+
+size=4
+
+for i=0 to 359 step sfak
+ fi=i+TIME*5
+ fi2=2*fi
+ fi3=3*fi
+ fim=-fi
+ x=sin(fi2)+0.5*sin(fim)
+ y=cos(fi2)+0.5*cos(fim)
+ z=zfak*sin(fi3)
+ if i<>0 then
+   color WHITE*0.5
+ else
+   color YELLOW*(0.5+0.3*sin(TIME*500))
+ endif
+ sphere size*<x,y,z>,size*rsphere
+endfor 
+

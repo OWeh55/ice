@@ -1,0 +1,51 @@
+# eine alte Welt
+
+# sonne
+light <1,0.8,0.6>,Z+X+2*Y
+#light BLUE,Z-X
+# Blauer Himmel
+light <0.5,0.5,0.7>
+
+color GRUEN
+
+polygon
+<-1000,0,1000>
+<1000,0,1000>
+<1000,0,-1000>
+<-1000,0,-1000>
+endpolygon
+
+include sonnenpyramide.inc
+
+color GRAY
+def pyramide
+polygon
+<-80,0,-80>
+<-80,0,80>
+<0,80,0>
+endpolygon
+polygon
+<-80,0,80>
+<80,0,80>
+<0,80,0>
+endpolygon
+polygon
+<80,0,80>
+<80,0,-80>
+<0,80,0>
+endpolygon
+polygon
+<80,0,-80>
+<-80,0,-80>
+<0,80,0>
+endpolygon
+enddef
+
+sonnenpyramide <150,0,-150>,-90,Y
+
+pyramide <0,0,-500>,0,Y
+
+color <0.4,0.3,0.3>
+polygon
+<-20,0.3,0>,<20,0.3,0>,<20,0.3,-500>,<-20,0.3,-500>
+endpolygon

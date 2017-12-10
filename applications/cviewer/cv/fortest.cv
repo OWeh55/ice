@@ -1,0 +1,32 @@
+# test-welt mit "for-schleifen"
+
+time=TIME*10
+fromto=14
+shift= 0.05
+
+segsize=10
+
+def ring
+ for i=0 to 180/segsize-1
+  fi1=i*segsize
+  fi2=(i+1)*segsize
+  cylinder <cos(fi1),0,sin(fi1)>,<cos(fi2),0,sin(fi2)>,0.04
+ endfor
+enddef
+
+#color ROT
+#for i=0 to 55
+#sphere <i*0.2,sin((i+time)*5),cos((i+time)*5)>,0.2
+#endfor
+#color GRUEN
+#for i=0 to 55
+#sphere <cos((i+time)*5),i*0.2,sin((i+time)*5)>,0.2
+#endfor
+#color BLAU
+#for i=0 to 55
+#sphere <sin((i+time)*5),cos((i+time)*5),i*0.2>,0.2
+#endfor
+
+for j=-fromto to fromto
+ ring X*(j*shift),j*10+time,X
+endfor

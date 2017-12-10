@@ -1,0 +1,16 @@
+include baum.inc
+
+dd=5
+dx=dd*X
+dz=dd*Z
+
+for ix=-2 to 2 
+ for iz=-2 to 2
+   baum NULL + ix * dx + iz * dz, 0, Y
+ endfor
+endfor
+
+color <0.3,0.8,0.5>
+polygon 
+<-20,0,20>,< 20,0,20>,<20,0,-20>,<-20,0,-20>
+endpolygon

@@ -1,0 +1,33 @@
+// Diese Szene mit cviewer bench1.cv -b starten und Kamera nicht bewegen
+// Rotation und Mittelung abwarten
+// Ergebnisse 
+// 13.7.15  core i7-2600 GTX 550 Ti   : 13.7  fps
+// 13.7.15  core i7-2600 GTX 550 Ti   : 24.3  fps
+
+krad=0.19
+crad=0.08
+n=5
+
+def gitter
+for i=-n to n
+ for j=-n to n
+  for k=-n to n
+   pos=<i,j,k>
+   color WEISS
+   sphere pos,krad
+   color BLAU
+   if i<n then 
+      cylinder pos,pos+X,crad 
+   endif
+   if j<n then 
+      cylinder pos,pos+Y,crad 
+   endif
+   if k<n then 
+      cylinder pos,pos+Z,crad 
+   endif
+  endfor
+ endfor
+endfor
+enddef
+
+gitter NULL,TIME*10,Y+Z

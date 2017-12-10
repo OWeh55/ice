@@ -1,0 +1,18 @@
+fi=TIME*50
+x=cos(fi)
+y=5
+z=sin(fi)
+d1=<x,y,z>
+
+tr1=translation(<1,1,1>)
+color RED
+sphere d1,0.2
+color BLUE
+pos2=tr1*d1
+sphere pos2,0.2
+for fix=0 to 360 step 15
+  tr2 = rotation(NULL,Y,fix)
+  color YELLOW
+  pos3 = tr1 # tr2 * pos2
+  sphere pos3,0.2
+endfor

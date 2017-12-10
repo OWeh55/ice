@@ -1,0 +1,42 @@
+krad=0.11
+crad=0.08
+n=2
+
+def stab
+color WEISS
+for i=-n to n
+ sphere i*X,krad
+endfor
+color BLAU
+for i=-n to n-1
+ cylinder i*X,i*X+X,crad
+endfor
+enddef
+
+def ebene
+for i=-n to n
+stab i*Z,0,Y
+endfor
+color BLAU
+for i=-n to n
+ for j=-n to n-1
+  pos=i*X+j*Z
+  cylinder pos,pos+Z,crad
+ endfor
+endfor
+enddef
+
+def gitter
+for i=-n to n
+ebene i*Y,0,Y
+endfor
+enddef
+for i=-n to n
+for j=-n to n
+ for k=-n to n-1
+  pos=i*X+j*Z+k*Y
+  cylinder pos,pos+Y,crad
+ endfor
+ endfor
+endfor
+gitter NULL,0,Y

@@ -1,0 +1,37 @@
+// Diese Szene mit cviewer bench.cv -b starten und Kamera nicht bewegen
+// Rotation und Mittelung abwarten
+// Ergebnisse 
+// 2.4.07   Athlon_64 3400+ ,         : 10.8 .. 13.8 fps ??
+// 2.4.07   Athlon X2 5000  , 7600 GT : 19.4 
+// 13.7.15  core i7-2600 GTX 550 Ti   : 54  fps
+// 13.7.15  core i7-2600 GTX 550 Ti   : 59.7  fps
+// Dieser Benchmark ist sinnlos geworden, da die Framerate der Berechnung
+// durch die Darstellungsrate (60fps) beschränkt wird
+
+krad=0.19
+crad=0.08
+n=3
+
+def gitter
+for i=-n to n
+ for j=-n to n
+  for k=-n to n
+   pos=<i,j,k>
+   color WEISS
+   sphere pos,krad
+   color BLAU
+   if i<n then 
+      cylinder pos,pos+X,crad 
+   endif
+   if j<n then 
+      cylinder pos,pos+Y,crad 
+   endif
+   if k<n then 
+      cylinder pos,pos+Z,crad 
+   endif
+  endfor
+ endfor
+endfor
+enddef
+
+gitter NULL,TIME*10,Y+Z

@@ -1,0 +1,125 @@
+# test-welt
+
+radradius=0.4
+raddicke=0.1
+raddicke2=raddicke/2
+radabstand=2
+spurbreite= 1.4
+spurbreite2=spurbreite/2
+zylinderlaenge=0.4
+zylinderrad=0.2
+
+rahmenrad=0.1
+
+mtime=TIME / 5
+
+fi1 = 10.1 * sin(mtime*20)
+
+fi = fi1 < -10 ? -10 : (fi1>10 ? 10 : fi1)
+
+rfi=fi*120*3
+rbo=radradius*0.75
+rby=sin(rfi)*rbo
+rbz=cos(rfi)*rbo
+rbv=<0,rby,rbz>
+
+rp1=<-raddicke2,0,0>
+rp2=<raddicke2,0,0>
+rp3=<raddicke2+raddicke,0,0>
+rp4=<raddicke2+raddicke+0.05,0,0>
+spur2=<spurbreite2,0,0>
+rh=radradius*Y
+ra=<0,0,radabstand>
+
+def gleis
+cylinder <spurbreite2,0,-100>, <spurbreite2,0,100>,0.02
+cylinder <-spurbreite2,0,-100>, <-spurbreite2,0,100>,0.02
+enddef
+
+def stange
+color WEISS
+cylinder NULL,ra,0.05
+enddef
+
+def raeder
+color ROT
+#rechts-vorn
+cylinder rp1+spur2+rh,rp2+spur2+rh, radradius
+cylinder rp2+spur2+rbv+rh, rp3+spur2+rbv+rh,0.08
+#links-vorn
+cylinder -rp1-spur2+rh,-rp2-spur2+rh,radradius
+cylinder -rp2-spur2-rbv+rh,  -rp3-spur2-rbv+rh,0.08
+#rechts-hinten
+cylinder rp1+spur2+rh+ra,rp2+spur2+rh+ra,radradius
+cylinder rp2+spur2+rbv+rh+ra, rp3+spur2+rbv+rh+ra,0.08
+#links-hinten
+cylinder -rp1-spur2+rh+ra,-rp2-spur2+rh+ra,radradius
+cylinder -rp2-spur2-rbv+rh+ra, -rp3-spur2-rbv+rh+ra,0.08
+#rechte stange
+stange rp3+spur2+rbv+rh,0,Y
+stange -rp3-spur2-rbv+rh,0,Y
+enddef
+
+# "Rahmen"
+rahmenbreite2=spurbreite2-rahmenrad-raddicke2
+p1=<rahmenbreite2,radradius,-radradius-0.5>
+p3=<-rahmenbreite2,radradius,-radradius-0.5>
+p2=<rahmenbreite2,radradius,radabstand+radradius+0.5>
+p4=<-rahmenbreite2,radradius,radabstand+radradius+0.5>
+
+def rahmen
+color BLAU
+cylinder p1,p2,rahmenrad
+cylinder p3,p4,rahmenrad
+cylinder p1,p3,rahmenrad
+cylinder p2,p4,rahmenrad
+sphere p1,rahmenrad
+sphere p2,rahmenrad
+sphere p3,rahmenrad
+sphere p4,rahmenrad
+enddef
+
+def kessel
+color BLAU
+kesselrad=rahmenbreite2+rahmenrad
+kesselp1=<0,radradius+kesselrad,-radradius>
+kesselp2=kesselp1+Z*radabstand
+cylinder kesselp1,kesselp2,kesselrad
+sphere kesselp1,kesselrad
+enddef
+
+def haus
+color GELB
+cylinder <0,radradius,radabstand+0.2>,<0,radradius+2.5,radabstand+0.2>,kesselrad
+enddef
+
+def antrieb
+cylinder rp4+rh+spur2+Z*(-radradius-0.1),rp4+rh+spur2+Z*(-radradius-0.1-0.8),0.2
+cylinder -rp4+rh-spur2+Z*(-radradius-0.1),-rp4+rh-spur2+Z*(-radradius-0.1-0.8),0.2
+
+color WEISS
+schub=-0.2+rbz
+sp1=rh+Z*(schub-1.5)
+sp2=rh+Z*schub
+schubl=-0.2-rbz
+sp1l=rh+Z*(schubl-1.5)
+sp2l=rh+Z*schubl
+
+cylinder sp2+spur2+rp4,sp1+spur2+rp4,0.05
+cylinder sp2l-spur2-rp4,sp1l-rp4-spur2,0.05
+cylinder sp2+spur2+rp4,rp4+spur2+rbv+rh+Z*(radabstand/2),0.05
+cylinder sp2l-spur2-rp4,-rp4-spur2-rbv+rh+Z*(radabstand/2),0.05
+enddef
+
+def lok
+rahmen NULL,0,Y
+raeder NULL,0,Y
+kessel NULL,0,Y
+antrieb NULL,0,Y
+gleis NULL,0,Y
+haus NULL,0,Y
+enddef
+
+s = (radradius*6.2828*0.3*rfi/120)-10
+
+lok -Z*s,0,Y

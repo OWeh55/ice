@@ -1,0 +1,85 @@
+# größe der "Koordinatenachsen" (anf,endn)
+endn=6
+anf=-endn
+# dicke der Koordinatenachse
+achsenDicke=0.05
+
+# dickes ende der Pfeilspitze
+pfeilDicke=achsenDicke*1.2
+send=endn+achsenDicke*5
+
+# Y Achse - unten .. oben
+oben=endn
+unten=anf
+
+def stab
+cylinder <0,unten,0>,<0,oben,0>,achsenDicke
+enddef
+
+def spitze
+polygon 
+<-pfeilDicke,endn,-pfeilDicke>    
+<-pfeilDicke,endn,pfeilDicke>
+<0,send,0>
+endpolygon
+polygon 
+<-pfeilDicke,endn,pfeilDicke>
+<pfeilDicke,endn,pfeilDicke>
+<0,send,0>
+endpolygon
+
+polygon 
+<pfeilDicke,endn,pfeilDicke>
+<pfeilDicke,endn,-pfeilDicke>
+<0,send,0>
+endpolygon
+
+polygon 
+<-pfeilDicke,endn,-pfeilDicke>
+<pfeilDicke,endn,-pfeilDicke>
+<0,send,0>
+endpolygon
+enddef
+
+def pfeil
+stab NULL,0,<1,0,0>
+spitze NULL,0,<1,0,0>
+enddef
+
+def coordinaten
+color ROT
+pfeil NULL,0,<1,0,0>
+color GRUEN
+pfeil NULL,-90,<0,0,1>
+color BLAU
+pfeil NULL,90,<1,0,0>
+enddef
+
+kurvenDicke=achsenDicke*1.1
+
+color <0.9,0.9,0.9>
+pa=<0,0,0>
+fistep=30
+for fi=-400 to 400 step fistep
+    x = radian(fi)
+    fix = fi 
+# - TIME * 360 / 5
+    fia = fix - fistep
+    p=<fi/100, cos(fix), sin(fix)>
+    pa=<(fi-fistep)/100, cos(fix-fistep), sin(fix-fistep)>
+    color <0.9,0.9,0.9>
+    cylinder p, pa, kurvenDicke
+    sphere p, kurvenDicke
+    if TIME>15 then
+    p2=<fi/100, cos(-fix), sin(-fix)>
+    pa2=<(fi-fistep)/100, cos(-fix+fistep), sin(-fix+fistep)>
+color <0.9,0.9,0.3>
+    cylinder p2, pa2, kurvenDicke
+   endif
+endfor
+
+#color <0.3,0.8,0.5>
+#polygon 
+#<-20,0,20>,< 20,0,20>,<20,0,-20>,<-20,0,-20>
+#endpolygon
+coordinaten NULL,0,Y

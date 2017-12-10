@@ -1,0 +1,114 @@
+# test für eine Welt
+
+#color WEISS
+color <1,1,1>
+
+endn=2
+anf=-endn
+dist=0.05
+dist2=dist*1.2
+send=endn+dist*5
+
+links=-dist
+rechts=dist
+vorn=-dist
+hinten=dist
+oben=endn
+unten=anf
+
+luv=<links,unten,vorn>
+luh=<links,unten,hinten>
+ruv=<rechts,unten,vorn>
+ruh=<rechts,unten,hinten>
+lov=<links,oben,vorn>
+loh=<links,oben,hinten>
+rov=<rechts,oben,vorn>
+roh=<rechts,oben,hinten>
+
+def stab
+cylinder <0,unten,0>,<0,oben,0>,dist
+enddef
+
+def stab1
+cylinder <0,unten,0>,<0,oben,0>,dist
+cylinder <0,unten,-0.67>,<0,unten,0.67>,dist
+cylinder <0,oben,-0.67>,<0,oben,0.67>,dist
+enddef
+
+breite=0.2
+
+def rad1
+stab1 NULL, 0, X
+stab1 NULL, 36, X
+stab1 NULL, 72, X
+stab1 NULL, -36, X
+stab1 NULL, -72, X
+enddef
+
+def rad
+rad1 -breite*X,0,X
+rad1 breite*X,0,X
+enddef
+
+s=50
+s2=s/2
+s4=s/4
+pi=3.14159265
+v=3
+omega=v*360/(2*pi*endn)
+phi=TIME*omega
+
+x = -((TIME*v+s4) % s - s2)*Z
+
+rad x+endn*Y,-TIME*omega,X
+
+x1=-((TIME*v+s2) % s - s2)*Z
+rad x1+endn*Y,-TIME*omega,X
+
+x2= -((TIME*v+s2+s4) % s - s2)*Z
+rad x2+endn*Y,-TIME*omega,X
+
+x3= -(TIME*v % s - s2)*Z
+rad x3+endn*Y,-TIME*omega,X
+
+#---------------------------------------------------
+def spitze
+polygon 
+<-dist2,endn,-dist2>	
+<-dist2,endn,dist2>
+<0,send,0>
+endpolygon
+polygon 
+<-dist2,endn,dist2>
+<dist2,endn,dist2>
+<0,send,0>
+endpolygon
+
+polygon 
+<dist2,endn,dist2>
+<dist2,endn,-dist2>
+<0,send,0>
+endpolygon
+
+polygon 
+<-dist2,endn,-dist2>
+<dist2,endn,-dist2>
+<0,send,0>
+endpolygon
+enddef
+
+def pfeil
+stab NULL,0,<1,0,0>
+spitze NULL,0,<1,0,0>
+enddef
+
+def coordinaten
+color ROT
+pfeil NULL,0,<1,0,0>
+color GRUEN
+pfeil NULL,-90,<0,0,1>
+color BLAU
+pfeil NULL,90,<1,0,0>
+enddef
+
+coordinaten NULL,0,Y

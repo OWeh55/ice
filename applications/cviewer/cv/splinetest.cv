@@ -1,0 +1,51 @@
+spline xp cubic
+NULL
+-X+0.1*Y
+-Z+0.2*Y
+X+0.3*Y
+Z+0.4*Y
+-X+0.5*Y
+-Z+0.6*Y
+X+0.7*Y
+Z+0.8*Y
+-X+0.9*Y
+-Z+1.0*Y
+X+1.1*Y
+Z+1.2*Y
+NULL+1.3*Y
+endspline
+
+spline xpl linear
+NULL
+-X+0.1*Y
+-Z+0.2*Y
+X+0.3*Y
+Z+0.4*Y
+-X+0.5*Y
+-Z+0.6*Y
+X+0.7*Y
+Z+0.8*Y
+-X+0.9*Y
+-Z+1.0*Y
+X+1.1*Y
+Z+1.2*Y
+NULL+1.3*Y
+endspline
+
+mtime=TIME*0.2
+mstep=0.1
+
+for i=mtime+0 to mtime+13.99 step mstep
+# r=0.08*(1-i/15)
+r=0.02
+color GELB
+ sphere xp[i],r
+color ROT
+ cylinder xp[i],xp[i+mstep],0.1*r
+color GRUEN
+ sphere xpl[i],r
+color BLAU
+ cylinder xpl[i],xpl[i+mstep],0.1*r
+ cylinder xp[i], xpl[i],0.01
+endfor
+

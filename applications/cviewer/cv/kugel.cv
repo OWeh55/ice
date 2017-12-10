@@ -1,0 +1,25 @@
+# light <0.1,0.1,0.1>
+l1=<1,1,2>
+l2=<-1,0,2>
+light <1,.5,.2>,l1*150
+light <.8,.8,1>,l2*150
+
+color YELLOW
+sphere <0,0,0>, 1
+
+radius=60
+fstep=12
+color WEISS
+for j=-90 to 89 step fstep*2
+for i1=0 to 359 step fstep*2
+color WEISS
+i=i1+TIME*20
+p1=<radius*cos(i)*cos(j),radius*sin(j),radius*sin(i)*cos(j)>
+p2=<radius*cos(i+fstep)*cos(j),radius*sin(j),radius*sin(i+fstep)*cos(j)>
+p3=<radius*cos(i+fstep)*cos(j+fstep),radius*sin(j+fstep),radius*sin(i+fstep)*cos(j+fstep)>
+p4=<radius*cos(i)*cos(j+fstep),radius*sin(j+fstep),radius*sin(i)*cos(j+fstep)>
+polygon 
+p4,p3,p2,p1
+endpolygon
+endfor
+endfor 

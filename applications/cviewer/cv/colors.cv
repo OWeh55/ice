@@ -1,0 +1,43 @@
+color GRAY
+polygon
+	<-100,-100,-200>
+	<-100,100,-200>
+	<100,100,-200>
+	<100,-100,-200>
+endpolygon
+
+light <1,0,0>,<100,120,100>
+light <0,1,1>,<-100,120,100>
+
+color BLACK
+sphere <-20,-20,-180>,5
+color MAROON
+sphere <0,-20,-180>,5
+color GREEN*0.5
+sphere <20,-20,-180>,5
+color OLIVE
+sphere <40,-20,-180>,5
+color NAVY
+sphere <-20,0,-180>,5
+color PURPLE
+sphere <0,0,-180>,5
+color TEAL
+sphere <20,0,-180>,5
+color SILVER
+sphere <40,0,-180>,5
+color GRAY
+sphere <-20,20,-180>,5
+color RED
+sphere <0,20,-180>,5
+color LIME
+sphere <20,20,-180>,5
+color YELLOW
+sphere <40,20,-180>,5
+color BLUE
+sphere <-20,40,-180>,5
+color FUCHSIA
+sphere <0,40,-180>,5
+color AQUA
+sphere <20,40,-180>,5
+color WHITE
+sphere <40,40,-180>,5

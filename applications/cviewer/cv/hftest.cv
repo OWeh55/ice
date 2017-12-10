@@ -1,0 +1,13 @@
+
+light <1,1,1>,<150,50,99>
+light <0.7,0.3,0>,<-150,50,99>
+
+color <0.5,0.5,0.5>
+
+def HF
+heightfield "test16.pgm",NULL,Z*5,X*5,-Y*2
+#heightfield "test16.pgm",NULL,X*5,Y*5,-Z*5
+enddef
+
+#sphere NULL,1
+HF NULL+Y,0,X
