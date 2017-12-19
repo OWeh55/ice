@@ -103,8 +103,9 @@ double downsize(const matrix<double>& big, matrix<double>& m)
   return sum;
 }
 
-double makeLine(matrix<double>& m, double len, double phi)
+double makeLine(matrix<double>& m, double len, double phi_degree)
 {
+  double phi=Arcus(phi_degree);
   int size = int(2 * (len + 1.0));
   int bigSize = size * iFactor;
   m.resize(size, size);
@@ -223,17 +224,21 @@ prog: Invertierung der Faltung
 para: file,optional,string,fn,Bild-Datei,""
 %
 opt: b, beta, double, beta, Regularisierungsparameter, 0.001
-opt: f, factor, double, factor, Faktor für Faltung(0.0=auto), 0.0
+opt: f, factor, double, factor, Faktor für Faltung (0.0=auto), 0.0
 opt: d, deconvolution, void, deconv, Nur inverse Faltung, false
 opt: m, maskmode, int, maskMode, Modus für [Ent-]Faltungsmaske, 1
 opt2:   m = 1  Kreisscheibe
 opt2:   m = 2  Linie / Bewegungsunschärfe
 opt: M, maskfile, string, maskFilename, Lies Maske aus Datei, ""
 opt: r, radius, double, radius, Ausdehnung der Maske, 10
-opt: p, phi, double, phi, Orientierung der Maske, 0
+opt: p, phi, double, phi, Orientierung der Maske (°), 0
 opt: q, quantize, void, simulateQuantization, Simuliere Quantisierung, false
 opt: i, interactive, void, interactive, Interaktive Parameterwahl, false
-
+opt: D, display, int, displayMode, Darstellung, 15
+opt2:    1 - Original
+opt2:    2 - Maske
+opt2:    4 - gefaltet
+opt2:    8 - restauriert
 opt: o, output, string, outfile, Datei-Name für Bildausgabe, ""
 opt: v, verbose, void,verbose,Anzeige der Abarbeitung, false
 opt: h, help, usage, help, Hilfe
@@ -275,7 +280,8 @@ int main(int argc, char* argv[])
       if (!maskFilename.empty())
         maskMode = 99;
 
-      Show(ON, src, "Original");
+      if (displayMode & 1)
+	Show(ON, src, "Original");
 
       int xSize = src.xsize;
       int ySize = src.ysize;
@@ -296,7 +302,8 @@ int main(int argc, char* argv[])
       Image mask;
       mask.create(src);
 
-      Show(ON, mask, "Filter-Maske");
+      if (displayMode & 2)
+	Show(ON, mask, "Filter-Maske");
 
       //Maske kreieren
       double maskNorm;
@@ -368,10 +375,12 @@ int main(int argc, char* argv[])
       ft2.setParameter(src.ysize, src.xsize, false);
       ft2.setInput(destSp.real, destSp.imag);
       // cout << "Input set" << endl;
-      Image dest = NewImg(src);
+      Image dest;
+      dest.create(src);
       ft2.getResult(dest, ADAPTIVE);
       // cout << "output get" < <endl;
-      Show(ON, dest, "Gefaltetes Bild");
+      if (displayMode & 4)
+	Show(ON, dest, "Gefaltetes Bild");
 
       if (simulateQuantization)
         {
@@ -381,8 +390,10 @@ int main(int argc, char* argv[])
           ft2.getResult(destSp.real, destSp.imag);
         }
 
-      Image rest = NewImg(src);
-      Show(ON, rest, "Restauriert");
+      Image rest;
+      rest.create(src);
+      if (displayMode & 8)
+	Show(ON, rest, "Restauriert");
       ComplexImage restSp;
       restSp.create(xSize, ySize);
 
@@ -391,7 +402,7 @@ int main(int argc, char* argv[])
           if (verbose)
             cout << "InvConvolutionImg" << endl;
 
-          InvConvolutionImg(mask, dest, rest, factor / maskNorm, beta);
+          InvConvolution(mask, dest, rest, factor / maskNorm, beta);
           GetChar();
         }
       else
@@ -401,12 +412,20 @@ int main(int argc, char* argv[])
           double radiusAlt = radius;
           double phiAlt = phi;
           double deltaR = 0.5;
-          double deltaPhi = 0.1;
+          double deltaPhi = 5;  // degree
           char iMode = 'R';
           while (!done)
             {
-              Printf("Radius: %4.2f (d: %4.2f)  Phi: %3.3f (d: %4.2f) beta: %6.1e  factor: %6.1e\n", radius, deltaR, phi, deltaPhi, beta, factor);
+              Printf("radius: %4.2f (d: %4.2f)  phi: %5.3f "
+		     "(d: %4.1f) beta: %6.1e  factor: %6.1e\n", 
+		     radius, deltaR, phi, deltaPhi, beta, factor);
 
+	      Printf("R/r - radius groesser/kleiner\n");
+	      Printf("P/p - phi groesser/kleiner\n");
+	      Printf("B/b - beta groesser/kleiner\n");
+	      Printf("F/f - factor groesser/kleiner\n");
+	      Printf("0   - factor gleich Null == adaptive\n");
+	      Printf("+/- - Schrittweite (radius/phi) groesser/kleiner\n");
               if (changed)
                 {
                   // Spektren von Maske und zu restaurierenden Bild sind gültig
@@ -491,6 +510,9 @@ int main(int argc, char* argv[])
                       factor = 0.001;
                   factor *= sqrt(sqrt(10));
                   break;
+		case '0':
+		  factor=0;
+		  break;
                 case'X':
                 case'x':
                 case'Q':
