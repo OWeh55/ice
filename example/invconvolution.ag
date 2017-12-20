@@ -418,7 +418,7 @@ int main(int argc, char* argv[])
           if (displayMode == 16)
             {
               v = Show(GRAY, display);
-              select = 3; // display restored image
+              select = 4; // display restored image
             }
 
           bool done = false;
