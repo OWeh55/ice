@@ -105,7 +105,7 @@ double downsize(const matrix<double>& big, matrix<double>& m)
 
 double makeLine(matrix<double>& m, double len, double phi_degree)
 {
-  double phi=Arcus(phi_degree);
+  double phi = Arcus(phi_degree);
   int size = int(2 * (len + 1.0));
   int bigSize = size * iFactor;
   m.resize(size, size);
@@ -239,6 +239,7 @@ opt2:    1 - Original
 opt2:    2 - Maske
 opt2:    4 - gefaltet
 opt2:    8 - restauriert
+opt2:    16 - interaktiv
 opt: o, output, string, outfile, Datei-Name für Bildausgabe, ""
 opt: v, verbose, void,verbose,Anzeige der Abarbeitung, false
 opt: h, help, usage, help, Hilfe
@@ -250,6 +251,9 @@ int main(int argc, char* argv[])
   /*AppGen:MainEnd*/
   try
     {
+      if (displayMode & 16) // interakiv?
+        displayMode = 16;   // disable all other displays
+
       Image src;
 
       if (!fn.empty())
@@ -281,7 +285,7 @@ int main(int argc, char* argv[])
         maskMode = 99;
 
       if (displayMode & 1)
-	Show(ON, src, "Original");
+        Show(ON, src, "Original");
 
       int xSize = src.xsize;
       int ySize = src.ysize;
@@ -303,7 +307,7 @@ int main(int argc, char* argv[])
       mask.create(src);
 
       if (displayMode & 2)
-	Show(ON, mask, "Filter-Maske");
+        Show(ON, mask, "Filter-Maske");
 
       //Maske kreieren
       double maskNorm;
@@ -380,7 +384,7 @@ int main(int argc, char* argv[])
       ft2.getResult(dest, ADAPTIVE);
       // cout << "output get" < <endl;
       if (displayMode & 4)
-	Show(ON, dest, "Gefaltetes Bild");
+        Show(ON, dest, "Gefaltetes Bild");
 
       if (simulateQuantization)
         {
@@ -393,7 +397,7 @@ int main(int argc, char* argv[])
       Image rest;
       rest.create(src);
       if (displayMode & 8)
-	Show(ON, rest, "Restauriert");
+        Show(ON, rest, "Restauriert");
       ComplexImage restSp;
       restSp.create(xSize, ySize);
 
@@ -407,6 +411,16 @@ int main(int argc, char* argv[])
         }
       else
         {
+          Image display;
+          display.create(src);
+          int select = 0; // no (special) display
+          Visual v = nullptr;
+          if (displayMode == 16)
+            {
+              v = Show(GRAY, display);
+              select = 3; // display restored image
+            }
+
           bool done = false;
           bool changed = true;
           double radiusAlt = radius;
@@ -417,15 +431,16 @@ int main(int argc, char* argv[])
           while (!done)
             {
               Printf("radius: %4.2f (d: %4.2f)  phi: %5.3f "
-		     "(d: %4.1f) beta: %6.1e  factor: %6.1e\n", 
-		     radius, deltaR, phi, deltaPhi, beta, factor);
+                     "(d: %4.1f) beta: %6.1e  factor: %6.1e\n",
+                     radius, deltaR, phi, deltaPhi, beta, factor);
 
-	      Printf("R/r - radius groesser/kleiner\n");
-	      Printf("P/p - phi groesser/kleiner\n");
-	      Printf("B/b - beta groesser/kleiner\n");
-	      Printf("F/f - factor groesser/kleiner\n");
-	      Printf("0   - factor gleich Null == adaptive\n");
-	      Printf("+/- - Schrittweite (radius/phi) groesser/kleiner\n");
+              Printf("R/r - radius groesser/kleiner\n");
+              Printf("P/p - phi groesser/kleiner\n");
+              Printf("B/b - beta groesser/kleiner\n");
+              Printf("F/f - factor groesser/kleiner\n");
+              Printf("0   - factor gleich Null == adaptive\n");
+              Printf("+/- - Schrittweite (radius/phi) groesser/kleiner\n");
+              Printf("D   - naechster Darstellungsmodus");
               if (changed)
                 {
                   // Spektren von Maske und zu restaurierenden Bild sind gültig
@@ -458,6 +473,22 @@ int main(int argc, char* argv[])
                     ft2.getResult(rest, ADAPTIVE, SIGNED);
                   else
                     ft2.getResult(rest, RAW, SIGNED);
+                }
+
+              switch (select)
+                {
+                case 1:
+                  CopyImg(src, display);
+                  break;
+                case 2:
+                  CopyImg(mask, display);
+                  break;
+                case 3:
+                  CopyImg(dest, display);
+                  break;
+                case 4:
+                  CopyImg(rest, display);
+                  break;
                 }
 
               int c = GetChar();
@@ -510,9 +541,14 @@ int main(int argc, char* argv[])
                       factor = 0.001;
                   factor *= sqrt(sqrt(10));
                   break;
-		case '0':
-		  factor=0;
-		  break;
+                case '0':
+                  factor = 0;
+                  break;
+                case 'D':
+                  select++;
+                  if (select > 4)
+                    select = 1;
+                  break;
                 case'X':
                 case'x':
                 case'Q':
