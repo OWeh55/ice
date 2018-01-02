@@ -1,0 +1,115 @@
+#include <image.h>
+#include <fouriertrafo2d.h>
+#include <fouriertrafo.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+prog: Shift estimation
+%%Beschreibung Parameter
+%symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
+para: file1,required,string,fn1,First image file,""
+para: file2,optional,string,fn2,Second image file,""
+%
+opt: b, beta, double, beta, Regularisation parameter, 0.01
+opt: s, sizes, int, windowSize, Windowsize, 128
+opt: l, linked, void, linkedWindows, Same window in both images, false
+opt: v, verbose, void,verbose,Anzeige der Abarbeitung, false
+opt: h, help, usage, help, Hilfe
+AppGen*/
+
+void mark(Image& mi, Window w, int color)
+{
+  Line(w.p1.x, w.p1.y, w.p1.x, w.p2.y, color, mi);
+  Line(w.p1.x, w.p1.y, w.p2.x, w.p1.y, color, mi);
+  Line(w.p2.x, w.p2.y, w.p1.x, w.p2.y, color, mi);
+  Line(w.p2.x, w.p2.y, w.p2.x, w.p1.y, color, mi);
+}
+
+void mark(Image& mi, Window& alt, Window neu, int color)
+{
+  mark(mi, alt, 0);
+  mark(mi, neu, color);
+  alt = neu;
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      if (fn2.empty())
+        fn2 = fn1;
+      if (fn1.empty())
+        throw "No filename given";
+
+      Image img1;
+      if (verbose)
+        cout << "reading image one" << endl;
+      img1.read(fn1);
+      Image mark1;
+      mark1.create(img1);
+      mark1.set(0);
+
+      Show(OVERLAY, img1, mark1);
+
+      Image img2;
+      if (verbose)
+        cout << "reading image two" << endl;
+      img2.read(fn2);
+      Image mark2;
+      mark2.create(img2);
+      Show(OVERLAY, img2, mark2);
+      mark2.set(0);
+
+      ImageD peak;
+      if (verbose)
+        cout << "creating peak image" << endl;
+      peak.create(windowSize, windowSize);
+      Show(GRAY, peak);
+      Window w1a, w2a;
+      bool cont = true;
+      while (cont)
+        {
+          Point p1 = SelPoint(img1);
+          IPoint p1i(p1.x, p1.y);
+          Window w1(p1i, windowSize);
+          if (img1.inside(w1))
+            {
+              mark(mark1, w1a, w1, 2);
+              Point p2;
+              if (linkedWindows)
+                p2 = p1;
+              else
+                p2 = SelPoint(img2);
+              IPoint p2i(p2.x, p2.y);
+              Window w2(p2i, windowSize);
+              if (img2.inside(w2))
+                {
+                  mark(mark2, w2a, w2, 2);
+                  InvConvolution(img1(w1), img2(w2), peak, beta, MD_IGNORE_BIAS);
+                  peak.adaptLimits();
+                  WindowWalker w(peak);
+                  Point maxp;
+                  double maxv = peak.getPixel(0, 0);
+                  for (w.init(); !w.ready(); w.next())
+                    {
+                      if (peak.getPixel(w) > maxv)
+                        {
+                          maxp = w;
+                          maxv = peak.getPixel(w);
+                        }
+                    }
+                  cout << (maxp - Point(windowSize / 2, windowSize / 2)) << endl;
+                }
+            }
+        }
+
+    }
+  catch (const char* msg)
+    {
+      cout << "Exception: " << msg << endl;
+    }
+  return OK;
+}

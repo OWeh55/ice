@@ -140,7 +140,7 @@ int main(int argc, char** argv)
   if (subPixelFactor != 1)
     {
       imgxhp = NewImgD(imghp.xsize * subPixelFactor, imghp.ysize * subPixelFactor);
-      SetImgD(imgxhp, 0.0);
+      imgxhp.set(0.0);
 
       for (int y = 0; y < imghp.ysize; y++)
         {

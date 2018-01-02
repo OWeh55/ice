@@ -65,7 +65,7 @@ void Trans(void)
     {
       Printf("Transforming %d\n", i);
       hmark1 = NewImg(img[i]->xsize, img[i]->ysize, 7);
-      SetImg(hmark1, 7);
+      setImg(hmark1, 7);
 
       // Markierungsbild zur Bestimmung gültiger Pixel
       mrk_m[i] = NewImg(dxs, dys, 7);

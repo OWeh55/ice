@@ -223,7 +223,7 @@ prog: Invertierung der Faltung
 %symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
 para: file,optional,string,fn,Bild-Datei,""
 %
-opt: b, beta, double, beta, Regularisierungsparameter, 0.001
+opt: b, beta, double, beta, Regularisierungsparameter, 0.01
 opt: f, factor, double, factor, Faktor für Faltung (0.0=auto), 0.0
 opt: d, deconvolution, void, deconv, Nur inverse Faltung, false
 opt: m, maskmode, int, maskMode, Modus für [Ent-]Faltungsmaske, 1
@@ -244,6 +244,67 @@ opt: o, output, string, outfile, Datei-Name für Bildausgabe, ""
 opt: v, verbose, void,verbose,Anzeige der Abarbeitung, false
 opt: h, help, usage, help, Hilfe
 AppGen*/
+
+void split(double& r, double& m, int& pot)
+{
+  constexpr double limit = sqrt(10 * 5);
+  m = r;
+  pot = 0;
+  while (m >= limit)
+    {
+      m = m / 10.0;
+      pot++;
+    }
+  while (m < limit / 10)
+    {
+      m = m * 10.0;
+      pot--;
+    }
+}
+
+double combine(double m, int pot)
+{
+  double res = m;
+  if (pot < 0)
+    for (int k = 0; k < -pot; k++)
+      res /= 10;
+  else
+    for (int k = 0; k < pot; k++)
+      res *= 10;
+  return res;
+}
+
+void inc(double& r)
+{
+  double m;
+  int pot;
+  split(r, m, pot);
+  constexpr double l1 = sqrt(1.0 * 2.0);
+  constexpr double l2 = sqrt(2.0 * 5.0);
+  if (m < l1)
+    m = 2.0;
+  else if (m < l2)
+    m = 5.0;
+  else
+    m = 10.0;
+  r = combine(m, pot);
+}
+
+void dec(double& r)
+{
+  double m;
+  int pot;
+  split(r, m, pot);
+  constexpr double l1 = sqrt(1.0 * 2.0);
+  constexpr double l2 = sqrt(2.0 * 5.0);
+  if (m < l1)
+    m = 0.5;
+  else if (m < l2)
+    m = 1.0;
+  else
+    m = 2.0;
+  r = combine(m, pot);
+}
 
 /*AppGen:Main*/
 int main(int argc, char* argv[])
@@ -414,10 +475,9 @@ int main(int argc, char* argv[])
           Image display;
           display.create(src);
           int select = 0; // no (special) display
-          Visual v = nullptr;
           if (displayMode == 16)
             {
-              v = Show(GRAY, display);
+              Show(GRAY, display);
               select = 4; // display restored image
             }
 
@@ -430,6 +490,7 @@ int main(int argc, char* argv[])
           char iMode = 'R';
           while (!done)
             {
+              ClearAlpha();
               Printf("radius: %4.2f (d: %4.2f)  phi: %5.3f "
                      "(d: %4.1f) beta: %6.1e  factor: %6.1e\n",
                      radius, deltaR, phi, deltaPhi, beta, factor);
@@ -440,7 +501,8 @@ int main(int argc, char* argv[])
               Printf("F/f - factor groesser/kleiner\n");
               Printf("0   - factor gleich Null == adaptive\n");
               Printf("+/- - Schrittweite (radius/phi) groesser/kleiner\n");
-              Printf("D   - naechster Darstellungsmodus");
+              if (select != 0)
+                Printf("D   - naechster Darstellungsmodus\n");
               if (changed)
                 {
                   // Spektren von Maske und zu restaurierenden Bild sind gültig
@@ -498,15 +560,15 @@ int main(int argc, char* argv[])
                 {
                 case '+':
                   if (iMode == 'R')
-                    deltaR *= 2;
+                    inc(deltaR);
                   else
-                    deltaPhi *= 2;
+                    inc(deltaPhi);
                   break;
                 case '-':
                   if (iMode == 'R')
-                    deltaR /= 2;
+                    dec(deltaR);
                   else
-                    deltaPhi /= 2;
+                    dec(deltaPhi);
                   break;
                 case'r':
                   iMode = 'R';
@@ -533,12 +595,12 @@ int main(int argc, char* argv[])
                   break;
                 case'f':
                     if (factor == 0)
-                      factor = 0.001;
+                      factor = 1.0;
                   factor /= sqrt(sqrt(10));
                   break;
                 case'F':
                     if (factor == 0)
-                      factor = 0.001;
+                      factor = 1.0;
                   factor *= sqrt(sqrt(10));
                   break;
                 case '0':
