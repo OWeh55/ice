@@ -12,9 +12,10 @@ para: file1,required,string,fn1,First image file,""
 para: file2,optional,string,fn2,Second image file,""
 %
 opt: b, beta, double, beta, Regularisation parameter, 0.01
-opt: s, sizes, int, windowSize, Windowsize, 128
+opt: s, sizes, int, windowSize, Window size, 128
+opt: w, windowing, void, windowing, Use windowing, false
 opt: l, linked, void, linkedWindows, Same window in both images, false
-opt: v, verbose, void,verbose,Anzeige der Abarbeitung, false
+opt: v, verbose, void,verbose, Be verbose, false
 opt: h, help, usage, help, Hilfe
 AppGen*/
 
@@ -69,6 +70,11 @@ int main(int argc, char* argv[])
       peak.create(windowSize, windowSize);
       Show(GRAY, peak);
       Window w1a, w2a;
+      Image wimg1;
+      wimg1.create(windowSize, windowSize, img1.maxval);
+      Image wimg2;
+      wimg2.create(windowSize, windowSize, img2.maxval);
+
       bool cont = true;
       while (cont)
         {
@@ -88,7 +94,18 @@ int main(int argc, char* argv[])
               if (img2.inside(w2))
                 {
                   mark(mark2, w2a, w2, 2);
-                  InvConvolution(img1(w1), img2(w2), peak, beta, MD_IGNORE_BIAS);
+                  if (windowing)
+                    {
+                      Windowing(img1(w1), wimg1);
+                      Windowing(img2(w2), wimg2);
+                    }
+                  else
+                    {
+                      CopyImg(img1(w1), wimg1);
+                      CopyImg(img2(w2), wimg2);
+                    }
+
+                  InvConvolution(wimg1, wimg2, peak, beta, MD_IGNORE_BIAS);
                   peak.adaptLimits();
                   WindowWalker w(peak);
                   Point maxp;
@@ -101,7 +118,15 @@ int main(int argc, char* argv[])
                           maxv = peak.getPixel(w);
                         }
                     }
-                  cout << (maxp - Point(windowSize / 2, windowSize / 2)) << endl;
+                  // Marker(2,peak,3,5,peak);
+                  //      Neighbor8Walker ww(IPoint(maxp));
+                  //      for (ww.init();!ww.ready();ww.next())
+                  //        peak.setPixel(ww,0);
+                  Point dp = maxp - Point(windowSize / 2, windowSize / 2);
+                  Point dp2 = 0.5 * dp;
+                  Marker(1, p1 - dp2, 3, 5, mark1);
+                  Marker(1, p2 + dp2, 3, 5, mark2);
+                  cout << dp << endl;
                 }
             }
         }
