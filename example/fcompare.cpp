@@ -355,7 +355,8 @@ int main(int argc, char* argv[])
                       if (bw)
                         v2 = ColorValue(v2.getGray());
 
-                      dif.setPixel(x, y, v1.Limited(dif.maxval));
+                      ColorValue vc(v1.red, v2.green, v2.blue);
+                      dif.setPixel(x, y, vc.Limited(dif.maxval));
 
                     }
                 }
