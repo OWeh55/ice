@@ -104,6 +104,7 @@ namespace ice
       }
     cmdline += " \'" + filename + "\'";
 
+
     // cout << cmdline << endl;
 
     fd = exopen(cmdline, FWMODUS);
@@ -135,9 +136,9 @@ namespace ice
         WritePBMImg(ir, ig, ib, fd);
 
         framenr++;
+	return true;
       }
     RETHROW;
-    return true;
   }
 #undef FNAME
 }
