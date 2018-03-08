@@ -136,7 +136,7 @@ namespace ice
         WritePBMImg(ir, ig, ib, fd);
 
         framenr++;
-	return true;
+        return true;
       }
     RETHROW;
   }

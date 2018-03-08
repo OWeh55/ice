@@ -519,6 +519,15 @@ namespace ice
      * @return interpolated value
      */
     double getPixelInterpol(double x, double y) const;
+
+    /**
+     * get value interpolated.
+     * Returns an interpolated value for Point (with floating point coordinates)
+     * @param p coordinates
+     * @return interpolated value
+     */
+    double getPixelInterpol(Point p) const;
+
     /**
      * get value interpolated.
      * Returns an interpolated value for floating point coordinates

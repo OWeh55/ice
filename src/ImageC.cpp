@@ -218,6 +218,11 @@ namespace ice
       }
   }
 #undef FNAME
+  double Image::getPixelInterpol(Point p) const
+  {
+    return getPixelInterpol(p.x, p.y);
+  }
+
   double Image::getPixelInterpol(double x, double y) const
   {
     // if x and y are too far outside the image border, we simply return zero

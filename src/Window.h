@@ -96,6 +96,11 @@ namespace ice
       return inside(p.x, p.y);
     }
 
+    inline bool inside(const Point& p) const
+    {
+      return inside(RoundInt(p.x), RoundInt(p.y));
+    }
+
     inline bool inside(int x, int y) const
     {
       return !((x < p1.x) || (y < p1.y) || (x > p2.x) || (y > p2.y));

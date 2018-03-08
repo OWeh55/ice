@@ -452,6 +452,11 @@ namespace ice
         }
     }
 
+    double getPixelInterpol(Point p) const
+    {
+      return getPixelInterpol(p.x, p.y);
+    }
+
     bool getPixelInterpol(double x, double y, double& val) const
     {
       // if x and y are to far outside the image border, we simply return 0.0
