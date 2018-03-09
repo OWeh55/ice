@@ -103,6 +103,7 @@ namespace ice
    * @param img1 the first source image
    * @param img2 the second source image
    * @param dest the destination image
+   * @param mode defines how the result is adjusted to the properties of dest
    */
   void maxImg(const ColorImage& img1, const ColorImage& img2, const ColorImage& dest,
               int mode = MD_LIMIT);
@@ -115,6 +116,7 @@ namespace ice
    * @param img1 the first source image
    * @param img2 the second source image
    * @param dest the destination image
+   * @param mode defines how the result is adjusted to the properties of dest
    */
   void minImg(const ColorImage& img1, const ColorImage& img2,
               const ColorImage& dest,
@@ -183,7 +185,7 @@ namespace ice
    * @param dest destination image
    * @param n1 size of the first filter
    * @param n2 size of the second filter
-   * @param mode mode of the subtraction (see above for available modes)
+   * @param smode mode of the subtraction (see above for available modes)
    */
   void DoBImg(const ColorImage& src, const ColorImage& dest, int n1, int n2,
               int smode = SMD_SHIFT);

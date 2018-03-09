@@ -131,6 +131,7 @@ namespace ice
     /**
      * "named constructor" which creates real image from template image.
      * creates an image with same size and limits
+     * @param src - template image
      * @param copy - copy content of image
      */
     static ImageF createImage(const ImageF& src, bool copy = false)
@@ -167,15 +168,16 @@ namespace ice
     /**
      * method to [re]create image, old content is lost.
      * creates an image with same size and limits
-     * @param copy - copy content of image
+     * @param templateImage - template image
+     * @param shallCopy - copy content of image
      */
-    void create(const ImageF<T>& templateImg, bool shallCopy = false)
+    void create(const ImageF<T>& templateImage, bool shallCopy = false)
     {
-      create(templateImg.xsize, templateImg.ysize,
-             templateImg.minValue(), templateImg.maxValue());
+      create(templateImage.xsize, templateImage.ysize,
+             templateImage.minValue(), templateImage.maxValue());
       if (shallCopy)
         {
-          copy(templateImg);
+          copy(templateImage);
         }
     }
 

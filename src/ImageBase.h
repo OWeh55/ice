@@ -93,16 +93,17 @@ namespace ice
      * set values for a pixel at (posX, posY)
      * this is totally unchecked !!
      * @param posX, posY coordinates
+     * @param value value to set
      */
-    virtual void setP(int PosX, int PosY,
-                      int Value) = 0;
+    virtual void setP(int posX, int posY,
+                      int value) = 0;
 
     /**
      * get values for a pixel at (posX, posY)
      * this is totally unchecked !!
      * @param posX, posY coordinates
      */
-    virtual int getP(int PosX, int PosY) const = 0;
+    virtual int getP(int posX, int posY) const = 0;
 
     // functions for organizing low level access to image data
     /**

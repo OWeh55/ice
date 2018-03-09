@@ -55,7 +55,7 @@ namespace ice
   /**
    * Searches the image for its maximum value
    *
-   * @param img the image to be browsed
+   * @param imgD the image to be browsed
    * @param mark values != 0 in this image mark ignored pixel
    * @return the position of unmarked maximum
    */

@@ -113,7 +113,7 @@ namespace ice
 
     /**
      * initialization of a given matrix.
-     * @param mode\n
+     * @param mode initialization mode \n
      *  mode = 0   all values zero.\n
      *  mode = 1   unit matrix.\n
      */

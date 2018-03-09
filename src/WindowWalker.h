@@ -57,7 +57,7 @@ namespace ice
      * @param sizeX, sizeY size of window (in pixel). If sizeY is
      * not given a square window is assumed.
      */
-    WindowWalker(IPoint center, int sizex, int sizey = -1);
+    WindowWalker(IPoint center, int sizeX, int sizeY = -1);
 
     /**
      * c'tor with Image.

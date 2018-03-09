@@ -48,11 +48,6 @@ namespace ice
 {
 
 #define FNAME "setImg"
-  /**
-   * does not depend on the colorspace
-   * the user has the posibility to fill the channels independent
-   * from the current colorspace
-   */
   void setImg(const ColorImage& img, unsigned int val)
   {
     img.redImage().set(val);

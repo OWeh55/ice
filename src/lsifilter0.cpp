@@ -315,7 +315,6 @@ namespace ice
    * @param ny the vertical size of the filter mask
    * @param mask the filter mask (_integer_ values)
    * @param norm the normalization factor
-   * @param offset the value representing 0 in destination image
    */
   template<typename SrcType>
   void lsiimg(const Image& src, ImageD dest,
@@ -420,7 +419,6 @@ namespace ice
    * @param nx the horizontal size of the filter mask
    * @param ny the vertical size of the filter mask
    * @param mask the filter mask (scaling factor included in the double values)
-   * @param offset the value representing 0 in destination image
    */
   template<typename SrcType>
   void lsiimg(const Image& src, ImageD dest,

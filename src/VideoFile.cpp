@@ -44,7 +44,7 @@ namespace ice
   }
 
 #define FNAME "VideoFile::VideoFile"
-  VideoFile::VideoFile(const string& fn, ios_base::openmode mode):
+  VideoFile::VideoFile(const string& fn, std::ios_base::openmode mode):
     reader(nullptr),
     writer(nullptr),
     filename(fn)

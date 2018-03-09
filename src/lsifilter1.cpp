@@ -149,7 +149,6 @@ namespace ice
    * @param ny the vertical size of the filter mask
    * @param mask the filter mask (only integer values)
    * @param norm the scaling factor
-   * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(const Image& src, ImageD dest,
               int nx, int ny, const int* mask,
@@ -177,7 +176,6 @@ namespace ice
    * @param nx the horizontal size of the filter mask
    * @param ny the vertical size of the filter mask
    * @param mask the filter mask (scaling factor included in the double values)
-   * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(const Image& src, ImageD dest,
               int nx, int ny, const double* mask)
@@ -205,7 +203,6 @@ namespace ice
    * @param ny the vertical size of the filter mask
    * @param mask the filter mask (only integer values)
    * @param norm the scaling factor
-   * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(ImageD src, ImageD dest,
               int nx, int ny, const int* mask,
@@ -228,7 +225,6 @@ namespace ice
    * @param nx the horizontal size of the filter mask
    * @param ny the vertical size of the filter mask
    * @param mask the filter mask (scaling factor included in the double values)
-   * @param offset the value representing 0 (to handle negative results)
    */
   void LSIImg(ImageD src, ImageD dest,
               int nx, int ny, const double* mask)

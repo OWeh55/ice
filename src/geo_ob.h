@@ -113,10 +113,15 @@ namespace ice
     /**
      * Shift by distance
      *
-     * @param xp  x shift
-     * @param yp  y shift
+     * @param dx  x shift
+     * @param dy  y shift
      */
     virtual void Shift(double dx, double dy);
+    /**
+     * Shift by distance
+     *
+     * @param p  shift by p.x, p.y
+     */
     virtual void Shift(Point p)
     {
       Shift(p.x, p.y);

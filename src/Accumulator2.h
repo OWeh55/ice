@@ -57,7 +57,7 @@ namespace ice
      * set parameters for one value of the pair.
      * setDim must be called two times with i==0 and i==1
      * @param i  select between first (i==0) and second (i==1) value
-     * @param nBin number of bins (resolution)
+     * @param nBins number of bins (resolution)
      * @param min, max range of values to analyze.
      *     values outside [min,max] are ignored.
      * @param cyclic should values outside [min,max] treaded cyclic.

@@ -52,7 +52,7 @@ namespace ice
 
     /**
      * setting the parameters for Accumulator
-     * @param nBin number of bins (resolution)
+     * @param nBins number of bins (resolution)
      * @param min, max range of values to analyze. values outside [min,max] are ignored.
      * @param cyclic should values outside [min,max] treaded cyclic
      * @param dn spread to bins [n - dn, n + dn]

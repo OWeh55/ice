@@ -32,42 +32,78 @@
 
 namespace ice
 {
+  /**
+   * class template poinT describes point by coordinates of type T.
+   * ice typically uses pointT<int> as IPoint and pointT<double> as Point
+   */
   template<typename T>
   class pointT
   {
   public:
     typedef T value_type;
 
+    /**
+     * the coordinates.
+     * these are public for fast (and easy) access.
+     */
     T x, y;
 
+    /**
+     * standard c'tor.
+     * creates point in origin.
+     */
     pointT() : x(0), y(0) {};
-    explicit pointT(T val) : x(val), y(val) {};
-    pointT(T xs, T ys) : x(xs), y(ys) {};
-    //    pointT(const pointT &p) : x(p.x), y(p.y) {}
 
+    /**
+     *  c'tor with given coordinates.
+     */
+    pointT(T xs, T ys) : x(xs), y(ys) {};
+
+    /**
+     * type conversion and copy c'tor.
+     */
     template<typename TI>
     explicit pointT(const pointT<TI>& p): x((T)p.x), y((T)p.y) {}
 
+    /**
+     * c'tor for type conversion from c array.
+     */
     explicit pointT(T d[]): x(d[0]), y(d[1]) {}
 
+    /**
+     * implicite conversion to pointT<double>
+     */
     operator pointT<double>() const
     {
       return pointT<double>(x, y);
     }
 
+    /**
+     * reference to coordinate x.
+     */
     T& X()
     {
       return x;
     }
+    /**
+     * reference to coordinate y.
+     */
     T& Y()
     {
       return y;
     }
 
+    /**
+     * const reference to coordinate x.
+     */
     const T& X() const
     {
       return x;
     }
+
+    /**
+     * const reference to coordinate y.
+     */
     const T& Y() const
     {
       return y;
@@ -108,14 +144,7 @@ namespace ice
       y += dy;
       return OK;
     }
-#if 0
-    const pointT& operator=(pointT p2)
-    {
-      x = p2.x;
-      y = p2.y;
-      return *this;
-    }
-#endif
+
     const pointT& operator+=(const pointT& second)
     {
       x += second.x;

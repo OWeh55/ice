@@ -81,10 +81,9 @@ namespace ice
      * "named constructors" which create a real image
      * @param src image, that ist used as "template"\n
      *  new image has the same sizes and maximum values as src.
-    //     * @param copy Shall content of src be copied to the new image.
      * @param title name of image used in visualization
      */
-    static Image createImage(const Image& src, // bool copy = false,
+    static Image createImage(const Image& src,
                              const std::string& title = "");
 
     /*
@@ -134,7 +133,7 @@ namespace ice
     /**
     * subimage method.
     * returns a subimage.
-    * @param window describes part of parent to use as subimage
+    * @param w  part window to use as subimage
     * @param title name of image used in visualization
     */
     Image operator()(const Window& w, const std::string& title = "") const
@@ -532,7 +531,7 @@ namespace ice
      * get value interpolated.
      * Returns an interpolated value for floating point coordinates
      * @param x, y coordinates
-     * @param variable to store value interpolated value
+     * @param val variable to store interpolated value
      * @return lies (x,y) inside image
      */
     bool getPixelInterpol(double x, double y, double& val) const;
