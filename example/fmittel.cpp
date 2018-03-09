@@ -153,7 +153,8 @@ int main(int argc, char* argv[])
   bool ok = true;
 
   while (ok && first > vf.FrameNumber())
-    if (!vf.read(in1)) ok = false;
+    if (!vf.read(in1))
+      ok = false;
 
   bool preprocess = false;
 
