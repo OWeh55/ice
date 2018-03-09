@@ -89,7 +89,7 @@ int Main(int argc, char* argv[])
     {
       int ii = i / 16;
       int cv = (i % 16) * 16;
-      v->SetGreyColor(i, ii & 1 ? cv : 0, ii & 2 ? cv : 0, ii & 4 ? cv : 0);
+      v->SetGrayColor(i, ii & 1 ? cv : 0, ii & 2 ? cv : 0, ii & 4 ? cv : 0);
     }
 
   GetChar();

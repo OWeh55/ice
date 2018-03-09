@@ -30,8 +30,7 @@ JPEG - Bibliothek
 
 Sehr empfohlen, aber eventuell verzichtbar:
  fftw3-devel
- libraw1394-devel (nur linux)
- libdc1394-devel (nur linux)
+ ffmpeg
 
 Installation Linux:
 *******************
@@ -52,34 +51,13 @@ Installation Linux:
 
     -	ICEDIR=/home/foo/ice
 	Verzeichnis, in dem ICE installiert ist. (Wo das Auspacken des
-	Tar-Files erfolgte)
+	tar-Files erfolgte)
 
     Optionale Variablen
 
     - ICEVISUALISATION=800,600,100
-	Zu verwendende Groesse der Dartstellung 800*600, 
+	Zu verwendende Groesse der Darstellung 800*600, 
         Update der Darstellung alle 100ms
-
-    - ICESCANDEVICE0=program,scan /tmp/bild.bmp,/tmp/bild.bmp
-      ICESCANDEVICE1=file,/pandora/data/temp/bild.bmp
-      ICESCANDEVICE2=fw,0,MODE_640x480_YUV422,30
-	
-      Die Variablen ICESCANDEVICEx legen die fuer die Bildeingabe
-	(Scan) zu verwendenden Geraete bzw. Treiber fest. 
-        Die angefuehrten Beispiele bedeuten:
-
-	ICESCANDEVICE0=program,scan /tmp/bild.bmp,/tmp/bild.bmp
-	Es ist ein externes Programm aufzurufen (hier: scan),
-	welches ein Bild in einer Datei ablegt. Das Ergebnis
-	ist die Datei /tmp/bild.bmp. Die Ergebnis-Datei muﬂ in
-	einem von ICE unterstuetzten Format vorliegen.
-	
-	ICESCANDEVICE1=file,/data/bild.bmp
-	Das gescannte Bild liegt direkt als Datei vor.
-
-	ICESCANDEVICE2=fw,0,MODE_640x480_YUV422,30
-	Es wird die Firewire-Schnittstelle zum Scannen
-        verwendet.
 
  3. Bilden der Bibliothek
 
@@ -96,11 +74,11 @@ Installation Linux:
     (ein *.cpp-File) ist, so kann ohne Editieren des Makefile meinprogramm
     gebildet werden mit:
 
-      make dep  ; //	muss nur einmal aufgerufen werden, wenn sich
-			Abhaengigkeiten nicht aendern
+      make dep       #	muss nur einmal aufgerufen werden, wenn sich
+		     #	Abhaengigkeiten nicht aendern
       make meinprogramm
 
-    Wenn das eigene Projekt mehrere Quelltext-Dateien umfaﬂt, muﬂ das 
+    Wenn das eigene Projekt mehrere Quelltext-Dateien umfaﬂt, muss das 
     Makefile entsprechend angepaﬂt werden.
 
 Soll ICE ohne die verzichtbaren Bibliotheken verwendet werden, so koennen
@@ -109,11 +87,6 @@ entsprechende Environment-Variablen gesetzt werden:
 Bibliothek            deaktivieren        Einschraenkung
 -----------------------------------------------------------------
 fftw3-devel           export NOFFTW=1     langsamere Fouriertrafo
------------------------------------------------------------------
-libraw1394-devel+     export NOSCANFW=1    keine Bildaufnahme mit 
-libdc1394-devel                            Firewire-Kameras
------------------------------------------------------------------
-
 
 Installation Windowsxx
 **********************
@@ -142,7 +115,7 @@ ICE-Distribution. Trotzdem wollen wir nach Moeglichkeit helfen, Probleme
 beim Einsatz von ICE zu loesen.  Schicken Sie uns dazu eine kurze Mail 
 mit einer moeglichst genauen Problem-Beschreibung an
 
-ice@inf.uni-jena.de
+noo@uni-jena.de
 
 Diese Adresse sollten Sie ebenfalls benutzen, wenn Sie eigene ICE-Programme 
 oder Funktionen geschrieben haben,  die Sie gerne auch anderen zur
@@ -153,7 +126,7 @@ Bemerkungen zum Verzeichnis Examples:
 
 Die Programme in diesem Verzeichnis  sind keine echten Lehrbeispiele, die
 meisten entstanden waehrend  der Erprobung neu implementierter Funktionen
-als Testprogramm.  Dem entsprechend koennen diese Programme auch zum Tes-
+als Testprogramm.  Dementsprechend koennen diese Programme auch zum Tes-
 ten der korekten Installation benutzt werden  (z.B. testet vis2 zahlrei-
 che Funktionen zur Bildschirmdarstellung). 
 Ein Blick in  den Quelltext  dieser Programme kann aber auch helfen,  die
@@ -166,14 +139,11 @@ Gegenueber Version 5 wurde die Verzeichnisstruktur geaendert. Alte Projekte
 kann das Makefile in ice/examples als Ausgangspunkt dienen.
 Alle Funktionen, die mit der Visualisierung verbunden sind, befinden sich im
 Unterverzeichnis src/visual. Explizite Includes der Headerfiles in diesem
-Verzeichnis muessen deshalb mit Verzeichnis erfolgen, also zum Beispiel
+Verzeichnis muessen deshalb mit Verzeichnisangabe erfolgen, also zum Beispiel
 
 #include <visual/xio.h>
 
 Bei Verwendung von "#include <image.h>" ist keine Aenderung erforderlich. 
-
-Der NULL-Pointer kann nicht mehr als Bild (Typ Image) uebergeben werden. Wo
-dies unbedingt erforderlich ist, muss stattdessen "Image()" verwendet werden. 
 
 Mit der Version 6.3.0 ist die Moeglichkeit entfallen, ein Fenster im Bild 
 zu setzen (SetWindowImg...). Eine bessere Moeglichkeit ist die Verwendung 

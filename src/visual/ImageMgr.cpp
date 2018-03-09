@@ -36,8 +36,8 @@ using namespace std;
 using namespace std;
 
 #include "visual/ImageMgr.h"
-#include "visual/GreyImageWindow.h"
-#include "visual/GreyImageColorTableWindow.h"
+#include "visual/GrayImageWindow.h"
+#include "visual/GrayImageColorTableWindow.h"
 #include "visual/OverlayImageWindow.h"
 #include "visual/Overlay2ImageWindow.h"
 #include "visual/RGBImageWindow.h"
@@ -47,8 +47,8 @@ using namespace std;
 namespace ice
 {
   DEFINE_EVENT_TYPE(DESTROY_WIN)
-  DEFINE_EVENT_TYPE(CREATE_GREY_WIN)
-  DEFINE_EVENT_TYPE(CREATE_GREY_COLORTABLE_WIN)
+  DEFINE_EVENT_TYPE(CREATE_GRAY_WIN)
+  DEFINE_EVENT_TYPE(CREATE_GRAY_COLORTABLE_WIN)
   DEFINE_EVENT_TYPE(CREATE_OVERLAY_WIN)
   DEFINE_EVENT_TYPE(CREATE_OVERLAY2_WIN)
   DEFINE_EVENT_TYPE(CREATE_RGB_WIN)
@@ -56,8 +56,8 @@ namespace ice
   DEFINE_EVENT_TYPE(REFRESH_TIMER)
 
   BEGIN_EVENT_TABLE(ImageManager, wxEvtHandler)
-    EVT_COMMAND(wxID_ANY, CREATE_GREY_WIN,    ImageManager::OnCreateGreyWin)
-    EVT_COMMAND(wxID_ANY, CREATE_GREY_COLORTABLE_WIN,    ImageManager::OnCreateGreyColorTableWin)
+    EVT_COMMAND(wxID_ANY, CREATE_GRAY_WIN,    ImageManager::OnCreateGrayWin)
+    EVT_COMMAND(wxID_ANY, CREATE_GRAY_COLORTABLE_WIN,    ImageManager::OnCreateGrayColorTableWin)
     EVT_COMMAND(wxID_ANY, CREATE_OVERLAY_WIN, ImageManager::OnCreateOverlayWin)
     EVT_COMMAND(wxID_ANY, CREATE_OVERLAY2_WIN, ImageManager::OnCreateOverlay2Win)
     EVT_COMMAND(wxID_ANY, CREATE_RGB_WIN,     ImageManager::OnCreateRGBWin)
@@ -152,20 +152,20 @@ namespace ice
     ImageData(): img1(nullptr), img2(nullptr), img3(nullptr), img4(nullptr), img5(nullptr), img6(nullptr), imgd(nullptr), v(nullptr) {}
   };
 
-  void ImageManager::OnCreateGreyWin(wxCommandEvent& Event)
+  void ImageManager::OnCreateGrayWin(wxCommandEvent& Event)
   {
     // extract the image data from the event
     ImageData& id = *(ImageData*)Event.GetClientData();
 
-    GreyImageWindow* imageWindow;
+    GrayImageWindow* imageWindow;
 
     if (id.img1 != nullptr)
       {
-        imageWindow = new GreyImageWindow(id.img1, id.title);
+        imageWindow = new GrayImageWindow(id.img1, id.title);
       }
     else
       {
-        imageWindow = new GreyImageWindow(id.imgd, id.title);
+        imageWindow = new GrayImageWindow(id.imgd, id.title);
       }
     WindowList.push_back(imageWindow);
     imageWindow->Show(true);
@@ -173,12 +173,12 @@ namespace ice
     WakeUpUserThread();
   }
 
-  void ImageManager::OnCreateGreyColorTableWin(wxCommandEvent& Event)
+  void ImageManager::OnCreateGrayColorTableWin(wxCommandEvent& Event)
   {
     // extract the image data from the event
     ImageData& id = *(ImageData*)Event.GetClientData();
 
-    GreyImageColorTableWindow* ImageWindow = new GreyImageColorTableWindow(id.img1, id.title);
+    GrayImageColorTableWindow* ImageWindow = new GrayImageColorTableWindow(id.img1, id.title);
     WindowList.push_back(ImageWindow);
     ImageWindow->Show(true);
     id.v = ImageWindow;
@@ -252,7 +252,7 @@ namespace ice
   // Changes color at "Entry" in ALL colortables
   // This send the command to all Windows. Windows without color table
   // have to ignore this (by not overwriting the methods of ImageWindow)
-  int ImageManager::SetGreyColor(unsigned int entry,
+  int ImageManager::SetGrayColor(unsigned int entry,
                                  unsigned char redValue,
                                  unsigned char greenValue,
                                  unsigned char blueValue)
@@ -260,19 +260,19 @@ namespace ice
     // Tell all image windows to use this color definition
     for (auto it = WindowList.begin(); it != WindowList.end(); it++)
       {
-        (*it)->SetGreyColor(entry, redValue, greenValue, blueValue);
+        (*it)->SetGrayColor(entry, redValue, greenValue, blueValue);
       }
     return OK;
   }
 
-  int ImageManager::SetGreyLUT(unsigned int first, unsigned int last)
+  int ImageManager::SetGrayLUT(unsigned int first, unsigned int last)
   {
-    // Tell all image windows to set color table to grey in range first..last
+    // Tell all image windows to set color table to gray in range first..last
     // This send the command to all Windows. Windows without color table
     // have to ignore this (by not overwriting the methods of ImageWindow)
     for (auto it = WindowList.begin(); it != WindowList.end(); it++)
       {
-        (*it)->SetGreyLUT(first, last);
+        (*it)->SetGrayLUT(first, last);
       }
     return OK;
   }
@@ -354,7 +354,7 @@ namespace ice
         if (Img->maxval > ColorTable::maxEntries)
           throw IceException(FNAME, M_HIGHRANGE_VIS);
         // Windows MUST be created in main thread
-        wxCommandEvent Event(CREATE_GREY_COLORTABLE_WIN);
+        wxCommandEvent Event(CREATE_GRAY_COLORTABLE_WIN);
         Event.SetClientData(&id);
         AddPendingEvent(Event);
         WaitForMainThread();
@@ -364,7 +364,7 @@ namespace ice
       case GRAY:
       {
         // Windows MUST be created in main thread
-        wxCommandEvent Event(CREATE_GREY_WIN);
+        wxCommandEvent Event(CREATE_GRAY_WIN);
         Event.SetClientData(&id);
         AddPendingEvent(Event);
         WaitForMainThread();
@@ -374,12 +374,12 @@ namespace ice
       case OVERLAY:
       {
         // Windows MUST be created in main thread
-        wxCommandEvent Event(CREATE_GREY_COLORTABLE_WIN);
+        wxCommandEvent Event(CREATE_GRAY_COLORTABLE_WIN);
         Event.SetClientData(&id);
 
         AddPendingEvent(Event);
         WaitForMainThread();
-        ((GreyImageColorTableWindow*)id.v)->SetTable();
+        ((GrayImageColorTableWindow*)id.v)->SetTable();
         return id.v;
       }
       }
@@ -421,7 +421,7 @@ namespace ice
       case GRAY:
       {
         // Windows MUST be created in main thread
-        wxCommandEvent Event(CREATE_GREY_WIN);
+        wxCommandEvent Event(CREATE_GRAY_WIN);
         Event.SetClientData(&id);
         AddPendingEvent(Event);
         WaitForMainThread();

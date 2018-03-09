@@ -27,29 +27,29 @@
 #include "base.h"
 #include "ImageBase.h"
 #include "visual/ImageMgr.h"
-#include "visual/GreyImageWindow.h"
+#include "visual/GrayImageWindow.h"
 #include "macro.h"  // for min / max templates
 
 namespace ice
 {
-  BEGIN_EVENT_TABLE(GreyImageWindow, ImageWindow)
-    EVT_PAINT(GreyImageWindow::OnPaint)
+  BEGIN_EVENT_TABLE(GrayImageWindow, ImageWindow)
+    EVT_PAINT(GrayImageWindow::OnPaint)
   END_EVENT_TABLE()
 
-#define FNAME "GreyImageWindow::GreyImageWindow"
-  GreyImageWindow::GreyImageWindow(ImageBase* img,
+#define FNAME "GrayImageWindow::GrayImageWindow"
+  GrayImageWindow::GrayImageWindow(ImageBase* img,
                                    const std::string& windowname)
     : ImageWindow(img, windowname)
   {
   }
 
-  GreyImageWindow::GreyImageWindow(ImageD* img,
+  GrayImageWindow::GrayImageWindow(ImageD* img,
                                    const std::string& windowname)
     : ImageWindow(img, windowname)
   {
   }
 
-  void GreyImageWindow::PutPixel()
+  void GrayImageWindow::PutPixel()
   {
     int i = imgs[0]->getValueShifted(PaintImageX, PaintImageY);
     *(PixelArrayPtr++) = i;

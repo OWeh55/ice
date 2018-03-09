@@ -40,12 +40,12 @@ int main(int argc, char* argv[])
   GetChar();
 
   Printf("Now changing GreyLUT to have Greyvalues from 0..255 in the intervall [16,128]\t\t");
-  SetGreyLUT(16, 128);
+  SetGrayLUT(16, 128);
   Printf("OK\n\n");
   GetChar();
 
   Printf("Changing greyvalue  at index 64 to GREEN (0,255,0)");
-  SetGreyColor(64, 0, 255, 0);
+  SetGrayColor(64, 0, 255, 0);
   Printf("OK\n\n");
   GetChar();
 

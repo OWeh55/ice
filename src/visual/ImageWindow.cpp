@@ -637,7 +637,7 @@ namespace ice
     // (which would be quite time-consuming) or paint the cursor in such a
     // fashion that it could be erased easily. This can be accomplished by painting
     // the cursor with logical function wxINVERT, but this has one drawback: if we
-    // paint the cursor over a large patch of grey it will be hardly recognizable.
+    // paint the cursor over a large patch of gray it will be hardly recognizable.
     // Instead we use logical function wxXOR and paint with RGB color(128, 128, 128).
     // This just swapes the most significant bit of the destination color.
     wxClientDC ClientDC(this);
@@ -892,8 +892,8 @@ namespace ice
 
   // Handling of colortables: here: methods that do nothing
   // Overide this in classes, where colortables make sense
-#define FNAME "GetGreyColor"
-  int ImageWindow::GetGreyColor(unsigned int Entry,
+#define FNAME "GetGrayColor"
+  int ImageWindow::GetGrayColor(unsigned int Entry,
                                 unsigned char& RedVal,
                                 unsigned char& GreenVal,
                                 unsigned char& BlueVal)
@@ -902,8 +902,8 @@ namespace ice
   }
 
 #undef FNAME
-#define FNAME "SetGreyColor"
-  int ImageWindow::SetGreyColor(unsigned int Entry,
+#define FNAME "SetGrayColor"
+  int ImageWindow::SetGrayColor(unsigned int Entry,
                                 unsigned char RedVal,
                                 unsigned char GreenVal,
                                 unsigned char BlueVal)
@@ -911,8 +911,8 @@ namespace ice
     return OK;
   }
 #undef FNAME
-#define FNAME "SetGreyLUT"
-  int ImageWindow::SetGreyLUT(unsigned int First, unsigned int Last)
+#define FNAME "SetGrayLUT"
+  int ImageWindow::SetGrayLUT(unsigned int First, unsigned int Last)
   {
     return OK;
   }

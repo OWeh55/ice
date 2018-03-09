@@ -1283,7 +1283,7 @@ void setcolor(int ColorMode)
         }
     }
   for (int z = 0; z <= maxval; z++)
-    SetGreyColor(z, red[z], green[z], blue[z]);
+    SetGrayColor(z, red[z], green[z], blue[z]);
 }
 
 void makeColorImage(const Image& ptr, ColorImage& co)
@@ -1295,7 +1295,7 @@ void makeColorImage(const Image& ptr, ColorImage& co)
       {
         int gw = ptr.getPixel(x, y);
         unsigned char r, g, b;
-        GetGreyColor(ptr, gw, r, g, b); // color table lookup
+        GetGrayColor(ptr, gw, r, g, b); // color table lookup
         co.setPixel(x, y, ColorValue(r, g, b));
       }
 }

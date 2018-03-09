@@ -24,8 +24,8 @@
 #include "visual/App.h"
 #include "visual/ImageMgr.h"
 #include "IceException.h"
-#include "visual/GreyImageWindow.h"
-#include "visual/GreyImageColorTableWindow.h"
+#include "visual/GrayImageWindow.h"
+#include "visual/GrayImageColorTableWindow.h"
 #include "visual/OverlayImageWindow.h"
 #include "visual/RGBImageWindow.h"
 #include "macro.h"
@@ -107,7 +107,7 @@ namespace ice
 
 #undef FNAME
 
-  int GetGreyColor(int, int&, int&, int&)
+  int GetGrayColor(int, int&, int&, int&)
   {
     return ERROR;
   }
@@ -146,20 +146,20 @@ namespace ice
     return v->Zoom(ZoomFactor);
   }
 
-  int Zoom(Image Img)
+  int Zoom(const Image& Img)
   {
     return Zoom(Img, 0);
   }
 #undef FNAME
-#define FNAME "SetGreyColor"
-  int SetGreyColor(unsigned int Entry,
+#define FNAME "SetGrayColor"
+  int SetGrayColor(unsigned int Entry,
                    unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue)
   {
-    RETURN_ERROR_IF_FAILED(wxGetApp().GetImageManager()->SetGreyColor(Entry, RedValue, GreenValue, BlueValue));
+    RETURN_ERROR_IF_FAILED(wxGetApp().GetImageManager()->SetGrayColor(Entry, RedValue, GreenValue, BlueValue));
     return OK;
   }
 
-  int SetGreyColor(Image img, unsigned int Entry,
+  int SetGrayColor(Image img, unsigned int Entry,
                    unsigned char Red, unsigned char Green, unsigned char Blue)
   {
     Visual v;
@@ -167,25 +167,25 @@ namespace ice
     if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
 
-    RETURN_ERROR_IF_FAILED(v->SetGreyColor(Entry, Red, Green, Blue));
+    RETURN_ERROR_IF_FAILED(v->SetGrayColor(Entry, Red, Green, Blue));
     return OK;
   }
 #undef FNAME
-#define FNAME "SetGreyLut"
-  int SetGreyLUT(Image img, unsigned int First, unsigned int Last)
+#define FNAME "SetGrayLut"
+  int SetGrayLUT(Image img, unsigned int First, unsigned int Last)
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
 
-    RETURN_ERROR_IF_FAILED(v->SetGreyLUT(First, Last));
+    RETURN_ERROR_IF_FAILED(v->SetGrayLUT(First, Last));
     return OK;
   }
 
-  int SetGreyLUT(unsigned int First, unsigned int Last)
+  int SetGrayLUT(unsigned int First, unsigned int Last)
   {
-    RETURN_ERROR_IF_FAILED(wxGetApp().GetImageManager()->SetGreyLUT(First, Last));
+    RETURN_ERROR_IF_FAILED(wxGetApp().GetImageManager()->SetGrayLUT(First, Last));
     return OK;
   }
 
@@ -211,14 +211,14 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "GetGrayColor"
-  int GetGreyColor(const Image& img, unsigned int Entry,
+  int GetGrayColor(const Image& img, unsigned int Entry,
                    unsigned char& Red, unsigned char& Green, unsigned char& Blue)
   {
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(img));
     if (v == nullptr)
       throw IceException(FNAME, M_NOT_VIS);
-    RETURN_ERROR_IF_FAILED(v->GetGreyColor(Entry, Red, Green, Blue));
+    RETURN_ERROR_IF_FAILED(v->GetGrayColor(Entry, Red, Green, Blue));
     return OK;
   }
 

@@ -19,23 +19,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __ICEGREYIMAGEWINDOWCT_H
-#define __ICEGREYIMAGEWINDOWCT_H
+#ifndef __ICEGRAYIMAGEWINDOWCT_H
+#define __ICEGRAYIMAGEWINDOWCT_H
 
 #include "visual/ImageWindow.h"
 #include "ColorTable.h"
 
 namespace ice
 {
-  //! A window for displaying a grey value image. The intensity values
+  //! A window for displaying a gray value image. The intensity values
   //! of the image are mapped to a color for display,
   //! depending on the color table for the window.
-  class GreyImageColorTableWindow : public ImageWindow
+  class GrayImageColorTableWindow : public ImageWindow
   {
   protected:
-    ~GreyImageColorTableWindow() {};
+    ~GrayImageColorTableWindow() {};
   public:
-    GreyImageColorTableWindow(ice::ImageBase* Img,
+    GrayImageColorTableWindow(ice::ImageBase* Img,
                               const std::string& windowname);
 
     virtual char getVisualizationType() const
@@ -43,11 +43,11 @@ namespace ice
       return 1;
     }
 
-    int GetGreyColor(unsigned int Entry, unsigned char& RedValue, unsigned char& GreenValue, unsigned char& BlueValue);
-    int SetGreyColor(unsigned int Entry, unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue);
+    int GetGrayColor(unsigned int Entry, unsigned char& RedValue, unsigned char& GreenValue, unsigned char& BlueValue);
+    int SetGrayColor(unsigned int Entry, unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue);
     int GetOverlayColor(unsigned int Entry, unsigned char& RedValue, unsigned char& GreenValue, unsigned char& BlueValue);
     int SetOverlayColor(unsigned int Entry, unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue);
-    int SetGreyLUT(unsigned int First, unsigned int Last);
+    int SetGrayLUT(unsigned int First, unsigned int Last);
     int SetTable(int type = 0)
     {
       return colorTable.setTable(type);
@@ -68,16 +68,16 @@ namespace ice
   //             inline implementations
   //
 
-  inline int GreyImageColorTableWindow::GetGreyColor(unsigned int Entry,
+  inline int GrayImageColorTableWindow::GetGrayColor(unsigned int Entry,
       unsigned char& RedValue, unsigned char& GreenValue, unsigned char& BlueValue)
   {
     return colorTable.getColor(Entry, RedValue, GreenValue, BlueValue);
   }
 
-  inline int GreyImageColorTableWindow::GetOverlayColor(unsigned int Entry,
+  inline int GrayImageColorTableWindow::GetOverlayColor(unsigned int Entry,
       unsigned char& RedValue, unsigned char& GreenValue, unsigned char& BlueValue)
   {
     return colorTable.getColor(Entry, RedValue, GreenValue, BlueValue);
   }
 }
-#endif // #ifndef __ICEGREYIMAGEWINDOW_H
+#endif // #ifndef __ICEGRAYIMAGEWINDOW_H

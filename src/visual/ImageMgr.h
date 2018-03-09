@@ -57,7 +57,7 @@ namespace ice
   mutex that is provided via the mixin class %iceThreadCommHelper. The
   events that are defined for this purpose are:
   - DESTROY_WIN
-  - CREATE_GREY_WIN
+  - CREATE_GRAY_WIN
   - CREATE_OVERLAY_WIN
   - CREATE_RGB_WIN
   */
@@ -109,11 +109,11 @@ namespace ice
     // Those are kept for backward compatibility. They work just like the
     // corresponding function in the subclasses of iceImageWindow, but
     // they affect all windows
-    int SetGreyColor(unsigned int Entry,
+    int SetGrayColor(unsigned int Entry,
                      unsigned char RedValue,
                      unsigned char GreenValue,
                      unsigned char BlueValue);
-    int SetGreyLUT(unsigned int First, unsigned int Last);
+    int SetGrayLUT(unsigned int First, unsigned int Last);
     int SetOverlayColor(unsigned int Entry,
                         unsigned char RedValue,
                         unsigned char GreenValue,
@@ -122,8 +122,8 @@ namespace ice
   protected:
     // event handlers
     void OnDestroyWin(wxCommandEvent& Event);
-    void OnCreateGreyWin(wxCommandEvent& Event);
-    void OnCreateGreyColorTableWin(wxCommandEvent& Event);
+    void OnCreateGrayWin(wxCommandEvent& Event);
+    void OnCreateGrayColorTableWin(wxCommandEvent& Event);
     void OnCreateOverlayWin(wxCommandEvent& Event);
     void OnCreateOverlay2Win(wxCommandEvent& Event);
     void OnCreateRGBWin(wxCommandEvent& Event);

@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
       Text((char*)t1[k], 5, 25, 1, 1, img2);
 
       for (i = 0; i < 11; i++)
-        for (j = 0; j < 11; j++) SetGreyColor((11 * i) + j, a[k], a[i], a[j]);
+        for (j = 0; j < 11; j++) SetGrayColor((11 * i) + j, a[k], a[i], a[j]);
 
       Delay(COUNT);
       Text((char*)t1[k], 5, 25, 4, 1, img2);
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
       Text((char*)t1[k], 5, 25, 2, 1, img2);
 
       for (i = 0; i < 11; i++)
-        for (j = 0; j < 11; j++) SetGreyColor((11 * i) + j, a[i], a[k], a[j]);
+        for (j = 0; j < 11; j++) SetGrayColor((11 * i) + j, a[i], a[k], a[j]);
 
       Delay(COUNT);
       Text((char*)t1[k], 5, 25, 4, 1, img2);
@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
       Text((char*)t1[k], 5, 25, 3, 1, img2);
 
       for (i = 0; i < 11; i++)
-        for (j = 0; j < 11; j++) SetGreyColor((11 * i) + j, a[i], a[j], a[k]);
+        for (j = 0; j < 11; j++) SetGrayColor((11 * i) + j, a[i], a[j], a[k]);
 
       Delay(COUNT);
       Text((char*)t1[k], 5, 25, 4, 1, img2);

@@ -27,24 +27,24 @@
 #include "base.h"
 #include "ImageBase.h"
 #include "visual/ImageMgr.h"
-#include "visual/GreyImageColorTableWindow.h"
+#include "visual/GrayImageColorTableWindow.h"
 #include "macro.h"  // for min / max templates
 
 namespace ice
 {
-  BEGIN_EVENT_TABLE(GreyImageColorTableWindow, ImageWindow)
-    EVT_PAINT(GreyImageColorTableWindow::OnPaint)
+  BEGIN_EVENT_TABLE(GrayImageColorTableWindow, ImageWindow)
+    EVT_PAINT(GrayImageColorTableWindow::OnPaint)
   END_EVENT_TABLE()
 
-#define FNAME "GreyImageColorTableWindow::GreyImageColorTableWindow"
-  GreyImageColorTableWindow::GreyImageColorTableWindow(ImageBase* img,
+#define FNAME "GrayImageColorTableWindow::GrayImageColorTableWindow"
+  GrayImageColorTableWindow::GrayImageColorTableWindow(ImageBase* img,
       const std::string& windowname)
     : ImageWindow(img, windowname),
       colorTable(img->maxval)
   {
   }
 
-  int GreyImageColorTableWindow::SetGreyColor(unsigned int Entry,
+  int GrayImageColorTableWindow::SetGrayColor(unsigned int Entry,
       unsigned char RedValue,
       unsigned char GreenValue,
       unsigned char BlueValue)
@@ -57,7 +57,7 @@ namespace ice
     return RetVal;
   }
 
-  int GreyImageColorTableWindow::SetOverlayColor(unsigned int Entry,
+  int GrayImageColorTableWindow::SetOverlayColor(unsigned int Entry,
       unsigned char RedValue,
       unsigned char GreenValue,
       unsigned char BlueValue)
@@ -70,7 +70,7 @@ namespace ice
     return RetVal;
   }
 
-  int GreyImageColorTableWindow::SetGreyLUT(unsigned int First, unsigned int Last)
+  int GrayImageColorTableWindow::SetGrayLUT(unsigned int First, unsigned int Last)
   {
     int RetVal = colorTable.setLinear(First, Last);
     if (RetVal != ERROR)
@@ -80,7 +80,7 @@ namespace ice
     return RetVal;
   }
 
-  void GreyImageColorTableWindow::PutPixel()
+  void GrayImageColorTableWindow::PutPixel()
   {
     int i = imgs[0]->getPixel(PaintImageX, PaintImageY);
     unsigned char r, g, b;

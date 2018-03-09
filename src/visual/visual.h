@@ -58,25 +58,25 @@ namespace ice
   int Zoom(const Image& Img, int ZoomFactor, int = 0, int = 0);
   int Zoom(const Image& img);
 
-  // Sets the color for the grey value >Entry< to the RGB color (RedValue, GreenValue, BlueValue).
-  int SetGreyColor(unsigned int Entry,
+  // Sets the color for the gray value >Entry< to the RGB color (RedValue, GreenValue, BlueValue).
+  int SetGrayColor(unsigned int Entry,
                    unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue);
 
   // Same as above, but affecting only the Image >Img<. This function will only have effects
-  // Images that are visualized in grey value windows or overlay windows.
-  int SetGreyColor(Image Img, unsigned int Entry, unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue);
+  // Images that are visualized in gray value windows or overlay windows.
+  int SetGrayColor(Image Img, unsigned int Entry, unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue);
 
-  // This function only affects images that are displayed as grey value images at the moment,
-  // and whose maximal grey value is greater or equal to >Last<. This function resets
-  // the colors which will be used to paint a grey value pixel. Only grey values between
-  // >First< and >Last< will be painted in a linear interpolated shade of grey. The rest will
+  // This function only affects images that are displayed as gray value images at the moment,
+  // and whose maximal gray value is greater or equal to >Last<. This function resets
+  // the colors which will be used to paint a gray value pixel. Only gray values between
+  // >First< and >Last< will be painted in a linear interpolated shade of gray. The rest will
   // be painted black or white. This function is useful for increasing contrast in pictures,
   // whose gray values lie close together.
-  int SetGreyLUT(unsigned int First, unsigned int Last);
+  int SetGrayLUT(unsigned int First, unsigned int Last);
 
   // Same as above, but affecting only the Image >Img<. This function will only have effects
-  // Images that are visualized in grey value windows or overlay windows.
-  int SetGreyLUT(Image Img, unsigned int First, unsigned int Last);
+  // Images that are visualized in gray value windows or overlay windows.
+  int SetGrayLUT(Image Img, unsigned int First, unsigned int Last);
 
   // This function affects all images that are displayed as overlay images. It changes the
   // overlay color at entry >Entry< to the specified RGB color.
@@ -86,11 +86,11 @@ namespace ice
 
   // The next two function are deprecated, since there is no global color table anymore.
   // Instead each window will have its own color table.
-  int GetGreyColor(int entry, int& red, int& green, int& blue);
+  int GetGrayColor(int entry, int& red, int& green, int& blue);
   int GetOverlayColor(int entry, int& red, int& green, int& blue);
 
   //  Reading of color tables.
-  int GetGreyColor(const Image& Img,
+  int GetGrayColor(const Image& Img,
                    unsigned int Entry,
                    unsigned char& Red,
                    unsigned char& Green,

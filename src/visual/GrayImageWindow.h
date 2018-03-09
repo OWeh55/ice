@@ -19,26 +19,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __ICEGREYIMAGEWINDOW_H
-#define __ICEGREYIMAGEWINDOW_H
+#ifndef __ICEGRAYIMAGEWINDOW_H
+#define __ICEGRAYIMAGEWINDOW_H
 
 #include "visual/ImageWindow.h"
 #include "ColorTable.h"
 
 namespace ice
 {
-  //! A window for displaying a grey value image. The intensity values
+  //! A window for displaying a gray value image. The intensity values
   //! of the image are mapped to a color for display,
   //! depending on the color table for the window.
-  class GreyImageWindow : public ImageWindow
+  class GrayImageWindow : public ImageWindow
   {
   protected:
-    ~GreyImageWindow() {};
+    ~GrayImageWindow() {};
   public:
-    GreyImageWindow(ice::ImageBase* img,
+    GrayImageWindow(ice::ImageBase* img,
                     const std::string& windowname);
 
-    GreyImageWindow(ice::ImageD* img,
+    GrayImageWindow(ice::ImageD* img,
                     const std::string& windowname);
 
     virtual char getVisualizationType() const
@@ -53,4 +53,4 @@ namespace ice
     DECLARE_EVENT_TABLE()
   };
 }
-#endif // #ifndef __ICEGREYIMAGEWINDOW_H
+#endif // #ifndef __ICEGRAYIMAGEWINDOW_H

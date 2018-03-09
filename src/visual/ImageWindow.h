@@ -51,7 +51,7 @@ namespace ice
   class ImageWindow : public wxScrolledWindow, private ThreadCommHelper
   {
   protected:
-    static constexpr int BORDER = 10; // grey border around Image (in pixels)
+    static constexpr int BORDER = 10; // gray border around Image (in pixels)
 
     //! The Caption for image window.
     std::string Caption;
@@ -212,18 +212,18 @@ namespace ice
 
     // Handling of colortables
     // in this class these are dummy-functions and do nothing
-    // functional implementations in GreyImageWindow and OverlayImageWindow
-    virtual int GetGreyColor(unsigned int Entry,
+    // functional implementations in GrayImageWindow and OverlayImageWindow
+    virtual int GetGrayColor(unsigned int Entry,
                              unsigned char& RedVal,
                              unsigned char& GreenVal,
                              unsigned char& BlueVal);
 
-    virtual int SetGreyColor(unsigned int Entry,
+    virtual int SetGrayColor(unsigned int Entry,
                              unsigned char RedVal,
                              unsigned char GreenVal,
                              unsigned char BlueVal);
 
-    virtual int SetGreyLUT(unsigned int First, unsigned int Last);
+    virtual int SetGrayLUT(unsigned int First, unsigned int Last);
 
     virtual int GetOverlayColor(unsigned int Entry,
                                 unsigned char& RedVal,

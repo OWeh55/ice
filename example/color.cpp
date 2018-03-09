@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
           // Farbtabelle setzen
           for (int i = 0; i < STEP_NR; i++)
             for (int j = 0; j < STEP_NR; j++)
-              SetGreyColor((STEP_NR * i) + j, a[intensity], a[i], a[j]);
+              SetGrayColor((STEP_NR * i) + j, a[intensity], a[i], a[j]);
 
           break;
 
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 
           for (int i = 0; i < STEP_NR; i++)
             for (int j = 0; j < STEP_NR; j++)
-              SetGreyColor((STEP_NR * i) + j, a[i], a[intensity], a[j]);
+              SetGrayColor((STEP_NR * i) + j, a[i], a[intensity], a[j]);
 
           break;
 
@@ -149,7 +149,8 @@ int main(int argc, char* argv[])
             Text(NumberString(a[i]), x1 - 30, y2 + i * dy + 5, 1, 0, img2);
 
           for (int i = 0; i < STEP_NR; i++)
-            for (int j = 0; j < STEP_NR; j++) SetGreyColor((STEP_NR * i) + j, a[i], a[j], a[intensity]);
+            for (int j = 0; j < STEP_NR; j++)
+              SetGrayColor((STEP_NR * i) + j, a[i], a[j], a[intensity]);
 
           break;
         }
