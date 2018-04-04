@@ -161,6 +161,7 @@
 #include "rooteig.h"
 #include "root.h"
 #include "rotquaternion.h"
+#include "Sdr.h"
 #include "segment1.h"
 #include "segment.h"
 #include "selfcalib.h"
