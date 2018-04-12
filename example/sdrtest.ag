@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
       double beta = initialBeta;
 
       Window wLeftAlt, wRightAlt;
-      Sdr sdr(sdrSize,sdrSize,beta,sdrFactor,windowMode);
+      Sdr sdr(sdrSize, sdrSize, beta, sdrFactor, windowMode);
 
       bool abort = false;
       while (!abort)
@@ -108,15 +108,15 @@ int main(int argc, char* argv[])
           Image testRight = rightImage(wRight);
           if (verbose)
             cout << "detecting shift" << endl;
-	  sdr.setInput(testLeft, testRight);
-	  sdr.getPeak(result);
-	  
+          sdr.setInput(testLeft, testRight);
+          sdr.getPeak(result);
+
           if (verbose)
             cout << "analysing peak image" << endl;
 
-	  //          Point pd;
-	  //          double eval = peakAnalysis(result, pd);
-	  //          cout << "peak eval: " << eval << endl;
+          //          Point pd;
+          //          double eval = peakAnalysis(result, pd);
+          //          cout << "peak eval: " << eval << endl;
 
           IPoint pMax;
           {
@@ -172,15 +172,15 @@ int main(int argc, char* argv[])
             {
             case '0':
               windowMode = 0;
-	      sdr.setWindowMode(windowMode);
+              sdr.setWindowMode(windowMode);
               break;
             case '1':
               windowMode = 1;
-	      sdr.setWindowMode(windowMode);
+              sdr.setWindowMode(windowMode);
               break;
             case '2':
               windowMode = 2;
-	      sdr.setWindowMode(windowMode);
+              sdr.setWindowMode(windowMode);
               break;
             case 'l':
             case 'L':
