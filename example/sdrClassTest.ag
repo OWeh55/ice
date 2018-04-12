@@ -1,0 +1,133 @@
+#include <image.h>
+#include <fouriertrafo2d.h>
+#include <fouriertrafo.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+prog: Shift estimation
+%%Beschreibung Parameter
+%symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
+para: file1,required,string,fn1,First image file,""
+para: file2,optional,string,fn2,Second image file,""
+%
+opt: b, beta, double, beta, Regularisation parameter, 100
+opt: s, sizes, int, windowSize, Window size, 128
+opt: w, windowingmode, int, windowingMode, Mode of windowing, 1
+opt: f, factor, int, resolutionFactor, Resolution factor, 8
+opt: l, linked, void, linkedWindows, Same window position in both images, false
+opt: v, verbose, void,verbose, Be verbose, false
+opt: h, help, usage, help, Hilfe
+AppGen*/
+
+void mark(Image& mi, Window w, int color)
+{
+  Line(w.p1.x, w.p1.y, w.p1.x, w.p2.y, color, mi);
+  Line(w.p1.x, w.p1.y, w.p2.x, w.p1.y, color, mi);
+  Line(w.p2.x, w.p2.y, w.p1.x, w.p2.y, color, mi);
+  Line(w.p2.x, w.p2.y, w.p2.x, w.p1.y, color, mi);
+}
+
+void mark(Image& mi, Window& alt, Window neu, int color)
+{
+  mark(mi, alt, 0);
+  mark(mi, neu, color);
+  alt = neu;
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      if (fn2.empty())
+        fn2 = fn1;
+      if (fn1.empty())
+        throw "No filename given";
+
+      int bigWindowSize=windowSize*resolutionFactor;
+      double unitSize = 1.0 / resolutionFactor;
+
+      Image img1;
+      if (verbose)
+        cout << "reading image one" << endl;
+      img1.read(fn1);
+      Image mark1;
+      mark1.create(img1);
+      mark1.set(0);
+
+      Show(OVERLAY, img1, mark1, "image 1");
+
+      Image img2;
+      if (verbose)
+        cout << "reading image two" << endl;
+      img2.read(fn2);
+      Image mark2;
+      mark2.create(img2);
+      Show(OVERLAY, img2, mark2, "image 2");
+      mark2.set(0);
+
+      ImageD peak;
+      if (verbose)
+        cout << "creating peak image" << endl;
+      peak.create(bigWindowSize, bigWindowSize);
+      Show(GRAY, peak, "Shifted peak image");
+
+      Sdr sdr(windowSize, windowSize, beta, resolutionFactor, windowingMode);
+
+      Window w1a, w2a;
+      bool cont = true;
+      while (cont)
+        {
+          Point p1 = SelPoint(img1);
+          IPoint p1i(p1.x, p1.y);
+          Window w1(p1i, windowSize);
+          if (img1.inside(w1))
+            {
+              mark(mark1, w1a, w1, 2);
+              Point p2;
+              if (linkedWindows)
+                p2 = p1;
+              else
+                p2 = SelPoint(img2);
+
+              IPoint p2i(p2.x, p2.y);
+              Window w2(p2i, windowSize);
+              if (img2.inside(w2))
+                {
+                  mark(mark2, w2a, w2, 2);
+		  sdr.setInput(img1(w1), img2(w2));
+		  sdr.getPeak(peak);
+                  peak.adaptLimits();
+                  WindowWalker w(peak);
+                  Point maxp;
+                  double maxv = peak.getPixel(0, 0);
+                  for (w.init(); !w.ready(); w.next())
+                    {
+                      if (peak.getPixel(w) > maxv)
+                        {
+                          maxp = w;
+                          maxv = peak.getPixel(w);
+                        }
+                    }
+                  // Marker(2,peak,3,5,peak);
+                  //      Neighbor8Walker ww(IPoint(maxp));
+                  //      for (ww.init();!ww.ready();ww.next())
+                  //        peak.setPixel(ww,0);
+                  Point dp = maxp - Point(bigWindowSize / 2, 
+					  bigWindowSize / 2);
+                  Point dp2 = 0.5 * dp;
+                  Marker(1, p1 - dp2, 3, 5, mark1);
+                  Marker(1, p2 + dp2, 3, 5, mark2);
+                  cout << dp*unitSize << endl;
+                }
+            }
+        }
+    }
+  catch (const char* msg)
+    {
+      cout << "Exception: " << msg << endl;
+    }
+  return OK;
+}
