@@ -11,13 +11,21 @@ prog: Shift estimation
 para: file1,required,string,fn1,First image file,""
 para: file2,optional,string,fn2,Second image file,""
 %
-opt: b, beta, double, beta, Regularisation parameter, 0.01
-opt: s, sizes, int, windowSize, Window size, 128
-opt: w, windowing, void, windowing, Use windowing, false
-opt: l, linked, void, linkedWindows, Same window in both images, false
+opt: b, beta, double, beta, Regularisation parameter, 100
+opt: s, sizes, int, selectionSize, radius of selection, 64
+opt: f, factor, int, sdrFactor, Resolution factor, 1
+opt: w, windowmode, int, windowMode, Mode for windowing, 0
 opt: v, verbose, void,verbose, Be verbose, false
 opt: h, help, usage, help, Hilfe
 AppGen*/
+
+double getF(double r, double selectionSize)
+{
+  double rn = r * M_PI / selectionSize;
+  if (rn >= M_PI)
+    return 0;
+  return 0.5 * (1 + cos(rn));
+}
 
 void mark(Image& mi, Window w, int color)
 {
@@ -55,6 +63,10 @@ int main(int argc, char* argv[])
 
       Show(OVERLAY, img1, mark1);
 
+      Image img1w;
+      img1w.create(img1);
+      Show(GRAY, img1w);
+
       Image img2;
       if (verbose)
         cout << "reading image two" << endl;
@@ -67,71 +79,57 @@ int main(int argc, char* argv[])
       ImageD peak;
       if (verbose)
         cout << "creating peak image" << endl;
-      peak.create(windowSize, windowSize);
+      peak.create(img1.xsize * sdrFactor, img1.ysize * sdrFactor);
       Show(GRAY, peak);
-      Window w1a, w2a;
-      Image wimg1;
-      wimg1.create(windowSize, windowSize, img1.maxval);
-      Image wimg2;
-      wimg2.create(windowSize, windowSize, img2.maxval);
+
+      Sdr sdr(img1.xsize, img1.ysize, beta, sdrFactor, windowMode);
 
       bool cont = true;
       while (cont)
         {
           Point p1 = SelPoint(img1);
           IPoint p1i(p1.x, p1.y);
-          Window w1(p1i, windowSize);
-          if (img1.inside(w1))
+          if (img1.inside(p1i))
             {
-              mark(mark1, w1a, w1, 2);
-              Point p2;
-              if (linkedWindows)
-                p2 = p1;
-              else
-                p2 = SelPoint(img2);
-              IPoint p2i(p2.x, p2.y);
-              Window w2(p2i, windowSize);
-              if (img2.inside(w2))
+              WindowWalker w(img1);
+              for (w.init(); !w.ready(); w.next())
                 {
-                  mark(mark2, w2a, w2, 2);
-                  if (windowing)
-                    {
-                      Windowing(img1(w1), wimg1);
-                      Windowing(img2(w2), wimg2);
-                    }
+                  Point pd(w);
+                  double r = (pd - p1).length();
+                  double f = getF(r, selectionSize);
+                  img1w.setPixel(w, f * img1.getPixel(w));
+                  if (f < 0.05)
+                    mark1.setPixel(w, 1);
                   else
-                    {
-                      CopyImg(img1(w1), wimg1);
-                      CopyImg(img2(w2), wimg2);
-                    }
-
-                  InvConvolution(wimg1, wimg2, peak, beta, MD_IGNORE_BIAS);
-                  peak.adaptLimits();
-                  WindowWalker w(peak);
-                  Point maxp;
-                  double maxv = peak.getPixel(0, 0);
-                  for (w.init(); !w.ready(); w.next())
-                    {
-                      if (peak.getPixel(w) > maxv)
-                        {
-                          maxp = w;
-                          maxv = peak.getPixel(w);
-                        }
-                    }
-                  // Marker(2,peak,3,5,peak);
-                  //      Neighbor8Walker ww(IPoint(maxp));
-                  //      for (ww.init();!ww.ready();ww.next())
-                  //        peak.setPixel(ww,0);
-                  Point dp = maxp - Point(windowSize / 2, windowSize / 2);
-                  Point dp2 = 0.5 * dp;
-                  Marker(1, p1 - dp2, 3, 5, mark1);
-                  Marker(1, p2 + dp2, 3, 5, mark2);
-                  cout << dp << endl;
+                    mark1.setPixel(w, 0);
                 }
+
+              sdr.setInput(img1w, img2);
+              sdr.getPeak(peak);
+              peak.adaptLimits();
+
+              Point maxp;
+              double maxv = peak.getPixel(0, 0);
+              for (w.init(); !w.ready(); w.next())
+                {
+                  if (peak.getPixel(w) > maxv)
+                    {
+                      maxp = w;
+                      maxv = peak.getPixel(w);
+                    }
+                }
+
+              // Marker(2,peak,3,5,peak);
+              //      Neighbor8Walker ww(IPoint(maxp));
+              //      for (ww.init();!ww.ready();ww.next())
+              //        peak.setPixel(ww,0);
+              Point dp = maxp - Point(peak.xsize / 2, peak.ysize / 2);
+              Marker(1, p1 + dp, 3, 5, mark2);
+              cout << dp << endl;
             }
         }
-
     }
+
   catch (const char* msg)
     {
       cout << "Exception: " << msg << endl;
