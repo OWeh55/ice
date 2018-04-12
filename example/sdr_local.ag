@@ -61,7 +61,10 @@ int main(int argc, char* argv[])
       mark1.create(img1);
       mark1.set(0);
 
-      Show(OVERLAY, img1, mark1);
+      Show(OVERLAY3, img1, mark1);
+
+      int xSize = img1.xsize;
+      int ySize = img1.ysize;
 
       Image img1w;
       img1w.create(img1);
@@ -71,6 +74,9 @@ int main(int argc, char* argv[])
       if (verbose)
         cout << "reading image two" << endl;
       img2.read(fn2);
+      if (img2.xsize != xSize || img2.ysize != ySize)
+        throw "image sizes do not match";
+
       Image mark2;
       mark2.create(img2);
       Show(OVERLAY, img2, mark2);
@@ -79,10 +85,10 @@ int main(int argc, char* argv[])
       ImageD peak;
       if (verbose)
         cout << "creating peak image" << endl;
-      peak.create(img1.xsize * sdrFactor, img1.ysize * sdrFactor);
+      peak.create(xSize * sdrFactor, ySize * sdrFactor);
       Show(GRAY, peak);
 
-      Sdr sdr(img1.xsize, img1.ysize, beta, sdrFactor, windowMode);
+      Sdr sdr(xSize, ySize, beta, sdrFactor, windowMode);
 
       bool cont = true;
       while (cont)
@@ -92,12 +98,30 @@ int main(int argc, char* argv[])
           if (img1.inside(p1i))
             {
               WindowWalker w(img1);
+              double gsum = 0.0;
+              int n = 0;
               for (w.init(); !w.ready(); w.next())
                 {
                   Point pd(w);
                   double r = (pd - p1).length();
                   double f = getF(r, selectionSize);
-                  img1w.setPixel(w, f * img1.getPixel(w));
+                  if (f >= 0.05)
+                    {
+                      gsum += img1.getPixel(w);
+                      n++;
+                    }
+                }
+              double gMean = gsum / n;
+              for (w.init(); !w.ready(); w.next())
+                {
+                  Point pd(w);
+                  double r = (pd - p1).length();
+                  double f = getF(r, selectionSize);
+                  IPoint dp = w - p1i;
+                  dp.x = (dp.x + xSize + xSize / 2) % xSize;
+                  dp.y = (dp.y + ySize + ySize / 2) % ySize;
+                  double nVal = (img1.getPixel(w) - gMean) * f + gMean;
+                  img1w.setPixel(dp, nVal);
                   if (f < 0.05)
                     mark1.setPixel(w, 1);
                   else
