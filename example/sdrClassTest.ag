@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
       if (fn1.empty())
         throw "No filename given";
 
-      int bigWindowSize=windowSize*resolutionFactor;
+      int bigWindowSize = windowSize * resolutionFactor;
       double unitSize = 1.0 / resolutionFactor;
 
       Image img1;
@@ -97,8 +97,8 @@ int main(int argc, char* argv[])
               if (img2.inside(w2))
                 {
                   mark(mark2, w2a, w2, 2);
-		  sdr.setInput(img1(w1), img2(w2));
-		  sdr.getPeak(peak);
+                  sdr.setInput(img1(w1), img2(w2));
+                  sdr.getPeak(peak);
                   peak.adaptLimits();
                   WindowWalker w(peak);
                   Point maxp;
@@ -115,12 +115,12 @@ int main(int argc, char* argv[])
                   //      Neighbor8Walker ww(IPoint(maxp));
                   //      for (ww.init();!ww.ready();ww.next())
                   //        peak.setPixel(ww,0);
-                  Point dp = maxp - Point(bigWindowSize / 2, 
-					  bigWindowSize / 2);
+                  Point dp = maxp - Point(bigWindowSize / 2,
+                                          bigWindowSize / 2);
                   Point dp2 = 0.5 * dp;
                   Marker(1, p1 - dp2, 3, 5, mark1);
                   Marker(1, p2 + dp2, 3, 5, mark2);
-                  cout << dp*unitSize << endl;
+                  cout << dp* unitSize << endl;
                 }
             }
         }

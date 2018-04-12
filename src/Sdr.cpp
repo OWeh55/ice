@@ -1,4 +1,3 @@
-
 #include <algorithm>
 #include "Sdr.h"
 
@@ -195,7 +194,8 @@ void Sdr::getPeak(ImageD& result)
 
   fftw_execute(peakPlan);
 
-  result.create(bigXSize, bigYSize);
+  if ((result.xsize != bigXSize) || (result.ysize != bigYSize))
+    result.create(bigXSize, bigYSize);
   int idx = 0;
   for (int y = 0; y < bigYSize; y++)
     for (int x = 0; x < bigXSize; x++)
