@@ -1,0 +1,226 @@
+#include <image.h>
+
+//#include "peakanalysis.h"
+
+/*AppGen
+  %%  prog: Beschreibung des Programmes
+  prog: Test für sdr
+  %% Beschreibung Parameter
+  % para: symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  para: file1, optional, string, imgfile1, linkes Bild, left.jpg
+  para: file2, optional, string, imgfile2, rechtes Bild, right.jpg
+  %% Beschreibung der Optionen
+  % opt: kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
+  opt: v, verbose,  Void,   verbose,  Ausführliche Meldungen,  false
+  opt: w, window, int, windowMode, Art der Fenster-Funktion, 1
+  opt: s, sdrsize, int, sdrSize, Größe sdr-Fenster, 256
+  opt: f, factor, int, sdrFactor, Faktor für sdr, 8
+  opt: b, beta, double, initialBeta, Startwert für beta, 100.0
+  opt: h, help,   usage,   ,    Hilfe
+AppGen*/
+
+void mark(Image& mi, Window w, int color)
+{
+  for (int i = 0; i < 5; i++)
+    {
+      Line(w.p1.x + i, w.p1.y, w.p1.x + i, w.p2.y, color, mi);
+      Line(w.p1.x, w.p1.y + i, w.p2.x, w.p1.y + i, color, mi);
+      Line(w.p2.x, w.p2.y - i, w.p1.x, w.p2.y - i, color, mi);
+      Line(w.p2.x - i, w.p2.y, w.p2.x - i, w.p1.y, color, mi);
+    }
+}
+
+void mark(Image& mi, Window& alt, Window neu, int color)
+{
+  mark(mi, alt, 0);
+  mark(mi, neu, color);
+  alt = neu;
+}
+
+/*AppGen:Global*/
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      Image leftImage;
+      leftImage.read(imgfile1);
+      Image leftMarker;
+      leftMarker.create(leftImage.xsize, leftImage.ysize, 16);
+      leftMarker.set(0);
+
+      Image rightImage;
+      rightImage.read(imgfile2);
+      Image rightMarker;
+      rightMarker.create(rightImage.xsize, rightImage.ysize, 16);
+      rightMarker.set(0);
+
+      Show(OVERLAY, leftImage, leftMarker, "left");
+      Zoom(leftImage, 0);
+      Show(OVERLAY, rightImage, rightMarker, "right");
+      Zoom(rightImage, 0);
+
+      int resultSize = sdrSize * sdrFactor;
+      ImageD result;
+      result.create(resultSize, resultSize);
+      Image resultImage;
+      resultImage.create(resultSize, resultSize, 255);
+      Image resultMarker;
+      resultMarker.create(resultSize, resultSize, 8);
+      resultMarker.set(0);
+
+      Show(OVERLAY, resultImage, resultMarker, "result");
+
+      int x1 = leftImage.xsize / 2;
+      int y1 = leftImage.ysize / 2;
+      IPoint pLeft(x1, y1);
+
+      int x2 = rightImage.xsize / 2;
+      int y2 = rightImage.ysize / 2;
+      IPoint pRight(x2, y2);
+
+      double beta = initialBeta;
+
+      Window wLeftAlt, wRightAlt;
+      Sdr sdr(sdrSize,sdrSize,beta,sdrFactor,windowMode);
+
+      bool abort = false;
+      while (!abort)
+        {
+          Printf("Beta: %f\n", beta);
+          Printf("WindowType: %d\n", windowMode);
+          IPoint p;
+          Window w;
+
+          cout << "--------------------------------------" << endl;
+
+          leftMarker.set(0);
+          Marker(5, pLeft, 2, 19, leftMarker);
+          rightMarker.set(0);
+          Marker(5, pRight, 2, 19, rightMarker);
+
+          Window wLeft(pLeft, sdrSize);
+          mark(leftMarker, wLeftAlt, wLeft, 1);
+          Window wRight(pRight, sdrSize);
+          mark(rightMarker, wRightAlt, wRight, 1);
+          Image testLeft = leftImage(wLeft);
+          Image testRight = rightImage(wRight);
+          if (verbose)
+            cout << "detecting shift" << endl;
+	  sdr.setInput(testLeft, testRight);
+	  sdr.getPeak(result);
+	  
+          if (verbose)
+            cout << "analysing peak image" << endl;
+
+	  //          Point pd;
+	  //          double eval = peakAnalysis(result, pd);
+	  //          cout << "peak eval: " << eval << endl;
+
+          IPoint pMax;
+          {
+            double sumAbs = 0.0;
+            double sum2 = 0.0;
+            double maxval = result.getPixel(0, 0);
+            pMax.x = 0;
+            pMax.y = 0;
+            for (int y = 0; y < result.ysize; ++y)
+              for (int x = 0; x < result.xsize; ++x)
+                {
+                  double val = result.getPixelUnchecked(x, y);
+                  if (val > maxval)
+                    {
+                      maxval = val;
+                      pMax.x = x;
+                      pMax.y = y;
+                    }
+                  sum2 += val * val;
+                  sumAbs += fabs(val);
+                }
+            int nPoints = result.xsize * result.ysize;
+            double val = sumAbs / nPoints;
+            double val2 = sqrt(sum2 / nPoints);
+            cout << "peak height: " << maxval << endl;
+            cout << "mean absolute value: " << val << endl;
+            cout << "noise: " << val2 << endl;
+            cout << "rel. height: " << maxval / val2 << " " << maxval / val << endl;
+          }
+
+          resultMarker.set(0);
+          // Marker(3, pMax, 1, 9, resultMarker);
+          for (int x = 0; x < sdrSize * sdrFactor; x++)
+            {
+              if (x < pMax.x - 10 || x > pMax.x + 10)
+                resultMarker.setPixel(x, pMax.y, 1);
+            }
+          for (int y = 0; y < sdrSize * sdrFactor; y++)
+            {
+              if (y < pMax.y - 10 || y > pMax.y + 10)
+                resultMarker.setPixel(pMax.x, y, 1);
+            }
+          double dx = 1.0 * (pMax.x - sdrSize * sdrFactor / 2) / sdrFactor;
+          double dy = 1.0 * (pMax.y - sdrSize * sdrFactor / 2) / sdrFactor;
+          Printf("deltaX: %g   deltaY: %g\n", dx, dy);
+          IPoint right = pRight + IPoint(dx, dy);
+          Printf("Zielpunkt: %6.2f,%6.2f\n", pRight.x + dx, pRight.y + dy);
+          Marker(3, right, 1, 15, rightMarker);
+
+          ConvImgDImg(result, resultImage);
+          int key = GetChar();
+          switch (key)
+            {
+            case '0':
+              windowMode = 0;
+	      sdr.setWindowMode(windowMode);
+              break;
+            case '1':
+              windowMode = 1;
+	      sdr.setWindowMode(windowMode);
+              break;
+            case '2':
+              windowMode = 2;
+	      sdr.setWindowMode(windowMode);
+              break;
+            case 'l':
+            case 'L':
+              do
+                {
+                  p = SelPoint(leftImage);
+                }
+              while (!leftImage.inside(Window(p, sdrSize)));
+              pLeft = p;
+              break;
+            case 'r':
+            case 'R':
+              do
+                {
+                  p = SelPoint(rightImage);
+                }
+              while (!rightImage.inside(Window(p, sdrSize)));
+              pRight = p;
+              break;
+
+            case 'b':
+              beta = beta / 2;
+              break;
+            case 'B':
+              beta = beta * 2;
+              break;
+
+            case 'q':
+            case 'Q':
+              abort = true;
+              break;
+            }
+        }
+
+      Print("Abgebrochen! Irgend eine Taste druecken");
+      GetChar();
+    }
+  catch (const char* msg)
+    {
+      cerr << "Exception: " << msg << endl;
+    }
+  return 0;
+}
