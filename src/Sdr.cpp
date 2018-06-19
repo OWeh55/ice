@@ -15,7 +15,7 @@ Sdr::Sdr(int xSize, int ySize, double b, int factor, int windowMode):
   // create plan for inverse fft of peak image
   bigXSize = factor * xSize; // extended size for sub-pixel accuracy
   bigYSize = factor * ySize;
-  peakdata.resize(bigXSize * bigYSize * 2); 
+  peakdata.resize(bigXSize * bigYSize * 2);
   peakPlan = fftw_plan_dft_2d(bigYSize, bigXSize,
                               reinterpret_cast<fftw_complex*>(peakdata.data()),
                               reinterpret_cast<fftw_complex*>(peakdata.data()),
@@ -70,7 +70,7 @@ void Sdr::window2(std::vector<double>& window)
 
 void Sdr::setWindowMode(int m)
 {
-  windowing=m;
+  windowing = m;
   switch (m)
     {
     case 0:
@@ -94,29 +94,29 @@ void Sdr::setInput(const Image& img1, const Image& img2)
   for (int y = 0; y < ySize; y++)
     for (int x = 0; x < xSize; x++)
       {
-	if (windowing==0) // avoid unnecessary multiplication
-	  {
-	    data[idx] = img1.getPixelUnchecked(x, y);
-	    idx++;
-	    data[idx] = img2.getPixelUnchecked(x, y);
-	    idx++;
-	  }
-	else
-	  {
-	    data[idx] = img1.getPixelUnchecked(x, y) * xWindow[x] * yWindow[y];
-	    idx++;
-	    data[idx] = img2.getPixelUnchecked(x, y) * xWindow[x] * yWindow[y];
-	    idx++;
-	  }
+        if (windowing == 0) // avoid unnecessary multiplication
+          {
+            data[idx] = img1.getPixelUnchecked(x, y);
+            idx++;
+            data[idx] = img2.getPixelUnchecked(x, y);
+            idx++;
+          }
+        else
+          {
+            data[idx] = img1.getPixelUnchecked(x, y) * xWindow[x] * yWindow[y];
+            idx++;
+            data[idx] = img2.getPixelUnchecked(x, y) * xWindow[x] * yWindow[y];
+            idx++;
+          }
       }
 }
 
 void sdrFormulaPacked(
-		      double rr, double ir, // complex positiv coefficient
-		      double rq, double iq, // complex negativ coefficient
-		      double beta,
-		      double& rp, double& ip // complex coefficient of peak
-		      )
+  double rr, double ir, // complex positiv coefficient
+  double rq, double iq, // complex negativ coefficient
+  double beta,
+  double& rp, double& ip // complex coefficient of peak
+)
 {
   // complex coefficient for f1 and f2 from coefficient of f1 + i * f2
   double r1 = rr + rq;
@@ -200,9 +200,9 @@ void Sdr::getPeak(ImageD& result)
   for (int y = 0; y < bigYSize; y++)
     for (int x = 0; x < bigXSize; x++)
       {
-        result.setPixelUnchecked((x + bigXSize / 2) % bigXSize, 
-				 (y + bigYSize / 2) % bigYSize, 
-				 peakdata[idx]);
+        result.setPixelUnchecked((x + bigXSize / 2) % bigXSize,
+                                 (y + bigYSize / 2) % bigYSize,
+                                 peakdata[idx]);
         idx += 2;
       }
 }

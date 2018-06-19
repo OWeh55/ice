@@ -39,6 +39,19 @@ public:
     return beta;
   }
 
+  virtual int getFactor() const
+  {
+    return factor;
+  }
+  virtual int getXSize() const
+  {
+    return xSize;
+  }
+  virtual int getYSize() const
+  {
+    return ySize;
+  }
+
   virtual void setInput(const Image& img1, const Image& img2);
   virtual void getPeak(ImageD& result);
 private:

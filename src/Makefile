@@ -13,9 +13,9 @@
 # compiler options (e.g. -fPIC )
 ###########################################
 
-#NOFFTW3=1
+#NOFFTW3?=1
 #CXX := g++
-CXX=g++
+CXX?=g++
 #CXX=clang++
 
 SUBDIRS := devices ocr

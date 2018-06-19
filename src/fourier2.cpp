@@ -43,7 +43,7 @@
 //-----------------------------------------------------------------------
 namespace ice
 {
-// power spectra
+// power spectrum
 #define FNAME "PowerSpectrumFImgD"
   int PowerSpectrumFImgD(ImageD re, ImageD im, ImageD nrm, int mode)
   {
@@ -148,7 +148,7 @@ namespace ice
   }
 #undef FNAME
 //
-// Fourier spectra in magnitude/phase-representation
+// Fourier spectrum in magnitude/phase-representation
 //
 #define FNAME "MPSpectrumFImgD"
   int MPSpectrumFImgD(ImageD re, ImageD im, ImageD b, ImageD p)
@@ -257,7 +257,7 @@ namespace ice
   }
 #undef FNAME
 //-----------------------------------------------------
-// direct calculation of spectra from (double)images
+// direct calculation of spectrum from (double)images
 //-----------------------------------------------------
 #define FNAME "PowerSpectrumImgD"
   int PowerSpectrumImgD(ImageD img, ImageD spec, int mode)

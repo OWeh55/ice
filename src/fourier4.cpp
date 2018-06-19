@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /*
- * Operations on Fourier and Hartley spectra (twodimensional)
+ * Operations on Fourier and Hartley spectrum (twodimensional)
  * Wolfgang Ortmann, 97, 98
  */
 
@@ -36,7 +36,7 @@
 #include "fourier.h"
 
 //-----------------------------------------------------------------------
-// Whitening of spectra
+// Whitening of spectrum
 //-----------------------------------------------------------------------
 namespace ice
 {

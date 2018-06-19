@@ -203,7 +203,7 @@ namespace ice
 
     /**
      * center of Image.
-     * The central point of an Image can be important if used for fourier spectra etc.
+     * The central point of an Image can be important if used for fourier spectrum etc.
      * This is calculated by integer division of xSize and ySize by 2.
      */
     IPoint center() const
