@@ -129,6 +129,9 @@ namespace ice
                                        const std::string& titleP)
     : ImageBase(w.Width(), w.Height(), imgPtr->maxval, titleP, imgPtr)
   {
+    if (w.p1.x < 0 || w.p1.y < 0 ||
+        w.p2.x >= imgPtr->xsize || w.p2.y >= imgPtr->ysize)
+      throw IceException("iceImage<ValueType>::iceImage()", M_WRONG_WINDOW3);
     Pixel = new ValueType*[ysize];
     Pixelarray = nullptr;
     can_delete = false;

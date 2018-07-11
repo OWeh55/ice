@@ -10,10 +10,6 @@ namespace ice
   class ImageStruct
   {
   public:
-    ImageStruct()
-    {
-    }
-
     virtual ~ImageStruct() {}
 
     virtual int ImageType() const = 0;

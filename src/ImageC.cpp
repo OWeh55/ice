@@ -119,22 +119,24 @@ namespace ice
   Image::Image(const Image& i, const Window& w, const std::string& title)
   {
     ImageBase* imag = nullptr;
-
-    switch (i->getBytesPerPoint())
+    try
       {
-      case sizeof(PixelType1):
-        imag = new iceImage1((iceImage1*)i.img, w, title);
-        break;
-      case sizeof(PixelType2):
-        imag = new iceImage2((iceImage2*)i.img, w, title);
-        break;
-      case sizeof(PixelType3):
-        imag = new iceImage3((iceImage3*)i.img, w, title);
-        break;
-      default:
-        throw IceException(FNAME, M_WRONG_PARAM);
+        switch (i->getBytesPerPoint())
+          {
+          case sizeof(PixelType1):
+            imag = new iceImage1((iceImage1*)i.img, w, title);
+            break;
+          case sizeof(PixelType2):
+            imag = new iceImage2((iceImage2*)i.img, w, title);
+            break;
+          case sizeof(PixelType3):
+            imag = new iceImage3((iceImage3*)i.img, w, title);
+            break;
+          default:
+            throw IceException(FNAME, M_WRONG_PARAM);
+          }
       }
-
+    RETHROW;
     xsize = imag->xsize;
     ysize = imag->ysize;
     maxval = imag->maxval;
@@ -193,9 +195,7 @@ namespace ice
     if (!IsImg(imgp))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    Image result(imgp, w, title);
-
-    return result;
+    return Image(imgp, w, title);
   }
 #undef FNAME
 #define FNAME "Image::write"
@@ -236,6 +236,7 @@ namespace ice
     //(xi, yi),(xi + 1, yi),(xi + 1, yi + 1), and(xi, yi + 1), that enclose(x, y)
     x = max<double>(x, 0.0);
     y = max<double>(y, 0.0);
+
     int xi  = (int) x;
     int xi1 = xi + 1;
     int yi  = (int) y;

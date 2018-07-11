@@ -92,7 +92,7 @@ void Sdr::setInput(const Image& img1, const Image& img2)
 {
   if (img1.xsize != xSize || img1.ysize != ySize ||
       img2.xsize != xSize || img2.ysize != ySize)
-     throw IceException("Sdr::setInput", M_WRONG_IMGSIZE);
+    throw IceException("Sdr::setInput", M_WRONG_IMGSIZE);
 
   int idx = 0;
   for (int y = 0; y < ySize; y++)

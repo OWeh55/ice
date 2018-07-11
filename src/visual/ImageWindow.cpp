@@ -301,11 +301,11 @@ namespace ice
 
   void ImageWindow::OnChar(wxKeyEvent& KeyEvent)
   {
-    // processes key events are: plus and minus key
-    // for zooming (the rest will do the scroll helper class for us)
+    // processed key events are: plus and minus key for zooming
+    // (the rest will do the scroll helper class for us)
     if (KeyEvent.GetKeyCode() == '>')
       {
-        // ZoomFactor -1 is the same as ZoomFactor +1, so it can be skipped
+        // ZoomFactors 0 and -1 must be skipped
         if (ZoomFactor == -2)
           DoZoom(1);
         else
@@ -315,7 +315,7 @@ namespace ice
 
     if (KeyEvent.GetKeyCode() == '<')
       {
-        // ZoomFactor -1 is the same as ZoomFactor +1, so it can be skipped
+        // ZoomFactors 0 and -1 must be skipped
         if (ZoomFactor == 1)
           DoZoom(-2);
         else
