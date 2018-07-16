@@ -77,44 +77,50 @@ CircleSeg InputCircleSeg(const Image& img, const string& p)
 
 int main(int argc, char** argv)
 {
-  Image img(1024, 1024, 255);
-  Image mrk(1024, 1024, 8);
-  ClearImg(img);
-  ClearImg(mrk);
+  Image img;
+  img.create(1024, 1024, 255);
+  clearImg(img);
+
+  Image mrk;
+  mrk.create(1024, 1024, 8);
+  clearImg(mrk);
   Show(OVERLAY, img, mrk);
 
   while (true)
     {
       CircleSeg c1 = InputCircleSeg(mrk, "erstes Kreissegment");
-      c1.Draw(mrk, 1);
+      //      c1.draw(mrk, 1);
+      draw(c1, mrk, 1);
       CircleSeg c2 = InputCircleSeg(mrk, "zweites Kreissegment");
-      c2.Draw(mrk, 2);
-      Point p;
-
+      draw(c2, mrk, 2);
 #if 0
-      bool inter = c1.Intersection(c2, p);
-      //      cout << p.x << "," << p.y << endl;
+      {
+        Point p;
+        bool inter = c1.Intersection(c2, p);
+        //      cout << p.x << "," << p.y << endl;
 
-      int color = 3;
+        int color = 3;
 
-      if (!inter)
-        color = 1;
+        if (!inter)
+          color = 1;
 
-      if (Inside(mrk, IPoint(p)))
-        Marker(2, p, color, 7, mrk);
-
+        if (Inside(mrk, IPoint(p)))
+          Marker(2, p, color, 7, mrk);
+      }
 #endif
 
-      for (IPoint p = img.begin(); p != img.end(); img.next(p))
+      WindowWalker p(img);
+      for (p.init(); !p.ready(); p.next())
+        //      for (IPoint p = img.begin(); p != img.end(); img.next(p))
         {
           //    double d1=c1.Distance(Point(p));
           double d1 = c1.Distance(p);
           double d2 = c2.Distance(p);
 
           if (d1 < d2)
-            PutValue(img, p, limited(d1, img));
+            img.setPixel(p, limited(d1, img));
           else
-            PutValue(img, p, limited(d2, img));
+            img.setPixel(p, limited(d2, img));
         }
 
       for (int i = 0; i < 100000; i++)
@@ -128,14 +134,14 @@ int main(int argc, char** argv)
 
           if (c2.Inside(p)) color += 2;
 
-          PutValue(mrk, p, color);
+          mrk.setPixel(p, color);
         }
 
       Print("Weiter... <ENTER>\n");
 
       while (GetChar() != 13) /* wait*/;
 
-      ClearImg(mrk);
+      clearImg(mrk);
 
     }
 
