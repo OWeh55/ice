@@ -42,20 +42,24 @@ LineSeg InputLine(const Image& img, const string& p)
 
 bool InputCircle(const Image& img, const string& p,Circle &c)
 {
+  c=Circle();
   Print("Eingabe " + p + "\n");
   Print("Eingabe Mittelpunkt \n");
-  IPoint p1 = SelPoint(img);
-  Marker(1, p1, 3, 5, img);
-  Print("Eingabe Randpunkt \n");
   int rc;
-  IPoint p2 = SelPoint(img,rc);
+
+  IPoint p1 = SelPoint(img,rc);
   if (rc>=0)
     {
-      Marker(1, p1, 0, 5, img);
-      c  = Circle(p1, (p2 - p1).r());
+      Marker(1, p1, 3, 5, img);
+      Print("Eingabe Randpunkt \n");
+
+      IPoint p2 = SelPoint(img,rc);
+      if (rc>=0)
+	{
+	  Marker(1, p1, 0, 5, img);
+	  c  = Circle(p1, (p2 - p1).r());
+	}
     }
-  else
-    c=Circle();
   return (rc>=0);
 }
 
