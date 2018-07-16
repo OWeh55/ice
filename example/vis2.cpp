@@ -332,7 +332,7 @@ void PrintA(string);
 void ParameterMessage(void);
 int gc();
 
-void Printpp(int x, int& y, const string& text)
+void PrintAt(int x, int& y, const string& text)
 {
   SetAlphaCursor(x, y++);
   PrintA(text);
@@ -346,21 +346,21 @@ void PrintHelp()
 
   SetAttribute(-1, -1, -1, 0);
 
-  Printpp(x1, ya, "~Typ des Fraktals");
-  Printpp(x1, ya, "~Iterationstiefe");
-  Printpp(x1, ya, "~Farbtabellen");
-  Printpp(x1, ya, "~Speichern");
-  Printpp(x1, ya, "~Grösserer Ausschnitt");
-  Printpp(x1, ya, "~Angleichen Ausdehnungen x/y");
-  Printpp(x1, ya, "~Rücksetzen der Geometrie");
-  Printpp(x1, ya, "~Kino - Sequenzberechnung");
-//  Printpp(x1, ya, "S~upersampling ein/aus");
-  Printpp(x1, ya, "~Quittieren");
+  PrintAt(x1, ya, "~Typ des Fraktals");
+  PrintAt(x1, ya, "~Iterationstiefe");
+  PrintAt(x1, ya, "~Farbtabellen");
+  PrintAt(x1, ya, "~Speichern");
+  PrintAt(x1, ya, "~Grösserer Ausschnitt");
+  PrintAt(x1, ya, "~Angleichen Ausdehnungen x/y");
+  PrintAt(x1, ya, "~Rücksetzen der Geometrie");
+  PrintAt(x1, ya, "~Kino - Sequenzberechnung");
+//  PrintAt(x1, ya, "S~upersampling ein/aus");
+  PrintAt(x1, ya, "~Quittieren");
 
   frame_(x1 - 2, y1, xse - 3, ya);
 
   SetAttribute(-1, -1, -1, 1);
-  Printpp(x1, y1, "Tasten-Funktionen:");
+  PrintAt(x1, y1, "Tasten-Funktionen:");
 }
 
 void PrintStatus(const string& msg = "")
