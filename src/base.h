@@ -37,7 +37,7 @@ namespace ice
   typedef int PixelType3;
 
   // sets all grey values of >Img< to >Value<
-  //  void setImg(const Image& img, int value);
+  void setImg(const Image& img, int value);
   void clearImg(const Image& img);
 
   // Copy an image

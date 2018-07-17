@@ -132,7 +132,7 @@ double makeLine(matrix<double>& m, double len, double phi_degree)
   return downsize(big, m);
 }
 
-double makeDisc(matrix<double>& m, double radius)
+double makeDisc(matrix<double>& m, double radius, bool hollow = false)
 {
   int size = int(2 * (radius + 1.0));
   int bigSize = size * iFactor;
@@ -143,6 +143,7 @@ double makeDisc(matrix<double>& m, double radius)
 
   double ifactor2 = iFactor * iFactor;
   double radius2 = radius * radius * ifactor2;
+  double radius3 = (radius - 1) * (radius - 1) * ifactor2;
 
   int z0 = bigSize / 2;
 
@@ -156,6 +157,8 @@ double makeDisc(matrix<double>& m, double radius)
           dy *= dy;
           if (dx + dy < radius2)
             big[x][y] = 1.0;
+          if (hollow && dx + dy < radius3)
+            big[x][y] = 0.0;
         }
     }
 
@@ -174,10 +177,13 @@ double makeMaskFromMatrix(const Image& mask, double par1, double par2, int mode)
   switch (mode)
     {
     case 1:
-      factor = makeDisc(dmask, par1);
+      factor = makeDisc(dmask, par1, false);
       break;
     case 2:
       factor = makeLine(dmask, par1, par2);
+      break;
+    case 3:
+      factor = makeDisc(dmask, par1, true);
       break;
     }
   mask.set(mv2);
@@ -207,6 +213,9 @@ double makeMask(const Image& mask, double par1, double par2, int mode)
     case 2:
       result = makeMaskFromMatrix(mask, par1, par2, 2);
       break;
+    case 3:
+      result = makeMaskFromMatrix(mask, par1, par2, 3);
+      break;
     case 99:
       // Maske aus Datei laden
       // wird nicht hier bearbeitet
@@ -223,13 +232,14 @@ prog: Invertierung der Faltung
 %symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
 para: file,optional,string,fn,Bild-Datei,""
 %
+opt: e, expand, int, expand, Erweitern durch Padding um Faktor expand, 1
 opt: b, beta, double, beta, Regularisierungsparameter, 0.01
 opt: f, factor, double, factor, Faktor für Faltung (0.0=auto), 0.0
 opt: d, deconvolution, void, deconv, Nur inverse Faltung, false
+opt: M, maskfile, string, maskFilename, Lies Maske aus Datei, ""
 opt: m, maskmode, int, maskMode, Modus für [Ent-]Faltungsmaske, 1
 opt2:   m = 1  Kreisscheibe
 opt2:   m = 2  Linie / Bewegungsunschärfe
-opt: M, maskfile, string, maskFilename, Lies Maske aus Datei, ""
 opt: r, radius, double, radius, Ausdehnung der Maske, 10
 opt: p, phi, double, phi, Orientierung der Maske (°), 0
 opt: q, quantize, void, simulateQuantization, Simuliere Quantisierung, false
@@ -322,6 +332,25 @@ int main(int argc, char* argv[])
           if (verbose)
             cout << "Lese" << fn << endl;
           src = ReadImg(fn);
+          if (expand > 1)
+            {
+              WindowWalker w(src);
+              double sum = 0;
+              for (w.init(); !w.ready(); w.next())
+                sum += src.getPixel(w);
+              int middle = sum / src.xsize / src.ysize;
+              int xSizeN = src.xsize * expand;
+              int xO = (xSizeN - src.xsize) / 2;
+              int ySizeN = src.ysize * expand;
+              int yO = (ySizeN - src.ysize) / 2;
+              Image esrc;
+              esrc.create(xSizeN, ySizeN, src.maxval);
+              esrc.set(middle);
+              for (int y = yO; y < yO + src.ysize; y++)
+                for (int x = xO; x < xO + src.xsize; x++)
+                  esrc.setPixel(x, y, src.getPixel(x - xO, y - yO));
+              src = esrc;
+            }
         }
       else
         {

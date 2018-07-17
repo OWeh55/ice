@@ -31,14 +31,14 @@ using namespace std;
 
 namespace ice
 {
-#define FNAME "SetImg"
-  void setImg(const Image& img, int Value)
+#define FNAME "setImg"
+  void setImg(const Image& img, int value)
   {
-    if (Value < 0)
+    if (value < 0)
       throw IceException(FNAME, M_VALTOOSMALL);
-    if (Value > img.maxval)
+    if (value > img.maxval)
       throw IceException(FNAME, M_VALTOOLARGE);
-    img.set(Value);
+    img.set(value);
   }
 #undef FNAME
 
