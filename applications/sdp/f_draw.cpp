@@ -116,12 +116,12 @@ void Draw::get_data()
       for (int i = 0; i < nClasses; ++i)
         h.addValue(i, (*tsrc2)[i]);
 
-      h.Vis(valuer, (*tresult)[0]);
+      h.draw((*tresult)[0], valuer);
 
       if (src1->getSize() > 1)
-        h.Vis(valueg, (*tresult)[1]);
+        h.draw((*tresult)[1],valueg);
 
       if (src1->getSize() > 2)
-        h.Vis(valueb, (*tresult)[2]);
+        h.draw((*tresult)[2],valueb);
     }
 }

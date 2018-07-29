@@ -25,7 +25,7 @@ public:
     result[0] = tresult;
     addImageParameters(result, 0);
     
-    SkeletonImg((*img)[0], (*tresult)[0], threshold);
+    skeletonImg((*img)[0], (*tresult)[0], threshold);
   }
 };
 

@@ -18,9 +18,9 @@ protected:
     int grad = getInputInt(2);
     int ix = getInputInt(3);
     int iy = getInputInt(4);
-    LSIFilter pf = mkPolynomFilter(size, grad, ix, iy);
+    LsiFilter pf = makePolynomFilter(size, grad, ix, iy);
     int offset = pf.proposeOffset(img2);
-    pf.Filter(img1, img2, offset);
+    pf.filter(img1, img2, offset);
   }
 };
 

@@ -14,7 +14,7 @@ protected:
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
-    DilateImg(img1, img2, sx, sy);
+    dilateImg(img1, img2, sx, sy);
   }
 };
 
@@ -31,7 +31,7 @@ protected:
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
-    ErodeImg(img1, img2, sx, sy);
+    erodeImg(img1, img2, sx, sy);
   }
 };
 
@@ -48,7 +48,7 @@ protected:
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
-    OpeningImg(img1, img2, sx, sy);
+    openingImg(img1, img2, sx, sy);
   }
 };
 
@@ -65,7 +65,7 @@ protected:
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
-    ClosingImg(img1, img2, sx, sy);
+    closingImg(img1, img2, sx, sy);
   }
 };
 
