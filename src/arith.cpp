@@ -502,7 +502,7 @@ namespace ice
         val = dest.maxval;
       }
 
-    if ((bin < 1) || (bin > src.maxval) || (val < 0) || (val > dest.maxval))
+    if ((bin < 0) || (bin > src.maxval) || (val < 0) || (val > dest.maxval))
       throw IceException(FNAME, M_WRONG_PARAM);
 
     switch ((src->ImageType() << 4) + dest->ImageType())
