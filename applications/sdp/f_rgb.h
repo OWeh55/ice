@@ -20,13 +20,13 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *src = getInputImage(0);
+    const GImage* src = getInputImage(0);
     calcSize(src);
     if (nImg != 3)
       throw SdpException(name, "expected color image");
-    GImage *res1;
-    GImage *res2;
-    GImage *res3;
+    GImage* res1;
+    GImage* res2;
+    GImage* res3;
     result[0] = res1 = mkGImage(src, 1);
     CopyImg((*src)[0], (*res1)[0]);
     result[1] = res2 = mkGImage(src, 1);
@@ -56,16 +56,16 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *src = getInputImage(0);
+    const GImage* src = getInputImage(0);
     calcSize(src);
     if (nImg != 3)
       throw SdpException(name, "expected color image");
 
     ColorImage cimg((*src)[0], (*src)[1], (*src)[2]);
 
-    GImage *res1;
-    GImage *res2;
-    GImage *res3;
+    GImage* res1;
+    GImage* res2;
+    GImage* res3;
     result[0] = res1 = mkGImage(src, 1);
     result[1] = res2 = mkGImage(src, 1);
     result[2] = res3 = mkGImage(src, 1);
@@ -94,16 +94,16 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *src = getInputImage(0);
+    const GImage* src = getInputImage(0);
     calcSize(src);
     if (nImg != 3)
       throw SdpException(name, "expected color image");
 
     ColorImage cimg((*src)[0], (*src)[1], (*src)[2]);
 
-    GImage *res1;
-    GImage *res2;
-    GImage *res3;
+    GImage* res1;
+    GImage* res2;
+    GImage* res3;
     result[0] = res1 = mkGImage(src, 1);
     result[1] = res2 = mkGImage(src, 1);
     result[2] = res3 = mkGImage(src, 1);
@@ -132,16 +132,16 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *src1 = getInputImage(0);
+    const GImage* src1 = getInputImage(0);
     calcSize(src1);
     if (nImg != 1)
       throw SdpException(name, "expected grayvalue image");
-    const GImage *src2 = getInputImage(1);
+    const GImage* src2 = getInputImage(1);
     adaptSize(src2);
-    const GImage *src3 = getInputImage(2);
+    const GImage* src3 = getInputImage(2);
     adaptSize(src3);
     nImg = 3;
-    GImage *tresult = createResult();
+    GImage* tresult = createResult();
 
     CopyImg((*src1)[0], (*tresult)[0]);
     CopyImg((*src2)[0], (*tresult)[1]);

@@ -10,7 +10,7 @@ public:
         "<image> <sizex> <sizey> => <image+>") {}
   FFUNC(DilateImage);
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
@@ -27,7 +27,7 @@ public:
                                             "<image> <sizex> <sizey> => <image+>") {}
   FFUNC(ErodeImage);
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
@@ -44,7 +44,7 @@ public:
         "<image> <sizex> <sizey> => <image+>") {}
   FFUNC(OpeningImage);
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
@@ -57,11 +57,11 @@ FF(OpeningImage)
 class ClosingImage: public FilterAllChannelsOneInput
 {
 public:
-  ClosingImage(): FilterAllChannelsOneInput("closing", 3, 5 , "apply closing with box - "
+  ClosingImage(): FilterAllChannelsOneInput("closing", 3, 5, "apply closing with box - "
         "<image> <sizex> <sizey> => <image+>") {}
   FFUNC(ClosingImage);
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int sx = getInputInt(1, 3);
     int sy = getInputInt(2, sx);
@@ -81,7 +81,7 @@ public:
 
 protected:
 
-  virtual void filterOneChannel(const Image &imgsrc, const Image &img3)
+  virtual void filterOneChannel(const Image& imgsrc, const Image& img3)
   {
     Image img1 = imgsrc;
     int fsizex = getInputInt(1, 5);

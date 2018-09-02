@@ -12,7 +12,7 @@ public:
   FFUNC(FlipImage);
 
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int mode = getInputInt(1, 1);
     switch (mode)

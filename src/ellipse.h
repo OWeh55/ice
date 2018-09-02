@@ -62,8 +62,8 @@ namespace ice
     double cc, ss, aa, bb;
 
     //    virtual int draw(Image img,int val,int fval=-1) const;
-    virtual bool inside_(Point pp) const;
-    virtual double distance_(Point pp) const;
+    virtual bool inside_(Point pp) const override;
+    virtual double distance_(Point pp) const override;
 
   private:
     void normalize();
@@ -103,7 +103,7 @@ namespace ice
 
   protected:
     //    virtual int draw(Image img,int val,int fval=-1) const;
-    virtual bool inside_(Point pp) const ;
+    virtual bool inside_(Point pp) const override;
 
     double phi1; // segment limits relative to ellipse
     double phi2;

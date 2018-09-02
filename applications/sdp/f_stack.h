@@ -13,14 +13,14 @@ public:
   FFUNC(Stack)
 
 protected:
-  virtual GImage *createResult(int idx = 0, bool withParameters = true)
+  virtual GImage* createResult(int idx = 0, bool withParameters = true)
   {
     ysize = inp1->ySize() + inp2->ySize();
     xsize = ice::max(inp1->xSize(), inp2->xSize());
     return FilterAllChannelsTwoInputs::createResult(idx, withParameters);
   }
 
-  virtual void filterOneChannel(const Image &img1, const Image &img2, const Image &img3)
+  virtual void filterOneChannel(const Image& img1, const Image& img2, const Image& img3)
   {
 
     img3.set(0);

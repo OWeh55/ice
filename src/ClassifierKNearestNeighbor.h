@@ -78,9 +78,9 @@ namespace ice
   protected:
     /** classify single feature vector*/
     virtual int _classify(const std::vector<double>& feat,
-                          std::vector<double>& prob) const;
+                          std::vector<double>& prob) const override;
 
-    virtual bool _finish();
+    virtual bool _finish() override;
 
     /*
     void insert_distance(double distance, int class_nr) const;

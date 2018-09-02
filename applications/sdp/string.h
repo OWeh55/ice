@@ -3,6 +3,6 @@
 
 #include <string>
 
-bool stringMatch(const std::string &s1, const std::string &s2);
+bool stringMatch(const std::string& s1, const std::string& s2);
 
 #endif

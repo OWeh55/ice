@@ -8,17 +8,17 @@
 
 using namespace std;
 
-bool fileexists(const std::string &fn)
+bool fileexists(const std::string& fn)
 {
   struct stat buf;
   int rc = stat(fn.c_str(), &buf);
   return rc == 0;
 }
 
-void splitFileName(const std::string &fname,
-                   std::string &path,
-                   std::string &basename,
-                   std::string &extension)
+void splitFileName(const std::string& fname,
+                   std::string& path,
+                   std::string& basename,
+                   std::string& extension)
 {
   size_t poss = fname.find_last_of('/');
   if (poss == string::npos)
@@ -45,9 +45,9 @@ void splitFileName(const std::string &fname,
   basename = fname.substr(poss, posd - poss);
 }
 
-std::string makeFileName(const std::string &path,
-                         const std::string &basename,
-                         const std::string &extension)
+std::string makeFileName(const std::string& path,
+                         const std::string& basename,
+                         const std::string& extension)
 {
   string result = path;
   if (!result.empty() && result.back() != '/')
@@ -63,7 +63,7 @@ std::string makeFileName(const std::string &path,
   return result;
 }
 
-std::string findFile(const std::string &name, std::vector<std::string> &pathlist)
+std::string findFile(const std::string& name, std::vector<std::string>& pathlist)
 {
   if (name[0] == '/') //absolute path in name -> return this
     return name;

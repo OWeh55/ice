@@ -16,7 +16,7 @@ protected:
   //  int xsnew, ysnew, xp, yp;
   //  int paddingValue;
 
-  virtual GImage *createResult(int idx = 0, bool withParameters = true)
+  virtual GImage* createResult(int idx = 0, bool withParameters = true)
   {
     int xs = getInputInt(1);
     int ys = getInputInt(2);
@@ -31,7 +31,7 @@ protected:
     return FilterAllChannelsOneInput::createResult(idx, withParameters);
   }
 
-  virtual void filterOneChannel(const Image &img1, const Image &img2)
+  virtual void filterOneChannel(const Image& img1, const Image& img2)
   {
     int paddingValue = getInputInt(5, 0);
     img2.set(paddingValue);

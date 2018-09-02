@@ -15,10 +15,10 @@
 
 Library macros;
 
-void compileParameter(Parser &line,
-                      const OutletMap &outlets,
-                      const FilterOutlet &lastOutlet,
-                      std::vector<FilterOutlet> &input,
+void compileParameter(Parser& line,
+                      const OutletMap& outlets,
+                      const FilterOutlet& lastOutlet,
+                      std::vector<FilterOutlet>& input,
                       bool scriptVerbose)
 {
   int inputIndex = 0;
@@ -77,7 +77,7 @@ void compileParameter(Parser &line,
                           if (scriptVerbose)
                             cout << "," << nextvalue.token;
                         }
-                      Filter *in = new ConstantFilter(ivv);
+                      Filter* in = new ConstantFilter(ivv);
                       input[inputIndex] = FilterOutlet(in);
                     }
                     break;
@@ -94,7 +94,7 @@ void compileParameter(Parser &line,
                           if (scriptVerbose)
                             cout << "," << nextvalue.token;
                         }
-                      Filter *in = new ConstantFilter(dvv);
+                      Filter* in = new ConstantFilter(dvv);
                       input[inputIndex] = FilterOutlet(in);
                     }
                     break;
@@ -111,7 +111,7 @@ void compileParameter(Parser &line,
                           if (scriptVerbose)
                             cout << "," << nextvalue.token;
                         }
-                      Filter *in = new ConstantFilter(svv);
+                      Filter* in = new ConstantFilter(svv);
                       input[inputIndex] = FilterOutlet(in);
                     }
                     break;
@@ -131,20 +131,20 @@ void compileParameter(Parser &line,
                     {
                     case Token::integer:
                     {
-                      Filter *in = new ConstantFilter(para.getInt());
+                      Filter* in = new ConstantFilter(para.getInt());
                       input[inputIndex] = FilterOutlet(in);
                     }
                     break;
 
                     case Token::floatingpoint:
                     {
-                      Filter *in = new ConstantFilter(para.getFloat());
+                      Filter* in = new ConstantFilter(para.getFloat());
                       input[inputIndex] = FilterOutlet(in);
                     }
                     break;
                     case Token::stringliteral:
                     {
-                      Filter *in = new ConstantFilter(para.getString());
+                      Filter* in = new ConstantFilter(para.getString());
                       input[inputIndex] = FilterOutlet(in);
                     }
                     break;
@@ -186,8 +186,8 @@ void compileParameter(Parser &line,
  * returns filter tree
  */
 
-Filter *Compile(FilterDescription &src,
-                OutletMap &outlet,  // predefined outlets for input of macro,
+Filter* Compile(FilterDescription& src,
+                OutletMap& outlet,  // predefined outlets for input of macro,
                 // used to add other labeled outlets during compilation
                 bool scriptVerbose
                )
@@ -197,7 +197,7 @@ Filter *Compile(FilterDescription &src,
   Macro newMacro;
 
   FilterOutlet lastOutlet;
-  Filter *result = NULL;
+  Filter* result = NULL;
   while (!src.empty())
     {
       // prepare first operation for parsing
@@ -321,7 +321,7 @@ Filter *Compile(FilterDescription &src,
             }
           else
             {
-              Filter *currentFilter = NULL;
+              Filter* currentFilter = NULL;
               if (stringMatch(filter, "dial"))
                 {
                   // very special filter which needs special handling
@@ -336,7 +336,7 @@ Filter *Compile(FilterDescription &src,
                   int max = oper.getToken(Token::integer).getInt();
                   oper.expect(',');
                   int stepWidth = oper.getToken(Token::integer).getInt();
-                  Dial *dial = new Dial(initialValue, min, max, stepWidth);
+                  Dial* dial = new Dial(initialValue, min, max, stepWidth);
                   dial->setName(name);
                   currentFilter = dial;
                   dials.push_back(dial);
@@ -350,7 +350,7 @@ Filter *Compile(FilterDescription &src,
                       cout << filter ;
                     }
 
-                  const Macro &currentMacro = macros[filter];
+                  const Macro& currentMacro = macros[filter];
 
                   OutletMap outletMap;
                   int nInputs = currentMacro.inputlabels.size();
@@ -358,7 +358,7 @@ Filter *Compile(FilterDescription &src,
                   if (nOutputs == 0)
                     nOutputs = 1;
 
-                  MacroCapsule *macro = new MacroCapsule(nInputs, nOutputs);
+                  MacroCapsule* macro = new MacroCapsule(nInputs, nOutputs);
                   macro->setName(filter);
 
                   std::vector<FilterOutlet> macroinputs(nInputs);
@@ -478,7 +478,7 @@ Filter *Compile(FilterDescription &src,
   return result;
 }
 
-void compileMacro(const std::string &fn, bool scriptverbose)
+void compileMacro(const std::string& fn, bool scriptverbose)
 {
   deque<string> ops;
   string line;
@@ -494,7 +494,7 @@ void compileMacro(const std::string &fn, bool scriptverbose)
     }
 
   OutletMap om;
-  Filter *res = Compile(ops,
+  Filter* res = Compile(ops,
                         om,  // outletmap empty for macrodefinitions
                         scriptverbose
                        );

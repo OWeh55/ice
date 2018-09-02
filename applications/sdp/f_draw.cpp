@@ -6,8 +6,8 @@
 
 void Draw::get_data()
 {
-  const GImage *src1 = getInputImage(0);
-  const GData *src2 = getInputData(1);
+  const GImage* src1 = getInputImage(0);
+  const GData* src2 = getInputData(1);
 
   int valuer = getInputInt(2, src1->maxVal());
   int valueg = getInputInt(3, valuer);
@@ -15,16 +15,16 @@ void Draw::get_data()
 
   calcSize(src1);
 
-  GImage *tresult = cloneGImage(src1);
+  GImage* tresult = cloneGImage(src1);
   result[0] = tresult;
   addImageParameters(result, 0);
 
   if (src2->getType().type == DType::point)
     {
-      const GPoint *tsrc2 = dynamic_cast<const GPoint *>(src2);
+      const GPoint* tsrc2 = dynamic_cast<const GPoint*>(src2);
       for (int i = 0; i < tsrc2->getSize(); ++i)
         {
-          const Point &p = (*tsrc2)[i];
+          const Point& p = (*tsrc2)[i];
           (*tresult)[0].setPixelClipped(p.x, p.y, valuer);
           if (src1->getSize() > 1)
             (*tresult)[1].setPixelClipped(p.x, p.y, valueg);
@@ -35,7 +35,7 @@ void Draw::get_data()
 
   else if (src2->getType().type == DType::graph)
     {
-      const GGraph *tsrc2 = dynamic_cast<const GGraph *>(src2);
+      const GGraph* tsrc2 = dynamic_cast<const GGraph*>(src2);
       Point p1;
       Point p2;
       for (int i = 0; i < tsrc2->nEdges(); ++i)
@@ -51,7 +51,7 @@ void Draw::get_data()
 
   else if (src2->getType().type == DType::contur)
     {
-      const GContur *tsrc2 = dynamic_cast<const GContur *>(src2);
+      const GContur* tsrc2 = dynamic_cast<const GContur*>(src2);
       for (int i = 0; i < tsrc2->getSize(); ++i)
         {
           MarkContur((*tsrc2)[i], valuer, (*tresult)[0]);
@@ -66,10 +66,10 @@ void Draw::get_data()
 
   else if (src2->getType().type == DType::region)
     {
-      const GRegion *tsrc2 = dynamic_cast<const GRegion *>(src2);
+      const GRegion* tsrc2 = dynamic_cast<const GRegion*>(src2);
       for (int i = 0; i < tsrc2->getSize(); ++i)
         {
-          const Region &r = (*tsrc2)[i];
+          const Region& r = (*tsrc2)[i];
           r.draw((*tresult)[0], valuer);
 
           if (src1->getSize() > 1)
@@ -81,7 +81,7 @@ void Draw::get_data()
     }
   else if (src2->getType().type == DType::image)
     {
-      const GImage *tsrc2 = dynamic_cast<const GImage *>(src2);
+      const GImage* tsrc2 = dynamic_cast<const GImage*>(src2);
       if (tsrc2->getSize() != 1)
         throw SdpException(getName(), "expected grayvalue image");
 
@@ -110,7 +110,7 @@ void Draw::get_data()
   else if (src2->getType().type == DType::integer)
     {
       // we assume, that the given data vector<int> is a histogram
-      const GInteger *tsrc2 = dynamic_cast<const GInteger *>(src2);
+      const GInteger* tsrc2 = dynamic_cast<const GInteger*>(src2);
       int nClasses = src2->getSize();
       Histogram h(nClasses);
       for (int i = 0; i < nClasses; ++i)
@@ -119,9 +119,9 @@ void Draw::get_data()
       h.draw((*tresult)[0], valuer);
 
       if (src1->getSize() > 1)
-        h.draw((*tresult)[1],valueg);
+        h.draw((*tresult)[1], valueg);
 
       if (src1->getSize() > 2)
-        h.draw((*tresult)[2],valueb);
+        h.draw((*tresult)[2], valueb);
     }
 }

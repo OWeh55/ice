@@ -160,12 +160,12 @@ namespace ice
       return false;
     }
 
-    virtual double distance_(Point p) const
+    virtual double distance_(Point p) const override
     {
       return ice::Distance(p, ClosestPoint(p));
     }
 
-    virtual double getArea() const
+    virtual double getArea() const override
     {
       return 0;
     }

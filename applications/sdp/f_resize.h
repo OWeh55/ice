@@ -14,12 +14,12 @@ public:
 
 protected:
 
-  virtual void filterOneChannel(const Image &img1, const Image &img2)
+  virtual void filterOneChannel(const Image& img1, const Image& img2)
   {
     renormImg(img1, img2);
   }
 
-  virtual GImage *createResult(int idx = 0, bool withParameters = true)
+  virtual GImage* createResult(int idx = 0, bool withParameters = true)
   {
     int xs = getInputInt(1);
     int ys = getInputInt(2, 0);

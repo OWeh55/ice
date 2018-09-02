@@ -57,35 +57,35 @@ namespace ice
   {
   public:
     using VectorDistance::distance;
-    virtual double distance(const double* x, const double* y, int n) const;
+    virtual double distance(const double* x, const double* y, int n) const override;
   };
 
   class SquaredEuclideanVectorDistance : public VectorDistance
   {
   public:
     using VectorDistance::distance;
-    virtual double distance(const double* x, const double* y, int n) const;
+    virtual double distance(const double* x, const double* y, int n) const override;
   };
 
   class CityBlockVectorDistance : public VectorDistance
   {
   public:
     using VectorDistance::distance;
-    virtual double distance(const double* x, const double* y, int n) const;
+    virtual double distance(const double* x, const double* y, int n) const override;
   };
 
   class EarthMoverUnNormalizedVectorDistance : public VectorDistance
   {
   public:
     using VectorDistance::distance;
-    virtual double distance(const double* x, const double* y, int n) const;
+    virtual double distance(const double* x, const double* y, int n) const override;
   };
 
   class EarthMoverVectorDistance : public VectorDistance
   {
   public:
     using VectorDistance::distance;
-    virtual double distance(const double* x, const double* y, int n) const;
+    virtual double distance(const double* x, const double* y, int n) const override;
   };
 
   class QuadraticFormVectorDistance : public VectorDistance
@@ -96,7 +96,7 @@ namespace ice
   public:
     QuadraticFormVectorDistance(const Matrix& _A) : A(_A) {};
     using VectorDistance::distance;
-    virtual double distance(const double* x, const double* y, int n) const;
+    virtual double distance(const double* x, const double* y, int n) const override;
   };
 
 // constants for distance measures

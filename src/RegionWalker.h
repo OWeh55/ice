@@ -71,7 +71,7 @@ namespace ice
       init();
     }
 
-    void init()
+    void init() override
     {
       idx = 0;
       newidx();
@@ -79,14 +79,14 @@ namespace ice
       ready_ = false;
     }
 
-    virtual void moveTo(IPoint p)
+    virtual void moveTo(IPoint p) override
     {
       referencePoint = p;
       init();
     }
 
     using Walker::next;
-    virtual void next()
+    virtual void next() override
     {
       x++;
       if (x > x2)
@@ -106,7 +106,7 @@ namespace ice
     }
 
     using Walker::prev;
-    virtual void prev()
+    virtual void prev() override
     {
       x--;
       if (x < x1)

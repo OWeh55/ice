@@ -16,10 +16,10 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *img = getInputImage(0);
+    const GImage* img = getInputImage(0);
     string fn = getInputString(1);
     int nImg = img->getSize();
-    GImage *tresult = cloneGImage(img);
+    GImage* tresult = cloneGImage(img);
     result[0] = tresult;
 
     if (nImg == 1)

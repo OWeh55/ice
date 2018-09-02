@@ -14,7 +14,7 @@ public:
 
 protected:
 
-  virtual void filterOneChannel(const Image &img1, const Image &img2, const Image &img3)
+  virtual void filterOneChannel(const Image& img1, const Image& img2, const Image& img3)
   {
     for (int y = 0; y < img3.ysize; ++y)
       for (int x = 0; x < img3.xsize; ++x)
@@ -31,7 +31,7 @@ public:
                                           "<img1> <img2> => <minimg>") {}
   FFUNC(Minimum)
 protected:
-  virtual void filterOneChannel(const Image &img1, const Image &img2, const Image &img3)
+  virtual void filterOneChannel(const Image& img1, const Image& img2, const Image& img3)
   {
     for (int y = 0; y < img3.ysize; ++y)
       for (int x = 0; x < img3.xsize; ++x)

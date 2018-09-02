@@ -5,7 +5,7 @@ eval:"a a + b b + swap - 2 /",ks,vmimage=inv
 #eval:"a b -",ks,vmimage=inv
 #nop:ks=inv
 display:inv=dinv
-return=inv
+return=dinv
 
 test:1=t1
 test=t2

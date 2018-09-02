@@ -17,7 +17,7 @@ public:
 
   virtual ~GGraph() {};
 
-  virtual GData *clone() const
+  virtual GData* clone() const
   {
     return new GGraph(*this);
   }
@@ -33,7 +33,7 @@ public:
     catch (SdpException ex)
       {
         ex.setWhere("DGraph");
-        throw(ex);
+        throw (ex);
       }
   }
 
@@ -42,7 +42,7 @@ public:
     return edges.size();
   }
 
-  virtual void getEdge(int idx, Point &p1, Point &p2) const
+  virtual void getEdge(int idx, Point& p1, Point& p2) const
   {
     if (idx < 0 || idx >= (int)edges.size())
       throw SdpException("Graph::getEdge", "Edge index invalid");

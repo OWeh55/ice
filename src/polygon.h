@@ -64,7 +64,7 @@ namespace ice
     void ConvexHull(Polygon& p) const;
 
   protected:
-    virtual double distance_(Point p) const;
+    virtual double distance_(Point p) const override;
   };
 }
 #endif

@@ -81,7 +81,7 @@ namespace ice
       init();
     }
 
-    virtual void moveTo(IPoint p);
+    virtual void moveTo(IPoint p) override;
 
     virtual void setStartIndex(int idx0p = 0)
     {
@@ -89,14 +89,14 @@ namespace ice
       init();
     }
 
-    virtual void init()
+    virtual void init() override
     {
       setIndex(idx0);
       ready_ = false;
     }
 
     using Walker::next;
-    virtual void next()
+    virtual void next() override
     {
       unsigned int newIdx = normalizedIndex(idx + 1);
       if (newIdx == idx0)
@@ -107,7 +107,7 @@ namespace ice
     }
 
     using Walker::prev;
-    virtual void prev()
+    virtual void prev() override
     {
       unsigned int newIdx = normalizedIndex(idx - 1);
       if (newIdx == idx0)

@@ -43,7 +43,7 @@ namespace ice
     virtual ~ClassifierRandomForest() {};
 
     using Classifier::Init;
-    virtual void Init(int classes, int dimension);
+    virtual void Init(int classes, int dimension) override;
     virtual void Init(int classes, int dimension,
                       int nTrees,
                       int depth = std::numeric_limits<int>::max(),
@@ -52,20 +52,20 @@ namespace ice
 #if 0
     // store classifier to file
     using Classifier::write;
-    virtual int write(std::ostream&) const;
+    virtual int write(std::ostream&) const override;
     // restore classifier from file
     using Classifier::read;
-    virtual int read(std::istream&);
+    virtual int read(std::istream&) override;
 #endif
 
   protected:
     // Train classifier from single feature vector
-    virtual int _train(const ClassSample& s);
+    virtual int _train(const ClassSample& s) override;
     // classify single feature vector
     virtual int _classify(const std::vector<double>& feat,
-                          std::vector<double>& prob) const;
+                          std::vector<double>& prob) const override;
 
-    virtual bool _finish();
+    virtual bool _finish() override;
 
     std::vector<ClassifierTree> classifiers;
     int nTrees;

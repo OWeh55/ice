@@ -37,7 +37,7 @@ namespace ice
                    int depth = std::numeric_limits<int>::max());
     virtual ~ClassifierTree() {}
 
-    virtual void Init(); // = ReInit
+    virtual void Init() override; // = ReInit
     virtual void Init(int classes, int dimension,
                       int depth = std::numeric_limits<int>::max());
 
@@ -54,8 +54,8 @@ namespace ice
   protected:
     // classify single feature vector
     virtual int _classify(const std::vector<double>& feat,
-                          std::vector<double>& prob) const;
-    virtual bool _finish();
+                          std::vector<double>& prob) const override;
+    virtual bool _finish() override;
 
   protected:
     TreeCl tree;

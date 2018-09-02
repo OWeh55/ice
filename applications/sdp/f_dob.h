@@ -13,7 +13,7 @@ public:
                                           "<image> <size1*> <size2*> => <image+>") {}
   FFUNC(DobImage);
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int s1 = getInputInt(1, 5);
     int s2 = getInputInt(2, 15);

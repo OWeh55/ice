@@ -56,18 +56,18 @@ namespace ice
     virtual ~ClassifierBayes() {};
 
     using Classifier::Init;
-    virtual void Init(int classes, int dimension);
+    virtual void Init(int classes, int dimension) override;
 
     virtual void setRejectionFactor(double f);
     virtual double getRejectionFactor() const;
 
     // store classifier to file
     using Classifier::write;
-    virtual int write(std::ostream& os) const;
+    virtual int write(std::ostream& os) const override;
 
     // restore classifier from file
     using Classifier::read;
-    virtual int read(std::istream& is);
+    virtual int read(std::istream& is) override;
 
     virtual int getMue(int cl, Vector& mue) const;
     virtual int getSigmaInv(int cl, Matrix& sigmainv) const;
@@ -75,14 +75,14 @@ namespace ice
   protected:
 
     //
-    virtual bool _finish();
+    virtual bool _finish() override;
 
     // Train classifier from single feature vector
-    virtual int _train(const ClassSample& s);
+    virtual int _train(const ClassSample& s) override;
 
     // classify single feature vector
     virtual int _classify(const std::vector<double>& feat,
-                          std::vector<double>& prob) const;
+                          std::vector<double>& prob) const override;
 
     static const double epsilon; // parameter for regularization
 

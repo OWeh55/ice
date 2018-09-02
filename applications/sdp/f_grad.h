@@ -12,7 +12,7 @@ public:
 
   FFUNC(GradImage)
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int norm = getInputInt(1, 1);
     ice::GradImg(img1, img2, norm);
@@ -31,7 +31,7 @@ public:
   FFUNC(GradDirImage)
 
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int factor = getInputInt(1, 1);
     ice::GradDirImg(img1, img2);

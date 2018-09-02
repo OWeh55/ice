@@ -7,12 +7,12 @@ void CalcHistogram::get_data()
 {
   //  cout << "2pointset" << endl;
   // at the moment we only accept images
-  const GImage *src = getInputImage(0);
+  const GImage* src = getInputImage(0);
 
   if (src->getSize() > 1)
     throw SdpException(getName(), "expected grayvalue image");
 
-  GInteger *tresult = new GInteger;
+  GInteger* tresult = new GInteger;
   result[0] = tresult;
 
   Histogram h((*src)[0]);
@@ -30,7 +30,7 @@ void Otsu::get_data()
   if (typin.matchType(DType::integer))
     {
       // input is histogram
-      const GInteger *in = dynamic_cast<const GInteger *>(getInputPointer<GInteger, DType::integer>(0));
+      const GInteger* in = dynamic_cast<const GInteger*>(getInputPointer<GInteger, DType::integer>(0));
       int classes = in->getSize(); //  = classnumber
       Histogram hist(classes);
       for (int i = 0; i < classes; ++i)
@@ -40,13 +40,13 @@ void Otsu::get_data()
 
       int level = CalcThreshold(hist);
 
-      GInteger *tresult = new GInteger;
+      GInteger* tresult = new GInteger;
       result[0] = tresult;
       tresult->push_back(level);
     }
   else if (typin.matchType(DType::image))
     {
-      const GImage *src = getInputImage(0);
+      const GImage* src = getInputImage(0);
 
       if (src->getSize() > 1)
         throw SdpException(getName(), "expected grayvalue image");
@@ -54,7 +54,7 @@ void Otsu::get_data()
       Histogram hist((*src)[0]);
       int level = CalcThreshold(hist);
 
-      GInteger *tresult = new GInteger;
+      GInteger* tresult = new GInteger;
       result[0] = tresult;
       tresult->push_back(level);
     }

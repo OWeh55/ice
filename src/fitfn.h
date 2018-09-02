@@ -70,7 +70,7 @@ namespace ice
     FunctionWithFittingG(int n): fit(n), co(n) {}
     virtual ~FunctionWithFittingG() {};
 
-    virtual void FitInit()
+    virtual void FitInit() override
     {
       fit.Init();
     };
@@ -92,13 +92,13 @@ namespace ice
       fit.Value(p, v, w);
     };
 
-    virtual void FitFinish()
+    virtual void FitFinish() override
     {
       fit.Finish();
       fit.getResult(co);
     }
 
-    virtual double Variance() const
+    virtual double Variance() const override
     {
       return fit.Variance();
     }
@@ -109,7 +109,7 @@ namespace ice
       v = co;
     }
 
-    virtual int setCoefficient(const std::vector<double>& v, int idx = 0)
+    virtual int setCoefficient(const std::vector<double>& v, int idx = 0) override
     {
       for (unsigned int i = 0; i < co.size(); i++)
         {
@@ -136,13 +136,13 @@ namespace ice
       co = f.co;
     }
 
-    double operator()(double x) const
+    double operator()(double x) const override
     {
       return co[0];
     }
 
     using FunctionWithFittingG::FitVal;
-    virtual void FitVal(double x, double g, double w = 1.0);
+    virtual void FitVal(double x, double g, double w = 1.0) override;
 
     using FunctionWithFittingG::getCoefficient;
     void getCoefficient(double& pa) const
@@ -174,9 +174,9 @@ namespace ice
     virtual ~Polynom1o() {};
 
     using FunctionWithFittingG::FitVal;
-    virtual void FitVal(double x, double g, double w = 1.0);
+    virtual void FitVal(double x, double g, double w = 1.0) override;
 
-    double operator()(double x) const
+    double operator()(double x) const override
     {
       return x * co[1] + co[0];
     }
@@ -215,9 +215,9 @@ namespace ice
     virtual ~Polynom2o() {};
 
     using FunctionWithFittingG::FitVal;
-    virtual void FitVal(double x, double g, double w = 1.0);
+    virtual void FitVal(double x, double g, double w = 1.0) override;
 
-    double operator()(double x) const
+    double operator()(double x) const override
     {
       return (co[2] * x + co[1]) * x + co[0];
     }
@@ -237,10 +237,10 @@ namespace ice
     Polynom(const Polynom& f);
     virtual ~Polynom() {};
     using FunctionWithFittingG::FitVal;
-    virtual void FitVal(double x, double g, double w = 1.0);
-    virtual void FitInit(int n);
-    virtual void FitInit();
-    double operator()(double x) const;
+    virtual void FitVal(double x, double g, double w = 1.0) override;
+    virtual void FitInit(int n) override;
+    virtual void FitInit() override;
+    double operator()(double x) const override;
   protected:
     int ord;
   };
@@ -274,7 +274,7 @@ namespace ice
     Function2dWithFittingG(int n): fit(n), co(n) {}
     virtual ~Function2dWithFittingG() {};
 
-    virtual void FitInit()
+    virtual void FitInit() override
     {
       fit.Init();
       co.clear();
@@ -292,7 +292,7 @@ namespace ice
       fit.Value(p, v, w);
     };
 
-    virtual void FitFinish()
+    virtual void FitFinish() override
     {
       fit.Finish();
       fit.getResult(co);
@@ -305,7 +305,7 @@ namespace ice
     }
 
     using Function2dWithFitting::setCoefficient;
-    virtual int setCoefficient(const std::vector<double>& v, int idx = 0)
+    virtual int setCoefficient(const std::vector<double>& v, int idx = 0) override
     {
       for (unsigned int i = 0; i < co.size(); i++)
         {
@@ -314,7 +314,7 @@ namespace ice
       return idx;
     }
 
-    virtual double Variance() const
+    virtual double Variance() const override
     {
       return fit.Variance();
     }
@@ -339,9 +339,9 @@ namespace ice
     }
 
     using Function2dWithFittingG::FitVal;
-    void FitVal(double x, double y, double g, double w = 1.0);
+    void FitVal(double x, double y, double g, double w = 1.0) override;
 
-    double operator()(double x, double y) const;
+    double operator()(double x, double y) const override;
     using Function2dWithFittingG::getCoefficient;
     int getCoefficient(double& pa) const;
   };
@@ -364,9 +364,9 @@ namespace ice
     virtual ~Polynom2d1o() {};
 
     using Function2dWithFittingG::FitVal;
-    virtual void FitVal(double x, double y, double g, double w = 1.0);
+    virtual void FitVal(double x, double y, double g, double w = 1.0) override;
 
-    virtual double operator()(double x, double y) const;
+    virtual double operator()(double x, double y) const override;
 
     using Function2dWithFittingG::getCoefficient;
     virtual int getCoefficient(double& pa, double& pb, double& pc) const;
@@ -395,8 +395,8 @@ namespace ice
     virtual ~Polynom2d2o() {};
 
     using Function2dWithFittingG::FitVal;
-    void FitVal(double x, double y, double g, double w = 1.0);
-    double operator()(double x, double y) const;
+    void FitVal(double x, double y, double g, double w = 1.0) override;
+    double operator()(double x, double y) const override;
 
     using Function2dWithFittingG::getCoefficient;
     int getCoefficient(double& pa, double& pb, double& pc,
@@ -412,13 +412,13 @@ namespace ice
     Polynom2d(const Polynom2d& f);
     virtual ~Polynom2d() {} ;
 
-    virtual void FitInit(int n);
-    virtual void FitInit();
+    virtual void FitInit(int n) override;
+    virtual void FitInit() override;
 
     using Function2dWithFittingG::FitVal;
-    virtual void FitVal(double x, double y, double g, double w = 1.0);
+    virtual void FitVal(double x, double y, double g, double w = 1.0) override;
 
-    virtual double operator()(double x, double y) const;
+    virtual double operator()(double x, double y) const override;
 
   protected:
     int ord;

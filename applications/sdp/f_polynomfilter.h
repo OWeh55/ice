@@ -12,7 +12,7 @@ public:
         "<image> <size> <grad> <ix> <iy> => <image>") {}
   FFUNC(PolynomImage);
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int size = getInputInt(1);
     int grad = getInputInt(2);

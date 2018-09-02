@@ -68,7 +68,7 @@ namespace ice
       pl.push_back(p);
     }
 
-    virtual void setPos(Point pp);
+    virtual void setPos(Point pp) override;
 
     virtual void add(Point p)
     {
@@ -101,7 +101,7 @@ namespace ice
 
     using GeoObject::Distance;
 
-    virtual double getArea() const
+    virtual double getArea() const override
     {
       if (!closed)
         {
@@ -144,8 +144,8 @@ namespace ice
 
   protected:
 
-    virtual bool inside_(Point p) const;
-    virtual double distance_(Point p) const;
+    virtual bool inside_(Point p) const override;
+    virtual double distance_(Point p) const override;
 
     std::vector<Point> pl;
     const bool closed;

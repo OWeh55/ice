@@ -16,9 +16,9 @@ public:
 protected:
   virtual void get_data()
   {
-    const GContur *src = dynamic_cast<const GContur *>(getInputData(0, DType::contur));
+    const GContur* src = dynamic_cast<const GContur*>(getInputData(0, DType::contur));
 
-    GContur *tresult = new GContur;
+    GContur* tresult = new GContur;
     result[0] = tresult;
 
     int criteria = getInputInt(1);
@@ -31,7 +31,7 @@ protected:
 
         for (int i = 0; i < src->getSize(); ++i)
           {
-            const Contur &c = (*src)[i];
+            const Contur& c = (*src)[i];
 
             double area, convexity, length, formfactor;
 
@@ -63,7 +63,7 @@ protected:
       {
         for (int i = 0; i < src->getSize(); ++i)
           {
-            const Contur &c = (*src)[i];
+            const Contur& c = (*src)[i];
             // criteria < 3
             switch (criteria)
               {

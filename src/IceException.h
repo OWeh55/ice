@@ -25,7 +25,7 @@ namespace ice
     {
     }
 
-    virtual const char* what() const noexcept(true)
+    virtual const char* what() const noexcept(true) override
     {
       return (where_ + " - " + message_).c_str();
     }

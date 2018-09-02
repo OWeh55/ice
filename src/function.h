@@ -84,7 +84,7 @@ namespace ice
 
     ImageFunction(const Image& imgp, int im = INTERPOL): img(imgp), mode(im) { }
 
-    virtual double operator()(double x, double y) const
+    virtual double operator()(double x, double y) const override
     {
       switch (mode)
         {
@@ -126,7 +126,7 @@ namespace ice
 
     ImageDFunction(const ImageD& imgp, int im = INTERPOL): img(imgp), mode(im) { }
 
-    virtual double operator()(double x, double y) const
+    virtual double operator()(double x, double y) const override
     {
       if (Inside(img, (int)x, (int)y))
         {

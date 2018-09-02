@@ -22,7 +22,7 @@ public:
   }
   virtual ~GImage() {}
 
-  virtual void copyFrom(const GImage *img2)
+  virtual void copyFrom(const GImage* img2)
   {
     if (getType() != img2->getType())
       throw SdpException("GImage::copyFrom", "different kind of images");
@@ -30,14 +30,14 @@ public:
       CopyImg((*img2)[i], imgv[i]);
   }
 
-  virtual GImage *newGImage() const
+  virtual GImage* newGImage() const
   {
     return new GImage(imgv[0].xsize, imgv[0].ysize, imgv[0].maxval, imgv.size());
   }
 
-  virtual GData *clone() const
+  virtual GData* clone() const
   {
-    GImage *res = newGImage();
+    GImage* res = newGImage();
     for (int i = 0; i < (int)imgv.size(); ++i)
       CopyImg(imgv[i], res->imgv[i]);
     return res;
@@ -78,11 +78,11 @@ public:
   }
 
   // n-th channel == Image
-  virtual Image &operator[](int i)
+  virtual Image& operator[](int i)
   {
     return imgv[i];
   }
-  virtual const Image &operator[](int i) const
+  virtual const Image& operator[](int i) const
   {
     return imgv[i];
   }
@@ -90,14 +90,14 @@ protected:
   std::vector<Image> imgv;
 };
 
-GImage *mkGImage(int xm, int ym, int vm, int itype);
-GImage *mkGImage(const GImage *timg, int itype);
-GImage *mkGImage(const GImage *timg);
+GImage* mkGImage(int xm, int ym, int vm, int itype);
+GImage* mkGImage(const GImage* timg, int itype);
+GImage* mkGImage(const GImage* timg);
 
-GImage *cloneGImage(const GImage *timg);
+GImage* cloneGImage(const GImage* timg);
 
-void copyGImage(const GImage *img1, const GImage *img2);
+void copyGImage(const GImage* img1, const GImage* img2);
 
-bool matchGImage(const GImage *img1, const GImage *img2);
+bool matchGImage(const GImage* img1, const GImage* img2);
 
 #endif

@@ -49,7 +49,7 @@ class Parser
 {
 public:
 
-  Parser(const std::string &s, int start = 0):
+  Parser(const std::string& s, int start = 0):
     str(s), token(), pos(0), last(s.size() - 1)
   {
     while (last >= 0 && isblank(str[last]))
@@ -83,7 +83,7 @@ public:
     return getToken();
   }
 
-  virtual void expect(const std::string &tok)
+  virtual void expect(const std::string& tok)
   {
     get_token();
     if (token.token != tok)

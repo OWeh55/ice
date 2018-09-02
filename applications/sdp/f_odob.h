@@ -15,13 +15,13 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *img1 = getInputImage(0);
-    const GImage *img2 = getInputImage(1);
+    const GImage* img1 = getInputImage(0);
+    const GImage* img2 = getInputImage(1);
     if (img2->getSize() != 1)
       throw SdpException(name, "Need grayvalue image for direction");
 
     calcSize(img1, img2);
-    GImage *tresult = createResult();
+    GImage* tresult = createResult();
 
     int fsize = getInputInt(2, 11);
     int flength = getInputInt(3, fsize);

@@ -16,7 +16,7 @@ public:
   virtual DType getType() const = 0;
   virtual int getSize() const = 0;
 
-  virtual GData *clone() const = 0;
+  virtual GData* clone() const = 0;
 
   virtual void checkIndex(int i) const
   {

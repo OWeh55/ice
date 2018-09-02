@@ -6,7 +6,7 @@
 
 using namespace std;
 
-bool stringMatch(const string &s1, const string &s2)
+bool stringMatch(const string& s1, const string& s2)
 {
   if (s2.length() < s1.length())
     return false;

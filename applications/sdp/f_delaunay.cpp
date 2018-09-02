@@ -7,12 +7,12 @@
 
 void DelaunayPL::get_data()
 {
-  const GPoint *src = dynamic_cast<const GPoint *>(getInputData(0));
+  const GPoint* src = dynamic_cast<const GPoint*>(getInputData(0));
   int limit = getInputInt(1, 0);
 
 // cout << "delaunay " << src->getPointList().size() << " Punkte" << endl;
 
-  GGraph *tresult = new GGraph;
+  GGraph* tresult = new GGraph;
   result[0] = tresult;
   Delaunay delaunay(src->getVector());
   for (int i = 0; i < src->getSize(); ++i)

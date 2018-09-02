@@ -79,12 +79,12 @@ namespace ice
     */
     int setR(double r);
 
-    double getArea() const
+    double getArea() const override
     {
       return M_PI * r * r;
     }
 
-    virtual bool getInsidePoint(IPoint& pp) const
+    virtual bool getInsidePoint(IPoint& pp) const override
     {
       IPoint ip(p);
       pp = ip;
@@ -93,12 +93,12 @@ namespace ice
 
   protected:
 
-    virtual bool inside_(Point pp) const
+    virtual bool inside_(Point pp) const  override
     {
       return ice::Distance(p, pp) < r;
     }
 
-    virtual double distance_(Point pp) const
+    virtual double distance_(Point pp) const  override
     {
       return fabs(ice::Distance(p, pp) - r);
     }

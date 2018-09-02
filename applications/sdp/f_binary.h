@@ -12,7 +12,7 @@ public:
   FFUNC(BinaryImage)
 
 protected:
-  virtual void filterOneChannel(const Image &img1, const Image &img2)
+  virtual void filterOneChannel(const Image& img1, const Image& img2)
   {
     int threshold = getInputInt(1, 1);
     binImg(img1, threshold, img2);

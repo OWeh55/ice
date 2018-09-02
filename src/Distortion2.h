@@ -81,8 +81,8 @@ namespace ice
     Distortion2(const Matrix& mark, const Matrix& orig);
     virtual ~Distortion2() {};
 
-    virtual double ffr(double r) const;
-    virtual double frs(double r) const;
+    virtual double ffr(double r) const override;
+    virtual double frs(double r) const override;
 
     virtual double D2() const
     {
@@ -98,12 +98,12 @@ namespace ice
     }
 
     // virtual Vector makeVector() const;
-    virtual std::vector<double> makeVectorDouble() const;
-    virtual void set(const Vector& v);
-    virtual void set(const std::vector<double>& v);
+    virtual std::vector<double> makeVectorDouble() const override;
+    virtual void set(const Vector& v) override;
+    virtual void set(const std::vector<double>& v) override;
 
-    virtual std::string toString() const;
-    virtual void set(const std::string& parastring);
+    virtual std::string toString() const override;
+    virtual void set(const std::string& parastring) override;
 
     virtual Distortion2& operator =(const Distortion2& d);
 
