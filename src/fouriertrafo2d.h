@@ -77,21 +77,21 @@ namespace ice
     void setInput(const Matrix& vr, const Matrix& vi);
 
     void getResult(ice::matrix<double>& dstre,
-                   ice::matrix<double>& dstim) throw(std::logic_error);
+                   ice::matrix<double>& dstim);
 
-    double getResult(ice::matrix<double>& dstre) throw(std::logic_error);
+    double getResult(ice::matrix<double>& dstre);
 
     void getResult(const Image& dstre,
                    const Image& dstim,
-                   int mode = RAW, int sign = UNSIGNED) throw(std::logic_error);
+                   int mode = RAW, int sign = UNSIGNED);
 
     double getResult(const Image& dstre,
-                     int mode = RAW, int sign = UNSIGNED) throw(std::logic_error);
+                     int mode = RAW, int sign = UNSIGNED);
 
     void getResult(ImageD& dstre,
-                   ImageD& dstim) throw(std::logic_error);
+                   ImageD& dstim);
 
-    double getResult(ImageD& dstre) throw(std::logic_error);
+    double getResult(ImageD& dstre);
 
     FourierTrafo2D(const FourierTrafo2D& ft) = delete;
     const FourierTrafo2D& operator=(const FourierTrafo2D& ft) = delete;

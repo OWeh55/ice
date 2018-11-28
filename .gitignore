@@ -6,7 +6,7 @@
 !*/
 # ignore generated files
 *.o
-/doxy/html
+/doxy/html/
 /doc/*eps
 /doc/*converted-to.pdf
 /lib/
