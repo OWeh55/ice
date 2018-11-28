@@ -81,14 +81,14 @@ namespace ice
     }
 
     using ClassifierNormal::read;
-    virtual int read(std::istream& is);
+    virtual int read(std::istream& is) override;
     using ClassifierNormal::write;
-    virtual int write(std::ostream& fn) const;
+    virtual int write(std::ostream& fn) const override;
 
   protected:
     /** classify single feature vector*/
     virtual int _classify(const std::vector<double>& feat,
-                          std::vector<double>& prob) const;
+                          std::vector<double>& prob) const override;
 
     /** classify by searching (1) nearest neighbor */
     virtual int _classify1(const std::vector<double>& feat,
@@ -98,7 +98,7 @@ namespace ice
     virtual int _classifyk(const std::vector<double>& feat,
                            std::vector<double>& probs) const;
 
-    virtual bool _finish();
+    virtual bool _finish() override;
 
     /*
     void insert_distance(double distance, int class_nr) const;

@@ -45,7 +45,7 @@
   opt: l, listfilter, void, filterlist, Filterliste anzeigen, false
 AppGen*/
 
-std::vector<Dial *> dials; // controls for variable parameter
+std::vector<Dial*> dials;  // controls for variable parameter
 
 std::vector<std::string> pathlist; // search path for includes ...
 
@@ -86,7 +86,7 @@ int main()
       pathlist.push_back(includepath);
 
     // home
-    char *home = getenv("HOME");
+    char* home = getenv("HOME");
     string sdphome = home;
 
     sdphome += "/.sdp";
@@ -95,7 +95,7 @@ int main()
       pathlist.push_back(sdphome);
 
     //
-    char *includepath = getenv("SDPINCLUDE");
+    char* includepath = getenv("SDPINCLUDE");
     if (includepath != NULL)
       pathlist.push_back(includepath);
 #if 0
@@ -104,7 +104,7 @@ int main()
 #endif
   }
 
-  Filter *filterChain = NULL;
+  Filter* filterChain = NULL;
 
   deque<string> operations; // all operations
 
@@ -162,7 +162,7 @@ int main()
 
       if (graphexport)
         {
-          set<const Filter *> fs;
+          set<const Filter*> fs;
           cout << "digraph graph1 {" << endl;
           filterChain->graph_out(cout, fs);
           cout << "}" << endl;
@@ -173,12 +173,12 @@ int main()
           if (dials.empty())
             {
               // single run, no variable parameters
-              const GData *result = filterChain->getData(0);
+              const GData* result = filterChain->getData(0);
 
               if (verbose)
                 {
                   // result is image ?
-                  const GImage *iresult = dynamic_cast<const GImage *>(result);
+                  const GImage* iresult = dynamic_cast<const GImage*>(result);
                   if (iresult != NULL)
                     {
                       // yes: give some info
@@ -197,12 +197,12 @@ int main()
               bool continue_ = true;
 
               // first run
-              const GData *result = filterChain->getData(0);
+              const GData* result = filterChain->getData(0);
 
               if (verbose)
                 {
                   // result is image ?
-                  const GImage *iresult = dynamic_cast<const GImage *>(result);
+                  const GImage* iresult = dynamic_cast<const GImage*>(result);
                   if (iresult != NULL)
                     {
                       // yes: give some info
@@ -224,12 +224,12 @@ int main()
         }
       Filter::freeAll();
     }
-  catch (const EndOfSeriesException &ex)
+  catch (const EndOfSeriesException& ex)
     {
       cout << "No more images" << endl;
     }
 
-  catch (const exception &ex)
+  catch (const exception& ex)
     {
       cerr << endl << "Exception: " << ex.what() << endl;
     }

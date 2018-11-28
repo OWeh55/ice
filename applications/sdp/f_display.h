@@ -31,7 +31,7 @@ public:
 protected:
   virtual void get_data();
   Visual v;
-  GData *lastresult;
+  GData* lastresult;
 };
 
 FF(display)

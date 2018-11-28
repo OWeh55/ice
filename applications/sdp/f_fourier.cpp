@@ -5,7 +5,7 @@
 
 void FourierImg::get_data()
 {
-  const GImage *img = getInputPointer<GImage, DType::image>(0);
+  const GImage* img = getInputPointer<GImage, DType::image>(0);
   Image real, imag;
   if (img->getSize() == 1)
     {
@@ -26,7 +26,7 @@ void FourierImg::get_data()
   int rmaxval = (1 << 30) - 1;
   int rnull = (rmaxval + 1) / 2;
 
-  GImage *tresult = mkGImage(xsize, ysize, rmaxval, 2);
+  GImage* tresult = mkGImage(xsize, ysize, rmaxval, 2);
   result[0] = tresult;
   ImageD dreal;
   dreal.create(xsize, ysize);
@@ -88,15 +88,15 @@ void FourierImg::get_data()
 
 void FourierInverseImg::get_data()
 {
-  const GImage *img = getInputPointer<GImage, DType::image>(0);
+  const GImage* img = getInputPointer<GImage, DType::image>(0);
 
   if (img->getSize() != 2)
     {
       throw SdpException("FourierInverseImg", "Expected complex image");
     }
 
-  const Image &real = (*img)[0];
-  const Image &imag = (*img)[1];
+  const Image& real = (*img)[0];
+  const Image& imag = (*img)[1];
 
   int xsize = real.xsize;
   int ysize = real.ysize;
@@ -107,7 +107,7 @@ void FourierInverseImg::get_data()
   int rnull = (real.maxval + 1) / 2;
   int maxval = getInputInt(4, 255);
 
-  GImage *tresult = mkGImage(xsize, ysize, maxval, 2);
+  GImage* tresult = mkGImage(xsize, ysize, maxval, 2);
   result[0] = tresult;
   ImageD dreal;
   dreal.create(xsize, ysize);

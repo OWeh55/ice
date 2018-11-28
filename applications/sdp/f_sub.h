@@ -12,7 +12,7 @@ public:
   FFUNC(SubImage)
 
 protected:
-  virtual void filterOneChannel(const Image &img1, const Image &img2, const Image &img3)
+  virtual void filterOneChannel(const Image& img1, const Image& img2, const Image& img3)
   {
     int mode = getInputInt(2, 2);
     for (int y = 0; y < img3.ysize; ++y)

@@ -12,12 +12,12 @@ public:
 protected:
   virtual void get_data()
   {
-    const Image &src = getInput<Image, GImage, DType::image>(0);
+    const Image& src = getInput<Image, GImage, DType::image>(0);
     calcSize(src);
     vmax = getInputInt(3, vmax);
     int mode = getInputInt(1, 1);
     int threshold = getInputInt(2, 1);
-    GImage *tresult = createResult();
+    GImage* tresult = createResult();
     DistanceTransform(src, (*tresult)[0], mode, 0.0, threshold);
   }
 };

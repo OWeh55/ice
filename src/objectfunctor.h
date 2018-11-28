@@ -50,7 +50,7 @@ namespace ice
     SingleImageObjectFunctor(const Image& timg, int thr = 1): img(timg), object(ObjectThr), threshold(thr)
     {
     }
-    virtual object_rc operator()(IPoint p) const
+    virtual object_rc operator()(IPoint p) const override
     {
       if (!img.inside(p))
         {
@@ -79,7 +79,7 @@ namespace ice
     MarkedImageObjectFunctor(const Image& timg, const Image& tmrk, int thr = 1): img(timg), mrk(tmrk), object(ObjectThr), threshold(thr)
     {
     }
-    virtual object_rc operator()(IPoint p) const
+    virtual object_rc operator()(IPoint p) const override
     {
       if (!img.inside(p))
         {
@@ -101,7 +101,7 @@ namespace ice
     const GeoObject& ob;
   public:
     GeoObjectObjectFunctor(const GeoObject& obj): ob(obj) {}
-    virtual object_rc operator()(IPoint p) const
+    virtual object_rc operator()(IPoint p) const override
     {
       return ob.Inside(p) ? isobject : isunderground;
     }

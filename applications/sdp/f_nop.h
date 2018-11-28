@@ -32,18 +32,18 @@ public:
 protected:
   virtual void get_data()
   {
-    const GData *inp;
+    const GData* inp;
     for (int i = 0; i < nChannels; ++i)
       {
         if (input[i].inp != NULL)
           {
             inp = getInputData(i);
-            result[i] = const_cast<GData *>(inp);
+            result[i] = const_cast<GData*>(inp);
           }
       }
   }
 
-  virtual void graph_out(ostream &os, set<const Filter *> &fs) const
+  virtual void graph_out(ostream& os, set<const Filter*>& fs) const
   {
     if (fs.count(this) == 0)
       {

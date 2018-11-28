@@ -17,14 +17,14 @@ public:
 
 protected:
 
-  virtual GImage *createResult(int idx = 0, bool withParameters = true)
+  virtual GImage* createResult(int idx = 0, bool withParameters = true)
   {
     vmax = getInputInt(3, vmax);
     return FilterAllChannels::createResult(idx, withParameters);
   }
 
-  virtual void filterOneChannel(const vector<Image> &imgsrc,
-                                const Image &imgd)
+  virtual void filterOneChannel(const vector<Image>& imgsrc,
+                                const Image& imgd)
   {
     if (imgsrc.size() != 3)
       throw SdpException(name, "expected 3 images");

@@ -15,13 +15,13 @@ public:
 
 protected:
 
-  virtual GImage *createResult(int idx = 0, bool withParameters = true)
+  virtual GImage* createResult(int idx = 0, bool withParameters = true)
   {
     vmax = getInputInt(3, vmax);
     return FilterAllChannelsOneInput::createResult(idx, withParameters);
   }
 
-  virtual void filterOneChannel(const Image &img1, const Image &img2)
+  virtual void filterOneChannel(const Image& img1, const Image& img2)
   {
     double a1 = getInputFloat(1, 1.0);
     double a0 = getInputFloat(2, 0.0);

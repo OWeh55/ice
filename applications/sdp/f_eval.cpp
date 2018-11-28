@@ -11,7 +11,7 @@ void Evaluate::get_data()
 
   vector<DType> dts;
   dts.push_back(getInputType(1));
-  vector<const GData *> gdp;
+  vector<const GData*> gdp;
   gdp.push_back(getInputData(1));
 
   if (dts[0].type == DType::integer)
@@ -32,7 +32,7 @@ void Evaluate::get_data()
         }
       while (i < (int)input.size() && dt.type != DType::unknown);
 
-      GInteger *tresult = dynamic_cast<GInteger *>(gdp[0]->clone());
+      GInteger* tresult = dynamic_cast<GInteger*>(gdp[0]->clone());
       result[0] = tresult;
 
       vector<int> values(dts.size(), 0);
@@ -42,7 +42,7 @@ void Evaluate::get_data()
         {
           for (unsigned int k = 0; k < dts.size(); ++k)
             {
-              const GInteger *ip = dynamic_cast<const GInteger *>(gdp[k]);
+              const GInteger* ip = dynamic_cast<const GInteger*>(gdp[k]);
               values[k] = (*ip)[index[k]];
               ++index[k];
               if (index[k] >= ip->getSize())
@@ -79,10 +79,10 @@ void Evaluate::get_data()
         }
       while (i < (int)input.size() && dt.type != DType::unknown);
 
-      GImage *tresult = dynamic_cast<GImage *>(gdp[0]->clone());
+      GImage* tresult = dynamic_cast<GImage*>(gdp[0]->clone());
       result[0] = tresult;
 
-      const GImage *src1 = dynamic_cast<const GImage *>(gdp[0]);
+      const GImage* src1 = dynamic_cast<const GImage*>(gdp[0]);
 
       vector<int> values(dts.size(), 0);
       vector<int> index(dts.size(), 0);
@@ -96,12 +96,12 @@ void Evaluate::get_data()
                   {
                     if (dts[k].type == DType::image)
                       {
-                        const GImage *gip = dynamic_cast<const GImage *>(gdp[k]);
+                        const GImage* gip = dynamic_cast<const GImage*>(gdp[k]);
                         values[k] = (*gip)[i].getPixel(x, y);
                       }
                     else
                       {
-                        const GInteger *ip = dynamic_cast<const GInteger *>(gdp[k]);
+                        const GInteger* ip = dynamic_cast<const GInteger*>(gdp[k]);
                         values[k] = (*ip)[index[k]];
                         ++index[k];
                         if (index[k] >= ip->getSize())

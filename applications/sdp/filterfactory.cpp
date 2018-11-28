@@ -4,7 +4,7 @@
 
 #include "filterfactory.h"
 
-std::vector<const Filter *> FilterFactory::fmap;
+std::vector<const Filter*> FilterFactory::fmap;
 FilterFactory ff;
 
 #include "f_info.h"
@@ -60,7 +60,7 @@ FilterFactory ff;
 #include "f_concat.h"
 #include "f_eval.h"
 
-FilterFactory::FilterFactory(const Filter *f)
+FilterFactory::FilterFactory(const Filter* f)
 {
   fmap.push_back(f);
 }
@@ -77,9 +77,9 @@ void FilterFactory::printFilters() const
     cout << filterlist[i] << endl;
 }
 
-Filter *FilterFactory::mkFilter(const string &name)
+Filter* FilterFactory::mkFilter(const string& name)
 {
-  const Filter *foundfilter = NULL;
+  const Filter* foundfilter = NULL;
   for (int i = 0; (foundfilter == NULL) && i < (int)fmap.size(); ++i)
     {
       string fname = fmap[i]->getName();

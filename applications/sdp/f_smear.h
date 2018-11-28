@@ -12,7 +12,7 @@ public:
   FFUNC(SmearImage)
 
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int xs = getInputInt(1, 3) | 1;
     int ys = getInputInt(2, xs) | 1;
@@ -30,7 +30,7 @@ public:
   FFUNC(GaussImage)
 
 protected:
-  void filterOneChannel(const Image &img1, const Image &img2)
+  void filterOneChannel(const Image& img1, const Image& img2)
   {
     int sigma = getInputInt(1, 3);
     int size = 3 * sigma | 1;

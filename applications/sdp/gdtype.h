@@ -90,12 +90,12 @@ public:
   /**
    * \brief equality of DType instances
    */
-  virtual bool operator==(const DType &second) const
+  virtual bool operator==(const DType& second) const
   {
     return type == second.type && size == second.size;
   }
 
-  virtual bool operator!=(const DType &second) const
+  virtual bool operator!=(const DType& second) const
   {
     return !(*this == second);
   }

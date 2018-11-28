@@ -84,7 +84,7 @@ namespace ice
     }
     virtual void setPhi2(double phi2);
 
-    virtual bool getInsidePoint(IPoint& pp) const
+    virtual bool getInsidePoint(IPoint& pp) const override
     {
       IPoint ip(p);
       double mfi = (phi1 + phi2) / 2.0;
@@ -96,9 +96,9 @@ namespace ice
   protected:
     double phi1, phi2;
 
-    virtual double distance_(Point p) const;
+    virtual double distance_(Point p) const  override;
 
-    virtual bool inside_(Point p) const;
+    virtual bool inside_(Point p) const override;
   };
 }
 #endif

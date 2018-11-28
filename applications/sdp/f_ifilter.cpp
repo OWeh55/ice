@@ -3,7 +3,7 @@
 
 #include "f_ifilter.h"
 
-void ImageFilter::adaptSize(const GImage *in)
+void ImageFilter::adaptSize(const GImage* in)
 {
   if (mm & mm_size)
     {
@@ -36,7 +36,7 @@ void ImageFilter::adaptSize(const GImage *in)
     }
 }
 
-void ImageFilter::calcSize(const GImage *in)
+void ImageFilter::calcSize(const GImage* in)
 {
   xsize = in->xSize();
   ysize = in->ySize();
@@ -44,7 +44,7 @@ void ImageFilter::calcSize(const GImage *in)
   nImg = in->getSize();
 }
 
-void ImageFilter::calcSize(const Image &in, int nImages)
+void ImageFilter::calcSize(const Image& in, int nImages)
 {
   xsize = in.xsize;
   ysize = in.ysize;
@@ -52,17 +52,17 @@ void ImageFilter::calcSize(const Image &in, int nImages)
   nImg = nImages;
 }
 
-void ImageFilter::calcSize(const GImage *in1, const GImage *in2)
+void ImageFilter::calcSize(const GImage* in1, const GImage* in2)
 {
   calcSize(in1);
   adaptSize(in2);
 }
 
-void ImageFilter::addImageParameters(vector<GData *> &result, int index)
+void ImageFilter::addImageParameters(vector<GData*>& result, int index)
 {
   if (index + 5 > (int)result.size())
     throw SdpException(name, "result index out of range");
-  const GImage *img = dynamic_cast<const GImage *>(result[index]);
+  const GImage* img = dynamic_cast<const GImage*>(result[index]);
   if (img == NULL)
     throw SdpException("ImageFilter", "result is no image");
   result[index + 1] = new GInteger(img->xSize());

@@ -21,9 +21,9 @@ protected:
     vmax = getInputInt(3, 255);
     nImg = 1;
 
-    GImage *tresult = createResult();
+    GImage* tresult = createResult();
 
-    Image &gimg = (*tresult)[0];
+    Image& gimg = (*tresult)[0];
 
     switch (mode)
       {

@@ -16,28 +16,28 @@ void getInfos::get_data()
   DType rtype = result[0]->getType();
   if (rtype.type == DType::integer)
     {
-      const GInteger *src = getInputPointer<GInteger, DType::integer>(0);
+      const GInteger* src = getInputPointer<GInteger, DType::integer>(0);
       // cout << src << endl;
       for (int i = 0; i < src->getSize(); ++i)
         cout << i << ": " << (*src)[i] << endl;
     }
   else if (rtype.type == DType::floatingpoint)
     {
-      const GFloat *src = getInputPointer<GFloat, DType::floatingpoint>(0);
+      const GFloat* src = getInputPointer<GFloat, DType::floatingpoint>(0);
       // cout << src << endl;
       for (int i = 0; i < src->getSize(); ++i)
         cout << i << ": " << (*src)[i] << endl;
     }
   else if (rtype.type == DType::string_type)
     {
-      const GString *src = getInputPointer<GString, DType::string_type>(0);
+      const GString* src = getInputPointer<GString, DType::string_type>(0);
       // cout << src << endl;
       for (int i = 0; i < src->getSize(); ++i)
         cout << i << ": " << (*src)[i] << endl;
     }
   else if (rtype.type == DType::point)
     {
-      const GPoint *src = getInputPointer<GPoint, DType::point>(0);
+      const GPoint* src = getInputPointer<GPoint, DType::point>(0);
       // cout << src << endl;
       for (int i = 0; i < src->getSize(); ++i)
         cout << i << ": " << (*src)[i] << endl;
@@ -45,7 +45,7 @@ void getInfos::get_data()
   else if (rtype.type == DType::image)
     {
       cout << "image: ";
-      const Image &img = getInput<Image, GImage, DType::image>(0);
+      const Image& img = getInput<Image, GImage, DType::image>(0);
       cout << img.xsize << "x" << img.ysize << " " << img.maxval << endl;
       result[2] = new GInteger(img.xsize);
       result[3] = new GInteger(img.ysize);

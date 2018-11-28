@@ -31,7 +31,7 @@ typedef std::map<std::string, Macro> Library;
 extern Library macros;
 
 // interactive elements
-extern std::vector<Dial *> dials;
+extern std::vector<Dial*> dials;
 
 // where to find includes ...
 extern std::vector<std::string> pathlist;

@@ -20,14 +20,14 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *src = getInputImage(0);
+    const GImage* src = getInputImage(0);
     calcSize(src);
     if (nImg < 2)
       throw SdpException(name, "expected image sequence");
 
     nImg = 1;
-    GImage *res1 = createResult(0, false);
-    GImage *res2 = createResult(1, false);
+    GImage* res1 = createResult(0, false);
+    GImage* res2 = createResult(1, false);
 
     CopyImg((*src)[0], (*res1)[0]);
     CopyImg((*src)[1], (*res2)[0]);
@@ -50,15 +50,15 @@ public:
 protected:
   virtual void get_data()
   {
-    const GImage *src1 = getInputImage(0);
+    const GImage* src1 = getInputImage(0);
     calcSize(src1);
     if (nImg != 1)
       throw SdpException(name, "expected grayvalue image");
-    const GImage *src2 = getInputImage(1);
+    const GImage* src2 = getInputImage(1);
     adaptSize(src2);
     nImg = 2;
 
-    GImage *tresult = createResult(0, false);
+    GImage* tresult = createResult(0, false);
 
     CopyImg((*src1)[0], (*tresult)[0]);
     CopyImg((*src2)[0], (*tresult)[1]);

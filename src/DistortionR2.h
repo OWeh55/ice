@@ -68,9 +68,9 @@ namespace ice
     DistortionR2(double x0p, double y0p, int dimx, int dimy): Distortion(x0p / dimx, y0p / dimy) {}
 
     using Distortion::rectify;
-    virtual int rectify(double x, double y, double& xr, double& yr) const;
+    virtual int rectify(double x, double y, double& xr, double& yr) const override;
     using Distortion::distort;
-    virtual int distort(double x, double y, double& xd, double& yd) const;
+    virtual int distort(double x, double y, double& xd, double& yd) const override;
 
   protected:
     virtual double fr(double r) const

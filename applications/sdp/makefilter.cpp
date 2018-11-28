@@ -4,7 +4,7 @@
 
 #include "makefilter.h"
 
-Filter *mkFilter(const std::string &filter)
+Filter* mkFilter(const std::string& filter)
 {
   if (filter.empty())
     {

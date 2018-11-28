@@ -19,7 +19,7 @@ public:
     stack.push_back(i);
   }
 
-  int &top()
+  int& top()
   {
     return stack.back();
   }
@@ -53,7 +53,7 @@ public:
     stack[++sp] = i;
   }
 
-  int &top()
+  int& top()
   {
     return stack[sp];
   }
@@ -63,7 +63,7 @@ public:
     sp = -1;
   }
 
-  int &get(int i)
+  int& get(int i)
   {
     return stack[sp - i];
   }
@@ -75,8 +75,8 @@ private:
 class StackMachine
 {
 public:
-  StackMachine(const std::string &expression);
-  int evaluate(const std::vector<int> &variables, int x, int y, int z) const;
+  StackMachine(const std::string& expression);
+  int evaluate(const std::vector<int>& variables, int x, int y, int z) const;
 
 protected:
   std::vector<int> code;

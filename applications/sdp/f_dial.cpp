@@ -16,7 +16,7 @@ bool handleDials()
       Print("ESC - abort\n\n");
       for (int i = 0; i < (int)dials.size(); ++i)
         {
-          Dial &cdd = *(dials[i]);
+          Dial& cdd = *(dials[i]);
           if (i == current)
             Print("*");
           else
@@ -25,7 +25,7 @@ bool handleDials()
           Printf(" %d   %d ... %d  step:%d", cdd.value, cdd.min, cdd.max, cdd.step);
           Print("\n");
         }
-      Dial &cd = *(dials[current]);
+      Dial& cd = *(dials[current]);
       int key = GetChar();
 
       switch (key)

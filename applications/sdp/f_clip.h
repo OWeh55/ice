@@ -16,7 +16,7 @@ public:
 
 protected:
 
-  virtual GImage *createResult(int idx = 0, bool withParameters = true)
+  virtual GImage* createResult(int idx = 0, bool withParameters = true)
   {
     int x1 = getInputInt(1);
     int y1 = getInputInt(2);
@@ -31,7 +31,7 @@ protected:
     return FilterAllChannelsOneInput::createResult(idx, withParameters);
   }
 
-  virtual void filterOneChannel(const Image &img1, const Image &img2)
+  virtual void filterOneChannel(const Image& img1, const Image& img2)
   {
     int x1 = getInputInt(1);
     int y1 = getInputInt(2);

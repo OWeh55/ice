@@ -94,7 +94,7 @@ namespace ice
       return CCR;
     }
 
-    virtual double getArea() const;
+    virtual double getArea() const override;
 
     virtual bool isInsideCC(Point point) const;
 
@@ -102,7 +102,7 @@ namespace ice
 
     virtual void makeCCW();
 
-    virtual bool getInsidePoint(IPoint& pp) const
+    virtual bool getInsidePoint(IPoint& pp) const override
     {
       IPoint ip((p1 + p2 + p3) / 3);
       pp = ip;
@@ -111,8 +111,8 @@ namespace ice
 
   protected:
 
-    virtual bool inside_(Point pp) const;
-    virtual double distance_(Point pp) const;
+    virtual bool inside_(Point pp) const override;
+    virtual double distance_(Point pp) const override;
 
   private:
     Point p1, p2, p3;

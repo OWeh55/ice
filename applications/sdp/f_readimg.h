@@ -14,16 +14,17 @@ protected:
   virtual void get_data()
   {
     string filename = getInputString(0);
-    
-    try {
-      InfImgFile(filename, xsize, ysize, vmax, nImg);
-    }
-    catch (IceException &ex)
+
+    try
       {
-	throw FileException("ImageFile", filename);
+        InfImgFile(filename, xsize, ysize, vmax, nImg);
+      }
+    catch (IceException& ex)
+      {
+        throw FileException("ImageFile", filename);
       }
 
-    GImage *tresult = createResult();
+    GImage* tresult = createResult();
 
     if (nImg == 1)
       ReadImg(filename, (*tresult)[0]);

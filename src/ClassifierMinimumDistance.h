@@ -41,27 +41,27 @@ namespace ice
     virtual ~ClassifierMinimumDistance() {};
 
     using Classifier::Init;
-    void Init(int classes, int dimension); //
+    void Init(int classes, int dimension) override; //
 
     // store classifier to file
     using Classifier::write;
-    virtual int write(std::ostream& os) const;
+    virtual int write(std::ostream& os) const override;
 
     // restore classifier from file
     using Classifier::read;
-    virtual int read(std::istream& is);
+    virtual int read(std::istream& is) override;
 
     virtual ice::Vector Center(int n) const;
 
   protected:
     // Train classifier from single feature vector
-    virtual int _train(const ClassSample& s);
+    virtual int _train(const ClassSample& s) override;
 
     // classify single feature vector
     virtual int _classify(const std::vector<double>& feat,
-                          std::vector<double>& prob) const;
+                          std::vector<double>& prob) const override;
 
-    virtual bool _finish();
+    virtual bool _finish() override;
 
     Matrix par; // parameters of the classifier
 

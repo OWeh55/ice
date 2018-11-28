@@ -19,8 +19,8 @@ class FilterOutlet
 {
 public:
   FilterOutlet(): inp(NULL), idx(0) {}
-  FilterOutlet(Filter *src, int idx = 0): inp(src), idx(idx) {}
-  Filter *inp;
+  FilterOutlet(Filter* src, int idx = 0): inp(src), idx(idx) {}
+  Filter* inp;
   int idx;
 };
 
@@ -44,7 +44,7 @@ public:
 class Filter
 {
 public:
-  Filter(const std::string &name, int nInputs = 0, int nResults = 1, const std::string &help = ""):
+  Filter(const std::string& name, int nInputs = 0, int nResults = 1, const std::string& help = ""):
     dataValid(false), name(name), input(nInputs), result(nResults, NULL), helpstring(help)
   {
     next = first;
@@ -59,12 +59,12 @@ public:
 
   static void freeAll()
   {
-    Filter *f = first->next;
+    Filter* f = first->next;
     delete first;
     first = f;
   }
 
-  virtual Filter *clone() const = 0;
+  virtual Filter* clone() const = 0;
 
   virtual void reset()
   {
@@ -80,12 +80,12 @@ public:
       }
   }
 
-  virtual std::vector<FilterOutlet> &getInput()
+  virtual std::vector<FilterOutlet>& getInput()
   {
     return input;
   }
 
-  virtual void setInput(Filter *inp, int idx = 0, int i = 0)
+  virtual void setInput(Filter* inp, int idx = 0, int i = 0)
   {
     if (i < 0 || i >= (int)input.size())
       throw SdpException(name, "Input index out of range");
@@ -93,7 +93,7 @@ public:
 
   }
 
-  virtual void setInput(const FilterOutlet &inp, int i = 0)
+  virtual void setInput(const FilterOutlet& inp, int i = 0)
   {
     if (i < 0 || i >= (int)input.size())
       throw SdpException(name, "Input index out of range");
@@ -101,7 +101,7 @@ public:
 
   }
 
-  virtual const GData *getData(int idx)
+  virtual const GData* getData(int idx)
   {
     if (fdebug)
       {
@@ -135,7 +135,7 @@ public:
     return name;
   }
 
-  virtual void setName(const std::string &n)
+  virtual void setName(const std::string& n)
   {
     name = n;
   }
@@ -148,43 +148,43 @@ public:
     return hs;
   }
 
-  virtual void graph_out(ostream &os, set<const Filter *> &fs) const;
+  virtual void graph_out(ostream& os, set<const Filter*>& fs) const;
 
 protected:
-  virtual const GData *getInputData(int i) const;
-  virtual const GData *getInputData(int i, int type) const;
+  virtual const GData* getInputData(int i) const;
+  virtual const GData* getInputData(int i, int type) const;
   virtual DType getInputType(int i) const;
 
   template<class T, int dtype>
-  const T *getInputPointer(int inputNr = 0) const
+  const T* getInputPointer(int inputNr = 0) const
   {
-    const GData *src = getInputData(inputNr, dtype);
-    return dynamic_cast<const T *>(src);
+    const GData* src = getInputData(inputNr, dtype);
+    return dynamic_cast<const T*>(src);
   }
 
   template<class Tr, class T, int dtype>
-  const Tr &getInput(int inputNr = 0, int idx = 0) const
+  const Tr& getInput(int inputNr = 0, int idx = 0) const
   {
-    const GData *src = getInputData(inputNr, dtype);
-    return (*dynamic_cast<const T *>(src))[idx];
+    const GData* src = getInputData(inputNr, dtype);
+    return (*dynamic_cast<const T*>(src))[idx];
   }
 
-  virtual const GImage *getInputImage(int i) const;
+  virtual const GImage* getInputImage(int i) const;
   virtual const int getInputInt(int i, int def) const;
   virtual const int getInputInt(int i) const;
   virtual const double getInputFloat(int i) const;
   virtual const double getInputFloat(int i, double def) const;
-  virtual const string &getInputString(int i) const;
-  virtual const string &getInputString(int i, const string &def) const;
+  virtual const string& getInputString(int i) const;
+  virtual const string& getInputString(int i, const string& def) const;
 
   virtual void get_data() = 0;
 
   bool dataValid;
   std::string name;
   std::vector<FilterOutlet> input;
-  std::vector<GData *> result;
+  std::vector<GData*> result;
   std::string helpstring;
-  Filter *next;
-  static Filter *first;
+  Filter* next;
+  static Filter* first;
 };
 #endif

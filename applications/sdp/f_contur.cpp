@@ -4,12 +4,12 @@
 
 void getConturs::get_data()
 {
-  const Image &src = getInput<Image, GImage, DType::image>();
+  const Image& src = getInput<Image, GImage, DType::image>();
 
   int threshold = getInputInt(1, 1);
   Image mark = NewImg(src);
   clearImg(mark);
-  GContur *tresult = new GContur;
+  GContur* tresult = new GContur;
   result[0] = tresult;
 
   IPoint ps(0, 0);

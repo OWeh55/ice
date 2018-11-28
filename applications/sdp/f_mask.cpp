@@ -6,8 +6,8 @@
 
 void MaskImage::get_data()
 {
-  const GImage *src1 = getInputPointer<GImage, DType::image>(0);
-  const GData *src2 = getInputData(1, DType::image | DType::region);
+  const GImage* src1 = getInputPointer<GImage, DType::image>(0);
+  const GData* src2 = getInputData(1, DType::image | DType::region);
 
   calcSize(src1);
 
@@ -18,16 +18,16 @@ void MaskImage::get_data()
       imagemask = true;
       if (src2->getSize() != 1)
         SdpException(name, "expected binary image as mask");
-      adaptSize(dynamic_cast<const GImage *>(src2));
+      adaptSize(dynamic_cast<const GImage*>(src2));
     }
 
   vmax = src1->maxVal();
 
-  GImage *tresult = createResult();
+  GImage* tresult = createResult();
 
   if (imagemask)
     {
-      const GImage *srci = dynamic_cast<const GImage *>(src2);
+      const GImage* srci = dynamic_cast<const GImage*>(src2);
       for (int y = 0; y < ysize; ++y)
         for (int x = 0; x < xsize; ++x)
           {
@@ -46,7 +46,7 @@ void MaskImage::get_data()
   else
     {
       // mask is Region
-      Region reg = (* dynamic_cast<const GRegion *>(src2))[0];
+      Region reg = (* dynamic_cast<const GRegion*>(src2))[0];
       for (int y = 0; y < ysize; ++y)
         for (int x = 0; x < xsize; ++x)
           {
@@ -66,9 +66,9 @@ void MaskImage::get_data()
 
 void SelectImage::get_data()
 {
-  const GImage *src1 = getInputPointer<GImage, DType::image>(0);
-  const GImage *src2 = getInputPointer<GImage, DType::image>(1);
-  const GData *src3 = getInputData(2, DType::image | DType::region);
+  const GImage* src1 = getInputPointer<GImage, DType::image>(0);
+  const GImage* src2 = getInputPointer<GImage, DType::image>(1);
+  const GData* src3 = getInputData(2, DType::image | DType::region);
 
   calcSize(src1);
   adaptSize(src2);
@@ -83,17 +83,17 @@ void SelectImage::get_data()
       imagemask = true;
       if (src2->getSize() != 1)
         SdpException(name, "expected binary image as mask");
-      adaptSize(dynamic_cast<const GImage *>(src2));
+      adaptSize(dynamic_cast<const GImage*>(src2));
     }
 
   nImg = src1->getSize();
   vmax = src1->maxVal();
 
-  GImage *tresult = createResult();
+  GImage* tresult = createResult();
 
   if (imagemask)
     {
-      const GImage *srci = dynamic_cast<const GImage *>(src3);
+      const GImage* srci = dynamic_cast<const GImage*>(src3);
       for (int y = 0; y < ysize; ++y)
         for (int x = 0; x < xsize; ++x)
           {
@@ -113,7 +113,7 @@ void SelectImage::get_data()
   else
     {
       // mask is Region
-      Region reg = (* dynamic_cast<const GRegion *>(src3))[0];
+      Region reg = (* dynamic_cast<const GRegion*>(src3))[0];
       for (int y = 0; y < ysize; ++y)
         for (int x = 0; x < xsize; ++x)
           {

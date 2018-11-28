@@ -11,7 +11,7 @@ public:
   FFUNC(InverseImage)
 
 protected:
-  void filterOneChannel(const Image &src, const Image &dst)
+  void filterOneChannel(const Image& src, const Image& dst)
   {
     invertImg(src, dst);
   }

@@ -51,19 +51,19 @@ namespace ice
 
     // store classifier to file
     using Classifier::write;
-    virtual int write(std::ostream&) const;
+    virtual int write(std::ostream&) const override;
     // restore classifier from file
     using Classifier::read;
-    virtual int read(std::istream&);
+    virtual int read(std::istream&) override;
 
   protected:
     // Train classifier from single feature vector
-    virtual int _train(const ClassSample& s);
+    virtual int _train(const ClassSample& s) override;
     // classify single feature vector
     virtual int _classify(const std::vector<double>& feat,
-                          std::vector<double>& prob) const;
+                          std::vector<double>& prob) const override;
 
-    virtual bool _finish();
+    virtual bool _finish() override;
 
     double p1, p2; // a priory probability
     double c12, c21; // costs of errors

@@ -43,8 +43,8 @@ protected:
         if (input[i].inp != NULL)
           {
             // cout << name << " get " << i << endl;
-            const GData *inp = getInputData(i);
-            result[i] = const_cast<GData *>(inp);
+            const GData* inp = getInputData(i);
+            result[i] = const_cast<GData*>(inp);
           }
       }
     for (int i = 0; i < nOutput; ++i)
@@ -52,13 +52,13 @@ protected:
         if (input[i].inp != NULL)
           {
             //  cout << name << " get " << i << endl;
-            const GData *inp = getInputData(i);
-            result[i] = const_cast<GData *>(inp);
+            const GData* inp = getInputData(i);
+            result[i] = const_cast<GData*>(inp);
           }
       }
   }
 
-  virtual void graph_out(ostream &os, set<const Filter *> &fs) const
+  virtual void graph_out(ostream& os, set<const Filter*>& fs) const
   {
     if (fs.count(this) == 0)
       {

@@ -93,7 +93,7 @@ namespace ice
      * move Walker to given point.
      * @param p new referencePoint
      */
-    virtual void moveTo(IPoint p)
+    virtual void moveTo(IPoint p) override
     {
       IPoint dp = p - referencePoint;
       referencePoint = p;
@@ -109,7 +109,7 @@ namespace ice
       * Using init a Walker starts with first point (again).
       *
       */
-    virtual void init()
+    virtual void init() override
     {
       x = x1;
       y = y1;
@@ -120,7 +120,7 @@ namespace ice
     /**
      * walk to next point.
      */
-    virtual void next()
+    virtual void next() override
     {
       x++;
       if (x > x2)
@@ -139,7 +139,7 @@ namespace ice
     /**
      * walk to previous point.
      */
-    virtual void prev()
+    virtual void prev() override
     {
       x--;
       if (x < x1)

@@ -5,6 +5,6 @@
 #include "string.h"
 #include "f_filter.h"
 
-Filter *mkFilter(const std::string &filter);
+Filter* mkFilter(const std::string& filter);
 
 #endif

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-StackMachine::StackMachine(const string &expression)
+StackMachine::StackMachine(const string& expression)
 {
   int stacksize = 0;
   Parser exp(expression);
@@ -80,7 +80,7 @@ StackMachine::StackMachine(const string &expression)
           char oper = next.token[0];
           switch (oper)
             {
-              // binary operators represent themself
+            // binary operators represent themself
             case '+':
             case '-':
             case '*':
@@ -92,7 +92,7 @@ StackMachine::StackMachine(const string &expression)
               code.push_back(oper);
               stacksize--;
               break;
-              // unary operators represent themself
+            // unary operators represent themself
             case '!':
               // logical negation
               code.push_back(oper);
@@ -114,7 +114,7 @@ StackMachine::StackMachine(const string &expression)
 }
 
 
-int StackMachine::evaluate(const vector<int> &variables,
+int StackMachine::evaluate(const vector<int>& variables,
                            int x, int y, int z) const
 {
   Stack stack;

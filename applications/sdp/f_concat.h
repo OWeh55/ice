@@ -13,7 +13,7 @@ public:
 protected:
   virtual void get_data()
   {
-    GString *tresult = new GString("");
+    GString* tresult = new GString("");
     result[0] = tresult;
     int idx = 0;
     while (getInputType(idx).type == DType::string_type)
@@ -23,7 +23,7 @@ protected:
       }
   }
 
-  virtual void graph_out(ostream &os, set<const Filter *> &fs) const
+  virtual void graph_out(ostream& os, set<const Filter*>& fs) const
   {
     if (fs.count(this) == 0)
       {

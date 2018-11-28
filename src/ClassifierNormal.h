@@ -50,7 +50,7 @@ namespace ice
   protected:
     // Methods called by base class
     // Train classifier from single feature vector
-    virtual int _train(const ClassSample& s);
+    virtual int _train(const ClassSample& s) override;
 
     void normalize(std::vector<double>& feat) const;
     void doNormalization(int mode = normalizeCenter | normalizeScaling | normalizeIsotropic);

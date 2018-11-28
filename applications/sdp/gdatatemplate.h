@@ -20,13 +20,13 @@ public:
   /**
    * ctor which initializes array with an given vector
    */
-  GDataTemplate(const std::vector<T> &value): GData(), datavector(value) {}
+  GDataTemplate(const std::vector<T>& value): GData(), datavector(value) {}
   /**
    * virtual dtor
    */
   virtual ~GDataTemplate() {};
 
-  virtual GData *clone() const
+  virtual GData* clone() const
   {
     return new GDataTemplate<T, type>(*this);
   }
@@ -41,13 +41,13 @@ public:
     return datavector.size();
   }
 
-  virtual T &operator[](int i)
+  virtual T& operator[](int i)
   {
     checkIndex(i);
     return datavector[i];
   }
 
-  virtual const T &operator[](int i) const
+  virtual const T& operator[](int i) const
   {
     checkIndex(i);
     return datavector[i];
@@ -58,17 +58,17 @@ public:
     datavector.resize(s);
   }
 
-  virtual std::vector<T> &getVector()
+  virtual std::vector<T>& getVector()
   {
     return datavector;
   }
 
-  virtual const std::vector<T> &getVector() const
+  virtual const std::vector<T>& getVector() const
   {
     return datavector;
   }
 
-  virtual void push_back(const T &data)
+  virtual void push_back(const T& data)
   {
     datavector.push_back(data);
   }

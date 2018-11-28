@@ -38,16 +38,16 @@ namespace ice
   public:
     Function2dModifier(Function2d& funcp): basefunc(funcp) { }
 
-    virtual double operator()(double x, double y) const = 0;
+    virtual double operator()(double x, double y) const  override = 0;
 
-    virtual void getCoefficient(vector<double>& v) const
+    virtual void getCoefficient(vector<double>& v) const override
     {
       Function2d::getCoefficient(v); // base class
       basefunc.getCoefficient(v); // source function
       // no own coefficients here
     }
 
-    virtual int setCoefficient(const vector<double>& v, int idx = 0)
+    virtual int setCoefficient(const vector<double>& v, int idx = 0) override
     {
       idx = Function2d::setCoefficient(v, idx); // base class
       idx = basefunc.setCoefficient(v, idx); // source function
@@ -65,19 +65,19 @@ namespace ice
     Function2dParameterShift(Function2d& funcp, double sx, double sy):
       Function2dModifier(funcp), shiftx(sx), shifty(sy) { }
 
-    virtual double operator()(double x, double y) const
+    virtual double operator()(double x, double y) const override
     {
       return basefunc(x - shiftx, y - shifty);
     }
 
-    virtual void getCoefficient(vector<double>& v) const
+    virtual void getCoefficient(vector<double>& v) const override
     {
       Function2dModifier::getCoefficient(v); // base class (+source function)
       v.push_back(shiftx);
       v.push_back(shifty);
     }
 
-    virtual int setCoefficient(const vector<double>& v, int idx = 0)
+    virtual int setCoefficient(const vector<double>& v, int idx = 0) override
     {
       idx = Function2dModifier::setCoefficient(v, idx); // base class (+source function)
 
@@ -119,7 +119,7 @@ namespace ice
       return tr;
     }
 
-    virtual double operator()(double x, double y) const
+    virtual double operator()(double x, double y) const override
     {
       makeInverse();
       double xt, yt;
@@ -127,7 +127,7 @@ namespace ice
       return basefunc(xt, yt);
     }
 
-    virtual void getCoefficient(vector<double>& v) const
+    virtual void getCoefficient(vector<double>& v) const override
     {
       Function2dModifier::getCoefficient(v);
 
@@ -145,7 +145,7 @@ namespace ice
         }
     };
 
-    virtual int setCoefficient(const vector<double>& v, int idx = 0)
+    virtual int setCoefficient(const vector<double>& v, int idx = 0) override
     {
       idx = Function2dModifier::setCoefficient(v, idx);
 
@@ -200,12 +200,12 @@ namespace ice
       a0p = a0;
     }
 
-    virtual double operator()(double x, double y) const
+    virtual double operator()(double x, double y) const override
     {
       return a1 * basefunc(x, y) + a0;
     }
 
-    virtual void getCoefficient(vector<double>& v) const
+    virtual void getCoefficient(vector<double>& v) const override
     {
       Function2dModifier::getCoefficient(v);
 
@@ -213,7 +213,7 @@ namespace ice
       v.push_back(a0);
     };
 
-    virtual int setCoefficient(const vector<double>& v, int idx = 0)
+    virtual int setCoefficient(const vector<double>& v, int idx = 0) override
     {
       idx = Function2dModifier::setCoefficient(v, idx);
 
@@ -237,14 +237,14 @@ namespace ice
       dist = &d;
     }
 
-    virtual double operator()(double x, double y) const
+    virtual double operator()(double x, double y) const override
     {
       double xt, yt;
       dist->rectify(x, y, xt, yt);
       return basefunc(xt, yt);
     }
 
-    virtual void getCoefficient(vector<double>& v) const
+    virtual void getCoefficient(vector<double>& v) const override
     {
       Function2dModifier::getCoefficient(v);
       Vector dv = dist->makeVector();
@@ -255,7 +255,7 @@ namespace ice
         }
     }
 
-    virtual int setCoefficient(const vector<double>& v, int idx = 0)
+    virtual int setCoefficient(const vector<double>& v, int idx = 0) override
     {
       idx = Function2dModifier::setCoefficient(v, idx);
       Vector dv(v[idx++]);

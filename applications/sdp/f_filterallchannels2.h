@@ -8,9 +8,9 @@ class FilterAllChannelsTwoInputs: public ImageFilter
   // abstract base class for filters that are applied to
   // all channels separately
 public:
-  FilterAllChannelsTwoInputs(const string &name,
+  FilterAllChannelsTwoInputs(const string& name,
                              int nInput, int nOutput,
-                             const std::string &help = "", int matchmode = mm_strict):
+                             const std::string& help = "", int matchmode = mm_strict):
     ImageFilter(name, nInput, nOutput, help, matchmode)
   {
     if (nOutput < 5)
@@ -20,14 +20,14 @@ public:
 
 protected:
 
-  virtual void filterOneChannel(const Image &src1, const Image &src2, const Image &dst) = 0;
+  virtual void filterOneChannel(const Image& src1, const Image& src2, const Image& dst) = 0;
 
   virtual void get_data()
   {
     inp1 = getInputImage(0);
     inp2 = getInputImage(1);
     calcSize(inp1, inp2);
-    GImage *tresult = createResult();
+    GImage* tresult = createResult();
     try
       {
         for (int i = 0; i < nImg; ++i) // all channels
@@ -42,7 +42,7 @@ protected:
       }
   }
 
-  const GImage *inp1;
-  const GImage *inp2;
+  const GImage* inp1;
+  const GImage* inp2;
 };
 #endif

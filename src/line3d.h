@@ -174,7 +174,7 @@ namespace ice
       return true;
     }
 
-    virtual Vector3d closestPoint(const Vector3d& p) const;
+    virtual Vector3d closestPoint(const Vector3d& p) const override;
     virtual Vector3d closestPoint(const Vector3d& p, double& my) const;
 
     virtual double Length() const
@@ -206,7 +206,7 @@ namespace ice
       return (pos + dp);
     }
 
-    virtual double Volume() const
+    virtual double Volume() const override
     {
       return 0;
     }
