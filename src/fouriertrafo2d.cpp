@@ -220,14 +220,14 @@ namespace ice
   }
 
   void FourierTrafo2D::getResult(ice::matrix<double>& dstre,
-                                 ice::matrix<double>& dstim) throw(std::logic_error)
+                                 ice::matrix<double>& dstim)
   {
     transformIfNeeded();
     dstre = real;
     dstim = imag;
   }
 
-  double FourierTrafo2D::getResult(ice::matrix<double>& dstre) throw(std::logic_error)
+  double FourierTrafo2D::getResult(ice::matrix<double>& dstre)
   {
     transformIfNeeded();
     dstre = real;
@@ -243,7 +243,7 @@ namespace ice
 
   void FourierTrafo2D::getResult(const Image& dstre,
                                  const Image& dstim,
-                                 int mode, int sign) throw(std::logic_error)
+                                 int mode, int sign)
   {
     ImageD resReal;
     resReal.create(cols, rows);
@@ -255,7 +255,7 @@ namespace ice
   }
 
   double FourierTrafo2D::getResult(const Image& dstre,
-                                   int mode, int sign) throw(std::logic_error)
+                                   int mode, int sign)
   {
     ImageD resReal;
     resReal.create(cols, rows);
@@ -265,7 +265,7 @@ namespace ice
   }
 
   void FourierTrafo2D::getResult(ImageD& dstre,
-                                 ImageD& dstim) throw(std::logic_error)
+                                 ImageD& dstim)
   {
     transformIfNeeded();
 
@@ -278,7 +278,7 @@ namespace ice
         }
   }
 
-  double FourierTrafo2D::getResult(ImageD& dstre) throw(std::logic_error)
+  double FourierTrafo2D::getResult(ImageD& dstre)
   {
     transformIfNeeded();
 
