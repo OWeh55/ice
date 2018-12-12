@@ -20,7 +20,7 @@ Voraussetzungen:
 ****************
 
 Betriebssystem:
-	Linux mit X11
+	Linux
 oder	WindowsXX
 
 C++ - Compiler
@@ -78,8 +78,8 @@ Installation Linux:
 		     #	Abhaengigkeiten nicht aendern
       make meinprogramm
 
-    Wenn das eigene Projekt mehrere Quelltext-Dateien umfa�t, muss das 
-    Makefile entsprechend angepa�t werden.
+    Wenn das eigene Projekt mehrere Quelltext-Dateien umfaßt, muss das 
+    Makefile entsprechend angepaßt werden.
 
 Soll ICE ohne die verzichtbaren Bibliotheken verwendet werden, so koennen
 entsprechende Environment-Variablen gesetzt werden:
@@ -100,27 +100,11 @@ Der Einsatz anderer Compiler ist ohne weiteres moeglich, aber ungetestet.
 Dokumentation und Kontakte
 **************************
 
-Die Beschreibung von ICE liegt als Postscript-File den Paketen bei. Die 
-Dokumentation ist auch online unter
+Die Beschreibung von ICE liegt als Postscript-File den Paketen bei. 
 
-http://www.inf-cv.uni-jena.de/ice/icedoc_html/icedoc_html.html
-
-lesbar.  Beachten Sie bitte,  dass die online-Dokumentation stets den ak-
-tuellen Weiterentwicklungen angepasst wird und deshalb nicht vollstaendig
-mit dieser Distribution konform gehen muss.
-
-Die Universitaet Jena uebernimmt mit dieser Veroeffentlichung keine 
+Die Universität Jena uebernimmt mit dieser Veröffentlichung keine 
 weitergehenden Verpflichtungen zu Beratung und Support fuer diese 
-ICE-Distribution. Trotzdem wollen wir nach Moeglichkeit helfen, Probleme 
-beim Einsatz von ICE zu loesen.  Schicken Sie uns dazu eine kurze Mail 
-mit einer moeglichst genauen Problem-Beschreibung an
-
-noo@uni-jena.de
-
-Diese Adresse sollten Sie ebenfalls benutzen, wenn Sie eigene ICE-Programme 
-oder Funktionen geschrieben haben,  die Sie gerne auch anderen zur
-Verfuegung stellen wollen. Wir werden dann diese Information  in unseren 
-Server aufnehmen.
+ICE-Distribution.
 
 Bemerkungen zum Verzeichnis Examples:
 
