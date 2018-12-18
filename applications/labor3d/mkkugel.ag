@@ -1,0 +1,154 @@
+#include <image.h>
+#include <getopt.h>
+
+/*AppGen
+%%
+prog: 3d-Testbild
+opt: x, xsize, int, xsize, Bildgroesse x, 500
+opt: y, ysize, int, ysize, Bildgroesse y, 500
+opt: z, zsize, int, zsize, Bildgroesse z, 125
+opt: X, xfactor, double, xfak, X-Faktor, 1.0
+opt: Y, yfactor, double, yfak, Y-Faktor, 1.0
+opt: Z, zfactor, double, zfak, Z-Faktor, 1.0
+opt: n, number, int, nSpheres, Zahl der Kugeln, 1
+opt: r, radius, double, radius, Radius der Kugel, 200
+%opt: m, modus, int, modus, Modus der Kugelform, 1
+opt2:  1 - binaer
+opt2:  2 - linear abfallend
+opt: i, inverse, bool, inverse, Invertierte Grauwerte, false
+opt2: normal - Objekt hell
+opt2: invers - Objekt dunkel
+opt: o, output, string, ofn, Dateiname (Rumpf) 3D-Bild,"kugel"
+opt: h, help, usage, dummy, Hilfe
+AppGen*/
+
+/*AppGen:Global*/
+
+class sphere
+{
+  double x;
+  double y;
+  double z;
+  double rad;
+  double rad2;
+  double x1;
+  double x2;
+  double y1;
+  double y2;
+  double z1;
+  double z2;
+public:
+
+  void init()
+  {
+    rad2 = rad * rad;
+    x1 = x - rad;
+    x2 = x + rad;
+    y1 = y - rad;
+    y2 = y + rad;
+    z1 = z - rad;
+    z2 = z + rad;
+  }
+
+  sphere(double x, double y, double z, double rad): x(x), y(y), z(z), rad(rad)
+  {
+    init();
+  }
+
+  sphere(Vector3d p, double rad): x(p.x), y(p.y), z(p.z), rad(rad)
+  {
+    init();
+  }
+
+  bool inside(double xp, double yp, double zp)
+  {
+    if (xp < x1) return false;
+    if (xp > x2) return false;
+    if (yp < y1) return false;
+    if (yp > y2) return false;
+    if (zp < z1) return false;
+    if (zp > z2) return false;
+    double dx = xp - x;
+    double dy = yp - y;
+    double dz = zp - z;
+    double dist2 = dx * dx + dy * dy + dz * dz;
+    return dist2 < rad2;
+  }
+
+  bool inside(Vector3d v)
+  {
+    return inside(v.x, v.y, v.z);
+  }
+};
+
+#if 0
+int valueSphere(const vector<double>& data, Vector3d point)
+{
+  bool soft = data[0] == 1;
+  Vector3d center(data[1], data[2], data[3]);
+  double radius2(data[4]*data[4]);
+  double distanz2 = (point - center).Length2();
+  if (distanz2 > radius2) return 0;
+  if (!soft) return 255;
+  return 255 - sqrt(distanz2) * 255 / data[4];
+}
+#endif
+
+/*AppGen:Main*/
+int main(int argc, char** argv)
+{
+  /*AppGen:MainEnd*/
+
+  vector<sphere> objects;
+
+  Image3d<Image> img3d;
+  img3d.create(xsize, ysize, zsize, 255, xfak, yfak, zfak);
+
+  IVector3d imageCenter(xsize / 2, ysize / 2, zsize / 2);
+  Vector3d imageCenterP;
+  img3d.i2d(imageCenter, imageCenterP);
+
+  // erste Kugel im zentrum
+  objects.push_back(sphere(imageCenterP, radius));
+
+  // weitere Kugeln zufällig verteilt
+  for (int i = 1; i < nSpheres; i++)
+    {
+      double xc = (xsize * xfak - radius * 2) * RandomD() + radius;
+      double yc = (ysize * yfak - radius * 2) * RandomD() + radius;
+      double zc = (zsize * zfak - radius * 2) * RandomD() + radius;
+      objects.push_back(sphere(xc, yc, zc, radius));
+    }
+  #pragma omp parallel for
+  for (int z = 0; z < zsize; z++)
+    {
+      cout << z << " ";
+      cout.flush();
+      for (int y = 0; y < ysize; y++)
+        for (int x = 0; x < xsize; x++)
+          {
+            IVector3d currentPoint(x, y, z);
+            Vector3d currentPointD;
+            img3d.i2d(currentPoint, currentPointD);
+
+            int value = 0;
+
+            for (int i = 0; i < (int)objects.size(); i++)
+              {
+                if (objects[i].inside(currentPointD) > value)
+                  value = 255;
+              }
+
+            if (inverse)
+              img3d.setPixel(x, y, z, value);
+            else
+              img3d.setPixel(x, y, z, 255 - value);
+          }
+    }
+  for (int i = 0; i < zsize; i++)
+    {
+      string fn = ofn + NumberString(i, -3) + ".bmp";
+      WriteImg(img3d[i], fn);
+    }
+  return 0;
+}

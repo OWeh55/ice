@@ -1,0 +1,1342 @@
+#include <image.h>
+#include <fstream>
+#include <getopt.h>
+#include <iomanip>
+
+#include "display3d.h"
+#include "display3drgb.h"
+#include "matrix3d.h"
+#include "fft3d.h"
+#include "depth.h"
+#include "cube.h"
+#include "marching.h"
+#include "povexport.h"
+#include "dequantize.h"
+#include "graynormalize.h"
+#include "sdr.h"
+#include "konfokal.h"
+#include "peak.h"
+#include "selectseries.h"
+#include "menu.h"
+
+/*AppGen
+%%
+prog: Experimentier-Programm für 3D-Bilder
+para: basedir,optional, String, basedir, Ausgangsverzeichnis für Dateiauswahl, "."
+opt: z, zoom, double, zoom, Zoomfaktor, 1.0
+opt: X, xfactor, Double, xfak, X-Faktor, 1.0
+opt: Y, yfactor, Double, yfak, Y-Faktor, 1.0
+opt: Z, zfactor, Double, zfak, Z-Faktor, 1.0
+opt: n, normalize, void, normalize, Normalisierung beim Laden (ev. geeignet für MRT), false
+opt: d, dicomdata, void, dicom, Bilder sind DICOM-Bilder, false
+opt: h, help, usage, dummy, Hilfe
+AppGen*/
+
+/*AppGen:Global*/
+
+Image3d<Image>* activeImage = NULL;
+Image3d<Image>* lastImage = NULL;
+Image3d<Image>* referenceImage = NULL;
+
+Display3d* activedisplay;
+
+IVector3d currentPosition;
+int xsize, ysize, zsize;
+int xs, ys, zs;
+
+// initial values for sdr
+int sdr_wsize = 32; // must be even here !!
+int sdr_wsizeZ = 4; // must be even here !!
+int sdr_resfac = 5;
+double sdr_beta = 0.1; //
+
+double beta = 0.1; // invconvolution
+
+int sdr_xstep = 8;
+int sdr_ystep = 8;
+int sdr_zstep = 1;
+
+// all (grayvalue-)Displays
+vector<Display3d*> displays;
+
+// one ColorDisplay
+Display3dRGB* displayrgb = NULL;
+
+void ActivateDisplay(Display3d* display)
+{
+  // save last active image
+  if (activeImage != NULL)
+    {
+      lastImage = activeImage;
+      activedisplay->Active(false);
+    }
+  // set new active display
+  activedisplay = display;
+  activedisplay->Active(true);
+  // ... and image
+  activeImage = activedisplay->getImg();
+
+  // reale Größe (pixel)
+  int nxsize, nysize, nzsize;
+  activeImage->getSize(nxsize, nysize, nzsize);
+  // Größenänderung ?
+  if (xsize != nxsize || ysize != nysize || nzsize != zsize)
+    {
+      // anpassen
+      xsize = nxsize;
+      ysize = nysize;
+      zsize = nzsize;
+      // Cursor-Position aus Display rekonstruieren
+      currentPosition = activedisplay->lastCursor();
+    }
+
+  // "logische" Größe
+  double xsd, ysd, zsd;
+  activeImage->getSizeD(xsd, ysd, zsd);
+  xs = xsd;
+  ys = ysd;
+  zs = zsd;
+  // cout << currentPosition.x << "," << currentPosition.y << "," << currentPosition.z << endl;
+  // cout << activeImage->inside(currentPosition) << endl;
+  // correct cursor position if outside active image
+  if (!(activeImage->insideD(currentPosition.x, currentPosition.y, currentPosition.z)))
+    currentPosition = IVector3d(xs / 2, ys / 2, zs / 2);
+}
+
+void NewDisplay(Image3d<Image>* img, const string& title, bool activate = true)
+{
+  Display3d* newdisplay = new Display3d(img, title);
+  displays.push_back(newdisplay);
+  if (activate)
+    ActivateDisplay(newdisplay);
+}
+
+void NewDisplay(Display3d* olddisplay, const string& title, bool activate = true)
+{
+  Image3d<Image>* newimage = new Image3d<Image>();
+  newimage->copy(*olddisplay->getImg());
+  NewDisplay(newimage, title, activate);
+}
+
+/*AppGen:Main*/
+
+int main(int argc, char** argv)
+{
+  /*AppGen:MainEnd*/
+
+  try
+    {
+      int level = 0;
+      bool bin = false;
+
+      Alpha(ON);
+      ClearAlpha();
+
+      Printf("\n                3d - Labor\n");
+      Printf("***********************************************\n");
+
+      SeriesName ser;
+      {
+        if (dicom)
+          ser = SelectSeries(basedir);
+        else
+          ser = SelectDir(basedir);
+
+        Image3d<Image>* primary = new Image3d<Image>();
+        primary->create(ser.FileMask(), xfak * zoom, yfak * zoom, zfak * zoom);
+
+        //  Print("gelesen\n");
+        if (normalize)
+          NormalizeImages(*primary);
+
+        //  Print("new display\n");
+        Display3d* pdisplay = new Display3d(primary, ser.Filename());
+        displays.push_back(pdisplay);
+
+        //  Print("activate display\n");
+        ActivateDisplay(pdisplay);
+      }
+
+      Printf("Größe  %d %d %d\n", xs, ys, zs);
+
+      currentPosition = IVector3d(xs / 2, ys / 2, zs / 2);
+
+      lastImage = NULL;
+
+      bool cont = true;
+#if 0
+      int dx = 0;
+      int dy = 0;
+#endif
+      bool lines = true;
+
+      mkQMenu();
+      int qmenuselect = 1;
+      vector<string> globalItems;
+      vector<char> globalKeys;
+      mkQMenu(0, globalItems, globalKeys);
+
+      while (cont)
+        {
+          Printf("Position xa: %d  ya: %d za: %d ", currentPosition.x, currentPosition.y, currentPosition.z);
+          Printf("Grauwert: %f  ", activeImage->getValue(currentPosition.x, currentPosition.y, currentPosition.z));
+          Printf("Referenzpegel: %d\n", level);
+
+          for (unsigned int i = 0; i < displays.size(); i++)
+            {
+              if (bin && displays[i] == activedisplay)
+                displays[i]->setMarkerLevel(level);
+              else
+                displays[i]->setMarkerLevel(0);
+              int xp, yp, zp;
+              displays[i]->getImg()->getSize(xp, yp, zp);
+              if (xp == xsize && yp == ysize && zp == zsize)
+                displays[i]->Update(currentPosition);
+              else
+                displays[i]->Update();
+            }
+
+          if (displayrgb)
+            {
+              int xp, yp, zp;
+              displayrgb->getImg()->getSize(xp, yp, zp);
+              if (xp == xsize && yp == ysize && zp == zsize)
+                displayrgb->Update(currentPosition);
+              else
+                displayrgb->Update();
+            }
+
+
+          int c = 0;
+
+          bool mouseclick = false;
+          c = 0;
+          while (c == 0 && !mouseclick)
+            {
+              vector<string> items;
+              vector<char> keys;
+              PushAlpha();
+              mkQMenu(qmenuselect, items, keys);
+              DrawQMenu(items, keys);
+              while (c == 0 && ! mouseclick)
+                {
+                  for (unsigned int i = 0; i < displays.size() && !mouseclick; i++)
+                    {
+                      IVector3d mousepoint = currentPosition;
+                      mouseclick = displays[i]->getMouse(mousepoint.x, mousepoint.y, mousepoint.z);
+                      if (mouseclick)
+                        {
+                          if (displays[i] == activedisplay)
+                            {
+                              // mouseclick is new position
+                              currentPosition = mousepoint;
+                            }
+                          else
+                            {
+                              // mouseclick is selection of active display
+                              ActivateDisplay(displays[i]);
+                            }
+                        }
+                    }
+                  if (displayrgb && ! mouseclick)
+                    {
+                      IVector3d mousepoint = currentPosition;
+                      mouseclick = displayrgb->getMouse(mousepoint.x, mousepoint.y, mousepoint.z);
+                      if (mouseclick)
+                        {
+                          currentPosition = mousepoint;
+                        }
+                    }
+
+                  c = GetKey();
+                }
+              if (c != 0)
+                {
+                  if (c >= '0' && c <= '9')
+                    {
+                      qmenuselect = c - '0';
+                      c = 0;
+                    }
+                  else
+                    {
+                      if (find(keys.begin(), keys.end(), c) != keys.end())
+                        c = c + qmenuselect * 256;
+                      else
+                        {
+                          if (find(globalKeys.begin(), globalKeys.end(), c) != globalKeys.end())
+                            c = 0 * 256 + c;
+                          else
+                            c = 0; // ignore invalid key
+                        }
+                    }
+                }
+              PopAlpha();
+            }
+
+          switch (c)
+            {
+            case menu0+'+':
+              if (level < 255)
+                level++;
+              if (bin)
+                activedisplay->setMarkerLevel(level);
+              break;
+
+            case menu0+'-':
+              if (level > 0)
+                level--;
+              if (bin)
+                activedisplay->setMarkerLevel(level);
+              break;
+
+            case menu0+'z':
+              if (currentPosition.z > 0) currentPosition.z--;
+              break;
+            case menu0+'Z':
+              if (currentPosition.z < zs - 1) currentPosition.z++;
+              break;
+            case menu0+'x':
+              if (currentPosition.x > 0) currentPosition.x--;
+              break;
+            case menu0+'X':
+              if (currentPosition.x < xs - 1) currentPosition.x++;
+              break;
+            case menu0+'y':
+              if (currentPosition.y > 0) currentPosition.y--;
+              break;
+            case menu0+'Y':
+              if (currentPosition.y < ys - 1) currentPosition.y++;
+              break;
+
+            case menu0+'c':
+              lines = !lines;
+              for (unsigned int i = 0; i < displays.size(); i++)
+                {
+                  displays[i]->Cursor(lines);
+                }
+              break;
+
+
+            case menu0+'C':
+              if (displayrgb)
+                delete displayrgb;
+
+              if (displays.size() > 2)
+                {
+                  displayrgb = new Display3dRGB(*displays[0]->getImg(), *displays[1]->getImg(), *displays[2]->getImg(), "RGB");
+                }
+              break;
+
+            case menu0+'d':
+              if (Ask("Aktuelles Bild entfernen?"))
+                {
+                  if (displays.size() > 1)
+                    {
+                      Display3d* deldisplay = activedisplay;
+                      vector<Display3d*>::iterator di = displays.begin();
+                      while (*di != activedisplay)
+                        di++;
+                      displays.erase(di);
+                      ActivateDisplay(displays[0]);
+                      delete deldisplay;
+                    }
+                }
+              break;
+
+            case menu0+'i': // Input Image
+            {
+              SeriesName sern;
+              if (dicom)
+                sern = SelectSeries(ser);
+              else
+                sern = SelectDir(basedir);
+              if (sern.isValid())
+                {
+                  cout << ">>" << sern.FileMask() << "<<" << endl;
+                  Image3d<Image>* newimg = new Image3d<Image>();
+                  newimg->create(sern.FileMask(), xfak * zoom, yfak * zoom, zfak * zoom);
+                  if (normalize)
+                    NormalizeImages(*newimg);
+
+                  NewDisplay(newimg, sern.Filename());
+                }
+              else
+                {
+                  Printf("File-Auswahl abgebrochen.\n");
+                }
+            }
+            break;
+
+            case menu1+'b':
+              // Arbeitsbild binarisieren
+              if (level > 0)
+                {
+                  NewDisplay(activedisplay, activedisplay->getTitle() + " - binär");
+                  binImg(*activeImage, level);
+                }
+              else
+                Printf("Pegel nicht gesetzt!\n");
+              break;
+
+            case menu1+'i':
+              // Arbeitsbild invertieren
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - invers");
+              invertImg(*activeImage);
+              break;
+
+            case menu1+'S':
+            {
+              Image3d<Image>* img = activeImage;
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - smear");
+
+              for (int z = 0; z < zsize; z++)
+                {
+                  smearImg(img->operator[](z), activeImage->operator[](z));
+                }
+              break;
+            }
+
+            case menu1+'L':
+            {
+              int neighbour = Input("Nachbarschaft:");
+              Printf("\n");
+              int significance_level = 20;
+              Printf("\n");
+              // Localseg in Arbeitsbild (scheibenweise)
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - LOCALSEG");
+              bool ok = false;
+              do
+                {
+                  for (int z = 0; z < zsize; z++)
+                    {
+                      Image& imgo = lastImage->operator[](z);
+                      Image& img = activeImage->operator[](z);
+                      LocalSeg(imgo, img, neighbour, significance_level);
+                      for (int y = 0; y < ysize; y++)
+                        for (int x = 0; x < xsize; x++)
+                          {
+                            int g = img.getPixel(x, y);
+                            if (g == LSobject)
+                              img.setPixel(x, y, 255);
+                            else if (g == LSunderground)
+                              img.setPixel(x, y, 0);
+                            else
+                              img.setPixel(x, y, 128);
+                          }
+                    }
+                  activedisplay->Update(currentPosition);
+                  int c = GetChar();
+                  switch (c)
+                    {
+                    case '+':
+                      significance_level++;
+                      break;
+                    case '-':
+                      if (significance_level > 1)
+                        significance_level--;
+                      break;
+                    case K_Return:
+                    case K_Escape:
+                      ok = true;
+                      break;
+                    }
+                }
+              while (!ok);
+            }
+            level = 128;
+            break;
+
+            case menu1+'k':
+              // "Kantenfilterung" = DoB
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - DoB");
+
+              for (int z = 0; z < zsize; z++)
+                for (int y = 0; y < ysize; y++)
+                  for (int x = 0; x < xsize; x++)
+                    {
+                      int ct = 0;
+                      int val1 = lastImage->getPixel(x, y, z);
+                      int val2 = 0;
+                      if (x > 0)
+                        {
+                          val2 += lastImage->getPixel(x - 1, y, z);
+                          ct++;
+                        }
+                      if (x < xsize - 1)
+                        {
+                          val2 += lastImage->getPixel(x + 1, y, z);
+                          ct++;
+                        }
+                      if (y > 0)
+                        {
+                          val2 += lastImage->getPixel(x, y - 1, z);
+                          ct++;
+                        }
+                      if (y < ysize - 1)
+                        {
+                          val2 += lastImage->getPixel(x, y + 1, z);
+                          ct++;
+                        }
+                      if (z > 0)
+                        {
+                          val2 += lastImage->getPixel(x, y, z - 1);
+                          ct++;
+                        }
+                      if (z < zsize - 1)
+                        {
+                          val2 += lastImage->getPixel(x, y, z + 1);
+                          ct++;
+                        }
+                      int vneu = val1 * 6 - val2 * 6 / ct;
+                      activeImage->setPixel(x, y, z, limited(vneu + 128, 0, 255));
+                    }
+              break;
+
+            case menu1+'m':
+              // MaxImg
+            {
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - max");
+
+              for (int z = 0; z < zsize; z++)
+                for (int y = 0; y < ysize; y++)
+                  for (int x = 0; x < xsize; x++)
+                    {
+                      int max = lastImage->getPixel(x, y, z);
+                      int v1;
+                      if (x > 0)
+                        {
+                          v1 = lastImage->getPixel(x - 1, y, z);
+                          if (v1 > max) max = v1;
+                        }
+                      if (x < xsize - 1)
+                        {
+                          v1 = lastImage->getPixel(x + 1, y, z);
+                          if (v1 > max) max = v1;
+                        }
+                      if (y > 0)
+                        {
+                          v1 = lastImage->getPixel(x, y - 1, z);
+                          if (v1 > max) max = v1;
+                        }
+                      if (y < ysize - 1)
+                        {
+                          v1 = lastImage->getPixel(x, y + 1, z);
+                          if (v1 > max) max = v1;
+                        }
+                      if (z > 0)
+                        {
+                          v1 = lastImage->getPixel(x, y, z - 1);
+                          if (v1 > max) max = v1;
+                        }
+                      if (z < zsize - 1)
+                        {
+                          v1 = lastImage->getPixel(x, y, z + 1);
+                          if (v1 > max) max = v1;
+                        }
+                      activeImage->setPixel(x, y, z, max);
+                    }
+            }
+            break;
+
+            case menu1+'s':
+            {
+              // differenz active - reference
+              if (referenceImage != NULL)
+                if (referenceImage != activeImage)
+                  {
+                    Image3d<Image>* first = activeImage;
+                    Image3d<Image>* second = referenceImage;
+                    NewDisplay(activedisplay, activedisplay->getTitle() + " - subimg");
+
+                    for (int z = 0; z < zsize; z++)
+                      for (int y = 0; y < ysize; y++)
+                        for (int x = 0; x < xsize; x++)
+                          {
+                            int v1 = first->getPixel(x, y, z);
+                            int v2 = second->getPixel(x, y, z);
+                            activeImage->setPixel(x, y, z, limited(v1 - v2 + 128, 0, 255));
+                          }
+                  }
+                else
+                  Print("Aktuelles Bild == Referenzbild\n");
+              else
+                Print("Kein Bezugsbild festgelegt - \"r\" benutzen\n");
+            }
+            break;
+
+            case menu4+'r':
+            {
+              Matrix3d img_real;
+              Image2Matrix(*activeImage, img_real);
+
+              Matrix3d img_imag(img_real);
+              img_imag.set(0.0);
+
+              // spectra of image
+              cout << "fft(img)" << endl;
+              fft(img_real, img_imag);
+
+              double delta_r = 0.8;
+              double beta = 1e-9;
+              bool change_delta = true;
+              bool new_delta = true;
+              bool new_beta = true;
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - reconstructed");
+              int ch = 0;
+              Matrix3d psf(xsize, ysize, zsize);
+              Matrix3d sp_psf_r(xsize, ysize, zsize);
+              Matrix3d sp_psf_i(xsize, ysize, zsize);
+
+              Matrix3d restored_r(xsize, ysize, zsize);
+              Matrix3d restored_i(xsize, ysize, zsize);
+
+              do
+                {
+
+                  if (new_delta)
+                    {
+                      cout << "createPSF(" << delta_r << ")" << endl;
+                      CreatePSF(psf, delta_r);
+
+                      // Matrix2Image(psf,*activeImage,1);
+                      // activedisplay->Update(currentPosition);
+                      // GetChar();
+
+                      // complex image (sp_psf_r,sp_psf_i) <- (psf,0)
+                      sp_psf_r = psf;
+                      sp_psf_i.set(0.0);
+
+                      cout << "fft(psf)" << endl;
+                      fft(sp_psf_r, sp_psf_i); // spektrum psf
+                      // Matrix2Image(sp_psf_r,*activeImage,1);
+                      // activedisplay->Update(currentPosition);
+                      // GetChar();
+                    }
+                  if (new_beta || new_delta)
+                    {
+                      cout << "image / psf (with beta= " << beta << ")" << endl;
+                      // inverse convolution with image
+                      for (int z = 0; z < zsize; z++)
+                        for (int y = 0; y < ysize; y++)
+                          for (int x = 0; x < xsize; x++)
+                            {
+                              double psf_real = sp_psf_r(x, y, z);
+                              double psf_imag = sp_psf_i(x, y, z);
+                              double orig_real = img_real(x, y, z);
+                              double orig_imag = img_imag(x, y, z);
+                              // regularisierter Quotient orig / psf
+                              double denominator = psf_real * psf_real + psf_imag * psf_imag + beta;
+                              double numerator_real = orig_real * psf_real + orig_imag * psf_imag;
+                              double numerator_imag = -orig_real * psf_imag + orig_imag * psf_real;
+                              restored_r(x, y, z) = numerator_real / denominator;
+                              restored_i(x, y, z) = numerator_imag / denominator;
+                            }
+
+                      // cout  << endl;
+                      cout << "fft(img)" << endl;
+                      fft(restored_r, restored_i, false); // rücktrafo
+
+                      cout << "matrix -> img" << endl;
+                      Matrix2Image(restored_r, *activeImage, 1);
+                      activedisplay->Update(currentPosition);
+                    }
+
+                  new_beta = false;
+                  new_delta = false;
+
+                  ch = GetChar();
+                  cout << (int) ch << " = " << (char)ch << endl;
+                  switch (ch)
+                    {
+                    case '+':
+                      if (change_delta)
+                        {
+                          delta_r = delta_r * 1.1;
+                          new_delta = true;
+                        }
+                      else
+                        {
+                          beta = beta * 10;
+                          new_beta = true;
+                        }
+                      break;
+                    case'-':
+                      if (change_delta)
+                        {
+                          delta_r = delta_r / 1.1;
+                          new_delta = true;
+                        }
+                      else
+                        {
+                          beta = beta / 10;
+                          new_beta = true;
+                        }
+                      break;
+                    case 'b':
+                      change_delta = false;
+                      break;
+                    case 'd':
+                      change_delta = true;
+                      break;
+                    }
+                }
+              while (ch != 13);
+              // NewDisplay(activedisplay, "inverse PSF");
+              // Matrix2Image(sp_psf_r, *activeImage, 1);
+            }
+            break;
+
+            case menu2+'d':
+            {
+              // deconvolution active image, reference is psf
+              if (referenceImage != NULL)
+                if (referenceImage != activeImage)
+                  {
+                    Image3d<Image>* unsharp = activeImage;
+                    Image3d<Image>* psfimg = referenceImage;
+                    NewDisplay(activedisplay, activedisplay->getTitle() + " - restored");
+
+                    Matrix3d img_real;
+                    Image2Matrix(* unsharp, img_real);
+
+                    Matrix3d img_imag(img_real);
+                    img_imag.set(0.0);
+
+                    Matrix3d psf(xsize, ysize, zsize);
+                    Image2Matrix(* psfimg, psf);
+
+                    // spectra of image
+                    cout << "fft(img)" << endl;
+                    fft(img_real, img_imag);
+
+                    Matrix3d sp_psf_r(xsize, ysize, zsize);
+                    Matrix3d sp_psf_i(xsize, ysize, zsize);
+
+                    sp_psf_r = psf;
+                    sp_psf_i.set(0.0);
+                    fft(sp_psf_r, sp_psf_i); // spektrum psf
+
+                    Matrix3d restored_r(xsize, ysize, zsize);
+                    Matrix3d restored_i(xsize, ysize, zsize);
+
+                    cout << "image / psf (with beta= " << beta << ")" << endl;
+                    // inverse convolution with image
+                    for (int z = 0; z < zsize; z++)
+                      for (int y = 0; y < ysize; y++)
+                        for (int x = 0; x < xsize; x++)
+                          {
+                            double psf_real = sp_psf_r(x, y, z);
+                            double psf_imag = sp_psf_i(x, y, z);
+                            double orig_real = img_real(x, y, z);
+                            double orig_imag = img_imag(x, y, z);
+                            // regularisierter Quotient orig / psf
+                            double denominator = psf_real * psf_real + psf_imag * psf_imag + beta;
+                            double numerator_real = orig_real * psf_real + orig_imag * psf_imag;
+                            double numerator_imag = -orig_real * psf_imag + orig_imag * psf_real;
+                            restored_r(x, y, z) = numerator_real / denominator;
+                            restored_i(x, y, z) = numerator_imag / denominator;
+                          }
+
+                    // cout  << endl;
+                    cout << "fft(img)" << endl;
+                    fft(restored_r, restored_i, false); // rücktrafo
+
+                    cout << "matrix -> img" << endl;
+                    Matrix2Image(restored_r, *activeImage, 1);
+                    activedisplay->Update(currentPosition);
+                  }
+            }
+            break;
+            case menu4+'k':
+            {
+              Matrix3d img_real;
+              Image2Matrix(*activeImage, img_real);
+
+              Matrix3d img_imag(img_real);
+              img_imag.set(0.0);
+
+              // spectra of image
+              cout << "fft(img)" << endl;
+              fft(img_real, img_imag);
+
+              double delta_r = 0.8;
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - pseudokonfokal");
+
+              Matrix3d psf(xsize, ysize, zsize);
+              Matrix3d sp_psf_r(xsize, ysize, zsize);
+              Matrix3d sp_psf_i(xsize, ysize, zsize);
+
+              Matrix3d restored_r(xsize, ysize, zsize);
+              Matrix3d restored_i(xsize, ysize, zsize);
+
+              cout << "createPSF(" << delta_r << ")" << endl;
+              CreatePSF(psf, delta_r);
+
+              // complex image (sp_psf_r,sp_psf_i) <- (psf,0)
+              sp_psf_r = psf;
+              sp_psf_i.set(0.0);
+
+              cout << "fft(psf)" << endl;
+              fft(sp_psf_r, sp_psf_i); // spektrum psf
+
+              cout << "image * psf " << endl;
+              // convolution with image
+              for (int z = 0; z < zsize; z++)
+                for (int y = 0; y < ysize; y++)
+                  for (int x = 0; x < xsize; x++)
+                    {
+                      double psf_real = sp_psf_r(x, y, z);
+                      double psf_imag = sp_psf_i(x, y, z);
+                      double orig_real = img_real(x, y, z);
+                      double orig_imag = img_imag(x, y, z);
+
+                      restored_r(x, y, z) = orig_real * psf_real - orig_imag * psf_imag;
+                      restored_i(x, y, z) = orig_imag * psf_real + orig_real * psf_imag;
+                    }
+
+              // cout  << endl;
+              cout << "fft(img)" << endl;
+              fft(restored_r, restored_i, false); // rücktrafo
+
+              cout << "matrix -> img" << endl;
+              Matrix2Image(restored_r, *activeImage, 1);
+              activedisplay->Update(currentPosition);
+            }
+            break;
+
+            case menu2+'s':
+              // Verschobenes Bild
+            {
+              string is;
+              is = InputS("Verschiebung X: ");
+              //Print("\n");
+              double dx = Double(is);
+              Printf("%f\n", dx);
+              is = InputS("Verschiebung Y: ");
+              //Print("\n");
+              double dy = Double(is);
+              Printf("%f\n", dy);
+              is = InputS("Verschiebung Z: ");
+              //Print("\n");
+              double dz = Double(is);
+              Printf("%f\n", dz);
+
+              NewDisplay(activedisplay, activedisplay->getTitle() + " shifted");
+
+              for (int z = 0; z < zsize; z++)
+                for (int y = 0; y < ysize; y++)
+                  for (int x = 0; x < xsize; x++)
+                    {
+                      double fx, fy, fz;
+                      lastImage->i2d(x, y, z, fx, fy, fz);
+                      fx = FMod(fx - dx, xs);
+                      fy = FMod(fy - dy, ys);
+                      fz = FMod(fz - dz, zs);
+                      int v = lastImage->getValue(fx, fy, fz);
+                      activeImage->setPixel(x, y, z, v);
+                    }
+            }
+            break;
+
+            case menu1+'h':
+              // Bild lokaler Maxima
+            {
+              NewDisplay(activedisplay, activedisplay->getTitle() + " lokale Maxima");
+              activeImage->set(200); // unbearbeitet
+              activedisplay->Update();
+              for (int z = 1; z < zsize - 1; z++)
+                {
+                  for (int y = 1; y < ysize - 1; y++)
+                    {
+                      for (int x = 1; x < xsize - 1; x++)
+                        {
+                          int v = lastImage->getPixel(x, y, z);
+                          if (isMax(*lastImage, IVector3d(x, y, z)))
+                            {
+                              // lokales maximum,
+                              // jetzt einzugsbereich finden
+                              int eval = markMax(*lastImage, *activeImage, IVector3d(x, y, z));
+                              if (eval > 50)
+                                cout << "max  at (" << x << ", " << y << ", " << z << "): " << v << " " << eval << endl;
+                            }
+                        }
+                    }
+                  activedisplay->Update();
+                }
+
+            }
+            break;
+
+            case menu1+'n':
+            {
+              // Grauwert-Normalisierung
+              NewDisplay(activedisplay, activedisplay->getTitle() + " normalized");
+              int min = 255;
+              int max = 0;
+              for (int z = 0; z < zsize; z++)
+                {
+                  for (int y = 0; y < ysize; y++)
+                    {
+                      for (int x = 0; x < xsize; x++)
+                        {
+                          int v = lastImage->getPixel(x, y, z);
+                          if (v > max) max = v;
+                          if (v < min) min = v;
+                        }
+                    }
+                }
+
+              int diff = max - min;
+              if (diff == 0) diff++;
+
+              for (int z = 0; z < zsize; z++)
+                {
+                  for (int y = 0; y < ysize; y++)
+                    {
+                      for (int x = 0; x < xsize; x++)
+                        {
+                          int v = lastImage->getPixel(x, y, z);
+                          int vn = (v - min) * 255 / diff;
+                          activeImage->setPixel(x, y, z, vn);
+                        }
+                    }
+                }
+              break;
+            }
+
+            case menu0+'r':
+              referenceImage = activeImage;
+              break;
+
+            case menu0+'l':
+              level = RoundInt(activeImage->getValue(currentPosition.x, currentPosition.y, currentPosition.z));
+              bin = true;
+              activedisplay->setMarkerLevel(level);
+              break;
+
+            case menu0+'b':
+              bin = !bin;
+              if (bin)
+                activedisplay->setMarkerLevel(level);
+              else
+                activedisplay->setMarkerLevel(0);
+              break;
+
+            case menu3+'t':
+            {
+              // Tiefenbild
+              Image depth, depthvalid;
+
+              DepthImage(*activeImage, level, depth, depthvalid, 100);
+
+              Show(OVERLAY, depth, depthvalid);
+
+              Image depth2 = NewImg(depth, true);
+              Dequantize(depth, 200, depth2);
+
+              Show(OVERLAY, depth2, depthvalid);
+
+              povExportDepth(depth2, depthvalid, "depth1.inc", 100);
+              cvExportDepth(depth2, depthvalid, "depth1.cv", 100);
+
+              system("cviewer -D 400 -c 2 depth1.cv");
+              //  GetChar();
+            }
+            break;
+
+            case menu2+'f':
+            {
+              // fourier transform of active image
+              Matrix3d m;
+              Image2Matrix(*activeImage, m);
+              Matrix3d mr, mi;
+              fft(m, mr, mi);
+              int xc = xsize / 2;
+              int yc = ysize / 2;
+              int zc = zsize / 2;
+              mr(xc, yc, zc) = 0;
+              mi(xc, yc, zc) = 0;
+              string name = activedisplay->getTitle();
+              NewDisplay(activedisplay, name + " fft(real)");
+              Matrix2Image(mr, *activeImage, 1);
+              NewDisplay(activedisplay, name + " fft(imag)");
+              Matrix2Image(mi, *activeImage, 1);
+            }
+            break;
+
+            case menu2+'b':
+              beta = InputD("Regularisierungsparameter beta: ");
+              break;
+
+            case menu2+'p':
+              // Parameter für SDR
+              sdr_wsize = Input("Blockgroesse xy: ");
+              Printf("\n");
+              while ((sdr_wsize & 1) > 0 || sdr_wsize < 3)
+                {
+                  Printf("gerade Zahl > 3 !\n");
+                  sdr_wsize = Input("Blockgroesse xy: ");
+                  Printf("\n");
+                }
+
+              sdr_wsizeZ = Input("Blockgroesse z: ");
+              Printf("\n");
+              while (((sdr_wsizeZ & 1) > 0 && (sdr_wsizeZ > 1)) || sdr_wsizeZ < 1)
+                {
+                  Printf("gerade Zahl > 1 oder 1 !\n");
+                  sdr_wsizeZ = Input("Blockgroesse z: ");
+                  Printf("\n");
+                }
+
+              sdr_resfac = Input("Faktor für Subpixel-Auflösung: ");
+              Printf("\n");
+              while (sdr_resfac < 1)
+                {
+                  Printf("Zahl>=1 !\n");
+                  sdr_resfac = Input("Faktor für Subpixel-Auflösung: ");
+                  Printf("\n");
+                }
+
+              sdr_beta = InputD("Beta: ");
+              Printf("\n");
+              while (sdr_beta < 1e-16)
+                {
+                  Printf("Zahl>=1e-16 !\n");
+                  sdr_beta = InputD("Beta: ");
+                  Printf("\n");
+                }
+
+              sdr_xstep = Input("Schrittweite x: ");
+              Printf("\n");
+              while (sdr_xstep < 1)
+                {
+                  Printf("Wert >= 1\n");
+                  sdr_xstep = Input("Schrittweite x: ");
+                  Printf("\n");
+                }
+
+              sdr_ystep = Input("Schrittweite y: ");
+              Printf("\n");
+              while (sdr_ystep < 1)
+                {
+                  Printf("Wert >= 1\n");
+                  sdr_ystep = Input("Schrittweite y: ");
+                  Printf("\n");
+                }
+
+              sdr_zstep = Input("Schrittweite z: ");
+              Printf("\n");
+              while (sdr_zstep < 1)
+                {
+                  Printf("Wert >= 1\n");
+                  sdr_zstep = Input("Schrittweite z: ");
+                  Printf("\n");
+                }
+
+              break;
+
+            case menu2+'o':
+            {
+              // "Offset-Bild" erstellen
+
+              if (referenceImage == NULL)
+                Print("kein Referenzbild!");
+              else if (referenceImage == activeImage)
+                Print("Referenzbild == aktuelles Bild");
+              else
+                {
+                  Printf("Blöcke %d x %d x %d\n", sdr_wsize, sdr_wsize, sdr_wsizeZ);
+                  Printf("Subpixel-Auflösungs-Faktor: %d\n", sdr_resfac);
+                  Printf("beta: %lf\n", sdr_beta);
+                  Printf("Schrittweiten %d, %d, %d\n", sdr_xstep, sdr_ystep, sdr_zstep);
+
+                  Image3d<Image>* testimage = activeImage;
+
+                  string name = activedisplay->getTitle();
+
+                  NewDisplay(activedisplay, name + " shiftX");
+                  Image3d<Image>* imgsx = activeImage;
+
+                  NewDisplay(activedisplay, name + " shiftY");
+                  Image3d<Image>* imgsy = activeImage;
+
+                  NewDisplay(activedisplay, name + " shiftZ");
+                  Image3d<Image>* imgsz = activeImage;
+
+                  NewDisplay(activedisplay, name + " height");
+                  Image3d<Image>* imgh = activeImage;
+                  imgh->clear();
+
+                  double timea = TimeD();
+
+                  bool abort = false;
+                  for (int z = sdr_wsizeZ / 2; z < zsize - sdr_wsizeZ / 2 && !abort; z += sdr_zstep)
+                    {
+                      for (int y = sdr_wsize / 2; y < ysize - sdr_wsize / 2 && !abort; y += sdr_ystep)
+                        {
+                          #pragma omp parallel for schedule(dynamic)
+                          for (int x = sdr_wsize / 2; x < xsize - sdr_wsize / 2; x += sdr_xstep)
+                            {
+                              Matrix3d peak;
+                              if (InvConvolution(*referenceImage, *testimage,
+                                                 x, y, z,
+                                                 sdr_wsize, sdr_wsize, sdr_wsizeZ,
+                                                 sdr_beta, sdr_resfac,
+                                                 peak))
+                                {
+                                  int xm, ym, zm;
+                                  double max = peak.Max(xm, ym, zm);
+                                  // cout << max << endl;
+                                  for (int hz = 0; hz < sdr_zstep; hz++)
+                                    for (int hy = 0; hy < sdr_ystep; hy++)
+                                      for (int hx = 0; hx < sdr_xstep; hx++)
+                                        {
+                                          // shift
+                                          imgsx->setPixel(x + hx, y + hy, z + hz, limited((xm - sdr_wsize * sdr_resfac / 2) * 25 / sdr_resfac + 128, 0, 255));
+                                          imgsy->setPixel(x + hx, y + hy, z + hz, limited((ym - sdr_wsize * sdr_resfac / 2) * 25 / sdr_resfac + 128, 0, 255));
+                                          imgsz->setPixel(x + hx, y + hy, z + hz, limited((zm - sdr_wsizeZ * sdr_resfac / 2) * 25 / sdr_resfac + 128, 0, 255));
+                                          // peak height
+                                          imgh->setPixel(x + hx, y + hy, z + hz, limited(max * 10, 0, 255));
+#if 0
+                                          if (max > 0.9)
+                                            {
+                                              imgsx->setPixel(x + hx, y + hy, z + hz, xm * 4);
+                                              imgsy->setPixel(x + hx, y + hy, z + hz, ym * 4);
+                                              imgsz->setPixel(x + hx, y + hy, z + hz, zm * 4);
+                                            }
+                                          else
+                                            {
+                                              imgsx->setPixel(x + hx, y + hy, z + hz, 255);
+                                              imgsy->setPixel(x + hx, y + hy, z + hz, 255);
+                                              imgsz->setPixel(x + hx, y + hy, z + hz, 255);
+                                            }
+#endif
+                                        }
+                                }
+                            }
+                          if (GetKey() == 'x')
+                            abort = true;
+                          cout << ".";
+                          cout.flush();
+                        }
+                      cout << endl;
+                      for (unsigned int i = 0; i < displays.size(); i++)
+                        {
+                          displays[i]->Update(currentPosition);
+                        }
+
+                    }
+                  if (!abort)
+                    Printf("Zeit: %lf s\n", TimeD() - timea);
+                  else
+                    Printf("Abgebrochen nach %lf s\n", TimeD() - timea);
+                }
+            }
+            break;
+
+            case menu2+'S':
+            {
+              // detection of shift between referenceImage and activeImage at point currentPosition
+              if (referenceImage != NULL)
+                if (referenceImage != activeImage)
+                  {
+                    Printf("Blöcke %d x %d x %d\n", sdr_wsize, sdr_wsize, sdr_wsizeZ);
+                    Printf("Subpixel-Auflösungs-Faktor: %d\n", sdr_resfac);
+                    Printf("beta: %lf\n", sdr_beta);
+                    Matrix3d md1e;
+                    if (InvConvolution(*referenceImage, *activeImage,
+                                       currentPosition,
+                                       sdr_wsize, sdr_wsize, sdr_wsizeZ,
+                                       sdr_beta, sdr_resfac,
+                                       md1e))
+                      {
+                        int xm = 0;
+                        int ym = 0;
+                        int zm = 0;
+
+                        double max = md1e.Max(xm, ym, zm);
+
+                        cout << xm << "," << ym << "," << zm << ": " << max << endl;
+
+                        if (max > 0.1)
+                          {
+                            double quality = PeakEvaluation(md1e, xm, ym, zm);
+
+                            if (quality > 0.001)
+                              {
+                                double dx = (double)(xm - md1e.sizeX() / 2) / sdr_resfac;
+                                double dy = (double)(ym - md1e.sizeY() / 2) / sdr_resfac;
+                                double dz = (double)(zm - md1e.sizeZ() / 2) / sdr_resfac;
+
+                                Printf("Maximum auf (%f,%f,%f): %lf\n", dx, dy, dz, md1e(xm, ym, zm));
+                                Printf("Qualität: %lf\n", quality);
+
+                                double scalex, scaley, scalez;
+                                activeImage->getScale(scalex, scaley, scalez);
+                                dx *= scalex;
+                                dy *= scaley;
+                                dz *= scalez;
+
+                                Printf("Verschiebung 3D: %f,%f,%f\n", dx, dy, dz);
+
+                              }
+                            else
+                              Print("Verschiebung nicht detektierbar, geringe Güte\n");
+
+                            Image3d<Image>* newimg = new Image3d<Image>();
+                            newimg->create(md1e.sizeX(), md1e.sizeY(), md1e.sizeZ(), 255,
+                                           xfak * zoom, yfak * zoom, zfak * zoom);
+
+                            Matrix2Image(md1e, *newimg, 1);
+                            NewDisplay(newimg, "Peak", false);
+                          }
+                        else
+                          Print("Verschiebung nicht detektierbar, Maximum zu schwach\n");
+                      }
+                    else
+                      Print("Punkt am Rand\n");
+                  }
+
+                else
+                  Print("Aktuelles Bild == Referenzbild\n");
+              else
+                Print("Kein Bezugsbild festgelegt - \"r\" benutzen\n");
+            }
+            break;
+
+            case menu3+'T':
+            {
+              // "Tiefenbild" Typ 2: Punkte eines Objektes werden gesucht
+              // und in das Tiefenbild eingetragen
+
+              if (activeImage->getValue(currentPosition.x, currentPosition.y, currentPosition.z) < level)
+                {
+                  char dir = 'x';
+                  vector<string> dirmenu;
+                  dirmenu.push_back("Blick in ~x-richtung");
+                  dirmenu.push_back("Blick in ~y-richtung");
+                  dirmenu.push_back("Blick in ~z-richtung");
+                  dirmenu.push_back("Blick in negative x-richtung");
+                  dirmenu.push_back("Blick in negative y-richtung");
+                  dirmenu.push_back("Blick in negative z-richtung");
+                  int sel = Menu(dirmenu, -1, -1, -1, -1, true, "Blickrichtung");
+                  switch (sel)
+                    {
+                    case 0:
+                      dir = 'x';
+                      break;
+                    case 1:
+                      dir = 'y';
+                      break;
+                    case 2:
+                      dir = 'z';
+                      break;
+                    case 3:
+                      dir = 'X';
+                      break;
+                    case 4:
+                      dir = 'Y';
+                      break;
+                    case 5:
+                      dir = 'Z';
+                      break;
+                    default:
+                      dir = ' ';
+                    }
+
+                  if (dir != ' ')
+                    {
+                      Image depth, depthvalid;
+                      double ta = TimeD();
+                      DepthImage(*activeImage, level, currentPosition,
+                                 depth, depthvalid, dir, 100);
+                      Printf("Zeit: %6.3f s\n", TimeD() - ta);
+                      Image depth2 = NewImg(depth, true);
+                      Show(OVERLAY, depth2, depthvalid);
+                      Dequantize(depth, 200, depth2);
+
+                      povExportDepth(depth2, depthvalid, "depth.inc", 100);
+                      cvExportDepth(depth2, depthvalid, "depth.cv", 100);
+
+                      system("cviewer -D 400 -c 2 depth.cv");
+                    }
+                }
+              else
+                Print("Punkt nicht im Objekt\n");
+            }
+            break;
+
+            case menu3+'o':
+            {
+              // "Objektbild": Punkte des Objektes auf currentPosition werden gesucht
+              // und im Binärbild eingetragen
+
+              //              if (activeImage->getValue(currentPosition.x, currentPosition.y, currentPosition.z) < level)
+              if (activeImage->getValue(currentPosition.x, currentPosition.y, currentPosition.z) < level)
+                {
+                  Image3d<Image>* testimage = activeImage;
+                  NewDisplay(activedisplay, activedisplay->getTitle() + " single object");
+
+                  IVector3d startpoint;
+                  activeImage->d2i(currentPosition.x, currentPosition.y, currentPosition.z, startpoint.x, startpoint.y, startpoint.z);
+                  // zunächst binärbild erzeugen
+                  cout << "1" << endl;
+                  ObjImage(*testimage, level, startpoint, *activeImage);
+                  cout << "2" << endl;
+                  // jetzt Grauwerte kopieren
+                  for (int z = 0; z < zsize; z++)
+                    for (int y = 0; y < ysize; y++)
+                      for (int x = 0; x < xsize; x++)
+                        {
+                          int val = testimage->getPixel(x, y, z);
+                          if (val >= level)
+                            activeImage->setPixel(x, y, z, val);
+                          else
+                            {
+                              if (activeImage->getPixel(x, y, z) == 0)
+                                activeImage->setPixel(x, y, z, val);
+                              else
+                                activeImage->setPixel(x, y, z, level);
+                            }
+                        }
+                }
+              else
+                Print("Punkt nicht im Objekt\n");
+            }
+            break;
+
+            case menu3+'m':
+              // marching cubes
+            {
+              Printf("Suche Oberfläche\n");
+              vector<TRIANGLE> triangles;
+              for (int z = 0; z < zsize - 1; z++)
+                {
+                  Printf("%d/%d\n", z + 1, zsize);
+                  for (int y = 0; y < ysize - 1; y++)
+                    for (int x = 0; x < xsize - 1; x++)
+                      {
+                        cube ac(*activeImage, x, y, z);
+                        PolygoniseCube(ac, level, triangles);
+                      }
+                }
+              Printf("%d Dreiecke gefunden\n", triangles.size());
+              cvExport(triangles, "triangles.cv");
+              povExport(triangles, "triangles.inc");
+              system("cviewer -D 400 -c 2 triangles.cv");
+            }
+            break;
+
+            case menu0+'q':
+              cont = !Ask("Wirklich beenden?");
+              break;
+            }
+        }
+    }
+
+  catch (const char* msg)
+    {
+      cerr << "Exception: " << msg << endl;
+    }
+  return 0;
+}
