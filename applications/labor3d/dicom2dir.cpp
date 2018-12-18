@@ -11,12 +11,12 @@ const string tempfile = "/tmp/d2d";
 
 using namespace std;
 
-void System(const string &cmd)
+void System(const string& cmd)
 {
   system(cmd.c_str());
 }
 
-string Escape(const string &fn)
+string Escape(const string& fn)
 {
   string res;
   for (unsigned int i = 0; i < fn.length(); i++)
@@ -47,7 +47,7 @@ public:
   {
     cout << "image: " << fileid << "=" << instanceUID << "(" << number << ")" << endl;
   }
-  void convert(const string &srcdir, const string &dstname) const
+  void convert(const string& srcdir, const string& dstname) const
   {
     string cmd = "dicom2 " + Escape(srcdir + "/" + fileid) + " -w --to=" + Escape(dstname + "/");
     //+ NumberString(number,-2)+".bmp");
@@ -77,7 +77,7 @@ public:
       img[i].print();
   }
 
-  void convert(const string &srcdir, const string &dstname) const
+  void convert(const string& srcdir, const string& dstname) const
   {
     string dirname = Escape(dstname + "/" + NumberString(number, -2) + "_" + description);
     string cmd = "mkdir -p " + dirname;
@@ -104,7 +104,7 @@ public:
       ser[i].print();
   }
 
-  void convert(const string &srcdir, const string &dstname) const
+  void convert(const string& srcdir, const string& dstname) const
   {
     string dirname = Escape(dstname + "/" + date + "_" + time);
     string cmd = "mkdir -p " + dirname;
@@ -129,7 +129,7 @@ public:
       stud[i].print();
   }
 
-  void convert(const string &srcdir, const string &dstname) const
+  void convert(const string& srcdir, const string& dstname) const
   {
     string dirname = Escape(dstname + "/" + name + "_" + NumberString(id));
     string cmd = "mkdir -p " + dirname;
@@ -146,7 +146,7 @@ private:
   string line;
   size_t cursor;
 public:
-  parsed_line(const string &ln): line(ln), cursor(0) {}
+  parsed_line(const string& ln): line(ln), cursor(0) {}
   bool eol() const
   {
     return cursor >= line.size();
@@ -256,7 +256,7 @@ private:
 
 public:
   tag(): high(0), low(0), value(""), lastvalue("") {}
-  tag(const string &n)
+  tag(const string& n)
   {
     parsed_line pl(n);
 
@@ -291,10 +291,10 @@ public:
   string lastvalue;
 };
 
-bool readtag(FILE *f, tag &c)
+bool readtag(FILE* f, tag& c)
 {
   char line[500];
-  char *res;
+  char* res;
   int cursor;
   do
     {
@@ -312,7 +312,7 @@ bool readtag(FILE *f, tag &c)
   return true;
 }
 
-void readPatient(FILE *f, Patient &pat)
+void readPatient(FILE* f, Patient& pat)
 {
   tag t;
   do
@@ -327,7 +327,7 @@ void readPatient(FILE *f, Patient &pat)
   while (!t.equal(0xFFFE, 0xE00D));
 }
 
-void readStudy(FILE *f, Study &std)
+void readStudy(FILE* f, Study& std)
 {
   tag t;
   do
@@ -345,7 +345,7 @@ void readStudy(FILE *f, Study &std)
   while (!t.equal(0xFFFE, 0xE00D));
 }
 
-void readSeries(FILE *f, Series &ser)
+void readSeries(FILE* f, Series& ser)
 {
   tag t;
   do
@@ -365,7 +365,7 @@ void readSeries(FILE *f, Series &ser)
   while (!t.equal(0xFFFE, 0xE00D));
 }
 
-void readImage(FILE *f, image &img)
+void readImage(FILE* f, image& img)
 {
   tag t;
   do
@@ -394,7 +394,7 @@ void readImage(FILE *f, image &img)
   while (!t.equal(0xFFFE, 0xE00D));
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   vector<Patient> pat;
 
@@ -404,7 +404,7 @@ int main(int argc, char **argv)
   string dicomdir = srcdir + "/DICOMDIR";
 
   tag t;
-  FILE *dd = popen(("medcon -alias -f " + dicomdir).c_str(), "r");
+  FILE* dd = popen(("medcon -alias -f " + dicomdir).c_str(), "r");
   try
     {
       while (readtag(dd, t))
@@ -443,7 +443,7 @@ int main(int argc, char **argv)
             }
         }
     }
-  catch (const char *msg)
+  catch (const char* msg)
     {
       if (strcmp(msg, "eof") != 0)
         cerr << "Exeption: " << msg << endl;

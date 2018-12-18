@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void getCenter(const Image &depth, const Image &depthvalid, int &xc, int &yc, double &zc)
+void getCenter(const Image& depth, const Image& depthvalid, int& xc, int& yc, double& zc)
 {
   int xs = depth->xsize;
   int ys = depth->ysize;
@@ -35,7 +35,7 @@ void getCenter(const Image &depth, const Image &depthvalid, int &xc, int &yc, do
   zc = (zmax + zmin) / 2.0;
 }
 
-void povExportDepth(const Image &depth, const Image &depthvalid, const string &fn, double factor)
+void povExportDepth(const Image& depth, const Image& depthvalid, const string& fn, double factor)
 {
   int xs = depth->xsize;
   int ys = depth->ysize;
@@ -79,7 +79,7 @@ void povExportDepth(const Image &depth, const Image &depthvalid, const string &f
       }
 }
 
-void cvExportDepth(const Image &depth, const Image &depthvalid, const string &fn, double factor)
+void cvExportDepth(const Image& depth, const Image& depthvalid, const string& fn, double factor)
 {
   int xs = depth->xsize;
   int ys = depth->ysize;
@@ -134,17 +134,17 @@ void cvExportDepth(const Image &depth, const Image &depthvalid, const string &fn
 }
 
 
-void cvVector(ostream &os, const Vector3d &v)
+void cvVector(ostream& os, const Vector3d& v)
 {
   os << "<" << v.x << "," << v.y << "," << v.z << ">";
 }
 
-void povVector(ostream &os, const Vector3d &v)
+void povVector(ostream& os, const Vector3d& v)
 {
   os << "<" << v.x << "," << v.y << "," << -v.z << ">";
 }
 
-void povTriangle(ostream &os, const TRIANGLE &t, Vector3d center)
+void povTriangle(ostream& os, const TRIANGLE& t, Vector3d center)
 {
   os << "triangle {";
   povVector(os, t.p[0] - center);
@@ -153,7 +153,7 @@ void povTriangle(ostream &os, const TRIANGLE &t, Vector3d center)
   os << "}" << endl;
 }
 
-void cvTriangle(ostream &os, const TRIANGLE &t, Vector3d center)
+void cvTriangle(ostream& os, const TRIANGLE& t, Vector3d center)
 {
   os << "triangle ";
   cvVector(os, t.p[0] - center);
@@ -164,7 +164,7 @@ void cvTriangle(ostream &os, const TRIANGLE &t, Vector3d center)
   os << endl;
 }
 
-Vector3d Center(const vector<TRIANGLE> &tri)
+Vector3d Center(const vector<TRIANGLE>& tri)
 {
   Vector3d center(0, 0, 0);
   for (unsigned int i = 0; i < tri.size(); i++)
@@ -172,7 +172,7 @@ Vector3d Center(const vector<TRIANGLE> &tri)
   return center * (1.0 / tri.size());
 }
 
-void cvExport(const vector<TRIANGLE> &tri, const string &fn)
+void cvExport(const vector<TRIANGLE>& tri, const string& fn)
 {
   Vector3d center = Center(tri);
 
@@ -181,7 +181,7 @@ void cvExport(const vector<TRIANGLE> &tri, const string &fn)
   os2 << "def obj" << endl;
   for (unsigned int i = 0; i < tri.size(); i++)
     {
-      const TRIANGLE &t = tri[i];
+      const TRIANGLE& t = tri[i];
       // triangle <7.1099,0.3629,1.48993>,<7.1304,0.371005,1.50436>,<7.1441,0.360581,1.47347>
       cvTriangle(os2, t, center);
     }
@@ -190,14 +190,14 @@ void cvExport(const vector<TRIANGLE> &tri, const string &fn)
   // os2 << "obj NULL, 180, Y" << endl;
 }
 
-void povExport(const vector<TRIANGLE> &tri, const string &fn)
+void povExport(const vector<TRIANGLE>& tri, const string& fn)
 {
   Vector3d center = Center(tri);
 
   ofstream os2(fn.c_str());
   for (unsigned int i = 0; i < tri.size(); i++)
     {
-      const TRIANGLE &t = tri[i];
+      const TRIANGLE& t = tri[i];
       povTriangle(os2, t, center);
     }
 }

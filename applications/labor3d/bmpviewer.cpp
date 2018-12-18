@@ -28,7 +28,7 @@ public:
   }
 };
 
-SeriesName SelectSeries(const SeriesName &ser)
+SeriesName SelectSeries(const SeriesName& ser)
 {
   SeriesName res = ser;
   res.series = "";
@@ -50,7 +50,7 @@ SeriesName SelectSeries(const SeriesName &ser)
   return res;
 }
 
-SeriesName SelectSeries(const string &dir = basedir)
+SeriesName SelectSeries(const string& dir = basedir)
 {
   SeriesName res;
   res.basedir = dir;
@@ -58,7 +58,7 @@ SeriesName SelectSeries(const string &dir = basedir)
   return res;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   //  vector<string> fn;
   int zoom = 1;
@@ -360,7 +360,7 @@ int main(int argc, char **argv)
         }
     }
 
-  catch (const char *msg)
+  catch (const char* msg)
     {
       cerr << "Exception: " << msg << endl;
     }

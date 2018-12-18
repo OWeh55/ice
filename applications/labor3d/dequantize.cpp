@@ -3,7 +3,7 @@
 
 const double nada = 0.001;
 
-void Dequantize(const Image &qimg, int step, Image &iimg)
+void Dequantize(const Image& qimg, int step, Image& iimg)
 {
   int xs = qimg->xsize;
   int ys = qimg->ysize;
@@ -95,4 +95,4 @@ void Dequantize(const Image &qimg, int step, Image &iimg)
     for (int x = 0; x < xs; x++)
       PutVal(iimg, x, y, limited(RoundInt(GetValD(h, x, y)), iimg));
 
-    }
+}

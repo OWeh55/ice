@@ -5,7 +5,7 @@ using namespace std;
 
 const string SeriesName::dicommask = "img*.bmp";
 
-SeriesName SelectSeries(const SeriesName &ser)
+SeriesName SelectSeries(const SeriesName& ser)
 {
   SeriesName res = ser;
   res.series = "";
@@ -42,13 +42,13 @@ SeriesName SelectSeries(const SeriesName &ser)
   return res;
 }
 
-SeriesName SelectSeries(const string &dir)
+SeriesName SelectSeries(const string& dir)
 {
   SeriesName res(dir, true);
   return SelectSeries(res);
 }
 
-SeriesName SelectDir(const std::string &dir)
+SeriesName SelectDir(const std::string& dir)
 {
   string selection, selectionpath;
   if (SelFile(dir + "/*", selection, selectionpath, DIR_FILE | DIR_SELPATH, "Musterdatei waehlen", 2, 4, 60, 20))

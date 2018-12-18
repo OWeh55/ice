@@ -2,7 +2,7 @@
 
 #include "graynormalize.h"
 
-Polynom1o Image2Image(const Image &img1, const Image &img2)
+Polynom1o Image2Image(const Image& img1, const Image& img2)
 {
   Polynom1o res;
   res.FitInit();
@@ -16,7 +16,7 @@ Polynom1o Image2Image(const Image &img1, const Image &img2)
   return res;
 }
 
-void NormalizeImages(Image3d<Image> &img)
+void NormalizeImages(Image3d<Image>& img)
 {
   int xs, ys, zs;
   img.getSize(xs, ys, zs);

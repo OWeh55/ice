@@ -2,7 +2,7 @@
 
 #include "menu.h"
 
-const char *qmenu[] = { "b0bin-Darstellung ein/aus",
+const char* qmenu[] = { "b0bin-Darstellung ein/aus",
                         "l0Binarisierungspegel festlegen",
                         "c0Kursor ein/aus",
                         "C0Farbbilddarstellung ein/aus",
@@ -54,7 +54,7 @@ public:
   char key;
   unsigned char submenu;
   string title;
-  QMenuItem(const char *s): key(s[0]), submenu(s[1] - '0'), title(s + 2) {}
+  QMenuItem(const char* s): key(s[0]), submenu(s[1] - '0'), title(s + 2) {}
   void print() const
   {
     cout << key << " " << (int)submenu << ": " << title << endl;
@@ -74,7 +74,7 @@ void mkQMenu()
     }
 }
 
-void mkQMenu(int idx, vector<string> &items, vector<char> &key)
+void mkQMenu(int idx, vector<string>& items, vector<char>& key)
 {
   items.clear();
   key.clear();
@@ -89,8 +89,8 @@ void mkQMenu(int idx, vector<string> &items, vector<char> &key)
     }
 }
 
-void DrawQMenu(const vector<string> &items,
-               const vector<char> &key)
+void DrawQMenu(const vector<string>& items,
+               const vector<char>& key)
 {
   // 2,2,37,20,    41,2,77,20
   SetAttribute(C_YELLOW, C_RED, 0, 0);

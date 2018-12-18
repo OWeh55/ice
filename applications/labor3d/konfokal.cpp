@@ -3,7 +3,7 @@
 
 #include "konfokal.h"
 
-void CreatePSF(const Image3d<Image> &img, double delta_r)
+void CreatePSF(const Image3d<Image>& img, double delta_r)
 {
   int z0 = img.zsize / 2;
   int x0 = img.xsize / 2;
@@ -52,7 +52,7 @@ void CreatePSF(const Image3d<Image> &img, double delta_r)
     }
 }
 
-void CreatePSF(Matrix3d &mat, double delta_r)
+void CreatePSF(Matrix3d& mat, double delta_r)
 {
   int x0 = mat.sizeX() / 2;
   int y0 = mat.sizeY() / 2;

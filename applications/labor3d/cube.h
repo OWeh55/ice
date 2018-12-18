@@ -6,7 +6,7 @@
 class cube
 {
 public:
-  cube(const ice::Image3d<ice::Image> &img, int x, int y, int z);
+  cube(const ice::Image3d<ice::Image>& img, int x, int y, int z);
 
   ice::Vector3d p[8];
   double val[8]; // Grauwerte der Ecken

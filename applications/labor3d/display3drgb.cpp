@@ -1,7 +1,7 @@
 #include "display3drgb.h"
 
-Display3dRGB::Display3dRGB(Image3d<Image> &series1, Image3d<Image> &series2, Image3d<Image> &series3,
-                           const string &title):
+Display3dRGB::Display3dRGB(Image3d<Image>& series1, Image3d<Image>& series2, Image3d<Image>& series3,
+                           const string& title):
   owner(false), title(title), cursor(true), active(false)
 {
   img3d[0] = &series1;
@@ -14,9 +14,9 @@ Display3dRGB::~Display3dRGB()
 {
   if (owner)
     {
-    delete [] img3d[0];
-    delete [] img3d[1];
-    delete [] img3d[2];
+      delete [] img3d[0];
+      delete [] img3d[1];
+      delete [] img3d[2];
     }
 }
 
@@ -203,23 +203,23 @@ void Display3dRGB::Update(IVector3d p)
     }
 }
 
-bool Display3dRGB::getMouse(IVector3d &p) const
+bool Display3dRGB::getMouse(IVector3d& p) const
 {
   return getMouse(p.x, p.y, p.z);
 }
 
-bool Display3dRGB::getMouse(int &x, int &y, int &z) const
+bool Display3dRGB::getMouse(int& x, int& y, int& z) const
 {
   plane_t plane;
   return getMouse(x, y, z, plane);
 }
 
-bool Display3dRGB::getMouse(IVector3d &p, plane_t &plane) const
+bool Display3dRGB::getMouse(IVector3d& p, plane_t& plane) const
 {
   return getMouse(p.x, p.y, p.z, plane);
 }
 
-bool Display3dRGB::getMouse(int &x, int &y, int &z, plane_t &plane) const
+bool Display3dRGB::getMouse(int& x, int& y, int& z, plane_t& plane) const
 {
   int display_x, display_y;
   int mousestat = Mouse(red, display_x, display_y);

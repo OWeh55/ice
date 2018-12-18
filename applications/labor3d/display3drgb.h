@@ -10,10 +10,10 @@ class Display3dRGB
 public:
   enum plane_t { xy_plane, xz_plane, zy_plane };
 
-  Display3dRGB(Image3d<Image> &series1, Image3d<Image> &series2, Image3d<Image> &series3, const string &title = "");
+  Display3dRGB(Image3d<Image>& series1, Image3d<Image>& series2, Image3d<Image>& series3, const string& title = "");
   ~Display3dRGB();
 
-  void getSize(int &xa, int &ya, int &za) const
+  void getSize(int& xa, int& ya, int& za) const
   {
     xa = xs;
     ya = ys;
@@ -44,21 +44,21 @@ public:
   void Update(int xa, int ya, int za);
   void Update(IVector3d p);
 
-  bool getMouse(int &x, int &y, int &z, plane_t &plane) const;
-  bool getMouse(int &x, int &y, int &z) const;
-  bool getMouse(IVector3d &p, plane_t &plane) const;
-  bool getMouse(IVector3d &p) const;
+  bool getMouse(int& x, int& y, int& z, plane_t& plane) const;
+  bool getMouse(int& x, int& y, int& z) const;
+  bool getMouse(IVector3d& p, plane_t& plane) const;
+  bool getMouse(IVector3d& p) const;
 
   string getTitle() const
   {
     return title;
   }
 
-  Image3d<Image> *getImg(int n = 0)
+  Image3d<Image>* getImg(int n = 0)
   {
     return img3d[n];
   }
-  const Image3d<Image> *getImg(int n = 0) const
+  const Image3d<Image>* getImg(int n = 0) const
   {
     return img3d[n];
   }
@@ -77,7 +77,7 @@ private:
   void Line(int x1, int y1, int x2, int y2, int cred, int cgreen, int cblue);
   void Line(int x1, int y1, int x2, int y2, int c, Image img[3]);
 
-  Image3d<Image> *img3d[3];
+  Image3d<Image>* img3d[3];
 
   bool owner;
 

@@ -13,6 +13,6 @@ struct TRIANGLE
 ice::Vector3d VertexInterp(double isolevel, ice::Vector3d p1, ice::Vector3d p2,
                            double valp1, double valp2);
 
-int PolygoniseCube(const cube &g, double iso, std::vector<TRIANGLE> &tri);
+int PolygoniseCube(const cube& g, double iso, std::vector<TRIANGLE>& tri);
 
 #endif

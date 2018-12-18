@@ -26,7 +26,7 @@ public:
   }
 
   // copy c'tor
-  Transformer(const Transformer &tr): size(tr.size), forward(tr.forward)
+  Transformer(const Transformer& tr): size(tr.size), forward(tr.forward)
   {
     alloc();
     // unknown: can plan be copied ?
@@ -91,20 +91,20 @@ private:
     aimag = new double[size];
   }
 
-  fftw_complex *in;
-  fftw_complex *out;
+  fftw_complex* in;
+  fftw_complex* out;
 
   int size;
   bool forward;
   fftw_plan fftw_p;
 
 public:
-  double *areal;
-  double *aimag;
+  double* areal;
+  double* aimag;
 };
 
-void fft(const Matrix3d &src, Matrix3d &real,
-         Matrix3d &imag, bool forward) // real to complex fft
+void fft(const Matrix3d& src, Matrix3d& real,
+         Matrix3d& imag, bool forward) // real to complex fft
 {
   int sx = src.sizeX();
   int sy = src.sizeY();
@@ -115,7 +115,7 @@ void fft(const Matrix3d &src, Matrix3d &real,
   fft(real, imag, forward);
 }
 
-void fft(Matrix3d &real, Matrix3d &imag, bool forward)
+void fft(Matrix3d& real, Matrix3d& imag, bool forward)
 {
   int sx = real.sizeX();
   int sy = real.sizeY();

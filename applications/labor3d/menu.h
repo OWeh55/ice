@@ -10,8 +10,8 @@ const int menu5 = 5 * 256;
 const int menu6 = 6 * 256;
 
 void mkQMenu();
-void mkQMenu(int i, vector<string> &items, vector<char> &key);
+void mkQMenu(int i, vector<string>& items, vector<char>& key);
 
-void DrawQMenu(const vector<string> &items, const vector<char> &key);
+void DrawQMenu(const vector<string>& items, const vector<char>& key);
 
 #endif

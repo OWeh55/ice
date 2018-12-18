@@ -38,10 +38,10 @@ namespace ice
 
     point3d() : x(0), y(0), z(0) {};
     point3d(T xs, T ys, T zs) : x(xs), y(ys), z(zs) {};
-    point3d(const point3d &p) : x(p.x), y(p.y), z(p.z) {}
+    point3d(const point3d& p) : x(p.x), y(p.y), z(p.z) {}
 
     template<class TI>
-    explicit point3d(const pointT<TI> &p): x((T)p.x), y((T)p.y), z((T)p.z) {}
+    explicit point3d(const pointT<TI>& p): x((T)p.x), y((T)p.y), z((T)p.z) {}
 
     explicit point3d(T d[]): x(d[0]), y(d[1]), z(d[2]) {}
 
@@ -50,39 +50,39 @@ namespace ice
       return point3d<double>(x, y, z);
     }
 
-    T &X()
+    T& X()
     {
       return x;
     }
-    T &Y()
+    T& Y()
     {
       return y;
     }
-    T &Z()
+    T& Z()
     {
       return z;
     }
 
-    const T &X() const
+    const T& X() const
     {
       return x;
     }
-    const T &Y() const
+    const T& Y() const
     {
       return y;
     }
 
-    const T &Z() const
+    const T& Z() const
     {
       return z;
     }
 
-    bool operator==(const point3d &s) const
+    bool operator==(const point3d& s) const
     {
       return (s.x == x) && (s.y == y) && (s.z == z);
     }
 
-    bool operator!=(const point3d &s) const
+    bool operator!=(const point3d& s) const
     {
       return (s.x != x) || (s.y != y) || (s.z != z);
     }
@@ -94,7 +94,7 @@ namespace ice
       z += dz;
     }
 
-    point3d operator+=(const point3d &second)
+    point3d operator+=(const point3d& second)
     {
       x += second.x;
       y += second.y;
@@ -102,14 +102,14 @@ namespace ice
       return *this;
     }
 
-    point3d operator+ (const point3d &second) const
+    point3d operator+ (const point3d& second) const
     {
       point3d res = *this;
       res += second;
       return res;
     }
 
-    point3d operator-=(const point3d &second)
+    point3d operator-=(const point3d& second)
     {
       x -= second.x;
       y -= second.y;
@@ -117,7 +117,7 @@ namespace ice
       return *this;
     }
 
-    point3d operator-(const point3d &second) const
+    point3d operator-(const point3d& second) const
     {
       point3d res = *this;
       res -= second;

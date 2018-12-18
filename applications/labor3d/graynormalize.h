@@ -3,6 +3,6 @@
 
 #include "image3d.h"
 
-void NormalizeImages(Image3d<Image> &img);
+void NormalizeImages(Image3d<Image>& img);
 
 #endif

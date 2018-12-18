@@ -1,12 +1,12 @@
 #include "display3d.h"
 
-Display3d::Display3d(Image3d<Image> &series, const string &title):
+Display3d::Display3d(Image3d<Image>& series, const string& title):
   img3d(&series), owner(false), title(title), markerlevel(0), cursor(true), active(false)
 {
   init();
 }
 
-Display3d::Display3d(Image3d<Image> *series, const string &title):
+Display3d::Display3d(Image3d<Image>* series, const string& title):
   img3d(series), owner(true), title(title), markerlevel(0), cursor(true), active(false)
 {
   init();
@@ -166,23 +166,23 @@ void Display3d::Update(IVector3d p)
     }
 }
 
-bool Display3d::getMouse(IVector3d &p) const
+bool Display3d::getMouse(IVector3d& p) const
 {
   return getMouse(p.x, p.y, p.z);
 }
 
-bool Display3d::getMouse(int &x, int &y, int &z) const
+bool Display3d::getMouse(int& x, int& y, int& z) const
 {
   plane_t plane;
   return getMouse(x, y, z, plane);
 }
 
-bool Display3d::getMouse(IVector3d &p, plane_t &plane) const
+bool Display3d::getMouse(IVector3d& p, plane_t& plane) const
 {
   return getMouse(p.x, p.y, p.z, plane);
 }
 
-bool Display3d::getMouse(int &x, int &y, int &z, plane_t &plane) const
+bool Display3d::getMouse(int& x, int& y, int& z, plane_t& plane) const
 {
   int display_x, display_y;
   int mousestat = Mouse(gray, display_x, display_y);

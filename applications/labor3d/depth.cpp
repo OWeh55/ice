@@ -4,7 +4,7 @@
 #include "display3d.h"
 #include "depth.h"
 
-void DepthImage(const Image3d<Image> &src, int level, Image &depth, Image &depthvalid, int depthfactor)
+void DepthImage(const Image3d<Image>& src, int level, Image& depth, Image& depthvalid, int depthfactor)
 {
   double xsd, ysd, zsd;
   src.getSizeD(xsd, ysd, zsd);
@@ -35,7 +35,7 @@ void DepthImage(const Image3d<Image> &src, int level, Image &depth, Image &depth
       }
 }
 
-bool newPoint(Image3d<Image> &img, IVector3d test)
+bool newPoint(Image3d<Image>& img, IVector3d test)
 {
   if (img.inside(test) && img.getPixel(test) == 0)
     {
@@ -46,14 +46,14 @@ bool newPoint(Image3d<Image> &img, IVector3d test)
     return false;
 }
 
-bool objectPoint(const Image3d<Image> &img, IVector3d test)
+bool objectPoint(const Image3d<Image>& img, IVector3d test)
 {
   return img.inside(test) &&
          img.getPixel(test) < 20;
 }
 
-void DepthImage(const Image3d<Image> &src, int level, IVector3d current,
-                Image &depth, Image &depthvalid, char dir, int depthfactor)
+void DepthImage(const Image3d<Image>& src, int level, IVector3d current,
+                Image& depth, Image& depthvalid, char dir, int depthfactor)
 {
   double xsd, ysd, zsd;
   src.getSizeD(xsd, ysd, zsd);
@@ -222,9 +222,9 @@ void DepthImage(const Image3d<Image> &src, int level, IVector3d current,
   displayb.Update(current);
 }
 
-void ObjImage(const Image3d<Image> &src, int level,
+void ObjImage(const Image3d<Image>& src, int level,
               IVector3d startpoint,
-              Image3d<Image> &obj)
+              Image3d<Image>& obj)
 {
   int xs = src.xsize;
   int ys = src.ysize;

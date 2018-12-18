@@ -10,11 +10,11 @@ class Display3d
 public:
   enum plane_t { xy_plane, xz_plane, zy_plane };
 
-  Display3d(Image3d<Image> &img, const string &title = "");
-  Display3d(Image3d<Image> *img, const string &title = "");
+  Display3d(Image3d<Image>& img, const string& title = "");
+  Display3d(Image3d<Image>* img, const string& title = "");
   ~Display3d();
 
-  void getSize(int &xa, int &ya, int &za) const
+  void getSize(int& xa, int& ya, int& za) const
   {
     xa = xs;
     ya = ys;
@@ -45,10 +45,10 @@ public:
   void Update(int xa, int ya, int za);
   void Update(IVector3d p);
 
-  bool getMouse(int &x, int &y, int &z, plane_t &plane) const;
-  bool getMouse(int &x, int &y, int &z) const;
-  bool getMouse(IVector3d &p, plane_t &plane) const;
-  bool getMouse(IVector3d &p) const;
+  bool getMouse(int& x, int& y, int& z, plane_t& plane) const;
+  bool getMouse(int& x, int& y, int& z) const;
+  bool getMouse(IVector3d& p, plane_t& plane) const;
+  bool getMouse(IVector3d& p) const;
 
   void setMarkerLevel(int val)
   {
@@ -60,11 +60,11 @@ public:
     return title;
   }
 
-  Image3d<Image> *getImg()
+  Image3d<Image>* getImg()
   {
     return img3d;
   }
-  const Image3d<Image> *getImg() const
+  const Image3d<Image>* getImg() const
   {
     return img3d;
   }
@@ -81,7 +81,7 @@ private:
   static const int gap = 10;
 
 
-  Image3d<Image> *img3d;
+  Image3d<Image>* img3d;
   bool owner;
 
   string title;

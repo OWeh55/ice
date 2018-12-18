@@ -16,7 +16,7 @@ public:
   std::string series;
 public:
   SeriesName(): dicom(true), mask(dicommask) {}
-  SeriesName(const string &basedir, bool dicom = false): dicom(dicom), basedir(basedir)
+  SeriesName(const string& basedir, bool dicom = false): dicom(dicom), basedir(basedir)
   {
     if (dicom)
       mask = dicommask;
@@ -45,8 +45,8 @@ public:
   }
 };
 
-SeriesName SelectSeries(const SeriesName &ser);
-SeriesName SelectSeries(const std::string &dir);
-SeriesName SelectDir(const std::string &dir = ".");
+SeriesName SelectSeries(const SeriesName& ser);
+SeriesName SelectSeries(const std::string& dir);
+SeriesName SelectDir(const std::string& dir = ".");
 
 #endif

@@ -13,14 +13,14 @@ class GaussReg: public ice::LMFunctionObject
 {
 private:
 // Referenzen auf die dem Konstruktor übergebenen Parameter
-  const Matrix3d &m;
-  ice::Vector &gausspara; // Parameter der Gauss-Funktion
+  const Matrix3d& m;
+  ice::Vector& gausspara; // Parameter der Gauss-Funktion
   // inhalt des vektors: my_x,my_y,my_z,1/sigma_x,1/sigma_y,1/sigma_z,faktor
 public:
   // Konstruktor
   // übernimmt (als Referenz) die zu optimierenden
   // Parameter der Gauss-Funktion und die Matrix
-  GaussReg(ice::Vector &gp, const Matrix3d &mp):
+  GaussReg(ice::Vector& gp, const Matrix3d& mp):
     m(mp), gausspara(gp) { } ;
   // Dimension der Fehlerfunktion
   int funcdim() const
@@ -29,7 +29,7 @@ public:
     return m.sizeX() * m.sizeY() * m.sizeZ(); // Ein Fehlerwert pro Voxel
   }
   // Fehler-Funktion
-  int operator()(ice::Vector &result) const
+  int operator()(ice::Vector& result) const
   {
     int i = 0;
     for (int z = 0; z < m.sizeZ(); z++)
@@ -56,7 +56,7 @@ public:
 };
 
 
-double PeakEvaluation(const Matrix3d &m, double xm, double ym, double zm)
+double PeakEvaluation(const Matrix3d& m, double xm, double ym, double zm)
 {
   int inumber = 10000;
 
@@ -71,7 +71,7 @@ double PeakEvaluation(const Matrix3d &m, double xm, double ym, double zm)
   n[5] = 1;
   n[6] = m(xm, ym, zm);
 
-  std::vector<double *> op(7); // Pointer auf zu optimierende Parameter
+  std::vector<double*> op(7);  // Pointer auf zu optimierende Parameter
 
   for (int i = 0; i < 7; i++)
     op[i] = &n[i];
@@ -124,13 +124,13 @@ struct PointP: public IVector3d
 
   PointP(int x, int y, int z, double v): IVector3d(x, y, z), val(v) {}
   PointP(IVector3d s, double v): IVector3d(s), val(v) {}
-  bool operator<(const PointP &second) const
+  bool operator<(const PointP& second) const
   {
     return val < second.val;
   }
 };
 
-void push(priority_queue<PointP> &heap, IVector3d p, const Image3d<Image> &val, Image3d<Image> &mark)
+void push(priority_queue<PointP>& heap, IVector3d p, const Image3d<Image>& val, Image3d<Image>& mark)
 {
   if (mark.inside(p))
     if (mark.getPixel(p) == 200) // unbearbeitet
@@ -140,7 +140,7 @@ void push(priority_queue<PointP> &heap, IVector3d p, const Image3d<Image> &val, 
       }
 }
 
-int getVal(const Image3d<Image> &val, int x, int y, int z, const Image3d<Image> &mark)
+int getVal(const Image3d<Image>& val, int x, int y, int z, const Image3d<Image>& mark)
 {
   //  cout << "getVal: " << x << ", " << y << ", "<< z << endl;
   if (!val.inside(x, y, z)) return 0;
@@ -149,7 +149,7 @@ int getVal(const Image3d<Image> &val, int x, int y, int z, const Image3d<Image> 
   return val.getPixel(x, y, z);
 }
 
-bool isMax(const Image3d<Image> &val, IVector3d p, const Image3d<Image> &mark)
+bool isMax(const Image3d<Image>& val, IVector3d p, const Image3d<Image>& mark)
 {
   int x = p.x;
   int y = p.y;
@@ -170,7 +170,7 @@ IVector3d X(1, 0, 0);
 IVector3d Y(0, 1, 0);
 IVector3d Z(0, 0, 1);
 
-int markMax(const Image3d<Image> &val, Image3d<Image> &mark, IVector3d p)
+int markMax(const Image3d<Image>& val, Image3d<Image>& mark, IVector3d p)
 {
   priority_queue<PointP> heap;
   int max = val.getPixel(p);
@@ -198,7 +198,7 @@ int markMax(const Image3d<Image> &val, Image3d<Image> &mark, IVector3d p)
   return max - min;
 }
 
-bool isMax(const Image3d<Image> &val, IVector3d p)
+bool isMax(const Image3d<Image>& val, IVector3d p)
 {
   int x = p.x;
   int y = p.y;

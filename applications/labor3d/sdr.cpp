@@ -8,7 +8,7 @@
 using namespace std;
 using namespace ice;
 
-void Expand(const Matrix3d &m1, int faktor, Matrix3d &m2)
+void Expand(const Matrix3d& m1, int faktor, Matrix3d& m2)
 {
   int ox = m1.sizeX();
   int nx = ox * faktor;
@@ -65,11 +65,11 @@ void Expand(const Matrix3d &m1, int faktor, Matrix3d &m2)
         }
 }
 
-bool InvConvolution(const Image3d<Image> &img1, const Image3d<Image> &img2,
+bool InvConvolution(const Image3d<Image>& img1, const Image3d<Image>& img2,
                     int x, int y, int z,
                     int wsizex, int wsizey, int wsizez,
                     double beta, int resfac,
-                    Matrix3d &res)
+                    Matrix3d& res)
 {
 
   int xsize, ysize, zsize;
@@ -155,11 +155,11 @@ bool InvConvolution(const Image3d<Image> &img1, const Image3d<Image> &img2,
     return false;
 }
 
-bool InvConvolution(const Image3d<Image> &img1, const Image3d<Image> &img2,
-                    const IVector3d &p,
+bool InvConvolution(const Image3d<Image>& img1, const Image3d<Image>& img2,
+                    const IVector3d& p,
                     int wsizex, int wsizey, int wsizez,
                     double beta, int resfac,
-                    Matrix3d &res)
+                    Matrix3d& res)
 {
   cout << "[" << p.x << "," << p.y << "," << p.z << "]" << endl;
 

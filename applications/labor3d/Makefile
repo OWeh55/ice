@@ -52,6 +52,11 @@ ifndef NOFFTW3
 LIBS := $(LIBS) -lfftw3 #-lfftw3_omp
 endif
 
+# command for beautifier
+ASTYLE := astyle
+# format options for beautifier
+ASTYLE_OPT = --style=gnu --unpad-paren --pad-header --pad-oper --indent-namespaces --indent=spaces=2 --convert-tabs --align-pointer=type --align-reference=type
+
 %.o:%.c
 	$(CC) $(COPT) $(INCLUDE) -c $*.c
 
@@ -76,7 +81,10 @@ $(MAIN): $(OBJECTS) $(ICEDIR)/lib/$(MACHTYPE)/libice.a
 #	$(CXX) $(COPT) $(INCLUDE) -c $(MAIN).cpp
 
 clean:
-	-rm -f *.o depend *~ 
+	-rm -f *.o depend *~ *orig
+
+format:
+	$(ASTYLE) $(ASTYLE_OPT) *.cpp *.h *.ag
 
 dep:
 	-rm depend 
