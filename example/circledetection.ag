@@ -1,0 +1,156 @@
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Anwendung DFT auf Bilder
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ opt: r, radius, double, radius, Fixed circle radius, 0
+AppGen*/
+
+LineSeg InputLine(const Image& img, const string& p)
+{
+  LineSeg res;
+  Print("Eingabe " + p + "\n");
+  IPoint p1 = SelPoint(img);
+  Marker(1, p1, 3, 5, img);
+  IPoint p2 = SelPoint(img);
+  Marker(1, p2, 3, 5, img);
+  Print("G - Gerade\n");
+  Print("A - Strahl\n");
+  Print("I - Inverser Strahl\n");
+  Print("S - Strecke\n");
+  char c = GetChar();
+
+  switch (c)
+    {
+    case 'G':
+    case 'g':
+      res = LineSeg(p1, p2, LineSeg::line);
+      break;
+    case 'A':
+    case 'a':
+      res = LineSeg(p1, p2, LineSeg::ray);
+      break;
+    case 'I':
+    case 'i':
+      res = LineSeg(p1, p2, LineSeg::inv_ray);
+      break;
+    case 'S':
+    case 's':
+    default:
+      res = LineSeg(p1, p2, LineSeg::segment);
+      break;
+    }
+
+  Marker(1, p1, 0, 5, img);
+  Marker(1, p2, 0, 5, img);
+  return res;
+}
+
+bool InputCircle(const Image& img, double rad, Circle& c)
+{
+  c = Circle();
+  Print("Eingabe Mittelpunkt \n");
+  int rc;
+
+  IPoint p1 = SelPoint(img, rc);
+  if (rc >= 0)
+    {
+      Marker(1, p1, 3, 5, img);
+      if (rad == 0)
+        {
+          Print("Eingabe Randpunkt \n");
+
+          IPoint p2 = SelPoint(img, rc);
+          if (rc >= 0)
+            {
+              c  = Circle(p1, (p2 - p1).r());
+              Marker(1, p1, 0, 5, img);
+            }
+        }
+      else
+        {
+          c = Circle(p1, rad);
+          Marker(1, p1, 0, 5, img);
+        }
+    }
+
+  return (rc >= 0);
+}
+/*AppGen:Main*/
+int main(int argc, char** argv)
+{
+  /*AppGen:MainEnd*/
+  Image img;
+  img.create(1024, 1024, 255);
+  Image mrk;
+  mrk.create(1024, 1024, 8);
+  clearImg(img);
+  clearImg(mrk);
+  Show(OVERLAY, img, mrk);
+
+  vector<Circle> circles;
+  Circle c;
+  while (InputCircle(mrk, radius, c))
+    {
+      circles.push_back(c);
+      draw(c, mrk, 1);
+    }
+
+  vector<Point> points;
+  WindowWalker w(mrk);
+  for (w.init(); !w.ready(); w.next())
+    {
+      double r = drand48();
+      if (r < 0.1)
+        if (mrk.getPixel(w) > 0)
+          points.push_back(w);
+    }
+
+  cout << "selected: " << points.size() << " Points selected" << endl;
+
+  for (Point p : points)
+    {
+      mrk.setPixel(IPoint(p), 3);
+      img.setPixel(IPoint(p), 255);
+    }
+  FourierTrafo2D fft(img.xsize, img.ysize);
+  while (GetChar() != 13) /* wait*/;
+
+  fft.setInput(img);
+  ImageD spectrumR, spectrumI;
+  spectrumR.create(img);
+  spectrumI.create(img);
+
+  int xCenter = img.xsize / 2;
+  int yCenter = img.ysize / 2;
+  IPoint center(xCenter, yCenter);
+  fft.getResult(spectrumR, spectrumI);
+  WindowWalker s(spectrumR);
+  double max = 0;
+  for (s.init(); !s.ready(); s.next())
+    {
+      if (s != center)
+        {
+          double r = spectrumR.getPixel(s);
+          double i = spectrumI.getPixel(s);
+          double value = sqrt(r * r + i * i);
+          if (value > max)
+            max = value;
+        }
+    }
+  cout << "max: " << max << endl;
+  for (s.init(); !s.ready(); s.next())
+    {
+      double r = spectrumR.getPixel(s);
+      double i = spectrumI.getPixel(s);
+      double value = sqrt(r * r + i * i) / max;
+      img.setPixelLimited(s, value * 255);
+    }
+
+  while (GetChar() != 13) /* wait*/;
+
+  return OK;
+}

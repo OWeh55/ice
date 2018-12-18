@@ -175,19 +175,19 @@ void usage()
   cout << ag_programName << " [<options>] " << endl;
   cout << "Options:" << endl;
   cout << "-r <d>" << "  " << "--radius=<d>" << "   ";
-  cout << "Fixed circle radius (default: 0)" << endl ;
+  cout << "Fixed circle radius (default: 0)" << endl ; 
   exit(1);
 }
 
-void error(const string& msg)
+void error(const string &msg)
 {
   cout << endl << ag_programName << " - error: " << msg << endl << endl;
   usage();
 }
 
-double ptod(const char* para)
+double ptod(const char *para)
 {
-  char* end;
+  char *end;
   double res = strtod(para, &end);
   if (end == para)
     error(string("no double: ") + para);
@@ -196,7 +196,7 @@ double ptod(const char* para)
   return res;
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
   double radius = 0;
   static struct option ag_long_options[] =
@@ -225,7 +225,7 @@ int main(int argc, char** argv)
           error("error in options");
         }
     }
-  /*AppGen:MainEnd*/
+/*AppGen:MainEnd*/
 # 86 "circledetection.ag"
   Image img;
 # 87 "circledetection.ag"
