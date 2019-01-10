@@ -23,7 +23,6 @@
 AppGen*/
 
 typedef matrix<double> dMatrix;
-//typedef Matrix dMatrix;
 
 typedef vector<double> dVector;
 
