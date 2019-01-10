@@ -1,5 +1,5 @@
 #include <image.h>
-
+// extended histogram equalization
 #define superq 1000
 
 void XHequal(const Image& qimg, Image& iimg)
