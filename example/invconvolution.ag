@@ -405,39 +405,47 @@ int main(int argc, char* argv[])
         maskNorm = makeMask(mask, radius, phi, maskMode);
       else
         {
-          Image temp;
-          temp.create(xSize, ySize, 255);
-          temp.read(maskFilename);
-          int min = 255;
-          int max = 0;
-          int xmin = 0, ymin = 0;
-          for (int y = 0; y < ySize; ++y)
-            for (int x = 0; x < xSize; ++x)
-              {
-                int val = temp.getPixel(x, y);
-                if (val < min)
-                  {
-                    min = val;
-                    xmin = x;
-                    ymin = y;
-                  }
-                if (val > max)
-                  max = val;
-              }
-          int xShift = xSize / 2 - xmin;
-          int yShift = ySize / 2 - ymin;
+          mask.read(maskFilename);
+          WindowWalker w(mask);
           double sum = 0;
-          for (int y = 0; y < ySize; ++y)
-            for (int x = 0; x < xSize; ++x)
-              {
-                int val = temp.getPixel(x, y);
-                val -= max;
-                val = val * 255 / (min - max);
-                mask.setPixel((x + xShift + xSize) % xSize, (y + yShift + ySize) % ySize, val);
-                sum += val;
-              }
+          for (w.init(); !w.ready(); w.next())
+            sum += mask.getPixel(w);
           maskNorm = sum;
+          /*
+                Image temp;
+                temp.create(xSize, ySize, 255);
+                temp.read(maskFilename);
 
+                int min = 255;
+                int max = 0;
+                int xmin = 0, ymin = 0;
+                for (int y = 0; y < ySize; ++y)
+                  for (int x = 0; x < xSize; ++x)
+                    {
+                      int val = temp.getPixel(x, y);
+                      if (val < min)
+                        {
+                          min = val;
+                          xmin = x;
+                          ymin = y;
+                        }
+                      if (val > max)
+                        max = val;
+                    }
+                int xShift = xSize / 2 - xmin;
+                int yShift = ySize / 2 - ymin;
+                double sum = 0;
+                for (int y = 0; y < ySize; ++y)
+                  for (int x = 0; x < xSize; ++x)
+                    {
+                      int val = temp.getPixel(x, y);
+                      val -= max;
+                      val = val * 255 / (min - max);
+                      mask.setPixel((x + xShift + xSize) % xSize, (y + yShift + ySize) % ySize, val);
+                      sum += val;
+                    }
+          maskNorm = sum;
+          */
         }
 
       if (verbose)
@@ -506,7 +514,7 @@ int main(int argc, char* argv[])
           int select = 0; // no (special) display
           if (displayMode == 16)
             {
-              Show(GRAY, display);
+              Show(GRAY, display, "Use D to change selected image");
               select = 4; // display restored image
             }
 
