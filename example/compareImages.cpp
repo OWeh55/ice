@@ -14,11 +14,13 @@ int main(int argc, char** argv)
 
   int xs, ys, mv, ch;
   InfImgFile(fn1, xs, ys, mv, ch);
-  Image src1(xs, ys, mv);
+  Image src1;
+  src1.create(xs, ys, mv);
   ReadImg(fn1, src1);
 
   InfImgFile(fn2, xs, ys, mv, ch);
-  Image src2(xs, ys, mv);
+  Image src2;
+  src2.create(xs, ys, mv);
   ReadImg(fn2, src2);
 
   if ((src1->xsize != src2->xsize) || (src1->ysize != src2->ysize))

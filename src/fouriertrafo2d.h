@@ -97,7 +97,7 @@ namespace ice
     const FourierTrafo2D& operator=(const FourierTrafo2D& ft) = delete;
 
   private:
-    void transformIfNeeded() throw(std::logic_error);
+    void transformIfNeeded();
     void checkParameter(int xs, int ys); // throws in case of error
 
     // internal state

@@ -39,9 +39,8 @@ namespace ice
     {
     }
 
-    void solve(std::vector<double>& x) throw(std::logic_error);
-    void solve(std::vector<double>& x, const std::vector<int>& select)
-    throw(std::logic_error);
+    void solve(std::vector<double>& x);
+    void solve(std::vector<double>& x, const std::vector<int>& select);
 
     int getNIterations() const
     {
