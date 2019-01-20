@@ -20,27 +20,34 @@ namespace ice
       where_ += "/" + ex.where_;
     }
 
-    IceException(const std::string& where, const std::string& message, const std::string& emessage):
+    IceException(const std::string& where,
+                 const std::string& message,
+                 const std::string& emessage):
       where_(where), message_(message + " (" + emessage + ")")
     {
     }
 
     virtual const char* what() const noexcept(true) override
     {
-      return (where_ + " - " + message_).c_str();
+      fullmessage = where_ + " - " + message_;
+      return fullmessage.c_str();
     }
+
     virtual std::string where() const
     {
       return where_;
     }
+
     virtual std::string message() const
     {
       return message_;
     }
     virtual ~IceException() {}
+
   private:
     std::string where_;
     std::string message_;
+    mutable std::string fullmessage;
   };
 }
 

@@ -43,7 +43,7 @@ namespace ice
     return true;
   }
 
-  void LMSolver::solve(vector<double>& x, const vector<int>& select) throw(std::logic_error)
+  void LMSolver::solve(vector<double>& x, const vector<int>& select)
   {
     nIterations = 0;
     nVars = select.size();
@@ -210,7 +210,7 @@ namespace ice
     errorValue = sqrt(functionNorm2);
   }
 
-  void LMSolver::solve(vector<double>& x) throw(std::logic_error)
+  void LMSolver::solve(vector<double>& x)
   {
     vector<int> select(x.size());
     for (unsigned int i = 0; i < select.size(); ++i)

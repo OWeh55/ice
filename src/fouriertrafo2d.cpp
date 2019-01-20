@@ -42,7 +42,7 @@ namespace ice
     state = sPara;
   }
 
-  void FourierTrafo2D::transformIfNeeded() throw(std::logic_error)
+  void FourierTrafo2D::transformIfNeeded()
   {
     if (state >= sDone)
       {

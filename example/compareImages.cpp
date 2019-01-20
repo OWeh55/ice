@@ -1,5 +1,7 @@
 #include <image.h>
-// simper Test zum vergleich mit nice
+// simple comparisn of images:
+//  - image of absolute differences (normalized to 0..255)
+//  - sum of absolute differences (L1 norm)
 
 int main(int argc, char** argv)
 {
@@ -29,23 +31,37 @@ int main(int argc, char** argv)
       exit(-1);
     }
 
-  //  Show(ON,src1);
+  Image diff;
+  diff.create(xs, ys, mv);
 
-  for (int i = 0; i < 100; i++)
+  Show(ON, src1, fn1);
+  Show(ON, src2, fn2);
+  Show(ON, diff, fn1 + " - " + fn2);
+
+  double l1error = 0.0;
+  int maxdiff = 1;
+
+  WindowWalker w(src1);
+  for (w.init(); !w.ready(); w.next())
     {
-      double l1error = 0.0;
-
-      for (int y = 0 ; y < src1->ysize; y++)
-        for (int x = 0 ; x < src1->xsize; x++)
-          {
-            l1error += abs(GetVal(src1, x, y) - GetVal(src2, x, y));
-          }
-
-      l1error /= src1->xsize * src1->ysize;
-
-      //      GetChar();
-      cerr << "Average pixel difference: " << l1error << endl;
+      int g1 = src1.getPixel(w);
+      int g2 = src2.getPixel(w);
+      int d = abs(g1 - g2);
+      if (d > maxdiff)
+        maxdiff = d;
+      diff.setPixel(w, d);
+      l1error += d;
     }
+
+  // normalize differences 0...mv
+  for (w.init(); !w.ready(); w.next())
+    {
+      diff.setPixel(w, mv * diff.getPixel(w) / maxdiff);
+    }
+  l1error /= src1->xsize * src1->ysize;
+
+  cerr << "Average pixel difference: " << l1error << endl;
+  GetChar();
 
   return 0;
 }
