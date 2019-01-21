@@ -59,6 +59,12 @@ namespace ice
     int refcount = 0;
     T minValue = -1, maxValue = 1;
 
+    void setLimits(double minVal, double maxVal)
+    {
+      minValue = minVal;
+      maxValue = maxVal;
+    }
+
     void adaptLimits()
     {
       double min = (*this)[0][0];
@@ -568,6 +574,10 @@ namespace ice
       return mat->maxValue;
     }
 
+    void setLimits(double minVal, double maxVal)
+    {
+      mat->setLimits(minVal, maxVal);
+    }
     void adaptLimits()
     {
       mat->adaptLimits();
