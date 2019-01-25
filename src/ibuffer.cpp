@@ -80,7 +80,7 @@ namespace ice
     unsigned int val = 0, valr = 0, valg = 0, valb = 0;
     unsigned char* hptr, *rptr = NULL, *gptr = NULL, *bptr = NULL;
     int xm, ym;
-    int norm = 0;
+    bool norm = false;
 
     int scal = 1; // keine skalierung
     valfunc* valueFunction;
@@ -339,10 +339,11 @@ namespace ice
       {
         int xsb = ib.width;
         int ysb = ib.height; // Bildgroesse im Puffer
+
         int xs, ys, maxval;
         checkImage(imgr, imgg, imgb, xs, ys, maxval);
 
-        int norm = (maxval != ib.maxval);
+        bool norm = (maxval != ib.maxval);
 
         int scal = 1;
         if (flags & IB_SCALE)
@@ -414,10 +415,9 @@ namespace ice
                         valg = MulDiv(valg, imgg.maxval, ib.maxval);
                         valb = MulDiv(valb, imgb.maxval, ib.maxval);
                       }
-
-                    PutVal(imgr, x, y, std::min(imgr.maxval, std::max(0, valr)));
-                    PutVal(imgg, x, y, std::min(imgg.maxval, std::max(0, valg)));
-                    PutVal(imgb, x, y, std::min(imgb.maxval, std::max(0, valb)));
+                    imgr.setPixelLimited(x, y, valr);
+                    imgg.setPixelLimited(x, y, valg);
+                    imgb.setPixelLimited(x, y, valb);
 
                     switch (ib.packmethod)
                       {
