@@ -281,60 +281,12 @@ namespace ice
 
     return himg;
   }
-// RGB
+
+  // RGB
   void Buffer2Image(ibuffer& ib,
                     const Image& imgr, const Image& imgg, const Image& imgb,
                     int flags)
   {
-    valfunc* valueFunction;
-
-    if (ib.byteorder == IB_LSB_FIRST)
-      {
-        switch (ib.valuesize)
-          {
-          case 1:
-            valueFunction = get1;
-            break;
-          case 2:
-            valueFunction = get2l;
-            break;
-          case 4:
-            valueFunction = get4l;
-            break;
-          default:
-            throw IceException(FNAME, M_WRONG_PARAM);
-            break;
-          }
-      }
-    else
-      {
-        switch (ib.valuesize)
-          {
-          case 1:
-            valueFunction = get1;
-            break;
-          case 2:
-            valueFunction = get2h;
-            break;
-          case 4:
-            valueFunction = get4h;
-            break;
-          default:
-            throw IceException(FNAME, M_WRONG_PARAM);
-            break;
-          }
-      }
-
-    if (ib.planes == 1)
-      {
-        // kein RGB-Bild
-        if (ib.can_delete)
-          {
-            free(ib.data);
-          }
-        throw IceException(FNAME, M_WRONG_FILETYPE);
-      }
-
     try
       {
         int xsb = ib.width;
@@ -357,92 +309,170 @@ namespace ice
         int xm = std::min(xs, xsb / scal);
         int ym = std::min(ys, ysb / scal);
 
-        if (ib.planes == 1)
+        // spezial: 8Bit RGB
+        if (imgr->ImageType() == 1 &&
+            ib.valuesize == 1 &&
+            scal == 1 &&
+            !norm &&
+            ib.packmethod == IB_RGB &&
+            ib.intensity &&
+            ib.planes == 3)
           {
-            // no colorimage in buffer
-            throw IceException(FNAME, M_WRONG_FILETYPE);
-          }
-
-        if (ib.planes == 3)
-          {
+            PixelType1** riptr = (PixelType1**)imgr->getDataPtr();
+            PixelType1** giptr = (PixelType1**)imgg->getDataPtr();
+            PixelType1** biptr = (PixelType1**)imgb->getDataPtr();
+            unsigned char* ptr = nullptr;
             for (int y = 0; y < ym; y++)
               {
-                unsigned char* rptr = nullptr;
-                unsigned char* gptr = nullptr;
-                unsigned char* bptr = nullptr;
-                switch (ib.packmethod)
+                ptr = ib.data + y * ib.linelength;
+                for (int x = 0; x < xm; x++)
                   {
-                  case IB_RGB:
-                    rptr = ib.data + (y * scal) * ib.linelength;
-                    gptr = rptr + ib.valuesize;
-                    bptr = gptr + ib.valuesize;
+                    riptr[y][x] = maxval - *ptr;
+                    ptr++;
+                    giptr[y][x] = maxval - *ptr;
+                    ptr++;
+                    biptr[y][x] = maxval - *ptr;
+                    ptr++;
+                  }
+              }
+          }
+        else
+          {
+            valfunc* valueFunction;
+            if (ib.byteorder == IB_LSB_FIRST)
+              {
+                switch (ib.valuesize)
+                  {
+                  case 1:
+                    valueFunction = get1;
                     break;
-                  case IB_BGR:
-                    bptr = ib.data + (y * scal) * ib.linelength;
-                    gptr = bptr + ib.valuesize;
-                    rptr = gptr + ib.valuesize;
+                  case 2:
+                    valueFunction = get2l;
                     break;
-                  case IB_RGB_PLANES:
-                    rptr = ib.data + (y * scal) * ib.linelength;
-                    gptr = rptr + ib.height * ib.linelength;
-                    bptr = gptr + ib.height * ib.linelength;
-                    break;
-                  case IB_BGR_PLANES:
-                    bptr = ib.data + (y * scal) * ib.linelength;
-                    gptr = bptr + ib.width * ib.linelength;
-                    rptr = gptr + ib.width * ib.linelength;
+                  case 4:
+                    valueFunction = get4l;
                     break;
                   default:
                     throw IceException(FNAME, M_WRONG_PARAM);
+                    break;
                   }
-
-                for (int x = 0; x < xm; x++)
+              }
+            else
+              {
+                switch (ib.valuesize)
                   {
-                    int valr = valueFunction(rptr);
-                    int valg = valueFunction(gptr);
-                    int valb = valueFunction(bptr);
+                  case 1:
+                    valueFunction = get1;
+                    break;
+                  case 2:
+                    valueFunction = get2h;
+                    break;
+                  case 4:
+                    valueFunction = get4h;
+                    break;
+                  default:
+                    throw IceException(FNAME, M_WRONG_PARAM);
+                    break;
+                  }
+              }
 
-                    if (ib.intensity)
-                      {
-                        valr = ib.maxval - valr;
-                        valg = ib.maxval - valg;
-                        valb = ib.maxval - valb;
-                      }
+            if (ib.planes == 1)
+              {
+                // kein RGB-Bild
+                if (ib.can_delete)
+                  {
+                    free(ib.data);
+                  }
+                throw IceException(FNAME, M_WRONG_FILETYPE);
+              }
 
-                    if (norm)
-                      {
-                        valr = MulDiv(valr, imgr.maxval, ib.maxval);
-                        valg = MulDiv(valg, imgg.maxval, ib.maxval);
-                        valb = MulDiv(valb, imgb.maxval, ib.maxval);
-                      }
-                    imgr.setPixelLimited(x, y, valr);
-                    imgg.setPixelLimited(x, y, valg);
-                    imgb.setPixelLimited(x, y, valb);
+            if (ib.planes == 1)
+              {
+                // no colorimage in buffer
+                throw IceException(FNAME, M_WRONG_FILETYPE);
+              }
 
+            if (ib.planes == 3)
+              {
+                for (int y = 0; y < ym; y++)
+                  {
+                    unsigned char* rptr = nullptr;
+                    unsigned char* gptr = nullptr;
+                    unsigned char* bptr = nullptr;
                     switch (ib.packmethod)
                       {
                       case IB_RGB:
+                        rptr = ib.data + (y * scal) * ib.linelength;
+                        gptr = rptr + ib.valuesize;
+                        bptr = gptr + ib.valuesize;
+                        break;
                       case IB_BGR:
-                        rptr = rptr + ib.valuesize * 3 * scal;
-                        gptr = gptr + ib.valuesize * 3 * scal;
-                        bptr = bptr + ib.valuesize * 3 * scal;
+                        bptr = ib.data + (y * scal) * ib.linelength;
+                        gptr = bptr + ib.valuesize;
+                        rptr = gptr + ib.valuesize;
                         break;
                       case IB_RGB_PLANES:
+                        rptr = ib.data + (y * scal) * ib.linelength;
+                        gptr = rptr + ib.height * ib.linelength;
+                        bptr = gptr + ib.height * ib.linelength;
+                        break;
                       case IB_BGR_PLANES:
-                        rptr = rptr + ib.valuesize * scal;
-                        gptr = gptr + ib.valuesize * scal;
-                        bptr = bptr + ib.valuesize * scal;
+                        bptr = ib.data + (y * scal) * ib.linelength;
+                        gptr = bptr + ib.width * ib.linelength;
+                        rptr = gptr + ib.width * ib.linelength;
                         break;
                       default:
                         throw IceException(FNAME, M_WRONG_PARAM);
                       }
+
+                    for (int x = 0; x < xm; x++)
+                      {
+                        int valr = valueFunction(rptr);
+                        int valg = valueFunction(gptr);
+                        int valb = valueFunction(bptr);
+
+                        if (ib.intensity)
+                          {
+                            valr = ib.maxval - valr;
+                            valg = ib.maxval - valg;
+                            valb = ib.maxval - valb;
+                          }
+
+                        if (norm)
+                          {
+                            valr = MulDiv(valr, imgr.maxval, ib.maxval);
+                            valg = MulDiv(valg, imgg.maxval, ib.maxval);
+                            valb = MulDiv(valb, imgb.maxval, ib.maxval);
+                          }
+                        imgr.setPixelLimited(x, y, valr);
+                        imgg.setPixelLimited(x, y, valg);
+                        imgb.setPixelLimited(x, y, valb);
+
+                        switch (ib.packmethod)
+                          {
+                          case IB_RGB:
+                          case IB_BGR:
+                            rptr = rptr + ib.valuesize * 3 * scal;
+                            gptr = gptr + ib.valuesize * 3 * scal;
+                            bptr = bptr + ib.valuesize * 3 * scal;
+                            break;
+                          case IB_RGB_PLANES:
+                          case IB_BGR_PLANES:
+                            rptr = rptr + ib.valuesize * scal;
+                            gptr = gptr + ib.valuesize * scal;
+                            bptr = bptr + ib.valuesize * scal;
+                            break;
+                          default:
+                            throw IceException(FNAME, M_WRONG_PARAM);
+                          }
+                      }
                   }
               }
-          }
 
-        if (ib.can_delete)
-          {
-            free(ib.data);
+            if (ib.can_delete)
+              {
+                free(ib.data);
+              }
           }
       }
     catch (IceException& ex)
