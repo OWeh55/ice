@@ -40,9 +40,7 @@ endif
 # we use MACHTYPE as subdirectory name to allow parallel 
 # build on different architektures
 # we need to make sure, there is a definition of MACHTYPE
-ifndef MACHTYPE
-MACHTYPE := some_machine
-endif
+MACHTYPE ?= some_machine
 
 OBJDIR := $(MACHTYPE)/obj
 DEPDIR := $(MACHTYPE)/deps
@@ -160,6 +158,7 @@ format:
 	$(ASTYLE) $(ASTYLE_OPT) *.inc
 
 dep:
+	@echo $(MACHTYPE)
 	# "make dep ist nicht mehr erforderlich!"
 
 clean:
