@@ -378,17 +378,11 @@ namespace ice
 
             if (ib.planes == 1)
               {
-                // kein RGB-Bild
+                // no colorimage in buffer
                 if (ib.can_delete)
                   {
                     free(ib.data);
                   }
-                throw IceException(FNAME, M_WRONG_FILETYPE);
-              }
-
-            if (ib.planes == 1)
-              {
-                // no colorimage in buffer
                 throw IceException(FNAME, M_WRONG_FILETYPE);
               }
 
