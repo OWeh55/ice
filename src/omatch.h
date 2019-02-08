@@ -81,10 +81,7 @@ namespace ice
     virtual void getOrderedLists(std::vector<Point>& pl1, std::vector<Point>& pl2) const;
     virtual Trafo getTrafo(int optmode = MM_SQUARE) const;
 
-    virtual double getEvaluation() const
-    {
-      return eval;
-    }
+    virtual double getEvaluation() const;
 
   private:
     virtual void calcReferences(const std::vector<Point>& p1,

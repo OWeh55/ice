@@ -40,8 +40,11 @@
 using namespace std;
 namespace ice
 {
+
   inline int MyMod(int a, int b)
   {
+    return ((a % b) + b) % b;
+    /*
     // very special (optimized) modulo.
     // works only, if b > 0
     // and a within [-b..2b)
@@ -54,6 +57,7 @@ namespace ice
         return a - b;
       }
     return a;
+    */
   }
 
   template<class Tmat, class Tref>
@@ -332,7 +336,18 @@ namespace ice
     state |= st_references;
   }
 #undef FNAME
-
+#define FNAME "ObjectMatcher::getEvaluation"
+  double ObjectMatcher::getEvaluation() const
+  {
+    if ((state & (st_first | st_second)) != (st_first | st_second))
+      throw IceException(FNAME, M_EMPTY_POINTLIST);
+    if ((state & st_references) == 0)
+      {
+        calcReferences();
+      }
+    return eval;
+  }
+#undef FNAME
 #define FNAME "ObjectMatcher::getReferences"
   void ObjectMatcher::getReferences(std::vector<int>& i1, std::vector<int>& i2) const
   {
