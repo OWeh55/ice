@@ -129,9 +129,24 @@ namespace ice
   {
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
+    /*
     for (int i = 0; i < c.Number(); ++i)
       {
         p1.push_back(c.getPoint(i));
+      }
+    */
+    // since "normal" contur point are inner points of the object,
+    // we use pairs of inner and outer points and place the
+    // limiting polygon between these.
+
+    vector<IPoint> pi, po;
+    c.getPairs(pi, po);
+    for (int i = 0; i < pi.size(); i++)
+      {
+        // extraction and type conversion of points
+        Point iPoint = pi[i];
+        Point oPoint = po[i];
+        p1.push_back((iPoint + oPoint) * 0.5);
       }
 
     state |= (which == 0) ? st_first : st_second ;

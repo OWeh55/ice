@@ -117,7 +117,7 @@ namespace ice
     return OK;
   }
 
-#define FNAME "Contur::Add"
+#define FNAME "Contur::add"
   int DirDiff(Freeman d1, Freeman d2)
   {
     int diff = d1.Int() - d2.Int();
