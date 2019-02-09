@@ -111,12 +111,16 @@ namespace ice
     std::locale oldLocale = os.imbue(cLocale);
     std::streamsize width = os.width(0);
     os << "<" ;
-    for (int k = 0; k < (int)v.size() - 1; k++)
+    if (!v.empty())
       {
-        os << std::setw(width) << v[k] << "," ;
-      }
+        for (int k = 0; k < (int)v.size() - 1; k++)
+          {
+            os << std::setw(width) << v[k] << "," ;
+          }
 
-    os << std::setw(width) << v[v.size() - 1] << ">";
+        os << std::setw(width) << v[v.size() - 1];
+      }
+    os << ">";
     os.imbue(oldLocale);
     return os;
   }
