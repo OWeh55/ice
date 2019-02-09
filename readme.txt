@@ -26,11 +26,10 @@ oder	WindowsXX
 C++ - Compiler
 
 wxWidgets - Bibliothek
-JPEG - Bibliothek
 
-Sehr empfohlen, aber eventuell verzichtbar:
- fftw3-devel
- ffmpeg
+JPEG - Bibliothek
+fftw3-devel
+ffmpeg
 
 Installation Linux:
 *******************
