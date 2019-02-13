@@ -138,8 +138,8 @@ namespace ice
     xp = pl->xptr;
     yp = pl->yptr;
     wp = pl->wptr;
-    x = c.StartX();
-    y = c.StartY();
+    x = c.Start().x;
+    y = c.Start().y;
     *xp++ = x;
     *yp++ = y;
     *wp++ = 1;

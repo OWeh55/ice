@@ -69,6 +69,7 @@ namespace ice
     ph[0] = p1[0];
     ph[1] = p1[1];
     ph[2] = 1;
+
     MulMatrix((double*)t, (double*)ph, 3, 3, 1, (double*)ph);
 
     if (fabs(ph[2]) < 1e-10)
@@ -106,9 +107,8 @@ namespace ice
     if (IsMatrixRegular((double*)t, 3, &eps) != true)
       throw IceException(FNAME, M_NO_REGULAR);
 
-    ds[0] = c1.StartX();
-    ds[1] = c1.StartY();
-
+    ds[0] = c1.Start().x;
+    ds[1] = c1.Start().y;
     RETURN_ERROR_IF_FAILED(TransPoint(ds, t, dd));
 
     c2.setStart(RoundInt(dd[0]), RoundInt(dd[1]));

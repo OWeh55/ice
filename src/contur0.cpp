@@ -132,8 +132,8 @@ namespace ice
         slist[i].xlist = nullptr;
       }
 
-    xx = c.StartX();
-    yy = c.StartY();
+    xx = c.Start().x;
+    yy = c.Start().y;
 
     for (i = 0; i < c.Number(); i++)
       {

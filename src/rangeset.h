@@ -163,19 +163,6 @@ namespace ice
 
     int findIndex(const Elem& value, int left, int right) const
     {
-#if 0
-      // recursive binary search
-      if (right - left < 2)
-        {
-          return left;
-        }
-      int middle = (right + left) / 2;
-      if (value < elements[middle])
-        {
-          return findIndex(value, left, middle);
-        }
-      return findIndex(value, middle, right);
-#else
       // iterative binary search
       while (right - left > 1)
         {
@@ -190,7 +177,6 @@ namespace ice
             }
         }
       return left;
-#endif
     }
 
     int findIndex(int value, bool b) const

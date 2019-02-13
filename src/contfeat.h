@@ -18,8 +18,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _CONTFEAT_H /* verhindern mehrfacher Verarbeitung in einem */
-#define _CONTFEAT_H /* Programm */
+#ifndef _CONTFEAT_H // include guard
+#define _CONTFEAT_H
 
 #include "Contur.h"
 #include "pointlist.h"
@@ -36,7 +36,7 @@ namespace ice
   int MomentRegion(const Contur& c, double mm[15], double s[2]);
   IPoint ICentroid(const Contur& c);
   Point Centroid(const Contur& c);
-  int MarkContur(const Contur& c, int val, const Image& img);
-  int FillRegion(const Contur& c, int val, const Image& img);
+  void MarkContur(const Contur& c, int val, const Image& img);
+  void FillRegion(const Contur& c, int val, const Image& img);
 }
 #endif  /* IFNDEF _CONTFEAT_H_ */

@@ -47,9 +47,9 @@ int main(int argc, char** argv)
   vector<double> y(x.size());
 
   for (unsigned int i = 0; i < x.size(); ++i)
-    y[i] = 31.4159265 * cos(x[i] * 1.23456789 + 0.54321) - 1;
+    y[i] = 3.21 * cos(x[i] * 1.234 + 2.1) + 7.654321;
   // + (drand48()-0.5)*0.001;
-
+  // n[2]*cos(x*n[1]+n[0])+n[3]
   cout << x.size() << " Stützstellen" << endl;
   vector<double> n(4); // geschätzte Parameter der Funktion
   n[0] = 0;

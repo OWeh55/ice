@@ -43,9 +43,9 @@ namespace ice
 
     ~Contur();
 
-    int reset();        // Freigabe der Daten und Neu-Initialisierung
-    int reset(IPoint p);  // Freigabe der Daten und Neu-Initialisierung mit neuem Startpunkt
-    int reset(int x, int y);  // Freigabe der Daten und Neu-Initialisierung mit neuem Startpunkt
+    int reset();        // re-initialisation
+    int reset(IPoint p);  // re-initialisation with new start point p
+    int reset(int x, int y);  // re-initialisation with new start point (x,y)
 
     int setStart(IPoint p);
     int setStart(int x, int y)
@@ -62,7 +62,7 @@ namespace ice
       return add(IPoint(x, y));
     }
 
-    void close() // Close Contur = return to start point
+    void close() // close Contur = return to start point
     {
       if (isvalid && !isclosed)
         {
@@ -105,27 +105,11 @@ namespace ice
     {
       return start;
     };
+
     inline IPoint End() const
     {
       return endp;
     };
-
-    inline int StartX() const
-    {
-      return start.x;
-    };
-    inline int StartY() const
-    {
-      return start.y;
-    }; // Startpunkt der Kontur
-    inline int EndX() const
-    {
-      return endp.x;
-    };
-    inline int EndY() const
-    {
-      return endp.y;
-    };     // Endpunkt der Kontur
 
     //    void getPoints(std::vector<Point>& pl, bool close = false) const;
     //    void getPoints(std::vector<IPoint>& pl, bool close = false) const;
@@ -140,8 +124,10 @@ namespace ice
         throw IceException(FNAME, M_NOT_INITIALIZED);
 
       int nPoints = nDirectionCodes + 1;
-
-      if (isclosed && !close)
+      // if contur contains more than one point
+      // and is closed, the last point is equal to start
+      // we leave this out of not close is wished
+      if (isclosed && !close && nPoints > 1)
         {
           nPoints--;  // do not add start point again
         }

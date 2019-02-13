@@ -23,7 +23,7 @@
 /*************************************************************************/
 
 #include <iostream>
-
+#include <vector>
 #include <math.h>
 
 #include "defs.h"
@@ -42,38 +42,18 @@ namespace ice
   /************************************************/
 #define FNAME "MarkContur"
   /* #define DEBUG */
-  int MarkContur(const Contur& c, int val, const Image& img)
+  void MarkContur(const Contur& c, int val, const Image& img)
   {
-    int xx, yy;
-    int i;
-
-    if (!IsImg(img))
-      throw IceException(FNAME, M_WRONG_IMAGE);
-
-    if ((val < 0) || val > img.maxval)
-      throw IceException(FNAME, M_WRONG_VAL);
-
-    xx = c.StartX();
-    yy = c.StartY();
-
-    img.setPixelClipped(xx, yy, val);
-
-    for (i = 0; i < c.Number(); i++)
-      {
-        c.getDirection(i).move(xx, yy);
-
-        img.setPixelClipped(xx, yy, val);
-      }
-
-    return OK;
+    std::vector<IPoint> pl;
+    c.getPoints(pl);
+    for (const IPoint& p : pl)
+      img.setPixelClipped(p, val);
   }
 #undef FNAME
   /*********************************************************/
 #define FNAME "FillRegion"
-  int FillRegion(const Contur& c, int val, const Image& img)
+  void FillRegion(const Contur& c, int val, const Image& img)
   {
-    int i, x;
-
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
@@ -85,13 +65,11 @@ namespace ice
 
     IMatrix segm = ConturSegmentlist(c);
 
-    for (i = 0; i < segm.rows(); i++)
-      for (x = segm[i][1]; x <= segm[i][2]; x++)
+    for (int i = 0; i < segm.rows(); i++)
+      for (int x = segm[i][1]; x <= segm[i][2]; x++)
         {
           img.setPixelClipped(x, segm[i][0], val);
         }
-
-    return OK;
   }
 #undef FNAME
   /*********************************************************/
@@ -381,8 +359,8 @@ namespace ice
 
     if (c.Number() > 0)
       {
-        int x = c.StartX();
-        int y = c.StartY();
+        int x = c.Start().x;
+        int y = c.Start().y;
 
         int nGeradeSchritte = 0;
         int nSchraegeSchritte = 0;

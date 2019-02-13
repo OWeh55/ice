@@ -81,7 +81,7 @@ namespace ice
         // das innere fuellen
         Contur c1(c);
         c1.add(RoundInt(par[0]), RoundInt(par[1]));
-        c1.add(c1.StartX(), c1.StartY());
+        c1.add(c1.Start());
         RETURN_ERROR_IF_FAILED(FillRegion(c1, val2, img));
       }
 
@@ -112,7 +112,7 @@ namespace ice
       {
         Contur c1(c);
         c.add(RoundInt(par[0]), RoundInt(par[1]));
-        c.add(c.StartX(), c.StartY());
+        c.add(c.Start());
 
         RETURN_ERROR_IF_FAILED(FillRegion(c, val2, img));
       }

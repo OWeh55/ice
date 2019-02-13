@@ -405,7 +405,7 @@ namespace ice
       {
         Freeman(dir).move(xx, yy, xf, yf);
 
-        if ((xf == c.StartX()) && (yf == c.StartY()))
+        if ((xf == c.Start().x) && (yf == c.Start().y))
           {
             c.add(dir);
             break;

@@ -21,7 +21,7 @@
 #ifndef _REGION2_H
 #define _REGION2_H
 //
-// Die Klasse Region zur Beschreibung von 2d-Regionen als Sammlung
+// Die Klasse Region zur Beschreibung von 2d-Regionen als Menge
 // diskreter Punkte
 
 #include <deque>
