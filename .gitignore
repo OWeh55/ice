@@ -10,7 +10,8 @@
 /doc/*eps
 /doc/*converted-to.pdf
 /lib/
-/src/x86_64-suse-linux
+/src/x86_64-pc-linux-gnu
+.xvpics
 # ignore backups and temporary files
 *~
 *.orig

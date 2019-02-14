@@ -1,0 +1,7 @@
+# ignore generated files
+cviewer.cpp
+lexan.cpp
+parserb.cpp
+parserb.hpp
+parserb.output
+	
