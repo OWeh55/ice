@@ -30,6 +30,7 @@
 
 #include <vector>
 #include "Contur.h"
+#include "Matrix.h"
 
 #include "lineseg.h"
 #include "circle.h"

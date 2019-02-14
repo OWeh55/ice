@@ -1,8 +1,9 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 1992..2019 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2019.. Wolfgang Ortmann
+ * Contact: OWeh55@gmail.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +27,6 @@
 #include "defs.h"
 #include "base.h"
 #include "freeman.h"
-#include "Matrix.h"
 #include "Point.h"
 #include "Window.h"
 

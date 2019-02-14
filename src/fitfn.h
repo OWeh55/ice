@@ -341,7 +341,9 @@ namespace ice
     using Function2dWithFittingG::FitVal;
     void FitVal(double x, double y, double g, double w = 1.0) override;
 
+    using Function2d::operator();
     double operator()(double x, double y) const override;
+
     using Function2dWithFittingG::getCoefficient;
     int getCoefficient(double& pa) const;
   };
@@ -365,7 +367,7 @@ namespace ice
 
     using Function2dWithFittingG::FitVal;
     virtual void FitVal(double x, double y, double g, double w = 1.0) override;
-
+    using Function2d::operator();
     virtual double operator()(double x, double y) const override;
 
     using Function2dWithFittingG::getCoefficient;
@@ -396,6 +398,8 @@ namespace ice
 
     using Function2dWithFittingG::FitVal;
     void FitVal(double x, double y, double g, double w = 1.0) override;
+
+    using Function2d::operator();
     double operator()(double x, double y) const override;
 
     using Function2dWithFittingG::getCoefficient;
@@ -417,7 +421,7 @@ namespace ice
 
     using Function2dWithFittingG::FitVal;
     virtual void FitVal(double x, double y, double g, double w = 1.0) override;
-
+    using Function2d::operator();
     virtual double operator()(double x, double y) const override;
 
   protected:

@@ -26,6 +26,7 @@
 
 #include <vector>
 #include "Contur.h"
+#include "Matrix.h"
 #include "matrix_function.h"
 #include "pointvalue.h"
 
