@@ -213,7 +213,7 @@ Filter* Compile(FilterDescription& src,
         {
           filterToken = oper.getToken(Token::identifier);
         }
-      catch (SdpException exc)
+      catch (SdpException& exc)
         {
           throw SdpException("Parsing", "Filter name expected: " + currentLine);
         }
@@ -370,7 +370,7 @@ Filter* Compile(FilterDescription& src,
                       for (int i = 0; i < nInputs; ++i)
                         macro->setInput(macroinputs[i], i + nOutputs);
                     }
-                  catch (SdpException exc)
+                  catch (SdpException& exc)
                     {
                       exc.setWhere("Macro " + filter);
                       throw exc;
@@ -415,7 +415,7 @@ Filter* Compile(FilterDescription& src,
                     {
                       compileParameter(oper, outlet, lastOutlet, currentFilter->getInput(), scriptVerbose);
                     }
-                  catch (SdpException exc)
+                  catch (SdpException& exc)
                     {
                       exc.setWhere("Filter " + currentFilter->getName());
                       throw exc;

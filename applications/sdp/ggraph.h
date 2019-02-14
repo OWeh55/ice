@@ -30,7 +30,7 @@ public:
         checkIndex(i2);
         edges.push_back(std::pair<int, int>(i1, i2));
       }
-    catch (SdpException ex)
+    catch (SdpException& ex)
       {
         ex.setWhere("DGraph");
         throw (ex);

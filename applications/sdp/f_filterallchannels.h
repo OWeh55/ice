@@ -63,7 +63,7 @@ protected:
             filterOneChannel(srcimg, (*tresult)[i]);
           }
       }
-    catch (SdpException exc)
+    catch (SdpException& exc)
       {
         exc.setWhere(name);
         throw exc;

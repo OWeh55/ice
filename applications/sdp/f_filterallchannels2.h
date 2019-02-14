@@ -35,7 +35,7 @@ protected:
             filterOneChannel((*inp1)[i], (*inp2)[i], (*tresult)[i]);
           }
       }
-    catch (SdpException exc)
+    catch (SdpException& exc)
       {
         exc.setWhere(name);
         throw exc;
