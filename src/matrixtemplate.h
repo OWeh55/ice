@@ -23,11 +23,6 @@ namespace ice
   template<typename T>
   class matrix
   {
-  protected:
-    int nColumns = 0;
-    int nRows = 0;
-    T* data = nullptr;
-
   public:
     /**
      * default constructor.
@@ -44,7 +39,12 @@ namespace ice
      * @param init mode of initialization.
      * @see init()
      */
-    matrix(int r, int c, int init = -1):
+    matrix(int r, int c):
+      nColumns(c), nRows(r), data(new T[r * c])
+    {
+    }
+
+    matrix(int r, int c, int init):
       nColumns(c), nRows(r), data(new T[r * c])
     {
       initMatrix(init);
@@ -491,6 +491,10 @@ namespace ice
       return rhs * lhs;
     }
 
+  protected:
+    int nColumns = 0;
+    int nRows = 0;
+    T* data = nullptr;
   };
 }
 #endif
