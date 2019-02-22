@@ -5,8 +5,6 @@ int main(int argc, char** argv)
 {
   int oret;
   string ifn = "test_gray.jpg";
-  int xs, ys, mv;
-  Image grw, mrk;
 
   int nn = 15;
   int nd = 30;
@@ -30,103 +28,28 @@ int main(int argc, char** argv)
   OpenAlpha("Terminal");
   Alpha(ON);
   ClearAlpha();
-  Print("File : " + ifn + "\n");
+  Print("using file : " + ifn + "\n");
+
+  int xs, ys, mv;
   InfImgFile(ifn, xs, ys, mv);
   Printf("x:%d y:%d\n\n", xs, ys);
 
   Printf("Parameter: \n  Nachbarschaft %d\n", nn);
   Printf("  Minimaler Unterschied: %d\n", nd);
 
-  grw = NewImg(xs, ys, 255);
-  mrk = NewImg(xs, ys, 7);
-  clearImg(mrk);
-  Display(ON);
+  Image grw;
+  grw.create(xs, ys, 255);
+  Image mrk;
+  mrk.create(xs, ys, 7);
+  mrk.set(0);
+
   Show(OVERLAY, grw, mrk);
   Zoom(grw);
-  ReadImg(ifn, grw);
-  LocalSeg(grw, mrk, nn, 15);
+
+  grw.read(ifn);
+
+  LocalSeg(grw, mrk, nn, nd);
+  Printf("LocalSeg(grw, mrk, %d, %d)\n", nn, nd);
   GetChar();
-
-  bool ready = false;
-
-  while (!ready)
-    {
-      ready = true;
-      for (int y = 0; y < mrk.ysize; y++)
-        for (int x = 0; x < mrk.xsize; x++)
-          {
-            if (GetVal(mrk, x, y) == 2)
-              {
-                int no = 0;
-                int nu = 0;
-
-                for (int dir = 0; dir < 8; dir += 2)
-                  {
-                    int xt, yt;
-                    Freeman(dir).move(x, y, xt, yt);
-
-                    if ((xt >= 0) && (xt < xs) && (yt >= 0) && (yt < ys))
-                      {
-                        int v = GetVal(mrk, xt, yt);
-
-                        if ((v == 0) || (v == 4)) no++;
-
-                        if ((v == 1) || (v == 5)) nu++;
-                      }
-                  }
-
-                if ((no > 0) && (nu == 0)) PutVal(mrk, x, y, 4);
-
-                if ((no == 0) && (nu > 0)) PutVal(mrk, x, y, 5);
-
-                if ((no > 0) && (nu > 0)) PutVal(mrk, x, y, 6);
-
-                if ((no == 0) && (nu == 0)) ready = false;
-              }
-          }
-    }
-
-  GetChar();
-  ready = false;
-
-  while (!ready)
-    {
-      ready = true;
-      int x, y;
-      for (int y = 0; y < mrk.ysize; y++)
-        for (int x = 0; x < mrk.xsize; x++)
-          {
-            if (GetVal(mrk, x, y) == 6)
-              {
-                for (int dir = 0; dir < 8; dir += 2)
-                  {
-                    int xt, yt;
-                    Freeman(dir).move(x, y, xt, yt);
-
-                    if ((xt >= 0) && (xt < xs) && (yt >= 0) && (yt < ys))
-                      {
-                        int v = GetVal(mrk, xt, yt);
-
-                        if ((v == 4) || (v == 5))
-                          {
-                            PutVal(mrk, xt, yt, 6);
-                            ready = false;
-                          }
-                      }
-                  }
-
-                PutVal(mrk, x, y, 7);
-              }
-          }
-    }
-
-  GetChar();
-  for (int y = 0; y < mrk.ysize; y++)
-    for (int x = 0; x < mrk.xsize; x++)
-      {
-        PutVal(mrk, x, y, GetVal(mrk, x, y) & 3);
-      }
-  GetChar();
-
   return 0;
 }
