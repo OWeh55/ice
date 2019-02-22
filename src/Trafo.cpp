@@ -378,7 +378,7 @@ namespace ice
   }
 
 #define FNAME "Trafo::Projective"
-  void Trafo::Projective()
+  void Trafo::projective()
   // Reduktion der Dimension um 1 durch projektive abbildung in Richtung Z-Achse
   // Projektionszentrum (0,0,0)
   // Projektionsebene (x,y,1)

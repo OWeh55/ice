@@ -74,7 +74,7 @@ namespace ice
 
     virtual void init();
 
-    // these methods *append* transformations to existing one
+    // the following methods *append* transformations to existing one
 
     virtual void shift(double x0, double y0);
     virtual void shift(double x0, double y0, double z0);
@@ -111,7 +111,7 @@ namespace ice
     virtual void scale(const ice::Vector& center, double f);
     virtual void scale(const ice::Vector& center, const ice::Vector& f);
 
-    virtual void Projective();
+    virtual void projective();
 
     // append another Trafo
     virtual void append(const Trafo& tr);

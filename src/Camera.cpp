@@ -31,7 +31,7 @@ namespace ice
         dist = new Distortion3();
         break;
       default:
-        cerr << "Wrong Distortiontyp" << endl;
+        throw IceException("Camera::newdist", "Wrong distortion type");
         break;
       }
   }
@@ -51,6 +51,8 @@ namespace ice
       case 3:
         dist = new Distortion3(*(Distortion3*)(d));
         break;
+      default:
+        throw IceException("Camera::newdist", "Wrong distortion type");
       }
   }
 
@@ -167,7 +169,7 @@ namespace ice
     //    \   0    0      1    /     -
     //
 
-    tr.Projective(); // 3d -> 2d
+    tr.projective(); // 3d -> 2d
     tr.shearX(s);
     tr.scale(0, 0, f, -a * f);
     tr.shift(u0, v0);

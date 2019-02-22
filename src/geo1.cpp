@@ -48,7 +48,7 @@ namespace ice
     c.rotateY(param[1]);
     c.rotateX(param[2]);
     c.shift(Vector(param[3], param[4], param[5])); // Position im Raum
-    c.Projective();      // 3d-2d
+    c.projective();      // 3d-2d
     c.scale(0, 0, param[6], param[6]*param[7]); // anisotrope Skalierung
     c.shearX(param[8]);  // Scherung
     c.shift(param[9], param[10]); // Hauptpunkt-Verschiebung

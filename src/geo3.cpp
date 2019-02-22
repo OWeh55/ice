@@ -45,7 +45,7 @@ namespace ice
     c.rotateY(param[1]);
     c.rotateX(param[2]);
     c.shift(Vector(param[3], param[4], param[5]));
-    c.Projective();
+    c.projective();
     c.scale(0, 0, param[6], param[6]*param[7]);
     c.shearX(param[8]);
     c.shift(param[9], param[10]);

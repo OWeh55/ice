@@ -43,13 +43,14 @@ namespace ice
     enum { intrinsic = 1, extrinsic = 2, all = 3 };
 
   private:
+    // intrinsic parameters
     double f; // focal length
     double a; // aspect ration
     double s; // skew
     double u0, v0; // principal point
     // extrinsic parameters
     double dx, dy, dz; // translation
-    double alpha, beta, gamma; // rotation around Z-, Y- and X-axis
+    double alpha, beta, gamma; // rotation around z-, y- and x-axis
 
     mutable Trafo tr; // transformation matrix without distortion
     mutable bool trValid; // matrix valid ?
