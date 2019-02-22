@@ -96,7 +96,7 @@ Trafo Kamera1(const Vector& par)
   double u0 = par[3];
   double v0 = par[4];
 
-  tr.Projective();
+  tr.projective();
   tr.shearX(s);
   tr.scale(0, 0, f, a * f);
   tr.shift(u0, v0);
@@ -130,7 +130,7 @@ Trafo Kamera2(const Vector& par)
 
   tr.shift(dx, dy, dz);
 
-  tr.Projective();
+  tr.projective();
   tr.shearX(s);
   tr.scale(0, 0, f, a * f);
   tr.shift(u0, v0);
@@ -382,8 +382,7 @@ int DetectShift1(Image img1, Image img2,
 //  Show(ON,imgr);
   InvConvolution(img1(w1), img2(w2), imgr, 0, BETA, MD_IGNORE_BIAS);
 
-
-  peakEvaluation(imgr, dxy[0], dxy[1]);
+  val = peakEvaluation(imgr, dxy[0], dxy[1]);
 
   dxy[0] -= sx / 2;
   dxy[1] -= sy / 2;

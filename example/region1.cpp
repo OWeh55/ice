@@ -15,8 +15,6 @@ int main(int argc, char* argv[])
   Region s1;
   Region s2, s3;
 
-  int x, y;
-
   cout << "Test Region (bildliche Darstellung)" << endl;
   for (int y = 0; y < img.ysize; y++)
     for (int x = 0; x < img.xsize; x++)

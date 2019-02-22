@@ -6,17 +6,18 @@
 
 #include <image.h>
 
-void makeColorImage(const Image& ptr, ColorImage& co)
+void makeColorImage(const Image& colorTableImage, ColorImage& colorImage)
 {
-  co.create(ptr->xsize, ptr->ysize, 255);
+  // create a real color image from grayvalue image with colortable
+  colorImage.create(colorTableImage.xsize, colorTableImage.ysize, 255);
 
-  for (int y = 0; y < ptr.ysize; y++)
-    for (int x = 0; x < ptr.xsize; x++)
+  for (int y = 0; y < colorTableImage.ysize; y++)
+    for (int x = 0; x < colorTableImage.xsize; x++)
       {
-        int gw = GetVal(ptr, x, y);
+        int gw = colorTableImage.getPixel(x, y);
         unsigned char r, g, b;
-        GetGreyColor(ptr, gw, r, g, b);
-        co.setPixel(x, y, ColorValue(r, g, b));
+        GetGrayColor(colorTableImage, gw, r, g, b);
+        colorImage.setPixel(x, y, ColorValue(r, g, b));
       }
 }
 

@@ -221,14 +221,16 @@ yuvConvert
 #LSIImgH\
 #subImage\
 
-clean:
+clean_files:
 	-rm -f *.o depend *~ *.orig
 	find . -type f -executable -delete
 
 dep:
-	-rm depend 
+	-rm -f depend 
 	touch depend
 	$(CXX) -M $(COPT) $(INCLUDE) *.cpp >> depend	
+
+clean:	clean_files dep
 
 format:
 	$(ASTYLE) $(ASTYLE_OPT) *.cpp *.h *.ag

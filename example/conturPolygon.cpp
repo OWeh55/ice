@@ -2,7 +2,7 @@
 
 int main(int ragc, char** argv)
 {
-  Contur c(7,7);
+  Contur c(7, 7);
   // add Freeman codes
   c.add(0);
   c.add(0);
@@ -18,27 +18,27 @@ int main(int ragc, char** argv)
   c.add(6);
 
   Image g;
-  g.create(20,20,255);
+  g.create(20, 20, 255);
   g.set(0);
   Image m;
-  m.create(20,20,16);
+  m.create(20, 20, 16);
   m.set(0);
-  Show(OVERLAY,g,m);
-  Zoom(m,16);
-  
-  MarkContur(c,1,m);
+  Show(OVERLAY, g, m);
+  Zoom(m, 16);
+
+  MarkContur(c, 1, m);
   GetChar();
-  
-  FillRegion(c,2,m);
+
+  FillRegion(c, 2, m);
   GetChar();
 
   Polygon p;
-  LimitingPolygon(c,p);
-  draw(p,g,255,127);
-  int nCorners=p.size();
-  for (int i=0;i<nCorners;i++)
+  LimitingPolygon(c, p);
+  draw(p, g, 255, 127);
+  int nCorners = p.size();
+  for (int i = 0; i < nCorners; i++)
     cout << p[i] << endl;
   GetChar();
-  
+
   return OK;
 }
