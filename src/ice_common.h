@@ -33,6 +33,7 @@
 #include "based.h"
 #include "base.h"
 #include "Camera.h"
+#include "calibc.h"
 #include "circle.h"
 #include "circleseg.h"
 #include "Classifier.h"
