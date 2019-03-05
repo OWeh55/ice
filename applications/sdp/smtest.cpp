@@ -13,10 +13,11 @@ int main()
       getline(cin, input);
       try
         {
+	  vector<int> var(6);
           StackMachine sm(input);
-          cout << sm.evaluate(111, 222, 333, 444) << endl;
+          cout << sm.evaluate(var, 111, 222, 333) << endl;
         }
-      catch (SdpException ex)
+      catch (SdpException &ex)
         {
           cout << "Exception: " << ex.what() << endl;
         }
