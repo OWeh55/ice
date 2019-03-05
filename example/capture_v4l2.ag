@@ -53,52 +53,6 @@ int io = V4L2Device::IO_METHOD_AUTO;
  opt: h, help, usage, , This help, false
  AppGen*/
 
-#if 0
-static void usage(const string& pn)
-{
-  cout << pn << " - capture images with v4l2" << endl;
-  cout << "Usage: " << pn << " [options]" << endl << endl;
-  cout << "Options: " << endl;
-  cout << "-d | --device name   Video device name [/dev/video0]" << endl;
-  cout << "-h | --help          Print this message" << endl;
-  cout << "-x | --xsize pixel   Width of image" << endl;
-  cout << "-y | --ysize pixel   Height of image" << endl;
-  //  cout << "-p | --pixformat fmt Pixel format from camera" << endl;
-  //  cout << "          possible formats: yuyv, rgb24" << endl;
-  cout << "-n | --nframes n     Number of frames" << endl;
-  cout << "-r | --frate fps     Use framerate fps" << endl;
-  cout << "-s | --show          Display image while capturing" << endl;
-  cout << "-w | --wait          Wait after capture (usefull with --show)" << endl;
-  cout << "-o | --outfile fn    Output file name (default: no output to file)" << endl;
-  cout << "-m | --mode mode     Capture Mode" << endl;
-  cout << "              mode=mmap   memory mapped io (default)" << endl;
-  cout << "              mode=read   read io" << endl;
-  cout << "              mode=uptr   user pointer memory mapped io" << endl;
-  cout << "-l | -- listmodes    List all formats for device" << endl;
-  exit(1);
-}
-
-static const char short_options [] = "d:hm:n:o:swlx:y:p:r:";
-
-static const struct option
-  long_options [] =
-{
-  { "device",     required_argument,      NULL,   'd' },
-  { "help",       no_argument,            NULL,   'h' },
-  { "mode",       required_argument,      NULL,   'm' },
-  { "xsize",      required_argument,      NULL,   'x' },
-  { "ysize",      required_argument,      NULL,   'y' },
-  { "nframes",    required_argument,      NULL,   'n' },
-  { "frate",      required_argument,      NULL,   'r' },
-  { "outfile",    required_argument,      NULL,   'o' },
-  { "pixformat",  required_argument,      NULL,   'p' },
-  { "show",       no_argument,            NULL,   's' },
-  { "wait",       no_argument,            NULL,   'w' },
-  { "listmodes",  no_argument,            NULL,   'l' },
-  { 0, 0, 0, 0 }
-};
-#endif
-
 /*AppGen:Main*/
 int main(int argc, char** argv)
 {
@@ -123,8 +77,8 @@ int main(int argc, char** argv)
           cout << mode.formatString() << " ";
           cout << mode.width << " x " << mode.height << " ";
           mode.printFrameRate();
-          cout << endl;
 #endif
+          cout << endl;
         }
     }
 
