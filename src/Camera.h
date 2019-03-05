@@ -58,7 +58,7 @@ namespace ice
     int disttyp;
     Distortion* dist;
 
-    virtual void create_trans() const; // parameters -> matrix
+    virtual void create_trans() const; // parameters -> Trafo
     virtual void newdist(int dtyp);
     virtual void newdist(int dtyp, Distortion* d);
     virtual void assign(const Distortion& d);
@@ -66,13 +66,6 @@ namespace ice
   public:
 
     Camera(int dtyp = 1);
-
-    Camera(const Vector& v, int dtyp = 1): disttyp(dtyp)
-    {
-      newdist(dtyp);
-      set(v);
-    };
-
     Camera(const Camera&);
 
     virtual ~Camera()
@@ -84,13 +77,15 @@ namespace ice
 
     Camera& operator=(Camera c);
 
-    virtual Vector makeVector(int what = all) const; // Parameter in Vektor speichern
-    virtual std::vector<double> makeVectorDouble(int what = all) const; // Parameter in vector<double> speichern
+    // serialize variables
+    virtual Vector makeVector(int what = all) const;
+    virtual std::vector<double> makeVectorDouble(int what = all) const;
+    // deserialize variables
     virtual void set(const Vector& res, int what = all); // Parameter nach Vektor setzen
     virtual void set(const std::vector<double>& res, int what = all); // Parameter nach vector<double> setzen
 
-    virtual void set(double fp, double ap, double sp,
-                     double u0p, double v0p, const Distortion& d);
+    virtual void set(double fp, double ap, double sp, double u0p, double v0p,
+                     const Distortion& d);
     virtual void set(double fp, double ap, double sp, double u0p, double v0p);
 
     virtual void setExt(double dxp, double dyp, double dzp,
