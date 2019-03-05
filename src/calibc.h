@@ -26,14 +26,11 @@
 
 namespace ice
 {
-  extern Matrix CalibPoint;
-
   int Calib(Camera& cam, const Matrix& xyz, const Matrix& uv, int mode = 1);
   void calibrate(Camera& cam,
                  const std::vector<Vector3d>& xyz,
                  const std::vector<Point>& uv,
                  int mode = 1);
-
 }
 
 #endif
