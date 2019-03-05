@@ -30,47 +30,6 @@ using namespace std;
 
 namespace ice
 {
-
-  Matrix CalibPoint = Matrix(0, 3) &&
-                      Vector(20.0,  60.0,   0.0) &&
-                      Vector(100.0,  60.0,   0.0) &&
-                      Vector(180.0,  60.0,   0.0) &&
-                      Vector(260.0,  60.0,   0.0) &&
-                      Vector(20.0, 140.0,   0.0) &&
-                      Vector(100.0, 140.0,   0.0) &&
-                      Vector(180.0, 140.0,   0.0) &&
-                      Vector(260.0, 140.0,   0.0) &&
-                      Vector(20.0, 220.0,   0.0) &&
-                      Vector(100.0, 220.0,   0.0) &&
-                      Vector(180.0, 220.0,   0.0) &&
-                      Vector(260.0, 220.0,   0.0) &&
-                      Vector(20.0,   0.0,  20.0) &&
-                      Vector(20.0,   0.0, 100.0) &&
-                      Vector(20.0,   0.0, 180.0) &&
-                      Vector(20.0,   0.0, 260.0) &&
-                      Vector(100.0,   0.0,  20.0) &&
-                      Vector(100.0,   0.0, 100.0) &&
-                      Vector(100.0,   0.0, 180.0) &&
-                      Vector(100.0,   0.0, 260.0) &&
-                      Vector(180.0,   0.0,  20.0) &&
-                      Vector(180.0,   0.0, 100.0) &&
-                      Vector(180.0,   0.0, 180.0) &&
-                      Vector(180.0,   0.0, 260.0) &&
-                      Vector(260.0,   0.0,  20.0) &&
-                      Vector(260.0,   0.0, 100.0) &&
-                      Vector(260.0,   0.0, 180.0) &&
-                      Vector(260.0,   0.0, 260.0) &&
-                      Vector(0.0,  60.0,  60.0) &&
-                      Vector(0.0,  60.0, 140.0) &&
-                      Vector(0.0,  60.0, 220.0) &&
-                      Vector(0.0, 140.0,  60.0) &&
-                      Vector(0.0, 140.0, 140.0) &&
-                      Vector(0.0, 140.0, 220.0) &&
-                      Vector(0.0, 220.0,  60.0) &&
-                      Vector(0.0, 220.0, 140.0) &&
-                      Vector(0.0, 220.0, 220.0)
-                      ;
-
 // Allgemeine Funktion zur Kamerakalibrierung
 
 #define FNAME "Calib"
@@ -107,7 +66,8 @@ namespace ice
     // Fehler-Funktion
     int operator()(Vector& result) const
     {
-      Camera cam(camp, disttyp);
+      Camera cam(disttyp);
+      cam.set(camp);
       int i, j;
 
       for (i = 0, j = 0; j < points; j++)   // für jeden Funktionswert
