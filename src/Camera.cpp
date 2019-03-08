@@ -3,6 +3,7 @@
 
 #include "macro.h"
 #include "MatrixAlgebra.h"
+#include "matrixtools.h"
 
 #include "Distortion1.h"
 #include "Distortion2.h"
@@ -168,12 +169,14 @@ namespace ice
     //    |   0   -a*f    v0   |     -
     //    \   0    0      1    /     -
     //
-
+    // std::cout << tr.getMatrix() << std::endl;
     tr.projective(); // 3d -> 2d
+    // std::cout << tr.getMatrix() << std::endl;
     tr.shearX(s);
     tr.scale(0, 0, f, -a * f);
+    // std::cout << tr.getMatrix() << std::endl;
     tr.shift(u0, v0);
-
+    // std::cout << tr.getMatrix() << std::endl;
     trValid = true;
   }
 
@@ -265,9 +268,9 @@ namespace ice
         dx = res[i++];
         dy = res[i++];
         dz = res[i++];
-        alpha = res[i++];
-        beta = res[i++];
-        gamma = res[i++];
+        alpha = fmod(res[i++], 2 * M_PI);
+        beta = fmod(res[i++], 2 * M_PI);
+        gamma = fmod(res[i++], 2 * M_PI);
       }
 
     if ((what == all) || (what == intrinsic))
@@ -311,9 +314,9 @@ namespace ice
         dx = res[i++];
         dy = res[i++];
         dz = res[i++];
-        alpha = res[i++];
-        beta = res[i++];
-        gamma = res[i++];
+        alpha =  fmod(res[i++], 2 * M_PI);
+        beta =  fmod(res[i++], 2 * M_PI);
+        gamma =  fmod(res[i++], 2 * M_PI);
       }
 
     if ((what == all) || (what == intrinsic))

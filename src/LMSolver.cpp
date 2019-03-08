@@ -192,8 +192,8 @@ namespace ice
             newJacobi = true;
             functionValue = newFunctionValue;
             functionNorm2 = newFNorm2;
-            // cout << "newX: " << newX << endl;
-            // cout << enorm2(deltaX) << " ?? " << xtol2 << endl;
+            //cout << "newX: " << newX << endl;
+            //cout << norm2(deltaX) << " ?? " << xtol2 << endl;
             if (equal || norm2(deltaX) <= xtol2)
               {
                 stop |= 2;
