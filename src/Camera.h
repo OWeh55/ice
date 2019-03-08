@@ -55,7 +55,7 @@ namespace ice
     mutable Trafo tr; // transformation matrix without distortion
     mutable bool trValid; // matrix valid ?
 
-    int disttyp;
+    int distortionType;
     Distortion* dist;
 
     virtual void create_trans() const; // parameters -> Trafo
@@ -65,7 +65,7 @@ namespace ice
 
   public:
 
-    Camera(int dtyp = 1);
+    Camera(int dtyp = 0);
     Camera(const Camera&);
 
     virtual ~Camera()
@@ -102,15 +102,19 @@ namespace ice
     virtual void setDist(const Distortion& d);
     virtual int DistType() const
     {
-      return disttyp;
+      return distortionType;
     }
 
     virtual const Distortion& Dist() const
     {
+      if (dist == nullptr)
+        throw IceException("Camera::Dist", "no distortion");
       return *dist;
     }
     virtual Distortion& Dist()
     {
+      if (dist == nullptr)
+        throw IceException("Camera::Dist", "no distortion");
       return *dist;
     }
 

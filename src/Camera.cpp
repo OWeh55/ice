@@ -18,10 +18,13 @@ namespace ice
 {
   void Camera::newdist(int dtyp)
   {
-    disttyp = dtyp;
+    distortionType = dtyp;
 
     switch (dtyp)
       {
+      case 0:
+        dist = nullptr;
+        break;
       case 1:
         dist = new Distortion1();
         break;
@@ -39,10 +42,13 @@ namespace ice
 
   void Camera::newdist(int dtyp, Distortion* d)
   {
-    disttyp = dtyp;
+    distortionType = dtyp;
 
     switch (dtyp)
       {
+      case 0:
+        dist = nullptr;
+        break;
       case 1:
         dist = new Distortion1(*(Distortion1*)(d));
         break;
@@ -59,8 +65,11 @@ namespace ice
 
   void Camera::assign(const Distortion& d)
   {
-    switch (disttyp)
+    switch (distortionType)
       {
+      case 0:
+        throw IceException("Camera::assign", "Camera has no distortion");
+        break;
       case 1:
         dist = new Distortion1((Distortion1&)d);
         break;
@@ -86,7 +95,7 @@ namespace ice
     alpha(c.alpha), beta(c.beta), gamma(c.gamma),
     trValid(false)
   {
-    newdist(c.disttyp, c.dist);
+    newdist(c.distortionType, c.dist);
   }
 
   void Camera::swap(Camera& c)
@@ -104,7 +113,7 @@ namespace ice
     std::swap(gamma, c.gamma);
     trValid = false;
     c.trValid = false;
-    std::swap(disttyp, c.disttyp);
+    std::swap(distortionType, c.distortionType);
     std::swap(dist, c.dist);
   }
 
@@ -134,8 +143,10 @@ namespace ice
     os << "fy: " << Degree(beta) << " ";
     os << "fz: " << Degree(alpha) << del ;
 
-    os << "dist: " << del << dist->toString() << del;
-
+    if (dist != nullptr)
+      os << "dist: " << del << dist->toString() << del;
+    else
+      os << "no distortion" << del;
     return os.str();
   }
 
@@ -206,7 +217,7 @@ namespace ice
         res.Append(gamma);
       }
 
-    if ((what == all) || (what == intrinsic))
+    if (((what == all) || (what == intrinsic)) && distortionType != 0)
       {
         res.Append(dist->makeVector());
       }
@@ -239,7 +250,7 @@ namespace ice
         res.push_back(gamma);
       }
 
-    if ((what == all) || (what == intrinsic))
+    if (((what == all) || (what == intrinsic)) && distortionType != 0)
       {
         vector<double> distortionParameter = dist->makeVectorDouble();
         for (int i = 0; i < distortionParameter.size(); i++)
@@ -275,8 +286,11 @@ namespace ice
 
     if ((what == all) || (what == intrinsic))
       {
-        switch (disttyp)
+        switch (distortionType)
           {
+          case 0:
+            /* nothing to do */
+            break;
           case 1:
             dist->set(res(i, i + 3));
             i += 4;
@@ -319,7 +333,7 @@ namespace ice
         gamma =  fmod(res[i++], 2 * M_PI);
       }
 
-    if ((what == all) || (what == intrinsic))
+    if (((what == all) || (what == intrinsic)) && distortionType != 0)
       {
         vector<double> distortionParameter(5);
         for (int k = i; k < res.size() - i; k++)
@@ -405,7 +419,8 @@ namespace ice
       throw IceException(FNAME, M_WRONG_DIM);
 
     vh = tr * v;
-    vh = dist->distort(vh);
+    if (dist != nullptr)
+      vh = dist->distort(vh);
     return vh;
   }
 
@@ -414,7 +429,8 @@ namespace ice
     create_trans();
     Point res;
     ice::transform(tr, p.x, p.y, p.z, res.x, res.y);
-    dist->distort(res.x, res.y);
+    if (dist != nullptr)
+      dist->distort(res.x, res.y);
     return res;
   }
 
@@ -431,7 +447,9 @@ namespace ice
     try
       {
         create_trans(); // Transformation erzeugen
-        Vector bpu(dist->rectify(bp));// Unverzeichneter Bildpunkt
+        Vector bpu(bp);
+        if (dist != nullptr)
+          dist->rectify(bpu[0], bpu[1]); // Unverzeichneter Bildpunkt
         bpu.Append(1); // in homogene Koordinaten umwandeln
         Matrix T(tr.getMatrix()); // Transformationsmatrix
         Matrix A = T(0, 0, 2, 2); // Zerlegen T = (A|a)
