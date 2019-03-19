@@ -134,17 +134,17 @@ GLfloat globalambient[] = {0.3, 0.3, 0.3, 1.0};
 # 61 "tv.ag"
 GLfloat pos0[] = {1.0, 1.0, 1.0, 0.0}; /* w = 0 == infinite distance */
 # 62 "tv.ag"
-GLfloat dif0[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
+GLfloat diffuse0[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
 # 63 "tv.ag"
 
 # 64 "tv.ag"
-GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0}; // ambient light for all light sources
+GLfloat pos1[] = { -1.0, -1.0, -1.0, 0.0}; /* w = 0 == infinite distance */
 # 65 "tv.ag"
-
+GLfloat diffuse1[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
 # 66 "tv.ag"
-GLfloat pos1[] = { -1.0, .0, 5.0, 0.0}; /* w = 0 == infinite distance */
+
 # 67 "tv.ag"
-GLfloat dif1[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
+GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0}; // ambient light for all light sources
 # 68 "tv.ag"
 
 # 69 "tv.ag"
@@ -158,7 +158,7 @@ GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
 # 73 "tv.ag"
 %%  Beschreibung des Programmes:
 # 74 "tv.ag"
-  prog: Programm zur Darstellung von 3D-Welten
+  prog: Programm zur Darstellung von 3D-Welten mit Dreiecken
 # 75 "tv.ag"
 
 # 76 "tv.ag"
@@ -184,11 +184,11 @@ GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
 # 86 "tv.ag"
 
 # 87 "tv.ag"
-  opt: X, xrotation, void, xrotation, Rotation um 180° um X-Achse, false
+  opt: X, xrotation, void, xrotation, Rotation der Szene um 180° um X-Achse, false
 # 88 "tv.ag"
-  opt: Y, yrotation, void, yrotation, Rotation um 180° um Y-Achse, false
+  opt: Y, yrotation, void, yrotation, Rotation der Szene um 180° um Y-Achse, false
 # 89 "tv.ag"
-  opt: Z, zrotation, void, zrotation, Rotation um 180° um Z-Achse, false
+  opt: Z, zrotation, void, zrotation, Rotation der Szene um 180° um Z-Achse, false
 # 90 "tv.ag"
 
 # 91 "tv.ag"
@@ -241,61 +241,61 @@ string ag_programName;
 
 void usage()
 {
-  cout << ag_programName << " - Programm zur Darstellung von 3D-Welten" << endl;
+  cout << ag_programName << " - Programm zur Darstellung von 3D-Welten mit Dreiecken" << endl;
   cout << "Usage:" << endl;
   cout << ag_programName << " [<options>] [welt] " << endl;
   cout << "  welt - Weltbeschreibung (optional, default:\"welt.cv\")" << endl;
   cout << "Options:" << endl;
   cout << "-f <s>" << "  " << "--worldfile=<s>" << "   ";
-cout << endl << "                       "; 
-  cout << "Dateiname Weltbeschreibung (default: \"\")" << endl ; 
-  cout << "                       " << "Dies ist eine alternative Form, die auch die Angabe von" << endl; 
-  cout << "                       " << "-f - erlaubt, was die Standard-Eingabe als Quelle festlegt" << endl; 
+  cout << endl << "                       ";
+  cout << "Dateiname Weltbeschreibung (default: \"\")" << endl ;
+  cout << "                       " << "Dies ist eine alternative Form, die auch die Angabe von" << endl;
+  cout << "                       " << "-f - erlaubt, was die Standard-Eingabe als Quelle festlegt" << endl;
   cout << "-X    " << "  " << "--xrotation " << "   ";
-  cout << "Rotation um 180° um X-Achse (default: false)" << endl ; 
+  cout << "Rotation der Szene um 180° um X-Achse (default: false)" << endl ;
   cout << "-Y    " << "  " << "--yrotation " << "   ";
-  cout << "Rotation um 180° um Y-Achse (default: false)" << endl ; 
+  cout << "Rotation der Szene um 180° um Y-Achse (default: false)" << endl ;
   cout << "-Z    " << "  " << "--zrotation " << "   ";
-  cout << "Rotation um 180° um Z-Achse (default: false)" << endl ; 
+  cout << "Rotation der Szene um 180° um Z-Achse (default: false)" << endl ;
   cout << "-C    " << "  " << "--center    " << "   ";
-  cout << "Modellmittelpunkt in Ursprung schieben (default: false)" << endl ; 
+  cout << "Modellmittelpunkt in Ursprung schieben (default: false)" << endl ;
   cout << "-x <i>" << "  " << "--xsize=<i> " << "   ";
-  cout << "Bildgröße X (default: 1280)" << endl ; 
+  cout << "Bildgröße X (default: 1280)" << endl ;
   cout << "-y <i>" << "  " << "--ysize=<i> " << "   ";
-  cout << "Bildgröße Y (default: 1024)" << endl ; 
+  cout << "Bildgröße Y (default: 1024)" << endl ;
   cout << "-c <i>" << "  " << "--camera=<i>" << "   ";
-  cout << "Kamera-Modus (default: 2)" << endl ; 
-  cout << "                       " << "1 - Kamera sieht auf den Ursprung" << endl; 
-  cout << "                       " << "2 - Kamera frei beweglich im Raum" << endl; 
-  cout << "                       " << "3 - Kamera rotiert um den Ursprung" << endl; 
+  cout << "Kamera-Modus (default: 2)" << endl ;
+  cout << "                       " << "1 - Kamera sieht auf den Ursprung" << endl;
+  cout << "                       " << "2 - Kamera frei beweglich im Raum" << endl;
+  cout << "                       " << "3 - Kamera rotiert um den Ursprung" << endl;
   cout << "-D <d>" << "  " << "--cameradistance=<d>" << "   ";
-cout << endl << "                       "; 
-  cout << "Abstand der Kamera (default: 30)" << endl ; 
+  cout << endl << "                       ";
+  cout << "Abstand der Kamera (default: 30)" << endl ;
   cout << "-a <d>" << "  " << "--anglestep=<d>" << "   ";
-cout << endl << "                       "; 
-  cout << "Winkel-Schrittweite (default: 2)" << endl ; 
+  cout << endl << "                       ";
+  cout << "Winkel-Schrittweite (default: 2)" << endl ;
   cout << "-l <i>" << "  " << "--lights=<i>" << "   ";
-  cout << "Zahl der Standard-Lichtquellen (default: 2)" << endl ; 
+  cout << "Zahl der Standard-Lichtquellen (default: 2)" << endl ;
   cout << "-v    " << "  " << "--verbose   " << "   ";
-  cout << "Ausführliche Meldungen (default: false)" << endl ; 
+  cout << "Ausführliche Meldungen (default: false)" << endl ;
   cout << "-b    " << "  " << "--benchmark " << "   ";
-  cout << "Framerate anzeigen (default: false)" << endl ; 
+  cout << "Framerate anzeigen (default: false)" << endl ;
   cout << "-d <i>" << "  " << "--debug=<i> " << "   ";
-  cout << "Debug-Modus (default: 0)" << endl ; 
+  cout << "Debug-Modus (default: 0)" << endl ;
   cout << "-h    " << "  " << "--help      " << "   ";
-  cout << "Hilfe" << endl ; 
+  cout << "Hilfe" << endl ;
   exit(1);
 }
 
-void error(const string &msg)
+void error(const string& msg)
 {
   cout << endl << ag_programName << " - error: " << msg << endl << endl;
   usage();
 }
 
-long int ptol(const char *para)
+long int ptol(const char* para)
 {
-  char *end;
+  char* end;
   long int res = strtol(para, &end, 10);
   if (end == para)
     error(string("no int: ") + para);
@@ -304,9 +304,9 @@ long int ptol(const char *para)
   return res;
 }
 
-double ptod(const char *para)
+double ptod(const char* para)
 {
-  char *end;
+  char* end;
   double res = strtod(para, &end);
   if (end == para)
     error(string("no double: ") + para);
@@ -315,7 +315,7 @@ double ptod(const char *para)
   return res;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   string fname_opt = "";
   bool xrotation = false;
@@ -324,7 +324,7 @@ int main(int argc, char **argv)
   bool centerModel = false;
   double angledelta = 2;
   int std_lights = 2;
-  
+
   string fname = "welt.cv";
   static struct option ag_long_options[] =
   {
@@ -425,7 +425,7 @@ int main(int argc, char **argv)
   if (optind < argc)
     fname = argv[optind++];
 
-/*AppGen:MainEnd*/
+  /*AppGen:MainEnd*/
 # 117 "tv.ag"
 
 # 118 "tv.ag"
@@ -793,11 +793,11 @@ void MakeLighting(void)
 # 299 "tv.ag"
       glLightfv(GL_LIGHT0, GL_POSITION, pos0);
 # 300 "tv.ag"
-      glLightfv(GL_LIGHT0, GL_DIFFUSE, dif0);
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
 # 301 "tv.ag"
       glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 # 302 "tv.ag"
-      glLightfv(GL_LIGHT0, GL_SPECULAR, dif0);
+      glLightfv(GL_LIGHT0, GL_SPECULAR, diffuse0);
 # 303 "tv.ag"
       glEnable(GL_LIGHT0);
 # 304 "tv.ag"
@@ -811,11 +811,11 @@ void MakeLighting(void)
 # 308 "tv.ag"
       glLightfv(GL_LIGHT1, GL_POSITION, pos1);
 # 309 "tv.ag"
-      glLightfv(GL_LIGHT1, GL_DIFFUSE, dif1);
+      glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse1);
 # 310 "tv.ag"
       glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
 # 311 "tv.ag"
-      glLightfv(GL_LIGHT1, GL_SPECULAR, dif1);
+      glLightfv(GL_LIGHT1, GL_SPECULAR, diffuse1);
 # 312 "tv.ag"
       glEnable(GL_LIGHT1);
 # 313 "tv.ag"
@@ -1043,7 +1043,7 @@ void HandleKeyboard(unsigned char key, int x, int y)
 # 424 "tv.ag"
           break;
 # 425 "tv.ag"
-        // Zoom
+          // Zoom
 # 426 "tv.ag"
         case '-':
 # 427 "tv.ag"

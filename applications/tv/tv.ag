@@ -59,19 +59,19 @@ GLfloat globalambient[] = {0.3, 0.3, 0.3, 1.0};
 
 /* The specifications for 2 light sources */
 GLfloat pos0[] = {1.0, 1.0, 1.0, 0.0}; /* w = 0 == infinite distance */
-GLfloat dif0[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
+GLfloat diffuse0[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
+
+GLfloat pos1[] = { -1.0, -1.0, -1.0, 0.0}; /* w = 0 == infinite distance */
+GLfloat diffuse1[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
 
 GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0}; // ambient light for all light sources
-
-GLfloat pos1[] = { -1.0, .0, 5.0, 0.0}; /* w = 0 == infinite distance */
-GLfloat dif1[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
 
 GLfloat null[] = { 0.0, 0.0, 0.0, 1.0};
 GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
 
 /*AppGen
 %%  Beschreibung des Programmes:
-  prog: Programm zur Darstellung von 3D-Welten
+  prog: Programm zur Darstellung von 3D-Welten mit Dreiecken
 
   %% Beschreibung Parameter
   % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
@@ -84,9 +84,9 @@ GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
   opt2:   Dies ist eine alternative Form, die auch die Angabe von
   opt2:   -f - erlaubt, was die Standard-Eingabe als Quelle festlegt
 
-  opt: X, xrotation, void, xrotation, Rotation um 180° um X-Achse, false
-  opt: Y, yrotation, void, yrotation, Rotation um 180° um Y-Achse, false
-  opt: Z, zrotation, void, zrotation, Rotation um 180° um Z-Achse, false
+  opt: X, xrotation, void, xrotation, Rotation der Szene um 180° um X-Achse, false
+  opt: Y, yrotation, void, yrotation, Rotation der Szene um 180° um Y-Achse, false
+  opt: Z, zrotation, void, zrotation, Rotation der Szene um 180° um Z-Achse, false
 
   opt: C, center, void, centerModel, Modellmittelpunkt in Ursprung schieben, false
   opt: x, xsize,  Int,     window_width,    Bildgröße X,  1280
@@ -297,18 +297,18 @@ void MakeLighting(void)
   if (light_number > 0)
     {
       glLightfv(GL_LIGHT0, GL_POSITION, pos0);
-      glLightfv(GL_LIGHT0, GL_DIFFUSE, dif0);
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
       glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-      glLightfv(GL_LIGHT0, GL_SPECULAR, dif0);
+      glLightfv(GL_LIGHT0, GL_SPECULAR, diffuse0);
       glEnable(GL_LIGHT0);
     }
 
   if (light_number > 1)
     {
       glLightfv(GL_LIGHT1, GL_POSITION, pos1);
-      glLightfv(GL_LIGHT1, GL_DIFFUSE, dif1);
+      glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse1);
       glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-      glLightfv(GL_LIGHT1, GL_SPECULAR, dif1);
+      glLightfv(GL_LIGHT1, GL_SPECULAR, diffuse1);
       glEnable(GL_LIGHT1);
     }
 
