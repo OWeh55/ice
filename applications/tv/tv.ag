@@ -61,7 +61,7 @@ GLfloat globalambient[] = {0.3, 0.3, 0.3, 1.0};
 GLfloat pos0[] = {1.0, 1.0, 1.0, 0.0}; /* w = 0 == infinite distance */
 GLfloat dif0[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
 
-GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0};// ambient light for all light sources
+GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0}; // ambient light for all light sources
 
 GLfloat pos1[] = { -1.0, .0, 5.0, 0.0}; /* w = 0 == infinite distance */
 GLfloat dif1[] = {0.4, 0.4, 0.4, 1.0}; // diffuse and specular
@@ -87,6 +87,7 @@ GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
   opt: X, xrotation, void, xrotation, Rotation um 180° um X-Achse, false
   opt: Y, yrotation, void, yrotation, Rotation um 180° um Y-Achse, false
   opt: Z, zrotation, void, zrotation, Rotation um 180° um Z-Achse, false
+
   opt: C, center, void, centerModel, Modellmittelpunkt in Ursprung schieben, false
   opt: x, xsize,  Int,     window_width,    Bildgröße X,  1280
   opt: y, ysize,  Int,     window_height,    Bildgröße Y,  1024
@@ -110,112 +111,116 @@ GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
   AppGen*/
 
 /*AppGen:Main*/
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   /*AppGen:MainEnd*/
 
-  try {
-    if (fname=="welt.cv") // default
-      if (!fname_opt.empty()) // filename given as option
-	fname=fname_opt;
+  try
+    {
+      if (fname == "welt.cv") // default
+        if (!fname_opt.empty()) // filename given as option
+          fname = fname_opt;
 
-    angle_step = angledelta;
+      angle_step = angledelta;
 
-    int dummy_argc=1;
-    char arg0[]="tv";
-    char * dummy_argv[]={arg0,NULL};
+      int dummy_argc = 1;
+      char arg0[] = "tv";
+      char* dummy_argv[] = {arg0, NULL};
 
-    glutInit(&dummy_argc, dummy_argv);
+      glutInit(&dummy_argc, dummy_argv);
 
-    int mainmenu, anglemenu, speedmenu;
+      int mainmenu, anglemenu, speedmenu;
 
-    // ein oder zwei Standard-lichtquellen
-    // Szene-Beschreibung kann dies überschreiben
-    if (std_lights > 2) std_lights = 2;
-    if (std_lights < 1) std_lights = 1;
+      // ein oder zwei Standard-lichtquellen
+      // Szene-Beschreibung kann dies überschreiben
+      if (std_lights > 2) std_lights = 2;
+      if (std_lights < 1) std_lights = 1;
 
-    // verhältnis seitenlängen der Fenster
-    // (Pixel werden quadratisch angenommen)
-    window_ratio = ((float)window_width) / ((float)window_height);
+      // verhältnis seitenlängen der Fenster
+      // (Pixel werden quadratisch angenommen)
+      window_ratio = ((float)window_width) / ((float)window_height);
 
-    int readFlags = 0;
-    bool xs = false;
-    bool ys = false;
-    bool zs = false;
-    if (xrotation)
-      {
-	ys = !ys; zs = !zs;
-      }
-    if (yrotation)
-      {
-	xs = !xs; zs = !zs;
-      }
-    if (zrotation)
-      {
-	xs = !xs; ys = !ys;
-      }
-    
-    readFlags = (xs ? 1 : 0)|(ys ? 2 : 0)|(zs ? 4 : 0) | (centerModel ? 8 : 0);
+      int readFlags = 0;
+      bool xs = false;
+      bool ys = false;
+      bool zs = false;
+      if (xrotation)
+        {
+          ys = !ys;
+          zs = !zs;
+        }
+      if (yrotation)
+        {
+          xs = !xs;
+          zs = !zs;
+        }
+      if (zrotation)
+        {
+          xs = !xs;
+          ys = !ys;
+        }
 
-    // Lesen des Szene-Files, Aufbau der Welt
-    ReadWorld(world, fname, readFlags);
+      readFlags = (xs ? 1 : 0) | (ys ? 2 : 0) | (zs ? 4 : 0) | (centerModel ? 8 : 0);
 
-    if (light_number == 0) // weltbeschreibung enthält keine Lichtquellen
-      {
-	// Standard-Lichtquellen aktivieren
-	light_number = std_lights;
-      }
+      // Lesen des Szene-Files, Aufbau der Welt
+      ReadWorld(world, fname, readFlags);
 
-    /* Set things up and go */
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(window_width, window_height);
-    glutCreateWindow("TriangleViewer");
-    // call back funktionen setzen
-    glutDisplayFunc(Display);
-    glutIdleFunc(HandleIdle);
-    glutVisibilityFunc(HandleVisibility);
-    glutKeyboardFunc(HandleKeyboard);
-    glutSpecialFunc(HandleSpecialKeyboard);
-    glutMouseFunc(HandleMouse);
-    glutReshapeFunc(HandleReshape);
+      if (light_number == 0) // weltbeschreibung enthält keine Lichtquellen
+        {
+          // Standard-Lichtquellen aktivieren
+          light_number = std_lights;
+        }
 
-    //  glutMotionFunc(HandleMouseMotion);
+      /* Set things up and go */
+      glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+      glutInitWindowSize(window_width, window_height);
+      glutCreateWindow("TriangleViewer");
+      // call back funktionen setzen
+      glutDisplayFunc(Display);
+      glutIdleFunc(HandleIdle);
+      glutVisibilityFunc(HandleVisibility);
+      glutKeyboardFunc(HandleKeyboard);
+      glutSpecialFunc(HandleSpecialKeyboard);
+      glutMouseFunc(HandleMouse);
+      glutReshapeFunc(HandleReshape);
 
-    /* Set up some menus */
+      //  glutMotionFunc(HandleMouseMotion);
 
-    anglemenu = glutCreateMenu(HandleAngleMenu);
-    glutAddMenuEntry("Weit (w)", 1);
-    glutAddMenuEntry("Normal", 2);
-    glutAddMenuEntry("Tele (t)", 3);
+      /* Set up some menus */
 
-    speedmenu = glutCreateMenu(HandleSpeedMenu);
-    glutAddMenuEntry("Halt (p)", 1);
-    glutAddMenuEntry("Langsam (s)", 2);
-    glutAddMenuEntry("Normal (n)", 3);
-    glutAddMenuEntry("Schnell (f)", 4);
+      anglemenu = glutCreateMenu(HandleAngleMenu);
+      glutAddMenuEntry("Weit (w)", 1);
+      glutAddMenuEntry("Normal", 2);
+      glutAddMenuEntry("Tele (t)", 3);
 
-    mainmenu = glutCreateMenu(HandleMainMenu);
-    glutAddSubMenu("Blickwinkel", anglemenu);
-    glutAddSubMenu("Geschwindigkeit", speedmenu);
-    glutAddMenuEntry("Startposition (Home)", 5);
-    glutAddMenuEntry("Quit", 100);
+      speedmenu = glutCreateMenu(HandleSpeedMenu);
+      glutAddMenuEntry("Halt (p)", 1);
+      glutAddMenuEntry("Langsam (s)", 2);
+      glutAddMenuEntry("Normal (n)", 3);
+      glutAddMenuEntry("Schnell (f)", 4);
 
-    glutSetMenu(mainmenu);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
-  
-    CreateEnvironment();
-  
-    // Kamera-Parameter in Grundposition
-    Home();
-  
-    glutMainLoop();
-    return 0;
-  }
-  catch(const char*msg)
+      mainmenu = glutCreateMenu(HandleMainMenu);
+      glutAddSubMenu("Blickwinkel", anglemenu);
+      glutAddSubMenu("Geschwindigkeit", speedmenu);
+      glutAddMenuEntry("Startposition (Home)", 5);
+      glutAddMenuEntry("Quit", 100);
+
+      glutSetMenu(mainmenu);
+      glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+      CreateEnvironment();
+
+      // Kamera-Parameter in Grundposition
+      Home();
+
+      glutMainLoop();
+      return 0;
+    }
+  catch (const char* msg)
     {
       cerr << "Exception: " << msg << endl;
     }
-  catch(const string &msg)
+  catch (const string& msg)
     {
       cerr << "Exception: " << msg << endl;
     }
@@ -277,7 +282,7 @@ void Display(void)
 void MakeGeometry(void)
 {
 //    cout << "geometrie" << endl;
-  for (auto &t:world)
+  for (auto& t : world)
     t.draw();
 }
 
@@ -316,7 +321,7 @@ void MakeLighting(void)
 
 void Home()
 {
-  move_step=cameraDistance/20;
+  move_step = cameraDistance / 20;
   switch (cammode)
     {
     case 1: // no break
@@ -417,7 +422,7 @@ void HandleKeyboard(unsigned char key, int x, int y)
         case 'T':
           camangle = 20;
           break;
-          // Zoom
+        // Zoom
         case '-':
           if (camangle < 170) camangle++;
           break;
@@ -428,8 +433,8 @@ void HandleKeyboard(unsigned char key, int x, int y)
         case 'M':
           Trafo tr;
           tr.glGet();
-	  //  cout << tr.toString() << endl;
-	  //  cout << "------------" << endl;
+          //  cout << tr.toString() << endl;
+          //  cout << "------------" << endl;
 
           GLfloat m[16];
           glGetFloatv(GL_PROJECTION_MATRIX, m);
@@ -437,7 +442,7 @@ void HandleKeyboard(unsigned char key, int x, int y)
           for (int i = 0; i < 4; i++)
             {
               for (int j = 0; j < 4; j++)
-                cout << setw(10) << setprecision(5) << m[j*4+i] << "\t";
+                cout << setw(10) << setprecision(5) << m[j * 4 + i] << "\t";
               cout << endl;
             }
 
@@ -792,11 +797,11 @@ void HandleIdle()
   atime = tt.time + (double)tt.millitm / 1000;
 #endif
   double dt;
-  if (lasttime < 0) 
+  if (lasttime < 0)
     dt = 0;
-  else 
+  else
     dt = atime - lasttime;
-  //  if (dt > 1) 
+  //  if (dt > 1)
   //    dt = 1.0;
   lasttime = atime;
 
@@ -804,10 +809,10 @@ void HandleIdle()
     {
       RealTime += dt;
 
-      if (RealTime < 10) 
-	frametime = dt;
-      else 
-	frametime = frametime * 0.999 + 0.001 * dt;
+      if (RealTime < 10)
+        frametime = dt;
+      else
+        frametime = frametime * 0.999 + 0.001 * dt;
 
       if (RealTime > 1)
         cout << 1.0 / frametime << " fps " << endl;
@@ -844,7 +849,7 @@ void HandleIdle()
   The x,y,z coordinate is the bottom left corner (looking down -ve z axis)
 */
 
-void DrawTextXY(float x, float y, float z, float scale, char *s)
+void DrawTextXY(float x, float y, float z, float scale, char* s)
 {
   unsigned int i;
 
@@ -859,7 +864,7 @@ void DrawTextXY(float x, float y, float z, float scale, char *s)
 /*
    Display the program usage information
 */
-void Usage(const string &cmd, bool tasten)
+void Usage(const string& cmd, bool tasten)
 {
   fprintf(stderr, "Anwendung:    %s <optionen> [<filename>]\n", cmd.c_str());
   fprintf(stderr, "  -h Hilfe\n");
@@ -893,7 +898,7 @@ void Usage(const string &cmd, bool tasten)
   exit(-1);
 }
 
-void Usage(const string &cmd, const char *error)
+void Usage(const string& cmd, const char* error)
 {
   fprintf(stderr, "\n!!! %s !!!\n\n", error);
   Usage(cmd, false);
