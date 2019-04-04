@@ -291,8 +291,13 @@ namespace ice
         return charbuffer.empty() && widebuffer.empty();
       }
 
-      wchar_t Pop();
-      unsigned char PopC();
+      // get one wchar from fifo
+      wchar_t pop();
+
+      // get one char from fifos
+      // "char" is part of multibyte sequence (returned as int)
+      // special control character (value > 255)
+      int popC();
 
       // Store key press.
       void Push(wchar_t KeyCode);
@@ -308,9 +313,6 @@ namespace ice
 
     // The buffer that stores the pending keypresses.
     iceKeyBuffer KeyBuffer;
-
-
-
 
     // this macro declares that ConsoleWin has an event table that maps events to
     // event handler functions; the actual event table will be declared outside this

@@ -381,22 +381,14 @@ namespace ice
     Event.Skip();
   }
 
-  //   void iceConsoleWin::OnFocus(wxFocusEvent& Event)
-  //   {
-  //     cout << "OnSetFocus" << endl;
-  //     Event.Skip();
-  //   }
-
   void iceConsoleWin::OnChar(wxKeyEvent& Event)
   {
-    //    cout << "OnChar()"<<endl;
+    // cout << "OnChar()"<<endl;
 #if wxUSE_UNICODE
     wchar_t wc = Event.GetKeyCode();
-    // cout << wc << " " ; cout.flush();
     KeyBuffer.Push(wc);
 #else
     unsigned char kc = Event.GetKeyCode();
-    // cout << kc << " " ; cout.flush();
     KeyBuffer.Push(kc);
 #endif
   }
@@ -798,7 +790,7 @@ namespace ice
     // wait while keyboard buffer is empty
     WaitWhileKeybufferEmpty();
 
-    return KeyBuffer.PopC();
+    return KeyBuffer.popC();
   }
 
   int iceConsoleWin::GetKey()
@@ -816,7 +808,7 @@ namespace ice
 #endif
         return 0;
       }
-    return KeyBuffer.PopC();
+    return KeyBuffer.popC();
   };
 
   int iceConsoleWin::GetCharW()
@@ -831,7 +823,7 @@ namespace ice
     // wait while keyboard buffer is empty
     WaitWhileKeybufferEmpty();
 
-    return KeyBuffer.Pop();
+    return KeyBuffer.pop();
   }
 
   int iceConsoleWin::GetKeyW()
@@ -849,7 +841,7 @@ namespace ice
 #endif
         return 0;
       }
-    return KeyBuffer.Pop();
+    return KeyBuffer.pop();
   };
 
   int iceConsoleWin::InputString(string& str,
@@ -1018,7 +1010,7 @@ namespace ice
    *   iceKeyBuffer
    */
 
-  wchar_t iceConsoleWin::iceKeyBuffer::Pop()
+  wchar_t iceConsoleWin::iceKeyBuffer::pop()
   {
     // lock the mutex with the help of a mutex locker(that releases the mutex
     // automatically when this method is left)
@@ -1041,31 +1033,48 @@ namespace ice
     return 0;
   }
 
-  unsigned char iceConsoleWin::iceKeyBuffer::PopC()
+  int iceConsoleWin::iceKeyBuffer::popC()
   {
     // lock the mutex with the help of a mutex locker(that releases the mutex
     // automatically when this method is left)
     wxMutexLocker Locker(Mutex);
 
+    unsigned char res = 0;
     if (!charbuffer.empty())
       {
-        unsigned char res = charbuffer.back();
+        res = charbuffer.back();
         charbuffer.pop_back();
         return res;
       }
 
     if (!widebuffer.empty())
       {
-        wchar_t nc = widebuffer.back();
+        wchar_t wChar = widebuffer.back();
         widebuffer.pop_back();
 
-        unsigned char c[6];
-        unsigned int bytes = wctomb((char*)c, nc);
-        for (unsigned int i = 1; i < bytes; i++)
+        // we need a null terminated buffer for conversion
+        wchar_t wBuffer[2];
+        wBuffer[0] = wChar;
+        wBuffer[1] = 0;
+
+        // a pointer to the first char
+        wchar_t* pt = wBuffer;
+
+        char c[MB_CUR_MAX];
+        wctomb(NULL, *pt);
+        int length = wctomb(c, *pt);
+
+        if (length > 0)
           {
-            charbuffer.push_front(c[i]);
+            res = c[0]; // return first byte directly
+            // store following bytes if fifo
+            for (int i = 1; i < length; ++i)
+              charbuffer.push_front(c[i]);
+
+            return res;
           }
-        return c[0];
+        else
+          return wChar;
       }
 
     return 0;
