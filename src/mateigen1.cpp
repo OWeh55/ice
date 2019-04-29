@@ -30,6 +30,8 @@
 #include "mateigen.h"
 #include "Matrix.h"
 
+using namespace std;
+
 namespace ice
 {
 #define ROTATE(a,i,j,k,l) g=a.at(i).at(j);h=a.at(k).at(l);  \
@@ -60,13 +62,13 @@ namespace ice
     return rc;
   }
 
-  int Eigenvalue(const Matrix& A, Vector& eval, Matrix& evect, double eps, int maxIt)
+  int Eigenvalue(const Matrix& A,
+                 Vector& eval, Matrix& evect,
+                 double eps, int maxIt)
   {
     Matrix Amat = A;
 
-    int nrot;
-
-    double tresh, theta, t, sm, s, h, g, c;
+    double thresh, theta, t, sm, s, h, g, c;
 
     /* Testung der Parameter */
 
@@ -104,7 +106,7 @@ namespace ice
         z.at(ip) = 0.0;
       }
 
-    nrot = 0;
+    int nrot = 0;
 
     for (int i = 1; i <= maxIt; i++)
       {
@@ -127,11 +129,11 @@ namespace ice
 
         if (i < 4)
           {
-            tresh = 0.2 * sm / (n * n);
+            thresh = 0.2 * sm / (n * n);
           }
         else
           {
-            tresh = 0.0;
+            thresh = 0.0;
           }
 
         for (int ip = 0; ip < n - 1; ip++)
@@ -145,7 +147,7 @@ namespace ice
                   {
                     Amat.at(ip).at(iq) = 0.0;
                   }
-                else if (fabs(Amat.at(ip).at(iq)) > tresh)
+                else if (fabs(Amat.at(ip).at(iq)) > thresh)
                   {
                     h = eval.at(iq) - eval.at(ip);
 
@@ -213,7 +215,9 @@ namespace ice
   }
 #undef ROTATE
 
-  void rotate(matrix<double>& a, int i, int j, int k, int l, double s, double tau)
+  void rotate(matrix<double>& a,
+              int i, int j, int k, int l,
+              double s, double tau)
   {
     double g = a[i][j];
     double h = a[k][l];
@@ -221,9 +225,9 @@ namespace ice
     a[k][l] = h + s * (g - h * tau);
   }
 
-  void EigenvalueSort(std::vector<double>& d,
+  void EigenvalueSort(vector<double>& d,
                       matrix<double>& mv,
-                      std::vector<std::vector<double> >& ev)
+                      vector<vector<double> >& ev)
   {
     // sort eigenvalues and convert to vector of vectors
 
@@ -250,17 +254,17 @@ namespace ice
         if (idx_max != i)   // Tausch nötig ?
           {
             // tauschen
-            std::swap(d[idx_max], d[i]);
+            swap(d[idx_max], d[i]);
 
             // Spalten der Matrix tauschen
             for (int j = 0; j < n; j++)
               {
-                std::swap(mv[j][i], mv[j][idx_max]);
+                swap(mv[j][i], mv[j][idx_max]);
               }
           }
 
         // eigenvektor erzeugen
-        std::vector<double> v;
+        vector<double> v;
         for (int k = 0; k < n; ++k)
           {
             v.push_back(mv[k][i]);
@@ -268,7 +272,7 @@ namespace ice
         ev.push_back(v);
       }
 
-    std::vector<double> v;
+    vector<double> v;
     for (int k = 0; k < n; ++k)
       {
         v.push_back(mv[k][n - 1]);
@@ -276,8 +280,9 @@ namespace ice
     ev.push_back(v);
   }
 
-  int Eigenvalue(const matrix<double>& A, std::vector<double>& eval,
-                 std::vector<std::vector<double>>& eVectors, double eps, int maxIt)
+  int Eigenvalue(const matrix<double>& A,
+                 vector<double>& eval, vector<vector<double>>& eVectors,
+                 double eps, int maxIt)
   {
     matrix<double> Amat = A;
 
@@ -296,8 +301,8 @@ namespace ice
     matrix<double> evect(n, n);
     eval.resize(n);
 
-    std::vector<double> b(n);
-    std::vector<double> z(n);
+    vector<double> b(n);
+    vector<double> z(n);
 
     // evect mit Einheitsmatrix belegen
     for (int ip = 0; ip < n; ip++)
@@ -408,7 +413,6 @@ namespace ice
                 eval[ip] = b[ip];
                 z[ip] = 0.0;
               }
-
             //
           }
       }

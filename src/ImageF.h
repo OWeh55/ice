@@ -562,7 +562,12 @@ namespace ice
 
     void set(T val) const
     {
-      return mat->set(val);
+      mat->set(val);
+    }
+
+    void clear() const
+    {
+      set(0);
     }
 
     T minValue() const
