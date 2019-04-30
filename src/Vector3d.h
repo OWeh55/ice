@@ -234,6 +234,11 @@ namespace ice
       return vector3d(y * b.z - z * b.y, z * b.x - x * b.z, x * b.y - y * b.x);
     }
 
+    double dotProduct(const vector3d& b) const
+    {
+      return x * b.x + y * b.y + z * b.z;
+    }
+
     double Length() const
     {
       return sqrt(x * x + y * y + z * z);
