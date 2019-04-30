@@ -140,12 +140,12 @@ namespace ice
 
       return x;
     }
+#undef FNAME
 
     int size() const
     {
       return 3;
     }
-#undef FNAME
 
     operator Vector() const
     {

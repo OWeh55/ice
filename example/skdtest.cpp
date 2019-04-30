@@ -6,8 +6,8 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  ClassSample s;
-  sKDTree<ClassSample> tr;
+  //  ClassSample s;
+
   vector<ClassSample> sl;
   sl.push_back(ClassSample(1, vector<double> {1.1, 2, 3}));
   sl.push_back(ClassSample(1, vector<double> {2.2, 2, 3}));
@@ -18,13 +18,14 @@ int main(int argc, char** argv)
   sl.push_back(ClassSample(0, vector<double> {2.1, 4, 4}));
   sl.push_back(ClassSample(0, vector<double> {2.2, 4, 2}));
 
+  KDTree<ClassSample> tr;
   tr.create(sl);
 
   tr.statistics();
   const ClassSample* p = tr.findNearest(vector<double> {2, 4, 3});
   cout << "Klasse: " << p->classNr << endl;
   cout << "Merkmale ";
-  for (int i = 0; i < p->features.size(); ++i)
+  for (unsigned int i = 0; i < p->features.size(); ++i)
     cout << p->features[i] << " ";
 
   cout << endl;
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
   tr.findKNearest(vector<double> {2.1, 4, 4}, 5,
                   res, dist);
 
-  for (int k = 0; k < res.size(); ++k)
+  for (unsigned int k = 0; k < res.size(); ++k)
     {
       cout << res[k]->classNr << " : ";
       for (int i = 0; i < res[k]->size(); ++i)
@@ -57,7 +58,7 @@ int main(int argc, char** argv)
   itr.statistics();
   Image img;
   img.create(999, 777, 16);
-  Visual v = Show(OVERLAY, img);
+  Show(OVERLAY, img);
   for (int y = 0; y < 777; ++y)
     for (int x = 0; x < 999; ++x)
       {
@@ -85,9 +86,10 @@ int main(int argc, char** argv)
 
 
   itr.create(isl);
-  int x, y;
+
 
   vector<const ClassSample*> samples;
+  int x, y;
   while (Mouse(img, x, y) & (M_RIGHT_DOWN | M_LEFT_DOWN))
     {
       Print("Mouse-Button pressed\n");
@@ -95,13 +97,16 @@ int main(int argc, char** argv)
   Print("Press Mouse-Button to finish!\n");
   while (!(Mouse(img, x, y) & (M_RIGHT_DOWN | M_LEFT_DOWN)))
     {
-      vector<double> v {double(x), double(y)};
-      for (int i = 0; i < samples.size(); ++i)
+
+      for (unsigned int i = 0; i < samples.size(); ++i)
         {
           img.setPixel((*samples[i])[0], (*samples[i])[1], 2);
         }
-      itr.findNeighbors(v, 30, samples);
-      for (int i = 0; i < samples.size(); ++i)
+
+      itr.findNeighbors(ClassSample(1, vector<double> {double(x), double(y)}),
+			30, samples);
+      
+      for (unsigned int i = 0; i < samples.size(); ++i)
         {
           img.setPixel((*samples[i])[0], (*samples[i])[1], 1);
         }
@@ -109,5 +114,5 @@ int main(int argc, char** argv)
     }
   Print("Press <ENTER> to finish");
   GetChar();
-
+  return 0;
 }

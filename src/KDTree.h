@@ -395,25 +395,28 @@ namespace ice
           minNodes.push_back(tree);
         }
 
-      double hd = v[tree->idx] - tree->data[tree->idx]; // distance to split plane
-      double hd2 = hd * hd;
-
-      if (hd < 0)
+      if (tree->idx >= 0)
         {
-          findNeighbors(tree->left, v, dist2, minNodes);
+          double hd = v[tree->idx] - tree->data[tree->idx]; // distance to split plane
+          double hd2 = hd * hd;
 
-          if (dist2 > hd2)   // suche auch auf der anderen Seite
-            {
-              findNeighbors(tree->right, v, dist2, minNodes);
-            }
-        }
-      else
-        {
-          findNeighbors(tree->right, v, dist2, minNodes);
-
-          if (dist2 > hd2)   // suche auch auf der anderen Seite
+          if (hd < 0)
             {
               findNeighbors(tree->left, v, dist2, minNodes);
+
+              if (dist2 > hd2)   // suche auch auf der anderen Seite
+                {
+                  findNeighbors(tree->right, v, dist2, minNodes);
+                }
+            }
+          else
+            {
+              findNeighbors(tree->right, v, dist2, minNodes);
+
+              if (dist2 > hd2)   // suche auch auf der anderen Seite
+                {
+                  findNeighbors(tree->left, v, dist2, minNodes);
+                }
             }
         }
     }
