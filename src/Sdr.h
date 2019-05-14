@@ -16,73 +16,75 @@
 using namespace ice;
 // optimated class for shift detection by restoration
 // uses fftw directly, avoids multiple copying of data
-class Sdr
+namespace ice
 {
-public:
-  Sdr(int xSize, int ySize, double b = 10, int factor = 1, int window = 1);
-  virtual ~Sdr();
-  virtual void setCutOff(double f)
+  class Sdr
   {
-    fg = f;
-    fg2 = fg * fg;
-  }
-  virtual void setWindowMode(int m);
+  public:
+    Sdr(int xSize, int ySize, double b = 10, int factor = 1, int window = 1);
+    virtual ~Sdr();
+    virtual void setCutOff(double f)
+    {
+      fg = f;
+      fg2 = fg * fg;
+    }
+    virtual void setWindowMode(int m);
 
-  virtual void setBeta(double b)
-  {
-    beta = b;
-    beta2 = b * b;
-  }
+    virtual void setBeta(double b)
+    {
+      beta = b;
+      beta2 = b * b;
+    }
 
-  virtual double getBeta() const
-  {
-    return beta;
-  }
+    virtual double getBeta() const
+    {
+      return beta;
+    }
 
-  virtual int getFactor() const
-  {
-    return factor;
-  }
-  virtual int getXSize() const
-  {
-    return xSize;
-  }
-  virtual int getYSize() const
-  {
-    return ySize;
-  }
+    virtual int getFactor() const
+    {
+      return factor;
+    }
+    virtual int getXSize() const
+    {
+      return xSize;
+    }
+    virtual int getYSize() const
+    {
+      return ySize;
+    }
 
-  virtual void setInput(const Image& img1, const Image& img2);
-  virtual void getPeak(ImageD& result);
-private:
-  // basic parameters set by c'tor
-  int xSize;
-  int ySize;
-  double beta;
-  double beta2;
-  int factor;
+    virtual void setInput(const Image& img1, const Image& img2);
+    virtual void getPeak(ImageD& result);
+  private:
+    // basic parameters set by c'tor
+    int xSize;
+    int ySize;
+    double beta;
+    double beta2;
+    int factor;
 
-  int nPixel;
-  int bigXSize;
-  int bigYSize;
+    int nPixel;
+    int bigXSize;
+    int bigYSize;
 
-  int windowing;
+    int windowing;
 
-  // quasi fixed parameters
-  double fg = 2;        // cutoff frequency of highpass
-  double fg2 = fg * fg; // square of cutoff frequency of highpass
+    // quasi fixed parameters
+    double fg = 2;        // cutoff frequency of highpass
+    double fg2 = fg * fg; // square of cutoff frequency of highpass
 
-  fftw_plan spectrumPlan;
-  fftw_plan peakPlan;
+    fftw_plan spectrumPlan;
+    fftw_plan peakPlan;
 
-  std::vector<double> data;
-  std::vector<double> peakdata;
-  std::vector<double> xWindow;
-  std::vector<double> yWindow;
+    std::vector<double> data;
+    std::vector<double> peakdata;
+    std::vector<double> xWindow;
+    std::vector<double> yWindow;
 
-  static void window0(std::vector<double>& window);
-  static void window1(std::vector<double>& window);
-  static void window2(std::vector<double>& window);
-};
-
+    static void window0(std::vector<double>& window);
+    static void window1(std::vector<double>& window);
+    static void window2(std::vector<double>& window);
+  };
+}
 #endif
