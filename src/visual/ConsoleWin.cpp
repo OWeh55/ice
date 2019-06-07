@@ -478,34 +478,32 @@ namespace ice
       }
   }
 
-  void iceConsoleWin::PushContents()
-  {
-    ContentStack.push(CurrContent);
-  }
-
   void iceConsoleWin::ForceCursorDraw()
   {
     wxCommandEvent CommandEvent(FORCE_CURSOR);
     AddPendingEvent(CommandEvent);
   }
 
+  void iceConsoleWin::PushContents()
+  {
+    ContentStack.push(CurrContent);
+  }
+
   void iceConsoleWin::PopContents()
   {
     // if the content stack is empty then simply ignore this command
-    if (ContentStack.empty())
+    if (!ContentStack.empty())
       {
-        return;
+        CurrContent = ContentStack.top();
+        ContentStack.pop();
+
+        // we have to tell the ConsoleWin to repaint
+        Refresh();
       }
-
-    CurrContent = ContentStack.top();
-
-    // since the content has changed we have to tell the ConsoleWin to repaint
-    Refresh();
   }
 
   void iceConsoleWin::Clear()
   {
-
     CurrContent.Clear();
     CurrContent.CursorPos = iceCursor(0, 0);
   }
