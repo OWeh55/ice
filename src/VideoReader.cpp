@@ -48,7 +48,7 @@ namespace ice
         fps = 25;
         maxval = 255;
 
-        string cmd = "ffprobe -v error -show_streams -select_streams V \"" + fn + "\"";
+        string cmd = "ffprobe -v quiet -show_streams -select_streams V \"" + fn + "\"";
 
         // cout << cmd << endl;
         FILE* fd = popen(cmd.c_str(), "r");
@@ -98,13 +98,22 @@ namespace ice
         // we ignore errors in detection of size etc. and open video file nevertheless
       }
     // now really open file
-    pr.open("|ffmpeg -i \'" + fn + "\' -y -codec:v ppm -f rawvideo -an -sn -v error - ");
-
+    try
+      {
+        pbmReader.open("|ffmpeg -i \'" + fn + "\' -y -codec:v ppm -f rawvideo -an -sn -v quiet - ");
+      }
+    catch (const IceException& ex)
+      {
+        if (ex.message() == "Empty pbm file")
+          throw IceException("VideoReader", "no video file");
+        else
+          throw IceException("VideoReader", ex.message());
+      }
     // if use of ffprobe failed we try getInfo() instead
     if (width < 0 || height < 0)
       {
         int nChannels;
-        pr.getInfo(width, height, maxval, nChannels);
+        pbmReader.getInfo(width, height, maxval, nChannels);
       }
   }
 
@@ -128,8 +137,8 @@ namespace ice
   {
     try
       {
-        pr.getImage(r, g, b);
-        pr.nextImage();
+        pbmReader.getImage(r, g, b);
+        pbmReader.nextImage();
         framenr++;
         return true;
       }
@@ -149,8 +158,8 @@ namespace ice
   {
     try
       {
-        pr.getImage();
-        pr.nextImage();
+        pbmReader.getImage();
+        pbmReader.nextImage();
         framenr++;
         return true;
       }

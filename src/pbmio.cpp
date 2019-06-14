@@ -39,36 +39,44 @@ namespace ice
 #define FNAME "ReadPBMImg"
   int ReadPBMImg(const string& fname, Image& r, Image& g, Image& b, int flag)
   {
-    PbmReader rd(fname);
-    int x, y, mv, ch;
-    rd.getInfo(x, y, mv, ch);
-    if (!IsImg(r))
+    try
       {
-        r = NewImg(x, y, mv);
+        PbmReader rd(fname);
+        int x, y, mv, ch;
+        rd.getInfo(x, y, mv, ch);
+        if (!IsImg(r))
+          {
+            r = NewImg(x, y, mv);
+          }
+        if (!IsImg(g))
+          {
+            g = NewImg(x, y, mv);
+          }
+        if (!IsImg(b))
+          {
+            b = NewImg(x, y, mv);
+          }
+        rd.getImage(r, g, b, flag);
+        return OK;
       }
-    if (!IsImg(g))
-      {
-        g = NewImg(x, y, mv);
-      }
-    if (!IsImg(b))
-      {
-        b = NewImg(x, y, mv);
-      }
-    rd.getImage(r, g, b, flag);
-    return OK;
+    RETHROW;
   }
 
   Image ReadPBMImg(const string& fname, Image& img, int flag)
   {
-    PbmReader rd(fname);
-    int x, y, mv, ch;
-    rd.getInfo(x, y, mv, ch);
-    if (!IsImg(img))
+    try
       {
-        img = NewImg(x, y, mv);
+        PbmReader rd(fname);
+        int x, y, mv, ch;
+        rd.getInfo(x, y, mv, ch);
+        if (!IsImg(img))
+          {
+            img = NewImg(x, y, mv);
+          }
+        rd.getImage(img, flag);
+        return img;
       }
-    rd.getImage(img, flag);
-    return img;
+    RETHROW;
   }
 #undef FNAME
 

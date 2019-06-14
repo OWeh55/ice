@@ -61,7 +61,7 @@ namespace ice
 
   private:
     int framenr; // number of frame to read
-    PbmReader pr;
+    PbmReader pbmReader;
     int width, height, maxval, fps;
     void freeall();
   };

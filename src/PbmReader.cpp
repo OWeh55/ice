@@ -36,7 +36,7 @@ namespace ice
         c = fgetc(fd);
         if (c == EOF)
           {
-            throw runtime_error("PbmReader - EOF reading Number");
+            throw IceException("PbmReader", "EOF reading Number");
           }
         if (c == '#')
           {
@@ -82,11 +82,11 @@ namespace ice
       {
         if (c == EOF)
           {
-            throw runtime_error("PbmReader - Empty pbm file");
+            throw IceException("PbmReader", "Empty pbm file");
           }
         else
           {
-            throw runtime_error("PbmReader - No pbm file");
+            throw IceException("PbmReader", "No pbm file");
           }
       }
 
@@ -102,7 +102,7 @@ namespace ice
         break;
       default:
       {
-        throw runtime_error("PbmReader - Not supported pbm file type");
+        throw IceException("PbmReader", "Not supported pbm file type");
       }
       }
 
@@ -125,14 +125,14 @@ namespace ice
   {
     if (isOpen)
       {
-        throw logic_error("PbmReader - Already opened");
+        throw IceException("PbmReader", "Already opened");
       }
 
     fd = exopen(fn, FRMODUS);
 
     if (fd.fd == nullptr)
       {
-        throw runtime_error("PbmReader - Cannot open file " + fn);
+        throw IceException("PbmReader", "Cannot open file " + fn);
       }
 
     readInfo();
@@ -152,7 +152,7 @@ namespace ice
   {
     if (!isOpen)
       {
-        throw logic_error("PbmReader - Not opened");
+        throw IceException("PbmReader", "Not opened");
       }
     xs = xSize;
     ys = ySize;
@@ -164,7 +164,7 @@ namespace ice
   {
     if (!isOpen)
       {
-        throw logic_error("PbmReader - Not opened");
+        throw IceException("PbmReader", "Not opened");
       }
     if (ib.data == nullptr)   // if already read - ignore
       {
@@ -202,7 +202,7 @@ namespace ice
         int nReadValues = fread(ib.data, pixelsize, ib.width * ib.height, fd.fd);
         if (nReadValues !=  ib.width * ib.height)
           {
-            throw runtime_error("PbmReader - Error reading pbm file data");
+            throw IceException("PbmReader", "Error reading pbm file data");
           }
       }
   }

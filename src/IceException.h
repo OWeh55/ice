@@ -22,8 +22,8 @@ namespace ice
 
     IceException(const std::string& where,
                  const std::string& message,
-                 const std::string& emessage):
-      where_(where), message_(message + " (" + emessage + ")")
+                 const std::string& eMessage):
+      where_(where), message_(message + " (" + eMessage + ")")
     {
     }
 
