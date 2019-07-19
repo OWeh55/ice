@@ -43,7 +43,7 @@ namespace ice
     frate(25), brate(4000000),
     format("")
   {
-    fd.fd=nullptr;
+    fd.fd = nullptr;
     // really open video before first writing
   }
 
@@ -107,7 +107,7 @@ namespace ice
             if (format == "#h264ts")
               format = "-f mpegts -vcodec libx264 -vf format=yuv420p -profile:v high -level 4.1";
             else if (format == "#lossless")
-              format = "-c:v libvpx-vp9 -pix_fmt gbrp -lossless 1";
+              format = "-c:v libx264 -crf 0 -preset fast";
             else
               throw IceException("VideoWriter", "Undefined profile " + format);
           }
