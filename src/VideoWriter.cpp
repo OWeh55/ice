@@ -43,6 +43,7 @@ namespace ice
     frate(25), brate(4000000),
     format("")
   {
+    fd.fd=nullptr;
     // really open video before first writing
   }
 
@@ -100,6 +101,16 @@ namespace ice
       }
     if (!format.empty())
       {
+        if (format[0] == '#')
+          {
+            // special predefined profiles
+            if (format == "#h264ts")
+              format = "-f mpegts -vcodec libx264 -vf format=yuv420p -profile:v high -level 4.1";
+            else if (format == "#lossless")
+              format = "-c:v libvpx-vp9 -pix_fmt gbrp -lossless 1";
+            else
+              throw IceException("VideoWriter", "Undefined profile " + format);
+          }
         cmdline += " " + format + " ";
       }
     cmdline += " \'" + filename + "\'";
