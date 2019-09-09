@@ -391,11 +391,50 @@ namespace ice
     return i;
   }
 #undef FNAME
-  /*
-  int Histogram::computeMinimum() const;
-  int Histogram::computeMaximum() const;
-  int Histogram::computeFrequent() const;
-  */
+#define FNAME "Histogram::computeMinimum"
+  int Histogram::computeMinimum() const
+  {
+    if (!isInit)
+      throw IceException(FNAME, M_NOT_INITIALIZED);
+    if (nValues == 0)
+      throw IceException(FNAME, M_HIST_EMPTY);
+    int min = 0;
+    while (classes[min] == 0)
+      min++;
+    return min;
+  }
+#undef FNAME
+#define FNAME "Histogram::computeMinimum"
+  int Histogram::computeMaximum() const
+  {
+    if (!isInit)
+      throw IceException(FNAME, M_NOT_INITIALIZED);
+    if (nValues == 0)
+      throw IceException(FNAME, M_HIST_EMPTY);
+    int max = nclasses - 1;
+    while (classes[max] == 0)
+      max--;
+    return max;
+  }
+#undef FNAME
+#define FNAME "Histogramm:computeMostFrequent"
+  int Histogram::computeMostFrequent() const
+  {
+    if (!isInit)
+      throw IceException(FNAME, M_NOT_INITIALIZED);
+    if (nValues == 0)
+      throw IceException(FNAME, M_HIST_EMPTY);
+    int maxi = 0;
+    int maxn = 0;
+    for (int i = 0; i < nclasses; i++)
+      if (classes[i] > maxn)
+        {
+          maxn = classes[i];
+          maxi = i;
+        }
+    return maxi;
+  }
+#undef FNAME
 #define FNAME "Distance"
   double Distance(const Histogram& h1, const Histogram& h2)
   {

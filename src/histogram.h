@@ -94,7 +94,7 @@ namespace ice
     int computeMedian() const;
     int computeMinimum() const;
     int computeMaximum() const;
-    int computeFrequent() const;
+    int computeMostFrequent() const;
 
   protected:
 
