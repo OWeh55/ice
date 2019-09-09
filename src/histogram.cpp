@@ -388,7 +388,8 @@ namespace ice
     int i = 0;
     for (i = 1; i < nclasses && nV * 2 < nValues; i++)
       nV += classes[i];
-    return i;
+
+    return i - 1;
   }
 #undef FNAME
 #define FNAME "Histogram::computeMinimum"
