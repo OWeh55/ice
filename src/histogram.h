@@ -1,8 +1,8 @@
 /*
  * ICE - C++ - Library for image processing
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 1999-2019 FSU Jena, Digital Image Processing Group
+ * Contact:
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
  */
 
 // Funktionen zur Nutzung von Histogrammen
-// Ortmann 11/99 .. 07/13
+// Ortmann 11/99 .. 09/19
 #ifndef _HISTOGRAM_H
 #define _HISTOGRAM_H
 
@@ -44,11 +44,11 @@ namespace ice
     {
       std::swap(h1.isInit, h2.isInit);
       std::swap(h1.nclasses, h2.nclasses);
-      std::swap(h1.sum, h2.sum);
+      std::swap(h1.nValues, h2.nValues);
       std::swap(h1.classes, h2.classes);
     }
 
-    int isValid() const
+    bool isValid() const
     {
       return isInit;
     }
@@ -69,7 +69,7 @@ namespace ice
 
     int getSum() const
     {
-      return sum;
+      return nValues;
     }
 
     double getRelative(int nr) const;
@@ -90,6 +90,12 @@ namespace ice
 
     int operator[](int nr) const;
 
+    double computeAverage() const;
+    int computeMedian() const;
+    int computeMinimum() const;
+    int computeMaximum() const;
+    int computeFrequent() const;
+
   protected:
 
     void addImg0(const Image& b, int diff);
@@ -99,7 +105,7 @@ namespace ice
 
     bool isInit;
     int nclasses;           // number of classes
-    int sum;
+    int nValues;
     std::vector<int> classes;   // counter for all classes
   };
 

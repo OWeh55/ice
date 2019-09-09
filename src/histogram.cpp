@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 //
-//  Ortmann 6/2004
+//  Ortmann 6/2004, 9/2019
 //
 #include <vector>
 
@@ -43,7 +43,7 @@ using namespace std;
 namespace ice
 {
 #define FNAME "Histogram::Histogram"
-  Histogram::Histogram(): isInit(false), nclasses(0), sum(0)
+  Histogram::Histogram(): isInit(false), nclasses(0), nValues(0)
   {
   }
 
@@ -73,7 +73,7 @@ namespace ice
         }
   }
 
-  Histogram::Histogram(const Image& b, int diff): isInit(false), nclasses(0), sum(0)
+  Histogram::Histogram(const Image& b, int diff): isInit(false), nclasses(0), nValues(0)
   {
     if (!IsImg(b))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -140,7 +140,7 @@ namespace ice
         classes[i] = 0;
       }
 
-    sum = 0;
+    nValues = 0;
     isInit = true;
     return OK;
   }
@@ -154,7 +154,7 @@ namespace ice
     if ((unsigned int)val < (unsigned int)nclasses)
       {
         classes[val] += count;
-        sum += count;
+        nValues += count;
       }
     return OK;
   };
@@ -162,7 +162,7 @@ namespace ice
   int Histogram::addValueUnchecked(int val, int count)
   {
     classes[val] += count;
-    sum += count;
+    nValues += count;
     return OK;
   };
 #undef FNAME
@@ -217,10 +217,10 @@ namespace ice
     if (index < 0 || index >= nclasses)
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    if (sum == 0)
+    if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
 
-    return (double)classes[index] / (double)sum;
+    return (double)classes[index] / (double)nValues;
   }
 
   vector<double> Histogram::getRelative() const
@@ -230,12 +230,12 @@ namespace ice
     if (!isInit)
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
-    if (sum == 0)
+    if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
 
     for (int i = 0; i < nclasses; i++)
       {
-        res[i] = (double)classes[i] / (double)sum;
+        res[i] = (double)classes[i] / (double)nValues;
       }
 
     return res;
@@ -246,14 +246,14 @@ namespace ice
     if (!isInit)
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
-    if (sum == 0)
+    if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
 
     v.resize(nclasses);
 
     for (int i = 0; i < nclasses; i++)
       {
-        v[i] = (double)classes[i] / (double)sum;
+        v[i] = (double)classes[i] / (double)nValues;
       }
 
   }
@@ -265,7 +265,7 @@ namespace ice
     if (!isInit)
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
-    if (sum == 0)
+    if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
 
     int i = 0;
@@ -296,10 +296,10 @@ namespace ice
     if ((q < 0.0) || (q > 0.5))
       throw IceException(FNAME, M_WRONG_PARAM);
 
-    if (sum == 0)
+    if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
 
-    int qabs = RoundInt(sum * q); // number of values to ignore
+    int qabs = RoundInt(nValues * q); // number of values to ignore
 
     int ct = 0;
 
@@ -326,7 +326,7 @@ namespace ice
     if (!isInit)
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
-    if (sum == 0)
+    if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
 
     double sumx = 0;
@@ -341,10 +341,10 @@ namespace ice
         sumx3 += classes[i] * aktw * aktw * aktw;
       }
 
-    n = sum;
-    xm = sumx / sum;
-    xs = sqrt(sumx2 / sum - xm * xm);
-    skew = sumx3 - 3 * xm * sumx2 + xm * xm * 3 * sumx - xm * xm * xm * sum;
+    n = nValues;
+    xm = sumx / nValues;
+    xs = sqrt(sumx2 / nValues - xm * xm);
+    skew = sumx3 - 3 * xm * sumx2 + xm * xm * 3 * sumx - xm * xm * xm * nValues;
   };
 
   void Histogram::getStatistics(int& n, double& xm, double& xs) const
@@ -358,9 +358,44 @@ namespace ice
     if (!isInit)
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
-    n = sum;
+    n = nValues;
   };
 #undef FNAME
+
+#define FNAME "Histogram::computeAverage"
+  double Histogram::computeAverage() const
+  {
+    if (!isInit)
+      throw IceException(FNAME, M_NOT_INITIALIZED);
+    if (nValues == 0)
+      throw IceException(FNAME, M_HIST_EMPTY);
+
+    double vSum = 0.0;
+    for (int i = 0; i < nclasses; i++)
+      vSum += i * classes[i];
+    return vSum / nValues;
+  }
+#undef FNAME
+#define FNAME "Histogram::computeMedian"
+  int Histogram::computeMedian() const
+  {
+    if (!isInit)
+      throw IceException(FNAME, M_NOT_INITIALIZED);
+    if (nValues == 0)
+      throw IceException(FNAME, M_HIST_EMPTY);
+
+    int nV = classes[0];
+    int i = 0;
+    for (i = 1; i < nclasses && nV * 2 < nValues; i++)
+      nV += classes[i];
+    return i;
+  }
+#undef FNAME
+  /*
+  int Histogram::computeMinimum() const;
+  int Histogram::computeMaximum() const;
+  int Histogram::computeFrequent() const;
+  */
 #define FNAME "Distance"
   double Distance(const Histogram& h1, const Histogram& h2)
   {
