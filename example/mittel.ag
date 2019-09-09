@@ -1,6 +1,7 @@
 /*
- * bildet "Mittelwert"-Bilder aus einer Vielzahl von Einzelbildern in
- * unterschiedlichster Art und Weise
+ * bildet "Mittelwert"-Bilder aus einer Vielzahl von Einzelbildern
+ * ziwschenresultat ist für jedes Pixel ein Histogramm
+ * die Verrechnung erfolgt in unterschiedlichster Art und Weise
  * pixelweise Operationen:
  * - Mittelwert
  * - Median (RGB-Werte einzeln)
@@ -13,7 +14,10 @@
 
 /*AppGen:Global*/
 
-int xdim, ydim, vmax;
+typedef array<int, 3> RGB;
+typedef vector<vector<vector<RGB>>> PixelHist;
+
+int xSize, ySize, maximalValue;
 
 // ermittelt aus Dateiliste alle Bilder
 // ermittelt passende Bildgröße als Maximum
@@ -24,39 +28,49 @@ void filterImg(vector<string>& z)
 
   for (unsigned int i = 0; i < z.size(); ++i)
     {
-      if (i % 100 == 0)
-        cout << i << "/" << z.size() << endl;
+      if (verbose)
+        if (i % 10 == 0)
+          cout << i << "/" << z.size() << endl;
       string filename = z[i];
       // cout << filename<<endl;
-      int xda, yda, mva;
-      InfImgFile(filename, xda, yda, mva);
-
-      images.push_back(filename);
-      if (xda > xdim)
-        xdim = xda;
-      if (yda > ydim)
-        ydim = yda;
-      if (mva > vmax)
-        vmax = mva;
-
+      int xda = 0, yda = 0, mva = 0;
+      bool isImageFile = true;
+      try
+        {
+          InfImgFile(filename, xSize, ySize, maximalValue);
+        }
+      catch (IceException& ex)
+        {
+          // wenn kein Bild, dann könnte es Verzeichnis sein
+          isImageFile = false;
+        }
+      if (isImageFile)
+        {
+          images.push_back(filename);
+          if (xda > xSize)
+            xSize = xda;
+          if (yda > ySize)
+            ySize = yda;
+          if (mva > maximalValue)
+            maximalValue = mva;
+        }
     }
-
   z = images;
 }
 
-void average(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
+void average(const PixelHist& hist, ColorImage& sum)
 {
-  // mittelwert aktualisieren
-  vector<long int> csum(3);
-  vector<int> ct(3);
-  for (int y = 0; y < ydim; ++y)
-    for (int x = 0; x < xdim; ++x)
+  // mittelwert berechnen
+  array<long int, 3> csum;
+  array<int, 3> ct;
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
       {
         for (int c = 0; c < 3; ++c)
           {
             ct[c] = 0;
             csum[c] = 0;
-            for (int v = 0; v < vmax + 1; ++v)
+            for (int v = 0; v < maximalValue + 1; ++v)
               {
                 int cct = hist[y][x][v][c];
                 ct[c] += cct;
@@ -67,17 +81,17 @@ void average(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
       }
 }
 
-void min(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
+void min(const PixelHist& hist, ColorImage& sum)
 {
-  // mittelwert aktualisieren
+  // minimum
   vector<int> minval(3);
-  for (int y = 0; y < ydim; ++y)
-    for (int x = 0; x < xdim; ++x)
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
       {
         for (int c = 0; c < 3; ++c)
           {
             int v;
-            for (v = 0; v < vmax + 1 && hist[y][x][v][c] == 0 ; ++v)
+            for (v = 0; v < maximalValue + 1 && hist[y][x][v][c] == 0 ; ++v)
               /* nada*/;
             minval[c] = v;
           }
@@ -85,17 +99,17 @@ void min(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
       }
 }
 
-void max(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
+void max(const PixelHist& hist, ColorImage& sum)
 {
-  // mittelwert aktualisieren
+  // maximum
   vector<int> maxval(3);
-  for (int y = 0; y < ydim; ++y)
-    for (int x = 0; x < xdim; ++x)
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
       {
         for (int c = 0; c < 3; ++c)
           {
             int v;
-            for (v = vmax; v >= 0 && hist[y][x][v][c] == 0 ; --v)
+            for (v = maximalValue; v >= 0 && hist[y][x][v][c] == 0 ; --v)
               /* nada*/;
             maxval[c] = v;
           }
@@ -103,24 +117,24 @@ void max(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
       }
 }
 
-void median(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
+void median(const PixelHist& hist, ColorImage& sum)
 {
-  // mittelwert aktualisieren
+  // median
   vector<int> mval(3);
-  for (int y = 0; y < ydim; ++y)
-    for (int x = 0; x < xdim; ++x)
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
       {
         for (int c = 0; c < 3; ++c)
           {
             int ct = 0;
-            for (int v = 0; v < vmax + 1; ++v)
+            for (int v = 0; v < maximalValue + 1; ++v)
               {
                 int cct = hist[y][x][v][c];
                 ct += cct;
               }
             ct /= 2;
             int ctx = 0;
-            for (int v = 0; v < vmax + 1; ++v)
+            for (int v = 0; v < maximalValue + 1; ++v)
               {
                 int cct = hist[y][x][v][c];
                 int last = ctx;
@@ -133,17 +147,17 @@ void median(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
       }
 }
 
-void frequent(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
+void frequent(const PixelHist& hist, ColorImage& sum)
 {
-  // mittelwert aktualisieren
+  // häufigster wert
   vector<int> mval(3);
-  for (int y = 0; y < ydim; ++y)
-    for (int x = 0; x < xdim; ++x)
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
       {
         for (int c = 0; c < 3; ++c)
           {
             int maxcount = 0;
-            for (int v = 0; v < vmax + 1; ++v)
+            for (int v = 0; v < maximalValue + 1; ++v)
               {
                 int cct = hist[y][x][v][c];
                 if (cct > maxcount)
@@ -172,11 +186,13 @@ void frequent(const vector<vector<matrix<int>>>& hist, ColorImage& sum)
  opt2: mode = A - Maximum
  opt2: mode = I - Interaktive Auswahl
  opt: p, preprocess, char, preprocess, Vorverarbeitung, '-'
+ opt2: 'h' - Histogramm-Egalisierung
  opt: P, postprocess, char, postprocess, Nachbearbeitung, '-'
- opt: o, outfile, string, outfile, Dateiname für Ausgabe des Bildes, "gemitteltesBild.jpg"
+ opt2: 'h' - Histogramm-Egalisierung
+ opt: o, outfile, string, outfile, Dateiname für Ausgabe des Bildes, "averaged.jpg"
  opt: d, display, void, display, Anzeige Mittelung, false
  opt: D, displayrate, int, displayrate, Aktualisiere Anzeige nach n Bildern, 0
- opt: v, verbose, void, verbose, Anzeige der Abarbeitung, false
+ opt: v, verbose, Void, verbose, Anzeige der Abarbeitung, false
  opt: b, batch, void, batch, Kein Warten für Batchbearbeitung,false
  opt: h, help, usage, help, Hilfe
 AppGen*/
@@ -205,7 +221,7 @@ int main(int argc, char* argv[])
   bool isImageFile = true;
   try
     {
-      InfImgFile(dir, xdim, ydim, vmax);
+      InfImgFile(dir, xSize, ySize, maximalValue);
     }
   catch (IceException& ex)
     {
@@ -247,10 +263,10 @@ int main(int argc, char* argv[])
     }
 
   ColorImage src;
-  src.create(xdim, ydim, vmax);
+  src.create(xSize, ySize, maximalValue);
 
   ColorImage sum;
-  sum.create(xdim, ydim, vmax);
+  sum.create(xSize, ySize, maximalValue);
   Visual resultDisplay = nullptr;
 
   if (display)
@@ -259,19 +275,25 @@ int main(int argc, char* argv[])
       resultDisplay = Show(ON, sum, "Mittel");
     }
 
-  int maxcount = files.size();
+  //  vector<vector<matrix<int> > > hist(ySize);
+  PixelHist  hist(ySize);
 
-  //  vector<vector<matrix<int> > > hist(ydim);
-  vector<vector<matrix<int> > >  hist(ydim);
-  for (int y = 0; y < ydim; ++y)
+  RGB nullArray = {0, 0, 0};
+
+  for (int y = 0; y < ySize; ++y)
     {
-      hist[y].resize(xdim);
-      for (int x = 0; x < xdim; ++x)
+      hist[y].resize(xSize);
+      for (int x = 0; x < xSize; ++x)
         {
-          hist[y][x] = matrix<int>(vmax + 1, 3);
-          hist[y][x].set(0);
+          hist[y][x].resize(maximalValue + 1, nullArray);
         }
     }
+
+  for (int y = 0; y < ySize; y++)
+    for (int x = 0; x < xSize; x++)
+      for (int v = 0; v < maximalValue; v++)
+        for (int c = 0; c < 3; c++)
+          hist[y][x][v][c] = 0;
 
   int displaycounter = 0;
 
@@ -279,21 +301,27 @@ int main(int argc, char* argv[])
     {
       string filename = files[i];
       if (verbose)
-        cout << i << "/" << files.size() << ": " << filename << endl;
+        cout << (i + 1) << "/" << files.size() << ": " << filename << endl;
+
       src.read(filename);
+
       switch (preprocess)
         {
         case 'h':
           HistogramEqualization(src, src);
           break;
         }
+
       WindowWalker w(src.redImage());
       for (w.init(); !w.ready(); w.next())
         {
           ColorValue cv = src.getPixel(w);
-          for (int i = 0; i < 3; ++i)
-            hist[w.y][w.x][cv[i]][i]++;
+
+          hist[w.y][w.x][cv[0]][0]++;
+          hist[w.y][w.x][cv[1]][1]++;
+          hist[w.y][w.x][cv[2]][2]++;
         }
+
       if (display)
         {
           ++displaycounter;
@@ -324,6 +352,7 @@ int main(int argc, char* argv[])
                   HistogramEqualization(sum, sum);
                   break;
                 }
+              displaycounter = 0;
             }
         }
     }
@@ -380,7 +409,27 @@ int main(int argc, char* argv[])
               break;
 
             }
-          Print("Mode: " + string(&mode) + "\n");
+        }
+      if (mode != 'q')
+        {
+          switch (mode)
+            {
+            case 'a':
+              Print("Mode: a = average\n");
+              break;
+            case 'A':
+              Print("Mode: A = maximum\n");
+              break;
+            case 'm':
+              Print("Mode: m = median\n");
+              break;
+            case 'f':
+              Print("Mode: f = most frequent\n");
+              break;
+            case 'i':
+              Print("Mode: i = minimum\n");
+              break;
+            }
         }
     }
   while (interactive && mode != 'q');
@@ -396,5 +445,7 @@ int main(int argc, char* argv[])
       cin.get();
     }
 
+  if (resultDisplay)
+    Show(OFF, resultDisplay);
   return 1;
 }

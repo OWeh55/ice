@@ -10,7 +10,7 @@
 int main(int argc, char** argv)
 {
   ColorImage img;
-  img.read("input/bug.jpg");
+  img.read("xxx.jpg");
   Show(ON, img);
   Display(ON);
 

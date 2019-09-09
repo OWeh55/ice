@@ -104,8 +104,8 @@ int main(int argc, char** argv)
         }
 
       itr.findNeighbors(ClassSample(1, vector<double> {double(x), double(y)}),
-			30, samples);
-      
+                        30, samples);
+
       for (unsigned int i = 0; i < samples.size(); ++i)
         {
           img.setPixel((*samples[i])[0], (*samples[i])[1], 1);
