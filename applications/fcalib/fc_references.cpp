@@ -15,17 +15,17 @@
 using namespace std;
 using namespace ice;
 
-bool GetReferencePoints(const Image &img, const Image &mrk, 
-			const Image &segmented_img,
-                        vector<Point> &pointList, vector<Point> &referenceList,
-                        Trafo &homography, Distortion &dist)
+bool GetReferencePoints(const Image& img, const Image& mrk,
+                        const Image& segmented_img,
+                        vector<Point>& pointList, vector<Point>& referenceList,
+                        Trafo& homography, Distortion& dist)
 {
   clearImg(mrk);
 
   // grobe Lageschätzung
   if (!findPoly(segmented_img, mrk, homography))
     {
-      cout << "findPoly failed"<<endl;
+      cout << "findPoly failed" << endl;
       return false;
     }
 
@@ -35,7 +35,7 @@ bool GetReferencePoints(const Image &img, const Image &mrk,
     vector<Point> ppointList;
     for (int i = 0; i < pattern_corners; i++)
       ppointList.push_back(Point(pattern_x[i], pattern_y[i]));
-    Transform(homography, ppointList);
+    transform(homography, ppointList);
     Polygon tpoly(ppointList);
     draw(tpoly, mrk, 1);
   }
@@ -52,7 +52,7 @@ bool GetReferencePoints(const Image &img, const Image &mrk,
           if (Verbose & v_trafo)
             {
               cout  << dist.toString() << endl;
-              cout << homography.Tmatrix() << endl;
+              //!!!!              cout << homography.getMatrix() << endl;
             }
           clearImg(mrk);
 

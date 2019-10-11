@@ -10,9 +10,9 @@ public:
   static const char extdel = '.';
 
   FileName(std::string filename);
-  FileName(const std::string &path,
-           const std::string &name,
-           const std::string &ext);
+  FileName(const std::string& path,
+           const std::string& name,
+           const std::string& ext);
 
   std::string getFilename() const;
 
@@ -29,15 +29,15 @@ public:
     return extension;
   }
 
-  void getName(const std::string &n)
+  void getName(const std::string& n)
   {
     name = n;
   }
-  void getPath(const std::string &p)
+  void getPath(const std::string& p)
   {
     path = p;
   }
-  void getExtension(const std::string &x)
+  void getExtension(const std::string& x)
   {
     extension = x;
   }

@@ -18,8 +18,8 @@
 using namespace std;
 using namespace ice;
 
-void generatePointlistWithIndexShift(const vector<Point> &src,
-                                     int shift, vector<Point> &dst)
+void generatePointlistWithIndexShift(const vector<Point>& src,
+                                     int shift, vector<Point>& dst)
 {
   int npoint = src.size();
   dst.resize(npoint);
@@ -29,7 +29,7 @@ void generatePointlistWithIndexShift(const vector<Point> &src,
     }
 }
 
-double PointlistError(const vector<Point> &pl1, const vector<Point> &pl2, double minerror)
+double PointlistError(const vector<Point>& pl1, const vector<Point>& pl2, double minerror)
 {
   int npoints = pl1.size();
   double errorsum = 0.0;
@@ -40,8 +40,8 @@ double PointlistError(const vector<Point> &pl1, const vector<Point> &pl2, double
   return errorsum;
 }
 
-bool findPoly(const Image &oimg, const Image &mark,
-              Trafo &tr)
+bool findPoly(const Image& oimg, const Image& mark,
+              Trafo& tr)
 {
   bool polyfound = false;
   IPoint ps(0, 0);
@@ -108,10 +108,11 @@ bool findPoly(const Image &oimg, const Image &mark,
 
                       generatePointlistWithIndexShift(fitted.PointList(), offset, pl_img);
 
-                      Trafo ret = MatchPointlists(pattern_pl, pl_img, TRM_PROJECTIVE);
+                      // Trafo ret = MatchPointlists(pattern_pl, pl_img, TRM_PROJECTIVE);
+                      Trafo ret = matchPointListsProjective(pattern_pl, pl_img);
 
                       vector<Point> pl_corr = pattern_pl;
-                      Transform(ret, pl_corr);
+                      transform(ret, pl_corr);
 
                       double error = PointlistError(pl_corr, pl_img, minerror);
 
@@ -151,10 +152,10 @@ bool findPoly(const Image &oimg, const Image &mark,
                       if (Verbose & v_step)
                         cout << "Polygon found" << endl;
                       generatePointlistWithIndexShift(fitted.PointList(), minoffset, pl_img);
-                      Trafo otr = MatchPointlists(pattern_pl, pl_img, TRM_PROJECTIVE);
+                      Trafo otr = matchPointListsProjective(pattern_pl, pl_img);
                       if (Verbose & v_trafo)
                         {
-                          cout << otr.Tmatrix() << endl;
+                          //!!! cout << otr.getMatrix() << endl;
                         }
                       tr = otr;
                     }

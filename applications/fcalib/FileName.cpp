@@ -26,9 +26,9 @@ FileName::FileName(std::string n)
   normalize();
 }
 
-FileName::FileName(const std::string &path,
-                   const std::string &name,
-                   const std::string &ext): path(path), name(name), extension(ext)
+FileName::FileName(const std::string& path,
+                   const std::string& name,
+                   const std::string& ext): path(path), name(name), extension(ext)
 {
   normalize();
 }
@@ -82,7 +82,7 @@ void FileName::cleanExtension()
 
 using namespace std;
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   try
     {
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
           cout << fn.getFilename() << endl;
         }
     }
-  catch (const char *msg)
+  catch (const char* msg)
     {
       cout << "exception: " << msg << endl;
     }

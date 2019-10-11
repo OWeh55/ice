@@ -15,10 +15,10 @@ using namespace ice;
 //========= Kalibrierung =============
 class KalibFunk: public LMFunctor
 {
-  const vector<Matrix> &pl;
+  const vector<Matrix>& pl;
 public:
-  KalibFunk(const vector<Matrix> &pls): pl(pls) {};
-  int operator()(const Vector &xv, Vector &result) const
+  KalibFunk(const vector<Matrix>& pls): pl(pls) {};
+  int operator()(const Vector& xv, Vector& result) const
   {
     int anz = pl.size();
 //  cout << anz << " Kameras" << endl;
@@ -56,7 +56,7 @@ public:
   }
 };
 
-int KalibFehler(const Vector &xv, Vector &result) // Fehlerfunktion (von LMDif)
+int KalibFehler(const Vector& xv, Vector& result) // Fehlerfunktion (von LMDif)
 {
   int anz = RoundInt(xv[0]);
 //  cout << anz << " Kameras" << endl;
@@ -93,7 +93,7 @@ int KalibFehler(const Vector &xv, Vector &result) // Fehlerfunktion (von LMDif)
   return 1;
 }
 
-int DoKalibO(const vector<Matrix> &pl, int u0, int v0)
+int DoKalibO(const vector<Matrix>& pl, int u0, int v0)
 {
   if (pl.size() < 3)
     {
@@ -189,7 +189,7 @@ int DoKalibO(const vector<Matrix> &pl, int u0, int v0)
   return OK;
 }
 
-int DoKalib(const vector<Matrix> &pl)
+int DoKalib(const vector<Matrix>& pl)
 {
   if (pl.size() < 3)
     {

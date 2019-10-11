@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <image.h>
 #include <geo.h>
 #include <Distortion.h>
 #include <Distortion1.h>
@@ -38,9 +39,9 @@ const int exif_user = 3;
 
 int exifmode = exif_file;
 
-void NormalizeDistortion(double &x0, double &y0, double &d2, double &d4, int dimx, int dimy)
+void NormalizeDistortion(double& x0, double& y0, double& d2, double& d4, int dimx, int dimy)
 {
-  double refsize = Max(dimx, dimy) / 2.0;
+  double refsize = max(dimx, dimy) / 2.0;
   double refsize2 = refsize * refsize;
   double refsize4 = refsize2 * refsize2;
 
@@ -50,7 +51,7 @@ void NormalizeDistortion(double &x0, double &y0, double &d2, double &d4, int dim
   d4 = d4 * refsize4;
 }
 
-void Print(const Distortion1 &distortion, int dimx, int dimy)
+void Print(const Distortion1& distortion, int dimx, int dimy)
 {
   double x0 = distortion.X0();
   double y0 = distortion.Y0();
@@ -67,7 +68,7 @@ void Print(const Distortion1 &distortion, int dimx, int dimy)
   cout << "  d2: " << d2 << "  d4: " << d4 << endl << endl;
 }
 
-void Print(const Matrix &m, int dimx, int dimy)
+void Print(const Matrix& m, int dimx, int dimy)
 {
   cout << "Bildgröße:     " << dimx << " x " << dimy << endl;
   double f = m[0][0];
@@ -84,7 +85,7 @@ void Print(const Matrix &m, int dimx, int dimy)
   cout << Degree(atan2(sqrt(dimx * dimx + dimy * dimy) / 2, f) * 2) << "° (diag)" << endl;
 }
 
-void usage(const string &pname)
+void usage(const string& pname)
 {
   cout << "Kalibrierung mit 2D-Muster" << endl << endl;
   cout << "Aufruf" << "  " << pname << " [options] <filename> .." << endl << endl;
@@ -126,7 +127,7 @@ void usage(const string &pname)
   exit(0);
 }
 
-void error(const string &pname, const string &msg)
+void error(const string& pname, const string& msg)
 {
   string msg1 = "!!! Fehler - " + msg + "  !!!";
   int lng = msg1.length();
@@ -138,7 +139,7 @@ void error(const string &pname, const string &msg)
 }
 
 //========== Main =====================
-int Main(int argc, char *argv[])
+int main(int argc, char** argv)
 {
   vector<vector<Point> > pointList;
   vector<vector<Point> > referenceList;
@@ -265,48 +266,48 @@ int Main(int argc, char *argv[])
       string fileexif;
       double filefocallength;
       if (exifmode == exif_file)
-	{
-	  if (!getExifSig(fn, suffix, fileexif, filefocallength))
-	    {
-	      error(argv[0], "EXIF-Daten nicht vorhanden");
-	    }
+        {
+          if (!getExifSig(fn, suffix, fileexif, filefocallength))
+            {
+              error(argv[0], "EXIF-Daten nicht vorhanden");
+            }
 
-	  if (exif.empty()) // erste Datei
-	    {
-	      exif = fileexif;
-	      focallength = filefocallength;
-	    }
+          if (exif.empty()) // erste Datei
+            {
+              exif = fileexif;
+              focallength = filefocallength;
+            }
 
-	  if (fileexif != exif || filefocallength != focallength)
-	    {
-	      error(argv[0], "Unterschiedliche EXIF-Daten");
-	    }
-	}
+          if (fileexif != exif || filefocallength != focallength)
+            {
+              error(argv[0], "Unterschiedliche EXIF-Daten");
+            }
+        }
 
       if (dimx < 0)
-	{
-	  // erstes Bild
-	  dimx = sx;
-	  dimy = sy;
+        {
+          // erstes Bild
+          dimx = sx;
+          dimy = sy;
 
-	  img = NewImg(dimx, dimy, 255);
-	  mrk = NewImg(dimx, dimy, 7);
-	  segmented_img = NewImg(dimx, dimy, 4);
-	  if (display)
-	    {
-	      Show(OVERLAY, img, mrk);
-	      Show(OVERLAY, img, segmented_img);
-	    }
+          img = NewImg(dimx, dimy, 255);
+          mrk = NewImg(dimx, dimy, 7);
+          segmented_img = NewImg(dimx, dimy, 4);
+          if (display)
+            {
+              Show(OVERLAY, img, mrk);
+              Show(OVERLAY, img, segmented_img);
+            }
 
-	}
+        }
 
       if (dimx != sx || dimy != sy)
-	error(argv[0], "Bilder haben unterschiedliche Größen");
+        error(argv[0], "Bilder haben unterschiedliche Größen");
 
       // Load image
       ReadImg(fn, img);
       if (smear > 0)
-	smearImg(img, img, smear);
+        smearImg(img, img, smear);
       // Segmentation
       LocalSeg(img, segmented_img, segsize, seglevel);
 
@@ -317,52 +318,36 @@ int Main(int argc, char *argv[])
       distList.push_back(Distortion1());
 
       if (GetReferencePoints(img, mrk, segmented_img,
-			     pointList[images], referenceList[images],
-			     trafoList[images], distList[images]) &&
-	  (int)referenceList[images].size() >= minreferences)
-	{
+                             pointList[images], referenceList[images],
+                             trafoList[images], distList[images]) &&
+          (int)referenceList[images].size() >= minreferences)
+        {
 #if 0
-	  Image rest = NewImg(img);
-	  Show(ON, rest);
-	  distList[images].RectImg(img, rest, INTERPOL);
-	  GetChar();
+          Image rest = NewImg(img);
+          Show(ON, rest);
+          distList[images].RectImg(img, rest, INTERPOL);
+          GetChar();
 #endif
-<<<<<<< fcalib.cpp
-	  images++;
-	  if (Verbose & v_step)
-	    cout << "OK" << endl;
-	}
-      else
-	{
-	  pointList.pop_back();// Liste verwerfen
-	  referenceList.pop_back();// Liste verwerfen
-	  trafoList.pop_back();// Liste verwerfen
-	  distList.pop_back();// Liste verwerfen
-	  if (!(Verbose & v_step))
-	    cout << fn ;
-	  cout << " nicht nutzbar!" << endl;
 
-	}
+          images++;
+          if (Verbose & v_step)
+            cout << "OK" << endl;
+        }
+      else
+        {
+          pointList.pop_back();// Liste verwerfen
+          referenceList.pop_back();// Liste verwerfen
+          trafoList.pop_back();// Liste verwerfen
+          distList.pop_back();// Liste verwerfen
+          if (!(Verbose & v_step))
+            cout << fn ;
+          cout << " nicht nutzbar!" << endl;
+
+        }
       if (wait > 0)
-	GetChar();
+        GetChar();
     }
   optind++;
-=======
-              images++;
-              if (Verbose & v_step)
-                cout << "OK" << endl;
-            }
-          else
-            {
-              pointList.pop_back();// Liste verwerfen
-              referenceList.pop_back();// Liste verwerfen
-              trafoList.pop_back();// Liste verwerfen
-              distList.pop_back();// Liste verwerfen
-              if ((Verbose & v_step))
-                cout << fn ;
-              cout << " nicht nutzbar!" << endl;
->>>>>>> 1.11
-
 
   Distortion1 distortion;
   Matrix m(3, 3);

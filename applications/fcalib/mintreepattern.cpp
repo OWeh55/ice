@@ -4,7 +4,7 @@
 const int m_free = 0;
 const int m_marker = 255;
 
-void usage(const string &pname)
+void usage(const string& pname)
 {
   cout << pname << " - Kalibriermustererzeugung" << endl << endl;
   cout << "Aufruf" << "  " << pname << " [<options>]*" << endl << endl;
@@ -34,40 +34,40 @@ void usage(const string &pname)
   exit(0);
 }
 
-void error(const string &pname, const string &msg)
+void error(const string& pname, const string& msg)
 {
   cout << "Error: " << msg << endl << endl;
   usage(pname);
 }
 
-void setMarkerA(Image &lab, int x, int y, int val)
+void setMarkerA(Image& lab, int x, int y, int val)
 {
   if (lab.inside(x - 1, y - 1) && lab.inside(x + 1, y + 1))
     {
       PutVal(lab, x - 1, y - 1, val);
-      PutVal(lab, x  , y - 1, val);
+      PutVal(lab, x, y - 1, val);
       PutVal(lab, x + 1, y - 1, val);
       PutVal(lab, x - 1, y, val);
       PutVal(lab, x + 1, y, val);
       PutVal(lab, x - 1, y + 1, val);
-      PutVal(lab, x  , y + 1, val);
+      PutVal(lab, x, y + 1, val);
       PutVal(lab, x + 1, y + 1, val);
     }
 }
 
-void setMarkerB(Image &lab, int x, int y, int val)
+void setMarkerB(Image& lab, int x, int y, int val)
 {
   if (lab.inside(x - 1, y - 1) && lab.inside(x, y))
     {
       PutVal(lab, x - 1, y, val);
-      PutVal(lab, x  , y - 1, val);
-      PutVal(lab, x , y + 1 , val);
-      PutVal(lab, x , y, val);
-      PutVal(lab, x + 1 , y, val);
+      PutVal(lab, x, y - 1, val);
+      PutVal(lab, x, y + 1, val);
+      PutVal(lab, x, y, val);
+      PutVal(lab, x + 1, y, val);
     }
 }
 
-Polygon getPoly(const Contur &c)
+Polygon getPoly(const Contur& c)
 {
   Polygon poly;
   LimitingPolygon(c, poly);
@@ -76,7 +76,7 @@ Polygon getPoly(const Contur &c)
   return rpoly;
 }
 
-void WritePoly(ofstream &cf, const Polygon &rpoly)
+void WritePoly(ofstream& cf, const Polygon& rpoly)
 {
   cf << "const int pattern_corners=" << rpoly.size() << ";" << endl;
   cf << "const double pattern_x[pattern_corners]={" << endl << rpoly[0].x;
@@ -89,7 +89,7 @@ void WritePoly(ofstream &cf, const Polygon &rpoly)
   cf << "};" << endl;
 }
 
-void WriteGrating(ofstream &cf,
+void WriteGrating(ofstream& cf,
                   int cols, double x0, double dx,
                   int rows, double y0, double dy)
 {
@@ -102,7 +102,7 @@ void WriteGrating(ofstream &cf,
   cf << "const double pattern_dy=" << dy  << ";" << endl;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int rseed = 12345;
 

@@ -8,10 +8,10 @@
 
 using namespace std;
 
-string exiftool(const string &fn, const string para)
+string exiftool(const string& fn, const string para)
 {
   string cmd = "exiftool " + para + " " + fn;
-  FILE *p = popen(cmd.c_str(), "r");
+  FILE* p = popen(cmd.c_str(), "r");
   char res[3000];
   if (fgets(res, 2999, p) != NULL)
     {
@@ -31,8 +31,8 @@ string exiftool(const string &fn, const string para)
     return "";
 }
 
-bool getExifSig(const string &file, const string &modifier,
-                string &exif, double &focallength)
+bool getExifSig(const string& file, const string& modifier,
+                string& exif, double& focallength)
 {
   string FocalLength = exiftool(file, "-m -p '$focalLength'");
 //  cout << exif.FocalLength << endl;
@@ -65,8 +65,8 @@ bool getExifSig(const string &file, const string &modifier,
   return !(FocalLength.empty() && Model.empty() && Lens.empty() && Maker.empty());
 }
 
-bool getExifSig(const string &file,
-                string &exif, double &focallength)
+bool getExifSig(const string& file,
+                string& exif, double& focallength)
 {
   return getExifSig(file, exif, focallength);
 }

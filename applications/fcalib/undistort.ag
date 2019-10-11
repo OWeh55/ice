@@ -13,29 +13,29 @@
 
 /*AppGen
   %%  Beschreibung des Programmes:
-  prog: Entzeichnung für Bilder
+  prog: correct distortion in images
   %% Beschreibung Parameter
   % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
-  para: file, required, filelist, imgfile, Quelldateien,
+  para: file, required, filelist, imgfile, source file[s],
   %% Beschreibung der Optionen
   % kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
-  opt: E, entry, string, kalibdata, manuelle Auswahl der Kalibrierungsdaten,
-  opt: X, extra, string, exifextra, Zusatz zu EXIF-Daten
-  opt2: Kennung für externes Zubehör/Adapter, die nicht in EXIF-Daten eingetragen sind
-  opt: k, keepimagesize, Void, oldsize, Alte Bildgröße beibehalten
-  opt: D, destination, string, destpath, Zielverzeichnis, ""
-  opt: w, wait,  Void,     wait, Warten nach Berechnung,  false
-  opt: v, verbose,  Void,   verbose,  Ausführliche Meldungen,  false
-  opt: d, display,  Void,   display,  Darstellung der Bilder,  false
-  opt: p, profiles, String, profiles, Datei mit Verzeichnungsdaten, ./dist.txt
-  opt: h, help,   usage,   ,    Hilfe
+  opt: E, entry, string, kalibdata, manual selection of calibration set,
+  opt: X, extra, string, exifextra, addition to exif data
+  opt2: Identifier for external accessories not included in EXIF data
+  opt: k, keepimagesize, Void, oldsize, Keep image size
+  opt: D, destination, string, destpath, destination path, ""
+  opt: w, wait,  Void,     wait, wait before exit,  false
+  opt: v, verbose,  Void,   verbose, be verbose,  false
+  opt: d, display,  Void,   display, show images,  false
+  opt: p, profiles, String, profiles, file with distortion data, ./dist.txt
+  opt: h, help,   usage,   , help
 AppGen*/
 
 /*AppGen:Global*/
 
 Distortion1 di;
 
-void Wait(const Image &img)
+void Wait(const Image& img)
 {
   int xc, yc;
   if (wait)
@@ -48,10 +48,10 @@ void Wait(const Image &img)
     }
 }
 
-void error(const string &msg);
+void error(const string& msg);
 
-void copyRGB(const Image &r1, const Image &g1, const Image &b1, 
-	     Image &r2, Image &g2, Image &b2)
+void copyRGB(const Image& r1, const Image& g1, const Image& b1,
+             Image& r2, Image& g2, Image& b2)
 {
   for (int y = 0; y < r2->ysize; y++)
     for (int x = 0; x < r2->xsize; x++)
@@ -62,8 +62,8 @@ void copyRGB(const Image &r1, const Image &g1, const Image &b1,
       }
 }
 
-bool findProfile(const string &exifsig, double focallength,
-                 double &u0, double &v0, double &d2, double &d4)
+bool findProfile(const string& exifsig, double focallength,
+                 double& u0, double& v0, double& d2, double& d4)
 {
   ifstream ci(profiles.c_str());
 
@@ -140,8 +140,8 @@ bool findProfile(const string &exifsig, double focallength,
   return profileFound;
 }
 
-int rectify(const FileName &source, const FileName &dest,
-            string exifsig, const string &exifextra)
+int rectify(const FileName& source, const FileName& dest,
+            string exifsig, const string& exifextra)
 {
   double focallength = 0.0;
   if (exifsig.empty())
@@ -196,11 +196,14 @@ int rectify(const FileName &source, const FileName &dest,
   if (verbose)
     cout << "Lege Bilder an" << endl;
 
-  Image ro; ro.create(dimx, dimy, gm);
-  Image go; go.create(dimx, dimy, gm);
-  Image bo; bo.create(dimx, dimy, gm);
+  Image ro;
+  ro.create(dimx, dimy, gm);
+  Image go;
+  go.create(dimx, dimy, gm);
+  Image bo;
+  bo.create(dimx, dimy, gm);
 
-  double refsize = Max(dimx, dimy) / 2.0;
+  double refsize = max(dimx, dimy) / 2.0;
   double refsize2 = refsize * refsize;
   double refsize4 = refsize2 * refsize2;
 
@@ -226,7 +229,7 @@ int rectify(const FileName &source, const FileName &dest,
         for (int xi = 0; xi < dimx; xi++)
           {
             double x, y;
-            dist.Rect(xi, yi, x, y);
+            dist.rectify(xi, yi, x, y);
             if (x < minx) minx = x;
             if (x > maxx) maxx = x;
             if (y < miny) miny = y;
@@ -263,9 +266,12 @@ int rectify(const FileName &source, const FileName &dest,
       miny = 0;
     }
 
-  Image re; re.create(newdimx, newdimy, gm);
-  Image ge; ge.create(newdimx, newdimy, gm);
-  Image be; be.create(newdimx, newdimy, gm);
+  Image re;
+  re.create(newdimx, newdimy, gm);
+  Image ge;
+  ge.create(newdimx, newdimy, gm);
+  Image be;
+  be.create(newdimx, newdimy, gm);
 
   if (verbose)
     cout << "Lade " << source.getFilename() << endl;
@@ -287,7 +293,7 @@ int rectify(const FileName &source, const FileName &dest,
       {
         double xs, ys;
 
-        dist.Distort(x + minx, y + miny, xs, ys);
+        dist.distort(x + minx, y + miny, xs, ys);
 
         re.setPixel(x, y, ro.getPixelInterpol(xs, ys));
         ge.setPixel(x, y, go.getPixelInterpol(xs, ys));
@@ -310,7 +316,7 @@ int rectify(const FileName &source, const FileName &dest,
 }
 
 /*AppGen:Main*/
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   /*AppGen:MainEnd*/
   while (!imgfile.empty())
@@ -319,9 +325,9 @@ int main(int argc, char *argv[])
 
       imgfile.pop_back();
 
-      string path=destpath;
+      string path = destpath;
       if (path.empty())
-	path=infile.getPath();
+        path = infile.getPath();
 
       FileName outfile(path, infile.getName() + ".rect", infile.getExtension());
 

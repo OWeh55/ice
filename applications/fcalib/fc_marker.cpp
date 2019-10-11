@@ -18,7 +18,7 @@
 using namespace std;
 using namespace ice;
 
-bool FindMarker(const Image &lseg_image, const Image &marker_image, Point &p)
+bool FindMarker(const Image& lseg_image, const Image& marker_image, Point& p)
 {
   //  cout << p.x << "," << p.y << endl;
   Point start(p);
@@ -90,9 +90,9 @@ bool FindMarker(const Image &lseg_image, const Image &marker_image, Point &p)
   return (p - start).Length() < 10.;
 }
 
-bool MarkerSearch(const Image &oimg, const Image &mark,
-                  Trafo &tr, Distortion &dist,
-                  vector<Point> &markers, vector<Point> &reference)
+bool MarkerSearch(const Image& oimg, const Image& mark,
+                  Trafo& tr, Distortion& dist,
+                  vector<Point>& markers, vector<Point>& reference)
 {
   int nmarkers = 0;
   int good_markers = 0;
@@ -108,8 +108,8 @@ bool MarkerSearch(const Image &oimg, const Image &mark,
         nmarkers++;
         Point reference_point(pattern_x0 + x * pattern_dx, pattern_y0 + y * pattern_dy);
         Point estimated_point(reference_point);
-        Transform(tr, estimated_point);
-        estimated_point = dist.Distort(estimated_point);
+        transform(tr, estimated_point);
+        estimated_point = dist.distort(estimated_point);
         if (Inside(oimg, IPoint(RoundInt(estimated_point.x), RoundInt(estimated_point.y))))
           {
             Point found_point(estimated_point);

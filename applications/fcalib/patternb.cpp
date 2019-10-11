@@ -1,7 +1,7 @@
 #include <image.h>
 #include <fstream>
 
-void usage(const string &pname)
+void usage(const string& pname)
 {
   cout << pname << " - Kalibriermustererzeugung" << endl << endl;
   cout << "Aufruf" << "  " << pname << " [<options>]*" << endl << endl;
@@ -15,7 +15,7 @@ void usage(const string &pname)
 
   cout << "-x         Zahl der Marker in X-Richtung" << endl;
   cout << "-y         Zahl der Marker in Y-Richtung" << endl;
-  cout << "-f         Vergroesserungsfaktor fuer bildliche Darstellung (default: 17)" << endl;
+  cout << "-f         Vergroesserungsfaktor fuer bildliche Darstellung (default: 12)" << endl;
   cout << "-r n       n Lochreihen als Rand" << endl;
   cout << "-p n       weißen Rand entsprechend n Reihen ergänzen" << endl;
 
@@ -27,13 +27,13 @@ void usage(const string &pname)
   exit(0);
 }
 
-void error(const string &pname, const string &msg)
+void error(const string& pname, const string& msg)
 {
   cout << "Error: " << msg << endl << endl;
   usage(pname);
 }
 
-void setMarkerA(Image &lab, int x, int y)
+void setMarkerA(Image& lab, int x, int y)
 {
   int val = lab.maxval;
   for (int xo = -1; xo < 2; ++xo)
@@ -44,7 +44,7 @@ void setMarkerA(Image &lab, int x, int y)
   PutVal(lab, x, y, 0);
 }
 
-void WritePoly(ofstream &cf, int x1, int y1, int x2, int y2, int x3, int y3)
+void WritePoly(ofstream& cf, int x1, int y1, int x2, int y2, int x3, int y3)
 {
   cf << "const int pattern_corners = 6;" << endl;
   cf << "const double pattern_x[pattern_corners]={" << endl;
@@ -55,7 +55,7 @@ void WritePoly(ofstream &cf, int x1, int y1, int x2, int y2, int x3, int y3)
   cf << "};" << endl;
 }
 
-void WriteGrating(ofstream &cf,
+void WriteGrating(ofstream& cf,
                   int cols, double x0, double dx,
                   int rows, double y0, double dy)
 {
@@ -68,13 +68,13 @@ void WriteGrating(ofstream &cf,
   cf << "const double pattern_dy=" << dy  << ";" << endl;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   int padding = 1;
   int rand = 3;
 
-  int nCols = 30;
-  int nRows = 20;
+  int nCols = 32;
+  int nRows = 18;
   int display = false;
   int displayc = false;
   int wait = false;
@@ -139,6 +139,9 @@ int main(int argc, char **argv)
     --nRows;
   int ys = nRows * 4 + 1;
 
+  //  if (verbose)
+  cout << "image size: " << xs << " x " << ys << endl;
+
   if (wait)
     Alpha(ON);
 
@@ -174,6 +177,7 @@ int main(int argc, char **argv)
 
   Image out; // vergrößertes Bild mit Rand
   out.create((xs + padding * 4 * 2) * factor, (ys + padding * 4 * 2) * factor, 255);
+  cout << "image size: " << out.xsize << " x " << out.ysize << endl;
   out.set(0);
   Image big(out(Window(padding * 4 * factor, padding * 4 * factor, (padding * 4 + xs)*factor - 1, (padding * 4 + ys)*factor - 1)));
 
