@@ -1,0 +1,167 @@
+#include <getopt.h>
+
+#include <iostream>
+#include <fstream>
+
+#include <image.h>
+
+/* AppGen:Global  */
+
+void writeMarker(Image& pat, int x, int y, int msize, bool black)
+{
+  int x1 = x;
+  int y1 = y;
+  int dd = msize / 8;
+  int x2 = x1 + msize - 1;
+  int y2 = y1 + msize - 1;
+  pat(Window(x1, y1, x2, y2)).set(black ? 255 : 0);
+  x1 += 2 * dd;
+  x2 -= 2 * dd;
+  y1 += 2 * dd;
+  y2 -= 2 * dd;
+  pat(Window(x1, y1, x2, y2)).set(255);
+  x1 += dd;
+  x2 -= dd;
+  y1 += dd;
+  y2 -= dd;
+  pat(Window(x1, y1, x2, y2)).set(0);
+}
+
+void WritePoly(ofstream& cf,
+               double x1, double x2,  double x3,
+               double y1, double y2, double y3)
+{
+  cf << "const int pattern_corners = 6;" << endl;
+  cf << "const double pattern_x[pattern_corners]={" << endl;
+  cf << x1 << "," << x3 << "," << x3 << "," << x2 << "," << x2 << "," << x1;
+  cf << "};" << endl;
+  cf << "const double pattern_y[pattern_corners]={" << endl;
+  cf << y1 << "," << y1 << "," << y2 << "," << y2 << "," << y3 << "," << y3;
+  cf << "};" << endl;
+}
+
+void WriteGrating(ofstream& cf,
+                  int cols, double x0, double dx,
+                  int rows, double y0, double dy)
+{
+  cf << "const int pattern_cols=" << cols << ";" << endl;
+  cf << "const double pattern_x0=" << x0  << ";" << endl;
+  cf << "const double pattern_dx=" << dx  << ";" << endl;
+
+  cf << "const int pattern_rows=" << rows  << ";" << endl;
+  cf << "const double pattern_y0=" << y0  << ";" << endl;
+  cf << "const double pattern_dy=" << dy  << ";" << endl;
+}
+
+/*AppGen
+  prog: Mittelung von Einzelbildern
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  % no parameter yet
+  %
+  opt: o, outfile, string, outfilename, Name of output image file, ""
+  opt: c, cheader, string, coutfilename, File for pattern parameter in C, ""
+  opt: X, width, int, xsize, Width of pattern image, 1920
+  opt: Y, height, int, ysize, Height of pattern image, 1080
+  opt: m, markercellsize, int, msize, Size of marker cell, 64
+  opt: d, display, void, display, Display image, false
+  opt: v, verbose, void, verbose, Be verbose, false
+  opt: h, help, usage, help, Hilfe
+AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char** argv)
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      if (msize < 8)
+        throw "marker to small";
+      if (msize % 8 != 0)
+        {
+          cout << "adjusting marker size to multiple of 8!" << endl;
+          msize = msize / 8 * 8;
+        }
+
+      int nCols = xsize / msize;
+      if (nCols < 4)
+        throw "to less markers (marker too big)";
+
+      nCols = nCols / 4 * 4;
+
+      int nRows = ysize / msize;
+      if (nRows < 4)
+        throw "to less markers (marker too big)";
+
+      nRows = nRows / 4 * 4;
+
+      int xOffset = (xsize - nCols * msize) / 2;
+      int yOffset = (ysize - nRows * msize) / 2;
+
+      if (verbose)
+        {
+          cout << "image size: " << xsize << " x " << ysize << endl;
+          cout << "marker size: " << msize << endl;
+          cout << "markers: " << nCols << " x " << nRows << endl;
+        }
+
+      Image pat;
+      pat.create(xsize, ysize, 255);
+
+      if (display)
+        Show(ON, pat, "pattern");
+
+      pat.set(0);
+
+      int ix1 = nCols / 4;
+      int ix2 = ix1 * 2;
+      int ix3 = ix1 * 3;
+
+      int iy1 = nRows / 4;
+      int iy2 = iy1 * 2;
+      int iy3 = iy1 * 3;
+
+      for (int iy = 0; iy < nRows; iy++)
+        {
+          int y = iy * msize + yOffset;
+          for (int ix = 0; ix < nCols; ix++)
+            {
+              int x = ix * msize + xOffset;
+              bool black = false;
+              if (iy >= iy1 && ix >= ix1 && ix < ix3 && iy < iy3)
+                {
+                  if (ix >= ix2 && iy >= iy2)
+                    black = false;
+                  else
+                    black = true;
+                }
+              writeMarker(pat, x, y, msize, black);
+            }
+        }
+
+      if (display)
+        {
+          GetChar();
+        }
+
+      if (!outfilename.empty())
+        WriteImg(pat, outfilename);
+
+      if (!coutfilename.empty())
+        {
+          ofstream cf(coutfilename.c_str());
+          WritePoly(cf, ix1 - 0.5, ix2 - 0.5, ix3 - 0.5, iy1 - 0.5, iy2 - 0.5, iy3 - 0.5);
+          WriteGrating(cf,
+                       nCols, 2.5, 4,
+                       nRows, 2.5, 4);
+        }
+
+      return OK;
+    }
+  catch (const char* msg)
+    {
+      cerr << "Exception: " << msg << endl;
+    }
+  return 1;
+}
+
