@@ -1187,7 +1187,7 @@ namespace ice
 
     int rc = LMDif(corners, 2 * n, LM_polygon, 15, inumber, 10000);
 
-    if (rc > 3)
+    if (rc > 4)
       {
         throw IceException(FNAME, "LMDif " + LMDifMessage(rc));
       }
