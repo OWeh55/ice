@@ -25,6 +25,6 @@
 
 namespace ice
 {
-  int Flip(const Image& img);
-  int Mirror(const Image& img);
+  void flip(const Image& img);
+  void mirror(const Image& img);
 }

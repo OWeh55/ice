@@ -23,7 +23,7 @@
 namespace ice
 {
 
-  int Mirror(const Image& img)
+  void mirror(const Image& img)
   {
     int xs = img->xsize;
     int ys = img->ysize;
@@ -33,15 +33,14 @@ namespace ice
       for (int x = 0; x < xs2; x++)
         {
           int x1 = xs - 1 - x;
-          int h = GetVal(img, x, y);
-          PutVal(img, x, y, GetVal(img, x1, y));
-          PutVal(img, x1, y, h);
+          int v1 = img.getPixel(x, y);
+          int v2 = img.getPixel(x1, y);
+          img.setPixel(x, y, v2);
+          img.setPixel(x1, y, v1);
         }
-
-    return OK;
   }
 
-  int Flip(const Image& img)
+  void flip(const Image& img)
   {
     int xs = img->xsize;
     int ys = img->ysize;
@@ -50,15 +49,13 @@ namespace ice
     for (int y = 0; y < ys2; y++)
       {
         int y1 = ys - 1 - y;
-
         for (int x = 0; x < xs; x++)
           {
-            int h = GetVal(img, x, y);
-            PutVal(img, x, y, GetVal(img, x, y1));
-            PutVal(img, x, y1, h);
+            int v1 = img.getPixel(x, y);
+            int v2 = img.getPixel(x, y1);
+            img.setPixel(x, y, v2);
+            img.setPixel(x, y1, v1);
           }
       }
-
-    return OK;
   }
 }
