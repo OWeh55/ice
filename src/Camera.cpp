@@ -16,7 +16,7 @@ using namespace std;
 // Konstruktoren
 namespace ice
 {
-  void Camera::newdist(int dtyp)
+  void Camera::newDistortion(int dtyp)
   {
     distortionType = dtyp;
 
@@ -35,12 +35,12 @@ namespace ice
         dist = new Distortion3();
         break;
       default:
-        throw IceException("Camera::newdist", "Wrong distortion type");
+        throw IceException("Camera::newDistortion", "Wrong distortion type");
         break;
       }
   }
 
-  void Camera::newdist(int dtyp, Distortion* d)
+  void Camera::newDistortion(int dtyp, Distortion* d)
   {
     distortionType = dtyp;
 
@@ -59,7 +59,7 @@ namespace ice
         dist = new Distortion3(*(Distortion3*)(d));
         break;
       default:
-        throw IceException("Camera::newdist", "Wrong distortion type");
+        throw IceException("Camera::newDistortion", "Wrong distortion type");
       }
   }
 
@@ -87,7 +87,7 @@ namespace ice
     alpha(0), beta(0), gamma(0),
     trValid(false)
   {
-    newdist(dtyp);
+    newDistortion(dtyp);
   }
 
   Camera::Camera(const Camera& c): f(c.f), a(c.a), s(c.s), u0(c.u0), v0(c.v0),
@@ -95,7 +95,7 @@ namespace ice
     alpha(c.alpha), beta(c.beta), gamma(c.gamma),
     trValid(false)
   {
-    newdist(c.distortionType, c.dist);
+    newDistortion(c.distortionType, c.dist);
   }
 
   void Camera::swap(Camera& c)
@@ -151,7 +151,7 @@ namespace ice
   }
 
 // create transformation from camera parameters
-  void Camera::create_trans() const
+  void Camera::createTrans() const
   {
     // must be called, before trafo tr is used
     // all methods, that change parameters, must
@@ -405,7 +405,7 @@ namespace ice
 
   Trafo& Camera::getTrafo() const
   {
-    create_trans();
+    createTrans();
     return tr;
   }
 
@@ -413,7 +413,7 @@ namespace ice
   Vector Camera::transform(const Vector& v) const
   {
     Vector vh(2);
-    create_trans();
+    createTrans();
 
     if (v.size() != 3)
       throw IceException(FNAME, M_WRONG_DIM);
@@ -426,7 +426,7 @@ namespace ice
 
   Point Camera::transform(const Vector3d& p) const
   {
-    create_trans();
+    createTrans();
     Point res;
     ice::transform(tr, p.x, p.y, p.z, res.x, res.y);
     if (dist != nullptr)
@@ -436,7 +436,7 @@ namespace ice
 
   void Camera::transform(double x, double y, double z, double& u, double& v) const
   {
-    create_trans();
+    createTrans();
     ice::transform(tr, x, y, z, u, v);
     dist->distort(u, v);
   }
@@ -446,7 +446,7 @@ namespace ice
   {
     try
       {
-        create_trans(); // Transformation erzeugen
+        createTrans(); // Transformation erzeugen
         Vector bpu(bp);
         if (dist != nullptr)
           dist->rectify(bpu[0], bpu[1]); // Unverzeichneter Bildpunkt

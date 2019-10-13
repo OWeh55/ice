@@ -58,9 +58,9 @@ namespace ice
     int distortionType;
     Distortion* dist;
 
-    virtual void create_trans() const; // parameters -> Trafo
-    virtual void newdist(int dtyp);
-    virtual void newdist(int dtyp, Distortion* d);
+    virtual void createTrans() const; // parameters -> Trafo
+    virtual void newDistortion(int dtyp);
+    virtual void newDistortion(int dtyp, Distortion* d);
     virtual void assign(const Distortion& d);
 
   public:
