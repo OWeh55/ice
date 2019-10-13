@@ -1,0 +1,371 @@
+#include <unistd.h>
+#include <image.h>
+#include <geo.h>
+#include <Distortion.h>
+#include <Distortion1.h>
+#include <picio.h>
+#include <lseg.h>
+#include <visual/screen.h>
+#include <visual/visual.h>
+#include <Camera.h>
+#include <filter.h>
+#include <selfcalib.h>
+
+#include <string>
+#include <vector>
+#include <fstream>
+
+#include "filelist.h"
+
+#include "pattern.inc"
+
+#include "fc_references.h"
+#include "exifsig.h"
+
+#include "fcalib.h"
+
+using namespace std;
+using namespace ice;
+
+/*AppGen:Global*/
+
+const int exif_file = 1;
+const int exif_ignore = 2;
+const int exif_user = 3;
+
+int exifmode = exif_file;
+
+int verboseSwitch = 0;
+int displaySwitch = 0;
+
+void NormalizeDistortion(double& x0, double& y0, double& d2, double& d4, int dimx, int dimy)
+{
+  double refsize = max(dimx, dimy) / 2.0;
+  double refsize2 = refsize * refsize;
+  double refsize4 = refsize2 * refsize2;
+
+  x0 = x0 / dimx;
+  y0 = y0 / dimy;
+  d2 = d2 * refsize2;
+  d4 = d4 * refsize4;
+}
+
+void Print(const Distortion1& distortion, int dimx, int dimy)
+{
+  double x0 = distortion.X0();
+  double y0 = distortion.Y0();
+  double d2 = distortion.D2();
+  double d4 = distortion.D4();
+  cout << "Verzeichnung              ";
+  cout << "x0: " << x0 << "  y0: " << y0;
+  cout << "  d2: " << d2 << "  d4: " << d4 << endl;
+
+  NormalizeDistortion(x0, y0, d2, d4, dimx, dimy);
+
+  cout << "Verzeichnung normalisiert " ;
+  cout << "x0: " << x0 << "  y0: " << y0;
+  cout << "  d2: " << d2 << "  d4: " << d4 << endl << endl;
+}
+
+void Print(const Matrix& m, int dimx, int dimy)
+{
+  cout << "Bildgröße:     " << dimx << " x " << dimy << endl;
+  double f = m[0][0];
+  cout << "Brennweite  f: " << f << endl;
+  cout << "Anisotropie a: " << m[1][1] / m[0][0] << endl;
+  cout << "Scherung    s: " << m[0][1] / m[0][0] << endl;
+  cout << "Hauptpunkt u0: " << m[0][2] << endl;
+  cout << "           v0: " << m[1][2] << endl << endl;
+
+  cout << "Brennweite (KB äquivalent): " << f * 36 / dimx << " mm" <<  endl;
+  cout << "Bildwinkel:" << endl;
+  cout << Degree(atan2(dimx / 2, f) * 2) << "° (x)" << endl;
+  cout << Degree(atan2(dimy / 2, f) * 2) << "° (y)" << endl;
+  cout << Degree(atan2(sqrt(dimx * dimx + dimy * dimy) / 2, f) * 2) << "° (diag)" << endl;
+}
+
+/*AppGen
+ prog: calibration with 2 d pattern
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ para: file, required, filelist, imgfile, source file[s],
+ %
+ opt: s, smear, void, smearImage, preprocessing with box filter (3 x 3), false
+ opt: S, smearsize, int, smearSize, preprocessing with box filter (n x n), 0
+ opt2: if size == 0  and smear==false no box filter
+ opt: l, seglevel, int, segmentationLevel, Segmentation level, 55
+ opt: L, segsize, int, segmentationSize, Segmentation size, 15
+
+ opt: m, neededmarkers, int, markersNeeded, minimal number of markers, 400
+
+ opt: d, display, void, display, display images while processing, false
+ opt: D, displayselected, int, displaySelected, display selected images, 0
+ opt2: Bitmaske:
+ opt2:   1 - original
+ opt2:   2 - segmented
+ opt2:   4 - detected polygon and markers
+ opt: o, output, string, outputSelection, data to output, ""
+ opt2:   c - intrinsic camera parameters
+ opt2:   d - distortion parameters
+ opt2:   D - distortion parameters to database
+ opt: p, profiles, string, profileFile, file to store profile, "dist.txt"
+ opt: v, verbose, void, verbose, be verbose, false
+ opt: V, verboseselected, int, verboseSelected, be verbose in special stage, 0
+ opt: h, help, usage, help, help
+AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  Image img;
+  Image mrk;
+  Image segmented_img;
+
+  try
+    {
+      // handle combined settings in verbose + verboseSelected
+      if (verboseSelected > 0)
+        {
+          verbose = true;
+          verboseSwitch = verboseSelected;
+        }
+      else if (verbose)
+        {
+          verboseSwitch = verboseSelected = v_all;
+        }
+
+      if (displaySelected > 0)
+        {
+          display = true;
+          displaySwitch = displaySelected;
+        }
+      else if (display)
+        {
+          displaySwitch = displaySelected = 7;
+        }
+
+      int outputSelected = 0;
+      if (outputSelection.empty())
+        outputSelected = 3;
+      else
+        {
+          for (unsigned int i = 0; i < outputSelection.size(); i++)
+            {
+              char c = outputSelection[i];
+              switch (c)
+                {
+                case 'c':
+                  outputSelected |= output_intrinsic;
+                  break;
+                case 'd':
+                  outputSelected |= output_distortion;
+                  break;
+                case 'D':
+                  outputSelected |= output_distdb;
+                  break;
+                }
+            }
+        }
+
+      vector<vector<Point> > pointList;
+      vector<vector<Point> > referenceList;
+      vector<Trafo> trafoList;
+      vector<Distortion1> distList;
+
+      int images = 0;
+      int output = 0;
+
+      string exif; // EXIF-basierte Kennung
+      string suffix; // Modifier für EXIF-Kennung
+
+      double focallength = 0.0;
+
+      if (smearImage && smearSize == 0)
+        smearSize = 3;
+
+      if (output == 0)
+        output = 3;
+
+      vector<string> file;
+      FileList(argc, argv, optind, file, false);
+
+      int dimx = -1;
+      int dimy = -1;
+
+
+      images = 0;
+      while (!file.empty())
+        {
+          string fn = file.back();
+          file.pop_back();
+
+          if (verboseSwitch > 0)
+            cout << "Reading " << fn << endl;
+
+          int sx, sy, mv, ch;
+
+          InfImgFile(fn, sx, sy, mv, ch);
+
+          string fileexif;
+          double filefocallength;
+          if (exifmode == exif_file)
+            {
+              if (!getExifSig(fn, suffix, fileexif, filefocallength))
+                {
+                  throw "EXIF data not available";
+                }
+
+              if (exif.empty()) // erste Datei
+                {
+                  exif = fileexif;
+                  focallength = filefocallength;
+                }
+
+              if (fileexif != exif || filefocallength != focallength)
+                {
+                  throw "exif data differ";
+                }
+            }
+
+          if (dimx < 0)
+            {
+              // erstes Bild
+              dimx = sx;
+              dimy = sy;
+
+              img = NewImg(dimx, dimy, 255);
+              mrk = NewImg(dimx, dimy, 7);
+              segmented_img = NewImg(dimx, dimy, 4);
+              if (displaySwitch & 1)
+                {
+                  Show(OVERLAY, img, mrk);
+                }
+              if (displaySwitch & 2)
+                {
+                  Show(OVERLAY, img, segmented_img);
+                }
+
+            }
+
+          if (dimx != sx || dimy != sy)
+            throw "image sizes differ";
+
+          // Load image
+          ReadImg(fn, img);
+          if (smearSize > 0)
+            smearImg(img, img, smearSize);
+          // Segmentation
+          LocalSeg(img, segmented_img, segmentationSize, segmentationLevel);
+
+          // new pointlists, homography and distortion
+          pointList.push_back(vector<Point>());
+          referenceList.push_back(vector<Point>());
+          trafoList.push_back(Trafo());
+          distList.push_back(Distortion1());
+
+          if (getReferencePoints(img, mrk, segmented_img,
+                                 pointList[images], referenceList[images],
+                                 trafoList[images], distList[images]) &&
+              (int)referenceList[images].size() >= markersNeeded)
+            {
+#if 0
+              Image rest = NewImg(img);
+              Show(ON, rest);
+              distList[images].RectImg(img, rest, INTERPOL);
+              GetChar();
+#endif
+
+              images++;
+              if (verboseSwitch > 0)
+                cout << "OK" << endl;
+            }
+          else
+            {
+              pointList.pop_back();// Liste verwerfen
+              referenceList.pop_back();// Liste verwerfen
+              trafoList.pop_back();// Liste verwerfen
+              distList.pop_back();// Liste verwerfen
+              if (!(verboseSwitch & v_step))
+                cout << fn << " nicht nutzbar!" << endl;
+
+            }
+        }
+      optind++;
+
+      Distortion1 distortion;
+      Matrix m(3, 3);
+
+      if (images > 0)
+        {
+          // Berechnungen
+
+          if ((outputSelected & output_distortion) || (outputSelected & output_distdb))
+            {
+              // cout << pointList.size() << " " << referenceList.size() << endl;
+              // for (int i=0;i<pointList.size();i++)
+              //   cout << pointList[i].size() << " " << referenceList[i].size() << endl;
+              distortion.Calc(pointList, referenceList);
+            }
+
+          if (outputSelected & output_intrinsic)
+            {
+              if (images < 3)
+                throw "not enough images to calibrate intrinsic parameters";
+              else
+                m = calib_intrinsic_zhang(trafoList);
+            }
+
+          // Ausgaben
+          if (verboseSwitch > 0)
+            cout << "--------------------------" << endl;
+
+          if (outputSelected & output_intrinsic)
+            {
+              Print(m, dimx, dimy);
+            }
+
+          if (outputSelected & output_distortion)
+            {
+              Print(distortion, dimx, dimy);
+            }
+
+          if (outputSelected & output_distdb)
+            {
+              if (exifmode == exif_ignore)
+                throw "no exif data - no entry in database";
+
+              double x0 = distortion.X0();
+              double y0 = distortion.Y0();
+              double d2 = distortion.D2();
+              double d4 = distortion.D4();
+
+              NormalizeDistortion(x0, y0, d2, d4, dimx, dimy);
+
+              string signature = exif;
+
+              ofstream ddb(profileFile, ios::app);
+              ddb.precision(12);
+              ddb << signature << " "  << focallength << " ";
+              ddb << x0 << " " << y0 << " ";
+              ddb << d2 << " " << d4 << endl;
+            }
+        }
+      if (displaySwitch > 0)
+        {
+          cout << "input enter to continue" << endl;
+          getchar();
+        }
+      return OK;
+    }
+  catch (const char* msg)
+    {
+      cerr << "Exeption: " << msg << endl;
+    }
+  if (displaySwitch > 0)
+    {
+      cout << "input enter to continue" << endl;
+      getchar();
+    }
+  return 1;
+}
