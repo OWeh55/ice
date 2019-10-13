@@ -2,12 +2,16 @@
 #define FCALIB_H
 
 const int v_step = 1;
-const int v_opt = 2;
-const int v_trafo = 4;
+const int v_segmentation = 2;
+const int v_polygon = 4;
 const int v_marker = 8;
-const int v_assign = 16;
-extern int Verbose;
-extern int wait;
+const int v_trafo = 4;
+const int v_all = v_step | v_segmentation | v_trafo | v_marker | v_polygon;
+
+extern int verboseSwitch;
+extern int displaySwitch;
+
+extern bool wait;
 
 const int output_distortion = 1;
 const int output_intrinsic = 2;

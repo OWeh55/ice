@@ -77,6 +77,7 @@ int main(int argc, char** argv)
     {
       if (msize < 8)
         throw "marker to small";
+
       if (msize % 8 != 0)
         {
           cout << "adjusting marker size to multiple of 8!" << endl;
@@ -152,8 +153,8 @@ int main(int argc, char** argv)
           ofstream cf(coutfilename.c_str());
           WritePoly(cf, ix1 - 0.5, ix2 - 0.5, ix3 - 0.5, iy1 - 0.5, iy2 - 0.5, iy3 - 0.5);
           WriteGrating(cf,
-                       nCols, 2.5, 4,
-                       nRows, 2.5, 4);
+                       nCols, xOffset, msize,
+                       nRows, yOffset, msize);
         }
 
       return OK;

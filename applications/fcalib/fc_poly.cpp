@@ -7,6 +7,7 @@
 #include <contfeat.h>
 #include <geo.h>
 #include <drawline.h>
+#include <matrixtools.h>
 
 #include "fcalib.h"
 #include "pattern.inc"
@@ -29,7 +30,8 @@ void generatePointlistWithIndexShift(const vector<Point>& src,
     }
 }
 
-double PointlistError(const vector<Point>& pl1, const vector<Point>& pl2, double minerror)
+double PointlistError(const vector<Point>& pl1,
+                      const vector<Point>& pl2, double minerror)
 {
   int npoints = pl1.size();
   double errorsum = 0.0;
@@ -43,16 +45,18 @@ double PointlistError(const vector<Point>& pl1, const vector<Point>& pl2, double
 bool findPoly(const Image& oimg, const Image& mark,
               Trafo& tr)
 {
-  bool polyfound = false;
-  IPoint ps(0, 0);
-
   // gegebene Polygonkoordinaten aufbereiten
   vector<Point> pattern_pl(pattern_corners);
 
   for (int i = 0; i < pattern_corners; i++)
     pattern_pl[i] = Point(pattern_x[i], pattern_y[i]);
 
+  bool polyfound = false;
+
   Contur c;
+  IPoint ps(0, 0);
+  if (verboseSwitch & v_step)
+    cout << "find polygon" << endl;
 
   while (SearchStart(oimg, mark, LocalSegObj, 20, 1, ps) == OK && !polyfound)
     {
@@ -60,7 +64,7 @@ bool findPoly(const Image& oimg, const Image& mark,
       c = CalcContur(oimg, mark, LocalSegObj, 20,
                      ps, 0, isunknown, isunknown);
 
-      PutVal(mark, ps, 3);
+      mark.setPixel(ps, 3);
       if (c.isValid())
         {
           MarkContur(c, 1, mark); // markieren
@@ -71,9 +75,10 @@ bool findPoly(const Image& oimg, const Image& mark,
               double length, area, form, conv;
               FeatureContur(c, length, area, form, conv);
 
-              //    cout << oimg.xsize*oimg.ysize << " ? " << area << " == "<< form << " " << conv << endl;
+              // if (area>10000)
+              //  cout << oimg.xsize*oimg.ysize << " ? " << area << " == "<< form << " " << conv << endl;
 
-              if (area * 10 > oimg.xsize * oimg.ysize && form > 1.70) // Mindestens 10 % der Fläche, "unrund",
+              if (area * 20 > oimg.xsize * oimg.ysize && form > 1.70) // Mindestens 10 % der Fläche, "unrund",
                 {
                   MarkContur(c, 3, mark); // markieren
                   Polygon p;
@@ -83,8 +88,8 @@ bool findPoly(const Image& oimg, const Image& mark,
 
                   draw(pr, mark, 2, 3);
 
-                  //  Printf("Polygon reduziert\n");
-                  //  GetChar();
+                  //      Printf("Polygon reduziert\n");
+                  //                  GetChar();
 
 #if 1
                   Polygon fitted(FitPolygonPointlist(pr.PointList(), p.PointList(), 3, 3));
@@ -98,18 +103,29 @@ bool findPoly(const Image& oimg, const Image& mark,
                   // minerror = 1e99;
                   int minoffset = -1;
                   Trafo minTrafo;
+                  if (verboseSwitch & v_polygon)
+                    cout << "rotate polygon" << endl;
                   for (int offset = 0; offset < pattern_corners; offset++)
                     {
-                      if (Verbose & v_assign)
+                      if (verboseSwitch & v_polygon)
                         {
                           cout << " offset: " << offset;
                           cout.flush();
                         }
 
-                      generatePointlistWithIndexShift(fitted.PointList(), offset, pl_img);
-
-                      // Trafo ret = MatchPointlists(pattern_pl, pl_img, TRM_PROJECTIVE);
-                      Trafo ret = matchPointListsProjective(pattern_pl, pl_img);
+                      generatePointlistWithIndexShift(fitted.PointList(),
+                                                      offset, pl_img);
+#if 0
+                      // debug output
+                      vector<Point> pl = pl_img;
+                      for (auto p : pl)
+                        cout << p << endl;
+                      cout << "--------" << endl;
+#endif
+                      Trafo ret = matchPointListsProjective(pattern_pl,
+                                                            pl_img);
+                      // cout << "trafo " << ret.getMatrix() << endl;
+                      // getchar();
 
                       vector<Point> pl_corr = pattern_pl;
                       transform(ret, pl_corr);
@@ -121,9 +137,9 @@ bool findPoly(const Image& oimg, const Image& mark,
                           minerror = error;
                           minoffset = offset;
                         }
-                      if (Verbose & v_assign)
+                      if (verboseSwitch & v_polygon)
                         {
-                          cout << ": " << error << " " << minerror << endl;
+                          cout << ": " << error << endl;
                         }
                     }
                   if (minoffset >= 0)
@@ -149,13 +165,13 @@ bool findPoly(const Image& oimg, const Image& mark,
                         }
                       GetChar();
 #endif
-                      if (Verbose & v_step)
+                      if (verboseSwitch & v_step)
                         cout << "Polygon found" << endl;
                       generatePointlistWithIndexShift(fitted.PointList(), minoffset, pl_img);
                       Trafo otr = matchPointListsProjective(pattern_pl, pl_img);
-                      if (Verbose & v_trafo)
+                      if (verboseSwitch & v_trafo)
                         {
-                          //!!! cout << otr.getMatrix() << endl;
+                          cout << otr.getMatrix() << endl;
                         }
                       tr = otr;
                     }

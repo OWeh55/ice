@@ -15,19 +15,17 @@
 using namespace std;
 using namespace ice;
 
-bool GetReferencePoints(const Image& img, const Image& mrk,
+bool getReferencePoints(const Image& img, const Image& mrk,
                         const Image& segmented_img,
-                        vector<Point>& pointList, vector<Point>& referenceList,
+                        vector<Point>& pointList,
+                        vector<Point>& referenceList,
                         Trafo& homography, Distortion& dist)
 {
   clearImg(mrk);
 
   // grobe Lageschätzung
   if (!findPoly(segmented_img, mrk, homography))
-    {
-      cout << "findPoly failed" << endl;
-      return false;
-    }
+    throw "cannot find polygon";
 
 #if 1
   // debug: Anzeige des transformierten Polygons
@@ -49,7 +47,7 @@ bool GetReferencePoints(const Image& img, const Image& mrk,
         {
           // Verfeinerung
           dist.Calc(pointList, referenceList, homography, distortionCenter);
-          if (Verbose & v_trafo)
+          if (verboseSwitch & v_trafo)
             {
               cout  << dist.toString() << endl;
               //!!!!              cout << homography.getMatrix() << endl;
