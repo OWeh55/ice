@@ -90,13 +90,14 @@ void Print(const Matrix& m, int dimx, int dimy)
  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
  para: file, required, filelist, imgfile, source file[s],
  %
+ opt: m, mirror, void, mirrorImage, process mirrored image, false
  opt: s, smear, void, smearImage, preprocessing with box filter (3 x 3), false
  opt: S, smearsize, int, smearSize, preprocessing with box filter (n x n), 0
  opt2: if size == 0  and smear==false no box filter
  opt: l, seglevel, int, segmentationLevel, Segmentation level, 55
  opt: L, segsize, int, segmentationSize, Segmentation size, 15
 
- opt: m, neededmarkers, int, markersNeeded, minimal number of markers, 400
+ opt: n, neededmarkers, int, markersNeeded, minimal number of markers, 300
 
  opt: d, display, void, display, display images while processing, false
  opt: D, displayselected, int, displaySelected, display selected images, 0
@@ -253,6 +254,8 @@ int main(int argc, char* argv[])
 
           // Load image
           ReadImg(fn, img);
+          if (mirrorImage)
+            mirror(img);
           if (smearSize > 0)
             smearImg(img, img, smearSize);
           // Segmentation
