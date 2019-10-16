@@ -28,7 +28,7 @@
 #include "lmdif.h"
 #include "macro.h"
 #include "geo.h"
-#include "bairstow.h"
+//#include "bairstow.h"
 
 #include "DistortionR2.h"
 
@@ -48,6 +48,7 @@ namespace ice
     return OK;
   }
 #undef FNAME
+
 #define FNAME "DistortionR::rectify"
   int DistortionR2::rectify(double x, double y, double& xd, double& yd) const
   {

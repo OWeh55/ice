@@ -24,18 +24,18 @@
  * zur Nullstellenbestimmung von Polynomen
  *
  * Mike Leuschner 06/2004
+ * Ortmann 10/2019
  */
 
 #ifndef _BAIRSTOW_H
 #define _BAIRSTOW_H
 
+#include <vector>
 #include "Matrix.h"
 #include "Vector.h"
 
 namespace ice
 {
-
   int Bairstow(const Vector& para, Matrix& result, int inumber = 10000);
-
 }
 #endif

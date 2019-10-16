@@ -28,7 +28,7 @@
 #include "lmdif.h"
 #include "macro.h"
 #include "geo.h"
-#include "bairstow.h"
+//#include "bairstow.h"
 
 #include "Distortion.h"
 
@@ -37,10 +37,10 @@ using namespace std;
 namespace ice
 {
   /*************************************************************
-   * Abstrakte Basisklasse
+   * abstract base class Distortion
    *************************************************************/
 
-  bool Distortion::ReadPara(std::istream& is, const string& name, double& val)
+  bool Distortion::readPara(std::istream& is, const string& name, double& val)
   {
     string s;
     is >> s ;
@@ -58,7 +58,7 @@ namespace ice
     return false;
   }
 
-#define FNAME "Distortion::Distort"
+#define FNAME "Distortion::distort"
   int Distortion::distort(double& xd, double& yd) const
   {
     return distort(xd, yd, xd, yd);
@@ -92,7 +92,7 @@ namespace ice
   }
 
 #undef FNAME
-#define FNAME "Distortion::rect"
+#define FNAME "Distortion::rectify"
   int Distortion::rectify(double& xd, double& yd) const
   {
     return rectify(xd, yd, xd, yd);
@@ -117,16 +117,16 @@ namespace ice
   }
 
 #undef FNAME
-#define FNAME "Distortion::rectifyImg"
-  Image Distortion::rectifyImg(const Image& source, int mode) const
+#define FNAME "Distortion::rectifyImage"
+  Image Distortion::rectifyImage(const Image& source, int mode) const
   {
     Image dest = NewImg(source);
-    rectifyImg(source, dest, mode);
+    rectifyImage(source, dest, mode);
     CopyImg(dest, source);
     return source;
   }
 
-  int Distortion::rectifyImg(const Image& source, const Image& dest, int mode) const
+  int Distortion::rectifyImage(const Image& source, const Image& dest, int mode) const
   {
     if (!IsImg(source) || !IsImg(dest))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -137,7 +137,7 @@ namespace ice
     if (source == dest)
       {
         Image newimg = NewImg(source);
-        rectifyImg(source, newimg, mode);
+        rectifyImage(source, newimg, mode);
         CopyImg(newimg, dest);
         return OK;
       }
@@ -243,10 +243,10 @@ namespace ice
     }
   };
 
-#define FNAME "Distortion::Calc"
-  int Distortion::Calc(const vector<Point>& marker,
-                       const vector<Point>& orig,
-                       Trafo& tr, Point& center)
+#define FNAME "Distortion::calculate"
+  int Distortion::calculate(const vector<Point>& marker,
+                            const vector<Point>& orig,
+                            Trafo& tr, Point& center)
   {
     Vector dipara = makeVector();
     int diparams = dipara.size();
@@ -415,8 +415,8 @@ namespace ice
     }
   };
 
-  int Distortion::Calc(const std::vector<std::vector<Point> >& marker,
-                       const std::vector<std::vector<Point> >& orig)
+  int Distortion::calculate(const std::vector<std::vector<Point> >& marker,
+                            const std::vector<std::vector<Point> >& orig)
   {
     Vector distortion_parameters = makeVector();
     int nr_distortion_parameter = distortion_parameters.size();
@@ -515,8 +515,8 @@ namespace ice
     return OK;
   }
 
-  int Distortion::Calc(const Matrix& marker, const Matrix& orig,
-                       Trafo& tr, double mx, double my)
+  int Distortion::calculate(const Matrix& marker, const Matrix& orig,
+                            Trafo& tr, double mx, double my)
   {
     vector<Point> mpl(marker.rows());
     for (int i = 0; i < marker.rows(); i++)
@@ -531,14 +531,14 @@ namespace ice
       }
 
     Point center(mx, my);
-    RETURN_ERROR_IF_FAILED(Calc(mpl, opl, tr, center));
+    RETURN_ERROR_IF_FAILED(calculate(mpl, opl, tr, center));
 
     return OK;
   }
 
-  int Distortion::Calc(const vector<Point>& marker,
-                       const vector<Point>& orig,
-                       Trafo& tr)
+  int Distortion::calculate(const vector<Point>& marker,
+                            const vector<Point>& orig,
+                            Trafo& tr)
   {
     // Schätzung: Mittelpunkt der Verzeichnung ist Mittelpunkt der Markermenge
 
@@ -553,10 +553,10 @@ namespace ice
 
     center /= npoints;
 
-    return Calc(marker, orig, tr, center);
+    return calculate(marker, orig, tr, center);
   }
 
-  int Distortion::Calc(const Matrix& marker, const Matrix& orig, Trafo& tr)
+  int Distortion::calculate(const Matrix& marker, const Matrix& orig, Trafo& tr)
   {
     vector<Point> mpl(marker.rows());
     for (int i = 0; i < marker.rows(); i++)
@@ -570,17 +570,17 @@ namespace ice
         opl[i] = Point(orig[i][0], orig[i][1]);
       }
 
-    RETURN_ERROR_IF_FAILED(Calc(mpl, opl, tr));
+    RETURN_ERROR_IF_FAILED(calculate(mpl, opl, tr));
     return OK;
   }
 
-  int Distortion::Calc(const vector<Point>& marker, const vector<Point>& orig)
+  int Distortion::calculate(const vector<Point>& marker, const vector<Point>& orig)
   {
     Trafo tr = matchPointLists(orig, marker, TRM_PROJECTIVE);
-    return Calc(marker, orig, tr);
+    return calculate(marker, orig, tr);
   }
 
-  int Distortion::Calc(const Matrix& marker, const Matrix& orig)
+  int Distortion::calculate(const Matrix& marker, const Matrix& orig)
   {
     vector<Point> mpl(marker.rows());
     for (int i = 0; i < marker.rows(); i++)
@@ -594,14 +594,14 @@ namespace ice
         opl[i] = Point(orig[i][0], orig[i][1]);
       }
 
-    RETURN_ERROR_IF_FAILED(Calc(mpl, opl));
+    RETURN_ERROR_IF_FAILED(calculate(mpl, opl));
     return OK;
   }
 
-  int Distortion::Calc(const Matrix& marker, const Matrix& orig, double xm, double ym)
+  int Distortion::calculate(const Matrix& marker, const Matrix& orig, double xm, double ym)
   {
     Trafo tr = MatchPointlists(orig, marker, TRM_PROJECTIVE);
-    return Calc(marker, orig, tr, xm, ym);
+    return calculate(marker, orig, tr, xm, ym);
   }
 #undef FNAME
 }

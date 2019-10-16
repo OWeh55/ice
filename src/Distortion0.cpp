@@ -58,23 +58,23 @@ namespace ice
   Distortion0::Distortion0(const Matrix& mark, const Matrix& orig,
                            Trafo& tr, const Vector& ImageCenter)
   {
-    Calc(mark, orig, tr, ImageCenter[0], ImageCenter[1]);
+    calculate(mark, orig, tr, ImageCenter[0], ImageCenter[1]);
   }
 
   Distortion0::Distortion0(const Matrix& mark, const Matrix& orig,
                            Trafo& tr)
   {
-    Calc(mark, orig, tr);
+    calculate(mark, orig, tr);
   }
 
   Distortion0::Distortion0(const Matrix& mark, const Matrix& orig, const Vector& ImageCenter)
   {
-    Calc(mark, orig, ImageCenter[0], ImageCenter[1]);
+    calculate(mark, orig, ImageCenter[0], ImageCenter[1]);
   }
 
   Distortion0::Distortion0(const Matrix& mark, const Matrix& orig)
   {
-    Calc(mark, orig);
+    calculate(mark, orig);
   }
 #undef FNAME
 #define FNAME "Distortion0::ffr"
@@ -136,7 +136,7 @@ namespace ice
   {
     istringstream is(parastr);
 
-    if (! ReadPara(is, "x0", x0) || ! ReadPara(is, "y0", y0) || ! ReadPara(is, "d2", d2))
+    if (! readPara(is, "x0", x0) || ! readPara(is, "y0", y0) || ! readPara(is, "d2", d2))
       throw IceException(FNAME, M_WRONG_FORMAT);
   }
 #undef FNAME

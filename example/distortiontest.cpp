@@ -30,8 +30,8 @@ void DiTest(Distortion& di)
   double fmax = 0.0;
   double ta = TimeD(TM_PROCESS);
 
-  Matrix messung(0, 2);
-  Matrix orig(0, 2);
+  vector<Point> messung;
+  vector<Point> orig;
 
   for (int n = 0; n < COUNT; n++)
     for (int i = -HNUMBER; i < HNUMBER; i++)
@@ -71,11 +71,11 @@ void DiTest(Distortion& di)
       {
         double x = r * sin(fi) + X0;
         double y = r * cos(fi) + Y0;
-        orig.append(Vector(x, y));
+        orig.push_back(Point(x, y));
         double fr = 1.0 + D2 * r * r + D4 * r * r * r * r;
         double xd = r * fr * sin(fi) + X0 /*+ RandomD() - 0.5 */;
         double yd = r * fr * cos(fi) + Y0 /*+ RandomD()*/;
-        messung.append(Vector(xd, yd));
+        messung.push_back(Point(xd, yd));
       }
 
   //  cout << orig << endl;
@@ -83,7 +83,7 @@ void DiTest(Distortion& di)
 
   //  cout << "Vorgabe: " << di.toString() << endl;
   ta = TimeD(TM_PROCESS);
-  di.Calc(messung, orig);
+  di.calculate(messung, orig);
   cout << "Zeit Calc: " << TimeD(TM_PROCESS) - ta << endl;
   cout << "Calc:" << di.toString() << endl;
   cout << "------------------------------------------------------" << endl;

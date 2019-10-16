@@ -88,9 +88,9 @@ namespace ice
     virtual Point distort(const Point& v) const;
     virtual int distort(std::vector<Point>& pl) const;
 
-    virtual Image rectifyImg(const Image& source, int mode = DEFAULT) const;
-    virtual int rectifyImg(const Image& source, const Image& dest,
-                           int mode = DEFAULT) const;
+    virtual Image rectifyImage(const Image& source, int mode = DEFAULT) const;
+    virtual int rectifyImage(const Image& source, const Image& dest,
+                             int mode = DEFAULT) const;
 
     virtual std::vector<double> makeVectorDouble() const = 0;
     virtual Vector makeVector()
@@ -110,26 +110,29 @@ namespace ice
       return y0;
     }
 
-    virtual int Calc(const std::vector<Point>& marker, const std::vector<Point>& orig,
-                     Trafo& tr, Point& center);
+    virtual int calculate(const std::vector<Point>& marker,
+                          const std::vector<Point>& orig,
+                          Trafo& tr, Point& center);
 
-    virtual int Calc(const std::vector<Point>& marker, const std::vector<Point>& orig, Trafo& tr);
-    virtual int Calc(const std::vector<Point>& marker, const std::vector<Point>& orig);
+    virtual int calculate(const std::vector<Point>& marker,
+                          const std::vector<Point>& orig, Trafo& tr);
+    virtual int calculate(const std::vector<Point>& marker,
+                          const std::vector<Point>& orig);
 
-    virtual int Calc(const std::vector<std::vector<Point> >& marker,
-                     const std::vector<std::vector<Point> >& orig);
+    virtual int calculate(const std::vector<std::vector<Point> >& marker,
+                          const std::vector<std::vector<Point> >& orig);
 
-    virtual int Calc(const Matrix& marker, const Matrix& orig, Trafo& tr, double xm, double ym);
-    virtual int Calc(const Matrix& marker, const Matrix& orig, Trafo& tr);
-    virtual int Calc(const Matrix& marker, const Matrix& orig, double xm, double ym);
-    virtual int Calc(const Matrix& marker, const Matrix& orig);
+    virtual int calculate(const Matrix& marker, const Matrix& orig, Trafo& tr, double xm, double ym);
+    virtual int calculate(const Matrix& marker, const Matrix& orig, Trafo& tr);
+    virtual int calculate(const Matrix& marker, const Matrix& orig, double xm, double ym);
+    virtual int calculate(const Matrix& marker, const Matrix& orig);
 
     virtual std::string toString() const = 0;
     virtual void set(const std::string& parastring) = 0;
 
   protected:
     double x0, y0;
-    static bool ReadPara(std::istream& is, const std::string& name, double& val);
+    static bool readPara(std::istream& is, const std::string& name, double& val);
   };
 }
 #endif

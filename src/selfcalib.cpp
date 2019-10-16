@@ -1063,7 +1063,7 @@ namespace ice
 
             // Eingangsbilder entzeichnen
             Image temp_image = NewImg(image);
-            verzeichnung.rectifyImg(image, temp_image, INTERPOL);
+            verzeichnung.rectifyImage(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
             c.setDist(verzeichnung);
@@ -1085,7 +1085,7 @@ namespace ice
 
             // Eingangsbilder entzeichnen
             Image temp_image = NewImg(image);
-            verzeichnung.rectifyImg(image, temp_image, INTERPOL);
+            verzeichnung.rectifyImage(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
             c.setDist(verzeichnung);
@@ -1106,7 +1106,7 @@ namespace ice
 
             // Eingangsbilder entzeichnen
             Image temp_image = NewImg(image);
-            verzeichnung.rectifyImg(image, temp_image, INTERPOL);
+            verzeichnung.rectifyImage(image, temp_image, INTERPOL);
             CopyImg(temp_image, image);
 
             c.setDist(verzeichnung);

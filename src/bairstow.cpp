@@ -12,33 +12,30 @@ namespace ice
   {
     int rc = OK;
 
-    Vector a;
-
-    int i = para.size() - 1;
-
     // determine real degree of polygon
-    while (para[i] == 0.0 && i >= 0)
+    int degree = para.size() - 1;
+    while (degree >= 0 && para[degree] == 0)
       {
-        i--;
+        degree--;
       }
 
-    // reorder of coefficients
-    while (i >= 0)
-      {
-        a.Append(para[i]);
-        i--;
-      }
-
-    if (a.Size() < 2)
+    if (degree < 1)
       {
         rc = NO_SOLUTION;
         throw IceException(FNAME, M_NO_SOLUTION);
       }
 
-    unsigned int n = a.Size() - 1; //Ordnung
-    int iterate = n;
+    // redegree coefficients
+    Vector a;
+    for (int i = degree; i >= 0; i--)
+      {
+        a.Append(para[i]);
+      }
 
-    result = Matrix(n, 2);
+    int iterate = degree;
+    int n = degree;
+
+    result = Matrix(degree, 2);
 
     while (n > 2)
       {

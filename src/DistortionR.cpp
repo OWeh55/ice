@@ -28,7 +28,7 @@
 #include "lmdif.h"
 #include "macro.h"
 #include "geo.h"
-#include "bairstow.h"
+//#include "bairstow.h"
 
 #include "DistortionR.h"
 
