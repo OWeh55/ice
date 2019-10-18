@@ -44,7 +44,7 @@ endif
 COPT := $(COPT) -O4 -g -fno-strict-aliasing -Wall -Wno-unused-local-typedefs
 #-ffast-math
 
-INCLUDE := -I$(ICEDIR)/src `wx-config --cxxflags`
+INCLUDE := -I/c/msys/lib/fftw-3.3.8/api/ -I/c/msys/lib/jpeg-6b/ -/c/msys/lib/tiff-4.0.4/libtiff/ -I$(ICEDIR)/src `wx-config --cxxflags` -I.
 LIBRARY := -L$(ICEDIR)/lib/$(MACHTYPE)
 
 ifdef SCANFW
