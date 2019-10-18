@@ -18,7 +18,7 @@
 CXX?=g++
 #CXX=clang++
 
-SUBDIRS := devices ocr
+#SUBDIRS := devices ocr
 
 COPT := -std=c++11 -D__STDC_CONSTANT_MACROS=1
 
@@ -87,7 +87,7 @@ COPT := $(COPT) $(OPT)
 # visualization related parts need extra flags 
 COPTVIS := $(COPT) `wx-config --cxxflags` -fno-strict-aliasing
 
-INCLUDE := -I . 
+INCLUDE := -I/c/msys/lib/fftw-3.3.8/api/ -I/c/msys/lib/jpeg-6b/ -/c/msys/lib/tiff-4.0.4/libtiff/  -I . 
 
 INCLUDEVIS := $(INCLUDE)
 

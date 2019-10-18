@@ -26,6 +26,10 @@
 //   m.schubert 9.93
 //
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <iostream>
 #include <stdlib.h>
 #include <stddef.h>
 #include <math.h>

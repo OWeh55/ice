@@ -24,7 +24,11 @@
 //  Nullstellen von Polynomen 2,3,und 4. Grades:
 //  Root2   Root3   Root4
 
-#include <math.h>
+//#include <math.h>
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <iostream>
 #include <stdlib.h>
 
 #include "IceException.h"

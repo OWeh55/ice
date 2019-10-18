@@ -21,9 +21,13 @@
 /*******************************************************************
  numbase.c - Numerische Grundfunktionen:
 *******************************************************************/
+#define _USE_MATH_DEFINES
 
+#include <cmath>
+#include <iostream>
 #include <math.h>
-#include <stdlib.h>
+#include <stdlib>
+/*#include <stdlib.h>*/
 #include <ctime>
 
 #include "IceException.h"
@@ -162,7 +166,7 @@ namespace ice
   /* double random number */
   double RandomD(double max)
   {
-    return drand48() * max;
+    return (double(rand()) / RAND_MAX) * max;
   }
 
   /*

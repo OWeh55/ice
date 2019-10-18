@@ -23,8 +23,11 @@
  * Author: Alexander Lärz, 2005
  */
 
-#include <math.h>
+//#include <math.h>
+#define _USE_MATH_DEFINES
 
+#include <cmath>
+#include <iostream>
 #include "macro.h"
 #include "IceException.h"
 #include "defs.h"

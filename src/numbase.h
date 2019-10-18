@@ -20,7 +20,10 @@
  */
 #ifndef _NUMBASE_H
 #define _NUMBASE_H
+#define _USE_MATH_DEFINES
 
+#include <cmath>
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 

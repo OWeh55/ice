@@ -22,6 +22,10 @@
 /* Routinen zur Konturbearbeitung                                        */
 /*************************************************************************/
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <iostream>
 #include <iostream>
 #include <vector>
 #include <math.h>

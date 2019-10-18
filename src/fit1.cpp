@@ -29,6 +29,10 @@
  *   W. Ortmann 9/2006,10/2011  Modernisierung
  */
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <iostream>
 #include <vector>
 
 #include "defs.h"
