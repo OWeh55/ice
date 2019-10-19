@@ -64,7 +64,7 @@ namespace ice
         int ct = 0;
 
         while ((fabs(afr) > 1e-9) // Abweichung zu groß -> weiter
-               && (ct < 999))    // Notbremse
+               && (ct < 999))     // Notbremse
           {
             afr = fr(rectified_radius) - distorted_radius; // current f(rectified_radius) - r
             double fs = frs(rectified_radius);   // f'(rectified_radius)
@@ -75,7 +75,7 @@ namespace ice
               }
             else
               {
-                rectified_radius -= 1.0;  // weiss nichts besseres
+                rectified_radius -= 1.0;  // do something to leave this point
               }
 
             ct++;

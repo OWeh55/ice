@@ -50,7 +50,7 @@ namespace ice
   {
     double r2 = r * r;
     double r4 = r2 * r2;
-    return r  = 1.0 + 3.0 * d2 * r2 + 5.0 * d4 * r4;
+    return 1.0 + 3.0 * d2 * r2 + 5.0 * d4 * r4;
   }
 #undef FNAME
 
