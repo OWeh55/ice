@@ -33,9 +33,10 @@
 #include <base.h>
 #include <based.h>
 
+#include "IceException.h"
+
 namespace ice
 {
-
   class Function
   {
   public:
@@ -43,7 +44,11 @@ namespace ice
     virtual ~Function() {}
 
     virtual double operator()(double x) const = 0;
-
+    virtual double inverse(double v) const
+    {
+      throw IceException("Function::inverse", M_NOT_IMPLEMENTED);
+      return 0;
+    }
     virtual void getCoefficient(std::vector<double>& v) const {}
     virtual int setCoefficient(const std::vector<double>& v, int idx = 0)
     {
@@ -76,10 +81,6 @@ namespace ice
 
   class ImageFunction: public Function2d
   {
-  protected:
-    Image img;
-    int mode;
-
   public:
 
     ImageFunction(const Image& imgp, int im = INTERPOL): img(imgp), mode(im) { }
@@ -115,13 +116,13 @@ namespace ice
     {
       return img;
     }
+  protected:
+    Image img;
+    int mode;
   };
 
   class ImageDFunction: public Function2d
   {
-  protected:
-    ImageD img;
-    int mode;
 
   public:
 
@@ -162,6 +163,10 @@ namespace ice
     {
       return img;
     }
+
+  protected:
+    ImageD img;
+    int mode;
   };
 
   void setImg(const Image& img, const Function2d& fn);

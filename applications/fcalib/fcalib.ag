@@ -308,7 +308,7 @@ int main(int argc, char* argv[])
               // cout << pointList.size() << " " << referenceList.size() << endl;
               // for (int i=0;i<pointList.size();i++)
               //   cout << pointList[i].size() << " " << referenceList[i].size() << endl;
-              distortion.Calc(pointList, referenceList);
+              distortion.calculate(pointList, referenceList);
             }
 
           if (outputSelected & output_intrinsic)

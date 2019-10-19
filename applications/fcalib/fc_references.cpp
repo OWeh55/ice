@@ -46,7 +46,7 @@ bool getReferencePoints(const Image& img, const Image& mrk,
       for (int run = 0; run < 3 && found; ++run)
         {
           // Verfeinerung
-          dist.Calc(pointList, referenceList, homography, distortionCenter);
+          dist.calculate(pointList, referenceList, homography, distortionCenter);
           if (verboseSwitch & v_trafo)
             {
               cout  << dist.toString() << endl;
