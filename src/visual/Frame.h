@@ -11,9 +11,9 @@ namespace ice
 {
   class iceFrame : public wxFrame
   {
-  private:
-    iceFrame(const iceFrame&); // disable copy constructor
   public:
+    iceFrame(const iceFrame&) = delete; // disable copy constructor
+
     iceFrame(const wxString& WindowTitle);
     iceFrame(const wxString& WindowTitle, long WindowStyle);
 

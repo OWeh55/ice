@@ -75,8 +75,8 @@ namespace ice
   ImageWindow::ImageWindow(ImageBase* img,
                            const std::string& windowname):
     wxScrolledWindow(),
-    Caption(windowname),
-    ParentFrame(NULL),
+    caption(windowname),
+    parentFrame(NULL),
     SizeX(img->xsize),
     SizeY(img->ysize),
     ZoomFactor(1),
@@ -96,8 +96,8 @@ namespace ice
   ImageWindow::ImageWindow(ImageD* img,
                            const std::string& windowname):
     wxScrolledWindow(),
-    Caption(windowname),
-    ParentFrame(NULL),
+    caption(windowname),
+    parentFrame(NULL),
     SizeX(img->xsize),
     SizeY(img->ysize),
     ZoomFactor(1),
@@ -117,23 +117,23 @@ namespace ice
   bool ImageWindow::Create(unsigned int sizeX, unsigned int sizeY)
   {
     // create the parent frame
-    ParentFrame = new iceFrame(wxString(Caption.c_str(), wxConvLibc), // window title
+    parentFrame = new iceFrame(wxString(caption.c_str(), wxConvLibc), // window title
                                wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCAPTION |
                                wxSYSTEM_MENU | wxRESIZE_BORDER); // window style
 
-    ParentFrame->Show(true);
+    parentFrame->Show(true);
 
     // create the GUI window object
-    bool RetVal = wxScrolledWindow::Create(ParentFrame, // parent window
+    bool RetVal = wxScrolledWindow::Create(parentFrame, // parent window
                                            wxID_ANY, // WindowsID
                                            wxDefaultPosition, // window position
                                            wxSize(getVirtualSizeX(),
                                                getVirtualSizeY())); // window size
 
-    ParentFrame->SetChildWindow(*this);
+    parentFrame->SetChildWindow(*this);
 
     // set the appropiate height and width
-    ParentFrame->SetClientSize(
+    parentFrame->SetClientSize(
       std::min(wxGetApp().DefXSize(), getVirtualSizeX()),
       std::min(wxGetApp().DefYSize(), getVirtualSizeY()));
 
@@ -152,7 +152,7 @@ namespace ice
   {
     while (PaintIsRunning) usleep(1000);
 
-    ParentFrame->Destroy();
+    parentFrame->Destroy();
     return wxScrolledWindow::Destroy();
   }
 
@@ -223,7 +223,7 @@ namespace ice
 
   int ImageWindow::CalcOptimalZoom() const
   {
-    wxSize AvailableSize = ParentFrame->GetClientSize();
+    wxSize AvailableSize = parentFrame->GetClientSize();
 
     AvailableSize.SetWidth(max<int>(0, AvailableSize.GetWidth()));
     AvailableSize.SetHeight(max<int>(0, AvailableSize.GetHeight()));
@@ -264,7 +264,7 @@ namespace ice
 
     SetZoomFactor(NewZoomFactor);
 
-    ParentFrame->SetClientSize(
+    parentFrame->SetClientSize(
       std::min(wxGetApp().DefXSize(), getVirtualSizeX()),
       std::min(wxGetApp().DefYSize(), getVirtualSizeY())
     );
@@ -351,7 +351,7 @@ namespace ice
   bool ImageWindow::SwitchFullScreen()
   {
     isFullScreen = ! isFullScreen;
-    ParentFrame->ShowFullScreen(isFullScreen, wxFULLSCREEN_ALL);
+    parentFrame->ShowFullScreen(isFullScreen, wxFULLSCREEN_ALL);
     return isFullScreen;
   }
 

@@ -323,7 +323,10 @@ int main(int argc, char* argv[])
   try
     {
       if (displayMode & 16) // interakiv?
-        displayMode = 16;   // disable all other displays
+        {
+          displayMode = 16;   // disable all other displays
+          interactive = true; // set interactive mode
+        }
 
       Image src;
 
@@ -512,10 +515,11 @@ int main(int argc, char* argv[])
           Image display;
           display.create(src);
           int select = 0; // no (special) display
+          Visual specialWindow = nullptr;
           if (displayMode == 16)
             {
-              Show(GRAY, display, "Use D to change selected image");
-              select = 4; // display restored image
+              specialWindow = Show(GRAY, display, "Use D/d to change selected image");
+              select = 4;     // display restored image
             }
 
           bool done = false;
@@ -539,7 +543,24 @@ int main(int argc, char* argv[])
               Printf("0   - factor gleich Null == adaptive\n");
               Printf("+/- - Schrittweite (radius/phi) groesser/kleiner\n");
               if (select != 0)
-                Printf("D   - naechster Darstellungsmodus\n");
+                {
+                  switch (select)
+                    {
+                    case 1:
+                      Print("Original\n");
+                      break;
+                    case 2:
+                      Print("Maske\n");
+                      break;
+                    case 3:
+                      Print("Unscharf\n");
+                      break;
+                    case 4:
+                      Print("Restauriert\n");
+                      break;
+                    }
+                  Printf("d/D   - naechster Darstellungsmodus\n");
+                }
               if (changed)
                 {
                   // Spektren von Maske und zu restaurierenden Bild sind gültig
@@ -642,6 +663,11 @@ int main(int argc, char* argv[])
                   break;
                 case '0':
                   factor = 0;
+                  break;
+                case 'd':
+                  select--;
+                  if (select < 1)
+                    select = 4;
                   break;
                 case 'D':
                   select++;

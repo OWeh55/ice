@@ -54,10 +54,10 @@ namespace ice
     static constexpr int BORDER = 10; // gray border around Image (in pixels)
 
     //! The Caption for image window.
-    std::string Caption;
+    std::string caption;
 
     //! The parent frame, that hosts this window as a child.
-    iceFrame* ParentFrame;
+    iceFrame* parentFrame;
 
     //! The horizontal size of the image(s), that is displayed in this window.
     int SizeX;
@@ -238,7 +238,7 @@ namespace ice
     virtual bool AddMenuItem(const std::string& menu,
                              const std::string& item, long userid)
     {
-      return ParentFrame->AddMenuItem(menu, item, userid);
+      return parentFrame->AddMenuItem(menu, item, userid);
     }
 
     bool RegularUpdate();
@@ -247,7 +247,7 @@ namespace ice
 
     virtual iceFrame* Frame() const
     {
-      return ParentFrame;
+      return parentFrame;
     }
 
   protected:
