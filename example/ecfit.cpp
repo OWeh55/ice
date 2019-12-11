@@ -47,16 +47,17 @@ void ShowPoints(Image& img, const vector<Point>& pl, int value)
 {
   for (unsigned int i = 0; i < pl.size(); i++)
     {
-      if (img.Inside(pl[i]))
+      if (img.inside(pl[i]))
         PutVal(img, pl[i].x, pl[i].y, value);
     }
 }
 
 int main(int argc, char** argv)
 {
-  Image img(1200, 800, 255);
+  Image img;
+  img.create(1200, 800, 255);
   Show(ON, img);
-  ClearImg(img);
+  clearImg(img);
   int npoints = 555;
   double xc = 300.0;
   double yc = 321.0;
@@ -109,12 +110,12 @@ int main(int argc, char** argv)
     case 'c':
     {
       Trafo tr;
-      tr.Scale(0, 0, rad);
-      tr.Shift(xc, yc);
+      tr.scale(0, 0, rad);
+      tr.shift(xc, yc);
       // sample circle points
       mkUnityCircle(points, npoints, noise);
       // transform to desired circle
-      Transform(tr, points);
+      transform(tr, points);
 
       ShowPoints(img, points, 127);
 
@@ -122,7 +123,7 @@ int main(int argc, char** argv)
       cout << "for circle at (" << xc << "," << yc << ") with radius " << rad << endl;
       cout << "Fitting ..." << endl;
       Circle c = FitCircle(points);
-      Draw(c, img, 255, -1);
+      draw(c, img, 255, -1);
       cout << "Fitted circle at (" << c.getPos().x << "," << c.getPos().y << ") with radius " << c.getR() << endl;
     }
     break;
@@ -130,13 +131,13 @@ int main(int argc, char** argv)
     case 'e':
     {
       Trafo tr;
-      tr.Scale(0, 0, rad, rad2);
-      tr.Rotate(0, 0, Arcus(phi));
-      tr.Shift(xc, yc);
+      tr.scale(0, 0, rad, rad2);
+      tr.rotate(0, 0, Arcus(phi));
+      tr.shift(xc, yc);
       // sample circle points
       mkUnityCircle(points, npoints, noise);
       // transform to ellipse
-      Transform(tr, points);
+      transform(tr, points);
 
       ShowPoints(img, points, 127);
 
@@ -144,7 +145,7 @@ int main(int argc, char** argv)
       cout << "for ellipse at (" << xc << "," << yc << ") with axis " << rad << ", " << rad2 << endl;
       cout << "Fitting ..." << endl;
       Ellipse e = FitEllipse(points);
-      Draw(e, img, 255, -1);
+      draw(e, img, 255, -1);
       cout << "Fitted ellipse at (" << e.getPos() << ") with axis " << e.getR() << ", " << e.getR2() << endl;
 
     }
