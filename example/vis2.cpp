@@ -474,10 +474,10 @@ int Main(int argc, char* argv[])
           video = false;
           break;
 
-	case 'h': // no break!
+        case 'h': // no break!
         default:
           ParameterMessage(); /* falscher Parameter */
-	  exit(1);
+          exit(1);
         }
     }
 
