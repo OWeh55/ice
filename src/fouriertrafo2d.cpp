@@ -129,7 +129,7 @@ namespace ice
         {
           real[y][x] = (v.getPixel(x, y) - v0) * factor;
         }
-    imag.set(0);
+    imag.set(0.0);
     state = sInput;
   }
 

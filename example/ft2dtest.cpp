@@ -17,6 +17,8 @@ int main(int argc,char**argv)
 {
   try{
     // with matrix
+    cout << "matrix<double>:" << endl;
+
     FourierTrafo2D ft1;
     matrix<double> m1(4,8);
     for (int i=0;i<4;i++)
@@ -42,6 +44,7 @@ int main(int argc,char**argv)
     cout << "sum of deviations of " << (m1.rows()*m1.cols()) << " elements: " << fsum << endl;
 
     // with ImageD
+    cout << "ImageD:" << endl;
     int xs=300;
     int ys=200;
     ImageD source;
@@ -56,6 +59,7 @@ int main(int argc,char**argv)
     ImageD imag;
     imag.create(xs,ys);
     ft3.getResult(real,imag);
+
     FourierTrafo2D ft4(ys,xs,false);
     ft4.setInput(real,imag);
     ImageD res;
@@ -71,7 +75,43 @@ int main(int argc,char**argv)
 	  fsum+=fabs(source.getPixel(x,y)-res.getPixel(x,y));
 	  fsum+=fabs(resi.getPixel(x,y));
 	}
-    cout << "sum of deviations of " << (xs*ys) << " elements: " << fsum << endl;    
+
+    cout << "sum of deviations of " << (xs*ys) << " elements: " << fsum << endl;
+
+    // with Image
+    cout << "Image:" << endl;
+    int xsI=300;
+    int ysI=200;
+    Image sourceImg;
+    sourceImg.create(xsI,ysI,255);
+    for (int x=0;x<xsI;x++)
+      for (int y=0;y<ysI;y++)
+	sourceImg.setPixel(x,y,(x+3*y) % 100 );
+    FourierTrafo2D ft5(ysI,xsI,true);
+    ft5.setInput(sourceImg);
+    //    ImageD real;
+    real.create(xsI,ysI);
+    //    ImageD imag;
+    imag.create(xsI,ysI);
+    ft5.getResult(real,imag);
+    
+    FourierTrafo2D ft6(ysI,xsI,false);
+    ft6.setInput(real,imag);
+    Image resImg;
+    resImg.create(xsI,ysI,255);
+    Image resiImg;
+    resiImg.create(xsI,ysI,255);
+    ft6.getResult(resImg,resiImg);
+    
+    int sum=0.0;
+    for (int x=0;x<xsI;x++)
+      for (int y=0;y<ysI;y++)
+	{
+	  sum+=abs(sourceImg.getPixel(x,y)-resImg.getPixel(x,y));
+	  sum+=abs(resiImg.getPixel(x,y)-128);
+	}
+    cout << "sum of deviations of " << (xsI*ysI) << " elements: " << sum << endl;
+    Show(OFF,real);
     return 0;
   }
 

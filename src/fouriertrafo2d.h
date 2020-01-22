@@ -83,10 +83,10 @@ namespace ice
 
     void getResult(const Image& dstre,
                    const Image& dstim,
-                   int mode = RAW, int sign = UNSIGNED);
+                   int mode = RAW, int sign = SIGNED);
 
     double getResult(const Image& dstre,
-                     int mode = RAW, int sign = UNSIGNED);
+                     int mode = RAW, int sign = SIGNED);
 
     void getResult(ImageD& dstre,
                    ImageD& dstim);

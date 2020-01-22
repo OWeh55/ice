@@ -123,6 +123,7 @@ namespace ice
 #define FNAME "ConvImgDImg"
   void convImgDImg(const ImageD& input, const Image& output, double factor, double offset)
   {
+    //    cout << factor << " " << offset << endl;
     int xs = input.xsize;
     int ys = input.ysize;
 
@@ -132,7 +133,9 @@ namespace ice
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
         {
-          int ival = RoundInt(input.getPixelUnchecked(x, y) * factor + offset);
+	  double dval=input.getPixelUnchecked(x,y);
+	  int ival = RoundInt(dval * factor + offset);
+	  //	  cout << dval << " " << ival << endl;
           output.setPixelLimited(x, y, ival);
         }
   }
