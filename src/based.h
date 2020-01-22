@@ -67,7 +67,7 @@ namespace ice
     return res;
   }
 
-  inline   ImageD NewImgD(const Image& img, bool copy = false)
+  inline ImageD NewImgD(const Image& img, bool copy = false)
   {
     ImageD res;
 
@@ -90,18 +90,18 @@ namespace ice
 #undef FNAME
 
   /* Kopieren Image ---> ImageD */
-  int ConvImgImgD(const Image& imgs, ImageD& imgd,
-                  int mode = RAW, int sign = UNSIGNED);
+  void ConvImgImgD(const Image& imgs, ImageD& imgd,
+                   int mode = RAW, int sign = UNSIGNED);
 
   /* Kopieren ImageD ---> Image */
-  int ConvImgDImg(const ImageD& imgs, const Image& imgd,
-                  int mode = ADAPTIVE, int sign = UNSIGNED);
+  void ConvImgDImg(const ImageD& imgs, const Image& imgd,
+                   int mode = ADAPTIVE, int sign = UNSIGNED);
 
-  /* Aktualisieren der Eintraege minval, maxval nach dem Bildinhalt*/
+  /* update minval and maxval from pixel values */
   int UpdateLimitImgD(ImageD& img);
 
-  /* Test auf gueltiges Bild */
-  inline   int IsImgD(const ImageD& img)
+  /* valid Image ? */
+  inline int IsImgD(const ImageD& img)
   {
     return img.isValid();
   }

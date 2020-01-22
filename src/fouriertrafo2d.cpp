@@ -203,13 +203,10 @@ namespace ice
     state = sInput;
   }
 
-  void FourierTrafo2D::
-  checkParameter(int nRows, int nCols)
+  void FourierTrafo2D::checkParameter(int nRows, int nCols)
   {
-    if (state < sPara)   // not set
-      {
-        setParameter(nRows, nCols);
-      }
+    if (state < sPara) // not set
+      setParameter(nRows, nCols);
     else
       {
         if (cols != nCols || rows != nRows)

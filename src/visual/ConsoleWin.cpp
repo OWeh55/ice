@@ -43,7 +43,6 @@ using namespace std;
 
 namespace ice
 {
-
   wxPaintEvent p(wxID_ANY);
 
   const std::string iceConsoleWin::StdCaption = "ICE Console Window";
@@ -424,9 +423,8 @@ namespace ice
   void iceConsoleWin::ConsoleWinContent::Clear()
   {
     // initialize the character array to blanks
-    int x, y;
-    for (y = 0; y < SCREEN_YS; y++)
-      for (x = 0; x < SCREEN_XS; x++)
+    for (int y = 0; y < SCREEN_YS; y++)
+      for (int x = 0; x < SCREEN_XS; x++)
         {
           characters[y][x].Char = wxT(' ');
           characters[y][x].Attribs = AttribsCompressed;
@@ -458,9 +456,9 @@ namespace ice
 
     // set the new caption in the main thread
     wxCommandEvent Event(OPEN_ALPHA);
-
     Event.SetString(wxString((const char*)windowname.c_str(), wxConvLibc));
     AddPendingEvent(Event);
+
     isOpen = true;
   }
 
@@ -1065,7 +1063,7 @@ namespace ice
         if (length > 0)
           {
             res = c[0]; // return first byte directly
-            // store following bytes if fifo
+            // store following bytes in fifo
             for (int i = 1; i < length; ++i)
               charbuffer.push_front(c[i]);
 
@@ -1083,7 +1081,6 @@ namespace ice
     // lock the mutex with the help of a mutex locker(that releases the mutex
     // automatically when this method is left)
     wxMutexLocker Locker(Mutex);
-
     widebuffer.push_front(KeyCode);
   }
 
@@ -1098,7 +1095,6 @@ namespace ice
   void iceConsoleWin::iceKeyBuffer::Flush()
   {
     wxMutexLocker Locker(Mutex);
-
     widebuffer.clear();
     charbuffer.clear();
   };

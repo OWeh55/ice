@@ -84,49 +84,36 @@ namespace ice
   /* Konvertierung Int-Bild in Double-Bild                           */
   /*******************************************************************/
 #define FNAME "ConvImgImgD"
-  int ConvImgImgD(const Image& inp, ImageD& out, int modus, int sign)
+  void convImgImgD(const Image& inp, ImageD& out,
+                   double factor, double offset)
   {
-    int sx, sy;
+    int xs = inp.xsize;
+    int ys = inp.ysize;
 
-    int goff = 0;
-    double factor = 1;
+    if (!(out.xsize == xs && out.ysize == ys))
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
+    for (int y = 0; y < ys; ++y)
+      for (int x = 0; x < xs; ++x)
+        {
+          double pVal = (inp.getPixelUnchecked(x, y) - offset) * factor;
+          out.setPixel(x, y, pVal);
+        }
+  }
+
+  void ConvImgImgD(const Image& inp, ImageD& out,
+                   int modus, int sign)
+  {
     if (!inp.isValid())
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!out.isValid())
       throw IceException(FNAME, M_WRONG_IMAGED);
 
-    sx = inp.xsize;
-    sy = inp.ysize;
-
-    if (!(out.xsize == sx && out.ysize == sy))
-      throw IceException(FNAME, M_WRONG_IMGSIZE);
-
-    if (sign == SIGNED)
-      {
-        goff = (inp.maxval + 1) / 2;
-      }
-
-    if (modus == NORMALIZED)
-      {
-        factor = 4.0 / (inp.maxval + 1);
-      }
-
-    sx = std::min(sx, out.xsize);
-    sy = std::min(sy, out.ysize);
-
-    for (int y = 0; y < sy; ++y)
-      {
-        for (int x = 0; x < sx; ++x)
-          {
-            out.setPixel(x, y,
-                         (inp.getPixelUnchecked(x, y) - goff)*factor);
-          }
-      }
-
+    double offset = (sign == SIGNED) ? (inp.maxval + 1) / 2 : 0;
+    double factor = (modus == NORMALIZED) ?  4.0 / (inp.maxval + 1) : 1.0;
+    convImgImgD(inp, out, factor, offset);
     out.adaptLimits();
-    return OK;
   }
 #undef FNAME
 
@@ -134,83 +121,56 @@ namespace ice
   /* Konvertierung Double-Bild in Int-Bild                           */
   /*******************************************************************/
 #define FNAME "ConvImgDImg"
-  int ConvImgDImg(const ImageD& input, const Image& out, int modus, int sign)
+  void convImgDImg(const ImageD& input, const Image& output, double factor, double offset)
   {
+    int xs = input.xsize;
+    int ys = input.ysize;
 
-    int outmaxval;
-    int xs, ys;
-    double inmaxval;
-    double factor = 1.0, offset = 0.0;
+    if (!(output.xsize == xs && output.ysize == ys))
+      throw IceException(FNAME, M_WRONG_IMGSIZE);
 
+    for (int y = 0; y < ys; ++y)
+      for (int x = 0; x < xs; ++x)
+        {
+          int ival = RoundInt(input.getPixelUnchecked(x, y) * factor + offset);
+          output.setPixelLimited(x, y, ival);
+        }
+  }
+
+  void ConvImgDImg(const ImageD& input, const Image& out, int modus, int sign)
+  {
     if (!IsImgD(input))
       throw IceException(FNAME, M_WRONG_IMAGED);
 
     if (!IsImg(out))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    outmaxval = out.maxval;
-
-    ImageD inp(input); // copy to allow modification of limits
-
-    if (modus == ADAPTIVE)
+    int outmaxval = out.maxval;
+    int outnull = (sign == SIGNED) ? (outmaxval + 1) / 2 : 0;
+    if (modus != ADAPTIVE)
       {
-        inp.adaptLimits();
-      }
-
-    if (sign == SIGNED)
-      {
-        switch (modus)
-          {
-          case ADAPTIVE:
-            inmaxval = std::max(inp.maxValue(), -inp.minValue());
-            factor = (outmaxval / 2) / inmaxval;
-            offset = (outmaxval + 1) / factor / 2.0;
-            break;
-          case RAW:
-            factor = 1.0;
-            offset = (outmaxval + 1) / 2;
-            break;
-          case NORMALIZED:
-            factor = (outmaxval + 1) / 4.0;
-            offset = 2.0;
-            break;
-          }
+        double factor = 1.0;
+        if (modus == NORMALIZED)
+          factor = outmaxval / 4.0;
+        convImgDImg(input, out, factor, outnull);
       }
     else
       {
-        switch (modus)
+        ImageD inp(input); // copy to allow modification of limits
+        inp.adaptLimits();
+
+        if (sign == SIGNED)
           {
-          case ADAPTIVE:
-            offset = -inp.minValue();
-            factor = outmaxval / (inp.maxValue() - inp.minValue());
-            break;
-          case RAW:
-            factor = 1;
-            offset = 0;
-            break;
-          case NORMALIZED:
-            factor = (outmaxval + 1) / 4.0;
-            offset = 0;
-            break;
+            double inmaxval = std::max(inp.maxValue(), -inp.minValue());
+            double factor = (outmaxval / 2) / inmaxval;
+            convImgDImg(input, out, factor, outnull);
+          }
+        else
+          {
+            double factor = outmaxval / (inp.maxValue() - inp.minValue());
+            convImgDImg(input, out, factor, -inp.minValue() / factor);
           }
       }
-
-    xs = inp.xsize;
-    ys = inp.ysize;
-
-    if (!(out.xsize == xs && out.ysize == ys))
-      throw IceException(FNAME, M_WRONG_IMGSIZE);
-
-    for (int y = 0; y < ys; ++y)
-      {
-        for (int x = 0; x < xs; ++x)
-          {
-            int ival = RoundInt((inp.getPixelUnchecked(x, y) + offset) * factor);
-            out.setPixelLimited(x, y, ival);
-          }
-      }
-
-    return OK;
   }
 #undef FNAME
   //------------------------------------------------------

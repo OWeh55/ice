@@ -61,9 +61,7 @@ namespace ice
 
   void GetAlphaCursor(int* x, int* y)
   {
-    iceCursor CursorPos = wxGetApp().GetConsoleWin()->GetCursorPos();
-    *x = CursorPos.x;
-    *y = CursorPos.y;
+    GetAlphaCursor(*x, *y);
   }
 
   void GetAlphaCursor(int& x, int& y)

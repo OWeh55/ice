@@ -429,7 +429,7 @@ int Main(int argc, char* argv[])
   /* Auswertung der Kommandozeile */
 
   int rc;
-  while ((rc = getopt(argc, argv, "bBcC:x:y:o:O:i:s:p")) >= 0)
+  while ((rc = getopt(argc, argv, "bBcC:x:y:o:O:i:s:ph")) >= 0)
     {
       switch (rc)
         {
@@ -443,10 +443,7 @@ int Main(int argc, char* argv[])
           maxcount = MAXCOUNT_BENCH;
           break;
         case 'c':
-          bench = true;
-          display = false;
           cyclic = true;
-          maxcount = MAXCOUNT_BENCH;
           break;
         case 'p':
           worldTime = false;
@@ -477,8 +474,10 @@ int Main(int argc, char* argv[])
           video = false;
           break;
 
+	case 'h': // no break!
         default:
           ParameterMessage(); /* falscher Parameter */
+	  exit(1);
         }
     }
 
@@ -545,7 +544,6 @@ int Main(int argc, char* argv[])
       pclose(ip);
     }
 #endif
-
 
   bool done = false;
   bool neue_rechnung = true;
@@ -615,7 +613,7 @@ int Main(int argc, char* argv[])
             }
 
           if (bench)
-            printf("%3.2f (%3.2f)", (double)(50.0 / tp), (double)tp);
+            printf("%3.2f (%3.2f us/pixel)", (double)(50.0 / tp), (double)tp);
 
           if ((currentRange == baseRange)
               && (maxcount == MAXCOUNT_DEFAULT))
@@ -1475,7 +1473,16 @@ string toString(DOUBLE v)
 void ParameterMessage()
 {
   printf("\nvis2 (c)OWeh\n\n");
-  printf("vis [-b|-B] commandstring\n");
+  printf("vis2 [options]\n");
+  printf("options:\n");
+  printf("-B  benchmark with display\n");
+  printf("-b  benchmark without display\n");
+  printf("-c  cyclic benchmark (with -b or -B)\n");
+  printf("-x xxx  width of display\n");
+  printf("-y yyy  height of display\n");
+  printf("-s s    supersampling\n");
+  printf("-O filename sequence output as video\n");
+  printf("-o filename sequence output as images\n");
 }
 
 void PrintA(string s)
