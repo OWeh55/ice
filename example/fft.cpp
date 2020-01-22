@@ -1,4 +1,5 @@
 #include <image.h>
+
 // programm zur berechnung von fft und abgeleiteten Transformationen
 // von gegebenen bildern
 
@@ -12,7 +13,6 @@ void usage(const string& pn)
   cout << "     3 Logarithmiertes Leistungsspektrum" << endl;
   cout << "     4 Hartley-Transformation" << endl;
   cout << "     5 Cepstrum" << endl;
-  cout << "     1 Leistungsspektrum" << endl;
   cout << "-g     Grauwerte statt Farbe" << endl;
   cout << "-o fn  Ausgabe in Datei fn" << endl;
   cout << "-H f   Hochpass mit Grenzfrequenz f" << endl;
@@ -27,13 +27,13 @@ void TP(ImageD& id, int tp)
     {
       int xm = id.xsize / 2;
       int ym = id.ysize / 2;
-
+      
       for (int y = 0; y < id.ysize; y++)
         for (int x = 0; x < id.xsize; x++)
           {
             int dx = abs(x - xm);
             int dy = abs(y - ym);
-
+	    
             if (dx > tp || dy > tp)
               PutValD(id, x, y, 0.0);
           }
@@ -150,7 +150,6 @@ int main(int argc, char** argv)
     }
   else
     usage(argv[0]);
-
 
   ColorImage orig;
   orig.read(fn);
