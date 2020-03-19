@@ -59,13 +59,13 @@ namespace ice
       return highest - lowest;
     }
 
-    bool operator==(const Range& sec)
+    bool operator==(const Range& sec) const
     {
       return highest == sec.highest && lowest == sec.lowest;
     }
 
     // requested operator< for use in map, set ...
-    bool operator<(const Range& sec)
+    bool operator<(const Range& sec) const
     {
       return (lowest < sec.lowest) ||
              ((lowest == sec.lowest) && (highest < sec.highest));
