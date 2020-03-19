@@ -5,7 +5,6 @@
 
 namespace ice
 {
-
   template<typename T>
   class Range
   {
@@ -34,6 +33,12 @@ namespace ice
       return lowest <= highest;
     }
 
+    void setInvalid()
+    {
+      highest = lowest;
+      highest--;
+    }
+
     bool isInRange(T val) const
     {
       return val >= lowest && val <= highest;
@@ -47,6 +52,23 @@ namespace ice
     T getHighest() const
     {
       return highest;
+    }
+
+    T length() const
+    {
+      return highest - lowest;
+    }
+
+    bool operator==(const Range& sec)
+    {
+      return highest == sec.highest && lowest == sec.lowest;
+    }
+
+    // requested operator< for use in map, set ...
+    bool operator<(const Range& sec)
+    {
+      return (lowest < sec.lowest) ||
+             ((lowest == sec.lowest) && (highest < sec.highest));
     }
   };
 } // namespace ice

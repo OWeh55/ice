@@ -76,7 +76,7 @@ namespace ice
     {
       clear();
       std::vector<int> indexList(vList.size());
-      for (int i = 0; i < indexList.size(); ++i)
+      for (unsigned int i = 0; i < indexList.size(); ++i)
         {
           indexList[i] = i;
         }

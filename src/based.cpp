@@ -133,9 +133,9 @@ namespace ice
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
         {
-	  double dval=input.getPixelUnchecked(x,y);
-	  int ival = RoundInt(dval * factor + offset);
-	  //	  cout << dval << " " << ival << endl;
+          double dval = input.getPixelUnchecked(x, y);
+          int ival = RoundInt(dval * factor + offset);
+          //    cout << dval << " " << ival << endl;
           output.setPixelLimited(x, y, ival);
         }
   }
