@@ -27,13 +27,13 @@ void TP(ImageD& id, int tp)
     {
       int xm = id.xsize / 2;
       int ym = id.ysize / 2;
-      
+
       for (int y = 0; y < id.ysize; y++)
         for (int x = 0; x < id.xsize; x++)
           {
             int dx = abs(x - xm);
             int dy = abs(y - ym);
-	    
+
             if (dx > tp || dy > tp)
               PutValD(id, x, y, 0.0);
           }

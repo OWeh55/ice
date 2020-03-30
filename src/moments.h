@@ -58,10 +58,9 @@ namespace ice
     explicit Moments(PointList p);
     explicit Moments(PointList p, int a1, int a2);
 
-    int Init()
+    void Init()
     {
       init();
-      return OK;
     }
 
     // pointer to "old" moments (for compatibility)
@@ -76,22 +75,22 @@ namespace ice
     }
 
     // modify moments by adding a point
-    int add(Point p, double val);
+    void add(Point p, double val);
 
     // modify moments by adding new regions
-    int add(const Region& r);
-    int add(const Contur& c);
+    void add(const Region& r);
+    void add(const Contur& c);
 
     // polygon
-    int add(const Matrix& p);
-    int add(const std::vector<Point>& p);
+    void add(const Matrix& p);
+    void add(const std::vector<Point>& p);
 
-    int add(PointList p);
-    int add(PointList p, int a1, int a2);
+    void add(PointList p);
+    void add(PointList p, int a1, int a2);
 
-    int add(int y, int x1, int x2);     // add horizontal line segment
-    int add(const Moments& m);
-    int add(double m[15]);
+    void add(int y, int x1, int x2);     // add horizontal line segment
+    void add(const Moments& m);
+    void add(double m[15]);
 
     Point Centre() const;
     double& operator()(int z, int s);   // moments

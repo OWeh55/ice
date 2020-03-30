@@ -132,7 +132,7 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "Moments::Add"
-  int Moments::add(const Moments& m)
+  void Moments::add(const Moments& m)
   {
     int i;
 
@@ -140,11 +140,9 @@ namespace ice
       {
         mom[i] += m.mom[i];
       }
-
-    return OK;
   }
 
-  int Moments::add(double m[15])
+  void Moments::add(double m[15])
   {
     int i;
 
@@ -152,11 +150,9 @@ namespace ice
       {
         mom[i] += m[i];
       }
-
-    return OK;
   }
 
-  int Moments::add(Point p, double val)
+  void Moments::add(Point p, double val)
   {
     double x1 = p.x;
     double x2 = x1 * x1;
@@ -187,10 +183,9 @@ namespace ice
     mom[i22] += val * x2 * y2;
     mom[i13] += val * x1 * y3;
     mom[i04] += val *      y4;
-    return OK;
   }
 
-  int Moments::add(int y, int px1, int px2)
+  void Moments::add(int y, int px1, int px2)
   {
     // Zeilen-Segment zu Momenten hinzufügen
 
@@ -244,53 +239,51 @@ namespace ice
     mom[i22] += X2 * Y2;
     mom[i13] += X1 * Y3;
     mom[i04] += X0 * Y4;
-
-    return OK;
   }
 
-  int Moments::add(const Region& reg)
+  void Moments::add(const Region& reg)
   {
-    return reg.calcMoments(*this);
+    reg.calcMoments(*this);
   }
 
-  int Moments::add(const Contur& c)
+  void Moments::add(const Contur& c)
   {
     double s[2];
     double m[15];
     MomentRegion(c, m, s);
-    return add(m);
+    add(m);
   }
 
-  int Moments::add(const Matrix& p)
+  void Moments::add(const Matrix& p)
   {
     double s[2];
     double m[15];
     MomentPolygon(p, m, s);
-    return add(m);
+    add(m);
   }
 
-  int Moments::add(const std::vector<Point>& pl)
+  void Moments::add(const std::vector<Point>& pl)
   {
     double s[2];
     double m[15];
     MomentPolygon(pl, m, s);
-    return add(m);
+    add(m);
   }
 
-  int Moments::add(PointList p)
+  void Moments::add(PointList p)
   {
     double s[2];
     double m[15];
     MomentPolygon(p, m, s);
-    return add(m);
+    add(m);
   }
 
-  int Moments::add(PointList pl, int a1, int a2)
+  void Moments::add(PointList pl, int a1, int a2)
   {
     double s[2];
     double m[15];
     PointListMoment(pl, a1, a2, m, s);
-    return add(m);
+    add(m);
   }
 #undef FNAME
 #define FNAME "Moments::CentralMoments"

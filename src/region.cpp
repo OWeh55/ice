@@ -50,7 +50,7 @@ namespace ice
   }
 #undef FNAME
 
-  int Region::newY(int y)
+  void Region::newY(int y)
   {
     //    std::cout << "newY: "<< y << "(" << sl.size() << ")" << endl;
     if (sl.empty())
@@ -71,31 +71,22 @@ namespace ice
         sl.push_front(RangeSet());
         y0--;
       }
-
-    return OK;
   }
 
-  int Region::trimY()
+  void Region::trimY()
   {
-    if (sl.size() == 0)
+    while (!sl.empty() && (sl[0].empty()))
       {
-        return OK;
+	sl.pop_front();
+	y0++;
       }
-
-    while ((sl.size() > 0) && (sl[0].empty()))
+    
+    while (!sl.empty() && (sl.back().empty()))
       {
-        sl.pop_front();
-        y0++;
+	sl.pop_back();
       }
-
-    while ((sl.size() > 0) && (sl.back().empty()))
-      {
-        sl.pop_back();
-      }
-
-    return OK;
   }
-
+  
   int Region::getMinY() const
   {
     return y0;
@@ -265,33 +256,27 @@ namespace ice
   }
 #undef FNAME
 #define FNAME "Region::CalcMoments"
-  int Region::calcMoments(Moments& m) const
+  void Region::calcMoments(Moments& m) const
   {
     for (int y = 0; y < (int)sl.size(); y++)
       {
         sl[y].calcMoments(m, y + y0);
       }
-
-    return OK;
   }
 #undef FNAME
 #define FNAME "Region::Draw"
-  int Region::draw(const Image& img, int val) const
+  void Region::draw(const Image& img, int val) const
   {
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if (val == -1)
+    if (val >= 0)
       {
-        return OK;
+	for (int y = 0; y < (int)sl.size(); y++)
+	  {
+	    sl[y].draw(y + y0, img, val);
+	  }
       }
-
-    for (int y = 0; y < (int)sl.size(); y++)
-      {
-        sl[y].draw(y + y0, img, val);
-      }
-
-    return OK;
   }
 #undef FNAME
   Point Region::getCenter()const

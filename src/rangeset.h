@@ -2,7 +2,7 @@
 #define RANGESET_H
 
 #include <vector>
-#include <map>
+
 #include "ImageC.h"
 #include "moments.h"
 #include "rowsegment.h"
@@ -136,7 +136,6 @@ namespace ice
     friend std::ostream& operator<<(std::ostream& out, const RangeSet& s);
 
   private:
-
     class Elem
     {
     public:

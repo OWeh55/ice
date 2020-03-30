@@ -49,7 +49,7 @@ namespace ice
     int getMaxY() const;
     int getMaxX() const;
     int getMinX() const;
-
+    
     int getWidth() const;
     int getHeight() const;
     void getRect(int& xi, int& yi, int& xa, int& ya) const;
@@ -119,8 +119,8 @@ namespace ice
       return true;
     }
 
-    int draw(const Image& img, int val) const;
-    int calcMoments(Moments& m) const;
+    void draw(const Image& img, int val) const;
+    void calcMoments(Moments& m) const;
 
     friend std::ostream& operator<<(std::ostream&, const Region& s);
 
@@ -179,8 +179,8 @@ namespace ice
     Point getCenter() const;
 
   protected:
-    int newY(int y);
-    int trimY();
+    void newY(int y);
+    void trimY();
 
     std::deque<RangeSet> sl;
     int y0;
