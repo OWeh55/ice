@@ -77,16 +77,16 @@ namespace ice
   {
     while (!sl.empty() && (sl[0].empty()))
       {
-	sl.pop_front();
-	y0++;
+        sl.pop_front();
+        y0++;
       }
-    
+
     while (!sl.empty() && (sl.back().empty()))
       {
-	sl.pop_back();
+        sl.pop_back();
       }
   }
-  
+
   int Region::getMinY() const
   {
     return y0;
@@ -272,10 +272,10 @@ namespace ice
 
     if (val >= 0)
       {
-	for (int y = 0; y < (int)sl.size(); y++)
-	  {
-	    sl[y].draw(y + y0, img, val);
-	  }
+        for (int y = 0; y < (int)sl.size(); y++)
+          {
+            sl[y].draw(y + y0, img, val);
+          }
       }
   }
 #undef FNAME

@@ -1,6 +1,6 @@
 /*
  * bildet "Mittelwert"-Bilder aus einer Vielzahl von Einzelbildern
- * ziwschenresultat ist für jedes Pixel ein Histogramm
+ * Zwischenresultat ist für jedes Pixel ein Histogramm
  * die Verrechnung erfolgt in unterschiedlichster Art und Weise
  * pixelweise Operationen:
  * - Mittelwert

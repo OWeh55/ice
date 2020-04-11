@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <limits.h>
+#include <iostream>
 
 #include "defs.h"
 #include "IceException.h"
@@ -78,7 +79,7 @@ namespace ice
     int xs, ys;
     int x, y;
     unsigned int val = 0, valr = 0, valg = 0, valb = 0;
-    unsigned char* hptr, *rptr = NULL, *gptr = NULL, *bptr = NULL;
+    unsigned char* hptr, *rptr = nullptr, *gptr = nullptr, *bptr = nullptr;
     int xm, ym;
     bool norm = false;
 
@@ -334,6 +335,10 @@ namespace ice
                     biptr[y][x] = maxval - *ptr;
                     ptr++;
                   }
+              }
+            if (ib.can_delete)
+              {
+                free(ib.data);
               }
           }
         else
@@ -729,7 +734,7 @@ namespace ice
 
     ib.data = (unsigned char*) malloc(ib.linelength * ib.height);
 
-    if (ib.data == NULL)
+    if (ib.data == nullptr)
       throw IceException(FNAME, M_NO_MEM);
 
     if (ib.valuesize == 1)
@@ -784,7 +789,7 @@ namespace ice
 
     ImageBuffer.data = (unsigned char*)malloc(ImageBuffer.linelength * ImageBuffer.height);
 
-    if (ImageBuffer.data == NULL)
+    if (ImageBuffer.data == nullptr)
       throw IceException(FNAME, M_NO_MEM);
 
     // copy the pixel values
@@ -889,7 +894,7 @@ namespace ice
 
     size = 0;
 
-    if (buffer == NULL)
+    if (buffer == nullptr)
       {
         switch (pt)
           {
@@ -1027,7 +1032,7 @@ namespace ice
 
     size = 0;
 
-    if (buffer == NULL)
+    if (buffer == nullptr)
       {
         switch (pt)
           {

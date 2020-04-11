@@ -30,10 +30,10 @@ namespace ice
   {
   public:
     Range(): lowest(std::numeric_limits<T>::max()),
-	     highest(std::numeric_limits<T>::min()) {}
-    
+      highest(std::numeric_limits<T>::min()) {}
+
     Range(T min, T max): lowest(min), highest(max) {}
-    
+
     void update(T val)
     {
       if (val < lowest)
@@ -45,18 +45,18 @@ namespace ice
           highest = val;
         }
     }
-    
+
     bool isValid() const
     {
       return lowest <= highest;
     }
-    
+
     void setInvalid()
     {
       highest = 0;
       lowest = 1;
     }
-    
+
     bool isInRange(T val) const
     {
       return val >= lowest && val <= highest;
@@ -81,12 +81,12 @@ namespace ice
     {
       return highest == sec.highest && lowest == sec.lowest;
     }
-    
+
     // required operator< for use in map, set ...
     bool operator<(const Range& sec) const
     {
       return (lowest < sec.lowest) ||
-	((lowest == sec.lowest) && (highest < sec.highest));
+             ((lowest == sec.lowest) && (highest < sec.highest));
     }
   private:
     T lowest;

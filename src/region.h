@@ -49,7 +49,7 @@ namespace ice
     int getMaxY() const;
     int getMaxX() const;
     int getMinX() const;
-    
+
     int getWidth() const;
     int getHeight() const;
     void getRect(int& xi, int& yi, int& xa, int& ya) const;

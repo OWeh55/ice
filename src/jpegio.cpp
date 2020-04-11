@@ -69,7 +69,6 @@ namespace ice
   struct my_error_mgr
   {
     struct jpeg_error_mgr pub;  /* "public" fields */
-
     jmp_buf setjmp_buffer;  /* for return to caller */
   };
 
@@ -406,8 +405,9 @@ namespace ice
     ib.linelength = ib.planes * ib.width * ib.valuesize;
     ib.packmethod = IB_RGB;
     ib.intensity = true;
-    ib.can_delete = true;
+
     ib.data = (unsigned char*) malloc(ib.linelength * ib.height);
+    ib.can_delete = true;
 
     jpeg_start_decompress(&cinfo);
 
@@ -499,8 +499,8 @@ namespace ice
     ib.linelength = ib.planes * ib.width * ib.valuesize;
     ib.packmethod = IB_RGB;
     ib.intensity = true;
-    ib.can_delete = true;
 
+    ib.can_delete = true;
     ib.data = (unsigned char*) malloc(ib.linelength * ib.height);
 
     jpeg_start_decompress(&cinfo);
