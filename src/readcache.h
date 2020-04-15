@@ -69,7 +69,7 @@ namespace ice
           switch (error)
             {
             case 1:
-              throw IceException(FNAME, M_WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAMETER);
               break;
             case 2:
               throw IceException(FNAME, M_FILE_OPEN);
@@ -230,7 +230,7 @@ namespace ice
           switch (error)
             {
             case 1:
-              throw IceException(FNAME, M_WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAMETER);
               break;
             case 2:
               throw IceException(FNAME, M_FILE_OPEN);

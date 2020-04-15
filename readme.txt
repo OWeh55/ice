@@ -1,16 +1,17 @@
-ICE V6.x  (c) 1992 - 2011 Friedrich-Schiller-Universitaet Jena
-
+ICE V6.x  (c) 1992 - 2018 Friedrich-Schiller-Universitaet Jena
+    (c) 2019 - 2020 Wolfgang Ortmann
+ 
 ICE - C - Bibliothek fuer die Bildverarbeitung/Bildanalyse
 **********************************************************
 
 (Hinweise fuer Nutzer frueherer Versionen am Ende)
 
-ICE ist eine C/C++ Bibliothek fuer die Bildverarbeitung, die von der Bildverar-
-beitungs-Gruppe an der Uni Jena entwickelt wurde und sich im taeglichen Ge-
-brauch in Forschung und Lehre an der Uni Jena bewaehrt hat.  Die Bibliothek
-wurde zur Bearbeitung von Forschungsthemen auf dem Gebiet der robot vision/
-3D-Rekonstruktion,  der Mustererkennung und  weiteren Bildverarbeitungspro-
-blemen erfolgreich eingesetzt.
+ICE ist eine C/C++ Bibliothek fuer die Bildverarbeitung, die von der
+Bildverarbeitungs-Gruppe an der Uni Jena entwickelt wurde und sich im
+taeglichen Gebrauch in Forschung und Lehre an der Uni Jena bewaehrt hat.
+Die Bibliothek wurde zur Bearbeitung von Forschungsthemen auf dem Gebiet
+der robot vision, 3D-Rekonstruktion,  der Mustererkennung und weiteren
+Bildverarbeitungsproblemen erfolgreich eingesetzt.
 
 Die Bibliothek wird der Allgemeinheit zur freien Verwendung entsprechend der
 LGPL (GNU Lesser General Public License) zur Verfuegung gestellt.
@@ -21,7 +22,7 @@ Voraussetzungen:
 
 Betriebssystem:
 	Linux
-oder	WindowsXX
+oder	Windows
 
 C++ - Compiler
 
@@ -55,7 +56,7 @@ Installation Linux:
     Optionale Variablen
 
     - ICEVISUALISATION=800,600,100
-	Zu verwendende Groesse der Darstellung 800*600, 
+	Zu verwendende initiale Groesse der Darstellung 800*600, 
         Update der Darstellung alle 100ms
 
  3. Bilden der Bibliothek
@@ -66,8 +67,8 @@ Installation Linux:
 
  4. Bilden von eigenen Anwendungen
     Sinnvoller Ausgangspunkt zur Verwaltung eigener Anwendungen ist
-    das im Verzeichnis $ICEDIR/examples befindliche Makefile. Dies sollte
-    in das eigene Programm-Verzeichnis kopiert werden.
+    das im Verzeichnis $ICEDIR/examples befindliche Makefile.
+    Dieses sollte in das eigene Programm-Verzeichnis kopiert werden.
 
     Wenn meinprogramm.cpp eine kleine eigene Anwendung aus einem Modul
     (ein *.cpp-File) ist, so kann ohne Editieren des Makefile meinprogramm
@@ -77,8 +78,8 @@ Installation Linux:
 		     #	Abhaengigkeiten nicht aendern
       make meinprogramm
 
-    Wenn das eigene Projekt mehrere Quelltext-Dateien umfaßt, muss das 
-    Makefile entsprechend angepaßt werden.
+    Wenn das eigene Projekt mehrere Quelltext-Dateien umfasst, muss das 
+    Makefile entsprechend angepasst werden.
 
 Soll ICE ohne die verzichtbaren Bibliotheken verwendet werden, so koennen
 entsprechende Environment-Variablen gesetzt werden:
@@ -87,8 +88,8 @@ Bibliothek            deaktivieren        Einschraenkung
 -----------------------------------------------------------------
 fftw3-devel           export NOFFTW=1     langsamere Fouriertrafo
 
-Installation Windowsxx
-**********************
+Installation Windows
+********************
 
 Zur Installation unter Windows wird die Verwendung von des 
 MinGW-Paketes empfohlen. Fuer die Visualisierung wird die Bibliothek
@@ -101,16 +102,16 @@ Dokumentation und Kontakte
 
 Die Beschreibung von ICE liegt als Postscript-File den Paketen bei. 
 
-Die Universität Jena uebernimmt mit dieser Veröffentlichung keine 
-weitergehenden Verpflichtungen zu Beratung und Support fuer diese 
-ICE-Distribution.
+Wolfgang Ortmann und die Universität Jena uebernehmen mit dieser
+Veröffentlichung keine weitergehenden Verpflichtungen zu Beratung und
+Support fuer diese ICE-Distribution.
 
 Bemerkungen zum Verzeichnis Examples:
 
 Die Programme in diesem Verzeichnis  sind keine echten Lehrbeispiele, die
 meisten entstanden waehrend  der Erprobung neu implementierter Funktionen
 als Testprogramm.  Dementsprechend koennen diese Programme auch zum Tes-
-ten der korekten Installation benutzt werden  (z.B. testet vis2 zahlrei-
+ten der korrekten Installation benutzt werden  (z.B. testet vis2 zahlrei-
 che Funktionen zur Bildschirmdarstellung). 
 Ein Blick in  den Quelltext  dieser Programme kann aber auch helfen,  die
 Benutzung einzelner Funktionen besser zu verstehen.
