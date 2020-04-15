@@ -33,7 +33,7 @@ namespace ice
   PolygonalCurve::PolygonalCurve(const Matrix& im, bool close): closed(close)
   {
     if (im.cols() < 2 || im.rows() < 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < im.rows(); i++)
       {
@@ -272,7 +272,7 @@ namespace ice
       {
         // reducing to less then 3 point does not make sense
         // "reducing" to more then original points does not make sense
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       }
 
     // already reduced enough
@@ -363,7 +363,7 @@ namespace ice
       default:
       {
         // undefined mode
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
       }
@@ -379,7 +379,7 @@ namespace ice
   void PolygonalCurve::ReducedToPrecision(double prec, PolygonalCurve& result, int mode) const
   {
     if (prec < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     switch (mode)
       {
@@ -467,7 +467,7 @@ namespace ice
       default:
       {
         // undefined mode
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
       }

@@ -55,7 +55,7 @@ namespace ice
       throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     if (limit < 0.0)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (pl1->lng > MAXMATCHPOINTSLINOPT)
       throw IceException(FNAME, M_TOO_MUCH_POINTS);

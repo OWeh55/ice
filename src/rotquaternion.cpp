@@ -371,7 +371,7 @@ namespace ice
 
     if (!(in.rows() == 3 && in.cols() == 3))
       {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+        throw IceException(FNAME, M_MATRIXFORMAT);
 
         return out;
       }

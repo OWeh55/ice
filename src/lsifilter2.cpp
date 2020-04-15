@@ -142,7 +142,7 @@ namespace ice
     int sx = mask.size();
 
     if ((sx < 1) || ((sx & 1) != 1) || (norm == 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
@@ -298,7 +298,7 @@ namespace ice
     int sy = mask.size();
 
     if ((sy < 1) || ((sy & 1) != 1) || (norm == 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 

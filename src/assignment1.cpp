@@ -128,7 +128,7 @@ namespace ice
               double c = cost.at(i).at(j);
 
               if (c < 0.0)
-                throw IceException(FNAME, M_WRONG_PARAM);
+                throw IceException(FNAME, M_WRONG_PARAMETER);
 
               if (c > max)
                 {

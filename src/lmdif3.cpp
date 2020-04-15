@@ -80,7 +80,7 @@ namespace ice
     int funcdim = fcn.funcdim();
 
     if ((onr < 1) || (funcdim < onr))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     running = true;
 
@@ -110,8 +110,7 @@ namespace ice
     if (info == 0)
       {
         /* Fehler sollte nicht auftreten, da vorher getestet */
-        throw IceException(FNAME, M_WRONG_PARAM);
-        info = ERROR; // Rückgabewert vorbereiten
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       }
 
     for (i = 0; i < onr; i++)

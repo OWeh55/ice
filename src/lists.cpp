@@ -63,7 +63,7 @@ namespace ice
     IMatrix pl(0, 2);
 
     if (diff < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     std::vector<IPoint> vpl;
     c.getPoints(vpl, true);

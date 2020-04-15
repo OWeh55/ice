@@ -144,7 +144,7 @@ namespace ice
       throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (step < 0  || pl.size() != wv.size())
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (mode != 1 && mode != 2)
       throw IceException(FNAME, M_WRONG_MODE);

@@ -195,7 +195,7 @@ namespace ice
     void Resize(int newdim)
     {
       if (newdim < 0)
-        throw IceException("Vector::Resize", M_WRONG_DIM);
+        throw IceException("Vector::Resize", M_WRONG_DIMENSION);
 
       resize(newdim);
     }
@@ -338,7 +338,7 @@ namespace ice
     {
       if (dim != 2)
         {
-          throw IceException("Vector::Point", M_WRONG_DIM);
+          throw IceException("Vector::Point", M_WRONG_DIMENSION);
         }
       return pointT<T>(data[0], data[1]);
     }
@@ -386,7 +386,7 @@ namespace ice
     void setV(T x1, T x2, T x3, T x4)
     {
       if (dim < 4)
-        throw IceException("Vector::setV", M_WRONG_DIM);
+        throw IceException("Vector::setV", M_WRONG_DIMENSION);
 
       data[3] = x4;
 
@@ -396,7 +396,7 @@ namespace ice
     void setV(T x1, T x2, T x3)
     {
       if (dim < 3)
-        throw IceException("Vector::setV", M_WRONG_DIM);
+        throw IceException("Vector::setV", M_WRONG_DIMENSION);
 
       data[2] = x3;
       setV(x1, x2);
@@ -405,7 +405,7 @@ namespace ice
     void setV(T x1, T x2)
     {
       if (dim < 2)
-        throw IceException("Vector::setV", M_WRONG_DIM);
+        throw IceException("Vector::setV", M_WRONG_DIMENSION);
 
       data[1] = x2;
       setV(x1);
@@ -414,7 +414,7 @@ namespace ice
     void setV(T x1)
     {
       if (dim < 1)
-        throw IceException("Vector::setV", M_WRONG_DIM);
+        throw IceException("Vector::setV", M_WRONG_DIMENSION);
 
       data[0] = x1;
     }
@@ -484,7 +484,7 @@ namespace ice
     const VectorT& operator+=(const VectorT& h)
     {
       if (dim != h.dim)
-        throw IceException(FNAME, M_WRONG_DIM);
+        throw IceException(FNAME, M_WRONG_DIMENSION);
 
       for (unsigned int i = 0; i < dim; i++)
         {
@@ -507,7 +507,7 @@ namespace ice
     {
       if (dim != rhs.dim)
 
-        throw IceException(FNAME, M_WRONG_DIM);
+        throw IceException(FNAME, M_WRONG_DIMENSION);
 
       for (unsigned int i = 0; i < dim; i++)
         {
@@ -542,7 +542,7 @@ namespace ice
       T dist = 0.0;
 
       if (dim != h.dim)
-        throw IceException(FNAME, M_WRONG_DIM);
+        throw IceException(FNAME, M_WRONG_DIMENSION);
 
       for (unsigned i = 0; i < dim; i++)
         {
@@ -601,7 +601,7 @@ namespace ice
       T prod = 0;
 
       if (dim != h.dim)
-        throw IceException("Vector::operator*", M_WRONG_DIM);
+        throw IceException("Vector::operator*", M_WRONG_DIMENSION);
 
       for (unsigned int i = 0; i < dim; i++)
         {
@@ -704,7 +704,7 @@ namespace ice
       double l = Length();
 
       if (l == 0)
-        throw IceException("Vector::Normalize", M_WRONG_PARAM);
+        throw IceException("Vector::Normalize", M_ZERO_VECTOR);
 
       for (unsigned int j = 0; j < dim; j++)
         {
@@ -769,7 +769,7 @@ namespace ice
       if (c != '<')
         {
           is.clear();
-          throw IceException(FNAME, M_WRONG_FILE);
+          throw IceException(FNAME, M_WRONG_FILETYPE);
         }
 
       if (is.peek() == '>')
@@ -788,7 +788,7 @@ namespace ice
           if ((c != ',') && (c != '#') && (c != '>'))
             {
               is.clear();
-              throw IceException(FNAME, M_WRONG_FILE);
+              throw IceException(FNAME, M_WRONG_FILETYPE);
             }
         }
       while (c != '>');

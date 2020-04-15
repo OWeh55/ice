@@ -96,7 +96,7 @@ namespace ice
       throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (pnr != weight.size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     /* Berechnung der Kovarianzmatrix */
     cov.set(0.0);
@@ -172,7 +172,7 @@ namespace ice
       throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (step < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     double mse = 1.0;
 

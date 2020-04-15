@@ -271,7 +271,6 @@ namespace ice
       }
   }
 
-
   void FourierTrafo::setSource(const std::vector<double>& source)
   {
     if (checkParameter(source.size()))
@@ -410,7 +409,6 @@ namespace ice
     int ln = 0;
     for (int i = 1; i < size; i = i + i)
       ln++;
-
 
     doBitReversal();
 

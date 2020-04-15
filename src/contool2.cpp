@@ -165,7 +165,7 @@ namespace ice
         int xf, yf;
 
         if (fabs(par[3] - par[4]) > 2 * M_PI)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         e.xm = par[0];
         e.ym = par[1];
@@ -278,7 +278,7 @@ namespace ice
         int xf, yf;
 
         if (fabs(PHI1 - PHI2) > 2 * M_PI || fabs(PHI1 - PHI2)*RA < 1)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         e.xm = XM;
         e.ym = YM;

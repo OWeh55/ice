@@ -83,7 +83,7 @@ namespace ice
 
     if ((!orig.inside(p)) || (maxSize <= 0) ||
         (stdmax <= 0))   // Parametertestung
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     Histogram stat(orig.maxval + 1);
 
@@ -191,7 +191,7 @@ namespace ice
   Region RegionGrowing(IPoint p, const Image& orig, int maxSize, bool findMin)
   {
     if ((!orig.inside(p)) || (maxSize <= 0))   // Parametertestung
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     Image himg;
     himg.create(orig.xsize, orig.ysize, 1);

@@ -407,7 +407,6 @@ int main(int argc, char* argv[])
             case 'q':
               mode = 'q';
               break;
-
             }
         }
       if (mode != 'q')

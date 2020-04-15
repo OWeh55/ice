@@ -79,7 +79,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (diff < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
     reset(b.maxval + 1);
     addImage(b, diff);
   }
@@ -90,7 +90,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (diff < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int typ = b->ImageType();
 
@@ -129,7 +129,7 @@ namespace ice
     int i;
 
     if (number < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     nclasses = number;
 
@@ -174,7 +174,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((index < 0) || (index >= nclasses))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return classes[index];
   }
@@ -215,7 +215,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (index < 0 || index >= nclasses)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -294,7 +294,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((q < 0.0) || (q > 0.5))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (nValues == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -440,7 +440,7 @@ namespace ice
   double Distance(const Histogram& h1, const Histogram& h2)
   {
     if (!h1.isValid() || !h2.isValid() || h1.nClasses() != h2.nClasses())
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     EarthMoverVectorDistance emd;
     return emd(h1.getRelative(), h2.getRelative());

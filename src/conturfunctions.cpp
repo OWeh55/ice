@@ -118,7 +118,7 @@ namespace ice
     y = ps[1];
 
     if ((direct != HORZ) && (direct != VERT))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (!IsImg(imgv))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -139,7 +139,7 @@ namespace ice
       }
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-      throw IceException(FNAME, M_WRONG_WINDOW2);
+      throw IceException(FNAME, M_IMAGE_TOO_SMALL);
 
     if ((x < wxi) || (y < wyi) || (x > wxa) || (y > wya))
       {

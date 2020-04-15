@@ -189,7 +189,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (p < 0 || q < 0 || n <= 0 || ((n & 1) == 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     n = n / 2; // Umgebungsgröße -> Abstandswert
     nx = quelle.xsize;

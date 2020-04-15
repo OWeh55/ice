@@ -67,8 +67,11 @@ namespace ice
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
 
-    if ((val < 0) || (val > img.maxval) || (size < 2))
-      throw IceException(FNAME, M_WRONG_VAL);
+    if ((val < 0) || (val > img.maxval))
+      throw IceException(FNAME, M_WRONG_VALUE);
+
+    if (size < 2)
+      throw IceException(FNAME, M_WRONG_SIZE);
 
     if ((x < 0) || (y < 0) || (x >= img->xsize) || (y >= img->ysize))
       {
@@ -138,7 +141,7 @@ namespace ice
         FillRegion(c, val, img);
         break;
       default:
-        throw IceException(FNAME, M_WRONG_VAL);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     return OK;
@@ -155,7 +158,7 @@ namespace ice
       (val1 < 0) || (val2 > img.maxval) ||
       (val2 < 0) || (val2 > img.maxval)
     )
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (mode != DEFAULT && mode != NOFILL)
       throw IceException(FNAME, M_WRONG_MODE);
@@ -183,7 +186,7 @@ namespace ice
     Contur c;
 
     if ((val1 < 0) || (val2 < 0) || (val2 > img.maxval))
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (mode != DEFAULT && mode != NOFILL)
       throw IceException(FNAME, M_WRONG_MODE);
@@ -218,7 +221,7 @@ namespace ice
     double z1u, z1o;
 
     if ((val < 0) || val > pic.maxval)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     for (j = 0; j < dimy; ++j)
       for (i = 0; i < dimx; ++i)

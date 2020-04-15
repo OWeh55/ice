@@ -40,12 +40,12 @@ namespace ice
     int ok = false;
 //  cout << "Kommando: " << cmd << endl;
     if (srlWriteString(ROB_DEVICE, cmd, 0) != srlOK)
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_WRITE);
 
     do
       {
         if (srlReadString(ROB_DEVICE, answer, 800) != srlOK)
-          throw IceException(FNAME, M_WRONG_FILE);
+          throw IceException(FNAME, M_WRONG_READ);
 
 //    cout << answer << " - " << cmd << endl;
 
@@ -103,7 +103,7 @@ namespace ice
   {
     char cmd[80];
     if (speed < 0 || speed > 100)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
     sprintf(cmd, "Velocity %d\n", speed);
     return RobSendCommand(cmd);
   }
@@ -127,7 +127,7 @@ namespace ice
         sprintf(cmd, "AussenGripper\n");
       }
     else
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
     return RobSendCommand(cmd);
   }
 #undef FNAME
@@ -142,7 +142,7 @@ namespace ice
         sprintf(cmd, "GripperValue %d\n", value);
       }
     else
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
     return RobSendCommand(cmd);
   }
 #undef FNAME
@@ -278,7 +278,7 @@ namespace ice
     cout << answer << endl;
     if (sscanf(answer, "%*c%*c%le%le%le%le%le%le", &par[0], &par[1], &par[2], \
                &par[3], &par[4], &par[5]) < 6)
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_FILETYPE);
     return OK;
   }
 #undef FNAME

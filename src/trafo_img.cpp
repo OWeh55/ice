@@ -50,7 +50,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     try
       {

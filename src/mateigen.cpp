@@ -48,7 +48,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     Amat = MoveMat(A, nullptr);
     n = A->rsize;
@@ -267,7 +267,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     m = A->rsize;
     n = A->csize;

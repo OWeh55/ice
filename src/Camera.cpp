@@ -416,7 +416,7 @@ namespace ice
     createTrans();
 
     if (v.size() != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     vh = tr * v;
     if (dist != nullptr)

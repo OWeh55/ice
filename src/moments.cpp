@@ -565,7 +565,7 @@ namespace ice
   Moments Moments::AffineTransform(const Trafo& tr) const
   {
     if ((tr.DimSource() != 2) || (tr.DimTarget() != 2))
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     Matrix trm(tr.getMatrix());
 

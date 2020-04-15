@@ -51,7 +51,7 @@ namespace ice
   CircleSeg::CircleSeg(const Vector& v) : Circle(v)
   {
     if (v.Size() < 5)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     phi1 = v[3];
     phi2 = v[4];

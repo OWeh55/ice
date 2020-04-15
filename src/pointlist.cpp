@@ -77,7 +77,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_INDEX);
 
     if (weight < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     pl->xptr[adr] = x;
     pl->yptr[adr] = y;
@@ -116,7 +116,7 @@ namespace ice
     double* wp;
 
     if (diff < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     pl = (PointList)malloc(sizeof(struct PointList_));
 

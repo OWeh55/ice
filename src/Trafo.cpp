@@ -60,7 +60,7 @@ namespace ice
   Trafo::Trafo(int dimSourcep, int dimTargetp)
   {
     if ((dimSourcep <= 0) || (dimTargetp < 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     dimSource = dimSourcep;
     dimTarget = dimTargetp;
@@ -152,7 +152,7 @@ namespace ice
   void Trafo::shift(double x, double y)
   {
     if (dimTarget != 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         matrix<double> h(3, 3, 1);
@@ -167,7 +167,7 @@ namespace ice
   void Trafo::shift(double x, double y, double z)
   {
     if (dimTarget != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     try
       {
@@ -191,7 +191,7 @@ namespace ice
   void Trafo::shift(const Vector& s)
   {
     if (dimTarget != s.Size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         // generate translation matrix
@@ -212,7 +212,7 @@ namespace ice
   void Trafo::flip(int achse)
   {
     if (dimTarget - 1 < achse)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     for (int i = 0; i < dimSource; i++)
       {
@@ -225,7 +225,7 @@ namespace ice
   {
     // 2D-rotation um einen Punkt (x0,y0)
     if (dimTarget != 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     try
       {
@@ -250,7 +250,7 @@ namespace ice
   {
     // 3D-Rotation um einen durch Punkt und Richtung gegebenen Strahl
     if (dimTarget != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     try
       {
@@ -290,7 +290,7 @@ namespace ice
 // Rotation um X-Achse für 3D/3D-Trafo (Euler)
   {
     if (dimTarget != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         double sind = sin(phi);
@@ -313,7 +313,7 @@ namespace ice
 // Rotation um Y-Achse für 3D/3D-Trafo (Euler)
   {
     if (dimTarget != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         double sind = sin(phi);
@@ -338,7 +338,7 @@ namespace ice
 // Rotation um Z-Achse für 3D/3D-Trafo (Euler)
   {
     if (dimTarget != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         double sind = sin(phi);
@@ -384,7 +384,7 @@ namespace ice
   // Projektionsebene (x,y,1)
   {
     if (dimTarget < 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         matrix<double> h(dimTarget, dimTarget + 1);
@@ -415,7 +415,7 @@ namespace ice
   {
     // Scherung in Y-Richtung (in Ebene!)
     if (dimTarget != 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         matrix<double> h(3, 3, 1);
@@ -432,7 +432,7 @@ namespace ice
   {
     // Scherung in X-Richtung (in Ebene!)
     if (dimTarget != 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         matrix<double> h(3, 3, 1);
@@ -454,7 +454,7 @@ namespace ice
   void Trafo::scale(double x0, double y0, double fx, double fy)
   {
     if (dimTarget != 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     shift(-x0, -y0);
 
@@ -470,7 +470,7 @@ namespace ice
   void Trafo::scale(Vector3d center, double fx, double fy, double fz)
   {
     if (dimTarget != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     shift(-center);
 
@@ -492,7 +492,7 @@ namespace ice
   void Trafo::scale(const Vector& center, const Vector& f)
   {
     if ((dimTarget != f.Size()) || (dimTarget != center.Size()))
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     shift(-center);
 
@@ -521,7 +521,7 @@ namespace ice
   void Trafo::append(const Trafo& t2)
   {
     if (t2.dimSource != dimTarget)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         Trafo res(dimSource, t2.dimTarget);
@@ -536,7 +536,7 @@ namespace ice
   void Trafo::prepend(const Trafo& t2)
   {
     if (t2.dimSource != dimTarget)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         Trafo res(dimSource, t2.dimTarget);
@@ -552,7 +552,7 @@ namespace ice
   void Trafo::invert()
   {
     if (dimSource != dimTarget)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         m = ice::Inverse(m);
@@ -577,7 +577,7 @@ namespace ice
   Trafo operator *(const Trafo& t1, const Trafo& t2)
   {
     if (t1.dimSource != t2.dimTarget)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         Trafo res(t2.dimSource, t1.dimTarget);
@@ -593,7 +593,7 @@ namespace ice
     Vector res(t.dimTarget);
 
     if (t.dimSource != v.Size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     // tmp = t.m * tmp;
 
@@ -626,7 +626,7 @@ namespace ice
   Vector3d operator *(const Trafo& t, const Vector3d& v)
   {
     if (t.dimSource != 3 || t.dimTarget != 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     Vector3d res;
     double norm =  t.m[3][0] * v[0] + t.m[3][1] * v[1] +
@@ -648,7 +648,7 @@ namespace ice
     double hf, xt, yt;
 
     if ((tr.dimSource != 2) || (tr.dimTarget != 2))
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     hf = x * tr.m[2][0] + y * tr.m[2][1] + tr.m[2][2];
     xt = (x * tr.m[0][0] + y * tr.m[0][1] + tr.m[0][2]) / hf;
@@ -689,7 +689,7 @@ namespace ice
   void transform(const Trafo& tr, double& x, double& y, double& z)
   {
     if ((tr.dimSource != 3) || (tr.dimTarget != 3))
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     double hf = x * tr.m[3][0] + y * tr.m[3][1] + z * tr.m[3][2] + tr.m[3][3];
     double xt = (x * tr.m[0][0] + y * tr.m[0][1] + z * tr.m[0][2] + tr.m[0][3]) / hf;
@@ -749,7 +749,7 @@ namespace ice
                  double& xt, double& yt)
   {
     if ((tr.dimSource != 3) || (tr.dimTarget != 2))
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     double hf;
 

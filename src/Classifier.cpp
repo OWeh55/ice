@@ -39,7 +39,7 @@ namespace ice
   void Classifier::Init(int classes, int dimension)
   {
     if ((dimension < 1) || (classes < 2))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     nFeatures = dimension;
     nClasses = classes;
@@ -55,7 +55,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((int)s.features.size() != nFeatures)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (s.classNr < 0 || s.classNr >= nClasses)
       throw IceException(FNAME, M_INVALID_CLASSNUMBER);
@@ -162,7 +162,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_FINISHED);
 
     if (nFeatures != (int)feat.size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     std::vector<double> prob;
     return _classify(feat, prob);
   }
@@ -174,7 +174,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_FINISHED);
 
     if (nFeatures != (int)feat.size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     prob.resize(nClasses);
     prob[0] = -1;
     int classNr = _classify(feat, prob);
@@ -270,7 +270,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_FINISHED);
 
     if (sl.size() < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (nFeatures != (int)sl[0].features.size())
       throw IceException(FNAME, M_MATRIXFORMAT);

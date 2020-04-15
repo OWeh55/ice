@@ -45,7 +45,7 @@ namespace ice
   LineSeg::LineSeg(const Vector& v, int typep) : GeoObject(v), type(typep)
   {
     if (v.Size() < 4)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     dp.x = v[2] - p.x;
     dp.y = v[3] - p.y;

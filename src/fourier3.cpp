@@ -120,7 +120,7 @@ namespace ice
     try
       {
         if (beta < 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         double beta2 = beta * beta;
 
@@ -174,7 +174,7 @@ namespace ice
     try
       {
         if (beta < 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
         double beta2 = beta * beta;
 
         int xs, ys;

@@ -56,7 +56,7 @@ namespace ice
       points = xyz.rows();
 
       if ((uv.rows() != points) || (xyz.cols() < 3) || (uv.cols() < 2))
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
     };
     // Dimension der Fehlerfunktion
     int funcdim() const

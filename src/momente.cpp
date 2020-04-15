@@ -219,7 +219,7 @@ namespace ice
     double x1, y1, x2, y2;
 
     if (a1 < 0 || a2 < 0 || a1 >= pl->lng || a2 >= pl->lng)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     for (i = 0; i < 15; i++)
       {
@@ -739,7 +739,7 @@ namespace ice
   int CalcCentralMoments(const double m[15], double mc[15])
   {
     if (m[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     double xs = m[1] / m[0];
     double ys = m[2] / m[0];
@@ -766,7 +766,7 @@ namespace ice
     ys = 0;
 
     if (fabs(m[0]) < 1e-15)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     PosSign(m, msk);
 
@@ -904,7 +904,7 @@ namespace ice
             double h = p2 * p2 - q;
 
             if (h < 0)
-              throw IceException(FNAME, M_WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAMETER);
 
             h = sqrt(h);
             sol[0] = Complex(-p2 + h, 0.0);
@@ -915,7 +915,7 @@ namespace ice
         else
           {
             if (m2[7] == 0)
-              throw IceException(FNAME, M_WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAMETER);
             else
               {
                 sol[0] = Complex(-m2[6] / (3 * m2[7]), 0.0);
@@ -974,7 +974,7 @@ namespace ice
       }
 
     if (imin < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     CopyMoments(mx[imin], m2);
     //    for (i=0;i<15;i++)

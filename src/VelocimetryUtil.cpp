@@ -485,7 +485,7 @@ namespace ice
         double efactor;
 
         if (noise < 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         double noise2 = noise * noise;
 
@@ -602,7 +602,7 @@ namespace ice
         MatchImgD(xDelta, xDelta, kWidthd, kHeightd);
 
         if (iterationNumber <= 0 || lambda <= 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         int MASK_DIM = 2;
 
@@ -771,7 +771,7 @@ namespace ice
     int sizeY = xDelta.ysize;
 
     if (!(subSampleSize > 0 && subSampleSize <= sizeX && subSampleSize <= sizeY && vectorScale != 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int x, y;
     double x1, y1;

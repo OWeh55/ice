@@ -135,7 +135,7 @@ namespace ice
     std::string id;
     source >> id;
     if (id != "ClassifierBayes2")
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_FILEFORMAT);
 
     source >> nFeatures >> p1 >> p2;
     source >> c12 >> c21;
@@ -149,7 +149,7 @@ namespace ice
     source >> st2;
 
     if (source.fail() || source.bad())
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_READ);
 
     Finish();
     return OK;

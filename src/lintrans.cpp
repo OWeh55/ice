@@ -41,7 +41,7 @@ namespace ice
                             double quantile)
   {
     if (quantile < 0 || quantile >= 0.5)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int len = hi.size();
     double alq = 0;
@@ -153,7 +153,7 @@ namespace ice
   int GrayTransformLimits(const Image& src, const Image& tgt, int min, int max)
   {
     if (max < min)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     double diff = max - min;
     double a1, a0;

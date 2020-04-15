@@ -58,7 +58,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((val < 0) || val > img.maxval)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (!c.isClosed())
       throw IceException(FNAME, M_CONTUR_NOT_CLOSED);

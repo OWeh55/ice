@@ -271,16 +271,12 @@ namespace ice
 
     if (ReadBMPHeader(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE);
-        fclose(fp);
-        return Image();
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     if (!LoadCMap(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE);
-        fclose(fp);
-        return Image();
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     if (bmi.iBitCount != 24)
@@ -369,7 +365,7 @@ namespace ice
       }
 
     if (rv)
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
     if (!IsImg(img))
       {
@@ -398,16 +394,12 @@ namespace ice
 
     if (ReadBMPHeader(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE);
-        fclose(fp);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     if (!LoadCMap(fp, bmi))
       {
-        throw IceException(FNAME, M_WRONG_FILE);
-        fclose(fp);
-        return WRONG_FILE;
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     /* create pic8 or pic24 */
@@ -476,7 +468,7 @@ namespace ice
     fclose(fp);
 
     if (rv)
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_FILETYPE);
 
     if (!IsImg(red))
       {

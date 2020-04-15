@@ -527,10 +527,10 @@ namespace ice
     pl = nullptr;
 
     if ((pl1 == nullptr) || (pl2 == nullptr))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if ((pl1->lng < 3) || (pl2->lng < 3))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     c1 = p_ClipList(pl1);
     c2 = p_ClipList(pl2);
@@ -592,7 +592,7 @@ namespace ice
     bool flag;
 
     if (pl == nullptr)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (pl->lng < 2)
       {
@@ -616,10 +616,10 @@ namespace ice
     int lastdir = 0;
 
     if (pl == nullptr)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (pl->lng < 2)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     for (i = 0, j = 1; i < pl->lng; i++, j++)
       {
@@ -681,7 +681,7 @@ namespace ice
     Contur c;
 
     if (pl == nullptr)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     c.setStart(RoundInt(pl->xptr[0]), RoundInt(pl->yptr[0]));
 
@@ -704,7 +704,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (pl == nullptr)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     for (i = 0, j = 1; i < pl->lng; i++, j++)
       {

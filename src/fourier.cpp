@@ -43,7 +43,7 @@ namespace ice
   {
     int dim = re.size();
     if (dim != (int)im.size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
     try
       {
         vector<double> real(dim);

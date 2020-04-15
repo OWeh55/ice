@@ -48,7 +48,7 @@ namespace ice
   int Cursor(int Mode, const Image& Img)
   {
     if (!IsImg(Img))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(Img));
@@ -79,7 +79,7 @@ namespace ice
   int Cursor(int Mode, const Image& Img, int x, int y)
   {
     if (!IsImg(Img))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     Visual v;
     RETURN_ERROR_IF_FAILED(v = getVisual(Img));
@@ -278,7 +278,7 @@ namespace ice
         return 1;
 
       default:
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       }
   }
 #undef FNAME

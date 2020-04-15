@@ -2109,7 +2109,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PTR);
 
     if ((mode < 0) || (mode > 2))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (pl->lng < 2)
       throw IceException(FNAME, M_TOO_LESS_POINTS);
@@ -2212,7 +2212,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PTR);
 
     if ((type < 1) || (type > 7) || (pa < 0) || (pe >= pl->lng) || (pa > pe))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (pe == pa)
       throw IceException(FNAME, M_TOO_LESS_POINTS);
@@ -2426,7 +2426,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PTR);
 
     if (((mode & ~(SPL_NOCLOSE | SPL_BIDIRECT)) > 2) || max_dev <= 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (pl->lng < 2)
       throw IceException(FNAME, M_TOO_LESS_POINTS);

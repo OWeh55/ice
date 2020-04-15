@@ -168,7 +168,7 @@ namespace ice
 
     if (rang < 1)
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       };
 
     switch (rang)
@@ -370,7 +370,7 @@ namespace ice
     colmem = 0;
 
     if (row < 1 || col < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     /* Bearbeitung der Trivialfalles */
     if (row == 1)

@@ -279,19 +279,19 @@ namespace ice
     do
       {
         if (fgets(line, 100, stream) == nullptr)
-          throw IceException(FNAME, M_WRONG_FILE);
+          throw IceException(FNAME, M_WRONG_FILETYPE);
       }
     while (line[0] != '%' || line[1] != 'P');
 
     for (i = 0; i < 4; i++)
       {
         if (fgets(line, 100, stream) == nullptr)
-          throw IceException(FNAME, M_WRONG_FILE);
+          throw IceException(FNAME, M_WRONG_FILETYPE);
 
         frp = &f->frame[i][0];
 
         if (sscanf(line, "%le%le%le%le", frp, frp + 1, frp + 2, frp + 3) != 4)
-          throw IceException(FNAME, M_WRONG_FILE);
+          throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     fclose(stream);

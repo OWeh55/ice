@@ -367,10 +367,10 @@ namespace ice
       throw IceException(FNAME, M_NO_SQUARE);
 
     if (indx.Size() != dim)   // Größe permutation korrekt
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (b.Size() != dim)   // Größe inhomogenität korrekt
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     int ii = -1;
 
@@ -424,10 +424,10 @@ namespace ice
       throw IceException(FNAME, M_NO_SQUARE);
 
     if ((int)indx.size() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if ((int)b.size() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     int ii = -1;
 

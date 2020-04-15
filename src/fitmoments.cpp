@@ -64,7 +64,7 @@ namespace ice
     Moments mx = m.NormalizeSign();
 
     if (mx(0, 0) < EPSILON)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     Trafo tr;
     // trafo in die Standardlage ermitteln
@@ -250,7 +250,7 @@ namespace ice
     int n = pl.size();
 
     if (n > 7)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     double pstart[7][2]; // initial solution
 

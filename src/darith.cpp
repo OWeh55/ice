@@ -340,7 +340,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -395,7 +395,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     hx = imgs.xsize;
     hy = imgs.ysize;
@@ -454,7 +454,7 @@ namespace ice
       {
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
       }
     else
       {
@@ -463,7 +463,7 @@ namespace ice
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (!IsImgD(imgd))
       throw IceException(FNAME, M_WRONG_IMAGED);
@@ -497,7 +497,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     double hx = imgs.xsize;
     double hy = imgs.ysize;
@@ -566,7 +566,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGED);
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     hx = imgs->xsize;
     hy = imgs->ysize;
@@ -625,11 +625,11 @@ namespace ice
       {
         // if no source is given then r1 and r2 must be given
         if (r2 == 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
       }
 
     if ((sym < 1) || (r1 <= 0.0) || (r2 < 0.0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (!IsImgD(imgd))
       throw IceException(FNAME, M_WRONG_IMAGED);

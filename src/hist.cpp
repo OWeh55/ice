@@ -85,7 +85,7 @@ namespace ice
   int Hist::reset(int number, double diff, double minval)
   {
     if ((number < 1) || (diff <= 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     delete [] klasse;
     nClasses = number;
@@ -172,7 +172,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((index < 0) || (index > nClasses + 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     return klasse[index];
   }
@@ -184,7 +184,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (index < 0 || index > nClasses + 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (sum == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -214,7 +214,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if ((q < 0.0) || (q > 0.5))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (sum == 0)
       throw IceException(FNAME, M_HIST_EMPTY);
@@ -263,9 +263,9 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (nr < 0 || nr > nClasses + 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
-    return (nr - 1 + 0.5) * classwidth + lowerLimit; // Klassenmitte als Repr�entant
+    return (nr - 1 + 0.5) * classwidth + lowerLimit; // Klassenmitte als Repräsentant
   }
 
   double Hist::ClassValue(int nr, double& min, double& max) const
@@ -275,7 +275,7 @@ namespace ice
       throw IceException(FNAME, M_NOT_INITIALIZED);
 
     if (nr < 1 || nr > nClasses)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     min = (nr - 1) * classwidth + lowerLimit;
     max = min + classwidth;
@@ -448,7 +448,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if ((diff > b->xsize) || (diff > (b->ysize)) || diff < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     h.reset((b.maxval + 1 + (klbr - 1)) / klbr, klbr, 0);
 

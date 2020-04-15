@@ -50,7 +50,7 @@ namespace ice
       }
 
     if (dim <= 0)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     values = 0;
     gsquare = 0;
@@ -82,7 +82,7 @@ namespace ice
   void GaussFit::Value(const vector<double>& p, double v, double w)
   {
     if ((int)p.size() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < dim; i++)
       {
@@ -118,7 +118,7 @@ namespace ice
   void GaussFit::Fit(const Matrix& p, const Vector& v)
   {
     if ((p.cols() != dim) || (p.rows() != v.Size()))
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     Init();
 

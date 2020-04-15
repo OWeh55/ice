@@ -397,7 +397,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int dimx = pic->xsize;
     int dimy = pic->ysize;
@@ -526,7 +526,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(pic, dest));
 
     if (detectionsize <= 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int dimx = pic->xsize;
     int dimy = pic->ysize;
@@ -646,7 +646,7 @@ namespace ice
     checkSizes(pn1p, pn2, xSize, ySize);
 
     if ((pn2.maxval < 7))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     Image pn1 = pn1p;
 

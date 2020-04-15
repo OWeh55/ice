@@ -127,7 +127,7 @@ namespace ice
       throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
     if ((p1.cols() != 2) || (p2.cols() != 2))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     Vector para;
     IVector opara;

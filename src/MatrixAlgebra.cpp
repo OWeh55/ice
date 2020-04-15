@@ -246,7 +246,7 @@ namespace ice
 
     if ((j1 < 0) || (j1 >= m.cols()))
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_INDEX);
       }
 
     for (int j = j1; j < m.rows(); j++)

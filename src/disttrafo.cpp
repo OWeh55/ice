@@ -114,10 +114,10 @@ namespace ice
       }
 
     if ((mode < 1) || (mode > 2))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (fabs(step) > maxdist)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (step < 0.0)
       {
@@ -137,7 +137,7 @@ namespace ice
       }
 
     if ((pegl < 0) || (pegl > orig.maxval))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (IsImg(dir))
       {

@@ -259,7 +259,7 @@ namespace ice
     channels = channelnum;
     //  cout << "info channels " << channels << endl;
     if (ch < 0 || ch >= channels)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -274,7 +274,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -293,7 +293,7 @@ namespace ice
     if (Channel[ch].xsize > 0)
       {
         if ((x1 < 0) || (y1 < 0) || (x2 > Channel[ch].xsize) || (y2 > Channel[ch].ysize))
-          throw IceException(FNAME, M_WRONG_WINDOW);
+          throw IceException(FNAME, M_INVALID_WINDOW);
       }
     Channel[ch].wxi = x1;
     Channel[ch].wyi = y1;
@@ -308,7 +308,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -326,7 +326,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -347,7 +347,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -364,7 +364,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -381,7 +381,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -426,7 +426,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -482,7 +482,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);
@@ -501,7 +501,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(ScanInit());
 
     if (ch < 0 || ch >= channelnum)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((Channel[ch].flags & SC_SCAN) == 0)
       throw IceException(FNAME, M_NO_SCANDEVICE);

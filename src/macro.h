@@ -37,5 +37,3 @@ namespace ice
 }
 
 #endif /*IFDEF _MACRO_H */
-
-

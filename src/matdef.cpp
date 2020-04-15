@@ -47,7 +47,7 @@ namespace ice
     unsigned char* cptr;
 
     if (csize < 1 || rsize < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     mat = (MatrixStruct)malloc(sizeof(struct MatrixStruct_));
     /* Daten eintragen */
@@ -148,7 +148,7 @@ namespace ice
         mat->datai = nullptr;
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
         free(mat);
         return (nullptr);
       }

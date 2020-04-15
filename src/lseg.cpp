@@ -108,7 +108,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!(neighb & 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((oimg->xsize != source->xsize) ||
         (oimg->ysize != source->ysize) ||
@@ -166,7 +166,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (!(neighb & 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((oimg->xsize != source->xsize) ||
         (oimg->ysize != source->ysize) ||

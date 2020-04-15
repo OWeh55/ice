@@ -75,7 +75,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     double xs, ys;
     RETURN_ERROR_IF_FAILED(NormalizeMomentsTranslation(mx, mtrans, xs, ys));
@@ -136,7 +136,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     double sx, sy;
 
@@ -174,7 +174,7 @@ namespace ice
     PosSign(moments_object, mom);
 
     if (mom[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     /****************************************************************/
     /*  Fitting eines Ellipsensegmentes an ein Objekt                */
@@ -428,7 +428,7 @@ namespace ice
     PosSign(moments, mom);
 
     if (mom[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     /****************************************************************/
     /*  Fitting eines Kreissegmentes an ein Objekt                */
@@ -721,7 +721,7 @@ namespace ice
     PosSign(moments, mom);
 
     if (mom[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     int i, j;
     double c, s, h, s1_opt, s2_opt;
@@ -834,7 +834,7 @@ namespace ice
     if (mom[0] == 0.0 || mom[3] <= 0.0 ||
         mom[5] <= 0.0 || mom[10] <= 0.0 ||
         mom[12] <= 0.0 || mom[14] <= 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     xs = mom[1] / mom[0];
     ys = mom[2] / mom[0];

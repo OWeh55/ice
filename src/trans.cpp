@@ -73,7 +73,7 @@ namespace ice
     MulMatrix((double*)t, (double*)ph, 3, 3, 1, (double*)ph);
 
     if (fabs(ph[2]) < 1e-10)
-      throw IceException(FNAME, M_WRONG_TRANS);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     if (p2 == NULL)
       {
@@ -149,7 +149,7 @@ namespace ice
     double mx1, my1, my2[3];
 
     if (!IsImg(imgss) || !IsImg(imgd))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     Image imgs;
 
@@ -393,11 +393,11 @@ namespace ice
     if ((Abs(t[2][0]) > eps) || (Abs(t[2][1]) > eps) || (Abs(t[2][2] - 1.0) > eps))
       {
         // not an affine transform
-        throw IceException(FNAME, M_WRONG_TRANS);
+        throw IceException(FNAME, M_WRONG_TRAFO);
       }
 
     if (!IsImg(imgd) || !IsImg(imgss))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     Image imgs;
 

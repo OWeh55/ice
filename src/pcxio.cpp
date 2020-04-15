@@ -60,7 +60,7 @@ namespace ice
 
     if (Header.Signature != 0x0a)
       {
-        throw IceException(FNAME, M_WRONG_FORMAT);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
         fclose(fd);
       }
 
@@ -84,7 +84,7 @@ namespace ice
         break;
       default:
         fclose(fd);
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     Shift2 = 3 - Shift1;
@@ -115,7 +115,7 @@ namespace ice
                 fclose(fd);
 
                 free(PCXLine);
-                throw IceException(FNAME, M_WRONG_FILE);
+                throw IceException(FNAME, M_WRONG_FILETYPE);
               }
 
             if (Ch >> 6 == 0x03)
@@ -128,7 +128,7 @@ namespace ice
                     fclose(fd);
 
                     free(PCXLine);
-                    throw IceException(FNAME, M_WRONG_FILE);
+                    throw IceException(FNAME, M_WRONG_FILETYPE);
                   }
 
                 for (ii = 0; ii < Count; ii++)
@@ -140,7 +140,7 @@ namespace ice
                         fclose(fd);
 
                         free(PCXLine);
-                        throw IceException(FNAME, M_WRONG_FILE);
+                        throw IceException(FNAME, M_WRONG_FILETYPE);
                       }
                   }
               }

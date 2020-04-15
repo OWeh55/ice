@@ -36,191 +36,161 @@ namespace ice
 //
 
 #define M_0       ""
-#define M_INTERN  "interner Fehler"
-#define M_OS      "Betriebssystemfehler "
-#define M_NO_MEM  "Nicht genug Speicher vorhanden"
+#define M_INTERN  "internal error"
+#define M_NO_MEM  "not enough memory"
 
-#define M_NOT_IMPLEMENTED "Funktion nicht implementiert"
+#define M_NOT_IMPLEMENTED "not implemented"
 
 // general parameter errors
-#define M_NOT_FOUND   "Nicht gefunden"
-#define M_WRONG_PARAM   "Falsche Parameterbelegung"
-#define M_WRONG_PARAMETER M_WRONG_PARAM
-#define M_WRONG_MODE    "Unzulaessiger Modus"
-#define M_CONFLICTING_MODES "Widerspruechliche Modi"
+#define M_NOT_FOUND   "not found"
 
-#define M_WRONG_LEN   "Unzulaessige Laengenangabe"
-#define M_WRONG_LENGTH M_WRONG_LEN
-#define M_WRONG_VAL   "Unzulaessiger Wert-Parameter"
-#define M_WRONG_VALUE M_WRONG_VAL
-#define M_WRONG_MAGNITUDE "Unzulaessige Groessenangabe"
-#define M_WRONG_COORDINATE "Unzulaessige Koordinatenangaben"
-#define M_WRONG_INDEX           "Unzulässiger Index"
-#define M_WRONG_DIM             "Falsche Dimension"
-#define M_WRONG_DIMENSION M_WRONG_DIM
-#define M_WRONG_PTR   "Unzulaessiger Pointer"
+#define M_WRONG_PARAMETER   "wrong parameter"
+
+#define M_WRONG_MODE    "invalid mode"
+#define M_CONFLICTING_MODES "conflictiong modes"
+
+#define M_WRONG_LENGTH   "invalid length parameter"
+#define M_WRONG_VALUE   "invalid pixel value parameter"
+#define M_WRONG_SIZE  "invalid size parameter"
+#define M_WRONG_COORDINATE "invalid coordinates"
+#define M_WRONG_INDEX "invalid index"
+#define M_WRONG_DIMENSION   "invalid dimension"
+#define M_WRONG_PTR   "invalid pointer"
 #define M_WRONG_POINTER M_WRONG_PTR
-#define M_WRONG_POINTLIST   "Ungueltige Punktliste"
-#define M_EMPTY_POINTLIST       "Leere Punktliste"
-#define M_EMPTY_LIST            "Leere Liste"
-#define M_DIFFERENT_LISTSIZE    "Unterschiedliche Listenlaenge"
-#define M_TOO_LESS_POINTS       "Zu wenig Punkte"
-#define M_TOO_MUCH_POINTS       "Zu viele Punkte"
-#define M_TOO_LESS_VALUES       "Zu wenig Werte"
+#define M_WRONG_POINTLIST   "invalid pointlist"
+#define M_EMPTY_POINTLIST       "empty pointlist"
+#define M_EMPTY_LIST            "empty list"
+#define M_DIFFERENT_LISTSIZE    "list sizes differ"
+#define M_TOO_LESS_POINTS       "no enough points"
+#define M_TOO_MUCH_POINTS       "too much points"
+#define M_TOO_LESS_VALUES       "too less values"
 
-#define M_XTOOSMALL             "x-Koordinate zu klein"
-#define M_XTOOLARGE             "x-Koordinate zu gross"
-#define M_YTOOSMALL             "y-Koordinate zu klein"
-#define M_YTOOLARGE             "y-Koordinate zu gross"
-#define M_ZTOOSMALL             "z-Koordinate zu klein"
-#define M_ZTOOLARGE             "z-Koordinate zu gross"
-#define M_VALTOOSMALL           "Pixelwert zu klein"
-#define M_VALTOOLARGE           "Pixelwert zu gross"
+#define M_XTOOSMALL             "x coordinate too small"
+#define M_XTOOLARGE              "x coordinate too large"
+#define M_YTOOSMALL              "y coordinate too small"
+#define M_YTOOLARGE              "x coordinate too large"
+#define M_ZTOOSMALL              "z coordinate too small"
+#define M_ZTOOLARGE              "x coordinate too large"
+#define M_VALTOOSMALL           "pixel value too small"
+#define M_VALTOOLARGE           "Pixel value too large"
 
-#define M_X_OUT_OF_RANGE        "x-Koordinate ungültig"
-#define M_Y_OUT_OF_RANGE        "y-Koordinate ungültig"
-#define M_Z_OUT_OF_RANGE        "z-Koordinate ungültig"
-#define M_VAL_OUT_OF_RANGE      "Wert ungültig"
+#define M_X_OUT_OF_RANGE         "x coordinate out of range"
+#define M_Y_OUT_OF_RANGE        "y coordinate out of range"
+#define M_Z_OUT_OF_RANGE        "z coordinate out of range"
+#define M_VAL_OUT_OF_RANGE      "value out of range"
 
-#define M_INVALID_STRUCT  "Ungültige Datenstruktur"
+#define M_INVALID_STRUCT  "invalid data structure"
 
-#define M_VECTORDIM             "Falsche Vektor-Dimension"
-#define M_MATRIXFORMAT          "Falsches Matrixformat"
+#define M_VECTORDIM             "wrong vector dimension"
 
 // general errors
-#define M_NOT_INITIALIZED       "Nicht initialisiert"
-#define M_ALREADY_INITIALIZED   "Initialisierung bereits abgeschlossen"
-#define M_NO_DATA               "Keine Daten"
-#define M_WRONG_CODING          "Falsche String-Kodierung (utf8 benutzen)"
+#define M_NOT_INITIALIZED       "not initialized"
+#define M_ALREADY_INITIALIZED   "already initialized"
+#define M_NO_DATA               "no data"
+#define M_WRONG_CODING          "wrong string coding"
 
 // classifiers
-#define M_NOT_TRAINED           "Klassifikator ist nicht ausreichend angelernt"
-#define M_NOT_FINISHED          "Anlernen nicht abgeschlossen"
+#define M_NOT_TRAINED           "classifier not trained"
+#define M_NOT_FINISHED          "training not finished"
 
-#define M_INVALID_CLASSNUMBER   "Klassennummer unzulässig"
-#define M_INVALID_NCLASSES      "Ungültige Klassenanzahl"
-
-// String Operations
-#define M_WRONG_STRPTR    "Unzulaessiger Stringpointer"
-#define M_WRONG_FORMAT          "Unzulaessiges Stringformat"
-// #define M_STR_TO_LONG  "String zu lang"
+#define M_INVALID_CLASSNUMBER   "invalid class index"
+#define M_INVALID_NCLASSES      "invalid number of classes"
 
 // Files
-#define M_WRONG_FILE    "Dateifehler"
-#define M_FILE_OPEN   "Fehler beim Oeffnen der Datei "
-#define M_WRONG_WRITE   "Fehler beim Schreiben in die Datei "
-#define M_WRONG_FILETYPE        "Falscher Dateityp"
-#define M_UNSUPPORTED_FILE      "Nicht unterstuetzter Dateityp"
-#define M_ALREADY_OPEN          "Schon geoeffnet"
-#define M_NOT_OPEN              "Nicht geoeffnet"
+// #define M_WRONG_FILE    "Dateifehler"
+#define M_FILE_OPEN     "Cannot open file"
+#define M_WRONG_WRITE   "error writing to file"
+#define M_WRONG_READ    "error reading from file"
+#define M_WRONG_FILETYPE        "wrong type of file"
+#define M_WRONG_FILEFORMAT      "wrong file format"
+#define M_UNSUPPORTED_FILE      "unsupported file type"
+#define M_ALREADY_OPEN          "already open"
+#define M_NOT_OPEN              "not opened"
 
 // Visualisation
-#define M_NOT_VIS   "Bild nicht zur Visualisierung angemeldet"
-#define M_NOT_AVAILABLE         "Option nicht verfuegbar"
-#define M_ALREADY_VISIBLE       "Bild bereits visualisiert"
-#define M_HIGHRANGE_VIS         "Wertumfang zu gross - Show(GRAY,..) benutzen"
+#define M_NOT_VIS   "image not displayed"
+#define M_NOT_AVAILABLE         "option not available"
+#define M_HIGHRANGE_VIS         "mode not usable with value images. use Show(GRAY,..)"
 
 // Fehler bei Bildeingabegeräten
-#define M_NO_SCANDEVICE         "Kein Bildaufnahme-Geraet vorhanden"
-#define M_WRONG_CONFIG          "Konfigurations-Fehler der Bildaufnahme-Geraete"
-#define M_NO_PREVIEW            "Keine Voransicht moeglich"
-#define M_SCAN_ERROR            "Fehler bei Bildaufnahme"
+#define M_NO_SCANDEVICE         "no scan device available"
+#define M_WRONG_CONFIG          "wrong scan device configuration"
+#define M_NO_PREVIEW            "preview not possible"
+#define M_SCAN_ERROR            "scan error"
 
   /* Arbeit mit Bildern */
-#define M_WRONG_IMAGE     "Unzulaessiges Bild"
-#define M_WRONG_IMAGED    "Unzulaessiges Gleitkomma-Bild"
-#define M_WRONG_IMGSIZE   "Falsche Bildgroesse"
-#define M_IMAGE_TOO_LARGE       "Bild ist zu gross"
-#define M_SIZES_DIFFER          "Bilder sind unterschiedlich gross"
-#define M_SAME_IMAGE            "Bilder sind identisch"
-#define M_LOWRANGE              "Pixelwertumfang zu gering"
-#define M_HIGHRANGE             "Pixelwertumfang zu gross"
-#define M_INVALID               "Bild ungueltig"
-#define M_OUTSIDE           "Punkt ausserhalb des Bildes"
 
-#define M_MODE_NOT_APPLYABLE    "Modus nicht anwendbar"
+#define M_INVALID_IMAGE   "invalid image"
+#define M_WRONG_IMAGE     M_INVALID_IMAGE
 
-#define M_WRONG_CS              "Falscher Farbraum"
-#define M_NOT_CONVERTIBLE       "Angeforderter Kanal nicht konvertierbar"
-#define M_WRONG_RANGE           "Wertebereiche unterschiedlich"
-#define M_CS_DIFFER             "Unterschiedliche Farbraeume"
+#define M_WRONG_IMAGED    "invalid double image"
+#define M_WRONG_IMGSIZE   "wrong image size"
+#define M_IMAGE_TOO_LARGE "image too large"
+#define M_IMAGE_TOO_SMALL "image too small"
+#define M_SIZES_DIFFER    "image sizes differ"
+#define M_SAME_IMAGE      "same images"
+#define M_LOWRANGE        "pixel range too low"
+#define M_HIGHRANGE       "pixel range too high"
+
+#define M_OUTSIDE         "point outside image"
+
+#define M_MODE_NOT_APPLYABLE    "mode not applicable"
+
+#define M_NOT_CONVERTIBLE       "not convertible"
+#define M_WRONG_RANGE           "ranges differ"
+
+#define M_WRONG_CS              "wrong color space"
+#define M_CS_DIFFER             "different color spaces"
 
   /* Arbeit mit Fenstern */
-#define M_WRONG_WINDOW    "Passt nicht in aktuellen Fensterbereich"
-#define M_WRONG_WINDOW2   "Gemeinsamer Fensterbereich zu klein"
-#define M_WRONG_WINDOW3   "Unzulaessiger Fensterbereich"
+#define M_INVALID_WINDOW   "invalid window"
 
   /* Konturen*/
-#define M_INVALID_CONTUR        "Kontur ist ungueltig"
-#define M_WRONG_STARTPOINT  "Unzulaessiger Startpunkt"
-#define M_WRONG_STARTPOINT2   "Isolierter Startpunkt"
-#define M_WRONG_STARTPOINT3   "Startpunkt liegt im Objekt"
-#define M_NO_SEGMENT    "Kein Segment in Kontur gefunden"
-#define M_CONTUR_NOT_CLOSED "Kontur nicht geschlossen"
+#define M_INVALID_CONTUR    "invalid contur"
+#define M_WRONG_STARTPOINT  "invalid starting point"
+#define M_WRONG_STARTPOINT2   "insulated starting point"
+#define M_WRONG_STARTPOINT3   "starting point inside object"
+#define M_CONTUR_NOT_CLOSED "contur not closed"
 
   /* Numerik */
-#define M_DIVISION_ZERO   "Division durch Null"
-#define M_NO_SOLUTION   "Keine Loesung vorhanden"
-#define M_SOL_MANIFOLD          "Loesungsvielfalt"
-#define M_NUM_INSTABILITY "Numerische Instabilitaet"
-#define M_ZERO_VECTOR           "Nullvektor"
-#define M_NO_ORTHO    "Keine Orthonormalmatrix"
-#define M_WRONG_VECTOR          "Unzulaessiger Vektorpointer"
-#define M_ZERO_DET      "Nicht loesbar (Determinante 0)"
-#define M_WRONG_MATRIX          "Unzulaessige Matrix"
-#define M_MAT_NO_COMPAT         "Matrizen nicht kompatibel"
-#define M_MATRIX_SINGULAR       "Matrix ist singulär"
-#define M_WRONG_MATRIXTYPE      "Falscher Matrix-Typ"
-#define M_NO_REGULAR            "Matrix ist nicht regulaer"
-#define M_NO_SYMM               "Matrix ist nicht symmetrisch"
-#define M_NO_SQUARE             "Matrix ist nicht quadratisch"
-#define M_VEC_DEPEND    "Vektoren nicht unabhaengig"
-#define M_NO_INVERSE    "Inverse existiert nicht"
-#define M_WRONG_START   "Ungeeigneter Startwert"
-#define M_POINT_IDENTIC   "Punkte identisch"
-#define M_WRONG_POINTS    "Unzulaessige Punktauswahl"
-#define M_WRONG_TRANS   "Unzulaessige Transformationsmatrix"
-#define M_NO_PROJ               "Keine projektive Matrix (dritte Zeile 0)"
-#define M_NO_NULL               "Keine Nullstelle"
+#define M_DIVISION_ZERO   "division by zero"
+#define M_NO_SOLUTION   "no solution"
+#define M_SOL_MANIFOLD          "manifold of solutions"
+#define M_NUM_INSTABILITY "numerical instability"
+#define M_ZERO_VECTOR           "zero vector"
+#define M_NO_ORTHO    "no orthogonal matrix"
+#define M_WRONG_VECTOR  "invalid vector"
+#define M_ZERO_DET      "not solvable (determinant is zero)"
+
+#define M_MATRIXFORMAT          "wrong matrix format"
+#define M_WRONG_MATRIX          "invalid matrix"
+#define M_MAT_NO_COMPAT         "matrices not compatible"
+#define M_MATRIX_SINGULAR       "matrix is singular"
+#define M_NO_REGULAR            "Matrix is not regular"
+#define M_NO_SYMM               "Matrix is not symmetrical"
+#define M_NO_SQUARE             "Matrix is not quadratic"
+#define M_VEC_DEPEND    "Vectors not independent"
+#define M_NO_INVERSE    "inverse not exists"
+#define M_WRONG_START   "invalid initial state"
+#define M_POINT_IDENTIC   "indentical points"
+#define M_WRONG_POINTS    "invalid point set"
 
 // geometrische Transformationen, Matching
-#define M_WRONG_OBJECT          "Leeres Objekt oder negatives Gebiet"
-#define M_WRONG_TRAFO           "Entartete Transformations-Matrix"
-#define M_TRAFO_NOTAFFINE       "Transformation ist nicht affine"
-#define M_OBJECT_FEATURE        "Objekt-Merkmale können nicht berechnet werden"
+#define M_EMPTY_OBJECT          "empty object"
+#define M_WRONG_TRAFO           "degenerate transformation matrix"
+#define M_TRAFO_NOTAFFINE       "transformation not affine"
+#define M_OBJECT_FEATURE        "error determining object features"
 
 // Histogramme
-#define M_HIST_EMPTY            "Histogramm enthaelt keine Daten"
-
-// Klassifikatoren
-#define M_CLASSPTR        "Nicht initialisierte Klassifikatorstruktur"
-#define M_TRAIN           "Unvollstaendig angelernter Klassifikator"
-#define M_CLASS         "Falsche Klassenangabe"
-#define M_TWOCLASSES            "Keine zwei Klassen vorhanden"
+#define M_HIST_EMPTY            "no entry in histogram"
 
 // Statistik
-#define M_STATIST_PTR       "Nicht initialisierter Statistikbereich"
-#define M_STAT_NOENTRY    "Keine Eintraege im Statistikbereich"
-#define M_ZERO_VARIANZ    "Eine Komponente besitzt Varianz 0"
-#define M_EMPTY_STAT    "Leerer Statistikbereich"
+#define M_STAT_NOENTRY    "no entry in statistics"
+#define M_ZERO_VARIANZ    "variance is zero for one dimension"
 
-// Kalibrierung - Rekonstruktion - multiokulare BV (Triangulation)
-#define M_PARALLEL              "Parallele Geraden"
-#define M_CALIBERR        "Kalibrierung aus Punktkorrespondenzen nicht moeglich"
-#define M_PRJZ            "Projektionszentrum nicht berechenbar"
-#define M_MISS_P          "Anzahl Punktkorrespondenzen zu klein"
-#define M_UNCALIBRATED_CAM      "Kamera ist nicht kalibriert"
-#define M_TOO_FEW_CAM           "unzureichende Anzahl an Kamerastrukturen"
-#define M_NO_DISTANCE           "Distanz nicht berechenbar"
-#define M_WRONG_CAMERA_POS  "Kameraposition ueberpruefen!"
-#define M_NO_ELLIPSE    "keine Ellipse"
-#define M_INFINIT_POINT   "Abbildung in unendlich fernen Punkt"
+#define M_NO_ELLIPSE    "no ellipse"
 
-#define M_NOT_NESTED            "Funktion kann nicht verschachtelt gerufen werden!"
-
-// fuer wxwindows
-#define M_OVERFLOW_INT          "Ueberschreitung des Integerbereiches"
-#define M_OVERFLOW_DOUBLE       "Ueberschreitung des double-Bereiches"
+#define M_NOT_NESTED      "function may not be called nested!"
 
   /************************************************
    *                                              *
@@ -272,7 +242,6 @@ namespace ice
 
 // Warnings for intersection, ..
 #define OUTSIDE         2
-
 
 #define OFF   0       /* Schalter fuer Visualisierung .. */
 #define ON    1

@@ -142,7 +142,7 @@ namespace ice
   void FreeMaxSearch(MaxSearch ms)
   {
     if (ms == nullptr)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     delete [](ms->allhist);
 
@@ -162,7 +162,7 @@ namespace ice
   {
 
     if (ms == nullptr || !IsImg(img) || !IsImg(imgo))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     while (ms->allhist[ms->lastgrw].next_area == nullptr)
       {

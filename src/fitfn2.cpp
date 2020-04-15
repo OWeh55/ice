@@ -38,7 +38,7 @@ namespace ice
     int i;
 
     if (m.cols() < 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     FitInit();
 
@@ -86,7 +86,7 @@ namespace ice
   Constant2d::Constant2d(const Vector& v): Function2dWithFittingG(1)
   {
     if (v.Size() < 1)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     co[0] = v[0];
   }
@@ -116,7 +116,7 @@ namespace ice
   Polynom2d1o::Polynom2d1o(const Vector& v): Function2dWithFittingG(3)
   {
     if (v.Size() < 3)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     co[0] = v[0];
     co[1] = v[1];
@@ -154,7 +154,7 @@ namespace ice
     int i;
 
     if (v.Size() < 6)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (i = 0; i < 6; i++)
       {

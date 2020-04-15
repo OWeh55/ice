@@ -46,7 +46,7 @@ namespace ice
   Sphere::Sphere(const Vector& v) : GeoObject3d(v)
   {
     if (v.Size() < 4)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     setR(v[2]);
   }
@@ -61,7 +61,7 @@ namespace ice
   void Sphere::setR(double rp)
   {
     if (rp < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     r = rp;
   }

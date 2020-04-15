@@ -100,7 +100,7 @@ namespace ice
             valueFunction = get4l;
             break;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAMETER);
             break;
           }
       }
@@ -118,7 +118,7 @@ namespace ice
             valueFunction = get4h;
             break;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAMETER);
             break;
           }
       }
@@ -358,7 +358,7 @@ namespace ice
                     valueFunction = get4l;
                     break;
                   default:
-                    throw IceException(FNAME, M_WRONG_PARAM);
+                    throw IceException(FNAME, M_WRONG_PARAMETER);
                     break;
                   }
               }
@@ -376,7 +376,7 @@ namespace ice
                     valueFunction = get4h;
                     break;
                   default:
-                    throw IceException(FNAME, M_WRONG_PARAM);
+                    throw IceException(FNAME, M_WRONG_PARAMETER);
                     break;
                   }
               }
@@ -421,7 +421,7 @@ namespace ice
                         rptr = gptr + ib.width * ib.linelength;
                         break;
                       default:
-                        throw IceException(FNAME, M_WRONG_PARAM);
+                        throw IceException(FNAME, M_WRONG_PARAMETER);
                       }
 
                     for (int x = 0; x < xm; x++)
@@ -462,7 +462,7 @@ namespace ice
                             bptr = bptr + ib.valuesize * scal;
                             break;
                           default:
-                            throw IceException(FNAME, M_WRONG_PARAM);
+                            throw IceException(FNAME, M_WRONG_PARAMETER);
                           }
                       }
                   }
@@ -772,7 +772,7 @@ namespace ice
     if (RedImage->xsize != GreenImage->xsize || RedImage->ysize != GreenImage->ysize ||
         RedImage->xsize != BlueImage->xsize  || RedImage->ysize != BlueImage->ysize ||
         RedImage.maxval != GreenImage.maxval || RedImage.maxval != BlueImage.maxval)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     // copy values from the image to the image buffer
     ImageBuffer.width = RedImage->xsize;

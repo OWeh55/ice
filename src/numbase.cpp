@@ -151,7 +151,7 @@ namespace ice
   int Random(int val)
   {
     if (val > RAND_MAX)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     return rand() % (val + 1);
     //    return (int)((double)(val + 1) * rand() / RAND_MAX);

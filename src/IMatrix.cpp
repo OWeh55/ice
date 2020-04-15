@@ -693,7 +693,7 @@ namespace ice
     int i;
 
     if ((n < 0) || (n >= dim))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     delete data[n];
 
@@ -722,7 +722,7 @@ namespace ice
     int i;
 
     if ((n1 < 0) || (n1 >= dim) || (n2 < 0) || (n2 >= dim))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (n2 < n1)
       {

@@ -84,7 +84,7 @@ namespace ice
   {
 
     if (pl == NULL)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     if (pl->aktlng == pl->lng)
       {
@@ -135,7 +135,7 @@ namespace ice
   {
 
     if (pl == NULL || num >= pl->lng)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     pl->lng--;
     int anz = (pl->lng - num) * sizeof(int);
@@ -164,7 +164,7 @@ namespace ice
   {
 
     if (pl == NULL)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     delete [](pl->xptr);
     delete [](pl->yptr);

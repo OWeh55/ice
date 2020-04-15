@@ -267,7 +267,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMAGE);
 
     if (f.Size() != (int)pl.size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < f.Size(); i++)
       {

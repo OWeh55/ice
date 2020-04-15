@@ -66,22 +66,22 @@ namespace ice
     /*--- Parametertest ----------------------------------------------*/
     if (dim < 1)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_DIMENSION);
       }
 
     if (i > dim || i < 1)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_INDEX);
       }
 
     if (h <= 0.0)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_PARAMETER);
       }
 
     if (mode > 5 || mode < 0)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_MODE);
       }
 
     /*----------------------------------------------------------------*/
@@ -223,22 +223,22 @@ namespace ice
     /*--- Parametertest ----------------------------------------------*/
     if (dim < 1)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_DIMENSION);
       }
 
     if (i > dim || i < 1)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_INDEX);
       }
 
     if (h <= 0.0)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_PARAMETER);
       }
 
     if (mode > 4 || mode < 0)
       {
-        throw IceException("DeriveFunc", M_WRONG_PARAM);
+        throw IceException("DeriveFunc", M_WRONG_MODE);
       }
 
     /*----------------------------------------------------------------*/
@@ -378,7 +378,7 @@ namespace ice
 
     /*--- Parametertest ----------------------------------------------*/
     if (*prec >= 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (down > top)
       {

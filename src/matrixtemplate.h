@@ -393,7 +393,7 @@ namespace ice
       matrix<T> res(lhs.nRows, rhs.nColumns);
 
       if (lhs.nColumns != rhs.nRows)
-        throw IceException(FNAME, M_WRONG_DIM);
+        throw IceException(FNAME, M_WRONG_DIMENSION);
 
       for (int i = 0; i < lhs.nRows; i++)
         for (int j = 0; j < rhs.nColumns; j++)
@@ -419,7 +419,7 @@ namespace ice
       std::vector<T> res(rhs.nColumns);
 
       if ((int)lhs.size() != rhs.nRows)
-        throw IceException(FNAME, M_WRONG_DIM);
+        throw IceException(FNAME, M_WRONG_DIMENSION);
 
       for (int j = 0; j < rhs.nColumns; ++j)
         {
@@ -444,7 +444,7 @@ namespace ice
       std::vector<T> res(lhs.nRows);
 
       if (lhs.nColumns != (int)rhs.size())
-        throw IceException(FNAME, M_WRONG_DIM);
+        throw IceException(FNAME, M_WRONG_DIMENSION);
 
       for (int i = 0; i < lhs.nRows; ++i)
         {

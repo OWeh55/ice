@@ -209,7 +209,7 @@ namespace ice
   void ColorImage::checkSizes(const ColorImage& img2) const
   {
     if (!isValid() || !img2.isValid())
-      throw IceException(FNAME, M_INVALID);
+      throw IceException(FNAME, M_INVALID_IMAGE);
     try
       {
         red.checkSizes(img2.red);

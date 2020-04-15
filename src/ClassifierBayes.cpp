@@ -496,7 +496,7 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierBayes")
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_FILEFORMAT);
 
     source >> nFeatures;
     source >> nClasses;
@@ -562,7 +562,7 @@ namespace ice
       }
 
     if (source.fail() || source.bad())
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_READ);
     state = ready;
     return OK;
   }

@@ -37,7 +37,7 @@ namespace ice
                 const ColorImage& simg, ColorImage& dimg, int mode)
   {
     if ((!simg.isValid()) || (!dimg.isValid()))
-      throw IceException(FNAME, M_INVALID);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     RETURN_ERROR_IF_FAILED(Transform(tr, simg.redImage(), dimg.redImage(), mode));
     RETURN_ERROR_IF_FAILED(Transform(tr, simg.greenImage(), dimg.greenImage(), mode));

@@ -184,7 +184,7 @@ namespace ice
       dy >= img.xsize / 2 || dy >= img.ysize / 2 ||
       dx < 0 || dy < 0
     )
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (mode == CF_CUT)
       {
@@ -199,7 +199,7 @@ namespace ice
             PutVal(dest, x, y, GetVal(img, x - dest.xsize / 2 + img.xsize / 2, y - dest.ysize / 2 + img.ysize / 2));
       }
     else
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     return OK;
   }
@@ -212,7 +212,7 @@ namespace ice
   double EntropyImg(const Image& img)
   {
     if (!IsImg(img))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     try
       {
@@ -248,7 +248,7 @@ namespace ice
     ConturList clist;
 
     if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img.xsize || sy >= img.ysize)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int weiter = true;
 

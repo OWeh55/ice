@@ -126,7 +126,7 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierMinimumDistance")
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_FILEFORMAT);
 
     source >> nFeatures >> nClasses;
 

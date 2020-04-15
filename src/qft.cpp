@@ -136,16 +136,16 @@ namespace ice
   int PowerSpektrumQFT(QuatMatrix& input, Image& output, int type, int mode)
   {
     if (!IsImg(output))
-      throw IceException(FNAME, M_INVALID);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     if (int(input.getColumns()) != output->xsize || int(input.getRows()) != output->ysize)
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (!(type == LOG || type == POWER || type == NORM))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     int maxcolor = output.maxval;
     int i, j;
@@ -241,7 +241,7 @@ namespace ice
   int EigenwinkelSpektrumQFT(QuatMatrix& input, Image& r, Image& g, Image& b, int mode)
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
-      throw IceException(FNAME, M_INVALID);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
@@ -252,7 +252,7 @@ namespace ice
       throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     int maxcolor = r.maxval;
     int i, j;
@@ -335,7 +335,7 @@ namespace ice
   int EigenachsenSpektrumQFT(QuatMatrix& input, Image& r, Image& g, Image& b, int mode)
   {
     if (!(IsImg(r) && IsImg(g) && IsImg(g)))
-      throw IceException(FNAME, M_INVALID);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     if (int(input.getColumns()) != r->xsize || int(input.getRows()) != r->ysize ||
         int(input.getColumns()) != g->xsize || int(input.getRows()) != g->ysize ||
@@ -346,7 +346,7 @@ namespace ice
       throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     int maxcolor = r.maxval;
     int i, j;
@@ -420,7 +420,7 @@ namespace ice
   int PhasenSpektrumQFT(QuatMatrix& input, Image& alpha, Image& beta, Image& delta, int mode)
   {
     if (!(IsImg(alpha) && IsImg(beta) && IsImg(delta)))
-      throw IceException(FNAME, M_INVALID);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     if (int(input.getColumns()) != alpha->xsize || int(input.getRows()) != alpha->ysize ||
         int(input.getColumns()) != beta->xsize || int(input.getRows()) != beta->ysize ||
@@ -428,7 +428,7 @@ namespace ice
       throw IceException(FNAME, M_SIZES_DIFFER);
 
     if (!(mode == CENTER || mode == NOCENTER))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     int i, j;
     int X = input.getColumns();

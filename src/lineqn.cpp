@@ -215,7 +215,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (A->rsize != A->csize)
       throw IceException(FNAME, M_NO_SQUARE);
@@ -276,7 +276,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (A->rsize < A->csize)
       throw IceException(FNAME, M_MATRIX_SINGULAR);
@@ -353,7 +353,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (A->rsize != A->csize)
       throw IceException(FNAME, M_NO_SQUARE);
@@ -364,7 +364,7 @@ namespace ice
           throw IceException(FNAME, M_WRONG_MATRIX);
 
         if (B->type != MAT_DOUBLE || B->rsize != A->rsize || B->csize != A->csize)
-          throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+          throw IceException(FNAME, M_MATRIXFORMAT);
       }
     else
       {
@@ -445,7 +445,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (A->type != MAT_DOUBLE)
-      throw IceException(FNAME, M_WRONG_MATRIXTYPE);
+      throw IceException(FNAME, M_MATRIXFORMAT);
 
     if (A->rsize != A->csize)
       throw IceException(FNAME, M_NO_SQUARE);

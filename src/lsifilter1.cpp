@@ -49,7 +49,7 @@ namespace ice
     try
       {
         if (norm == 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         // test if both images have valid pixel arrays and
         // equal size
@@ -100,7 +100,7 @@ namespace ice
                  int norm, int offset)
   {
     if (norm == 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows
@@ -155,7 +155,7 @@ namespace ice
               int norm)
   {
     if (norm == 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (!IsImg(src))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -209,7 +209,7 @@ namespace ice
               int norm)
   {
     if (norm == 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     // test if both images have valid pixel arrays and
     // equal size of the active windows

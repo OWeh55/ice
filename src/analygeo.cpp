@@ -548,7 +548,7 @@ label:
         b = feat[3];
 
         if (a <= 0 || b <= 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
 #ifdef DEBUG
         printf("xm: %f ym %f phi %f a %f b %f\n", xm, ym, phi, a, b);
@@ -575,7 +575,7 @@ label:
         b = feat[3];
 
         if (a <= 0 || b <= 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         par[0] = Sqr(cos(phi) / a) - Sqr(sin(phi) / b);
         par[1] = Sqr(sin(phi) / a) - Sqr(cos(phi) / b);
@@ -592,7 +592,7 @@ label:
         p = feat[2];
 
         if (p <= 0)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         par[0] = Sqr(sin(phi));
         par[1] = Sqr(cos(phi));
@@ -608,7 +608,7 @@ label:
                  par[4] * xm * ym;
         return OK;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       }
   }
 #undef FNAME
@@ -686,7 +686,7 @@ label:
     phi = par[4];
 
     if ((A <= 0) || (B <= 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
 #if DEBUG
     printf("DistPointEllipse\n");

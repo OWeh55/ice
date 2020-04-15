@@ -69,7 +69,7 @@ namespace ice
     Vector res(2);
 
     if (v.size() != 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     distort(v[0], v[1], res[0], res[1]);
     return res;
@@ -103,7 +103,7 @@ namespace ice
     Vector result = v;
 
     if (v.size() != 2)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     rectify(v[0], v[1], result[0], result[1]);
     return result;

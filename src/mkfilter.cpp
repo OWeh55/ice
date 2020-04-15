@@ -72,7 +72,7 @@ namespace ice
       (ii < 0) ||
       (jj < 0)
     )
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     Matrix f(size * size, (grad + 1) * (grad + 2) / 2);
 
@@ -405,7 +405,7 @@ namespace ice
   LsiFilter makeMexicanHatFilter(int size, double sigma)
   {
     if (size < 0 || sigma < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (size == 0)
       {
@@ -422,7 +422,7 @@ namespace ice
   LsiFilter makeGaussFilter(int size, double sigma)
   {
     if (size < 0 || sigma < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (size == 0)
       {

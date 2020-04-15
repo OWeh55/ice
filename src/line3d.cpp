@@ -51,7 +51,7 @@ namespace ice
   Line3d::Line3d(const Vector& v, int typep) : GeoObject3d(v), type(typep)
   {
     if (v.Size() < 6)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     dp = Vector3d(v[3] - pos.x, v[4] - pos.y, v[5] - pos.z);
     len2 = dp.length2();

@@ -131,7 +131,7 @@ namespace ice
   {
     if (w.p1.x < 0 || w.p1.y < 0 ||
         w.p2.x >= imgPtr->xsize || w.p2.y >= imgPtr->ysize)
-      throw IceException("iceImage<ValueType>::iceImage()", M_WRONG_WINDOW3);
+      throw IceException("iceImage<ValueType>::iceImage()", M_INVALID_WINDOW);
     Pixel = new ValueType*[ysize];
     Pixelarray = nullptr;
     can_delete = false;

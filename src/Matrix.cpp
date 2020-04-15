@@ -51,7 +51,7 @@ namespace ice
   Matrix::Matrix(int n, int m, int init): nRows(n), nColumns(m), data(nullptr)
   {
     if (n < 0)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (n > 0)
       {
@@ -76,7 +76,7 @@ namespace ice
   Matrix::Matrix(int n, int m, double* init): nRows(n), nColumns(m), data(nullptr)
   {
     if (n < 0)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (n > 0)
       {
@@ -1138,7 +1138,7 @@ namespace ice
   int Matrix::Sort(int colnr, bool asc)
   {
     if (colnr >= nColumns)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     sortcolumn = colnr;
 
@@ -1159,7 +1159,7 @@ namespace ice
   int Matrix::Add(const Matrix& m)
   {
     if ((m.rows() != nRows) || (m.cols() != nColumns))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     for (int i = 0 ; i < nRows ; i++)
       for (int j = 0 ; j < nColumns ; j++)
@@ -1176,7 +1176,7 @@ namespace ice
   {
     // *this += v * !v
     if ((v.Size() != nRows) || (v.Size() != nColumns))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     for (int i = 0 ; i < nRows ; i++)
       for (int j = i ; j < nColumns ; j++)
@@ -1195,7 +1195,7 @@ namespace ice
   {
     // *this += v * !w
     if ((v.Size() != nRows) || (w.Size() != nColumns))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     for (int i = 0 ; i < nRows ; i++)
       for (int j = 0 ; j < nColumns ; j++)
@@ -1240,7 +1240,7 @@ namespace ice
 
     if (c != '<')
       {
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILEFORMAT);
         is.clear(ios::badbit);
         return is;
       }
@@ -1269,7 +1269,7 @@ namespace ice
 
         if ((c != ',') && (c != '#') && (c != '>'))
           {
-            throw IceException(FNAME, M_WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILEFORMAT);
             is.clear(ios::badbit);
             return is;
           }
@@ -1289,7 +1289,7 @@ namespace ice
 
     if (c != '<')
       {
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILEFORMAT);
         is.clear(ios::badbit);
       }
 
@@ -1308,7 +1308,7 @@ namespace ice
 
         if (v.Size() != cols())
           {
-            throw IceException(FNAME, M_WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILEFORMAT);
             is.clear(ios::badbit);
           }
 
@@ -1316,7 +1316,7 @@ namespace ice
 
         if ((c != ',') && (c != '#') && (c != '>'))
           {
-            throw IceException(FNAME, M_WRONG_FILE);
+            throw IceException(FNAME, M_WRONG_FILEFORMAT);
             is.clear(ios::badbit);
           }
       }
@@ -1327,7 +1327,7 @@ namespace ice
   int Matrix::DeleteCol(int n)
   {
     if ((n < 0) || (n >= nColumns))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     *this = (*this)(0, 0, nRows - 1, n - 1) || (*this)(0, n + 1, nRows - 1, nColumns - 1);
     return OK;
@@ -1338,7 +1338,7 @@ namespace ice
     int i;
 
     if ((n1 < 0) || (n1 >= nColumns) || (n2 < 0) || (n2 >= nColumns))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (n2 < n1)
       {
@@ -1357,7 +1357,7 @@ namespace ice
   int Matrix::DeleteRow(int n)
   {
     if ((n < 0) || (n >= nRows))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     delete data[n];
 
@@ -1386,7 +1386,7 @@ namespace ice
   int Matrix::DeleteRow(int n1, int n2)
   {
     if ((n1 < 0) || (n1 >= nRows) || (n2 < 0) || (n2 >= nRows))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (n2 < n1)
       {
@@ -1411,7 +1411,7 @@ namespace ice
     int sy = m.rows();
 
     if ((img->xsize < sx) || (img->ysize < sy))
-      throw IceException(FNAME, M_WRONG_WINDOW);
+      throw IceException(FNAME, M_IMAGE_TOO_SMALL);
 
     double minv = m[0][0], maxv = m[0][0];
 

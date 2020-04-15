@@ -57,7 +57,7 @@ namespace ice
     y = ps[1];
 
     if ((direct != HORZ) && (direct != VERT))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (!IsImg(imgv))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -73,7 +73,7 @@ namespace ice
     wya = imgv->ysize - 1;
 
     if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-      throw IceException(FNAME, M_WRONG_WINDOW2);
+      throw IceException(FNAME, M_IMAGE_TOO_SMALL);
 
     if ((wxi - 1) == x)
       {
@@ -502,7 +502,7 @@ namespace ice
         wya = imgv->ysize - 1;
 
         if (((wxa - wxi) < 1) || ((wya - wyi) < 1))
-          throw IceException(FNAME, M_WRONG_WINDOW2);
+          throw IceException(FNAME, M_IMAGE_TOO_SMALL);
 
         if (xs < wxi || xs > wxa || ys < wyi || ys > wya)
           throw IceException(FNAME, M_WRONG_STARTPOINT);
@@ -1017,7 +1017,7 @@ namespace ice
     ys = ps[1];
 
     if (cls == NULL)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     // Test vom Startpunkt alle acht Richtungen nach links beginnend
     Freeman dir(4);

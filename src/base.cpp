@@ -258,7 +258,7 @@ namespace ice
   void checkImage(const Image& i1)
   {
     if (!i1.isValid())
-      throw IceException(FNAME, M_INVALID);
+      throw IceException(FNAME, M_INVALID_IMAGE);
   }
 
   void checkImage(const Image& i1, const Image& i2)

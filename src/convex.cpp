@@ -444,7 +444,7 @@ namespace ice
   {
 
     if (pl1 == NULL || pl1->lng < 3 || pl2 == NULL || pl2->lng < 3)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int i, j;
 

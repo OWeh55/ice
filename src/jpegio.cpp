@@ -134,7 +134,7 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     jpeg_create_compress(&cinfo);
@@ -234,7 +234,7 @@ namespace ice
          */
         jpeg_destroy_compress(&cinfo);
         fclose(output_file);
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     jpeg_create_compress(&cinfo);
@@ -315,7 +315,7 @@ namespace ice
          */
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     jpeg_create_decompress(&cinfo);
@@ -377,7 +377,7 @@ namespace ice
             free(ib.data);
           }
 
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     jpeg_create_decompress(&cinfo);
@@ -470,7 +470,7 @@ namespace ice
             free(ib.data);
           }
 
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
     jpeg_create_decompress(&cinfo);

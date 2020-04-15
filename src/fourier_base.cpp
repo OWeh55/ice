@@ -58,10 +58,10 @@ namespace ice
     int dim = srcre.size();
 
     if (dim < 1 || dim != (int)srcim.size())
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (option != NORMAL && option != INVERS)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     try
       {
@@ -78,10 +78,10 @@ namespace ice
     int dim = re.size();
 
     if (dim < 1 || dim != (int)im.size())
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (option != NORMAL && option != INVERS)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     try
       {
@@ -93,5 +93,4 @@ namespace ice
   }
 #undef FNAME
 }
-
 

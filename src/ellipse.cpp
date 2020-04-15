@@ -91,7 +91,7 @@ namespace ice
   Ellipse::Ellipse(const Vector& v) : Circle(v)
   {
     if (v.Size() < 5)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     r2 = v[3];
     phi = v[4];
@@ -110,7 +110,7 @@ namespace ice
   int Ellipse::setR2(double rv)
   {
     if (rv < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     r2 = rv;
     normalize();
@@ -214,7 +214,7 @@ namespace ice
   EllipseSeg::EllipseSeg(const Vector& v) : Ellipse(v)
   {
     if (v.Size() < 7)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     phi1 = v[5];
     phi2 = v[6];

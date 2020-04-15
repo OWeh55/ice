@@ -42,7 +42,7 @@ namespace ice
       }
 
     if (SizeX < 1 || SizeY < 1 || MaxValue < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     xsize = SizeX;
     ysize = SizeY;
@@ -69,7 +69,7 @@ namespace ice
                 imag = new iceImage3(SizeX, SizeY, MaxValue, title);
               }
             else
-              throw IceException(FNAME, M_WRONG_PARAM);
+              throw IceException(FNAME, M_WRONG_PARAMETER);
           }
       }
     assign(imag);
@@ -133,7 +133,7 @@ namespace ice
             imag = new iceImage3((iceImage3*)i.img, w, title);
             break;
           default:
-            throw IceException(FNAME, M_WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAMETER);
           }
       }
     RETHROW;

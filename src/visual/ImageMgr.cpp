@@ -312,7 +312,7 @@ namespace ice
       }
       default:
         // if no valid Mode was specified, there must be some error
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       }
   }
 
@@ -385,7 +385,7 @@ namespace ice
       }
 
     // if no valid Mode was specified
-    throw IceException(FNAME, M_WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE);
   }
 
   Visual ImageManager::Show(int mode, ImageD* img,
@@ -430,7 +430,7 @@ namespace ice
 
       default:
         // no valid Mode was specified
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
   }
 
@@ -513,7 +513,7 @@ namespace ice
       } // switch(Mode)
 
     // if no valid Mode was specified, there must be some error
-    throw IceException(FNAME, M_WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE);
   }
 
   Visual ImageManager::Show(int Mode,
@@ -557,7 +557,7 @@ namespace ice
       } // switch(Mode)
 
     // no valid Mode was specified
-    throw IceException(FNAME, M_WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE);
   }
 
   Visual ImageManager::Show(int Mode,
@@ -609,7 +609,7 @@ namespace ice
       } // switch(Mode)
 
     // no valid Mode was specified
-    throw IceException(FNAME, M_WRONG_PARAM);
+    throw IceException(FNAME, M_WRONG_MODE);
   }
 #undef FNAME
 

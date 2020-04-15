@@ -158,9 +158,7 @@ namespace ice
 
     if (!(in.rows() == 4 && in.cols() == 4))
       {
-        throw IceException(FNAME, M_WRONG_MATRIXTYPE);
-
-        return out;
+        throw IceException(FNAME, M_MATRIXFORMAT);
       }
 
     Matrix rotm = in(0, 0, 2, 2);

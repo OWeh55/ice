@@ -65,7 +65,7 @@ namespace ice
     Contur c;
 
     if ((val1 < 0) || (val2 < 0) || (val1 > img.maxval) || (val2 > img.maxval))
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (mode != DEFAULT && mode != NOFILL)
       throw IceException(FNAME, M_WRONG_MODE);
@@ -98,7 +98,7 @@ namespace ice
 
     if ((val1 < 0) || (val2 < 0) ||
         (val1 > img.maxval) || (val2 > img.maxval))
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (mode != DEFAULT && mode != NOFILL)
       throw IceException(FNAME, M_WRONG_MODE);
@@ -178,9 +178,7 @@ namespace ice
 
     if ((dx < 4) || (dy < 4))
       {
-        throw IceException(FNAME, M_WRONG_WINDOW2);
-        *xs = *ys = 0;
-        return WRONG_WINDOW;
+        throw IceException(FNAME, M_IMAGE_TOO_SMALL);
       }
 
     if (! Inside(img, xc, yc))
@@ -292,7 +290,7 @@ namespace ice
     RETURN_ERROR_IF_FAILED(MatchImg(img, imgh, dx, dy));
 
     if ((dx < 1) || (dy < 1))
-      throw IceException(FNAME, M_WRONG_WINDOW2);
+      throw IceException(FNAME, M_IMAGE_TOO_SMALL);
 
     if (decision(func, parray, xs, ys, dx, dy) == 0)
       throw IceException(FNAME, M_WRONG_STARTPOINT);

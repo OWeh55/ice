@@ -150,8 +150,7 @@ namespace ice
         double efactor;
 
         if (noise < 0)
-
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         double noise2 = noise * noise;
 

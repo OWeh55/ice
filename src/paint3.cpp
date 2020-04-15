@@ -57,7 +57,7 @@ namespace ice
     int i;
 
     if (nbr < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     fi = (FuncImage1D)malloc(sizeof(struct FuncImage1D_));
 
@@ -90,7 +90,7 @@ namespace ice
   int PutFuncImage1D(FuncImage1D fi, int i, double val)
   {
     if ((i < 0) || (i > fi->nbr - 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     fi->entry[i] = val;
     return OK;
@@ -118,7 +118,7 @@ namespace ice
     int sizey, h;
 
     if (mode != DEFAULT)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     min = HUGE_VAL;
     max = -HUGE_VAL;

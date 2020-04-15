@@ -643,7 +643,7 @@ namespace ice
           {
             // reducing to less then 3 point does not make sense
             // "reducing" to more then original points does not make sense
-            throw IceException(FNAME, M_WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAMETER);
           }
 
         // already reduced enough
@@ -695,7 +695,7 @@ namespace ice
     Matrix fpl;
 
     if (n < 3)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     // make pointlist from contur
     fpl = ConturPointlist(c, 1, false);
@@ -716,7 +716,7 @@ namespace ice
           {
             // reducing to less then 3 point does not make sense
             // "reducing" to more then original points does not make sense
-            throw IceException(FNAME, M_WRONG_PARAM);
+            throw IceException(FNAME, M_WRONG_PARAMETER);
           }
 
         if (mode == 2)
@@ -758,7 +758,7 @@ namespace ice
     Matrix fpl;
 
     if (prec < 0.0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     // make pointlist from contur
     fpl = ConturPointlist(c, 1, false);
@@ -852,8 +852,6 @@ namespace ice
           {
             if (ct == 0)
               throw IceException(FNAME, M_WRONG_START);
-
-            return res;
           }
 
         changed = oldcutpoint != cutpoints;

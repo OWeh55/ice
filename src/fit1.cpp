@@ -169,7 +169,7 @@ namespace ice
       throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (nr != weight.size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     double n = 0.0;
     double x = 0.0;
@@ -209,10 +209,10 @@ namespace ice
       throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (n < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (nr != weight.size())
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (n == 0)
       {

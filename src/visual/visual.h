@@ -48,11 +48,13 @@ namespace ice
   //     OFF = image windows will be iconized
   int Display(int option);
 
-  // Zooms the Image >Img<. If >ZoomFactor< is greater than zero, each image point will
-  // be displayed by a ZoomFactor times ZoomFactor sized rectangle, if it is less than zero
-  // some image points will not get drawn, that means for every drawn point there will be
-  // ZoomFactor - 1 points skipped. ZoomFactor zero means that the greatest zoom
+  // Zooms the Image >Img<.
+  // If >ZoomFactor< is greater than zero, each image point will
+  // be displayed by a ZoomFactor times ZoomFactor sized rectangle,
+  // if it is less than zero only every (-ZoomFactor)th point is drawn.
+  // ZoomFactor zero means that the greatest zoom
   // factor, such that the image still fits its window, will be used.
+
   int Zoom(Visual v, int ZoomFactor, int = 0, int = 0);
   int Zoom(const ImageD& Img, int ZoomFactor, int = 0, int = 0);
   int Zoom(const Image& Img, int ZoomFactor, int = 0, int = 0);

@@ -266,10 +266,6 @@ namespace ice
     B[1][2] = B[2][1] = V[4][min_col] / V[5][min_col];
     B[2][2] = V[5][min_col] / V[5][min_col];
 
-    // compute A from B
-    if (!isPositiveDefinite(B))
-      throw IceException(FNAME, M_INTERN);
-
     Matrix A = CholeskyDecomposition(B);
 
     A = Inverse(!A);
@@ -1400,8 +1396,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_MATRIXFORMAT);
-
-        return WRONG_PARAM;
       }
 
     int error = 0;
@@ -1444,8 +1438,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_MATRIXFORMAT);
-
-        return WRONG_PARAM;
       }
 
     int error = 0;
@@ -1532,7 +1524,6 @@ namespace ice
 
         throw IceException(FNAME, M_VECTORDIM);
 
-        return WRONG_PARAM;
       }
 
     for (unsigned int i = 0; i < imagepoints.size(); i++)
@@ -1550,8 +1541,6 @@ namespace ice
 #endif
 
             throw IceException(FNAME, M_MATRIXFORMAT);
-
-            return WRONG_PARAM;
           }
       }
 
@@ -1607,8 +1596,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_VECTORDIM);
-
-        return WRONG_PARAM;
       }
 
     for (unsigned int i = 0; i < imagepoints.size(); i++)
@@ -1626,8 +1613,6 @@ namespace ice
 #endif
 
             throw IceException(FNAME, M_MATRIXFORMAT);
-
-            return WRONG_PARAM;
           }
       }
 
@@ -1741,8 +1726,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_VECTORDIM);
-
-        return WRONG_PARAM;
       }
 
     int error = 0;
@@ -1800,8 +1783,6 @@ namespace ice
 #endif
 
         throw IceException(FNAME, M_VECTORDIM);
-
-        return WRONG_PARAM;
       }
 
     int error = 0;
@@ -1920,11 +1901,7 @@ namespace ice
         }
 #endif
 
-        throw IceException(FNAME, M_WRONG_PARAM);
-
-        Image img = NewImg(dimx, dimy, 255);
-
-        return img;
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       }
 
     Image img = NewImg(dimx, dimy, 255);

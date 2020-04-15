@@ -914,7 +914,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     if (!IsImg(i) || !IsImg(io))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     for (int y = 0; y < i.ysize; y++)
       for (int x = 0; x < i.xsize; x++)
@@ -934,7 +934,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     if (!IsImg(i) || !IsImg(io))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_IMAGE);
 
     for (int y = 0; y < i.ysize; y++)
       for (int x = 0; x < i.xsize; x++)
@@ -1000,7 +1000,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
     status.set(0);
 
     if (!IsImg(i1) || treshold < 0)     // Eingabebild gueltig
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     struct STPoint temp;
 
@@ -1062,7 +1062,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
   {
 
     if (!IsImg(GrwImg) || !IsImg(WSHEDDeleted))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     int xn, yn;
 
@@ -1116,8 +1116,7 @@ check:        // wenn Punkt an Objektrand liegt, in FIFO-Schlange aufnehmen
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
       {
-        // Eingabebilder ungleich NULL?
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_IMAGE);
       }
 
     int maxval = WSImg.maxval;

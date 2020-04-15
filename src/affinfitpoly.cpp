@@ -53,7 +53,7 @@ namespace ice
     int i, j, k, diff, cnt = 20;
 
     if (pl1 == NULL || pl2 == NULL)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     /* Abstand der Stuetzstellen */
     diff = pl1->lng / cnt;
@@ -151,7 +151,7 @@ namespace ice
     int i, imin, j, k;
 
     if (pl1 == NULL || pl2 == NULL)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PTR);
 
     MomentPolygon(pl1, m1, pc0);
     MomentPolygon(pl2, m2, pc0);
@@ -291,7 +291,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] < EPSILON)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     PolyNormMoments(mx, mh, tr);
     InvertTrans(tr);
@@ -337,7 +337,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     /*******************************************************/
     mhor40 = mhor04 = 0.519615;
@@ -494,7 +494,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     sx = mx[1] / mx[0];
     sy = mx[2] / mx[0];
@@ -707,7 +707,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     //
     // *****************************************************
@@ -868,7 +868,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     //
     // *****************************************************
@@ -1150,10 +1150,10 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] <= 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     if (n < 3 || n > 7)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     /*******************************************************/
 
@@ -1263,7 +1263,7 @@ namespace ice
     PosSign(mp, mx);
 
     if (mx[0] == 0.0)
-      throw IceException(FNAME, M_WRONG_OBJECT);
+      throw IceException(FNAME, M_EMPTY_OBJECT);
 
     //
     // *****************************************************

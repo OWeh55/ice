@@ -60,18 +60,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                throw IceException(FNAME, M_FILE_OPEN, fn);
+                throw IceException(FNAME, M_FILE_OPEN);
                 break;
               case 2:
               case 3:
-                throw IceException(FNAME, M_WRONG_FILETYPE, fn);
+                throw IceException(FNAME, M_WRONG_FILETYPE);
                 break;
               case 4:
               case 5:
-                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE);
                 break;
               default:
-                throw IceException(FNAME, M_FILE_OPEN, fn);
+                throw IceException(FNAME, M_FILE_OPEN);
               }
 
             reader = nullptr;
@@ -142,18 +142,18 @@ namespace ice
         switch (error)
           {
           case 1:
-            throw IceException(FNAME, M_FILE_OPEN, filename);
+            throw IceException(FNAME, M_FILE_OPEN);
             break;
           case 2:
           case 3:
-            throw IceException(FNAME, M_WRONG_FILETYPE, filename);
+            throw IceException(FNAME, M_WRONG_FILETYPE);
             break;
           case 4:
           case 5:
-            throw IceException(FNAME, M_UNSUPPORTED_FILE, filename);
+            throw IceException(FNAME, M_UNSUPPORTED_FILE);
             break;
           default:
-            throw IceException(FNAME, M_FILE_OPEN, filename);
+            throw IceException(FNAME, M_FILE_OPEN);
           }
 
         reader = nullptr;
@@ -180,18 +180,18 @@ namespace ice
             switch (error)
               {
               case 1:
-                throw IceException(FNAME, M_FILE_OPEN, fn);
+                throw IceException(FNAME, M_FILE_OPEN);
                 break;
               case 2:
               case 3:
-                throw IceException(FNAME, M_WRONG_FILETYPE, fn);
+                throw IceException(FNAME, M_WRONG_FILETYPE);
                 break;
               case 4:
               case 5:
-                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE);
                 break;
               default:
-                throw IceException(FNAME, M_FILE_OPEN, fn);
+                throw IceException(FNAME, M_FILE_OPEN);
               }
 
             reader = nullptr;
@@ -214,10 +214,10 @@ namespace ice
               case 1:
               case 20:
               case 21:
-                throw IceException(FNAME, M_UNSUPPORTED_FILE, fn);
+                throw IceException(FNAME, M_UNSUPPORTED_FILE);
                 break;
               default:
-                throw IceException(FNAME, M_FILE_OPEN, fn);
+                throw IceException(FNAME, M_FILE_OPEN);
               }
 
             reader = nullptr;

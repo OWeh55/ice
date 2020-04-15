@@ -240,13 +240,13 @@ namespace ice
           throw IceException(FNAME, M_DIFFERENT_LISTSIZE);
 
         if (dim2 > dim1)
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIMENSION);
 
         if ((dim1 != dim2) && (mode != TRM_AFFINE) && (mode != TRM_PROJECTIVE))
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         if ((mode == TRM_SIMILARITY_NOR) && ((dim1 != 2) || (dim2 != 2)))
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_PARAMETER);
 
         switch (mode)
           {
@@ -484,7 +484,7 @@ namespace ice
         nPoints = p1.rows();
 
         if ((dim2 != 2) || (dim1 != 2)) // linear opt. only 2 dimensions
-          throw IceException(FNAME, M_WRONG_PARAM);
+          throw IceException(FNAME, M_WRONG_DIMENSION);
 
         // construct pointlist
         pl1 = NewPointList(nPoints);

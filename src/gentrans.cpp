@@ -80,7 +80,7 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     return OK;
   }
@@ -111,7 +111,7 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     return OK;
   }
@@ -137,7 +137,7 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     return OK;
   }
@@ -167,12 +167,12 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
     if (fac < eps)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     ScaleMatrix((double*)Trans, 3, 3, fac, (double*)Trans);
     return OK;
@@ -207,12 +207,12 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
     if (fac < eps)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     ScaleMatrix((double*)Trans, 3, 3, fac, (double*)Trans);
     return OK;
@@ -233,12 +233,12 @@ namespace ice
 
     /* Normierung nach Summe der Quadrate der unteren Zeile */
     if (normalize(Trans) != OK)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     fac = Sqr(Trans[2][0]) + Sqr(Trans[2][1]) + Sqr(Trans[2][2]);
 
     if (fac < eps)
-      throw IceException(FNAME, M_NO_PROJ);
+      throw IceException(FNAME, M_WRONG_TRAFO);
 
     ScaleMatrix((double*)Trans, 3, 3, 1 / fac, (double*)Trans);
     return OK;
@@ -253,7 +253,7 @@ namespace ice
     int i, rc;
 
     if (pl1->lng < 4)
-      throw IceException(FNAME, M_MISS_P);
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (pl2->lng < pl1->lng)
       throw IceException(FNAME, M_WRONG_POINTLIST);
@@ -315,7 +315,7 @@ namespace ice
     int i, rc;
 
     if (pl1->lng < 3)
-      throw IceException(FNAME, M_MISS_P);
+      throw IceException(FNAME, M_TOO_LESS_POINTS);
 
     if (pl2->lng < pl1->lng)
       throw IceException(FNAME, M_WRONG_POINTLIST);

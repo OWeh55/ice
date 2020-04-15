@@ -23,7 +23,7 @@
 
 #include "Vector.h"
 
-#define vERR(f,m,r,ret) { throw IceException("VectorT::" f,m); }
+#define vERR(f,m) { throw IceException("VectorT::" f,m); }
 
 namespace ice
 {
@@ -102,7 +102,7 @@ namespace ice
 
     if (l == 0)
       {
-        vERR("Normalize", "Can't normalize", WRONG_PARAM, z);
+        vERR("Normalize", M_ZERO_VECTOR);
       }
 
     for (unsigned int i = 0; i < z.size(); i++)
@@ -121,7 +121,7 @@ namespace ice
 
     if ((u.dim != 3) || (v.dim != 3))
       {
-        vERR(FNAME, M_WRONG_DIM, WRONG_PARAM, z);
+        vERR(FNAME, M_WRONG_DIMENSION);
       }
 
     z.data[0] = u.data[1] * v.data[2] - v.data[1] * u.data[2];

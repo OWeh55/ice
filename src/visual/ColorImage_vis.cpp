@@ -58,7 +58,7 @@ namespace ice
       case OFF:
         return wxGetApp().GetImageManager()->Show(OFF, getVisual(img));
       default:
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
     return OK;
   }

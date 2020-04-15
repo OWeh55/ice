@@ -445,7 +445,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PTR);
 
     if (dim < 1)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < dim; i++)
       {
@@ -465,7 +465,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_PTR);
 
     if (dim < 1)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < dim; i++)
       {

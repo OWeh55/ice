@@ -264,7 +264,7 @@ namespace ice
     nPoints(distances.rows()), tree(nPoints), edgeLength(nPoints)
   {
     if (nPoints < 1 || distances.cols() != nPoints)
-      throw IceException(FNAME, M_WRONG_FORMAT);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     // zum Start ist nPoints-1 der erste und einzige Punkt des Baumes = Wurzel
 

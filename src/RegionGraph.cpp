@@ -321,7 +321,7 @@ namespace ice
     if (!IsImg(source) || !IsImg(labImg) || !IsImg(retImg))
       {
         // Eingabebilder gültig?
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_INVALID_IMAGE);
       }
 
     CopiedLabImg = NewImg(labImg, true);  //CopyImg(labImg,CopiedLabImg);
@@ -887,7 +887,7 @@ ende:
     RegNodeCount = 0;
 
     if (!IsImg(retImg))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     for (int yw = 0; yw < CopiedSourceImg.ysize; yw++)
       for (int xw = 0; xw < CopiedSourceImg.xsize; xw++)
@@ -959,7 +959,7 @@ ende:
   {
 
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_INVALID_IMAGE);
 
     Image mark;
     mark.create(Original->xsize, Original->ysize, 2);
@@ -1038,7 +1038,7 @@ ende:
   {
     // Bilder initialisert und Schwellwert fuer Wasserscheidenlinien groesser 0 ?
     if (!IsImg(Original) || !IsImg(WSImg) || !IsImg(GrwImg) || Treshold < 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     GrwImg.set(255);
     Image BlWh = NewImg(WSImg);

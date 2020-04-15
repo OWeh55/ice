@@ -52,7 +52,7 @@ namespace ice
       (x1 < 0) || (x1 > x2) || (x2 > xm) ||
       (y1 < 0) || (y1 > y2) || (y2 > ym)
     )
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (frame)
       {
@@ -109,7 +109,7 @@ namespace ice
     ym = AlphaSizeY() - 1;
 
     if ((xs > xm - 2) || (ys > ym - 2))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     x = 0;
     y = 0;
@@ -259,7 +259,7 @@ namespace ice
     char yn[2];
     char s[STRLEN];
     if (strlen(yns) < 2)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
     yn[0] = tolower(yns[0]);
     yn[1] = tolower(yns[1]);
     sprintf(s, "%s (%c/%c)", p, yn[0], yn[1]);
@@ -281,7 +281,7 @@ namespace ice
     char yn[2];
     string s;
     if (yns.length() < 2)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
     yn[0] = toupper(yns[0]);
     yn[1] = toupper(yns[1]);
     s = p + "\n" + yn[0] + " / " + yn[1];

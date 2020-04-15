@@ -336,12 +336,12 @@ namespace ice
     int hfeld[5] = {1, 2, 4, 8, 16};
 
     if ((val < 0) || (val > img.maxval))
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     int DotSize;
 
     if (size_exp > 5)
-      throw IceException(FNAME, M_WRONG_MAGNITUDE);
+      throw IceException(FNAME, M_WRONG_SIZE);
     else
       {
         if (size_exp >= 0)

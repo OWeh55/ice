@@ -125,7 +125,7 @@ namespace ice
     int x1, y1, x2, y2;
 
     if ((fsize & 1) == 0 || rank < 0 || rank >= fsize * fsize)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int size2 = fsize / 2;
 
@@ -247,7 +247,7 @@ namespace ice
     int dx, dy;
 
     if (((fsizex & 1) == 0) || ((fsizey & 1) == 0))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int sizex = fsizex / 2;
     int sizey = fsizey / 2;
@@ -376,7 +376,7 @@ namespace ice
     int ret;
 
     if ((size & 1) == 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_SIZE);
 
     int rank = (size * size) / 2;
     RETURN_ERROR_IF_FAILED(ret = RankImg(img, size, rank, imgd));

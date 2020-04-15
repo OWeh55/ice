@@ -44,10 +44,10 @@ namespace ice
     TrafoDualQuaternion out = TrafoDualQuaternion();
 
     if (!(orig.cols() == 3 && trans.cols() == 3))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     if (!(orig.rows() == trans.rows()))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     int k = orig.rows();
 
@@ -146,16 +146,12 @@ namespace ice
 
     if (!(orig.cols() == 3 && trans.cols() == 3 && weights.cols() == 1))
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
-
-        return out;
+        throw IceException(FNAME, M_WRONG_DIMENSION);
       }
 
     if (!(orig.rows() == trans.rows() && orig.rows() == weights.rows()))
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
-
-        return out;
+        throw IceException(FNAME, M_WRONG_DIMENSION);
       }
 
     int k = orig.rows();

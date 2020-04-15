@@ -360,8 +360,6 @@ namespace ice
     if (!read_header(fd, xsize, ysize, bits, nr))
       {
         throw IceException(FNAME, M_WRONG_FILETYPE);
-        fclose(fd);
-        return WRONG_FILE;
       }
 
     if (bits == 8)
@@ -443,8 +441,6 @@ namespace ice
     if (!read_header(fd, xs, ys, bits, ch))
       {
         throw IceException(FNAME, M_WRONG_FILETYPE);
-        fclose(fd);
-        return WRONG_FILE;
       }
 
     int bsize = (bits / 8) * ch * xs * ys;
@@ -453,8 +449,6 @@ namespace ice
     if (pic == NULL)
       {
         throw IceException(FNAME, M_NO_MEM);
-        fclose(fd);
-        return NO_MEM;
       }
 
     fread(pic, bsize, 1, fd);

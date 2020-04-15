@@ -49,7 +49,7 @@ namespace ice
   int ImageBase::set(int grayvalue)
   {
     if (grayvalue > maxval)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     for (int y = 0; y < ysize; y++)
       for (int x = 0; x < xsize; x++)

@@ -676,7 +676,7 @@ namespace ice
         RETURN_ERROR_IF_FAILED(TimeWarpReduced(distance, ref, mode));
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_MODE);
       }
 
     return OK;

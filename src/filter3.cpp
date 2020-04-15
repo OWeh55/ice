@@ -386,7 +386,7 @@ namespace ice
     int dx, dy;
 
     if ((sx < 1) || ((sx & 1) != 1) || (sy < 1) || ((sy & 1) != 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     RETURN_ERROR_IF_FAILED(MatchImg(pn1, pn2, dx, dy));
 
@@ -686,7 +686,7 @@ namespace ice
     int dx, dy;
 
     if ((n1 < 1) || ((n1 & 1) != 1) || (n2 < 1) || ((n2 & 1) != 1))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     RETURN_ERROR_IF_FAILED(MatchImg(imgs, imgd, dx, dy));
     Image box1 = NewImg(dx, dy, imgs.maxval);
@@ -772,7 +772,7 @@ namespace ice
                 if (use_gauss_filter)
                   {
                     if (nx != ny)
-                      throw IceException(FNAME, M_WRONG_PARAM);
+                      throw IceException(FNAME, M_WRONG_PARAMETER);
 
                     GaussImg(imgs_wide, smearresult, nx, nx / 3.0);
                   }
@@ -879,7 +879,7 @@ namespace ice
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       };
 
     try
@@ -914,7 +914,7 @@ namespace ice
     /* Parameter pruefen */
     if (sigma <= 0 || size < 1 || (size & 1) == 0)
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       };
     try
       {

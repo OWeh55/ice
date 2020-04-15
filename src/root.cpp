@@ -252,7 +252,7 @@ namespace ice
   double GammaFunction(double x)
   {
     if (x <= 0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     double c0 = 1.0;
     double c1 = 1.0    / 12.0;

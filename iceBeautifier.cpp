@@ -22,7 +22,7 @@ public:
   static const int stringliteral = 8;
   static const int singlecharacter = 16;
   static const int comment = 32;
-  Lexer(const std::string &s, bool insideComment = false):
+  Lexer(const std::string& s, bool insideComment = false):
     str(s), pos(0), insideComment(insideComment)
   {
     nextToken();
@@ -50,7 +50,7 @@ public:
   virtual std::string getWord();
 
   // expect and remove specific token (string)
-  virtual void expect(const std::string &tok)
+  virtual void expect(const std::string& tok)
   {
     if (token != tok)
       throw IceException("Parsing", "Expected " + tok);
@@ -123,9 +123,9 @@ void Lexer::nextToken()
       token += f;
       if (insideComment)
         {
-	  // f = nextChar();
-	  // skipChar();
-	  token=' ';
+          // f = nextChar();
+          // skipChar();
+          token = ' ';
           while (f != 0 && (f != '*' || nextChar() != '/'))
             {
               token += f;
@@ -136,10 +136,10 @@ void Lexer::nextToken()
             {
               token += "*/";
               skipChar();
-	      insideComment=false;
+              insideComment = false;
             }
-	  else
-	    insideComment=true;
+          else
+            insideComment = true;
         }
       else if (isdigit(f))
         {
@@ -184,17 +184,17 @@ void Lexer::nextToken()
           skipChar();
         }
       else if (f == '/' && nextChar() == '/')
-	{
-	  // one line comment
-	  skipChar();
+        {
+          // one line comment
+          skipChar();
           while (f != 0)
             {
               token += f;
               f = nextChar();
               skipChar();
             }
-	  type=comment;
-	}
+          type = comment;
+        }
       else if (f == '/' && nextChar() == '*')
         {
           skipChar();
@@ -213,17 +213,17 @@ void Lexer::nextToken()
               token += "*/";
               skipChar();
             }
-	  else
-	    insideComment=true;
+          else
+            insideComment = true;
         }
-      else if (isalpha(f) || f=='_')
+      else if (isalpha(f) || f == '_')
         {
           //    cout << "id"<<endl;
           // identifier
           type = identifier;
           f = nextChar();
           //    cout << (int)f << " " << f << endl;
-          while (isalnum(f) || f=='_')
+          while (isalnum(f) || f == '_')
             {
               token += f;
               skipChar();
@@ -276,7 +276,7 @@ std::string Lexer::getWord()
   return res;
 }
 
-void read(const string &fn, vector<string> &buffer)
+void read(const string& fn, vector<string>& buffer)
 {
   ifstream is(fn);
   string line;
@@ -284,48 +284,48 @@ void read(const string &fn, vector<string> &buffer)
     buffer.push_back(line);
 }
 
-void write(const string &fn, const vector<string> &buffer)
+void write(const string& fn, const vector<string>& buffer)
 {
   ofstream os(fn);
-  int nLines=buffer.size();
-  int nEmptyLines=0;
-  for (int lineNr=0;lineNr<nLines;lineNr++)
+  int nLines = buffer.size();
+  int nEmptyLines = 0;
+  for (int lineNr = 0; lineNr < nLines; lineNr++)
     {
-      string line=buffer[lineNr];
-      if (line!="////")  // ignore these
-      {
-	if (line.empty())
-	  {
-	    nEmptyLines++;
-	    if (nEmptyLines<2)
-	      os << endl;
-	  }
-	else
-	  {
-	    nEmptyLines=0;
-	    os << line << endl;
-	  }
-      }
+      string line = buffer[lineNr];
+      if (line != "////") // ignore these
+        {
+          if (line.empty())
+            {
+              nEmptyLines++;
+              if (nEmptyLines < 2)
+                os << endl;
+            }
+          else
+            {
+              nEmptyLines = 0;
+              os << line << endl;
+            }
+        }
     }
 }
 
-bool leftMatch(const string &line, const string &pattern)
+bool leftMatch(const string& line, const string& pattern)
 {
   int len = pattern.size();
   return line.substr(0, len) == pattern;
 }
 
-void getIceException(Lexer &lex,string &arg1,string &arg2)
+void getIceException(Lexer& lex, string& arg1, string& arg2)
 {
-  while (!lex.empty() && lex.type==Lexer::comment)
+  while (!lex.empty() && lex.type == Lexer::comment)
     lex.nextToken();
   lex.expect("throw");
   lex.expect("IceException");
   lex.expect('(');
-  arg1=lex.getWord();
+  arg1 = lex.getWord();
   lex.expect(',');
-  arg2=lex.getWord();
-  if (lex.token==",")
+  arg2 = lex.getWord();
+  if (lex.token == ",")
     {
       lex.nextToken();
       lex.getWord();
@@ -333,47 +333,48 @@ void getIceException(Lexer &lex,string &arg1,string &arg2)
   lex.expect(')');
 }
 
-void convert(const string &fn)
+void convert(const string& fn)
 {
   vector<string> buffer;
   read(fn, buffer);
-  int nLines=buffer.size();
+  int nLines = buffer.size();
   vector<string> newBuffer(nLines);
-  for (int lineNr=0;lineNr<nLines;lineNr++)
+  for (int lineNr = 0; lineNr < nLines; lineNr++)
     {
-      newBuffer[lineNr]=buffer[lineNr];
-      buffer[lineNr]=trim(buffer[lineNr]);
+      newBuffer[lineNr] = buffer[lineNr];
+      buffer[lineNr] = trim(buffer[lineNr]);
     }
   bool comment = false;
   bool mustWrite = false;
-  for (int lineNr=0;lineNr<nLines;lineNr++)
+  for (int lineNr = 0; lineNr < nLines; lineNr++)
     {
-      string hline=buffer[lineNr];
+      string hline = buffer[lineNr];
       Lexer lex(hline, comment);
-      try {
-	string arg1,arg2;
-	getIceException(lex,arg1,arg2);
-	/* we do not need this again
-	if (lineNr>1 && lineNr<nLines-1)
-	  {
-	    if (buffer[lineNr-1]=="{" && buffer[lineNr+1]=="}")
-	      {
-		newBuffer[lineNr-1]="////";
-		newBuffer[lineNr+1]="////";
-	      }
-	  }
-	*/
-	newBuffer[lineNr]="throw IceException(" + arg1 + "," + arg2 +");";
-	cout << newBuffer[lineNr] << endl;
-	mustWrite=true;
-      }
-      catch (IceException&ex)
-	{
-	  // ignore
-	}
+      try
+        {
+          string arg1, arg2;
+          getIceException(lex, arg1, arg2);
+          /* we do not need this again
+          if (lineNr>1 && lineNr<nLines-1)
+            {
+              if (buffer[lineNr-1]=="{" && buffer[lineNr+1]=="}")
+                {
+            newBuffer[lineNr-1]="////";
+            newBuffer[lineNr+1]="////";
+                }
+            }
+          */
+          newBuffer[lineNr] = "throw IceException(" + arg1 + "," + arg2 + ");";
+          cout << newBuffer[lineNr] << endl;
+          mustWrite = true;
+        }
+      catch (IceException& ex)
+        {
+          // ignore
+        }
 
       while (!lex.empty())
-	lex.nextToken();
+        lex.nextToken();
       comment = lex.insideComment;
     }
   if (mustWrite)
@@ -386,25 +387,26 @@ void convert(const string &fn)
     }
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-  try {
-  vector<string> files;
-    Directory(files,"/home/noo/ice/src","*.cpp",DIR_FILE|DIR_WITHPATH);
-    Directory(files,"/home/noo/ice/src","*.h",DIR_FILE|DIR_WITHPATH);
-    Directory(files,"/home/noo/ice/src/visual","*.cpp",DIR_FILE|DIR_WITHPATH);
-    Directory(files,"/home/noo/ice/src/visual","*.h",DIR_FILE|DIR_WITHPATH);
-    Directory(files,"/home/noo/ice/src/ocr","*.cpp",DIR_FILE|DIR_WITHPATH);
-   Directory(files,"/home/noo/ice/src/ocr","*.h",DIR_FILE|DIR_WITHPATH);
-  Directory(files, "/home/noo/ice/src/devices", "*.cpp", DIR_FILE | DIR_WITHPATH);
-  Directory(files, "/home/noo/ice/src/devices", "*.h", DIR_FILE | DIR_WITHPATH);
-  for (auto file : files)
+  try
     {
-      //      cout << file << endl;
-      convert(file);
+      vector<string> files;
+      Directory(files, "/home/noo/ice/src", "*.cpp", DIR_FILE | DIR_WITHPATH);
+      Directory(files, "/home/noo/ice/src", "*.h", DIR_FILE | DIR_WITHPATH);
+      Directory(files, "/home/noo/ice/src/visual", "*.cpp", DIR_FILE | DIR_WITHPATH);
+      Directory(files, "/home/noo/ice/src/visual", "*.h", DIR_FILE | DIR_WITHPATH);
+      Directory(files, "/home/noo/ice/src/ocr", "*.cpp", DIR_FILE | DIR_WITHPATH);
+      Directory(files, "/home/noo/ice/src/ocr", "*.h", DIR_FILE | DIR_WITHPATH);
+      Directory(files, "/home/noo/ice/src/devices", "*.cpp", DIR_FILE | DIR_WITHPATH);
+      Directory(files, "/home/noo/ice/src/devices", "*.h", DIR_FILE | DIR_WITHPATH);
+      for (auto file : files)
+        {
+          //      cout << file << endl;
+          convert(file);
+        }
     }
-  }
-  catch(IceException &ex)
+  catch (IceException& ex)
     {
       cerr << ex.what() <<  endl;
     }

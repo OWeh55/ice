@@ -156,7 +156,7 @@ namespace ice
     string id;
     source >> id;
     if (id != "ClassifierNearestNeighbor")
-      throw IceException(FNAME, M_WRONG_FILE);
+      throw IceException(FNAME, M_WRONG_FILEFORMAT);
     source >> nFeatures;
     source >> nClasses;
     source >> nNeighbors;

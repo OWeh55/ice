@@ -93,7 +93,7 @@ namespace ice
                          double* solution, double& costs)
   {
     if ((rows <= 0) || (columns <= 0))
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (matrix == NULL || r_side == NULL || cost_function == NULL || solution == NULL)
       throw IceException(FNAME, M_WRONG_PTR);

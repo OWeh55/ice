@@ -48,7 +48,7 @@ namespace ice
   {
     if (dimension < 1)
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_DIMENSION);
         dim = 0;
       }
     else
@@ -83,9 +83,7 @@ namespace ice
   {
     if (dimension < 1)
       {
-        throw IceException(FNAME, M_WRONG_PARAM);
-        dim = 0;
-        return WRONG_PARAM;
+        throw IceException(FNAME, M_WRONG_DIMENSION);
       }
 
     dim = dimension;
@@ -96,10 +94,10 @@ namespace ice
   int Statistics::put(const Vector& val, double weight)
   {
     if (weight < 0.0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if (val.Size() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < dim; i++)
       {
@@ -130,10 +128,10 @@ namespace ice
   int Statistics::put(const std::vector<double>& val, double weight)
   {
     if (weight < 0.0)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     if ((int)val.size() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < dim; i++)
       {
@@ -164,7 +162,7 @@ namespace ice
   int Statistics::put(const Matrix& vals)
   {
     if (vals.cols() != dim)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     for (int i = 0; i < vals.rows(); i++)
       {
@@ -380,7 +378,7 @@ namespace ice
     if ((c != ',') && (c != '#'))
       {
         inp.clear(std::ios::badbit);
-        throw IceException(FNAME, M_WRONG_FILE);
+        throw IceException(FNAME, M_WRONG_FILEFORMAT);
       }
 
     inp >> st.sweight;

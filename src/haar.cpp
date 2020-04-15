@@ -62,7 +62,7 @@ namespace ice
   int HaarImg(const Image& pic1, Image& pic2, int depth, int mode)
   {
     if (depth < 1)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
 
     int nx = pic1.xsize;
     int ny = pic1.ysize;
@@ -74,7 +74,7 @@ namespace ice
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
     if (mode != NORMAL && mode != INVERS)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MODE);
 
     if (mode == NORMAL)
       {

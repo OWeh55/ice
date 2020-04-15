@@ -126,7 +126,7 @@ namespace ice
 
     if (! readPara(is, "x0", x0) || ! readPara(is, "y0", y0) ||
         ! readPara(is, "d2", d2) || ! readPara(is, "d4", d4))
-      throw IceException(FNAME, M_WRONG_FORMAT);
+      throw IceException(FNAME, M_WRONG_FILEFORMAT);
   }
 #undef FNAME
 
@@ -139,7 +139,7 @@ namespace ice
   void Distortion1::set(const Vector& v)
   {
     if (v.size() != 4)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     x0 = v[0];
     y0 = v[1];
@@ -150,7 +150,7 @@ namespace ice
   void Distortion1::set(const std::vector<double>& v)
   {
     if (v.size() < 4)
-      throw IceException(FNAME, M_WRONG_DIM);
+      throw IceException(FNAME, M_WRONG_DIMENSION);
 
     x0 = v[0];
     y0 = v[1];

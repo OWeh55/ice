@@ -65,7 +65,7 @@ namespace ice
         sortarray = pl->wptr;
         break;
       default:
-        throw IceException(FNAME, M_WRONG_PARAM);
+        throw IceException(FNAME, M_WRONG_PARAMETER);
       }
 
     /*Indexfeld anlegen*/
@@ -167,10 +167,10 @@ namespace ice
     MatrixStruct mats;
 
     if (!IsMatrix(mat))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_MATRIX);
 
     if (col >= mat->csize)
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     /*zu sortierendes Feld auswählen*/
     sortcol = col;

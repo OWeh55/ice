@@ -41,7 +41,7 @@ namespace ice
   {
     ImageD img;
     if ((xsize <= 0) || (ysize <= 0) || (minval > maxval))
-      throw IceException(FNAME, M_WRONG_PARAM);
+      throw IceException(FNAME, M_WRONG_PARAMETER);
     img.create(xsize, ysize, minval, maxval);
     return img;
   }

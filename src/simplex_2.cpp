@@ -40,10 +40,10 @@ namespace ice
       throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (a1 < 0 || a2 > pl->lng - 1)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (step < 0)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (pl->lng < 2)
       throw IceException(FNAME, M_TOO_LESS_POINTS);
@@ -529,10 +529,10 @@ namespace ice
       throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (a1 < 0 || a2 > pl->lng - 1)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (step < 0)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (pl->lng < 3)
       throw IceException(FNAME, M_TOO_LESS_POINTS);
@@ -943,10 +943,10 @@ namespace ice
       throw IceException(FNAME, M_WRONG_POINTLIST);
 
     if (a1 < 0 || a2 > pl->lng - 1)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_INDEX);
 
     if (step < 0)
-      throw IceException(FNAME, M_WRONG_VAL);
+      throw IceException(FNAME, M_WRONG_VALUE);
 
     if (pl->lng < 5)
       throw IceException(FNAME, M_TOO_LESS_POINTS);
