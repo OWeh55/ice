@@ -535,10 +535,10 @@ namespace ice
       }
   }
 
-  int Buffer2Image(const unsigned char* buffer,
-                   const Image& img,
-                   bool intensity,
-                   int lineoffset, int factor, int offset)
+  void Buffer2Image(const unsigned char* buffer,
+                    const Image& img,
+                    bool intensity,
+                    int lineoffset, int factor, int offset)
   {
     if (!IsImg(img))
       {
@@ -577,19 +577,15 @@ namespace ice
                (PixelType2*) buffer, lineoffset, factor, offset, intensity);
         break;
       }
-
-    return OK;
   }
 
   template<class T>
-  static int frombuffer(T** r, T** g, T** b,
-                        int width, int height,
-                        const unsigned char* buffer,
-                        bool intensity,
-                        int lineoffset, int packmode)
+  void frombuffer(T** r, T** g, T** b,
+                  int width, int height,
+                  const unsigned char* buffer,
+                  bool intensity,
+                  int lineoffset, int packmode)
   {
-    int rc = OK;
-
     switch (packmode)
       {
       case IB_RGB:
@@ -642,16 +638,13 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_MODE);
-        rc = WRONG_PARAM;
       }
-
-    return rc;
   }
 
-  int Buffer2Image(const unsigned char* buffer,
-                   const Image& imgr, const Image& imgg, const Image& imgb,
-                   bool intensity,
-                   int packmode, int lineoffset)
+  void Buffer2Image(const unsigned char* buffer,
+                    const Image& imgr, const Image& imgg, const Image& imgb,
+                    bool intensity,
+                    int packmode, int lineoffset)
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -678,44 +671,40 @@ namespace ice
         lineoffset = width * factor;
       }
 
-    int rc = ERROR;
-
     switch (pt)
       {
       case 1:
-        rc = frombuffer((PixelType1**)imgr->getDataPtr(),
-                        (PixelType1**)imgg->getDataPtr(),
-                        (PixelType1**)imgb->getDataPtr(),
-                        width, height,
-                        buffer, intensity,
-                        lineoffset, packmode);
+        frombuffer((PixelType1**)imgr->getDataPtr(),
+                   (PixelType1**)imgg->getDataPtr(),
+                   (PixelType1**)imgb->getDataPtr(),
+                   width, height,
+                   buffer, intensity,
+                   lineoffset, packmode);
         break;
 
       case 2:
-        rc = frombuffer((PixelType2**)imgr->getDataPtr(),
-                        (PixelType2**)imgg->getDataPtr(),
-                        (PixelType2**)imgb->getDataPtr(),
-                        width, height,
-                        buffer, intensity,
-                        lineoffset, packmode);
+        frombuffer((PixelType2**)imgr->getDataPtr(),
+                   (PixelType2**)imgg->getDataPtr(),
+                   (PixelType2**)imgb->getDataPtr(),
+                   width, height,
+                   buffer, intensity,
+                   lineoffset, packmode);
         break;
 
       case 3:
-        rc = frombuffer((PixelType3**)imgr->getDataPtr(),
-                        (PixelType3**)imgg->getDataPtr(),
-                        (PixelType3**)imgb->getDataPtr(),
-                        width, height,
-                        buffer, intensity,
-                        lineoffset, packmode);
+        frombuffer((PixelType3**)imgr->getDataPtr(),
+                   (PixelType3**)imgg->getDataPtr(),
+                   (PixelType3**)imgb->getDataPtr(),
+                   width, height,
+                   buffer, intensity,
+                   lineoffset, packmode);
         break;
       }
-
-    return rc;
   }
 #undef FNAME
 
 #define FNAME "Image2Buffer"
-  int Image2Buffer(const Image& img, ibuffer& ib)
+  void Image2Buffer(const Image& img, ibuffer& ib)
   {
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -757,12 +746,10 @@ namespace ice
               *(bptr++) = img.getPixel(x, y);
             }
       }
-
-    return OK;
   }
 
-  int Image2Buffer(const Image& RedImage, const Image& GreenImage, const Image& BlueImage,
-                   ibuffer& ImageBuffer)
+  void Image2Buffer(const Image& RedImage, const Image& GreenImage, const Image& BlueImage,
+                    ibuffer& ImageBuffer)
   {
     // consistency checks at first
     if (!IsImg(RedImage) || !IsImg(GreenImage) || !IsImg(BlueImage))
@@ -817,8 +804,6 @@ namespace ice
               *(bptr++) = BlueImage.getPixel(x, y);
             }
       }
-
-    return OK;
   }
 
   /*
@@ -872,9 +857,9 @@ namespace ice
       }
   }
 
-  int Image2Buffer(const Image& img,
-                   unsigned char*& buffer, int& size,
-                   bool intensity, int lineoffset, int factor, int offset)
+  void Image2Buffer(const Image& img,
+                    unsigned char*& buffer, int& size,
+                    bool intensity, int lineoffset, int factor, int offset)
   {
     if (!IsImg(img))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -930,16 +915,14 @@ namespace ice
                  (PixelType2*) buffer, lineoffset, factor, offset, intensity);
         break;
       }
-
-    return OK;
   }
 
   template<class T>
-  static int tobuffer(T** r, T** g, T** b,
-                      int width, int height,
-                      unsigned char* buffer,
-                      bool intensity,
-                      int lineoffset, int packmode)
+  static void tobuffer(T** r, T** g, T** b,
+                       int width, int height,
+                       unsigned char* buffer,
+                       bool intensity,
+                       int lineoffset, int packmode)
   {
     int rc = OK;
 
@@ -995,15 +978,12 @@ namespace ice
         break;
       default:
         throw IceException(FNAME, M_WRONG_MODE);
-        rc = WRONG_PARAM;
       }
-
-    return rc;
   }
 
-  int Image2Buffer(const Image& imgr, const Image& imgg, const Image& imgb,
-                   unsigned char*& buffer, int& size,
-                   bool intensity, int packmode, int lineoffset)
+  void Image2Buffer(const Image& imgr, const Image& imgg, const Image& imgb,
+                    unsigned char*& buffer, int& size,
+                    bool intensity, int packmode, int lineoffset)
   {
     if (!IsImg(imgr) || !IsImg(imgg) || !IsImg(imgb))
       throw IceException(FNAME, M_WRONG_IMAGE);
@@ -1054,34 +1034,32 @@ namespace ice
     switch (pt)
       {
       case 1:
-        return tobuffer((PixelType1**)imgr->getDataPtr(),
-                        (PixelType1**)imgg->getDataPtr(),
-                        (PixelType1**)imgb->getDataPtr(),
-                        width, height,
-                        buffer, intensity,
-                        lineoffset, packmode);
+        tobuffer((PixelType1**)imgr->getDataPtr(),
+                 (PixelType1**)imgg->getDataPtr(),
+                 (PixelType1**)imgb->getDataPtr(),
+                 width, height,
+                 buffer, intensity,
+                 lineoffset, packmode);
         break;
 
       case 2:
-        return tobuffer((PixelType2**)imgr->getDataPtr(),
-                        (PixelType2**)imgg->getDataPtr(),
-                        (PixelType2**)imgb->getDataPtr(),
-                        width, height,
-                        buffer, intensity,
-                        lineoffset, packmode);
+        tobuffer((PixelType2**)imgr->getDataPtr(),
+                 (PixelType2**)imgg->getDataPtr(),
+                 (PixelType2**)imgb->getDataPtr(),
+                 width, height,
+                 buffer, intensity,
+                 lineoffset, packmode);
         break;
 
       case 3:
-        return tobuffer((PixelType3**)imgr->getDataPtr(),
-                        (PixelType3**)imgg->getDataPtr(),
-                        (PixelType3**)imgb->getDataPtr(),
-                        width, height,
-                        buffer, intensity,
-                        lineoffset, packmode);
+        tobuffer((PixelType3**)imgr->getDataPtr(),
+                 (PixelType3**)imgg->getDataPtr(),
+                 (PixelType3**)imgb->getDataPtr(),
+                 width, height,
+                 buffer, intensity,
+                 lineoffset, packmode);
         break;
       }
-
-    return ERROR;
   }
 #undef FNAME
 }

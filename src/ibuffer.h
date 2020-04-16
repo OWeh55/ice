@@ -59,27 +59,27 @@ namespace ice
   void Buffer2Image(ibuffer& ib, const Image& imgr, const Image& imgg, const Image& imgb,
                     int flags = IB_CROP);
 
-  int Image2Buffer(const Image& ir, const Image& ig, const Image& ib, ibuffer& ibuf);
-  int Image2Buffer(const Image& img, ibuffer& ib);
+  void Image2Buffer(const Image& ir, const Image& ig, const Image& ib, ibuffer& ibuf);
+  void Image2Buffer(const Image& img, ibuffer& ib);
 
 // char * as buffer
-  int Buffer2Image(const unsigned char* buffer,
-                   const Image& img,
-                   bool intensity = true, int lineoffset = 0, int factor = 1, int offset = 0);
+  void Buffer2Image(const unsigned char* buffer,
+                    const Image& img,
+                    bool intensity = true, int lineoffset = 0, int factor = 1, int offset = 0);
 
-  int Buffer2Image(const unsigned char* buffer,
-                   const Image& imgr, const Image& imgg, const Image& imgb,
-                   bool intensity = true, int packmode = IB_RGB, int lineoffset = 0);
+  void Buffer2Image(const unsigned char* buffer,
+                    const Image& imgr, const Image& imgg, const Image& imgb,
+                    bool intensity = true, int packmode = IB_RGB, int lineoffset = 0);
 
-  int Image2Buffer(const Image& img,
-                   unsigned char*& buffer, int& size,
-                   bool intensity = true,
-                   int lineoffset = 0, int factor = 1, int offset = 0);
+  void Image2Buffer(const Image& img,
+                    unsigned char*& buffer, int& size,
+                    bool intensity = true,
+                    int lineoffset = 0, int factor = 1, int offset = 0);
 
-  int Image2Buffer(const Image& imgr, const Image& imgg, const Image& imgb,
-                   unsigned char*& buffer, int& size,
-                   bool intensity = true,
-                   int packmode = IB_RGB, int lineoffset = 0);
+  void Image2Buffer(const Image& imgr, const Image& imgg, const Image& imgb,
+                    unsigned char*& buffer, int& size,
+                    bool intensity = true,
+                    int packmode = IB_RGB, int lineoffset = 0);
 
 #define GRAYVALUE(r,g,b) ((r*30+g*59+b*11)/100)
 

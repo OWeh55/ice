@@ -19,7 +19,8 @@ namespace ice
   public:
     typedef typename TImage::ValueType ValueType;
 
-    Image3d(): seq(), xsize(0), ysize(0), zsize(0),  maxval(0),
+    Image3d():
+      seq(), xsize(0), ysize(0), zsize(0),  maxval(0),
       scale_x(0), scale_y(0), scale_z(0) {}
 
     Image3d(const Image3d& src, Window3d w):
@@ -200,7 +201,6 @@ namespace ice
         {
           return seq[z].getPixelUnchecked(x, y);
         }
-      return WRONG_PARAM;
     }
 #undef FNAME
 
@@ -262,24 +262,19 @@ namespace ice
     }
 
 #define FNAME "Image::match"
-    int match(const Image3d<TImage>& img2) const
+    void match(const Image3d<TImage>& img2) const
     {
       if (!isValid() || !img2.isValid())
         throw IceException(FNAME, M_WRONG_IMAGE);
 
       if ((xsize != img2.xsize) || (ysize != img2.ysize) || (zsize != img2.zsize))
         throw IceException(FNAME, M_WRONG_IMGSIZE);
-
-      return OK;
     }
 
-    int match(const Image3d<TImage>& img2, const Image3d<TImage>& img3) const
+    void match(const Image3d<TImage>& img2, const Image3d<TImage>& img3) const
     {
-      if (match(img2) != OK)
-        {
-          return WRONG_PARAM;
-        }
-      return match(img3);
+      match(img2);
+      match(img3);
     }
 #undef FNAME
 

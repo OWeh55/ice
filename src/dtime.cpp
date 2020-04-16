@@ -118,8 +118,6 @@ namespace ice
         throw IceException(FNAME, M_WRONG_MODE);
         break;
       }
-
-    return WRONG_PARAM;
 #endif
   }
 #undef FNAME
