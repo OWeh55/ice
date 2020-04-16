@@ -23,8 +23,9 @@
 
 #include <stdlib.h>
 
-#include "RegionGraph.h"
 #include "macro.h"
+
+#include "RegionGraph.h"
 
 // ------------------------------------------------------------------------
 

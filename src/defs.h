@@ -123,12 +123,14 @@ namespace ice
 #define M_INVALID_IMAGE   "invalid image"
 #define M_WRONG_IMAGE     M_INVALID_IMAGE
 
-#define M_WRONG_IMAGED    "invalid double image"
+#define M_INVALID_IMAGED  "invalid double image"
+#define M_WRONG_IMAGED    M_INVALID_IMAGED
+
 #define M_WRONG_IMGSIZE   "wrong image size"
 #define M_IMAGE_TOO_LARGE "image too large"
 #define M_IMAGE_TOO_SMALL "image too small"
 #define M_SIZES_DIFFER    "image sizes differ"
-#define M_SAME_IMAGE      "same images"
+#define M_SAME_IMAGE      "same image"
 #define M_LOWRANGE        "pixel range too low"
 #define M_HIGHRANGE       "pixel range too high"
 
@@ -136,61 +138,61 @@ namespace ice
 
 #define M_MODE_NOT_APPLYABLE    "mode not applicable"
 
-#define M_NOT_CONVERTIBLE       "not convertible"
-#define M_WRONG_RANGE           "ranges differ"
+#define M_NOT_CONVERTIBLE "not convertible"
+#define M_WRONG_RANGE     "ranges differ"
 
-#define M_WRONG_CS              "wrong color space"
-#define M_CS_DIFFER             "different color spaces"
+#define M_WRONG_CS        "wrong color space"
+#define M_CS_DIFFER       "different color spaces"
 
   /* Arbeit mit Fenstern */
 #define M_INVALID_WINDOW   "invalid window"
 
   /* Konturen*/
-#define M_INVALID_CONTUR    "invalid contur"
-#define M_WRONG_STARTPOINT  "invalid starting point"
+#define M_INVALID_CONTUR      "invalid contur"
+#define M_WRONG_STARTPOINT    "invalid starting point"
 #define M_WRONG_STARTPOINT2   "insulated starting point"
 #define M_WRONG_STARTPOINT3   "starting point inside object"
-#define M_CONTUR_NOT_CLOSED "contur not closed"
+#define M_CONTUR_NOT_CLOSED   "contur not closed"
 
   /* Numerik */
-#define M_DIVISION_ZERO   "division by zero"
-#define M_NO_SOLUTION   "no solution"
-#define M_SOL_MANIFOLD          "manifold of solutions"
-#define M_NUM_INSTABILITY "numerical instability"
-#define M_ZERO_VECTOR           "zero vector"
-#define M_NO_ORTHO    "no orthogonal matrix"
-#define M_WRONG_VECTOR  "invalid vector"
-#define M_ZERO_DET      "not solvable (determinant is zero)"
+#define M_DIVISION_ZERO     "division by zero"
+#define M_NO_SOLUTION       "no solution"
+#define M_SOL_MANIFOLD      "manifold of solutions"
+#define M_NUM_INSTABILITY   "numerical instability"
+#define M_ZERO_VECTOR       "zero vector"
+#define M_NO_ORTHO          "no orthogonal matrix"
+#define M_WRONG_VECTOR      "invalid vector"
+#define M_ZERO_DET          "not solvable (determinant is zero)"
 
-#define M_MATRIXFORMAT          "wrong matrix format"
-#define M_WRONG_MATRIX          "invalid matrix"
-#define M_MAT_NO_COMPAT         "matrices not compatible"
-#define M_MATRIX_SINGULAR       "matrix is singular"
-#define M_NO_REGULAR            "Matrix is not regular"
-#define M_NO_SYMM               "Matrix is not symmetrical"
-#define M_NO_SQUARE             "Matrix is not quadratic"
-#define M_VEC_DEPEND    "Vectors not independent"
-#define M_NO_INVERSE    "inverse not exists"
-#define M_WRONG_START   "invalid initial state"
-#define M_POINT_IDENTIC   "indentical points"
-#define M_WRONG_POINTS    "invalid point set"
+#define M_MATRIXFORMAT      "wrong matrix format"
+#define M_WRONG_MATRIX      "invalid matrix"
+#define M_MAT_NO_COMPAT     "matrices not compatible"
+#define M_MATRIX_SINGULAR   "matrix is singular"
+#define M_NO_REGULAR        "Matrix is not regular"
+#define M_NO_SYMM           "Matrix is not symmetrical"
+#define M_NO_SQUARE         "Matrix is not quadratic"
+#define M_VEC_DEPEND        "Vectors not independent"
+#define M_NO_INVERSE        "inverse not exists"
+#define M_WRONG_START       "invalid initial state"
+#define M_POINT_IDENTIC     "indentical points"
+#define M_WRONG_POINTS      "invalid point set"
 
 // geometrische Transformationen, Matching
-#define M_EMPTY_OBJECT          "empty object"
-#define M_WRONG_TRAFO           "degenerate transformation matrix"
-#define M_TRAFO_NOTAFFINE       "transformation not affine"
-#define M_OBJECT_FEATURE        "error determining object features"
+#define M_EMPTY_OBJECT      "empty object"
+#define M_WRONG_TRAFO       "degenerate transformation matrix"
+#define M_TRAFO_NOTAFFINE   "transformation not affine"
+#define M_OBJECT_FEATURE    "error determining object features"
 
 // Histogramme
-#define M_HIST_EMPTY            "no entry in histogram"
+#define M_HIST_EMPTY        "no entry in histogram"
 
 // Statistik
-#define M_STAT_NOENTRY    "no entry in statistics"
-#define M_ZERO_VARIANZ    "variance is zero for one dimension"
+#define M_STAT_NOENTRY      "no entry in statistics"
+#define M_ZERO_VARIANZ      "variance is zero for one dimension"
 
-#define M_NO_ELLIPSE    "no ellipse"
+#define M_NO_ELLIPSE        "no ellipse"
 
-#define M_NOT_NESTED      "function may not be called nested!"
+#define M_NOT_NESTED        "function may not be called nested!"
 
   /************************************************
    *                                              *
@@ -247,8 +249,6 @@ namespace ice
 #define ON    1
 #define GRAY 20
 #define STEREO_IH 2
-//#define DISABLE   3
-//#define REORG   4
 #define RESET   5
 #define UPDATE    6
 #define OVERLAY   7

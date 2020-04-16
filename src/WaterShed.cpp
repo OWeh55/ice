@@ -24,6 +24,8 @@
 
 #include <malloc.h>
 
+#include "macro.h"
+
 #include "base.h"
 #include "IceException.h"
 #include "drawline.h"

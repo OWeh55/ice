@@ -27,46 +27,12 @@
 #include <vector>
 #include <deque>
 #include <set>
+
 #include "base.h"
 
 using namespace std;
 namespace ice
 {
-
-// Makrodefinition fuer 8-er Nachbarschaft
-// jetzt 12 Zuweisungen, vorher 18, 8 Vergleiche
-// normaler 8-er Nachbarschaftsansatz: 8*2=16 Zuweisungen und 8*4=32 Vergleiche
-#define ForAll8Nbrs(p,x,y,x_nb,y_nb,code) \
-{\
-  if (x>0){\
-    y_nb=y;\
-    x_nb=x-1;\
-    code;\
-    if (y>0) { y_nb=y-1; code;}\
-    if (y<p->ysize-1) { y_nb=y+1; code;}\
-  }\
-  if (x<p->xsize-1) {\
-    y_nb=y;\
-    x_nb=x+1;\
-    code;\
-    if (y>0) { y_nb=y-1; code;}\
-    if (y<p->ysize-1) { y_nb=y+1; code;}\
-  }\
-  if (y>0) { y_nb=y-1; x_nb=x; code;}\
-  if (y<(p->ysize-1)) { y_nb=y+1; x_nb=x; code;}\
-}\
-
-
-// Makrodefinition fuer 4-er Nachbarschaft
-// jetzt 4 Zuweisungen, 4 Vergleiche
-#define ForAll4Nbrs(p,x,y,x_nb,y_nb,code) \
-{\
-  if (x>0) { y_nb=y; x_nb=x-1; code;}\
-  if (x<(p->xsize-1)) { y_nb=y; x_nb=x+1; code;}\
-  if (y>0) { y_nb=y-1; x_nb=x; code;}\
-  if (y<(p->ysize-1)) { y_nb=y+1; x_nb=x; code;}\
-}\
-
   struct STPoint
   {
     // Punktstruktur

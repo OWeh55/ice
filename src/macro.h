@@ -29,8 +29,39 @@
 
 namespace ice
 {
-  // Fehlerbehandlung in Prozeduren
-  // these macros should be removed!!
+
+// macro for optimized handling all neighbours
+
+#define ForAll8Nbrs(img,x,y,x_nb,y_nb,code) \
+{\
+  if (x>0){\
+    y_nb=y;\
+    x_nb=x-1;\
+    code;\
+    if (y>0) { y_nb=y-1; code;}\
+    if (y<img.ysize-1) { y_nb=y+1; code;}\
+  }\
+  if (x<img.xsize-1) {\
+    y_nb=y;\
+    x_nb=x+1;\
+    code;\
+    if (y>0) { y_nb=y-1; code;}\
+    if (y<img.ysize-1) { y_nb=y+1; code;}\
+  }\
+  if (y>0) { y_nb=y-1; x_nb=x; code;}\
+  if (y<(img.ysize-1)) { y_nb=y+1; x_nb=x; code;}\
+}
+
+#define ForAll4Nbrs(img,x,y,x_nb,y_nb,code) \
+{\
+  if (x>0) { y_nb=y; x_nb=x-1; code;}\
+  if (x<(img.xsize-1)) { y_nb=y; x_nb=x+1; code;}\
+  if (y>0) { y_nb=y-1; x_nb=x; code;}\
+  if (y<(img.ysize-1)) { y_nb=y+1; x_nb=x; code;}\
+}
+
+  // error handling in functions
+  // these macros should be substituted with exceptions
 
 #define RETURN_ERROR_IF_FAILED(action) try { action; } catch(IceException &ex) { throw IceException(ex, FNAME); }
 #define RETURN_NULL_IF_FAILED(action) RETURN_ERROR_IF_FAILED(action)
