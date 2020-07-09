@@ -4,17 +4,44 @@
 
 #include <fourierdescriptor.h>
 
-void draw(const vector<Point>& points, Image& m)
+#define nParts 2
+
+void interpolate(vector<Point> points, vector<Point> &ip, double delta)
 {
-  Point p0(m.xsize / 2, m.ysize / 2);
-  Marker(1, points[0] + p0, 1, 5, m);
+  int nPoints=points.size();
+  ip.clear();
+  for (int i=0;i<nPoints;i++)
+    {
+      Point p1=points[i];
+      int i2=(i+1) % nPoints;
+      Point p2=points[i2];
+      Point dp=p2-p1;
+      double len1=dp.length();
+      int nSteps=len1/delta;
+      if (nSteps<1)
+	nSteps=1;
+      dp = dp /nSteps;
+      for (int k=0;k<nSteps;k++)
+	ip.push_back(p1+k*dp);
+    }
+}
+
+void draw(const vector<Point>& points, Image& m, int xi, int yi)
+{
+  double fac=m.xsize/(3*nParts);
+  if (m.ysize/(3*nParts)<fac)
+    fac=m.ysize/(3*nParts);
+  
+  Point p0((xi*2+1)*m.xsize / (2*nParts),(yi*2+1)* m.ysize / (2*nParts));
+  Marker(1, points[0]*fac + p0, 3, 5, m);
   Point pa = points[0];
   for (unsigned int i = 1; i < points.size(); i++)
     {
-      Marker(1, points[i] + p0, 3, 5, m);
-      Line(points[i] + p0, pa + p0, 1, m);
+      Marker(1, points[i]*fac + p0, 2, 5, m);
+      Line(points[i]*fac + p0, pa*fac + p0, 1, m);
       pa = points[i];
     }
+  Line(points[0]*fac + p0, pa*fac + p0, 2, m);
 }
 
 void print(const vector<Point>& fk)
@@ -36,40 +63,84 @@ int main(int argc, char** argv)
   Show(OVERLAY, gray, marker);
 
   vector<Point> p;
+
 #if 0
-  p.push_back(Point(0, -0.3 * ys));
-  p.push_back(Point(0.1 * xs, -0.1 * ys));
-  p.push_back(Point(0.3 * xs, 0.0 * ys));
-  p.push_back(Point(0.1 * xs, 0.1 * ys));
-  p.push_back(Point(0.0 * xs, 0.3 * ys));
-  p.push_back(Point(-0.1 * xs, 0.1 * ys));
-  p.push_back(Point(-0.3 * xs, 0.0 * ys));
-  p.push_back(Point(-0.1 * xs, -0.1 * ys));
-#else
+  p.push_back(Point(0, -0.3));
+  p.push_back(Point(0.1, -0.1));
+  p.push_back(Point(0.3, 0.0));
+  p.push_back(Point(0.1 , 0.1 ));
+  //  p.push_back(Point(0.0 , 0.3 ));
+  p.push_back(Point(-0.1 , 0.1 ));
+  p.push_back(Point(-0.3 , 0.0 ));
+  p.push_back(Point(-0.1 , -0.1 ));
+  interpolate(p, p, 0.07);
+#endif
+
+#if 0
+  const int nS=99;
+  for (int i=0; i<nS; i++)
+    {
+      double phi=2*M_PI/nS*i;
+      p.push_back(Point(0.7*cos(phi),0.7*sin(phi)));
+    }
+#endif
+  
+#if 0
+  p.push_back(Point(-1.0, -0.9));
+  p.push_back(Point(-0.1, 0.0));
+  p.push_back(Point(-0.3, 0.2));
+  p.push_back(Point(0.9 , 0.9 ));
+  p.push_back(Point(0.2 , -0.3 ));
+  p.push_back(Point(0.0 , -0.1 ));
+  p.push_back(Point(-0.9 , -1.0 ));
+  interpolate(p, p, 0.2);
+#endif
+  
+#if 1
   Contur c = SelContur(marker, true);
-  c.getPoints(p);
-  for (unsigned int i = 0; i < p.size(); i++)
-    p[i] -= Point(xs / 2, ys / 2);
+  vector<Point> praw;
+  c.getPoints(praw);
+  for (unsigned int i = 0; i < praw.size(); i++)
+    {
+      praw[i] -= Point(xs / 2, ys / 2);
+      praw[i] = praw[i] * (4.0 / xs)  ;
+      if (i % 10 == 0)
+	p.push_back(praw[i]);
+    }
   marker.set(0);
 #endif
 
-  draw(p, marker);
-
-  GetChar();
+  draw(p, marker,0,0);
 
   vector<Point> fk;
   computeFourier(p, fk, true);
-  print(fk);
 
-  GetChar();
   vector<Point> fd;
-  normalizeFDIShiftRotation(fk, fd);
-  print(fd);
-
+  /*
+  normalizeFDShift(fk, fd);
+  normalizeFDScaling(fd, fd);
+  normalizeFDIShiftRotation(fd, fd);
+  */
+  normalizeFDEuclidian(fk,fd);
   computeFourier(fd, p, false);
+  draw(p, marker,1,0);
 
-  draw(p, marker);
+  vector<Point> fk2;
+  rotateFD(fk,2.2,fk2);
+  scaleFD(fk2,0.8,fk2);
+  computeFourier(fk2, p, false);
+  draw(p, marker,0,1);
 
+  vector<Point> fd2;
+  /*
+  normalizeFDShift(fk2, fd2);
+  normalizeFDScaling(fd2, fd2);
+  normalizeFDIShiftRotation(fd2, fd2);
+  */
+  normalizeFDEuclidian(fk2,fd2);
+  computeFourier(fd2, p, false);
+  draw(p, marker,1,0);
+  
   GetChar();
   return OK;
 }

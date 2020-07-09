@@ -10,19 +10,29 @@ void computeFourier(const std::vector<ice::Point>& v1,
                     std::vector<ice::Point>& v2,
                     bool forward = true);
 
-void normalizeFDScaling(const std::vector<ice::Point>& fk,
+void scaleFD(std::vector<ice::Point> fk, double s,
+             std::vector<ice::Point>& fd);
+
+void shiftFD(std::vector<ice::Point> fk, ice::Point sh,
+             std::vector<ice::Point>& fd);
+
+void rotateFD(std::vector<ice::Point> fk, double phi,
+              std::vector<ice::Point>& fd);
+
+void normalizeFDScaling(std::vector<ice::Point> fk,
                         std::vector<ice::Point>& fd);
-void normalizeFDShift(const std::vector<ice::Point>& fk,
+
+void normalizeFDShift(std::vector<ice::Point> fk,
                       std::vector<ice::Point>& fd);
 
-void normalizeFDIShift(const std::vector<ice::Point>& fk,
+void normalizeFDIShift(std::vector<ice::Point> fk,
                        std::vector<ice::Point>& fd);
-void normalizeFDRotation(const std::vector<ice::Point>& fk,
+void normalizeFDRotation(std::vector<ice::Point> fk,
                          std::vector<ice::Point>& fd);
-void normalizeFDIShiftRotation(const std::vector<ice::Point>& fk,
+void normalizeFDIShiftRotation(std::vector<ice::Point> fk,
                                std::vector<ice::Point>& fd);
 
-void normalizeFDEuclidian(const std::vector<ice::Point>& fk,
+void normalizeFDEuclidian(std::vector<ice::Point> fk,
                           std::vector<ice::Point>& fd);
 
 #endif

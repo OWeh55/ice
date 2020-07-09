@@ -237,7 +237,7 @@ namespace ice
   }
 #undef FNAME
 
-#define FNAME "PolygonalCurve::Distance"
+#define FNAME "PolygonalCurve::Length"
   double PolygonalCurve::Length() const
   {
     double len = 0.0;
