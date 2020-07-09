@@ -20,6 +20,7 @@
 #define FOURIERTRAFO_H
 
 #include <vector>
+#include <Point.h>
 #include "matrixtemplate.h"
 
 //#define NOFFTW3
@@ -58,6 +59,7 @@ namespace ice
     void setInput(const double* vr, const double* vi, int n);
     void setInput(const std::vector<double>& v);
     void setInput(const std::vector<double>& vr, const std::vector<double>& vi);
+    void setInput(const std::vector<Point>& v);
     void setInput(const std::vector<int>& v, double factor = 1.0);
     void setInput(const std::vector<int>& vr, const std::vector<int>& vi, double factor = 1.0);
 
@@ -94,6 +96,8 @@ namespace ice
                    std::vector<double>& dstim) const;
 
     double getResult(std::vector<double>& dstre) const;
+
+    void getResult(std::vector<Point>& dstre) const;
 
     void getResultFromReal(std::vector<double>& dstre,
                            std::vector<double>& dstim) const;
@@ -132,6 +136,7 @@ namespace ice
     void setSource(const std::vector<double>& src);
     void setSource(const std::vector<double>& srcre,
                    const std::vector<double>& srcim);
+    void setSource(const std::vector<Point>& source);
     void setSource(const std::vector<int>& src, double factor = 1.0);
     void setSource(const std::vector<int>& srcre,
                    const std::vector<int>& srcim, double factor = 1.0);

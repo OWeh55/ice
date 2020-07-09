@@ -239,6 +239,25 @@ namespace ice
     return 0.0;
   }
 
+  void FourierTrafo::getResult(std::vector<Point>& destination) const
+  {
+    if (state != sDone)
+      {
+        throw IceException(FNAME, "data incomplete");
+      }
+    else
+      {
+        destination.resize(size);
+        int destIdx = getIndexFromFrequency(0);
+        for (int i = 0; i < size; ++i, destIdx = (destIdx + 1) % size)
+          {
+            destination[destIdx].x = out[i][0] * norm;
+            destination[destIdx].y = out[i][1] * norm;
+          }
+      }
+  }
+
+
   // -------- setSource (privat) ---------------------------
   // get source data and transform data
 
@@ -280,6 +299,20 @@ namespace ice
           {
             in[i][0] = source[sourceIndex];
             in[i][1] = 0.0;
+          }
+        transform();
+      }
+  }
+
+  void FourierTrafo::setSource(const std::vector<Point>& source)
+  {
+    if (checkParameter(source.size()))
+      {
+        int sourceIndex = getIndexFromFrequency(0);
+        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
+          {
+            in[i][0] = source[sourceIndex].x;
+            in[i][1] = source[sourceIndex].y;
           }
         transform();
       }
@@ -732,6 +765,12 @@ namespace ice
   }
 
   void FourierTrafo::setInput(const std::vector<double>& v)
+  {
+    checkParameter(v.size());
+    setSource(v);
+  }
+
+  void FourierTrafo::setInput(const std::vector<Point>& v)
   {
     checkParameter(v.size());
     setSource(v);
