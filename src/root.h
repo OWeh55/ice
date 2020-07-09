@@ -36,18 +36,3 @@ namespace ice
   double GammaFunction(double x);   // Gammafunktion
 }
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

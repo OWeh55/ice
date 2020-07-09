@@ -21,14 +21,15 @@
 
 /*AppGen
 %%
-prog: Experimentier-Programm für 3D-Bilder
-para: basedir,optional, String, basedir, Ausgangsverzeichnis für Dateiauswahl, "."
+prog: Experimentier-Programm fuer 3D-Bilder
+para: basedir,optional, String, basedir, Ausgangsverzeichnis fuer Dateiauswahl, "."
 opt: z, zoom, double, zoom, Zoomfaktor, 1.0
 opt: X, xfactor, Double, xfak, X-Faktor, 1.0
 opt: Y, yfactor, Double, yfak, Y-Faktor, 1.0
 opt: Z, zfactor, Double, zfak, Z-Faktor, 1.0
-opt: n, normalize, void, normalize, Normalisierung beim Laden (ev. geeignet für MRT), false
+opt: n, normalize, void, normalize, Normalisierung beim Laden (ev. geeignet fuer MRT), false
 opt: d, dicomdata, void, dicom, Bilder sind DICOM-Bilder, false
+opt: v, verbose, Void, verbose, Ausführliche Meldungen, false
 opt: h, help, usage, dummy, Hilfe
 AppGen*/
 
@@ -76,10 +77,10 @@ void ActivateDisplay(Display3d* display)
   // ... and image
   activeImage = activedisplay->getImg();
 
-  // reale Größe (pixel)
+  // reale Groesse (pixel)
   int nxsize, nysize, nzsize;
   activeImage->getSize(nxsize, nysize, nzsize);
-  // Größenänderung ?
+  // Groessenaenderung ?
   if (xsize != nxsize || ysize != nysize || nzsize != zsize)
     {
       // anpassen
@@ -90,7 +91,7 @@ void ActivateDisplay(Display3d* display)
       currentPosition = activedisplay->lastCursor();
     }
 
-  // "logische" Größe
+  // "logische" Groesse
   double xsd, ysd, zsd;
   activeImage->getSizeD(xsd, ysd, zsd);
   xs = xsd;
@@ -157,7 +158,7 @@ int main(int argc, char** argv)
         ActivateDisplay(pdisplay);
       }
 
-      Printf("Größe  %d %d %d\n", xs, ys, zs);
+      Printf("Groesse  %d %d %d\n", xs, ys, zs);
 
       currentPosition = IVector3d(xs / 2, ys / 2, zs / 2);
 
@@ -371,7 +372,7 @@ int main(int argc, char** argv)
               // Arbeitsbild binarisieren
               if (level > 0)
                 {
-                  NewDisplay(activedisplay, activedisplay->getTitle() + " - binär");
+                  NewDisplay(activedisplay, activedisplay->getTitle() + " - binaer");
                   binImg(*activeImage, level);
                 }
               else
@@ -403,7 +404,7 @@ int main(int argc, char** argv)
               int significance_level = 20;
               Printf("\n");
               // Localseg in Arbeitsbild (scheibenweise)
-              NewDisplay(activedisplay, activedisplay->getTitle() + " - LOCALSEG");
+              NewDisplay(activedisplay, activedisplay->getTitle() + " - localseg");
               bool ok = false;
               do
                 {
@@ -634,7 +635,7 @@ int main(int argc, char** argv)
 
                       // cout  << endl;
                       cout << "fft(img)" << endl;
-                      fft(restored_r, restored_i, false); // rücktrafo
+                      fft(restored_r, restored_i, false); // ruecktrafo
 
                       cout << "matrix -> img" << endl;
                       Matrix2Image(restored_r, *activeImage, 1);
@@ -739,7 +740,7 @@ int main(int argc, char** argv)
 
                     // cout  << endl;
                     cout << "fft(img)" << endl;
-                    fft(restored_r, restored_i, false); // rücktrafo
+                    fft(restored_r, restored_i, false); // ruecktrafo
 
                     cout << "matrix -> img" << endl;
                     Matrix2Image(restored_r, *activeImage, 1);
@@ -796,7 +797,7 @@ int main(int argc, char** argv)
 
               // cout  << endl;
               cout << "fft(img)" << endl;
-              fft(restored_r, restored_i, false); // rücktrafo
+              fft(restored_r, restored_i, false); // ruecktrafo
 
               cout << "matrix -> img" << endl;
               Matrix2Image(restored_r, *activeImage, 1);
@@ -885,7 +886,10 @@ int main(int argc, char** argv)
                         }
                     }
                 }
-
+	      
+	      if (verbose)
+		cout << min << " .. " << max << endl;
+	      
               int diff = max - min;
               if (diff == 0) diff++;
 
@@ -903,7 +907,48 @@ int main(int argc, char** argv)
                 }
               break;
             }
+	    
+            case menu1+'N':
+	      // Grauwert-Normalisierung Einzelbilder
+              NewDisplay(activedisplay, activedisplay->getTitle() + " normalized");
+              for (int z = 0; z < zsize; z++)
+                {
+		  Image himg;
+		  himg.create(xsize,ysize,255);
+		  
+                  for (int y = 0; y < ysize; y++)
+		    for (int x = 0; x < xsize; x++)
+		      himg.setPixel(x,y,lastImage->getPixel(x, y, z));
+		  
+		  GrayNormalize(himg);
 
+                  for (int y = 0; y < ysize; y++)
+		    for (int x = 0; x < xsize; x++)
+		      activeImage->setPixel(x,y,z,himg.getPixel(x,y));
+
+		}
+	      break;
+
+	    case menu1+'H':
+
+	      NewDisplay(activedisplay, activedisplay->getTitle() + " hequal");
+              for (int z = 0; z < zsize; z++)
+                {
+		  Image himg;
+		  himg.create(xsize,ysize,255);
+
+                  for (int y = 0; y < ysize; y++)
+		    for (int x = 0; x < xsize; x++)
+		      himg.setPixel(x,y,lastImage->getPixel(x, y, z));
+		  
+		  HistogramEqualization(himg);
+		  
+                  for (int y = 0; y < ysize; y++)
+		    for (int x = 0; x < xsize; x++)
+		      activeImage->setPixel(x,y,z,himg.getPixel(x,y));
+		}
+	      break;
+	      
             case menu0+'r':
               referenceImage = activeImage;
               break;
@@ -969,7 +1014,7 @@ int main(int argc, char** argv)
               break;
 
             case menu2+'p':
-              // Parameter für SDR
+              // Parameter fuer SDR
               sdr_wsize = Input("Blockgroesse xy: ");
               Printf("\n");
               while ((sdr_wsize & 1) > 0 || sdr_wsize < 3)
@@ -988,12 +1033,12 @@ int main(int argc, char** argv)
                   Printf("\n");
                 }
 
-              sdr_resfac = Input("Faktor für Subpixel-Auflösung: ");
+              sdr_resfac = Input("Faktor fuer Subpixel-Aufloesung: ");
               Printf("\n");
               while (sdr_resfac < 1)
                 {
                   Printf("Zahl>=1 !\n");
-                  sdr_resfac = Input("Faktor für Subpixel-Auflösung: ");
+                  sdr_resfac = Input("Faktor fuer Subpixel-Aufloesung: ");
                   Printf("\n");
                 }
 
@@ -1045,8 +1090,8 @@ int main(int argc, char** argv)
                 Print("Referenzbild == aktuelles Bild");
               else
                 {
-                  Printf("Blöcke %d x %d x %d\n", sdr_wsize, sdr_wsize, sdr_wsizeZ);
-                  Printf("Subpixel-Auflösungs-Faktor: %d\n", sdr_resfac);
+                  Printf("Bloecke %d x %d x %d\n", sdr_wsize, sdr_wsize, sdr_wsizeZ);
+                  Printf("Subpixel-Aufloesungs-Faktor: %d\n", sdr_resfac);
                   Printf("beta: %lf\n", sdr_beta);
                   Printf("Schrittweiten %d, %d, %d\n", sdr_xstep, sdr_ystep, sdr_zstep);
 
@@ -1140,8 +1185,8 @@ int main(int argc, char** argv)
               if (referenceImage != NULL)
                 if (referenceImage != activeImage)
                   {
-                    Printf("Blöcke %d x %d x %d\n", sdr_wsize, sdr_wsize, sdr_wsizeZ);
-                    Printf("Subpixel-Auflösungs-Faktor: %d\n", sdr_resfac);
+                    Printf("Bloecke %d x %d x %d\n", sdr_wsize, sdr_wsize, sdr_wsizeZ);
+                    Printf("Subpixel-Aufloesungs-Faktor: %d\n", sdr_resfac);
                     Printf("beta: %lf\n", sdr_beta);
                     Matrix3d md1e;
                     if (InvConvolution(*referenceImage, *activeImage,
@@ -1169,7 +1214,7 @@ int main(int argc, char** argv)
                                 double dz = (double)(zm - md1e.sizeZ() / 2) / sdr_resfac;
 
                                 Printf("Maximum auf (%f,%f,%f): %lf\n", dx, dy, dz, md1e(xm, ym, zm));
-                                Printf("Qualität: %lf\n", quality);
+                                Printf("Qualitaet: %lf\n", quality);
 
                                 double scalex, scaley, scalez;
                                 activeImage->getScale(scalex, scaley, scalez);
@@ -1181,7 +1226,7 @@ int main(int argc, char** argv)
 
                               }
                             else
-                              Print("Verschiebung nicht detektierbar, geringe Güte\n");
+                              Print("Verschiebung nicht detektierbar, geringe Guete\n");
 
                             Image3d<Image>* newimg = new Image3d<Image>();
                             newimg->create(md1e.sizeX(), md1e.sizeY(), md1e.sizeZ(), 255,
@@ -1269,7 +1314,7 @@ int main(int argc, char** argv)
             case menu3+'o':
             {
               // "Objektbild": Punkte des Objektes auf currentPosition werden gesucht
-              // und im Binärbild eingetragen
+              // und im Binaerbild eingetragen
 
               //              if (activeImage->getValue(currentPosition.x, currentPosition.y, currentPosition.z) < level)
               if (activeImage->getValue(currentPosition.x, currentPosition.y, currentPosition.z) < level)
@@ -1279,7 +1324,7 @@ int main(int argc, char** argv)
 
                   IVector3d startpoint;
                   activeImage->d2i(currentPosition.x, currentPosition.y, currentPosition.z, startpoint.x, startpoint.y, startpoint.z);
-                  // zunächst binärbild erzeugen
+                  // zunaechst binaerbild erzeugen
                   cout << "1" << endl;
                   ObjImage(*testimage, level, startpoint, *activeImage);
                   cout << "2" << endl;
@@ -1308,7 +1353,7 @@ int main(int argc, char** argv)
             case menu3+'m':
               // marching cubes
             {
-              Printf("Suche Oberfläche\n");
+              Printf("Suche Oberflaeche\n");
               vector<TRIANGLE> triangles;
               for (int z = 0; z < zsize - 1; z++)
                 {
@@ -1323,7 +1368,7 @@ int main(int argc, char** argv)
               Printf("%d Dreiecke gefunden\n", triangles.size());
               cvExport(triangles, "triangles.cv");
               povExport(triangles, "triangles.inc");
-              system("cviewer -D 400 -c 2 triangles.cv");
+              system("cviewer -D 800 -c 2 triangles.cv");
             }
             break;
 

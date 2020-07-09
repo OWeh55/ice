@@ -6,23 +6,25 @@ const char* qmenu[] = { "b0bin-Darstellung ein/aus",
                         "l0Binarisierungspegel festlegen",
                         "c0Kursor ein/aus",
                         "C0Farbbilddarstellung ein/aus",
-                        "X0X erhöhen",
+                        "X0X erhoehen",
                         "x0X erniedrigen",
-                        "Y0Y erhöhen",
+                        "Y0Y erhoehen",
                         "y0Y erniedrigen",
-                        "Z0Z erhöhen",
+                        "Z0Z erhoehen",
                         "z0Z erniedrigen",
-                        "+0Binarisierungspegel erhöhen",
+                        "+0Binarisierungspegel erhoehen",
                         "-0Binarisierungspegel erniedrigen",
                         "r0Bild als Referenz festlegen",
                         "d0Delete Image",
                         "i0Einlesen eines 3d-Bildes",
                         "q0Quit",
 
-                        "b1Binärbild erzeugen",
+                        "b1Binaerbild erzeugen",
                         "i1Invertiertes Bild",
                         "k1DoB-Filter",
-                        "n1Normalisierung",
+                        "n1Normalisierung (alle Bilder)",
+			"N1Normalisierung (Einzelbild x,y)",
+			"H1Histogramm-Egalisierung",
                         "s1Differenzbild",
                         "L1Lokale Segmentierung",
                         "S1Mittelwert-Filterung",
@@ -39,7 +41,7 @@ const char* qmenu[] = { "b0bin-Darstellung ein/aus",
 
                         "t3Tiefenbild als Gebirge",
                         "T3Einzelobjekt als Gebirge",
-                        "o3Fremde Objekte löschen",
+                        "o3Fremde Objekte loeschen",
                         "m3Marching cubes + Darstellung",
 
                         "k4Konfokal-Simulation",
@@ -124,7 +126,7 @@ void DrawQMenu(const vector<string>& items,
   SetAlphaCursor(3, 19);
   Print("0 - globale Tasten");
   SetAlphaCursor(43, 19);
-  Print("1, .., 9 - Wechsel des Menüs");
+  Print("1, .., 9 - Wechsel des Menues");
   SetAttribute(C_WHITE, C_BLUE, 0, 0);
   SetAlphaCursor(0, 23);
 }

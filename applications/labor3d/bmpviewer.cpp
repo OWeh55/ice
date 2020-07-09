@@ -36,16 +36,16 @@ SeriesName SelectSeries(const SeriesName& ser)
   string imgfile, imgdir;
   if (res.patient.empty())
     {
-      SelFile(res.basedir + "/*", imgfile, imgdir, DIR_DIR, "Patient wählen", 2, 4, 60, 20);
+      SelFile(res.basedir + "/*", imgfile, imgdir, DIR_DIR, "Patient waehlen", 2, 4, 60, 20);
       res.patient = imgfile;
     }
   if (res.study.empty())
     {
-      SelFile(res.basedir + "/" + res.patient + "/*", imgfile, imgdir, DIR_DIR, "Studie wählen", 2, 4, 60, 20);
+      SelFile(res.basedir + "/" + res.patient + "/*", imgfile, imgdir, DIR_DIR, "Studie waehlen", 2, 4, 60, 20);
       res.study = imgfile;
     }
 
-  SelFile(res.basedir + "/" + res.patient + "/" + res.study + "/*", imgfile, imgdir, DIR_DIR, "Serie wählen", 2, 4, 60, 20);
+  SelFile(res.basedir + "/" + res.patient + "/" + res.study + "/*", imgfile, imgdir, DIR_DIR, "Serie waehlen", 2, 4, 60, 20);
   res.series = imgfile;
   return res;
 }
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
       int xs = xsd;
       int ys = ysd;
       int zs = zsd;
-      Printf("Größe  %d %d %d\n", xs, ys, zs);
+      Printf("Groesse  %d %d %d\n", xs, ys, zs);
       Display3D display1(primary, ser1.Filename());
 
       SeriesName ser2 = SelectSeries(ser1);

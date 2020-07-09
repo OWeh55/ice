@@ -190,6 +190,13 @@ void cvExport(const vector<TRIANGLE>& tri, const string& fn)
   // os2 << "obj NULL, 180, Y" << endl;
 }
 
+void tvExport(const vector<TRIANGLE>& tri, const string& fn)
+{
+  Vector3d center = Center(tri);
+  ofstream os(fn.c_str());
+  
+}
+
 void povExport(const vector<TRIANGLE>& tri, const string& fn)
 {
   Vector3d center = Center(tri);

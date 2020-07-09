@@ -62,7 +62,7 @@ void DepthImage(const Image3d<Image>& src, int level, IVector3d current,
   int ys = RoundInt(ysd);
   int zs = RoundInt(zsd);
 
-  // binarisierung und Größenanpassung!
+  // binarisierung und Groessenanpassung!
   Image3d<Image> binary;
   binary.create(xs, ys, zs, 255);
   Display3d displayb(binary);

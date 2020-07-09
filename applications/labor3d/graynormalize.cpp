@@ -73,6 +73,5 @@ void NormalizeImages(Image3d<Image>& img)
             int vali = limited(255 - RoundInt(val), img[i]);
             PutVal(img[i], x, y, vali);
           }
-
     }
 }

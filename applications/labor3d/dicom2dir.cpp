@@ -11,6 +11,25 @@ const string tempfile = "/tmp/d2d";
 
 using namespace std;
 
+bool verbose=false;
+bool doit=true;
+
+void printHex(int h,bool withX=false)
+{
+  string res;
+  if (h!=0)
+    {
+      while (h!=0)
+	{
+	  int hd=h % 16;
+	  h/=16;
+	  res = "0123456789ABCDEF"[hd] + res;
+	}
+    }
+  else
+    res="0";
+  cout << res;
+}
 void System(const string& cmd)
 {
   system(cmd.c_str());
@@ -52,11 +71,13 @@ public:
     string cmd = "dicom2 " + Escape(srcdir + "/" + fileid) + " -w --to=" + Escape(dstname + "/");
     //+ NumberString(number,-2)+".bmp");
     cout << cmd << endl;
-    System(cmd);
+    if (doit)
+      System(cmd);
     cmd = "mv " + Escape(dstname + "/" + basename + ".bmp");
-    cmd += " " + Escape(dstname + "/img" + NumberString(number, -2) + ".bmp");
+    cmd += " " + Escape(dstname + "/img" + NumberString(number, -3) + ".bmp");
     cout << cmd << endl;
-    System(cmd);
+    if (doit) 
+      System(cmd);
   }
 };
 
@@ -275,6 +296,9 @@ public:
         lastvalue = pl.getToDel(']');
         value += "/" + lastvalue;
       }
+    cout << "tag: "; printHex(high); cout << " / ";
+    printHex(low);
+    cout << endl;
   }
   unsigned int id() const
   {
@@ -375,23 +399,38 @@ void readImage(FILE* f, image& img)
         {
           img.fileid = t.value;
           img.basename = t.lastvalue;
+	  // cout << img.fileid << " == " << img.basename << endl;
         }
-      if (t.equal(0x08, 0x23))
+      else if (t.equal(0x08, 0x23))
         img.date = t.value;
       else if (t.equal(0x08, 0x33))
         img.time = t.value;
       else if (t.equal(0x08, 0x18))
         img.instanceUID = t.value;
       else if (t.equal(0x20, 0x13))
-        img.number = Integer(t.value);
+	{
+	  img.number = Integer(t.value);
+	  cout << "instance: " << img.number << endl;
+	}
 #if 0
       else if (t.equal(0x28, 0x11))
         img.cols = Integer(t.value);
       else if (t.equal(0x28, 0x10))
         img.rows = Integer(t.value);
 #endif
+      else if (t.equal(0xFFFE, 0xE000)) // embedded sequence (?)
+	{
+	  cout << "embedded" << endl;
+	  tag th;
+	  do {
+	    readtag(f,th);
+	  }
+	  while (!th.equal(0xFFFE, 0xE00D));
+	  cout << "end embedded"<<endl;
+	}
     }
   while (!t.equal(0xFFFE, 0xE00D));
+  cout << "---- end image " << endl;
 }
 
 int main(int argc, char** argv)
@@ -411,12 +450,13 @@ int main(int argc, char** argv)
         {
           if (t.equal(0xFFFE, 0xE000))
             {
-              // cout << "new item"<< endl;
               do
                 {
                   readtag(dd, t);
                 }
               while (! t.equal(0x0004, 0x1430));
+
+              cout << "new item " << t.value << endl;
 
               if (t.value == "PATIENT")
                 {
@@ -435,7 +475,7 @@ int main(int argc, char** argv)
                 }
               else if (t.value == "IMAGE")
                 {
-                  pat.back().stud.back().ser.back().img.push_back(image());
+		  pat.back().stud.back().ser.back().img.push_back(image());
                   readImage(dd, pat.back().stud.back().ser.back().img.back());
                 }
               else

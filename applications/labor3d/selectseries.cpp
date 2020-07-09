@@ -14,7 +14,7 @@ SeriesName SelectSeries(const SeriesName& ser)
   if (res.patient.empty())
     {
       if (SelFile(res.basedir + "/*", selection, selectionpath, DIR_DIR,
-                  "Patient wählen", 2, 4, 60, 20))
+                  "Patient waehlen", 2, 4, 60, 20))
         res.patient = selection;
       else
         return res; // Abbruch !
@@ -22,7 +22,7 @@ SeriesName SelectSeries(const SeriesName& ser)
   if (res.study.empty())
     {
       if (SelFile(res.basedir + "/" + res.patient + "/*", selection, selectionpath, DIR_DIR,
-                  "Studie wählen", 2, 4, 60, 20))
+                  "Studie waehlen", 2, 4, 60, 20))
         res.study = selection;
       else
         {
@@ -32,7 +32,7 @@ SeriesName SelectSeries(const SeriesName& ser)
     }
 
   if (SelFile(res.basedir + "/" + res.patient + "/" + res.study + "/*", selection, selectionpath, DIR_DIR,
-              "Serie wählen", 2, 4, 60, 20))
+              "Serie waehlen", 2, 4, 60, 20))
     res.series = selection;
   else
     {
