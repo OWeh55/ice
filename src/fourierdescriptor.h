@@ -10,9 +10,9 @@ void computeFourier(const std::vector<ice::Point>& v1,
                     std::vector<ice::Point>& v2,
                     bool forward = true);
 
-void zeroPaddingFD(const std::vector<ice::Point> &v1, int newsize,
-		   std::vector<ice::Point> &v2);
-		   
+void zeroPaddingFD(const std::vector<ice::Point>& v1, int newsize,
+                   std::vector<ice::Point>& v2);
+
 void scaleFD(std::vector<ice::Point> fk, double s,
              std::vector<ice::Point>& fd);
 

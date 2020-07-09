@@ -21,28 +21,28 @@ void getIndices(const vector<Point>& fd, int& f0, int& f1, int& f2)
 }
 
 #define FNAME "zeroPaddingFD"
-void zeroPaddingFD(const std::vector<ice::Point> &v1, int newsize,
-		   std::vector<ice::Point> &v2)
+void zeroPaddingFD(const std::vector<ice::Point>& v1, int newsize,
+                   std::vector<ice::Point>& v2)
 {
-  int i0,i1,i2;
-  getIndices(v1,i0,i1,i2);
-  int oldsize=v1.size();
-  int n0,n1,n2;
-  if (newsize<=oldsize)
+  int i0, i1, i2;
+  getIndices(v1, i0, i1, i2);
+  int oldsize = v1.size();
+  int n0, n1, n2;
+  if (newsize <= oldsize)
     throw IceException(FNAME, M_WRONG_SIZE);
   v2.resize(newsize);
-  getIndices(v2,n0,n1,n2);
-  int di=n0-i0;
+  getIndices(v2, n0, n1, n2);
+  int di = n0 - i0;
   // padding left
-  for (int i=0; i<di; i++)
-    v2[i]=Point(0.0,0.0);
-  double fac=sqrt(1.0*newsize/oldsize);
+  for (int i = 0; i < di; i++)
+    v2[i] = Point(0.0, 0.0);
+  double fac = sqrt(1.0 * newsize / oldsize);
   // data
-  for (int i=0;i<oldsize;i++)
-    v2[i+di]=v1[i]*fac;
+  for (int i = 0; i < oldsize; i++)
+    v2[i + di] = v1[i] * fac;
   // padding right
-  for (int i=di+oldsize;i<newsize;i++)
-    v2[i]=Point(0.0,0.0);
+  for (int i = di + oldsize; i < newsize; i++)
+    v2[i] = Point(0.0, 0.0);
 }
 #undef FNAME
 
