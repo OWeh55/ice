@@ -13,6 +13,8 @@ void computeFourier(const std::vector<ice::Point>& v1,
 void zeroPaddingFD(const std::vector<ice::Point>& v1, int newsize,
                    std::vector<ice::Point>& v2);
 
+void invertOrderFD(std::vector<ice::Point> fk, std::vector<ice::Point>& fd);
+
 void scaleFD(std::vector<ice::Point> fk, double s,
              std::vector<ice::Point>& fd);
 
@@ -21,6 +23,8 @@ void shiftFD(std::vector<ice::Point> fk, ice::Point sh,
 
 void rotateFD(std::vector<ice::Point> fk, double phi,
               std::vector<ice::Point>& fd);
+
+void normalizeFDOrder(std::vector<ice::Point> fk, std::vector<ice::Point>& fd);
 
 void normalizeFDScaling(std::vector<ice::Point> fk,
                         std::vector<ice::Point>& fd);

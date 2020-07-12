@@ -12,26 +12,31 @@ void computeFourier(const vector<Point>& v1, vector<Point>& v2,
   ft.getResult(v2);
 }
 
-void getIndices(const vector<Point>& fd, int& f0, int& f1, int& f2)
+void getZeroIndex(const vector<Point>& fd, int& f0)
 {
   int size = fd.size();
   f0 = size / 2;
-  f1 = f0 + 1;
-  f2 = f0 + 2;
+}
+
+int getZeroIndex(const vector<Point>& fd)
+{
+  int size = fd.size();
+  return size / 2;
 }
 
 #define FNAME "zeroPaddingFD"
+// applies zero padding, corrects values to get interpolation after FT^-1
 void zeroPaddingFD(const std::vector<ice::Point>& v1, int newsize,
                    std::vector<ice::Point>& v2)
 {
-  int i0, i1, i2;
-  getIndices(v1, i0, i1, i2);
+  int i0;
+  getZeroIndex(v1, i0);
   int oldsize = v1.size();
   int n0, n1, n2;
   if (newsize <= oldsize)
     throw IceException(FNAME, M_WRONG_SIZE);
   v2.resize(newsize);
-  getIndices(v2, n0, n1, n2);
+  getZeroIndex(v2, n0);
   int di = n0 - i0;
   // padding left
   for (int i = 0; i < di; i++)
@@ -49,8 +54,8 @@ void zeroPaddingFD(const std::vector<ice::Point>& v1, int newsize,
 void scaleFD(std::vector<ice::Point> fk, double s,
              std::vector<ice::Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
+  int i0;
+  getZeroIndex(fk, i0);
   fd.resize(fk.size());
   for (int i = 0; i < fk.size(); i++)
     {
@@ -64,8 +69,8 @@ void scaleFD(std::vector<ice::Point> fk, double s,
 void shiftFD(std::vector<ice::Point> fk, ice::Point sh,
              std::vector<ice::Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
+  int i0;
+  getZeroIndex(fk, i0);
   int n = fk.size();
   fd.resize(n);
   for (int i = 0; i < n; i++)
@@ -80,8 +85,8 @@ void shiftFD(std::vector<ice::Point> fk, ice::Point sh,
 void rotateFD(std::vector<ice::Point> fk, double phi,
               std::vector<ice::Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
+  int i0;
+  getZeroIndex(fk, i0);
   int n = fk.size();
   fd.resize(n);
   for (int i = 0; i < n; i++)
@@ -95,20 +100,48 @@ void rotateFD(std::vector<ice::Point> fk, double phi,
     }
 }
 
-void normalizeFDScaling(vector<Point> fk, vector<Point>& fd)
+void invertOrderFD(std::vector<ice::Point> fk,
+                   std::vector<ice::Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
   int n = fk.size();
   fd.resize(n);
-  double snorm = sqrt(n) / fk[i1].length();
+  if (n % 2 == 0)
+    {
+      for (int i = 1; i < n; i++)
+        fd[n - i] = fk[i];
+    }
+  else
+    {
+      for (int i = 0; i < n; i++)
+        fd[n - 1 - i] = fk[i];
+    }
+}
+
+void normalizeFDOrder(vector<Point> fk, vector<Point>& fd)
+{
+  int i0 = getZeroIndex(fk);
+  int n = fk.size();
+  fd.resize(n);
+  if (fk[i0 - 1].r() > fk[i0 + 1].r())
+    invertOrderFD(fk, fd);
+  else
+    fd = fk;
+}
+
+void normalizeFDScaling(vector<Point> fk, vector<Point>& fd)
+{
+  int i0;
+  getZeroIndex(fk, i0);
+  int n = fk.size();
+  fd.resize(n);
+  double snorm = sqrt(n) / fk[i0 + 1].length();
   scaleFD(fk, snorm, fd);
 }
 
 void normalizeFDShift(vector<Point> fk, vector<Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
+  int i0;
+  getZeroIndex(fk, i0);
   fd.resize(fk.size());
   for (int i = 0; i < fk.size(); i++)
     {
@@ -121,10 +154,10 @@ void normalizeFDShift(vector<Point> fk, vector<Point>& fd)
 
 void normalizeFDIShift(vector<Point> fk, vector<Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
+  int i0;
+  getZeroIndex(fk, i0);
   fd.resize(fk.size());
-  double dfi = -fk[i1].phi();
+  double dfi = -fk[i0 + 1].phi();
   for (int i = 0; i < fk.size(); i++)
     {
       int k = i - i0;
@@ -138,37 +171,26 @@ void normalizeFDIShift(vector<Point> fk, vector<Point>& fd)
 
 void normalizeFDRotation(vector<Point> fk, vector<Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
+  int i0;
+  getZeroIndex(fk, i0);
   fd.resize(fk.size());
-  double beta = -fk[i2].phi();
+  double beta = -fk[i0 + 2].phi();
   rotateFD(fk, beta, fd);
-#if 0
-  for (int i = 0; i < fk.size(); i++)
-    {
-      Point p = fk[i];
-      double r = p.r();
-      double fi = p.phi();
-      if (i != i0)
-        fi += beta;
-      fd[i] = Point(r * cos(fi), r * sin(fi));
-    }
-#endif
 }
 
 void normalizeFDIShiftRotation(vector<Point> fk, vector<Point>& fd)
 {
-  int i0, i1, i2;
-  getIndices(fk, i0, i1, i2);
+  int i0;
+  getZeroIndex(fk, i0);
   fd.resize(fk.size());
   double beta, dfi; // rotation and shift of initial point
 #if 1
   double a1 = 1;
   double b1 = 1;
-  double c1 = -fk[i1].phi();
+  double c1 = -fk[i0 + 1].phi();
   double a2 = 1;
   double b2 = 2;
-  double c2 = -fk[i2].phi();
+  double c2 = -fk[i0 + 2].phi();
   Solve2(a1, b1, c1, a2, b2, c2, beta, dfi);
 #else
   beta = -0.5 * (fk[i0 + 1].phi() + fk[i0 - 1].phi());

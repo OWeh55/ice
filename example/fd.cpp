@@ -1,4 +1,4 @@
-//
+// Tests mit Fourier-Deskriptoren
 
 #include <image.h>
 
@@ -6,6 +6,7 @@
 
 #define nParts 2
 
+// interpolation of polygon
 void interpolate(vector<Point> points, vector<Point>& ip, double delta)
 {
   int nPoints = points.size();
@@ -26,6 +27,7 @@ void interpolate(vector<Point> points, vector<Point>& ip, double delta)
     }
 }
 
+// draw point list (polygon)
 void draw(const vector<Point>& points, Image& m, int xi, int yi)
 {
   double fac = min(m.xsize, m.ysize) / (4 * nParts);
@@ -44,6 +46,7 @@ void draw(const vector<Point>& points, Image& m, int xi, int yi)
   Line(points[0]*fac + p0, pa * fac + p0, 2, m);
 }
 
+// draw point list from FD
 void drawFD(const vector<Point>& fd, Image& m, int xi, int yi)
 {
   vector<Point> p;
@@ -53,9 +56,9 @@ void drawFD(const vector<Point>& fd, Image& m, int xi, int yi)
 
 void print(const vector<Point>& fk)
 {
-  for (auto k : fk)
-    cout << k << " " ;
-  cout << endl;
+  int i0 = fk.size() / 2;
+  for (int i = 0; i < fk.size(); i++)
+    cout << (i - i0) << " " << fk[i] << endl ;
 }
 
 int main(int argc, char** argv)
@@ -71,7 +74,7 @@ int main(int argc, char** argv)
 
   vector<Point> p;
 
-#if 1
+#if 0
   for (int g = 0; g < 360; g += 15)
     {
       double fi = g * 2.0 * M_PI / 360;
@@ -114,7 +117,7 @@ int main(int argc, char** argv)
   interpolate(p, p, 0.2);
 #endif
 
-#if 0
+#if 1
   Contur c = SelContur(marker, true);
   vector<Point> praw;
   c.getPoints(praw);
@@ -132,10 +135,11 @@ int main(int argc, char** argv)
 
   vector<Point> fk;
   computeFourier(p, fk, true);
+  // print(fk);
 
   vector<Point> fd;
-
-  normalizeFDShift(fk, fd);
+  normalizeFDOrder(fk, fd);
+  normalizeFDShift(fd, fd);
   normalizeFDScaling(fd, fd);
   normalizeFDIShiftRotation(fd, fd);
 
@@ -144,13 +148,14 @@ int main(int argc, char** argv)
 
   vector<Point> fk2;
   rotateFD(fk, 2.2, fk2);
-  scaleFD(fk2, 0.8, fk2);
+  scaleFD(fk2, 1.8, fk2);
 
   drawFD(fk2, marker, 0, 1);
 
   vector<Point> fd2;
 
-  normalizeFDShift(fk2, fd2);
+  normalizeFDOrder(fk2, fd2);
+  normalizeFDShift(fd2, fd2);
   normalizeFDScaling(fd2, fd2);
   normalizeFDIShiftRotation(fd2, fd2);
 
