@@ -1,0 +1,77 @@
+#include <image.h>
+#include <ClassSample.h>
+#include <KDTree.h>
+
+using namespace ice;
+using namespace std;
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Anwendung DFT auf Bilder
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ para: file, optional, string, filename, Zu verarbeitendes Bild, "test_rgb.jpg"
+ %
+ opt: n, npoints, int, nPoints, Number of points, 1000
+AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  ColorImage img;
+  img.read(filename);
+  Show(ON, img);
+
+  int xSize = img.xsize;
+  int ySize = img.ysize;
+
+  ClassSample s;
+  KDTree<ClassSample> tr;
+
+  vector<ClassSample> sl;
+  for (int i = 0; i < nPoints; i++)
+    {
+      double x = RandomD() * xSize;
+      double y = RandomD() * ySize;
+      sl.push_back(ClassSample(i, vector<double> {x, y}));
+    }
+
+  tr.create(sl);
+
+
+
+  ColorImage res;
+  res.create(img);
+  Show(ON, res);
+
+  vector<ColorValue> cv(nPoints, ColorValue());
+  vector<int> nPixel(nPoints, 0);
+
+  for (int x = 0; x < xSize; x++)
+    for (int y = 0; y < ySize; y++)
+      {
+        const ClassSample* p = tr.findNearest(vector<double> {(double)x, (double)y});
+        int idx = p->classNr;
+        ColorValue acv = img.getPixel(x, y);
+        cv[idx] += acv;
+        nPixel[idx]++;
+      }
+
+  for (int i = 0; i < nPoints; i++)
+    if (nPixel[i] > 0)
+      cv[i] /= nPixel[i];
+
+  for (int x = 0; x < xSize; x++)
+    for (int y = 0; y < ySize; y++)
+      {
+        const ClassSample* p = tr.findNearest(vector<double> {(double)x, (double)y});
+        int idx = p->classNr;
+        res.setPixel(x, y, cv[idx]);
+      }
+
+  Print("Press <ENTER> to finish");
+  GetChar();
+  return 0;
+}

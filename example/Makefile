@@ -157,6 +157,7 @@ imgsvd\
 input\
 jtest\
 korrel\
+kdmosaic\
 LaplaceImg\
 laufzeit\
 linequ\
