@@ -89,6 +89,9 @@ ASTYLE_OPT = --style=gnu --unpad-paren --pad-header --pad-oper --indent-namespac
 $(MAIN): $(OBJECTS) $(ICEDIR)/lib/$(MACHTYPE)/libice.a
 	$(CXX) $(LOPT) $(LIBRARY) -o $(MAIN) $(OBJECTS) $(LIBS)
 
+fractal: fractal.o filefunctions.o $(ICEDIR)/lib/$(MACHTYPE)/libice.a
+	$(CXX) $(LOPT) $(LIBRARY) -o fractal fractal.o filefunctions.o $(LIBS)
+
 all: algebra\
 alphatest\
 base_1\
