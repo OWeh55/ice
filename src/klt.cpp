@@ -27,7 +27,15 @@
 namespace ice
 {
   // Calculation of KLT matrix from feature list
+
 #define FNAME "KLT"
+  Matrix KLT(const Matrix& m, Vector& percent)
+  {
+    Statistics st(m.cols());
+    Put(st, m);
+    return KLT(st, percent);
+  }
+
   Matrix KLT(const Matrix& m, Vector& percent)
   {
     Statistics st(m.cols());
