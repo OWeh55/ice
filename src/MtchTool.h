@@ -2,7 +2,7 @@
  * ICE - C++ - Library for image processing
  *
  * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Contact: ice@ortmann-jena.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,17 +46,6 @@ namespace ice
                           double& x0, double& y0,
                           double& sx, double& sy, double& sxy,
                           double& a, double& b);
-
-  //
-
-#define CF_CUT 1
-#define CF_SET 2
-
-  int CutFrameImg(Image, int dx, int dy, int mode, Image);
-
-//
-
-  ConturList BinObj2ConturList(Image img, int sx, int sy);
 
 //
   double EntropyImg(const Image& img);

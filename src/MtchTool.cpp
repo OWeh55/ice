@@ -18,7 +18,6 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-// 1998 - Torsten Baumbach
 
 #include <float.h>
 #include <limits.h>
@@ -33,10 +32,10 @@ namespace ice
 {
   /*****************************************************************************/
   /*****************************************************************************/
-  double Gauss2D(double x, double y, double xm, double ym,
+  double Gauss2D(double x, double y,
+                 double xm, double ym,
                  double s1, double s2, double s12)
   {
-
     double f = (1 - s12 * s12);
     double xx = x - xm;
     double yy = y - ym;
@@ -53,7 +52,6 @@ namespace ice
                           double& sx, double& sy, double& sxy,
                           double& a, double& b)
   {
-
     int xsize = imgd.xsize;
     int ysize = imgd.ysize;
     if ((imgo.xsize != xsize) || (imgo.ysize != ysize))
@@ -172,41 +170,8 @@ namespace ice
   }
 
 #undef FNAME
+
   /****************************************************************************/
-  /****************************************************************************/
-#define FNAME "CutFrameImg"
-
-  int CutFrameImg(Image img, int dx, int dy, int mode, Image dest)
-  {
-
-    if (
-      (!IsImg(img)) || (!IsImg(dest)) ||
-      dy >= img.xsize / 2 || dy >= img.ysize / 2 ||
-      dx < 0 || dy < 0
-    )
-      throw IceException(FNAME, M_WRONG_PARAMETER);
-
-    if (mode == CF_CUT)
-      {
-        for (int y = 0; y < dest.ysize; y++)
-          for (int x = 0; x < dest.xsize; x++)
-            PutVal(dest, x, y, GetVal(img, x + dx, y + dy));
-      }
-    else if (mode == CF_SET)
-      {
-        for (int y = 0; y < dest.ysize; y++)
-          for (int x = 0; x < dest.xsize; x++)
-            PutVal(dest, x, y, GetVal(img, x - dest.xsize / 2 + img.xsize / 2, y - dest.ysize / 2 + img.ysize / 2));
-      }
-    else
-      throw IceException(FNAME, M_WRONG_PARAMETER);
-
-    return OK;
-  }
-#undef FNAME
-
-  //
-  //
 
 #define FNAME "EntropyImg"
   double EntropyImg(const Image& img)
@@ -230,150 +195,6 @@ namespace ice
         return entropy;
       }
     RETHROW;
-  }
-
-#undef FNAME
-
-  /********************************************************************************/
-  /********************************************************************************/
-
-#define FNAME "BinObj2ConturList"
-
-  static const int dirx[8] = {1, 1, 0, -1, -1, -1, 0, 1};
-  static const int diry[8] = {0, 1, 1, 1, 0, -1, -1, -1};
-
-  ConturList BinObj2ConturList(Image img, int sx, int sy)
-  {
-
-    ConturList clist;
-
-    if (!IsImg(img) || sx < 0 || sy < 0 || sx >= img.xsize || sy >= img.ysize)
-      throw IceException(FNAME, M_WRONG_PARAMETER);
-
-    int weiter = true;
-
-    Image mark = NewImg(img.xsize, img.ysize, 1);
-
-    if (!IsImg(mark))
-      throw IceException(FNAME, M_NO_MEM);
-
-    clearImg(mark);
-
-    do
-      {
-
-        int x, y, xs, ys, d, x0 = -1, y0 = -1, dir0 = 0, dir = 0, flag;
-        for (int y = 0; y < img.ysize; y++)
-          for (int x = 0; x < img.xsize; x++)
-            {
-              if (GetVal(img, x, y) && !GetVal(mark, x, y) &&
-                  (!img.getPixelClipped(x - 1, y) ||
-                   !img.getPixelClipped(x, y - 1) ||
-                   !img.getPixelClipped(x, y + 1) ||
-                   !img.getPixelClipped(x + 1, y)))
-                {
-                  x0 = x;
-                  y0 = y;
-                  x = y = 10000;
-                }
-            }
-
-        if (x0 == -1)
-          {
-            break;  // Kein Startpunkt mehr gefunden
-          }
-
-        // Startrichtung suchen
-        for (d = 0; d < 8; d += 2)
-          {
-            if (!img.getPixelClipped(x0 + dirx[d], y0 + diry[d]))
-              {
-                dir = d;
-                break;
-              }
-          }
-
-        DPointList pl = NewDPointList();
-
-        if (pl == NULL)
-          throw IceException(FNAME, M_NO_MEM);
-
-        x = x0;
-        y = y0;
-
-        do
-          {
-
-            xs = x;
-            ys = y;
-            PutVal(mark, xs, ys, 1);
-
-            DAddPoint(pl, xs, ys, dir);
-
-            flag = false;
-
-            for (d = dir; d < dir + 8; d++)
-              {
-                x = xs + dirx[d % 8];
-                y = ys + diry[d % 8];
-
-                if (img.getPixelClipped(x, y))
-                  {
-                    if (!img.getPixelClipped(x - 1, y) || !img.getPixelClipped(x, y - 1) ||
-                        !img.getPixelClipped(x + 1, y) || !img.getPixelClipped(x, y + 1) ||
-                        !img.getPixelClipped(x - 1, y - 1) || !img.getPixelClipped(x + 1, y - 1) ||
-                        !img.getPixelClipped(x + 1, y + 1) || !img.getPixelClipped(x - 1, y + 1))
-                      {
-                        flag = true;
-                        break;
-                      }
-                  }
-              }
-
-            if (!flag)
-              {
-                break;
-              }
-
-            dir = d % 8;
-
-            if (pl->lng == 1)
-              {
-                dir0 = dir;
-              }
-            else if (xs == x0 && ys == y0 && dir == dir0)
-              {
-                break;
-              }
-
-            dir = (dir + 6) % 8;
-
-          }
-        while (1);
-
-        PointList plnrm = NewPointList(pl->lng);
-
-        if (plnrm == NULL)
-          {
-            FreePointList(pl);
-            throw IceException(FNAME, M_NO_MEM);
-          }
-
-        for (int pln = 0; pln < pl->lng; pln++)
-          {
-            PutPoint(plnrm, (pl->lng - 1 - pln), pl->xptr[pln], pl->yptr[pln], 1);
-          }
-
-        FreePointList(pl);
-
-        Contur c = PolygonContur(plnrm);
-        FreePointList(plnrm);
-        clist.add(c);
-
-      }
-    while (weiter);
-
-    return clist;
   }
 }
 #undef FNAME
