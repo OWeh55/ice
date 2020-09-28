@@ -47,7 +47,6 @@ namespace ice
     virtual double inverse(double v) const
     {
       throw IceException("Function::inverse", M_NOT_IMPLEMENTED);
-      return 0;
     }
     virtual void getCoefficient(std::vector<double>& v) const {}
     virtual int setCoefficient(const std::vector<double>& v, int idx = 0)

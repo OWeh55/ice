@@ -23,7 +23,7 @@ string findFilename(const string& mask)
 {
   string fileMask = mask;
   static int FileNr = 0;
-  string filename;
+  string filename = mask;
   if (!isMask(mask)) // filename without %d
     {
       if (!fexist(filename))
@@ -40,6 +40,5 @@ string findFilename(const string& mask)
     {
       filename = filenameFromMask(fileMask, FileNr++);
     }
-
   return filename;
 }
