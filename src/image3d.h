@@ -154,9 +154,9 @@ namespace ice
             }
         }
       else
-	{
-	  throw IceException(FNAME, M_WRONG_IMGSIZE);
-	}
+        {
+          throw IceException(FNAME, M_WRONG_IMGSIZE);
+        }
       return OK;
     }
 #undef FNAME
