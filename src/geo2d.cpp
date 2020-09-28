@@ -304,6 +304,7 @@ namespace ice
     return iterateEuclidean(tr, p1, p2, weights);
   }
 #undef FNAME
+
 #define FNAME "matchPointListsShift"
   Trafo matchPointListsShift(const vector<Point>& p1,
                              const vector<Point>& p2,
@@ -399,6 +400,7 @@ namespace ice
     return matchPointListsShiftScale(p1, p2, weights);
   }
 #undef FNAME
+
 #define FNAME "matchPointListsRotate"
   Trafo matchPointListsRotate(const vector<Point>& p1,
                               const vector<Point>& p2,
@@ -427,6 +429,7 @@ namespace ice
     return matchPointListsRotate(p1, p2, weights);
   }
 #undef FNAME
+
 #define FNAME "matchPointListsEuclidean"
   Trafo matchPointListsEuclidean(const vector<Point>& p1,
                                  const vector<Point>& p2,

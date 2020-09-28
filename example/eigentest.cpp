@@ -2,8 +2,6 @@
 
 using namespace ice;
 
-static double st;
-
 void usage(const string& pn)
 {
   cout << "Usage: " << pn << " <options>" << endl;
@@ -20,11 +18,14 @@ void testMatrix()
   a[0][1] = 3.0;
   a[0][2] = 2.0;
   a[0][3] = 9.0;
+
   a[1][1] = 3.0;
   a[1][2] = 1.0;
   a[1][3] = 4.0;
+
   a[2][2] = 2.0;
-  a[1][3] = 1.0;
+  a[2][3] = 1.0;
+
   a[3][3] = 8.1;
 
   for (int i = 1; i < 4; i++)
@@ -46,32 +47,42 @@ void testMatrix()
   for (int i = 0; i < 4; i++)
     {
       Vector evektor(evek[0][i], evek[1][i], evek[2][i], evek[3][i]);
-      cout << a* evektor << " == " << eval[i] * evektor << endl;
+      cout << setw(10) << a* evektor << " == " << setw(10) << eval[i] * evektor << endl;
     }
 }
 
-void testmatrix()
+void testmatrix(int msize)
 {
-  matrix<double> a(4, 4);
+  matrix<double> a(msize, msize);
 
-  a[0][0] = 1.0;
-  a[0][1] = 3.0;
-  a[0][2] = 2.0;
-  a[0][3] = 9.0;
-  a[1][1] = 3.0;
-  a[1][2] = 1.0;
-  a[1][3] = 4.0;
-  a[2][2] = 2.0;
-  a[1][3] = 1.0;
-  a[3][3] = 8.1;
+  if (msize == 4)
+    {
+      a[0][0] = 1.0;
+      a[0][1] = 0.8;
+      a[0][2] = 0.6;
+      a[0][3] = 0.4;
 
-  for (int i = 1; i < 4; i++)
-    for (int j = 0; j < i; j++)
-      a[i][j] = a[j][i];
+      a[1][1] = 1.0;
+      a[1][2] = 0.8;
+      a[1][3] = 0.6;
 
-  cout << a << endl;
+      a[2][2] = 1.0;
+      a[2][3] = 0.8;
 
-  vector<double> eval(4);
+      a[3][3] = 1.0;
+
+      for (int i = 1; i < 4; i++)
+        for (int j = 0; j < i; j++)
+          a[i][j] = a[j][i];
+    }
+  else
+    for (int i = 1; i < msize; i++)
+      for (int j = 0; j <= i; j++)
+        a[i][j] = a[j][i] = RandomD();
+
+  cout << setprecision(5) << setw(11) << a << endl;
+
+  vector<double> eval(msize);
   vector<vector<double>> evec;
 
   Eigenvalue(a, eval, evec);
@@ -80,19 +91,24 @@ void testmatrix()
   cout << evec << endl;
 
   cout << "a * evector[i] ==  eval[i]*evector[i]" << endl;
-
-  for (int i = 0; i < 4; i++)
+  cout << setprecision(5);
+  for (unsigned int i = 0; i < evec.size(); i++)
     {
-      cout << a* evec[i] << " == " << eval[i] * evec[i] << endl;
+      cout << setw(11) << a* evec[i] << " == " << setw(11) << eval[i] * evec[i] << "  diff: " << setw(11) << a* evec[i] - eval[i]*evec[i] << endl;
     }
 }
 
 int main(int argc, char* argv[])
 {
-  Printf("Test zu Eigenwerten\n");
+  cout << "Test zu Eigenwerten" << endl;
+  cout << "mit Typ Matrix/Vector" << endl;
 
   testMatrix();
   cout << "----------------------" << endl;
-  testmatrix();
+  cout << "Test zu Eigenwerten" << endl;
+  cout << "mit Typ matrix<double>/vector<double>" << endl;
+
+  testmatrix(4);
+  //  testmatrix(10);
   return 0;
 }

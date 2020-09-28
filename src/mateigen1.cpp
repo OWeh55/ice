@@ -38,7 +38,48 @@ namespace ice
   a.at(i).at(j)=g-s*(h+g*tau);          \
   a.at(k).at(l)=h+s*(g-h*tau);
 
-  void EigenvalueSort(Vector& d, Matrix& v);
+  /* interne Funktion: Sortierung der Eigenwerte, Eigenvektoren nach Betrag */
+  void EigenvalueSort(Vector& d, Matrix& v)
+  {
+    //    std::cout << d << std::endl;
+    //    std::cout << v << std::endl;
+
+    int n = d.size();
+
+    for (int i = 0; i < n - 1; i++)
+      {
+        // max. Betrag suchen
+        int idx_max = i;
+        double p = fabs(d[i]);
+
+        for (int j = i + 1; j < n; j++)
+          {
+            double pa = fabs(d.at(j));
+
+            if (pa > p)
+              {
+                p = pa;
+                idx_max = j;
+              }
+          }
+
+        if (idx_max != i)   // Tausch nötig ?
+          {
+            // tauschen
+            double p = d.at(idx_max);
+            d.at(idx_max) = d.at(i);
+            d.at(i) = p;
+
+            for (int j = 0; j < n; j++)
+              {
+                // Spalten der Matrix tauschen
+                double p = v.at(j).at(i);
+                v.at(j).at(i) = v.at(j).at(idx_max);
+                v.at(j).at(idx_max) = p;
+              }
+          }
+      }
+  }
 
 #define FNAME "Eigenvalue"
   int Eigenvalue(const Matrix& A, Matrix& W, Matrix& v, double eps, int maxIt)
@@ -46,7 +87,7 @@ namespace ice
     int rc;
     Vector w;
 
-    rc = Eigenvalue(A, w, v);
+    rc = Eigenvalue(A, w, v, eps, maxIt);
 
     if (rc == OK)
       {
@@ -80,8 +121,10 @@ namespace ice
     // Matrix symmetrisieren
     for (int ip = 0; ip < n; ip++)
       for (int iq = 0; iq < n; iq++)
-        Amat.at(ip).at(iq) = Amat.at(iq).at(ip) =
-                               0.5 * (Amat.at(ip).at(iq) + Amat.at(iq).at(ip));
+        {
+          if (fabs(Amat.at(ip).at(iq) - Amat.at(iq).at(ip)) > eps)
+            throw IceException(FNAME, M_NO_SYMM);
+        }
 
     evect = Matrix(n, n);
     eval.Resize(n);
@@ -217,17 +260,17 @@ namespace ice
 
   void rotate(matrix<double>& a,
               int i, int j, int k, int l,
-              double s, double tau)
+              double s, double c)
   {
     double g = a[i][j];
     double h = a[k][l];
-    a[i][j] = g - s * (h + g * tau);
-    a[k][l] = h + s * (g - h * tau);
+    a[i][j] = c * g - s * h;
+    a[k][l] = s * g + c * h;
   }
 
-  void EigenvalueSort(vector<double>& d,
-                      matrix<double>& mv,
-                      vector<vector<double> >& ev)
+  void sortEV(vector<double>& d,
+              matrix<double>& mv,
+              vector<vector<double> >& ev)
   {
     // sort eigenvalues and convert to vector of vectors
 
@@ -295,7 +338,8 @@ namespace ice
     for (int ip = 0; ip < n; ip++)
       for (int iq = 0; iq < ip; iq++)
         {
-          Amat[ip][iq] = Amat[iq][ip] = 0.5 * (Amat[ip][iq] + Amat[iq][ip]);
+          if (fabs(Amat[ip][iq] - Amat[iq][ip]) > eps)
+            throw IceException(FNAME, M_NO_SYMM);
         }
 
     matrix<double> evect(n, n);
@@ -336,7 +380,6 @@ namespace ice
               }
           }
 
-        //    Printf("%d: %f\n",i,sm);
         ready = sm < eps;
         if (! ready)
           {
@@ -363,18 +406,15 @@ namespace ice
                           }
                         else
                           {
-                            double theta = 0.5 * h / Amat[ip][iq];
-                            t = 1.0 / (fabs(theta) + sqrt(1.0 + theta * theta));
-
+                            double theta = 0.5 * h / Amat[ip][iq]; // cot 2phi
+                            t = 1.0 / (fabs(theta) + sqrt(1.0 + theta * theta)); // tan phi
                             if (theta < 0.0)
-                              {
-                                t = -t;
-                              }
+                              t = -t;
                           }
 
-                        double c = 1.0 / sqrt(1 + t * t);
-                        double s = t * c;
-                        double tau = s / (1.0 + c);
+                        double c = 1.0 / sqrt(1 + t * t); // cos phi
+                        double s = t * c;  // sin phi
+
                         h = t * Amat[ip][iq];
                         z[ip] -= h;
                         z[iq] += h;
@@ -384,22 +424,22 @@ namespace ice
 
                         for (int j = 0; j <= ip - 1; j++)
                           {
-                            rotate(Amat, j, ip, j, iq, s, tau);
+                            rotate(Amat, j, ip, j, iq, s, c);
                           }
 
                         for (int j = ip + 1 ; j <= iq - 1; j++)
                           {
-                            rotate(Amat, ip, j, j, iq, s, tau);
+                            rotate(Amat, ip, j, j, iq, s, c);
                           }
 
                         for (int j = iq + 1 ; j < n; j++)
                           {
-                            rotate(Amat, ip, j, iq, j, s, tau);
+                            rotate(Amat, ip, j, iq, j, s, c);
                           }
 
                         for (int j = 0; j < n; j++)
                           {
-                            rotate(evect, j, ip, j, iq, s, tau);
+                            rotate(evect, j, ip, j, iq, s, c);
                           }
 
                         ++nrot;
@@ -419,7 +459,7 @@ namespace ice
 
     if (ready)
       {
-        EigenvalueSort(eval, evect, eVectors);
+        sortEV(eval, evect, eVectors);
         return OK;
       }
     else
@@ -428,50 +468,7 @@ namespace ice
       }
   }
 
-  /* interne Funktion: Sortierung der Eigenwerte, Eigenvektoren nach Betrag */
-  void EigenvalueSort(Vector& d, Matrix& v)
-  {
-    //    std::cout << d << std::endl;
-    //    std::cout << v << std::endl;
-
-    int n = d.size();
-
-    for (int i = 0; i < n - 1; i++)
-      {
-        // max. Betrag suchen
-        int idx_max = i;
-        double p = fabs(d[i]);
-
-        for (int j = i + 1; j < n; j++)
-          {
-            double pa = fabs(d.at(j));
-
-            if (pa > p)
-              {
-                p = pa;
-                idx_max = j;
-              }
-          }
-
-        if (idx_max != i)   // Tausch nötig ?
-          {
-            // tauschen
-            double p = d.at(idx_max);
-            d.at(idx_max) = d.at(i);
-            d.at(i) = p;
-
-            for (int j = 0; j < n; j++)
-              {
-                // Spalten der Matrix tauschen
-                double p = v.at(j).at(i);
-                v.at(j).at(i) = v.at(j).at(idx_max);
-                v.at(j).at(idx_max) = p;
-              }
-          }
-      }
-  }
 #undef FNAME
-
 #define FNAME "SingularValueDcmp"
 
   static inline double pythag(double a, double b)

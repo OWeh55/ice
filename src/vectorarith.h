@@ -51,7 +51,7 @@ namespace ice
   {
     if (v1.size() != v2.size())
       throw IceException("operator-=", "different sizes");
-    for (int i = 0; i < v1.size(); ++i)
+    for (unsigned int i = 0; i < v1.size(); ++i)
       {
         v1[i] -= v2[i];
       }
@@ -68,7 +68,7 @@ namespace ice
   template<typename T, typename TS>
   const std::vector<T>& operator*=(std::vector<T>& v1, TS f)
   {
-    for (int i = 0; i < v1.size(); ++i)
+    for (unsigned int i = 0; i < v1.size(); ++i)
       {
         v1[i] *= f;
       }
