@@ -36,13 +36,6 @@ namespace ice
     return KLT(st, percent);
   }
 
-  Matrix KLT(const Matrix& m, Vector& percent)
-  {
-    Statistics st(m.cols());
-    Put(st, m);
-    return KLT(st, percent);
-  }
-
   Matrix KLT(const Matrix& m)
   {
     Vector percent;

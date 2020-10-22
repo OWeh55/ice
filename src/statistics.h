@@ -175,7 +175,7 @@ namespace ice
     // one value
     int put(const Vector& val, double weight = 1.0);
     int put(const std::vector<double>& val, double weight = 1.0);
-    
+
     // list of values
     int put(const std::vector<std::vector<double>>& val, double weight = 1.0);
     int put(const Matrix& val);
