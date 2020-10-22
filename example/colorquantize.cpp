@@ -13,11 +13,11 @@ void quantizeWithStatistics(const ColorImage& imageIn,
   // apply a given colortable to an image plus return
   // the statistics of color usage
   // reset statistics
-  for (int i = 0; i < mid.size(); ++i)
+  for (unsigned int i = 0; i < mid.size(); ++i)
     {
       mid[i] = ColorValue(0);
     }
-  for (int i = 0; i < count.size(); ++i)
+  for (unsigned int i = 0; i < count.size(); ++i)
     {
       count[i] = 0;
     }
@@ -154,7 +154,7 @@ void refineColorTableFromStatistics2(vector<ColorValue>& colorTable,
 void setColorTable(const vector<ColorValue>& colorTable, Image& quantized)
 {
   for (int i = 0; i < nColors; ++i)
-    SetGreyColor(quantized, i,
+    SetGrayColor(quantized, i,
                  colorTable[i].red, colorTable[i].green, colorTable[i].blue);
 }
 
@@ -176,9 +176,9 @@ int main(int argc, char** argv)
   Show(ON, imageIn);
   Show(ON, quantized);
   int imageIdx = 0;
-  while (in.Read(imageIn) && imageIdx < 3000)
+  while (in.read(imageIn) && imageIdx < 3000)
     cout << imageIdx++ << endl;
-  while (in.Read(imageIn))
+  while (in.read(imageIn))
     {
       cout << imageIdx++ << endl;
       for (int i = 0; i < 3; ++i)
