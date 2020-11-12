@@ -1,0 +1,358 @@
+#include <image.h>
+#include <fouriertrafo2d.h>
+#include <fouriertrafo.h>
+
+/*AppGen:Global*/
+
+const int iFactor = 10;
+
+class ComplexImage
+{
+public:
+  void create(const ImageD& img)
+  {
+    real.create(img, true);
+    imag.create(img);
+    imag.set(0);
+    xsize = real.xsize;
+    ysize = real.ysize;
+  }
+
+  void create(const ImageD& imgr, const ImageD& imgi)
+  {
+    real.create(imgr, true);
+    imag.create(imgi, true);
+    xsize = real.xsize;
+    ysize = real.ysize;
+  }
+
+  void create(const Image& img)
+  {
+    real.create(img.xsize, img.ysize);
+    xsize = real.xsize;
+    ysize = real.ysize;
+
+    for (int y = 0; y < ysize; ++y)
+      for (int x = 0; x < xsize; ++x)
+        real.setPixel(x, y, img.getPixel(x, y));
+
+    imag.create(real);
+    imag.set(0);
+  }
+
+  void create(int xs, int ys)
+  {
+    xsize = xs;
+    ysize = ys;
+    real.create(xsize, ysize);
+    real.set(0);
+    imag.create(xsize, ysize);
+    imag.set(0);
+  }
+  void getValue(int x, int y, double& r, double& i)
+  {
+    r = real.getPixel(x, y);
+    i = imag.getPixel(x, y);
+  }
+
+  void setValue(int x, int y, double r, double i)
+  {
+    real.setPixel(x, y, r);
+    imag.setPixel(x, y, i);
+  }
+
+  const ComplexImage& operator=(const ComplexImage& rhs)
+  {
+    real.copy(rhs.real);
+    imag.copy(rhs.imag);
+    return *this;
+  }
+
+  ImageD real;
+  ImageD imag;
+  int xsize;
+  int ysize;
+
+};
+
+double downsize(const matrix<double>& big, matrix<double>& m)
+{
+  int size = m.cols();
+  int bigSize = big.cols();
+  int iFactor = bigSize / size;
+  int iFactor2 = iFactor * iFactor;
+  double sum = 0.0;
+
+  for (int x = 0; x < size; ++x)
+    {
+      int xBig = x * iFactor;
+      for (int y = 0; y < size; ++y)
+        {
+          int yBig = y * iFactor;
+
+          double sumV = 0.0;
+          for (int xx = xBig; xx < xBig + iFactor; ++xx)
+            for (int yy = yBig; yy < yBig + iFactor; ++yy)
+              sumV += big[xx][yy];
+
+          double currentValue = sumV / iFactor2;
+          sum += currentValue;
+          m[x][y] = currentValue;
+        }
+    }
+  return sum;
+}
+
+double makeLine(matrix<double>& m, double len, double phi)
+{
+  int size = int(2 * (len + 1.0));
+  int bigSize = size * iFactor;
+  m.resize(size, size);
+
+  matrix<double> big(bigSize, bigSize, 0.0);
+  double bigLen = len * iFactor;
+  int z0 = bigSize / 2;
+
+  LineSeg line(-cos(phi)*bigLen, -sin(phi)*bigLen, cos(phi)*bigLen, sin(phi)*bigLen);
+
+  for (int x = 0; x < bigSize; ++x)
+    {
+      double dx = x - z0;
+      for (int y = 0; y < bigSize; ++y)
+        {
+          double dy = y - z0;
+          //    cout << dx << ","<<dy << " " << line.Distance(dx, dy) << endl;
+          if (line.Distance(dx, dy) < 2.0)
+            big[x][y] = 1.0;
+          else
+            big[x][y] = 0.0;
+        }
+    }
+  return downsize(big, m);
+}
+
+double makeDisc(matrix<double>& m, double radius)
+{
+  int size = int(2 * (radius + 1.0));
+  int bigSize = size * iFactor;
+
+  m.resize(size, size);
+
+  matrix<double> big(bigSize, bigSize, 0.0);
+
+  double ifactor2 = iFactor * iFactor;
+  double radius2 = radius * radius * ifactor2;
+
+  int z0 = bigSize / 2;
+
+  for (int x = 0; x < bigSize; ++x)
+    {
+      double dx = x - z0;
+      dx *= dx;
+      for (int y = 0; y < bigSize; ++y)
+        {
+          double dy = y - z0;
+          dy *= dy;
+          if (dx + dy < radius2)
+            big[x][y] = 1.0;
+        }
+    }
+
+  return downsize(big, m);
+}
+
+double makeMaskFromMatrix(const Image& mask, double par1, double par2, int mode)
+{
+  int xm = mask.xsize / 2;
+  int ym = mask.ysize / 2;
+  int mv = mask.maxval;
+  int mv2 = (mv + 1) / 2;
+
+  matrix<double> dmask;
+  double factor = 0;
+  switch (mode)
+    {
+    case 1:
+      factor = makeDisc(dmask, par1);
+      break;
+    case 2:
+      factor = makeLine(dmask, par1, par2);
+      break;
+    }
+  mask.set(mv2);
+  int ss = dmask.rows() / 2;
+  for (int xi = 0; xi < dmask.cols(); ++xi)
+    {
+      for (int yi = 0; yi < dmask.rows(); ++yi)
+        {
+          int g =  0.5 * dmask[xi][yi] * mv + mv2;
+          //  if (g < 0 || g > mv)
+          //    cout << "!!! "  << dmask[xi][yi] << endl;
+          mask.setPixel(xm - ss + xi, ym - ss + yi, g);
+        }
+    }
+  //  cout << factor << endl;
+  return factor;
+}
+
+double makeMask(const Image& mask, double par1, double par2, int mode)
+{
+  double result = 0;
+  switch (mode)
+    {
+    case 1:
+      result = makeMaskFromMatrix(mask, par1, par2, 1);
+      break;
+    case 2:
+      result = makeMaskFromMatrix(mask, par1, par2, 2);
+      break;
+    case 99:
+      // Maske aus Datei laden
+      // wird nicht hier bearbeitet
+      break;
+    default:
+      throw "Wrong mask mode";
+    }
+  return result;
+}
+
+/*AppGen
+prog: Faltung eines Bildes mit einem anderen Bild oder einer speziellen Maske
+%%Beschreibung Parameter
+%symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
+para: file, required, string, fn, Bild-Datei, ""
+%
+opt: D, displayone, void, displayOne, Bilder abwechselnd, false
+opt: d, displayrow, void, displayRow, Bilder in einer Reihe, false
+opt: m, maskmode, int, maskMode, Modus für [Ent-]Faltungsmaske, 1
+opt2:   m = 1  Kreisscheibe
+opt2:   m = 2  Linie / Bewegungsunschärfe
+opt: r, radius, double, radius, Ausdehnung der Maske, 10
+opt: p, phi, double, phi, Orientierung der Maske, 0.11
+
+opt: v, verbose, void,verbose,Anzeige der Abarbeitung, false
+opt: h, help, usage, help, Hilfe
+AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      if (displayOne)
+	displayRow=false;
+      else if (displayRow)
+	displayOne=false;
+      else
+	displayOne=true;
+      
+      Image src;
+
+      if (verbose)
+	cout << "Lese" << fn << endl;
+      src = ReadImg(fn);
+
+      if (displayOne)
+	Show(ON,src);
+      
+      int xSize = src.xsize;
+      int ySize = src.ysize;
+
+      Image show;
+      show.create(xSize*3,ySize);
+      
+      if (displayRow)
+	Show(ON,show);
+      
+      Image srcS(show,Window(0,0,xSize-1,ySize-1));
+      Image maskS(show,Window(xSize,0,2*xSize-1,ySize-1));
+      Image destS(show,Window(2*xSize,0,3*xSize-1,ySize-1));
+
+      CopyImg(src,srcS);
+      int srcContent=1;
+      
+      bool cont=true;
+      
+      while (cont)
+	{
+	  ComplexImage srcSp;
+	  srcSp.create(xSize, ySize);
+	  
+	  if (verbose)
+	    cout << "FT(src)" << endl;
+	  
+	  FourierTrafo2D ft2;
+	  ft2.setInput(srcS);
+	  ft2.getResult(srcSp.real, srcSp.imag);
+	  
+	  if (verbose)
+	    cout << "ErzeugeMaske" << endl;
+	  
+	  //Maske kreieren
+	  makeMask(maskS,radius,phi,maskMode);
+        
+	  if (verbose)
+	    cout << "FT(mask)" << endl;
+
+	  ComplexImage maskSp;
+	  maskSp.create(xSize, ySize);
+
+	  ft2.setInput(maskS);
+	  ft2.getResult(maskSp.real, maskSp.imag);
+      
+	  ComplexImage destSp;
+	  destSp.create(xSize, ySize);
+
+	  if (verbose)
+	    cout << "Faltung(imSpektrum)" << endl;
+
+	  ConvolutionFImgD(srcSp.real, srcSp.imag,
+			   maskSp.real, maskSp.imag,
+			   destSp.real, destSp.imag);
+
+	  if (verbose)
+	    cout << "IFT(gefaltet)" << endl;
+
+	  ft2.setParameter(src.ysize, src.xsize, false);
+	  ft2.setInput(destSp.real, destSp.imag);
+	  // cout << "Input set" << endl;
+
+	  ft2.getResult(destS, ADAPTIVE);
+	  // cout << "output get" < <endl;
+
+	  if (displayOne)
+	    {
+	      switch(srcContent)
+		{
+		case 1: CopyImg(srcS,src); break;
+		case 2: CopyImg(maskS,src); break;
+		case 3: CopyImg(destS,src); break;
+		}
+	    }
+	  
+	  int c = GetChar();
+	  switch (c)
+	    {
+	    case 'q':
+	    case 'Q':
+	    case 'x':
+	    case 'X': cont=false; break;
+	    case '1':
+	    case '2':
+	    case '3': srcContent=c-'0'; break;
+	    case 'r': if (radius>1) radius--; break;
+	    case 'R': radius++; break;
+	    case 'm': maskMode=1; break;
+	    case 'M': maskMode=2; break;
+	    case 'p': phi -= 0.20; break;
+	    case 'P': phi += 0.20; break;
+	    }
+	}
+	}
+      catch (const char* msg)
+	{
+	  cout << "Exception: " << msg << endl;
+	}
+      return OK;
+    }
