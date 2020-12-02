@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
   sourceReal.read(filename);
   if (!noDisplay)
     Show(ON, sourceReal);
+
   int xs = sourceReal.xsize;
   int ys = sourceReal.ysize;
   int x0 = xs / 2;
@@ -215,7 +216,7 @@ int main(int argc, char* argv[])
         {
           Image resized;
           resized.create(xo, yo, 255);
-          RenormImg(out, resized);
+          renormImg(out, resized);
           out = resized;
         }
       out.write(outfilename);

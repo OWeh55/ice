@@ -241,118 +241,140 @@ int main(int argc, char* argv[])
   try
     {
       if (displayOne)
-	displayRow=false;
+        displayRow = false;
       else if (displayRow)
-	displayOne=false;
+        displayOne = false;
       else
-	displayOne=true;
-      
+        displayOne = true;
+
       Image src;
 
       if (verbose)
-	cout << "Lese" << fn << endl;
+        cout << "Lese" << fn << endl;
       src = ReadImg(fn);
 
       if (displayOne)
-	Show(ON,src);
-      
+        Show(ON, src);
+
       int xSize = src.xsize;
       int ySize = src.ysize;
 
       Image show;
-      show.create(xSize*3,ySize);
-      
+      show.create(xSize * 3, ySize);
+
       if (displayRow)
-	Show(ON,show);
-      
-      Image srcS(show,Window(0,0,xSize-1,ySize-1));
-      Image maskS(show,Window(xSize,0,2*xSize-1,ySize-1));
-      Image destS(show,Window(2*xSize,0,3*xSize-1,ySize-1));
+        Show(ON, show);
 
-      CopyImg(src,srcS);
-      int srcContent=1;
-      
-      bool cont=true;
-      
+      Image srcS(show, Window(0, 0, xSize - 1, ySize - 1));
+      Image maskS(show, Window(xSize, 0, 2 * xSize - 1, ySize - 1));
+      Image destS(show, Window(2 * xSize, 0, 3 * xSize - 1, ySize - 1));
+
+      CopyImg(src, srcS);
+      int srcContent = 1;
+
+      bool cont = true;
+
       while (cont)
-	{
-	  ComplexImage srcSp;
-	  srcSp.create(xSize, ySize);
-	  
-	  if (verbose)
-	    cout << "FT(src)" << endl;
-	  
-	  FourierTrafo2D ft2;
-	  ft2.setInput(srcS);
-	  ft2.getResult(srcSp.real, srcSp.imag);
-	  
-	  if (verbose)
-	    cout << "ErzeugeMaske" << endl;
-	  
-	  //Maske kreieren
-	  makeMask(maskS,radius,phi,maskMode);
-        
-	  if (verbose)
-	    cout << "FT(mask)" << endl;
+        {
+          ComplexImage srcSp;
+          srcSp.create(xSize, ySize);
 
-	  ComplexImage maskSp;
-	  maskSp.create(xSize, ySize);
+          if (verbose)
+            cout << "FT(src)" << endl;
 
-	  ft2.setInput(maskS);
-	  ft2.getResult(maskSp.real, maskSp.imag);
-      
-	  ComplexImage destSp;
-	  destSp.create(xSize, ySize);
+          FourierTrafo2D ft2;
+          ft2.setInput(srcS);
+          ft2.getResult(srcSp.real, srcSp.imag);
 
-	  if (verbose)
-	    cout << "Faltung(imSpektrum)" << endl;
+          if (verbose)
+            cout << "ErzeugeMaske" << endl;
 
-	  ConvolutionFImgD(srcSp.real, srcSp.imag,
-			   maskSp.real, maskSp.imag,
-			   destSp.real, destSp.imag);
+          //Maske kreieren
+          makeMask(maskS, radius, phi, maskMode);
 
-	  if (verbose)
-	    cout << "IFT(gefaltet)" << endl;
+          if (verbose)
+            cout << "FT(mask)" << endl;
 
-	  ft2.setParameter(src.ysize, src.xsize, false);
-	  ft2.setInput(destSp.real, destSp.imag);
-	  // cout << "Input set" << endl;
+          ComplexImage maskSp;
+          maskSp.create(xSize, ySize);
 
-	  ft2.getResult(destS, ADAPTIVE);
-	  // cout << "output get" < <endl;
+          ft2.setInput(maskS);
+          ft2.getResult(maskSp.real, maskSp.imag);
 
-	  if (displayOne)
-	    {
-	      switch(srcContent)
-		{
-		case 1: CopyImg(srcS,src); break;
-		case 2: CopyImg(maskS,src); break;
-		case 3: CopyImg(destS,src); break;
-		}
-	    }
-	  
-	  int c = GetChar();
-	  switch (c)
-	    {
-	    case 'q':
-	    case 'Q':
-	    case 'x':
-	    case 'X': cont=false; break;
-	    case '1':
-	    case '2':
-	    case '3': srcContent=c-'0'; break;
-	    case 'r': if (radius>1) radius--; break;
-	    case 'R': radius++; break;
-	    case 'm': maskMode=1; break;
-	    case 'M': maskMode=2; break;
-	    case 'p': phi -= 0.20; break;
-	    case 'P': phi += 0.20; break;
-	    }
-	}
-	}
-      catch (const char* msg)
-	{
-	  cout << "Exception: " << msg << endl;
-	}
-      return OK;
+          ComplexImage destSp;
+          destSp.create(xSize, ySize);
+
+          if (verbose)
+            cout << "Faltung(imSpektrum)" << endl;
+
+          ConvolutionFImgD(srcSp.real, srcSp.imag,
+                           maskSp.real, maskSp.imag,
+                           destSp.real, destSp.imag);
+
+          if (verbose)
+            cout << "IFT(gefaltet)" << endl;
+
+          ft2.setParameter(src.ysize, src.xsize, false);
+          ft2.setInput(destSp.real, destSp.imag);
+          // cout << "Input set" << endl;
+
+          ft2.getResult(destS, ADAPTIVE);
+          // cout << "output get" < <endl;
+
+          if (displayOne)
+            {
+              switch (srcContent)
+                {
+                case 1:
+                  CopyImg(srcS, src);
+                  break;
+                case 2:
+                  CopyImg(maskS, src);
+                  break;
+                case 3:
+                  CopyImg(destS, src);
+                  break;
+                }
+            }
+
+          int c = GetChar();
+          switch (c)
+            {
+            case 'q':
+            case 'Q':
+            case 'x':
+            case 'X':
+              cont = false;
+              break;
+            case '1':
+            case '2':
+            case '3':
+              srcContent = c - '0';
+              break;
+            case 'r':
+              if (radius > 1) radius--;
+              break;
+            case 'R':
+              radius++;
+              break;
+            case 'm':
+              maskMode = 1;
+              break;
+            case 'M':
+              maskMode = 2;
+              break;
+            case 'p':
+              phi -= 0.20;
+              break;
+            case 'P':
+              phi += 0.20;
+              break;
+            }
+        }
     }
+  catch (const char* msg)
+    {
+      cout << "Exception: " << msg << endl;
+    }
+  return OK;
+}

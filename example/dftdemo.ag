@@ -1,0 +1,233 @@
+// Demo-Programm zur Anwendung der DFT auf Bilder
+//
+
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Apply DFT to images
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ para: file, optional, string, filename, image to load, "test_gray.jpg"
+ para: file2, optional, string, filename2, second image to load (Imaginärteil), ""
+ %
+ opt: D, nodc, void, nodc, ignore bias, false
+ opt: F, maxfrequency, int, maxf, maximum frequency, 100
+ opt: l, logarithmic, void, log, display logarithmic (initial state), false
+ opt: L, logrange, double, logRange, range of logarithmic display, 1000
+ opt2:   Parameter is ratio max to min
+ opt: v, verbose, Void, verbose, be verbose, false
+ AppGen*/
+
+class QuadImage
+{
+public:
+  QuadImage(int xs, int ys, Image& img1, Image& img2, Image& img3, Image& img4)
+  {
+    four.create(xs * 2, ys * 2, 255);
+    four.set(0);
+    img1 = four(Window(0, 0, xs - 1, ys - 1));
+    img2 = four(Window(xs, 0, 2 * xs - 1, ys - 1));
+    img3 = four(Window(0, ys, xs - 1, 2 * ys - 1));
+    img4 = four(Window(xs, ys, 2 * xs - 1, 2 * ys - 1));
+    Show(GRAY, four, "2*2");
+  }
+private:
+  Image four;
+};
+
+void logImage(ImageD& img, double range)
+{
+  double maxMag = 0;
+  WindowWalker ww(img);
+  for (ww.init(); !ww.ready(); ww.next())
+    {
+      double m = img.getPixel(ww);
+      if (m > maxMag)
+        maxMag = m;
+    }
+
+  double minLog = log(maxMag / range);
+
+  for (ww.init(); !ww.ready(); ww.next())
+    {
+      double m = img.getPixel(ww);
+      if (m > 0)
+        m = log(m) - minLog;
+      if (m < 0)
+        m = 0;
+      img.setPixel(ww, m);
+    }
+}
+
+void log2Images(ImageD& imgr, ImageD& imgi, double range)
+{
+  double maxMag = 0;
+  WindowWalker ww(imgr);
+  for (ww.init(); !ww.ready(); ww.next())
+    {
+      double r = imgr.getPixel(ww);
+      double i = imgi.getPixel(ww);
+      double m = sqrt(r * r + i * i);
+      if (m > maxMag)
+        maxMag = m;
+    }
+
+  double minLog = log(maxMag / range);
+
+  for (ww.init(); !ww.ready(); ww.next())
+    {
+      double r = imgr.getPixel(ww);
+      double i = imgi.getPixel(ww);
+      double m = sqrt(r * r + i * i);
+      double mNew = m;
+      if (mNew > 0)
+        mNew = log(mNew) - minLog;
+      if (mNew < 0)
+        mNew = 0;
+      imgr.setPixel(ww, mNew / m * r);
+      imgi.setPixel(ww, mNew / m * i);
+    }
+}
+
+void image2Display(const ImageD& real, Window& w, Image& display, int mode)
+{
+  Image img;
+  img.create(real.xsize, real.ysize, 255);
+  ConvImgDImg(real, img, ADAPTIVE, mode);
+  renormImg(img(w), display);
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  bool showCentre = false;
+  bool showMagnitude = true;
+
+  Image sourceReal;
+  sourceReal.read(filename);
+
+  Image sourceImag;
+  if (!filename2.empty())
+    {
+      sourceImag.read(filename2);
+    }
+  else
+    {
+      sourceImag.create(sourceReal);
+      sourceImag.set(128);
+    }
+
+  int xs = sourceReal.xsize;
+  int ys = sourceReal.ysize;
+  int x0 = xs / 2;
+  int y0 = ys / 2;
+
+  // display image (4 quadrants)
+  Image img1;
+  Image img2;
+  Image img3;
+  Image img4;
+  QuadImage qimg(xs, ys, img1, img2, img3, img4);
+
+  // result images (double)
+  ImageD resReal;
+  resReal.create(xs, ys);
+  ImageD resImag;
+  resImag.create(xs, ys);
+
+  ImageD resMag;
+  resMag.create(xs, ys);
+
+  // 2D FT Objekt
+  FourierTrafo2D tr(ys, xs, true);
+
+  bool abort = false;
+  while (!abort)
+    {
+      tr.setInput(sourceReal, sourceImag, 1.0, UNSIGNED);
+      tr.getResult(resReal, resImag);
+
+      if (nodc)
+        {
+          resReal.setPixel(x0, y0, 0.0);
+          resImag.setPixel(x0, y0, 0.0);
+        }
+
+      WindowWalker ww(resMag);
+      for (ww.init(); !ww.ready(); ww.next())
+        {
+          double r = resReal.getPixel(ww);
+          double i = resImag.getPixel(ww);
+          double power = r * r + i * i;
+          resMag.setPixel(ww, sqrt(power));
+        }
+
+      if (log)
+        {
+          log2Images(resReal, resImag, logRange);
+          logImage(resMag, logRange);
+        }
+
+      img1.copy(sourceReal);
+      img2.copy(sourceImag);
+
+      if (!showCentre)
+        {
+          if (showMagnitude)
+            ConvImgDImg(resMag, img2, ADAPTIVE, UNSIGNED);
+
+          ConvImgDImg(resReal, img3, ADAPTIVE, SIGNED);
+          ConvImgDImg(resImag, img4, ADAPTIVE, SIGNED);
+        }
+      else
+        {
+          Window w(x0 - maxf, y0 - maxf, x0 + maxf, y0 + maxf);
+          if (showMagnitude)
+            image2Display(resMag, w, img2, UNSIGNED);
+
+          image2Display(resReal, w, img3, SIGNED);
+          image2Display(resImag, w, img4, SIGNED);
+        }
+
+      ClearAlpha();
+      Print(log ? "logarithmic" : "linear");
+      Print("  l/L\n");
+      Print(showCentre ? "low frequencies" : "full spectrum");
+      Print("  c/C\n");
+      Print(showMagnitude ? "show magnitude" : "show imaginary part");
+      Print("  m/M\n");
+      int c = GetChar();
+      switch (c)
+        {
+        case 'q':
+        case 'Q':
+        case 'x':
+        case 'X':
+          abort = true;
+          break;
+        case 'm':
+          showMagnitude = false;
+          break;
+        case 'M':
+          showMagnitude = true;
+          break;
+        case 'l':
+          log = false;
+          break;
+        case 'L':
+          log = true;
+          break;
+        case 'c':
+          showCentre = false;
+          break;
+        case 'C':
+          showCentre = true;
+          break;
+
+        }
+    }
+  return 0;
+}
