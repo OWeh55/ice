@@ -16,6 +16,7 @@
  opt: F, maxfrequency, int, maxf, maximum frequency, 100
  opt: l, logarithmic, void, log, display logarithmic (initial state), false
  opt: L, logrange, double, logRange, range of logarithmic display, 1000
+ opt: M, magnitude, void, showMagnitude, show magnitude (initial state), false
  opt2:   Parameter is ratio max to min
  opt: v, verbose, Void, verbose, be verbose, false
  AppGen*/
@@ -104,7 +105,6 @@ int main(int argc, char* argv[])
 {
   /*AppGen:MainEnd*/
   bool showCentre = false;
-  bool showMagnitude = true;
 
   Image sourceReal;
   sourceReal.read(filename);
@@ -199,6 +199,8 @@ int main(int argc, char* argv[])
       Print("  c/C\n");
       Print(showMagnitude ? "show magnitude" : "show imaginary part");
       Print("  m/M\n");
+      Print(nodc ? "suppres bias" : "show bias");
+      Print("  d/D\n");
       int c = GetChar();
       switch (c)
         {
@@ -219,6 +221,12 @@ int main(int argc, char* argv[])
           break;
         case 'L':
           log = true;
+          break;
+        case 'd':
+          nodc = false;
+          break;
+        case 'D':
+          nodc = true;
           break;
         case 'c':
           showCentre = false;
