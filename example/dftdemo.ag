@@ -24,7 +24,9 @@
 class QuadImage
 {
 public:
-  QuadImage(int xs, int ys, Image& img1, Image& img2, Image& img3, Image& img4)
+  QuadImage(int xs, int ys,
+	    Image& img1, Image& img2, Image& img3, Image& img4,
+	    const string &name)
   {
     four.create(xs * 2, ys * 2, 255);
     four.set(0);
@@ -32,7 +34,7 @@ public:
     img2 = four(Window(xs, 0, 2 * xs - 1, ys - 1));
     img3 = four(Window(0, ys, xs - 1, 2 * ys - 1));
     img4 = four(Window(xs, ys, 2 * xs - 1, 2 * ys - 1));
-    Show(GRAY, four, "2*2");
+    Show(GRAY, four, name);
   }
 private:
   Image four;
@@ -130,7 +132,7 @@ int main(int argc, char* argv[])
   Image img2;
   Image img3;
   Image img4;
-  QuadImage qimg(xs, ys, img1, img2, img3, img4);
+  QuadImage qimg(xs, ys, img1, img2, img3, img4, filename);
 
   // result images (double)
   ImageD resReal;
