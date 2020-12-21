@@ -41,19 +41,34 @@ namespace ice
 #define IB_LSB_FIRST 0
 #define IB_MSB_FIRST 1
 
-  typedef struct ibuffer_struct
+  struct ibuffer
   {
     int width, height; // Bildgröße in Pixel
-    int maxval;                 // maximaler Pixelwert
-    int planes;     // 1 - Grau, 3 - RGB
-    int linelength; // Zeilenlänge in Byte
-    int valuesize;    // bytegröße der Werte
-    int packmethod; // Byteanordnungen
-    int intensity;  // Invertierung Intensitaet -> Grauwert
+    int maxval;        // maximaler Pixelwert
+    int planes;        // 1 - Grau, 3 - RGB
+    int linelength;    // Zeilenlänge in Byte
+    int valuesize;     // bytegröße der Werte
+    int packmethod;    // Byteanordnungen
+    int intensity;     // Invertierung Intensitaet -> Grauwert
     int byteorder;
-    bool can_delete; // true wenn *data freigegeben werden kann/muss
+
+    ibuffer(): data(nullptr) {}
+    ~ibuffer()
+    {
+      delete data;
+    }
+    void alloc(int size)
+    {
+      delete data;
+      data = new unsigned char [size];
+    }
+    unsigned char* const getData()
+    {
+      return data;
+    }
+  private:
     unsigned char* data;
-  } ibuffer;
+  };
 
   Image Buffer2Image(ibuffer& ib, const Image& img, int flags = IB_CROP);
   void Buffer2Image(ibuffer& ib, const Image& imgr, const Image& imgg, const Image& imgb,

@@ -70,7 +70,6 @@ namespace ice
     if (isOpen)
       {
         exclose(fd);
-        delete ib.data;
       }
   }
 
@@ -138,13 +137,10 @@ namespace ice
     readInfo();
 
     isOpen = true;
-    ib.data = nullptr;
   }
 
   void PbmReader::nextImage()
   {
-    delete ib.data;
-    ib.data = nullptr;
     readInfo();
   }
 
@@ -166,44 +162,43 @@ namespace ice
       {
         throw IceException("PbmReader", "Not opened");
       }
-    if (ib.data == nullptr)   // if already read - ignore
+
+    int valsize;
+
+    if (maxValue >= (1 << 16))
       {
-        int valsize;
+        valsize = 4;
+      }
+    else if (maxValue >= (1 << 8))
+      {
+        valsize = 2;
+      }
+    else
+      {
+        valsize = 1;
+      }
 
-        if (maxValue >= (1 << 16))
-          {
-            valsize = 4;
-          }
-        else if (maxValue >= (1 << 8))
-          {
-            valsize = 2;
-          }
-        else
-          {
-            valsize = 1;
-          }
+    int pixelsize = valsize * nChannels;
 
-        int pixelsize = valsize * nChannels;
+    ib.width = xSize;
+    ib.height = ySize;
 
-        ib.width = xSize;
-        ib.height = ySize;
+    ib.maxval = maxValue;
 
-        ib.maxval = maxValue;
+    ib.planes = nChannels;
 
-        ib.planes = nChannels;
+    ib.linelength = ib.width * pixelsize;
+    ib.valuesize = valsize;
+    ib.byteorder = IB_MSB_FIRST;
+    ib.packmethod = IB_RGB;
 
-        ib.linelength = ib.width * pixelsize;
-        ib.valuesize = valsize;
-        ib.byteorder = IB_MSB_FIRST;
-        ib.packmethod = IB_RGB;
-        ib.can_delete = false;
-        ib.data = new unsigned char [ib.linelength * ib.height];
-        ib.intensity = true;
-        int nReadValues = fread(ib.data, pixelsize, ib.width * ib.height, fd.fd);
-        if (nReadValues !=  ib.width * ib.height)
-          {
-            throw IceException("PbmReader", "Error reading pbm file data");
-          }
+    ib.alloc(ib.linelength * ib.height);
+
+    ib.intensity = true;
+    int nReadValues = fread(ib.getData(), pixelsize, ib.width * ib.height, fd.fd);
+    if (nReadValues !=  ib.width * ib.height)
+      {
+        throw IceException("PbmReader", "Error reading pbm file data");
       }
   }
 

@@ -348,7 +348,6 @@ namespace ice
                   int flag)
   {
     ibuffer ib;
-    ib.data = nullptr;
 
     FILE* infile;
 
@@ -371,11 +370,6 @@ namespace ice
          */
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
-
-        if (ib.data != nullptr)
-          {
-            free(ib.data);
-          }
 
         throw IceException(FNAME, M_WRONG_FILETYPE);
       }
@@ -406,15 +400,15 @@ namespace ice
     ib.packmethod = IB_RGB;
     ib.intensity = true;
 
-    ib.data = (unsigned char*) malloc(ib.linelength * ib.height);
-    ib.can_delete = true;
+    ib.alloc(ib.linelength * ib.height);
+    unsigned char* data = ib.getData();
 
     jpeg_start_decompress(&cinfo);
 
     for (int i = 0; i < ib.height; i++)
       {
         JSAMPROW row_pointer[1];
-        row_pointer[0] = ((unsigned char*)ib.data) + ib.linelength * i;
+        row_pointer[0] = data + ib.linelength * i;
         jpeg_read_scanlines(&cinfo, row_pointer, 1);
       }
 
@@ -441,7 +435,6 @@ namespace ice
   Image ReadJPEGImg(const string& fname, Image& img, int flag)
   {
     ibuffer ib;
-    ib.data = nullptr;
 
     FILE* infile;
 
@@ -464,11 +457,6 @@ namespace ice
          */
         jpeg_destroy_decompress(&cinfo);
         fclose(infile);
-
-        if (ib.data != nullptr)
-          {
-            free(ib.data);
-          }
 
         throw IceException(FNAME, M_WRONG_FILETYPE);
       }
@@ -500,15 +488,15 @@ namespace ice
     ib.packmethod = IB_RGB;
     ib.intensity = true;
 
-    ib.can_delete = true;
-    ib.data = (unsigned char*) malloc(ib.linelength * ib.height);
+    ib.alloc(ib.linelength * ib.height);
+    unsigned char* data = ib.getData();
 
     jpeg_start_decompress(&cinfo);
 
     for (int i = 0; i < ib.height; i++)
       {
         JSAMPROW row_pointer[1];
-        row_pointer[0] = ((unsigned char*)ib.data) + ib.linelength * i;
+        row_pointer[0] = data + ib.linelength * i;
         jpeg_read_scanlines(&cinfo, row_pointer, 1);
       }
 

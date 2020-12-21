@@ -52,10 +52,13 @@ namespace ice
   static int   loadBMP4(FILE*, unsigned char*, u_int, u_int, u_int);
   static int   loadBMP8(FILE*, unsigned char*, u_int, u_int, u_int);
   static int   loadBMP24(FILE*, unsigned char*, u_int, u_int);
+
   static u_int getshort(FILE*);
   static u_int getint(FILE*);
+
   static void  putshort(FILE*, int);
   static void  putint(FILE*, int);
+
   static void  writeBMP1(FILE*, unsigned char*, int, int);
   static void  writeBMP4(FILE*, unsigned char*, int, int);
   static void  writeBMP8(FILE*, unsigned char*, int, int);
@@ -63,15 +66,15 @@ namespace ice
 
 #define FERROR(fp) (ferror(fp) || feof(fp))
 
-  typedef struct bmp_info
+  struct BMPInfo
   {
     unsigned int fSize, fOffBits, iSize, iWidth, iHeight, iPlanes;
     unsigned int iBitCount, iCompression, iSizeImage, iXPelsPerMeter;
     unsigned int iYPelsPerMeter, iColorsUsed, iClrImportant;
-  } BMPInfo;
+  };
 
   static std::string Error;
-  static unsigned char r[256], g[256], b[256];
+  static unsigned char r[256], g[256], b[256]; // color table
 
   int ReadBMPHeader(FILE* fp, BMPInfo& bmi)
   {
@@ -89,38 +92,20 @@ namespace ice
     bmi.fSize = getint(fp);
     getshort(fp);         /* reserved and ignored */
     getshort(fp);
+
     bmi.fOffBits = getint(fp);
+    bmi.iSize = getint(fp);
 
-    bmi.iSize          = getint(fp);
-
-    if (bmi.iSize == WIN_NEW || bmi.iSize == OS2_NEW)
-      {
-        bmi.iWidth         = getint(fp);
-        bmi.iHeight        = getint(fp);
-        bmi.iPlanes        = getshort(fp);
-        bmi.iBitCount      = getshort(fp);
-        bmi.iCompression   = getint(fp);
-        bmi.iSizeImage     = getint(fp);
-        bmi.iXPelsPerMeter = getint(fp);
-        bmi.iYPelsPerMeter = getint(fp);
-        bmi.iColorsUsed    = getint(fp);
-        bmi.iClrImportant  = getint(fp);
-      }
-
-    else      /* old bitmap format */
-      {
-        bmi.iWidth         = getshort(fp);          /* Types have changed ! */
-        bmi.iHeight        = getshort(fp);
-        bmi.iPlanes        = getshort(fp);
-        bmi.iBitCount      = getshort(fp);
-
-        /* Not in old versions so have to compute them*/
-        bmi.iSizeImage = (((bmi.iPlanes * bmi.iBitCount * bmi.iWidth) + 31) / 32) * 4 * bmi.iHeight;
-
-        bmi.iCompression   = BI_RGB;
-        bmi.iXPelsPerMeter = bmi.iYPelsPerMeter = 0;
-        bmi.iColorsUsed    = bmi.iClrImportant  = 0;
-      }
+    bmi.iWidth         = getint(fp);
+    bmi.iHeight        = getint(fp);
+    bmi.iPlanes        = getshort(fp);
+    bmi.iBitCount      = getshort(fp);
+    bmi.iCompression   = getint(fp);
+    bmi.iSizeImage     = getint(fp);
+    bmi.iXPelsPerMeter = getint(fp);
+    bmi.iYPelsPerMeter = getint(fp);
+    bmi.iColorsUsed    = getint(fp);
+    bmi.iClrImportant  = getint(fp);
 
     if (FERROR(fp))
       {
@@ -134,10 +119,9 @@ namespace ice
          bmi.iBitCount != 8 && bmi.iBitCount != 24) ||
         bmi.iPlanes != 1 || bmi.iCompression > BI_RLE4)
       {
-
-        Error = string("Bogus BMP File! (bitCount=") + string(bmi.iBitCount, 0) +
-                string(", Planes=") + string(bmi.iPlanes, 0) +
-                string(", Compression=") + string(bmi.iCompression, 0) + string(")");
+        Error = string("Bogus BMP File! (bitCount=") + to_string(bmi.iBitCount) +
+                string(", Planes=") + to_string(bmi.iPlanes) +
+                string(", Compression=") + to_string(bmi.iCompression) + string(")");
         return true;
       }
 
@@ -221,17 +205,16 @@ namespace ice
     BMPInfo bmi;
     string hname = fname;
 
-    if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
+    if ((fp = fopen(hname.c_str(), FRMODUS)) == nullptr)
       throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
       {
-        throw IceException(FNAME, Error);
         fclose(fp);
-        return WRONG_FILE;
+        throw IceException(FNAME, Error);
       }
-
     fclose(fp);
+
     xsize = bmi.iWidth;
     ysize = bmi.iHeight;
     maxval = 255; /* max. value in Colormap */
@@ -258,15 +241,12 @@ namespace ice
     unsigned int i;
     unsigned int rv = 1;
     unsigned int cmaplen;
-    unsigned char*         pic24, *pic8;
     BMPInfo bmi;
     ibuffer ib;
 
-    pic8 = pic24 = (unsigned char*) NULL;
-
     string hname = fname;
 
-    if ((fp = fopen(hname.c_str(), FRMODUS)) == NULL)
+    if ((fp = fopen(hname.c_str(), FRMODUS)) == nullptr)
       throw IceException(FNAME, M_FILE_OPEN);
 
     if (ReadBMPHeader(fp, bmi))
@@ -290,65 +270,49 @@ namespace ice
           }
       }
 
-    /* create pic8 or pic24 */
 
-    if (bmi.iBitCount == 24)
-      {
-        pic24 = (unsigned char*) malloc(bmi.iWidth * bmi.iHeight * 3);
 
-        if (!pic24)
-          {
-            throw IceException(FNAME, M_NO_MEM);
-            fclose(fp);
-            return Image();
-          }
-      }
-    else
-      {
-        pic8 = (unsigned char*) malloc(bmi.iWidth * bmi.iHeight);
-
-        if (!pic8)
-          {
-            throw IceException(FNAME, M_NO_MEM);
-            fclose(fp);
-            return Image();
-          }
-      }
 
     ib.width = bmi.iWidth;
     ib.height = bmi.iHeight;
     ib.valuesize = 1;
     ib.byteorder = IB_LSB_FIRST;
     ib.intensity = true;
-    ib.can_delete = true;
     ib.packmethod = IB_RGB; // wird nur bei Farbbildern verwendet
+
+    if (bmi.iBitCount == 24)
+      {
+        ib.alloc(bmi.iWidth * bmi.iHeight * 3);
+      }
+    else
+      {
+        ib.alloc(bmi.iWidth * bmi.iHeight);
+      }
+
+    unsigned char* const data = ib.getData();
 
     /* load up the image */
     switch (bmi.iBitCount)
       {
       case 1:
-        rv = loadBMP1(fp, pic8, bmi.iWidth, bmi.iHeight);
+        rv = loadBMP1(fp, data, bmi.iWidth, bmi.iHeight);
         ib.maxval = 1;
         ib.planes = 1;
-        ib.data = pic8;
         break;
       case 4:
-        rv = loadBMP4(fp, pic8, bmi.iWidth, bmi.iHeight, bmi.iCompression);
+        rv = loadBMP4(fp, data, bmi.iWidth, bmi.iHeight, bmi.iCompression);
         ib.maxval = 15;
         ib.planes = 1;
-        ib.data = pic8;
         break;
       case 8:
-        rv = loadBMP8(fp, pic8, bmi.iWidth, bmi.iHeight, bmi.iCompression);
+        rv = loadBMP8(fp, data, bmi.iWidth, bmi.iHeight, bmi.iCompression);
         ib.maxval = 255;
         ib.planes = 1;
-        ib.data = pic8;
         break;
       case 24:
-        rv = loadBMP24(fp, pic24, bmi.iWidth, bmi.iHeight);
+        rv = loadBMP24(fp, data, bmi.iWidth, bmi.iHeight);
         ib.maxval = 255;
         ib.planes = 3;
-        ib.data = pic24;
         break;
       }
 
@@ -360,7 +324,7 @@ namespace ice
       {
         for (i = 0; i < bmi.iWidth * bmi.iHeight; i++)
           {
-            pic8[i] = r[pic8[i]];
+            data[i] = r[data[i]];
           }
       }
 
@@ -373,6 +337,7 @@ namespace ice
       }
 
     return Buffer2Image(ib, img, flag);
+
   }
   /*******************************************/
   int ReadBMPImg(const string& fname,
@@ -381,11 +346,9 @@ namespace ice
   {
     FILE*         fp;
     int          rv = 1;
-    unsigned char* pic24, *pic8;
     ibuffer ib;
 
     BMPInfo bmi;
-    pic8 = pic24 = (unsigned char*) NULL;
 
     string hname = fname;
 
@@ -402,64 +365,45 @@ namespace ice
         throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
-    /* create pic8 or pic24 */
-    if (bmi.iBitCount == 24)
-      {
-        pic24 = (unsigned char*) malloc(bmi.iWidth * bmi.iHeight * 3);
-
-        if (!pic24)
-          {
-            throw IceException(FNAME, M_NO_MEM);
-            fclose(fp);
-            return NO_MEM;
-          }
-      }
-    else
-      {
-        pic8 = (unsigned char*) malloc(bmi.iWidth * bmi.iHeight);
-
-        if (!pic8)
-          {
-            throw IceException(FNAME, M_NO_MEM);
-            fclose(fp);
-            return NO_MEM;
-          }
-      }
-
     ib.width = bmi.iWidth;
     ib.height = bmi.iHeight;
     ib.valuesize = 1;
     ib.byteorder = IB_LSB_FIRST;
     ib.intensity = true;
-    ib.can_delete = true;
     ib.packmethod = IB_RGB; // wird nur bei Farbbildern verwendet
+
+    if (bmi.iBitCount == 24)
+      {
+        ib.alloc(bmi.iWidth * bmi.iHeight * 3);
+      }
+    else
+      {
+        ib.alloc(bmi.iWidth * bmi.iHeight);
+      }
+    unsigned char* data = ib.getData();
 
     /* load up the image */
     switch (bmi.iBitCount)
       {
       case 1:
-        rv = loadBMP1(fp, pic8, bmi.iWidth, bmi.iHeight);
+        rv = loadBMP1(fp, data, bmi.iWidth, bmi.iHeight);
         ib.maxval = 1;
         ib.planes = 1;
-        ib.data = pic8;
         break;
       case 4:
-        rv = loadBMP4(fp, pic8, bmi.iWidth, bmi.iHeight, bmi.iCompression);
+        rv = loadBMP4(fp, data, bmi.iWidth, bmi.iHeight, bmi.iCompression);
         ib.maxval = 15;
         ib.planes = 1;
-        ib.data = pic8;
         break;
       case 8:
-        rv = loadBMP8(fp, pic8, bmi.iWidth, bmi.iHeight, bmi.iCompression);
+        rv = loadBMP8(fp, data, bmi.iWidth, bmi.iHeight, bmi.iCompression);
         ib.maxval = 255;
         ib.planes = 1;
-        ib.data = pic8;
         break;
       case 24:
-        rv = loadBMP24(fp, pic24, bmi.iWidth, bmi.iHeight);
+        rv = loadBMP24(fp, data, bmi.iWidth, bmi.iHeight);
         ib.maxval = 255;
         ib.planes = 3;
-        ib.data = pic24;
         break;
       }
 

@@ -18,6 +18,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 /*********************************************************************/
 /*  Bildarithmetik für Double-Bilder                                 */
 /*********************************************************************/
@@ -55,28 +56,27 @@ namespace ice
   {
     if (!p.isValid())
       throw IceException(FNAME, M_WRONG_IMAGED);
-    for (int y = 0; y < p.ysize; ++y)
-      for (int x = 0; x < p.xsize; ++x)
-        {
-          PutValD(p, x, y, val);
-        }
+    WindowWalker w(p);
+    for (w.init(); !w.ready(); w.next())
+      {
+        p.setPixel(w, val);
+      }
   }
 #undef FNAME
 
 #define FNAME "SmearImgD"
   void smearImgD(ImageD pn1, ImageD pn2, int sx, int sy)
   {
-
-    int dx, dy;
-    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, dx, dy));
+    int xSize, ySize;
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, xSize, ySize));
 
     int sx1 = sx / 2;
     int sy1 = sy / 2;
 
-    ImageD tmp = NewImgD(dx - sx + 1, dy);
+    ImageD tmp = NewImgD(xSize - sx + 1, ySize);
 
     // horizontale Filterung
-    for (int y = 0; y < dy; y++)   // alle zeilen
+    for (int y = 0; y < ySize; y++)   // alle zeilen
       {
         int y1 = y;
         int x1 = 0, x2 = 0;
@@ -88,7 +88,7 @@ namespace ice
             x2++;
           }
 
-        while (x2 < dx)
+        while (x2 < xSize)
           {
             gsum += GetValD(pn1, x2, y1);
             PutValD(tmp, x1, y, gsum);
@@ -100,12 +100,12 @@ namespace ice
 
     // vertikale Filterung
     for (int x = 0; x < sx1; x++)
-      for (int y = 0; y < dy; y++)
+      for (int y = 0; y < ySize; y++)
         {
           PutValD(pn2, x, y, 0);
         }
 
-    for (int x = 0; x < dx - sx + 1; x++)   // alle spalten
+    for (int x = 0; x < xSize - sx + 1; x++)   // alle spalten
       {
         int y1 = 0, y2 = 0;
         int yt = 0;
@@ -123,7 +123,7 @@ namespace ice
             yt++;
           }
 
-        while (y2 < dy)
+        while (y2 < ySize)
           {
             gsum += GetValD(tmp, x, y2);
             PutValD(pn2, x + sx1, yt, gsum);
@@ -133,15 +133,15 @@ namespace ice
             yt++;
           }
 
-        while (yt < dy)
+        while (yt < ySize)
           {
             PutValD(pn2, x + sx1, yt, 0);
             yt++;
           }
       }
 
-    for (int x = dx - sx1; x < dx; x++)
-      for (int y = 0; y < dy; y++)
+    for (int x = xSize - sx1; x < xSize; x++)
+      for (int y = 0; y < ySize; y++)
         {
           PutValD(pn2, x, y, 0);
         }
@@ -160,18 +160,16 @@ namespace ice
 #define FNAME "addImgD"
   void addImgD(ImageD pn1, ImageD pn2, ImageD pn3)
   {
-    int i, j, hx, hy;
-
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
       throw IceException(FNAME, M_WRONG_IMAGED);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3));
 
-    for (i = 0; i < hx; i++)
-      for (j = 0; j < hy; j++)
-        {
-          PutValD(pn3, i, j, GetValD(pn1, i, j) + GetValD(pn2, i, j));
-        }
+    WindowWalker w(pn1);
+    for (w.init(); !w.ready(); w.next())
+      {
+        pn3.setPixel(w, pn1.getPixel(w) + pn2.getPixel(w));
+      }
   }
 #undef FNAME
 
@@ -181,18 +179,16 @@ namespace ice
 #define FNAME "MulImgD"
   void mulImgD(ImageD pn1, ImageD pn2, ImageD pn3)
   {
-    int i, j, hx, hy;
-
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)) || (!IsImgD(pn3)))
       throw IceException(FNAME, M_WRONG_IMAGED);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3, hx, hy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, pn3));
 
-    for (i = 0; i < hx; i++)
-      for (j = 0; j < hy; j++)
-        {
-          PutValD(pn3, i, j, GetValD(pn1, i, j)*GetValD(pn2, i, j));
-        }
+    WindowWalker w(pn1);
+    for (w.init(); !w.ready(); w.next())
+      {
+        pn3.setPixel(w, pn1.getPixel(w) * pn2.getPixel(w));
+      }
   }
 #undef FNAME
 
@@ -202,19 +198,16 @@ namespace ice
 #define FNAME "MoveImgD"
   int MoveImgD(ImageD pn1, ImageD pn2)
   {
-    int i, j, hx, hy;
-
     if ((!IsImgD(pn1)) || (!IsImgD(pn2)))
       throw IceException(FNAME, M_WRONG_IMAGED);
 
-    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2, hx, hy));
+    RETURN_ERROR_IF_FAILED(MatchImgD(pn1, pn2));
 
-    for (i = 0; i < hx; i++)
-      for (j = 0; j < hy; j++)
-        {
-          PutValD(pn2, i, j, GetValD(pn1, i, j));
-        }
-
+    WindowWalker w(pn1);
+    for (w.init(); !w.ready(); w.next())
+      {
+        pn2.setPixel(w, pn1.getPixel(w));
+      }
     return OK;
   }
 #undef FNAME

@@ -122,8 +122,7 @@ namespace ice
     ib.valuesize = 1;
     ib.byteorder = IB_LSB_FIRST;
     ib.packmethod = IB_RGB;
-    ib.can_delete = true;
-    ib.data = (unsigned char*)malloc(ib.linelength * ib.height);
+    ib.alloc(ib.linelength * ib.height);
     ib.intensity = true;
 
     if (!IsImg(r))
@@ -157,6 +156,7 @@ namespace ice
         dy = -1;
       }
 
+    unsigned char* data = ib.getData();
     for (int y = y1; y != (y2 + dy); y += dy)
       {
         for (int x = 0; x < ib.width; x++)
@@ -183,9 +183,9 @@ namespace ice
                 break;
               }
 
-            ((unsigned char*)ib.data)[y * ib.linelength + x * 3] = rr;
-            ((unsigned char*)ib.data)[y * ib.linelength + x * 3 + 1] = gg;
-            ((unsigned char*)ib.data)[y * ib.linelength + x * 3 + 2] = bb;
+            data[y * ib.linelength + x * 3] = rr;
+            data[y * ib.linelength + x * 3 + 1] = gg;
+            data[y * ib.linelength + x * 3 + 2] = bb;
           }
       }
 
@@ -290,8 +290,7 @@ namespace ice
     ib.valuesize = 1;
     ib.byteorder = IB_LSB_FIRST;
     ib.packmethod = IB_RGB;
-    ib.can_delete = true;
-    ib.data = (unsigned char*)malloc(ib.linelength * ib.height);
+    ib.alloc(ib.linelength * ib.height);
     ib.intensity = true;
 
     if (dir != 0)
@@ -306,6 +305,8 @@ namespace ice
         y2 = 0;
         dy = -1;
       }
+
+    unsigned char* const data = ib.getData();
 
     for (int y = y1; y != (y2 + dy); y += dy)
       {
@@ -333,9 +334,9 @@ namespace ice
                 break;
               }
 
-            ((unsigned char*)ib.data)[y * ib.linelength + x * 3] = rr;
-            ((unsigned char*)ib.data)[y * ib.linelength + x * 3 + 1] = gg;
-            ((unsigned char*)ib.data)[y * ib.linelength + x * 3 + 2] = bb;
+            data[y * ib.linelength + x * 3] = rr;
+            data[y * ib.linelength + x * 3 + 1] = gg;
+            data[y * ib.linelength + x * 3 + 2] = bb;
           }
       }
 
@@ -345,7 +346,6 @@ namespace ice
       {
         img = NewImg(ib.width, ib.height, ib.maxval);
       }
-
     return Buffer2Image(ib, img, flag);
   }
 #undef FNAME

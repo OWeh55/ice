@@ -392,7 +392,6 @@ namespace ice
     ib.height = pi->ysize;
     ib.maxval = pi->maxval;
     ib.planes = 1;
-    ib.data = NULL;
 
     if (interactive)
       {
@@ -439,7 +438,6 @@ namespace ice
     ib.height = ys;
     ib.maxval = pr->maxval;
     ib.planes = 3;
-    ib.data = NULL;
     ib.byteorder = IB_LSB_FIRST;
 
     if (interactive)

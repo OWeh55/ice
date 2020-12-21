@@ -380,7 +380,6 @@ namespace ice
   {
     FILE*     fd;
 
-    unsigned char* pic;
     ibuffer ib;
     int xs, ys, bits, ch;
 
@@ -394,18 +393,6 @@ namespace ice
         return Image();
       }
 
-    int bsize = (bits / 8) * ch * xs * ys;
-    pic = (unsigned char*)malloc(bsize);
-
-    if (pic == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM);
-        fclose(fd);
-        return Image();
-      }
-
-    fread(pic, bsize, 1, fd);
-
     ib.width = xs;
     ib.height = ys;
     ib.valuesize = (bits / 8);
@@ -414,9 +401,11 @@ namespace ice
     ib.linelength = xs * (bits / 8);
     ib.byteorder = IB_MSB_FIRST;
     ib.intensity = true;
-    ib.can_delete = true;
     ib.packmethod = IB_RGB_PLANES; // wird nur bei Farbbildern verwendet
-    ib.data = pic;
+
+    int bsize = (bits / 8) * ch * xs * ys;
+    ib.alloc(bsize);
+    fread(ib.getData(), bsize, 1, fd);
 
     if (!IsImg(img))
       {
@@ -431,7 +420,6 @@ namespace ice
   {
     FILE*     fd;
 
-    unsigned char* pic;
     ibuffer ib;
     int xs, ys, bits, ch;
 
@@ -443,15 +431,6 @@ namespace ice
         throw IceException(FNAME, M_WRONG_FILETYPE);
       }
 
-    int bsize = (bits / 8) * ch * xs * ys;
-    pic = (unsigned char*)malloc(bsize);
-
-    if (pic == NULL)
-      {
-        throw IceException(FNAME, M_NO_MEM);
-      }
-
-    fread(pic, bsize, 1, fd);
 
     ib.width = xs;
     ib.height = ys;
@@ -461,9 +440,11 @@ namespace ice
     ib.linelength = xs * (bits / 8);
     ib.byteorder = IB_MSB_FIRST;
     ib.intensity = true;
-    ib.can_delete = true;
     ib.packmethod = IB_RGB_PLANES; // wird nur bei Farbbildern verwendet
-    ib.data = pic;
+
+    int bsize = (bits / 8) * ch * xs * ys;
+    ib.alloc(bsize);
+    fread(ib.getData(), bsize, 1, fd);
 
     if (!IsImg(imgr))
       {
