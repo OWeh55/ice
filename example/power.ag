@@ -1,0 +1,173 @@
+#include <fstream>
+#include <image.h>
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Leistungspektren von Bildern
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ para: file, optional, string, filename, Zu verarbeitendes Bild, "test_rgb.jpg"
+ %
+ opt: l, logarithmic, void, logarithmic, Logarithmische Darstellung, false
+ opt: L, logrange, double, logRange, Bereich für logarithmische Darstellung, 6
+ opt: o, output, string, outfilename, Bild-Ausgabe-Dateiname, ""
+ opt: d, nodisplay, void, noDisplay, Keine Anzeige der Bilder, false
+ opt: D, nodc, void, nodc, Gleichanteil ausblenden, false
+AppGen*/
+
+// programm zur berechnung und Auswertung von Leistungsspektren
+// von gegebenen bildern
+
+int sqr(int x)
+{
+  return x * x;
+}
+
+void radialSpectre(ImageD& spectrum, vector<double>& rSpectrum)
+{
+  int xc = spectrum.xsize / 2;
+  int yc = spectrum.ysize / 2;
+  int maxR = sqrt(sqr(xc) + sqr(yc));
+  vector<int> ct(maxR + 1, 0);
+  vector<double> sum(maxR + 1, 0.0);
+  WindowWalker w(spectrum);
+  for (w.init(); !w.ready(); w.next())
+    {
+      double val = spectrum.getPixel(w);
+      int d = sqrt(sqr(w.x - xc) + sqr(w.y - yc));
+      ct[d]++;
+      sum[d] += val;
+    }
+  rSpectrum.resize(maxR + 1);
+  for (unsigned int i = 0; i < sum.size(); i++)
+    {
+      if (ct[i] == 0)
+        {
+          cerr << i << " no value" << endl;
+          throw "no value";
+        }
+      rSpectrum[i] = sum[i] / ct[i];
+    }
+}
+
+void correctSpectre(ImageD& spectrum, vector<double>& rSpectrum,
+                    double a, double b)
+{
+  int xc = spectrum.xsize / 2;
+  int yc = spectrum.ysize / 2;
+  WindowWalker w(spectrum);
+  for (w.init(); !w.ready(); w.next())
+    {
+      double val = spectrum.getPixel(w);
+      int d = sqrt(sqr(w.x - xc) + sqr(w.y - yc));
+      if (d > 0)
+        {
+          double ist = rSpectrum[d];
+          double soll = exp10(a + b * log10(d));
+          spectrum.setPixel(w, val * soll / ist);
+        }
+    }
+}
+
+void Transform(const Image& i, ImageD& psp)
+{
+//  cout << kind << endl;
+  int xs = i.xsize;
+  int ys = i.ysize;
+  ImageD is;
+  is.create(xs, ys);
+
+  psp.create(xs, ys);
+
+  ConvImgImgD(i, is);
+
+  PowerSpectrumImgD(is, psp, MD_POWER);
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  bool display = !noDisplay;
+
+  ColorImage orig;
+  orig.read(filename);
+  if (display)
+    Show(ON, orig, filename);
+
+  int xs = orig.xsize;
+  int ys = orig.ysize;
+  ImageD spectre;
+  ImageD spectrePart;
+  Transform(orig.redImage(), spectre);
+  Transform(orig.greenImage(), spectrePart);
+  addImgD(spectre, spectrePart, spectre);
+  Transform(orig.blueImage(), spectrePart);
+  addImgD(spectre, spectrePart, spectre);
+
+  if (nodc)
+    {
+      int xc = xs / 2;
+      int yc = ys / 2;
+      spectre.setPixel(xc, yc, 0);
+    }
+
+  // display spectre
+  double max = 1e-33;
+  WindowWalker w(spectre);
+  for (w.init(); !w.ready(); w.next())
+    {
+      double v = spectre.getPixel(w);
+      if (v > max)
+        max = v;
+    }
+
+  Image spectreInt;
+  spectreInt.create(xs, ys, 255);
+  if (display)
+    Show(GRAY, spectreInt, "Power");
+  if (logarithmic)
+    {
+      for (w.init(); !w.ready(); w.next())
+        {
+          double relVal = spectre.getPixel(w) / max;
+          double logVal = -log10(relVal);
+          spectreInt.setPixelLimited(w, 255 - logVal * 255 / logRange);
+        }
+    }
+  else
+    {
+      for (w.init(); !w.ready(); w.next())
+        {
+          double relVal = spectre.getPixel(w) / max;
+          spectreInt.setPixelLimited(w, relVal * 255);
+        }
+    }
+  vector<double> rSpectrum;
+  radialSpectre(spectre, rSpectrum);
+  Polynom1o func;
+  func.FitInit();
+  for (unsigned int i = 1; i < rSpectrum.size() / 4; i++)
+    {
+      if (rSpectrum[i] > 0) // i>0 && \alpha_i >0
+        func.FitVal(log10(i), log10(rSpectrum[i]));
+    }
+  func.FitFinish();
+  double a, b;
+  func.getCoefficient(a, b);
+  if (b < 0)
+    cout << "log10(alpha)=" << a << " " << b << "*log10(i)" << endl;
+  else
+    cout << "log10(alpha)=" << a << " +" << b << "*log10(i)" << endl;
+  ofstream os("power.gp");
+  for (unsigned int i = 1; i < rSpectrum.size(); i++)
+    {
+      if (rSpectrum[i] > 0)
+        os << i << " " << log10(i) << " " << rSpectrum[i] << " " << log10(rSpectrum[i]) << endl;
+    }
+  // correctSpectre(spectre,rSpectrum,9,-2);
+
+  if (display)
+    GetChar();
+  return 0;
+}
