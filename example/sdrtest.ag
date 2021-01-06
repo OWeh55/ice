@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
       result.create(resultSize, resultSize);
       Image resultImage;
       resultImage.create(resultSize, resultSize, 255);
+      resultImage.set(0);
       Image resultMarker;
       resultMarker.create(resultSize, resultSize, 8);
       resultMarker.set(0);
@@ -93,7 +94,8 @@ int main(int argc, char* argv[])
           IPoint p;
           Window w;
 
-          cout << "--------------------------------------" << endl;
+	  if (verbose)
+	    cout << "--------------------------------------" << endl;
 
           leftMarker.set(0);
           Marker(5, pLeft, 2, 19, leftMarker);
@@ -141,10 +143,13 @@ int main(int argc, char* argv[])
             int nPoints = result.xsize * result.ysize;
             double val = sumAbs / nPoints;
             double val2 = sqrt(sum2 / nPoints);
-            cout << "peak height: " << maxval << endl;
-            cout << "mean absolute value: " << val << endl;
-            cout << "noise: " << val2 << endl;
-            cout << "rel. height: " << maxval / val2 << " " << maxval / val << endl;
+	    if (verbose)
+	      {
+		cout << "peak height: " << maxval << endl;
+		cout << "mean absolute value: " << val << endl;
+		cout << "noise: " << val2 << endl;
+		cout << "rel. height: " << maxval / val2 << " " << maxval / val << endl;
+	      }
           }
 
           resultMarker.set(0);
@@ -166,7 +171,7 @@ int main(int argc, char* argv[])
           Printf("Zielpunkt: %6.2f,%6.2f\n", pRight.x + dx, pRight.y + dy);
           Marker(3, right, 1, 15, rightMarker);
 
-          ConvImgDImg(result, resultImage);
+          ConvImgDImg(result, resultImage, ADAPTIVE, UNSIGNED);
           int key = GetChar();
           switch (key)
             {

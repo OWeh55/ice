@@ -88,6 +88,8 @@ namespace ice
         window2(xWindow);
         window2(yWindow);
         break;
+      default:
+        throw IceException("Sdr::setWindowMode", "wrong windowing type");
       }
   }
 
@@ -134,7 +136,7 @@ namespace ice
     // sdr formula
     double zr = r1 * r2 + i1 * i2;
     double zi = -i1 * r2 + r1 * i2;
-    // the symmetrised variant is more expensive to calculate
+    // the symmetrized variant is more expensive to calculate
     // double n = sqrt((r1 * r1 + i1 * i1) * (r2 * r2 + i2 * i2)) + beta;
     double n = (r1 * r1 + i1 * i1) + beta;
     rp = zr / n;

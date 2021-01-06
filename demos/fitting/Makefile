@@ -43,21 +43,6 @@ COPT := $(COPT) -fopenmp -DOPENMP
 LOPT := $(LOPT) -fopenmp
 endif
 
-ifdef VIDEOIO
-ifndef OSTYPE 
-# win32 (?)
-#ifeq ($(OSTYPE),msys)
-# warum auch immer, muessen wir "ws2_32" hier anlinken ...
-LIBS := $(LIBS)  -lavformat -lavcodec -lavutil -lswscale -lws2_32 -lz
-#-lbz2
-else
-# wir sind unter Linux
-LIBS := $(LIBS)  -lavformat -lavcodec -lavutil -lswscale -lz 
-#-lbz2
-endif
-COPT := $(COPT) -DVIDEOIO
-endif
-
 ifndef NOFFTW3
 LIBS := $(LIBS) -lfftw3 
 endif

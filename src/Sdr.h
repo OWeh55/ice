@@ -14,7 +14,7 @@
 //#include <image.h>
 
 using namespace ice;
-// optimated class for shift detection by restoration
+// optimized class for shift detection by restoration
 // uses fftw directly, avoids multiple copying of data
 namespace ice
 {

@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
   for (int i = 0; i < 256; i++)
     {
       int v = 255 - i / 2;
-      SetGreyColor(i, v, v, v);
+      SetGrayColor(i, v, v, v);
     }
 
   if (!imagefn.empty())
