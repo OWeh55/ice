@@ -66,11 +66,11 @@ int main(int argc, char* argv[])
       Am[r][c] = A[r][c];
 
   vector<double> bv(b.size());
-  for (int i = 0; i < b.size(); i++)
+  for (unsigned int i = 0; i < b.size(); i++)
     bv[i] = b[i];
 
   vector<double> xx(x.size());
-  for (int i = 0; i < x.size(); i++)
+  for (unsigned int i = 0; i < x.size(); i++)
     xx[i] = x[i];
 
   vector<double> xv = solveLinearEquation(Am, bv);

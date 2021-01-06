@@ -30,23 +30,23 @@ namespace ice
         {
           return classIt->second;
         }
-      std::cout << "undefined classname " << classname << std::endl;
-      throw ("undefined classname");
+      // std::cout << "undefined classname " << classname << std::endl;
+      throw IceException("ClassifierWithNames::classNr","classname undefined");
     }
 
     virtual Tlabel className(int i) const
     {
-      if (i >= 0 && i < clName.size())
+      if (i >= 0 && i < (int)clName.size())
         {
           return clName[i];
         }
-      throw ("undefined class");
+      throw IceException("ClassifierWithNames::classNr","class undefined");
     }
 
     virtual void init()
     {
-      assert(nLabels == clIndex.size());
-      assert(nLabels == clName.size());
+      assert(nLabels == (int)clIndex.size());
+      assert(nLabels == (int)clName.size());
       initialized = true;
       cl.Init(clIndex.size(), nFeatures);
     }

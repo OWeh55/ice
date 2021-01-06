@@ -46,8 +46,9 @@ int main(int argc, char* argv[])
   double na[9] = {1, 2, 7, 3, 6, 3, 3, 6, 10};
   double nb[3] = {32, 13, 28};
 
-  int rang, tnr, lsg, i, j;
-
+  int rang, tnr, i, j;
+  int lsg=0;
+  
   double s;
   double randmaxhalbe = (double)RAND_MAX / 2;
 
@@ -67,24 +68,16 @@ int main(int argc, char* argv[])
               for (j = 0; j < rang; j++) a[i * rang + j] = (double)rand() - randmaxhalbe;
             };
 
-
-          bool ok = true;
           try
             {
-              lsg = EquSys(a, b, rang, x);
-            }
-          catch (IceException& ex)
-            {
-              ok = false;
-            }
-
-          if (ok)
-            {
+              lsg=EquSys(a, b, rang, x);
               if (equprobe(rang, a, x, b) == 0) printf("*");
               else printf("!");
             }
-          else
-            printf("\nRang %d Test %d Fehlercode %d \n", rang, tnr, lsg);
+          catch (IceException& ex)
+            {
+	      printf("\nRang %d Test %d Fehler %d \n", rang, tnr,lsg);
+            }
         };
     };
 
@@ -96,11 +89,11 @@ int main(int argc, char* argv[])
 
   try
     {
-      lsg = EquSys(na, nb, 3, x);
+      lsg=EquSys(na, nb, 3, x);
     }
   catch (IceException& ex)
     {
-      printf("\n Fehlercode %d \n", lsg);
+      printf("\n Fehler %d \n",lsg);
     }
 
   if ((lsg == NUM_INSTABILITY) || (lsg == OK))

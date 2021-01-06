@@ -71,20 +71,13 @@ int main(int argc, char* argv[])
         imatrix[i][j] = vali;
       }
 
-  int mask[KSIZE * KSIZE]; // Maske für erode/dilate
   IMatrix maskm(KSIZE, KSIZE);
 
   for (int i = 0; i < KSIZE; ++i)
     for (int j = 0; j < KSIZE; j++)
       {
-        mask[i * KSIZE + j] = 0;
         maskm[j][i] = 0;
       }
-
-  mask[0] = 1;
-  mask[KSIZE - 1] = 1;
-  mask[(KSIZE - 1)*KSIZE] = 1;
-  mask[KSIZE * KSIZE - 1] = 1;
 
   maskm[0][0] = 1;
   maskm[KSIZE - 1][0] = 1;

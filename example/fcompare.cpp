@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
   int stshiftmax = 0;
   int stshift = 0;
   int fac = 1;
-  int delay = 0;
+  int delay=0;
   int first = 0;
   int last = -1;
   int cachesize = 200;

@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
       {
         m1.setPixel(x, y, cl.Classify(vector<double> {(double)x, (double)y}) + 3);
       }
-#if 0
+#if 1
   for (int s = 0; s < nSamples; s++)
     {
       int x = features[s][0];
