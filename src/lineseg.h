@@ -25,6 +25,8 @@
 #ifndef LINESEG_H
 #define LINESEG_H
 
+#include <algorithm>
+
 #include "Vector.h"
 #include "base.h"
 #include "geo_ob.h"
@@ -218,36 +220,24 @@ namespace ice
       // tested ob der Bereich my1..my2 Teile von *this umfasst
       // wenn ja: begrenzt my1..my2 auf den Bereich von *this
       if (my1 > my2)
-        {
-          double myh = my1;
-          my1 = my2;
-          my2 = myh;
-        }
+        std::swap(my1, my2);
 
       if (type & begin_l)
         {
           if (my2 < 0.0)
-            {
-              return false;
-            }
+            return false;
 
           if (my1 < 0.0)
-            {
-              my1 = 0.0;
-            }
+            my1 = 0.0;
         }
 
       if (type & end_l)
         {
           if (my1 > 1.0)
-            {
-              return false;
-            }
+            return false;
 
           if (my2 > 1.0)
-            {
-              my2 = 1.0;
-            }
+            my2 = 1.0;
         }
 
       return true;
@@ -263,9 +253,7 @@ namespace ice
     virtual Point Normal() const;
 
   protected:
-
     Point dp; // vector from start (GeoObject p) to end
-
     int type;
   };
 }

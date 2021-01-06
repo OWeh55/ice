@@ -100,7 +100,6 @@ base_3\
 base_4\
 boxen\
 camtest\
-chkdisplay\
 class\
 classname\
 classrgb\
