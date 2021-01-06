@@ -123,7 +123,7 @@ namespace ice
 #define FNAME "ConvImgDImg"
   void convImgDImg(const ImageD& input, const Image& output, double factor, double offset)
   {
-    //    cout << factor << " " << offset << endl;
+    // cout << factor << " " << offset << endl;
     int xs = input.xsize;
     int ys = input.ysize;
 
@@ -170,8 +170,9 @@ namespace ice
           }
         else
           {
+            //  cout << inp.maxValue() << " .. " << inp.minValue() << endl;
             double factor = outmaxval / (inp.maxValue() - inp.minValue());
-            convImgDImg(input, out, factor, -inp.minValue() / factor);
+            convImgDImg(input, out, factor, -inp.minValue() * factor);
           }
       }
   }

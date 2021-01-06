@@ -89,11 +89,15 @@ namespace ice
   }
 #undef FNAME
 
-  /* Kopieren Image ---> ImageD */
+  /* convert Image ---> ImageD */
+  void convImgImgD(const Image& inp, ImageD& out,
+                   double factor, double offset);
   void ConvImgImgD(const Image& imgs, ImageD& imgd,
                    int mode = RAW, int sign = UNSIGNED);
 
-  /* Kopieren ImageD ---> Image */
+  /* convert ImageD ---> Image */
+  void convImgDImg(const ImageD& input, const Image& output,
+                   double factor, double offset);
   void ConvImgDImg(const ImageD& imgs, const Image& imgd,
                    int mode = ADAPTIVE, int sign = UNSIGNED);
 
@@ -119,11 +123,11 @@ namespace ice
 
   inline   void PutValD(const ImageD& i, IPoint p, double val)
   {
-    PutValD(i, p.x, p.y, val);
+    i.setPixel(p, val);
   }
   inline   double GetValD(const ImageD& i, IPoint p)
   {
-    return GetValD(i, p.x, p.y);
+    return i.getPixel(p);
   }
 
 //
