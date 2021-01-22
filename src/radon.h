@@ -33,7 +33,7 @@ namespace ice
 {
 
   void RadonImg(Image& srcimg, Image& radonimg);
-  void InvRadonImg(Image& radonimg, Image& resimg, int fmax = -1);
+  void InvRadonImg(Image& radonimg, Image& resimg, int fmax = -1, int lines=-1, bool filtered=true);
 
   class RadonCTrafo
   {
@@ -55,7 +55,7 @@ namespace ice
   public:
     RadonCTrafo(int xsp, int ysp, // Größe Quellbild (nicht radon)
                 int xrp, int yrp // Größe Radonbild
-               ):
+		):
       xs(xsp), ys(ysp), xr(xrp), yr(yrp),
       diag(Distance(xsp, ysp)), alphafac(M_PI / yr), pfac(diag / xr),
       p0(-0.5 * diag), xm(0.5 * xsp), ym(0.5 * ysp)

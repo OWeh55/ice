@@ -49,18 +49,18 @@ int main(int argc, char* argv[])
       Image leftMarker;
       leftMarker.create(leftImage.xsize, leftImage.ysize, 16);
       leftMarker.set(0);
-
+      
       Image rightImage;
       rightImage.read(imgfile2);
       Image rightMarker;
       rightMarker.create(rightImage.xsize, rightImage.ysize, 16);
       rightMarker.set(0);
-
+      
       Show(OVERLAY, leftImage, leftMarker, "left");
       Zoom(leftImage, 0);
       Show(OVERLAY, rightImage, rightMarker, "right");
       Zoom(rightImage, 0);
-
+      
       int resultSize = sdrSize * sdrFactor;
       ImageD result;
       result.create(resultSize, resultSize);

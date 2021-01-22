@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /* radon transformation and inversion
- * Wolfgang Ortmann, 11
+ * Wolfgang Ortmann, 2011,  2021
  */
 
 #include <math.h>
@@ -51,47 +51,45 @@ namespace ice
 
     unsigned int xs = srcimg->xsize;
     unsigned int ys = srcimg->ysize;
-
+    
     int imgtype = srcimg->ImageType();
-
+    
     const void* datap = srcimg->getDataPtr();
 
-    // ImageBase *imgp = srcimg.Img();
 #ifdef OPENMP
-    #pragma omp parallel shared(srcimg) firstprivate(tr)
+#pragma omp parallel shared(srcimg) firstprivate(tr)
 #endif
     {
 #ifdef OPENMP
-      #pragma omp for schedule(dynamic,20)
+#pragma omp for schedule(dynamic,20)
 #endif
-
+      
       for (int y = 0; y < radonimg->ysize; y++)
         {
           tr.setYR(y);
-
+	  
           for (int x = 0; x < radonimg->xsize; x++)
             {
               int sum = 0;
               tr.setXR(x);
-              // Parameter für optimierte Schleife entlang scan-linie
-              double xtf, ytf; // Startpunkt
+              // parameter for loop over scan-linie
+              double xtf, ytf; // initial point
               tr.getXY0(xtf, ytf);
-              double dxtf, dytf; // Schrittweite
+              double dxtf, dytf; // step
               tr.getDXY(sres, dxtf, dytf);
-              int snumber = tr.getStepNumber(sres); // Zahl der Schritte
-#if 1
-
+              int nSteps = tr.getStepNumber(sres);
+#if 0
               switch (imgtype)
                 {
                 case 1:
                 {
                   const PixelType1** sourcep = (const PixelType1**)datap;
 
-                  for (int i = 0; i < snumber; i++)
+                  for (int i = 0; i < nSteps; i++)
                     {
                       int xt = RoundInt(xtf);
                       int yt = RoundInt(ytf);
-
+		      
                       if ((unsigned int)xt < xs && (unsigned int)yt < ys)
                         {
                           sum += sourcep[yt][xt];
@@ -106,7 +104,7 @@ namespace ice
                 {
                   const PixelType2** sourcep = (const PixelType2**)datap;
 
-                  for (int i = 0; i < snumber; i++)
+                  for (int i = 0; i < nSteps; i++)
                     {
                       int xt = RoundInt(xtf);
                       int yt = RoundInt(ytf);
@@ -125,7 +123,7 @@ namespace ice
                 {
                   const PixelType3** sourcep = (const PixelType3**)datap;
 
-                  for (int i = 0; i < snumber; i++)
+                  for (int i = 0; i < nSteps; i++)
                     {
                       int xt = RoundInt(xtf);
                       int yt = RoundInt(ytf);
@@ -141,25 +139,22 @@ namespace ice
                 }
                 break;
                 default:
-                {
-                  for (int i = 0; i < snumber; i++)
-                    {
-                      int xt = RoundInt(xtf);
-                      int yt = RoundInt(ytf);
-
-                      if ((unsigned int)xt < xs && (unsigned int)yt < ys)
-                        {
-                          sum += srcimg.getPixelUnchecked(xt, yt);
-                        }
-
-                      xtf += dxtf;
-                      ytf += dytf;
-                    }
+		  {
+		    for (int i = 0; i < nSteps; i++)
+		      {
+			int xt = RoundInt(xtf);
+			int yt = RoundInt(ytf);
+			
+			if ((unsigned int)xt < xs && (unsigned int)yt < ys)
+			  sum += srcimg.getPixelUnchecked(xt, yt);
+			
+			xtf += dxtf;
+			ytf += dytf;
+		      }
+		  }
                 }
-                }
-
+	      
 #else
-
               for (double tp = tr.getMinPar(); tp < tr.getMaxPar(); tp += sres)
                 {
                   int xt, yt;
@@ -167,7 +162,7 @@ namespace ice
                   if (tr.getXYS(tp, xt, yt))
                     {
                       // sum += GetValUnchecked(srcimg,xt,yt);
-                      sum += imgp->getPixelUnchecked(xt, yt);
+                      sum += srcimg.getPixelUnchecked(xt, yt);
                     }
                 }
 
@@ -175,70 +170,60 @@ namespace ice
 
               sum *= sres;
 
-              if (sum > radonimg.maxval)
-                {
-                  sum = radonimg.maxval;
-                }
-
-              PutVal(radonimg, x, y, RoundInt(sum));
+              radonimg.setPixelLimited(x, y, RoundInt(sum));
             }
         }
     }
   }
 
-  void InvRadonImg(Image& radonimg, Image& resimg, int fmax)
+  void InvRadonImg(Image& radonimg, Image& resimg, int fmax, int lines, bool filtered)
   {
-    // Invertierung Radon durch gefilterte Rückprojektion
+    // invert Radon by filtered back projection
     RadonCTrafo tr(resimg->xsize, resimg->ysize,
                    radonimg->xsize, radonimg->ysize);
-
+    
     if (fmax < 0)
       {
         fmax = radonimg->xsize;
       }
-
-    ImageD akku = NewImgD(resimg->xsize, resimg->ysize);
-    setImgD(akku, 0.0);
-
+    
+    ImageD akku;
+    akku.create(resimg->xsize, resimg->ysize);
+    akku.set(0.0);
+    if (lines<0)
+      lines=radonimg.ysize;
     //#pragma omp parallel for firstprivate(tr) schedule(dynamic,20)
-    for (int yr = 0; yr < radonimg->ysize; yr++)
+    for (int yr = 0; yr < lines; yr++)
       {
         tr.setYR(yr);
         Vector zeile(radonimg->xsize);
 
         for (int i = 0; i < radonimg->xsize; i++)
-          {
-            zeile[i] = GetVal(radonimg, i, yr);
-          }
-
+	  zeile[i] = radonimg.getPixel(i, yr);
+	
         //#pragma omp critical
+	if (filtered)
         {
           Hartley(zeile);
-
+	  
           // Filterung der Zeile
           for (int i = 0; i < zeile.Size(); i++)
             {
               double f = zeile.size() - i;
-
+	      
               if (i < f)
-                {
-                  f = i;
-                }
-
+		f = i;
+	      
               if (f <= fmax)
-                {
-                  zeile[i] = zeile[i] * f;
-                }
+		zeile[i] = zeile[i] * f;
               else
-                {
-                  zeile[i] = 0.0;
-                }
+		zeile[i] = 0.0;
             }
-
+	  
           //      cout << endl;
           Hartley(zeile);
         }
-        // Akkumulation
+        // akkumulation
         // #pragma omp critical
         {
           for (int y = 0; y < resimg->ysize; y++)
@@ -248,14 +233,14 @@ namespace ice
 
                 if (xr >= 0 && xr < radonimg->xsize)
                   {
-                    PutValD(akku, x, y, GetValD(akku, x, y) + zeile[xr]);
+                    akku.setPixel(x, y, akku.getPixel(x, y) + zeile[xr]);
                   }
               }
         }
         // ConvImgDImg(akku,debug);
         // GetChar();
       }
-
+    
     ConvImgDImg(akku, resimg);
   }
 }
