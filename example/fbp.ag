@@ -1,0 +1,69 @@
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Demo filtered back projection
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ para: file, optional, string, filename, Zu verarbeitendes Bild, ""
+ %
+ 
+AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  Image test;
+  double rad=500;
+  Point center(rad+1,rad+1);
+  if (!filename.empty())
+    {
+      Image src;
+      src.read(filename);
+      rad=std::min(src.xsize,src.ysize) / 2;
+      test.create(rad*2+2,rad*2+2,src.maxval);
+      //      test.set(src.maxval/2);
+      test.set(0);
+      center=Point(rad+1,rad+1);
+      WindowWalker w(test);
+      for (w.init();!w.ready();w.next())
+	{
+	  if (((Point)w-center).length()<rad)
+	    test.setPixel(w,src.getPixelClipped(w));
+	}
+    }
+  else
+    {
+      test.create(rad*2+2,rad*2+2,255);
+      test.set(0);
+      Text("Hallo", rad-200,rad-20, 200, 4, test);
+#if 0
+      test.setPixel(rad,rad,255);
+      test.setPixel(rad+1,rad,255);
+      test.setPixel(rad,rad+1,255);
+      test.setPixel(rad+1,rad+1,255);
+#endif
+    }
+  Show(ON,test);
+  //
+  Image radon;
+  radon.create(rad*2, 720, 255*1000);
+  Show(GRAY,radon);
+  double ta=TimeD();
+  RadonImg(test,radon);
+  cout << "Radon: "<< TimeD()-ta << endl;
+
+  Image rest;
+  rest.create(test);
+  Show(GRAY,rest);
+  //  for (int lines=1;lines<radon.ysize;lines+=(radon.ysize/100))
+  //   InvRadonImg(radon, rest, -1, lines);
+  InvRadonImg(radon, rest, -1, -1, false);
+  GetChar();
+  InvRadonImg(radon, rest, -1, -1, true);
+  GetChar();  
+  return 0;
+}
+
