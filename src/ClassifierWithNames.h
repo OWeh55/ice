@@ -31,7 +31,7 @@ namespace ice
           return classIt->second;
         }
       // std::cout << "undefined classname " << classname << std::endl;
-      throw IceException("ClassifierWithNames::classNr","classname undefined");
+      throw IceException("ClassifierWithNames::classNr", "classname undefined");
     }
 
     virtual Tlabel className(int i) const
@@ -40,7 +40,7 @@ namespace ice
         {
           return clName[i];
         }
-      throw IceException("ClassifierWithNames::classNr","class undefined");
+      throw IceException("ClassifierWithNames::classNr", "class undefined");
     }
 
     virtual void init()

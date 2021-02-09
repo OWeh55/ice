@@ -92,7 +92,7 @@ namespace ice
     void add(const Moments& m);
     void add(double m[15]);
 
-    Point Centre() const;
+    Point Center() const;
     double& operator()(int z, int s);   // moments
     const double& operator()(int z, int s) const;
 

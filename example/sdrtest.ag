@@ -49,18 +49,18 @@ int main(int argc, char* argv[])
       Image leftMarker;
       leftMarker.create(leftImage.xsize, leftImage.ysize, 16);
       leftMarker.set(0);
-      
+
       Image rightImage;
       rightImage.read(imgfile2);
       Image rightMarker;
       rightMarker.create(rightImage.xsize, rightImage.ysize, 16);
       rightMarker.set(0);
-      
+
       Show(OVERLAY, leftImage, leftMarker, "left");
       Zoom(leftImage, 0);
       Show(OVERLAY, rightImage, rightMarker, "right");
       Zoom(rightImage, 0);
-      
+
       int resultSize = sdrSize * sdrFactor;
       ImageD result;
       result.create(resultSize, resultSize);
@@ -94,8 +94,8 @@ int main(int argc, char* argv[])
           IPoint p;
           Window w;
 
-	  if (verbose)
-	    cout << "--------------------------------------" << endl;
+          if (verbose)
+            cout << "--------------------------------------" << endl;
 
           leftMarker.set(0);
           Marker(5, pLeft, 2, 19, leftMarker);
@@ -143,13 +143,13 @@ int main(int argc, char* argv[])
             int nPoints = result.xsize * result.ysize;
             double val = sumAbs / nPoints;
             double val2 = sqrt(sum2 / nPoints);
-	    if (verbose)
-	      {
-		cout << "peak height: " << maxval << endl;
-		cout << "mean absolute value: " << val << endl;
-		cout << "noise: " << val2 << endl;
-		cout << "rel. height: " << maxval / val2 << " " << maxval / val << endl;
-	      }
+            if (verbose)
+              {
+                cout << "peak height: " << maxval << endl;
+                cout << "mean absolute value: " << val << endl;
+                cout << "noise: " << val2 << endl;
+                cout << "rel. height: " << maxval / val2 << " " << maxval / val << endl;
+              }
           }
 
           resultMarker.set(0);

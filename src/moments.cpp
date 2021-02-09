@@ -99,8 +99,8 @@ namespace ice
     return res;
   }
 
-#define FNAME "Moments::Centre"
-  Point Moments::Centre() const
+#define FNAME "Moments::Center"
+  Point Moments::Center() const
   {
     if (mom[i00] == 0.0)
       throw IceException(FNAME, M_NOT_INITIALIZED);
@@ -112,7 +112,7 @@ namespace ice
   double& Moments::operator()(int xi, int yi)
   {
     int s = xi + yi;
-    int os[] = {0, 1, 3, 6, 10};
+    const int os[] = {0, 1, 3, 6, 10};
 
     if ((xi < 0) || (yi < 0) || (s > 4))
       throw IceException(FNAME, M_WRONG_INDEX);
@@ -123,7 +123,7 @@ namespace ice
   const double& Moments::operator()(int xi, int yi) const
   {
     int s = xi + yi;
-    int os[] = {0, 1, 3, 6, 10};
+    const int os[] = {0, 1, 3, 6, 10};
 
     if ((xi < 0) || (yi < 0) || (s > 4))
       throw IceException(FNAME, M_WRONG_INDEX);
@@ -134,22 +134,14 @@ namespace ice
 #define FNAME "Moments::Add"
   void Moments::add(const Moments& m)
   {
-    int i;
-
-    for (i = 0; i < 15; i++)
-      {
-        mom[i] += m.mom[i];
-      }
+    for (int i = 0; i < 15; i++)
+      mom[i] += m.mom[i];
   }
 
   void Moments::add(double m[15])
   {
-    int i;
-
-    for (i = 0; i < 15; i++)
-      {
-        mom[i] += m[i];
-      }
+    for (int i = 0; i < 15; i++)
+      mom[i] += m[i];
   }
 
   void Moments::add(Point p, double val)
@@ -286,6 +278,7 @@ namespace ice
     add(m);
   }
 #undef FNAME
+
 #define FNAME "Moments::CentralMoments"
   Moments Moments::CentralMoments() const
   {
@@ -298,6 +291,7 @@ namespace ice
     RETHROW;
   }
 #undef FNAME
+
 #define FNAME "Moments::XShear"
   Moments Moments::XShear(double a) const
   {
@@ -347,9 +341,7 @@ namespace ice
   double Moments::Diff(const Moments& m) const
   {
     double d = 0.0;
-    int i;
-
-    for (i = 0; i < 15; i++)
+    for (int i = 0; i < 15; i++)
       {
         double dd = mom[i] - m.mom[i];
         d += dd * dd;
@@ -364,9 +356,7 @@ namespace ice
     Vector res(4);
     double flu[4];
     AffinAlgebraicInvar(mom, flu);
-    int i;
-
-    for (i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
       {
         res[i] = flu[i];
       }
@@ -395,9 +385,7 @@ namespace ice
     Vector res(7);
     double hu[7];
     AffinHuInvar(mom, hu, trans);
-    int i;
-
-    for (i = 0; i < 7; i++)
+    for (int i = 0; i < 7; i++)
       {
         res[i] = hu[i];
       }
@@ -543,10 +531,8 @@ namespace ice
       }
 
     Matrix trm(3, 3);
-    int i, j;
-
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
         {
           trm[i][j] = trd[i][j];
         }
@@ -573,10 +559,9 @@ namespace ice
       throw IceException(FNAME, M_TRAFO_NOTAFFINE);
 
     double trd[3][3];
-    int i, j;
 
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
         {
           trd[i][j] = trm[i][j];
         }
