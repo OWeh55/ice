@@ -1,0 +1,118 @@
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Demo filtered back projection
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ para: file, optional, string, filename, Zu verarbeitendes Bild, ""
+ opt: o, outfiles, string, outfilename, Ausgabe-Dateiname, ""
+ opt: p, phiresolution, int, phiResolution, Auflösung phi, 360
+ opt: s, steps, void, showSteps, Zeige Zwischenschritte, false
+ opt: w, waitsteps, void, waitSteps, Warte bei Zwischenschritten, false
+ opt: u, unfiltered, void, showUnfiltered, Zeige auch unfiltered back projection, false
+ opt: h, help, usage, help, Hilfe
+AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  Image test;
+  double rad = 500;
+  Point center(rad + 1, rad + 1);
+  if (!filename.empty())
+    {
+      Image src;
+      src.read(filename);
+      rad = std::min(src.xsize, src.ysize) / 2;
+      test.create(rad * 2 + 2, rad * 2 + 2, src.maxval);
+      //      test.set(src.maxval/2);
+      test.set(0);
+      center = Point(rad + 1, rad + 1);
+      WindowWalker w(test);
+      for (w.init(); !w.ready(); w.next())
+        {
+          if (((Point)w - center).length() < rad)
+            test.setPixel(w, src.getPixelClipped(w));
+        }
+    }
+  else
+    {
+      test.create(rad * 2 + 2, rad * 2 + 2, 255);
+      test.set(0);
+      Text("H", rad - 200, rad - 200, 200, 3, test);
+      Text("a", rad - 200, rad - 100, 200, 3, test);
+      Text("l", rad - 200, rad - 0, 200, 3, test);
+      Text("l", rad - 200, rad + 100, 200, 3, test);
+      Text("o", rad - 200, rad + 200, 200, 3, test);
+#if 0
+      test.setPixel(rad, rad, 255);
+      test.setPixel(rad + 1, rad, 255);
+      test.setPixel(rad, rad + 1, 255);
+      test.setPixel(rad + 1, rad + 1, 255);
+#endif
+    }
+  Show(ON, test);
+  if (!outfilename.empty())
+    test.write(outfilename + "_1.jpg");
+  //
+  Image radon;
+  int rxs = rad * 2;
+  int rys = phiResolution;
+  radon.create(rxs, rys, 255 * rad * 2);
+  Show(GRAY, radon);
+  //  double ta = TimeD();
+  RadonImg(test, radon);
+  if (!outfilename.empty())
+    radon.write(outfilename + "_2.jpg");
+  //  cout << "Radon: "<< TimeD()-ta << endl;
+
+  Image rest;
+  rest.create(test);
+  Show(GRAY, rest);
+  if (showUnfiltered)
+    {
+      if (showSteps)
+        {
+          InvRadonImg(radon, rest, -1, 1, false);
+          if (!outfilename.empty())
+            rest.write(outfilename + "_3a.jpg");
+          GetChar();
+          InvRadonImg(radon, rest, -1, 0.1 * rys, false);
+          if (!outfilename.empty())
+            rest.write(outfilename + "_3b.jpg");
+          GetChar();
+          InvRadonImg(radon, rest, -1, 0.5 * rys, false);
+          if (!outfilename.empty())
+            rest.write(outfilename + "_3c.jpg");
+          GetChar();
+        }
+      InvRadonImg(radon, rest, -1, -1, false);
+      if (!outfilename.empty())
+        rest.write(outfilename + "_3.jpg");
+      GetChar();
+    }
+  if (showSteps)
+    {
+      InvRadonImg(radon, rest, -1, 1, true);
+      if (!outfilename.empty())
+        rest.write(outfilename + "_4a.jpg");
+      GetChar();
+      InvRadonImg(radon, rest, -1, 0.1 * rys, true);
+      if (!outfilename.empty())
+        rest.write(outfilename + "_4b.jpg");
+      GetChar();
+      InvRadonImg(radon, rest, -1, 0.5 * rys, true);
+      if (!outfilename.empty())
+        rest.write(outfilename + "_4c.jpg");
+      GetChar();
+    }
+  InvRadonImg(radon, rest, -1, -1, true);
+  if (!outfilename.empty())
+    rest.write(outfilename + "_4.jpg");
+  GetChar();
+  return 0;
+}
+
