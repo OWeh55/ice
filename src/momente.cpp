@@ -76,11 +76,11 @@ namespace ice
     m[8] += (x1 * (y1 * (3 * y1 + 2 * y2) + y22) + x2 * (y12 + y2 * (2 * y1 + 3 * y2))) * a;
     m[9] += (y12 + y22) * (y1 + y2) * a;
     m[10] += ((((x1 + x2) * x1 + x22) * x1 + x22 * x2) * x1 + x22 * x22) * a;
-    m[11] += ((y1 + 4 * y2) * x22 * x2 + (2 * y1 + 3 * y2) * x1 * x22 + \
+    m[11] += ((y1 + 4 * y2) * x22 * x2 + (2 * y1 + 3 * y2) * x1 * x22 +
               (3 * y1 + 2 * y2) * x12 * x2 + (4 * y1 + y2) * x12 * x1) * a;
-    m[12] += ((2 * y12 + 6 * y1 * y2 + 12 * y22) * x22 + (6 * (y12 + y22) + 8 * y1 * y2) * x1 * x2 + \
+    m[12] += ((2 * y12 + 6 * y1 * y2 + 12 * y22) * x22 + (6 * (y12 + y22) + 8 * y1 * y2) * x1 * x2 +
               (12 * y12 + 6 * y1 * y2 + 2 * y22) * x12) * a;
-    m[13] += ((x1 + 4 * x2) * y22 * y2 + (2 * x1 + 3 * x2) * y1 * y22 + \
+    m[13] += ((x1 + 4 * x2) * y22 * y2 + (2 * x1 + 3 * x2) * y1 * y22 +
               (3 * x1 + 2 * x2) * y12 * y2 + (4 * x1 + x2) * y12 * y1) * a;
     m[14] += ((((y1 + y2) * y1 + y22) * y1 + y22 * y2) * y1 + y22 * y22) * a;
     // m[15]+=((((x1+x2)*x1+x22)*x1+x22*x2)*x1+x22*x22)*x1+x22*x22*x2;
@@ -98,13 +98,13 @@ namespace ice
   static void CorrectMoments(double m[15])
   {
     m[1]  /= 3;
-    m[2] /= 3;
+    m[2]  /= 3;
     m[3]  /= 6;
-    m[4] /= 12;
-    m[5] /= 6;
+    m[4]  /= 12;
+    m[5]  /= 6;
     m[6]  /= 10;
-    m[7] /= 30;
-    m[8] /= 30;
+    m[7]  /= 30;
+    m[8]  /= 30;
     m[9]  /= 10;
     m[10] /= 15;
     m[11] /= 60;
@@ -114,14 +114,12 @@ namespace ice
     //  m[15]/=21; m[16]/=105; m[17]/=420; m[18]/=420; m[19]/=105; m[20]/=21;
   }
 
-  int MomentPolygon(PointList pl, double m[15], double centre[2])
+  int MomentPolygon(PointList pl, double m[15], double center[2])
   {
     int points = pl->lng;
 
     for (int i = 0; i < 15; i++)
-      {
-        m[i] = 0;
-      }
+      m[i] = 0;
 
     for (int i = 0; i < pl->lng; i++)
       {
@@ -142,20 +140,18 @@ namespace ice
         return ERROR;
       }
 
-    centre[0] = m[1] / m[i00];
-    centre[1] = m[2] / m[i00];
+    center[0] = m[1] / m[i00];
+    center[1] = m[2] / m[i00];
     return OK;
   }
 
   int MomentPolygon(const std::vector<Point>& pl,
-                    double m[15], double centre[2])
+                    double m[15], double center[2])
   {
     int points = pl.size();
 
     for (int i = 0; i < 15; i++)
-      {
-        m[i] = 0;
-      }
+      m[i] = 0;
 
     for (int i = 0; i < points; i++)
       {
@@ -170,12 +166,12 @@ namespace ice
         return ERROR;
       }
 
-    centre[0] = m[1] / m[i00];
-    centre[1] = m[2] / m[i00];
+    center[0] = m[1] / m[i00];
+    center[1] = m[2] / m[i00];
     return OK;
   }
 
-  int MomentPolygon(const Matrix& pl, double m[15], double centre[2])
+  int MomentPolygon(const Matrix& pl, double m[15], double center[2])
   {
     int points = pl.rows();
 
@@ -203,8 +199,8 @@ namespace ice
         return ERROR;
       }
 
-    centre[0] = m[1] / m[i00];
-    centre[1] = m[2] / m[i00];
+    center[0] = m[1] / m[i00];
+    center[1] = m[2] / m[i00];
     return OK;
   }
 #undef FNAME
@@ -213,7 +209,7 @@ namespace ice
 // ein Polygon als Ausschnitt einer Punktliste
 //**********************************************
 #define FNAME "PointListMoment"
-  int PointListMoment(PointList pl, int a1, int a2, double m[15], double centre[2])
+  int PointListMoment(PointList pl, int a1, int a2, double m[15], double center[2])
   {
     int i, j, a3;
     double x1, y1, x2, y2;
@@ -265,8 +261,8 @@ namespace ice
         return ERROR;
       }
 
-    centre[0] = m[1] / m[i00];
-    centre[1] = m[2] / m[i00];
+    center[0] = m[1] / m[i00];
+    center[1] = m[2] / m[i00];
     return OK;
   }
 #undef FNAME

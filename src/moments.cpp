@@ -492,7 +492,10 @@ namespace ice
         double momres[15];
         double c, s;
         NormalizeMomentsRotation(mom, momres, c, s);
-        phi = atan2(s, c);
+        if (c == 1.0 && s == 1.0) // rotation is undetermined
+          phi = 0;
+        else
+          phi = atan2(s, c);
         return Moments(momres);
       }
     RETHROW;

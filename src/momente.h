@@ -38,11 +38,11 @@
 namespace ice
 {
 // calculate moments
-  int MomentPolygon(const Matrix& p, double m[15], double centre[2]);
-  int MomentPolygon(PointList p, double m[15], double centre[2]);
-  int MomentPolygon(const std::vector<Point>& pl, double m[15], double centre[2]);
+  int MomentPolygon(const Matrix& p, double m[15], double center[2]);
+  int MomentPolygon(PointList p, double m[15], double center[2]);
+  int MomentPolygon(const std::vector<Point>& pl, double m[15], double center[2]);
 
-  int PointListMoment(PointList pl, int a1, int a2, double m[15], double centre[2]);
+  int PointListMoment(PointList pl, int a1, int a2, double m[15], double center[2]);
 
 // transform moments
   int TranslateMoments(const double m1[15], double x, double y, double m2[15]);
@@ -93,7 +93,7 @@ namespace ice
   int PosSign(const double ms[15], double md[15]);
   int PosSign(double ms[15]);
 
-// Abkürzungen für die Indizes der Momente
+  // Abkürzungen für die Indizes der Momente
 #define i00 (0)
 #define i10 (1)
 #define i01 (2)

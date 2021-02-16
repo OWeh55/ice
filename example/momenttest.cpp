@@ -9,11 +9,9 @@ using namespace std;
 // Ausgabe der Momente
 void pmom(const Moments& m)
 {
-  int i, j;
-
-  for (j = 0; j < 5; j++)
+  for (int j = 0; j < 5; j++)
     {
-      for (i = 0; i < 5 - j; i++)
+      for (int i = 0; i < 5 - j; i++)
         {
           cout << m(i, j) << "\t ";
         }
