@@ -263,7 +263,7 @@ int main(int argc, char** argv)
     {
       int dimx, dimy, maxval, channels;
 
-      if (!fn[0] == '%')
+      if (!(fn[0] == '%'))
         {
           InfImgFile(fn, dimx, dimy, maxval, channels);
         }
@@ -290,7 +290,7 @@ int main(int argc, char** argv)
         {
           Image src, direction, filtered;
 
-          if (!fn[0] == '%')
+          if (!(fn[0] == '%'))
             {
               src.read(fn);
             }

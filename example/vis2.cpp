@@ -780,6 +780,7 @@ int Main(int argc, char* argv[])
                             {
                               vout.open(vfn, ios_base::out);
                               vout.setPara(dimg.xsize, dimg.ysize, 255, 25, 10000000);
+                              vout.setCPara("#lossless");
                             }
 
                         }

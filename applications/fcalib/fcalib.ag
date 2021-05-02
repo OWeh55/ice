@@ -234,10 +234,10 @@ int main(int argc, char* argv[])
               // erstes Bild
               dimx = sx;
               dimy = sy;
-
-              img = NewImg(dimx, dimy, 255);
-              mrk = NewImg(dimx, dimy, 7);
-              segmented_img = NewImg(dimx, dimy, 4);
+	      
+              img.create(dimx, dimy, 255);
+              mrk.create(dimx, dimy, 7);
+              segmented_img.create(dimx, dimy, 4);
               if (displaySwitch & 1)
                 {
                   Show(OVERLAY, img, mrk);
@@ -356,10 +356,14 @@ int main(int argc, char* argv[])
         }
       if (displaySwitch > 0)
         {
-          cout << "input enter to continue" << endl;
+          cout << "press <ENTER> to continue" << endl;
           getchar();
         }
       return OK;
+    }
+  catch (const IceException & ex)
+    {
+      cerr << "Exeption: " << ex.what() << endl;
     }
   catch (const char* msg)
     {
@@ -367,7 +371,7 @@ int main(int argc, char* argv[])
     }
   if (displaySwitch > 0)
     {
-      cout << "input enter to continue" << endl;
+      cout << "press <ENTER> to continue" << endl;
       getchar();
     }
   return 1;

@@ -43,30 +43,24 @@ bool getExifSig(const string& file, const string& modifier,
   else
     focallength = 0.0;
   string Model = exiftool(file, "-m -p '$Model'");
-//  cout << exif.Model << endl;
+  //  cout << exif.Model << endl;
   string Lens = exiftool(file, "-m -p '$Lens'");
   if (Lens.empty())
     Lens = exiftool(file, "-m -p '$LensModel'");
   if (Lens.empty())
     Lens = exiftool(file, "-m -p '$LensType'");
-//  cout << exif.Lens << endl;
+  //  cout << exif.Lens << endl;
   string Maker = exiftool(file, "-m -p '$Make'");
-//  cout << exif.Maker << endl;
-// brennweite wird extra behandelt, um interpolieren zu können
+  //  cout << exif.Maker << endl;
+  // focal length is separate value 
   exif = Model + "#" + Lens + "#" + Maker;
-
+  
   if (!modifier.empty())
     exif += "#" + modifier;
-
+  
   for (unsigned int i = 0; i < exif.length(); i++)
     if (exif[i] == ' ')
       exif[i] = '_';
 
   return !(FocalLength.empty() && Model.empty() && Lens.empty() && Maker.empty());
-}
-
-bool getExifSig(const string& file,
-                string& exif, double& focallength)
-{
-  return getExifSig(file, exif, focallength);
 }

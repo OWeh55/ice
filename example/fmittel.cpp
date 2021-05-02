@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
       vfd.open(videoFileName, ios_base::out);
       //    cout << vfd.getpara() << endl;
       //    vfd.setpara("-ovc lavc -lavcopts vcodec=mpeg4:vbitrate=2400");
-      vfd.setPara(xs1, ys1, mv, fps / 8);
+      vfd.setPara(xs1, ys1, mv, fps);
     }
   int xs, ys;
 
