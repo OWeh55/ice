@@ -124,6 +124,7 @@ namespace ice
     red.copy(src.red);
     green.copy(src.green);
     blue.copy(src.blue);
+    makeValid();
   }
 
   void ColorImage::copy(const Image& src)
@@ -131,6 +132,7 @@ namespace ice
     red.copy(src);
     green.copy(src);
     blue.copy(src);
+    makeValid();
   }
 
   // named constructors
