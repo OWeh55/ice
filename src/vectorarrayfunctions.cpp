@@ -424,7 +424,7 @@ namespace ice
   void SortVectorRn(double* ptr, int lng)
   // Sortieren eines Double-Arrays "ptr" der Laenge "lng"
   {
-    if ((ptr == nullptr))
+    if (ptr == nullptr)
       throw IceException(FNAME, M_WRONG_PTR);
 
     if (lng >= 2)

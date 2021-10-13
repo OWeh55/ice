@@ -613,7 +613,7 @@ namespace ice
                       WshedNb = false;
                     }
               }     // Nachbar ist Wasserscheide, Knoten noch nicht verarbeitet, Knoten wird Wasserscheide
-            else if ((edges[node]->Status == -1))
+            else if (edges[node]->Status == -1)
               {
                 edges[node]->Status = -3;
                 WshedNb = true;

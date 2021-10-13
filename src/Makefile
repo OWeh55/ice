@@ -13,18 +13,19 @@
 # compiler options (e.g. -fPIC )
 ###########################################
 
-#NOFFTW3?=1
 #CXX := g++
-CXX?=g++
 #CXX=clang++
+
+CXX?=g++
 
 SUBDIRS := devices ocr
 
 COPT := -std=c++11 -D__STDC_CONSTANT_MACROS=1
 
 ifdef ANALYSE
-COPT := $(COPT) -Wall -Wunused-value -Wunused-variable -Wunused-result -Wzero-as-null-pointer-constant \
--Wextra -Wno-unused-parameter -Wchar-subscripts -Wundef -Wcast-align -Wwrite-strings 
+COPT := $(COPT) -Wall -Wunused-value -Wunused-variable -Wunused-result \
+-Wzero-as-null-pointer-constant -Wextra -Wno-unused-parameter \
+-Wchar-subscripts -Wundef -Wcast-align -Wwrite-strings 
 endif
 
 ifdef OPENMP

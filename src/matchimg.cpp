@@ -125,7 +125,7 @@ namespace ice
   }
 #undef FNAME
 
-  constexpr int MINVAL = 0.5;
+  constexpr double MINVAL = 0.5;
 
 #define FNAME "detectTrafo"
 

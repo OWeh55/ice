@@ -223,7 +223,7 @@ check:
               y = temp.y;
               //gr = temp.grw;
 
-              if ((temp.x == -1))     // Element ist Trennelement?
+              if (temp.x == -1)     // Element ist Trennelement?
                 {
                   if (Q.empty())
                     {

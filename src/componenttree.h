@@ -154,8 +154,8 @@ namespace ice
 
     nodelist_t children;
 
-    friend ComponentTreeNode* makeComponentTree(const Image& img, bool maxAsLeaf = false);
+    friend ComponentTreeNode* makeComponentTree(const Image& img, bool maxAsLeaf);
   };
-  ComponentTreeNode* makeComponentTree(const Image& img, bool maxAsLeaf);
+  ComponentTreeNode* makeComponentTree(const Image& img, bool maxAsLeaf = false);
 } // namespace ice
 #endif

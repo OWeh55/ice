@@ -1,6 +1,6 @@
-ifndef CXX
 #CXX=clang++
-#CXX=g++-5
+
+ifndef CXX
 CXX=g++
 endif
 
@@ -52,8 +52,10 @@ LIBS := $(LIBS) -lraw1394 -ldc1394_control
 endif
 
 ifdef OPENMP
+ifneq ($(CXX),clang++)
 COPT := $(COPT) -fopenmp -DOPENMP
 LOPT := $(LOPT) -fopenmp
+endif
 endif
 
 ifndef NOFFTW3

@@ -59,41 +59,39 @@ namespace ice
     #pragma omp parallel for schedule(dynamic,30)
 #endif
     for (int y = 0; y < yMax; y++)
-      {
-        for (int x = 0; x < xMax; x++)
-          {
-            int med = INT_MAX;
-            int medX = 0;
-            int medY = 0;
-            // calculate for every pixel the mean distance to the others
-            for (int ay = y; ay < y + size; ay++)
-              for (int ax = x; ax < x + size; ax++)
-                {
-                  int tmp = 0;
-                  int aktx = Pixels1[ay][ax];
-                  int akty = Pixels2[ay][ax];
-                  int aktz = Pixels3[ay][ax];
-                  for (int my = y; my < y + size && tmp < med; my++)
-                    for (int mx = x; mx < x + size && tmp < med; mx++)
-                      {
-                        int dx = abs((int)Pixels1[my][mx] - aktx);
-                        int dy = abs((int)Pixels2[my][mx] - akty);
-                        int dz = abs((int)Pixels3[my][mx] - aktz);
-                        tmp += dx + dy + dz;
-                      }
-                  if (tmp < med)
+      for (int x = 0; x < xMax; x++)
+        {
+          int med = INT_MAX;
+          int medX = 0;
+          int medY = 0;
+          // calculate for every pixel the mean distance to the others
+          for (int ay = y; ay < y + size; ay++)
+            for (int ax = x; ax < x + size; ax++)
+              {
+                int tmp = 0;
+                int aktx = Pixels1[ay][ax];
+                int akty = Pixels2[ay][ax];
+                int aktz = Pixels3[ay][ax];
+                for (int my = y; my < y + size && tmp < med; my++)
+                  for (int mx = x; mx < x + size && tmp < med; mx++)
                     {
-                      medX = ax;
-                      medY = ay;
-                      med = tmp;
+                      int dx = abs((int)Pixels1[my][mx] - aktx);
+                      int dy = abs((int)Pixels2[my][mx] - akty);
+                      int dz = abs((int)Pixels3[my][mx] - aktz);
+                      tmp += dx + dy + dz;
                     }
-                }
-            //dest.PutValue(x+size/2, y+size/2, src.GetValue(x+medX, y+medY));
-            Pixeld1[y + size2][x + size2] = Pixels1[medY][medX];
-            Pixeld2[y + size2][x + size2] = Pixels2[medY][medX];
-            Pixeld3[y + size2][x + size2] = Pixels3[medY][medX];
-          }
-      }
+                if (tmp < med)
+                  {
+                    medX = ax;
+                    medY = ay;
+                    med = tmp;
+                  }
+              }
+          //dest.PutValue(x+size/2, y+size/2, src.GetValue(x+medX, y+medY));
+          Pixeld1[y + size2][x + size2] = Pixels1[medY][medX];
+          Pixeld2[y + size2][x + size2] = Pixels2[medY][medX];
+          Pixeld3[y + size2][x + size2] = Pixels3[medY][medX];
+        }
   }
 
   void MedianImg_std(const ColorImage& src, const ColorImage& dest, int size)
@@ -143,32 +141,46 @@ namespace ice
 
   void MedianImg(const ColorImage& src, const ColorImage& dest, int size)
   {
+    src.checkSizes(dest);
     if (!src.isValid() || !dest.isValid())
       throw IceException(FNAME, M_WRONG_IMAGE);
-
+#if 0
+    MedianImg_std(src, dest, size);
+#else
     switch ((src.redImage()->ImageType() << 4) + dest.redImage()->ImageType())
       {
       case 17:
         MedianImg<unsigned char, unsigned char>(src, dest, size);
+        break;
       case 18:
         MedianImg<unsigned char, unsigned short>(src, dest, size);
+        break;
       case 19:
         MedianImg<unsigned char, unsigned int>(src, dest, size);
+        break;
       case 33:
         MedianImg<unsigned short, unsigned char>(src, dest, size);
+        break;
       case 34:
         MedianImg<unsigned short, unsigned short>(src, dest, size);
+        break;
       case 35:
         MedianImg<unsigned short, unsigned int>(src, dest, size);
+        break;
       case 49:
         MedianImg<unsigned int, unsigned char>(src, dest, size);
+        break;
       case 50:
         MedianImg<unsigned int, unsigned short>(src, dest, size);
+        break;
       case 51:
         MedianImg<unsigned int, unsigned int>(src, dest, size);
+        break;
       default:
         MedianImg_std(src, dest, size);
+        break;
       }
+#endif
   }
 #undef FNAME
 } /* namespace ice */
