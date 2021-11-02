@@ -93,11 +93,16 @@ namespace ice
     if (!(out.xsize == xs && out.ysize == ys))
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
+    double* dp = out.getMatrix().getData();
+
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
         {
           double pVal = (inp.getPixelUnchecked(x, y) - offset) * factor;
-          out.setPixel(x, y, pVal);
+          //          out.setPixel(x, y, pVal);
+          // out.setPixelUnchecked(x, y, pVal);
+          *dp = pVal;
+          dp++;
         }
   }
 
@@ -126,17 +131,28 @@ namespace ice
     // cout << factor << " " << offset << endl;
     int xs = input.xsize;
     int ys = input.ysize;
+    int maxval = output.maxval;
 
     if (!(output.xsize == xs && output.ysize == ys))
       throw IceException(FNAME, M_WRONG_IMGSIZE);
 
+    const double* dp = input.getMatrix().getData();
+
     for (int y = 0; y < ys; ++y)
       for (int x = 0; x < xs; ++x)
         {
-          double dval = input.getPixelUnchecked(x, y);
+          double dval = *dp;
+          dp++;
+
           int ival = RoundInt(dval * factor + offset);
-          //    cout << dval << " " << ival << endl;
-          output.setPixelLimited(x, y, ival);
+
+          if (ival < 0)
+            output.setPixelUnchecked(x, y, 0);
+          else if (ival > maxval)
+            output.setPixelUnchecked(x, y, maxval);
+          else
+            output.setPixelUnchecked(x, y, ival);
+          // output.setPixelLimited(x, y, ival);
         }
   }
 
