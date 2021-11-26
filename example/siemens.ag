@@ -1,0 +1,144 @@
+#include <image.h>
+// total redesign (with supersampling) 11/2021
+
+using namespace std;
+
+/*AppGen:Global*/
+
+/*AppGen
+  prog: Generator für Siemens-Stern
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  % para: nothing, optional, string, nothing, Nur zum Test, 12345
+  opt: n, nsectors, int, nSectors, number of spokes, 180
+  opt: x, xsize, int, xSize, width of image,1024
+  opt: y, ysize, int, ySize, height of image,1024
+
+  opt: s, supersampling, int, super, use supersampling by factor, 1
+
+  opt: o, output, string, output, output image file , ""
+  opt: d, display, void, display, display image , false
+  opt2: automatically enabled if no output file given
+
+  opt: i, integration, Double, integrationRange, Integration range, 1.0
+  opt: v, verbose,void, verbose, be verbose, false
+  opt: w, wait, void, wait, wait on exit, false
+  opt: h, help, usage, help, this help,
+  AppGen*/
+
+
+class Siemens
+{
+public:
+  Siemens(int spokes, double white = 0, double black = 255, double gray = 127):
+    s(spokes),
+    w(white), b(black), g(gray)
+  {
+  }
+  double operator()(Point p)
+  {
+    double r = p.Length();
+    if (r > 0.99)
+      return g;
+    double phi = p.phi() + M_PI;
+    double intp;
+    double fract = modf(phi / M_PI / 2 * s, &intp);
+
+    if (fract < 0.5)
+      return w;
+    else
+      return b;
+  }
+private:
+  int s;
+  double w;
+  double b;
+  double g;
+};
+
+double deltaStep1(int nParts, int n)
+{
+  double w = 1.0 / nParts;
+  return (n + 0.5) * w - 0.5;
+}
+
+double deltaStep(int nParts, int n)
+{
+  double w = integrationRange / nParts;
+  return (n + 0.5) * w - integrationRange / 2;
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      if (verbose)
+        {
+          cout << "generating " << xSize << "x" << ySize << " image ";
+          if (super > 1)
+            cout << "with supersampling " << super << "x" << super;
+          cout << endl;
+        }
+
+      if (output.empty())
+        display = true;
+      if (display)
+        wait = true;
+
+      double minr = xSize / 2;
+
+      if (ySize < xSize)
+        {
+          minr = ySize / 2;
+        }
+
+      Image img;
+      img.create(xSize, ySize, 255);
+
+      if (display)
+        Show(ON, img, "siemens star");
+
+      Point center(xSize / 2, ySize / 2);
+      WindowWalker w(img);
+
+      Siemens siemens(nSectors);
+      for (w.init(); !w.ready(); w.next())
+        {
+          Point point(w);
+          Point delta = (point - center) * (1.0 / minr);
+          int val = 0;
+          if (super > 1)
+            {
+              double sum = 0;
+              for (int iy = 0; iy < super; iy++)
+                for (int ix = 0; ix < super; ix++)
+                  {
+                    Point s = delta +
+                              Point(deltaStep(super, ix), deltaStep(super, iy)) * (1.0 / minr);
+
+                    sum += siemens(s);
+                  }
+              val = sum / (super * super);
+            }
+          else
+            val = siemens(delta);
+          img.setPixel(w, val);
+        }
+
+      if (!output.empty())
+        img.write(output);
+
+      if (wait)
+        {
+          cerr << "press <Enter>" << endl;
+          getchar();
+        }
+    }
+  catch (const char* msg)
+    {
+      cerr << "exception: " << msg << endl;
+    }
+  return 0;
+}
