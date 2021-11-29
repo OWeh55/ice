@@ -11,6 +11,7 @@ using namespace std;
   % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
   % para: nothing, optional, string, nothing, Nur zum Test, 12345
   opt: n, nsectors, int, nSectors, number of spokes, 180
+  opt: S, sinus, void, sinus, sinusoidal, false
   opt: x, xsize, int, xSize, width of image,1024
   opt: y, ysize, int, ySize, height of image,1024
 
@@ -30,11 +31,13 @@ using namespace std;
 class Siemens
 {
 public:
-  Siemens(int spokes, double white = 0, double black = 255, double gray = 127):
+  Siemens(int spokes, double white = 0, double black = 255, double gray = 127, bool sinus = false):
     s(spokes),
-    w(white), b(black), g(gray)
+    w(white), b(black), g(gray),
+    sinus(sinus)
   {
   }
+
   double operator()(Point p)
   {
     double r = p.Length();
@@ -43,17 +46,24 @@ public:
     double phi = p.phi() + M_PI;
     double intp;
     double fract = modf(phi / M_PI / 2 * s, &intp);
-
-    if (fract < 0.5)
-      return w;
+    if (sinus)
+      {
+        return (sin(fract * M_PI * 2) + 1.0) * (b - w) * 0.5 + w;
+      }
     else
-      return b;
+      {
+        if (fract < 0.5)
+          return w;
+        else
+          return b;
+      }
   }
 private:
   int s;
   double w;
   double b;
   double g;
+  bool sinus;
 };
 
 double deltaStep1(int nParts, int n)
@@ -103,7 +113,7 @@ int main(int argc, char* argv[])
       Point center(xSize / 2, ySize / 2);
       WindowWalker w(img);
 
-      Siemens siemens(nSectors);
+      Siemens siemens(nSectors, 0, 255, 127, sinus);
       for (w.init(); !w.ready(); w.next())
         {
           Point point(w);
