@@ -182,56 +182,56 @@ namespace ice
 
         int ptype = img1->ImageType();
         if ((ptype > 0) && (ptype < 4) && (img2->ImageType() == ptype))
-	  {
-	    switch (ptype)
-	      {
-	      case 1:
-		
-		switch (mode)
-		  {
-		  case ID_ABS:
-		    return Diff1<PixelType1>(img1, img2, dx, dy);
-		    break;
-		  case ID_SQUARE:
-		    return Diff2<PixelType1>(img1, img2, dx, dy);
-		    break;
-		  case ID_COV:
-		    return Diff3<PixelType1>(img1, img2, dx, dy);
-		    break;
-		  }
-		
-	      case 2:
-		
-		switch (mode)
-		  {
-		  case ID_ABS:
-		    return Diff1<PixelType2>(img1, img2, dx, dy);
-		    break;
-		  case ID_SQUARE:
-		    return Diff2<PixelType2>(img1, img2, dx, dy);
-		    break;
-		  case ID_COV:
-		    return Diff3<PixelType2>(img1, img2, dx, dy);
-		    break;
-		  }
+          {
+            switch (ptype)
+              {
+              case 1:
 
-	      case 3:
-		
-		switch (mode)
-		  {
-		  case ID_ABS:
-		    return Diff1<PixelType3>(img1, img2, dx, dy);
-		    break;
-		  case ID_SQUARE:
-		    return Diff2<PixelType3>(img1, img2, dx, dy);
-		    break;
-		  case ID_COV:
-		    return Diff3<PixelType3>(img1, img2, dx, dy);
-		    break;
-		  }
-	      }
-	  }
-	else
+                switch (mode)
+                  {
+                  case ID_ABS:
+                    return Diff1<PixelType1>(img1, img2, dx, dy);
+                    break;
+                  case ID_SQUARE:
+                    return Diff2<PixelType1>(img1, img2, dx, dy);
+                    break;
+                  case ID_COV:
+                    return Diff3<PixelType1>(img1, img2, dx, dy);
+                    break;
+                  }
+
+              case 2:
+
+                switch (mode)
+                  {
+                  case ID_ABS:
+                    return Diff1<PixelType2>(img1, img2, dx, dy);
+                    break;
+                  case ID_SQUARE:
+                    return Diff2<PixelType2>(img1, img2, dx, dy);
+                    break;
+                  case ID_COV:
+                    return Diff3<PixelType2>(img1, img2, dx, dy);
+                    break;
+                  }
+
+              case 3:
+
+                switch (mode)
+                  {
+                  case ID_ABS:
+                    return Diff1<PixelType3>(img1, img2, dx, dy);
+                    break;
+                  case ID_SQUARE:
+                    return Diff2<PixelType3>(img1, img2, dx, dy);
+                    break;
+                  case ID_COV:
+                    return Diff3<PixelType3>(img1, img2, dx, dy);
+                    break;
+                  }
+              }
+          }
+        else
           {
             switch (mode)
               {
