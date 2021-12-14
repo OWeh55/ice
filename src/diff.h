@@ -22,6 +22,7 @@
 #define DIFF_H
 
 #include "base.h"
+#include "based.h"
 
 namespace ice
 {
@@ -31,6 +32,6 @@ namespace ice
 
 // several measures for differences of images
   double Diff(const Image& img1, const Image& img2, int mode);
-
+  double Diff(const ImageD& img1, const ImageD& img2, int mode);
 }
 #endif
