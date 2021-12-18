@@ -84,11 +84,13 @@ int main(int argc, char* argv[])
       double beta = initialBeta;
 
       Window wLeftAlt, wRightAlt;
-      Sdr sdr(sdrSize, sdrSize, beta, sdrFactor, windowMode);
-
+      bool peakMarker=true;
+      
       bool abort = false;
       while (!abort)
         {
+	  Sdr sdr(sdrSize, sdrSize, beta, sdrFactor, windowMode);
+	  
           Printf("Beta: %f\n", beta);
           Printf("WindowType: %d\n", windowMode);
           IPoint p;
@@ -153,21 +155,25 @@ int main(int argc, char* argv[])
           }
 
           resultMarker.set(0);
-          // Marker(3, pMax, 1, 9, resultMarker);
-          for (int x = 0; x < sdrSize * sdrFactor; x++)
-            {
-              if (x < pMax.x - 10 || x > pMax.x + 10)
-                resultMarker.setPixel(x, pMax.y, 1);
-            }
-          for (int y = 0; y < sdrSize * sdrFactor; y++)
-            {
-              if (y < pMax.y - 10 || y > pMax.y + 10)
-                resultMarker.setPixel(pMax.x, y, 1);
-            }
+	  if (peakMarker)
+	    {
+	      // Marker(3, pMax, 1, 9, resultMarker);
+	      for (int x = 0; x < sdrSize * sdrFactor; x++)
+		{
+		  if (x < pMax.x - 10 || x > pMax.x + 10)
+		    resultMarker.setPixel(x, pMax.y, 1);
+		}
+	      for (int y = 0; y < sdrSize * sdrFactor; y++)
+		{
+		  if (y < pMax.y - 10 || y > pMax.y + 10)
+		    resultMarker.setPixel(pMax.x, y, 1);
+		}
+	    }
           double dx = 1.0 * (pMax.x - sdrSize * sdrFactor / 2) / sdrFactor;
           double dy = 1.0 * (pMax.y - sdrSize * sdrFactor / 2) / sdrFactor;
           Printf("deltaX: %g   deltaY: %g\n", dx, dy);
           IPoint right = pRight + IPoint(dx, dy);
+	  IPoint left = pLeft - IPoint(dx, dy);
           Printf("Zielpunkt: %6.2f,%6.2f\n", pRight.x + dx, pRight.y + dy);
           Marker(3, right, 1, 15, rightMarker);
 
@@ -188,7 +194,6 @@ int main(int argc, char* argv[])
               sdr.setWindowMode(windowMode);
               break;
             case 'l':
-            case 'L':
               do
                 {
                   p = SelPoint(leftImage);
@@ -196,8 +201,13 @@ int main(int argc, char* argv[])
               while (!leftImage.inside(Window(p, sdrSize)));
               pLeft = p;
               break;
-            case 'r':
+            case 'L':
+	      pLeft=left;
+	      break;
             case 'R':
+	      pRight=right;
+	      break;
+            case 'r':
               do
                 {
                   p = SelPoint(rightImage);
@@ -207,12 +217,25 @@ int main(int argc, char* argv[])
               break;
 
             case 'b':
-              beta = beta / 2;
+	      if (beta<0.001)
+		beta=0.0;
+	      else
+		beta = beta / 2;
               break;
             case 'B':
-              beta = beta * 2;
+	      if (beta<0.001)
+		beta=0.001;
+	      else
+		beta = beta * 2;
               break;
 
+	    case 'p':
+	      peakMarker=!peakMarker;
+	      break;
+	    case 'w':
+	      pRight=pLeft;
+	      break;
+	      
             case 'q':
             case 'Q':
               abort = true;

@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
   HartleyImgD(original, s1);
   ShowImg(s1, mitte);
   HartleyImgD(s1, resultat1);
-  PrintRange("Rücktransformiert", resultat1);
+  PrintRange("Ruecktransformiert", resultat1);
   ShowImg(resultat1, rechts);
   Enter();
 
@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
   HartleyImgD(original, s1, X_ONLY);
   ShowImg(s1, mitte);
   HartleyImgD(s1, resultat1, X_ONLY);
-  PrintRange("Rücktransformiert", resultat1);
+  PrintRange("Ruecktransformiert", resultat1);
   ShowImg(resultat1, rechts);
   Enter();
 
@@ -117,11 +117,11 @@ int main(int argc, char* argv[])
   HartleyImgD(original, s1, Y_ONLY);
   ShowImg(s1, mitte);
   HartleyImgD(s1, resultat1, Y_ONLY);
-  PrintRange("Rücktransformiert", resultat1);
+  PrintRange("Ruecktransformiert", resultat1);
   ShowImg(resultat1, rechts);
   Enter();
 
-  Printf("Vergleich: \n - Hartley direkt\n - Hartley als Differenz Real- und Imaginärteil der Fourier-Trafo\n");
+  Printf("Vergleich: \n - Hartley direkt\n - Hartley als Differenz Real- und Imaginaerteil der Fourier-Trafo\n");
 
   HartleyImgD(original, s1);
   PrintRange("Hartley", s1);
@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
   PrintDiffRange("Hartley-Fourier", s1, s2);
   Enter();
 
-  Printf("(logarithmiertes) Leistungs-Spektrum über Hartley und Fourier im Vergleich\n");
+  Printf("(logarithmiertes) Leistungs-Spektrum ueber Hartley und Fourier im Vergleich\n");
   HartleyImgD(original, s1);
   PowerSpectrumHImgD(s1, resultat1, MD_LOG);
   PrintRange("Hartley", resultat1);
@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
   HartleyImgD(s1, resultat1);
   ShowImg(resultat1, mitte);
   ShowDiff(original, resultat1, rechts);
-  PrintDiffRange("Original-Rücktransformiert", original, resultat1);
+  PrintDiffRange("Original-Ruecktransformiert", original, resultat1);
   Enter();
 
   Printf("Bild -> Hartley -> MP -> Fourier -> Bild\n");
@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
   FourierImgD(s3, s4, INVERS, resultat1, resultat2);
   ShowImg(resultat1, mitte);
   ShowDiff(original, resultat1, rechts);
-  PrintDiffRange("Original-Rücktransformiert", original, resultat1);
+  PrintDiffRange("Original-Ruecktransformiert", original, resultat1);
   Enter();
 
   Printf("Faltung: Hartley/Fourier\n");
