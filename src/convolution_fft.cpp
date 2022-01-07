@@ -18,7 +18,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-// Faltung und "Ent-"Faltung auf der Basis der FT
+
+// convolution and deconvolution using ft
+
 #include <math.h>
 
 #include "macro.h"
@@ -79,7 +81,7 @@ namespace ice
 
         for (int i = 0; i < size; i++)
           {
-            // zc = z1 * z2
+            // zc = sqrt(n) * z1 * z2
             rc[i] = (r1[i] * r2[i] - i1[i] * i2[i]) * efac;
             ic[i] = (r1[i] * i2[i] + r2[i] * i1[i]) * efac;
           }
@@ -143,23 +145,21 @@ namespace ice
 
         for (int i = 0; i < size; i++)
           {
-            double r3;
-            double i3;
+            double r3 = 0;
+            double i3 = 0;
             double b1 = r1[i] * r1[i] + i1[i] * i1[i];
             if (noise == 0)
               {
-                if (b1 == 0)
+                if (b1 != 0)
                   {
-                    r3 = i3 = 0;
-                  }
-                else
-                  {
+                    // z3 = (1/sqrt(N)) * z1 / z2
                     r3 = (r2[i] * r1[i] + i2[i] * i1[i]) / b1 * efac;
                     i3 = (r1[i] * i2[i] - r2[i] * i1[i]) / b1 * efac;
                   }
               }
             else
               {
+                // z3 = (1/sqrt(N) * (z1*~z2)/(z2 * ~z2 + noise^2)
                 b1 += noise2;
                 r3 = (r2[i] * r1[i] + i2[i] * i1[i]) / b1 * efac;
                 i3 = (r1[i] * i2[i] - r2[i] * i1[i]) / b1 * efac;

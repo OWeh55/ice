@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
       v2[(i + 7) % SIZE] = i;
     }
 
-  InvConvolution(v1, v2, 0.001, v3);
+  InvConvolution(v1, v2, v3, 0.001);
   cout << v1 << endl;
   cout << v2 << endl;
   cout << v3 << endl << "----------------------------" << endl;

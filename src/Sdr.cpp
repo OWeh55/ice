@@ -216,3 +216,10 @@ namespace ice
         }
   }
 }
+
+void Sdr::getPeak(Image& result)
+{
+  ImageD dresult;
+  getPeak(dresult);
+  convImgDImg(dresult, result, ADAPTIVE, UNSIGNED);
+}

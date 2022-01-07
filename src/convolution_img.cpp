@@ -18,7 +18,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-// Faltung und "Ent-"Faltung auf der Basis der FT
+// convoluction and deconvolution of images using ft
 #include <math.h>
 
 #include "macro.h"
@@ -36,29 +36,31 @@ namespace ice
 #define FNAME "Convolution"
   void Convolution(const ImageD& is1, const ImageD& is2,
                    ImageD& id, int mode)
+  // id = is1 (*) is2
   {
     try
       {
         int xs, ys;
-
         MatchImgD(is1, is2, id, xs, ys);
 
         // center = \alpha_{0,0}
         int x0 = xs / 2;
         int y0 = ys / 2;
 
-        ImageD ds1;
-        ds1.create(xs, ys, 0, 1);
-        ImageD ds2;
-        ds2.create(xs, ys, 0, 1);
+        // result of mixed ft
+        ImageD zReal;
+        zReal.create(xs, ys, 0, 1);
+        ImageD zImag;
+        zImag.create(xs, ys, 0, 1);
 
-        ImageD ddi;
-        ddi.create(xs, ys, 0, 1);
+        FourierImgD(is1, is2, NORMAL, zReal, zImag); // "mixed" FT for both images
 
-        // effective factor for Convolution
+        // imaginary part of result (id)
+        ImageD idImag;
+        idImag.create(xs, ys, 0, 1);
+
+        // effective factor for convolution
         double efac = sqrt((double)xs * (double)ys);
-
-        FourierImgD(is1, is2, NORMAL, ds1, ds2); // "mixed" FT for both images
 
         for (int y = 0; y < ys; y++)
           {
@@ -68,29 +70,31 @@ namespace ice
               {
                 int xq = negf(x, xs);
 
-                double rr = GetValD(ds1, x, y);
-                double ir = GetValD(ds2, x, y);
-                double rq = GetValD(ds1, xq, yq);
-                double iq = GetValD(ds2, xq, yq);
-                // calculate complex FT-parameter from result of mixed FT
+                double rr = zReal.getPixel(x, y);
+                double ir = zImag.getPixel(x, y);
+                double rq = zReal.getPixel(xq, yq);
+                double iq = zImag.getPixel(xq, yq);
+
+                // calculate complex fourier coefficients from mixed ft
                 double r1 = (rr + rq) / 2;
                 double i1 = (ir - iq) / 2;
                 double r2 = (ir + iq) / 2;
                 double i2 = (rq - rr) / 2;
+
                 // complex multiplication
-                PutValD(id, x, y, (r1 * r2 - i1 * i2) * efac);
-                PutValD(ddi, x, y, (r1 * i2 + r2 * i1) * efac);
+                id.setPixel(x, y, (r1 * r2 - i1 * i2) * efac);
+                idImag.setPixel(x, y, (r1 * i2 + r2 * i1) * efac);
               }
           }
 
         if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
           {
-            PutValD(id, x0, y0, 0.0);
-            PutValD(ddi, x0, y0, 0.0);
+            id.setPixel(x0, y0, 0.0);
+            idImag.setPixel(x0, y0, 0.0);
           }
 
         // inverse transform
-        FourierImgD(id, ddi, INVERS, id, ddi);
+        FourierImgD(id, idImag, INVERS, id, idImag);
       }
     RETHROW;
   }
@@ -106,11 +110,15 @@ namespace ice
         int xs, ys;
         MatchImg(is1, is2, id, xs, ys);
 
-        ImageD ds1 = NewImgD(is1);
+        ImageD ds1;
+        ds1.create(is1);
         ConvImgImgD(is1, ds1, NORMALIZED, SIGNED);
-        ImageD ds2 = NewImgD(is2);
+        ImageD ds2;
+        ds2.create(is2);
         ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
-        ImageD dd = NewImgD(xs, ys, 0, 1);
+
+        ImageD dd;
+        dd.create(xs, ys, 0, 1);
 
         Convolution(ds1, ds2, dd, mode);
 
@@ -135,39 +143,31 @@ namespace ice
 #undef FNAME
 
 #define FNAME "InvConvolution"
-// IS2 = ID (*) IS1
+// is2 = id (*) is1
   void InvConvolution(const ImageD& is1, const ImageD& is2, ImageD& id,
                       double noise, int mode)
   {
     try
       {
-        int xs, ys;
-
-        double rr, rq, ir, iq;
-        double r1, r2, im1, im2;
-        double r3 = 0, im3 = 0;
-        double b1;
-        double efactor;
-
         if (noise < 0)
           throw IceException(FNAME, M_WRONG_PARAMETER);
 
         double noise2 = noise * noise;
 
+        int xs, ys;
         MatchImgD(is1, is2, id, xs, ys);
 
         int x0 = xs / 2;
         int y0 = ys / 2;
 
-        efactor = sqrt((double)(xs * ys));
+        double efactor = sqrt((double)(xs * ys));
 
         ImageD ds1;
         ds1.create(xs, ys, 0, 1);
         ImageD ds2;
         ds2.create(xs, ys, 0, 1);
 
-        //  ImageD ddi=NewImgD(xs,ys,0,1);
-
+        // combined ft of is1 and is2
         FourierImgD(is1, is2, NORMAL, ds1, ds2);
 
         for (int y = 0; y < ys; y++)
@@ -177,24 +177,24 @@ namespace ice
             for (int x = 0; x < xs; x++)
               {
                 int xq = negf(x, xs);
-                rr = GetValD(ds1, x, y);
-                ir = GetValD(ds2, x, y);
-                rq = GetValD(ds1, xq, yq);
-                iq = GetValD(ds2, xq, yq);
 
-                r1 = (rr + rq) / 2;
-                im1 = (ir - iq) / 2;
-                r2 = (ir + iq) / 2;
-                im2 = (rq - rr) / 2;
-                b1 = r1 * r1 + im1 * im1;
+                double rr = ds1.getPixel(x, y);
+                double ir = ds2.getPixel(x, y);
+                double rq = ds1.getPixel(xq, yq);
+                double iq = ds2.getPixel(xq, yq);
+
+                double r1 = (rr + rq) / 2;
+                double im1 = (ir - iq) / 2;
+                double r2 = (ir + iq) / 2;
+                double im2 = (rq - rr) / 2;
+                double b1 = r1 * r1 + im1 * im1;
+
+                double r3 = 0;
+                double im3 = 0;
 
                 if (noise == 0)
                   {
-                    if (b1 == 0)
-                      {
-                        r3 = im3 = 0;
-                      }
-                    else
+                    if (b1 != 0)
                       {
                         r3 = (r2 * r1 + im2 * im1) / b1 * efactor;
                         im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
@@ -207,14 +207,14 @@ namespace ice
                     im3 = (r1 * im2 - r2 * im1) / b1 * efactor;
                   }
 
-                PutValD(id, x, y, r3 - im3);
-                //    PutValD(ddi,x,y,im3);
+                // hartley transform coefficient
+                id.setPixel(x, y, r3 - im3);
               }
           }
 
         if ((mode & MD_BIAS) == MD_IGNORE_BIAS)
           {
-            PutValD(id, x0, y0, 0.0);
+            id.setPixel(x0, y0, 0.0);
           }
 
         HartleyImgD(id, id);

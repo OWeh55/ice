@@ -56,6 +56,7 @@ namespace ice
 
     virtual void setInput(const Image& img1, const Image& img2);
     virtual void getPeak(ImageD& result);
+    virtual void getPeak(Image& result);
   private:
     // basic parameters set by c'tor
     int xSize;

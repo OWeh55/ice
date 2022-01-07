@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
       v2[(i + 2) % SIZE] = i;
     }
   */
-  InvConvolution(v1, v3, 0.001, v2);
+  InvConvolution(v1, v3, v2, 0.003);
   cout << "v1:                " << v1 << endl;
   cout << "v1*v2:             " << v3 << endl;
   cout << "v2 (reconstructed):" << v2 << endl;
