@@ -1,0 +1,153 @@
+// Programm zum Test ner Normalisierung von Momenten
+//
+
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Test zur Normalisierung von Momenten
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ %
+ opt: s, starcorners, int, starCorners, Corners of star, 5
+ opt: f, starfactor, double, starFactor, Factor of star, 0.5
+ opt: h, help, usage, help, help
+ opt: v, verbose, Void, verbose, be verbose, false
+AppGen*/
+
+Contur getStar(double size, double phi, int corners, double fak)
+{
+  Contur result;
+  double r1 = size;
+  double r2 = size * fak;
+  int n = corners;
+  double dphi = 2 * M_PI / n;
+
+  result.setStart(r1 * cos(phi), r1 * sin(phi));
+  result.add(r2 * cos(phi + dphi / 2), r2 * sin(phi + dphi / 2));
+  for (double aphi = dphi; aphi < 2 * M_PI; aphi = aphi + dphi)
+    {
+      result.add(r1 * cos(phi + aphi), r1 * sin(phi + aphi));
+      result.add(r2 * cos(phi + aphi + dphi / 2), r2 * sin(phi + aphi + dphi / 2));
+    }
+  result.close();
+  return result;
+}
+
+Contur getSquare(double size, double phi)
+{
+  return getStar(size, phi, 2, 1.0);
+}
+
+Contur getCircle(double size)
+{
+  return getStar(size, 0, 200, 1.0);
+}
+
+Contur getObject(int n, double size, double phi)
+{
+  switch (n)
+    {
+    case 1:
+      return getSquare(size, phi);
+      break;
+    case 2:
+      return getCircle(size);
+      break;
+    default:
+      throw IceException("getObject", "undefined object");
+    }
+  return Contur();
+}
+
+vector<double> getNormalizedMoments(const Contur& c)
+{
+  Moments m(c);
+  Moments sqm = m.NormalizeSign();
+  sqm = sqm.NormalizeTranslation();
+  sqm = sqm.NormalizeScaling();
+  Vector hu = sqm.HuInvariants();
+  vector<double> result;
+  for (int i = 0; i < hu.Size(); i++)
+    result.push_back(hu[i]);
+  return result;
+}
+
+void draw(const Contur& c, Image& display, int color)
+{
+  Contur dc = c;
+  dc.setStart(display.xsize / 2, display.ysize / 2);
+  MarkContur(dc, color, display);
+}
+
+void drawWait(const Contur& c, Image& display, int color)
+{
+  draw(c, display, color);
+  GetChar();
+  display.set(0);
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+#if 0
+      Image display;
+      display.create(800, 800, 255);
+      display.set(0);
+      Show(OVERLAY, display);
+#endif
+      Statistics statQ(7);
+      Statistics statC(7);
+      Statistics statS(7);
+
+      for (double size = 20; size < 300; size *= 2)
+        {
+          for (double phi = 0; phi < 2 * M_PI; phi += 0.1)
+            {
+              Contur c = getSquare(size, phi);
+              vector<double> nm = getNormalizedMoments(c);
+              statQ.put(nm);
+              //        drawWait(c,display,2);
+            }
+        }
+      for (double size = 20; size < 300; size *= 2)
+        {
+          for (double phi = 0; phi < 2 * M_PI; phi += 0.1)
+            {
+              Contur c = getStar(size, phi, starCorners, starFactor);
+              vector<double> nm = getNormalizedMoments(c);
+              statS.put(nm);
+              //        drawWait(c,display,2);
+            }
+        }
+      for (double size = 20; size < 300; size *= 2)
+        {
+          Contur c = getCircle(size);
+          vector<double> nm = getNormalizedMoments(c);
+          statC.put(nm);
+          //    draw(getStar<200>(size,0,1.0),display,4);
+          //    drawWait(c,display,2);
+        }
+      vector<double> meanQ = statQ.getMean();
+      vector<double> meanC = statC.getMean();
+      vector<double> meanS = statS.getMean();
+      //    matrix<double> cov=stat.getCovariance();
+      cout << "Circle: " << setw(12) << meanC << endl;
+      cout << "Square: " << setw(12) << meanQ << endl;
+      //    cout << "diff:   " << setw(12) << meanQ - meanC << endl;
+      cout << "Star:   " << setw(12) << meanS << endl;
+      //    cout << setw(12) << setprecision(3) << cov << endl;
+
+    }
+  catch (const IceException& ex)
+    {
+      cerr << "Exception " << ex.what() << endl;
+    }
+
+  return 0;
+}
+
