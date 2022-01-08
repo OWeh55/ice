@@ -1,7 +1,7 @@
 #include <iomanip>
 #include <image.h>
-#include <fouriertrafo.h>
-// test der neuen Klasse FourierTrafo
+#include <FourierTrafo.h>
+// test der Klasse FourierTrafo
 
 void print(const vector<double>& v)
 {

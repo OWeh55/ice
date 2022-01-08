@@ -1,6 +1,6 @@
 #include <iomanip>
 #include <image.h>
-#include <fouriertrafo2d.h>
+#include <FourierTrafo2D.h>
 
 #define COLS 16
 #define ROWS 9

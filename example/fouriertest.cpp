@@ -1,6 +1,6 @@
 #include <iomanip>
 #include <image.h>
-#include <fouriertrafo.h>
+#include <FourierTrafo.h>
 
 // test class FourierTrafo
 

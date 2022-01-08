@@ -57,8 +57,8 @@ int main(int argc, char** argv)
         case 'w':
           if (sscanf(optarg, "%d,%d,%d,%d", &x1, &y1, &dx, &dy) != 4)
             usage(argv[0]);
-	  
-	  //  cout << x1 << "," << y1 << "  " << dx <<"*" << dy << endl;
+
+          //  cout << x1 << "," << y1 << "  " << dx <<"*" << dy << endl;
           x2 = x1 + dx - 1;
           y2 = y1 + dy - 1;
           break;
