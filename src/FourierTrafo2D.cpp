@@ -39,44 +39,16 @@ namespace ice
 
     forward = newForward;
     centered = newCentered;
-    state = sPara;
+    setStatePara();
   }
 
-  void FourierTrafo2D::transformIfNeeded()
-  {
-    if (state >= sDone)
-      {
-        return;
-      }
-
-    if (state != sInput)
-      {
-        throw logic_error("no input specified");
-      }
-
-    FourierTrafo trRow(cols, forward, centered);
-    for (int y = 0; y < rows; ++y)
-      {
-        trRow.setInputFromRow(real, imag, y);
-        trRow.getResultToRow(real, imag, y);
-      }
-
-    FourierTrafo trCol(rows, forward, centered);
-    for (int x = 0; x < cols; ++x)
-      {
-        trCol.setInputFromColumn(real, imag, x);
-        trCol.getResultToColumn(real, imag, x);
-      }
-    state = sDone;
-  }
-
-  void FourierTrafo2D::setInput(const ice::matrix<double>& v)
+  void  FourierTrafo2D::setInput(const ice::matrix<double>& v)
   {
     checkParameter(v.rows(), v.cols());
 
     real = v;
     imag.set(0);
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const ice::matrix<double>& vr,
@@ -86,7 +58,7 @@ namespace ice
 
     real = vr;
     imag = vi;
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const ice::matrix<int>& v, double factor)
@@ -100,7 +72,7 @@ namespace ice
         }
 
     imag.set(0);
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const ice::matrix<int>& vr,
@@ -116,7 +88,7 @@ namespace ice
             imag[y][x] = vi[y][x] * factor;
           }
       }
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const Image& v, double factor, int sign)
@@ -130,7 +102,7 @@ namespace ice
           real[y][x] = (v.getPixel(x, y) - v0) * factor;
         }
     imag.set(0.0);
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const Image& vr, const Image& vi,
@@ -146,7 +118,7 @@ namespace ice
           real[y][x] = (vr.getPixel(x, y) - vr0) * factor;
           imag[y][x] = (vi.getPixel(x, y) - vi0) * factor;
         }
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const ImageD& v)
@@ -160,7 +132,7 @@ namespace ice
         }
 
     imag.set(0);
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const ImageD& vr, const ImageD& vi)
@@ -173,7 +145,7 @@ namespace ice
           real[y][x] = vr.getPixel(x, y);
           imag[y][x] = vi.getPixel(x, y);
         }
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const Matrix& v)
@@ -187,7 +159,7 @@ namespace ice
         }
 
     imag.set(0);
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::setInput(const Matrix& vr, const Matrix& vi)
@@ -200,12 +172,12 @@ namespace ice
           real[y][x] = vr[y][x];
           imag[y][x] = vi[y][x];
         }
-    state = sInput;
+    setStateData();
   }
 
   void FourierTrafo2D::checkParameter(int nRows, int nCols)
   {
-    if (state < sPara) // not set
+    if ((mState & sPara) == 0)  // not set
       setParameter(nRows, nCols);
     else
       {
@@ -216,17 +188,60 @@ namespace ice
       }
   }
 
+  void FourierTrafo2D::transform() const
+  {
+    FourierTrafo trRow(cols, forward, centered);
+    for (int y = 0; y < rows; ++y)
+      {
+        trRow.setInputFromRow(real, imag, y);
+        trRow.getResultToRow(real, imag, y);
+      }
+
+    FourierTrafo trCol(rows, forward, centered);
+    for (int x = 0; x < cols; ++x)
+      {
+        trCol.setInputFromColumn(real, imag, x);
+        trCol.getResultToColumn(real, imag, x);
+      }
+    setStateDone();
+  }
+
+  void FourierTrafo2D::setStateDone() const
+  {
+    mState = sDone | sPara | sData;
+  }
+
+  void FourierTrafo2D::setStatePara() const
+  {
+    mState = (mState | sPara) & ~sDone;
+  }
+
+  void FourierTrafo2D::setStateData() const
+  {
+    mState = (mState | sData) & ~sDone;
+  }
+
+  void FourierTrafo2D::checkDone() const
+  {
+    if ((mState & sData) == 0)
+      throw IceException(FNAME, "data incomplete");
+    if ((mState & sPara) == 0)
+      throw IceException(FNAME, "parameter not set");
+    if ((mState & sDone) == 0)
+      transform();
+  }
+
   void FourierTrafo2D::getResult(ice::matrix<double>& dstre,
                                  ice::matrix<double>& dstim)
   {
-    transformIfNeeded();
+    checkDone();
     dstre = real;
     dstim = imag;
   }
 
   double FourierTrafo2D::getResult(ice::matrix<double>& dstre)
   {
-    transformIfNeeded();
+    checkDone();
     dstre = real;
     double imagvalue = 0;
     for (int i = 0; i < rows; ++i)
@@ -264,7 +279,7 @@ namespace ice
   void FourierTrafo2D::getResult(ImageD& dstre,
                                  ImageD& dstim)
   {
-    transformIfNeeded();
+    checkDone();
 
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
@@ -277,7 +292,7 @@ namespace ice
 
   double FourierTrafo2D::getResult(ImageD& dstre)
   {
-    transformIfNeeded();
+    checkDone();
 
     double imagSum = 0;
     for (int i = 0; i < rows; ++i)

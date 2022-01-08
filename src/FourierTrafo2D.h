@@ -33,8 +33,9 @@ namespace ice
   class FourierTrafo2D final
   {
   public:
-    FourierTrafo2D(): rows(0), cols(0), forward(true), centered(true), state(sNull) {}
-    FourierTrafo2D(int rows, int cols, bool forward = true, bool centered = true)
+    FourierTrafo2D(): rows(0), cols(0), forward(true), centered(true), mState(sNull) {}
+
+    FourierTrafo2D(int rows, int cols, bool forward = true, bool centered = true): mState(sNull)
     {
       setParameter(rows, cols, forward, centered);
     }
@@ -97,23 +98,29 @@ namespace ice
     const FourierTrafo2D& operator=(const FourierTrafo2D& ft) = delete;
 
   private:
-    void transformIfNeeded();
+    void setStateData() const;
+    void setStatePara() const;
+    void setStateDone() const;
+    void checkDone() const;
+
+    void transform() const;
+
     void checkParameter(int xs, int ys); // throws in case of error
 
     // internal state
     static const int sNull = 0; // created (without parameters set)
     static const int sPara = 1; // parameters are set
-    static const int sInput = 2; // input specified
-    static const int sDone = 3; // transform done
+    static const int sData = 2; // input specified
+    static const int sDone = 4; // transform done
 
     int rows, cols;
     bool forward;
     bool centered;
 
-    int state = sNull;
+    mutable int mState;
 
-    matrix<double> real;
-    matrix<double> imag;
+    mutable matrix<double> real;
+    mutable matrix<double> imag;
   };
 
   template<typename Ts1, typename Ts2, typename Td1, typename Td2>
