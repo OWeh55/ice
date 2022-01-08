@@ -37,7 +37,7 @@ namespace ice
                                bool forward)
   {
     setParameter(source.size(), forward);
-    setSource(source);
+    setInput(source);
     getResult(destinationReal, destinationImag);
   }
 
@@ -48,8 +48,33 @@ namespace ice
                                bool forward)
   {
     setParameter(sourceReal.size(), forward);
-    setSource(sourceReal, sourceImag);
+    setInput(sourceReal, sourceImag);
     getResult(destinationReal, destinationImag);
+  }
+
+  void FourierTrafo::setStateDone() const
+  {
+    mState = sDone | sPara | sData;
+  }
+
+  void FourierTrafo::setStatePara() const
+  {
+    mState = (mState | sPara) & ~sDone;
+  }
+
+  void FourierTrafo::setStateData() const
+  {
+    mState = (mState | sData) & ~sDone;
+  }
+
+  void FourierTrafo::checkDone() const
+  {
+    if ((mState & sPara) == 0)
+      throw IceException(FNAME, "parameter not set");
+    if ((mState & sData) == 0)
+      throw IceException(FNAME, "data incomplete");
+    if ((mState & sDone) == 0)
+      transform();
   }
 
 #ifndef NOFFTW3
@@ -93,13 +118,13 @@ namespace ice
             size = 0;
           }
       }
-    state = sPara;
+    setStatePara();
   }
 
-  void FourierTrafo::transform()
+  void FourierTrafo::transform() const
   {
     fftw_execute(fftw_p);
-    state = sDone;
+    setStateDone();
   }
 
   // -------- getResult -----
@@ -107,11 +132,8 @@ namespace ice
   void FourierTrafo::getResult(double* destinationReal,
                                double* destinationImag, int n) const
   {
-    if (state != sDone)
-      {
-        throw IceException(FNAME, "data incomplete");
-      }
-    else if (size != n)
+    checkDone();
+    if (size != n)
       {
         throw IceException(FNAME, M_VECTORDIM);
       }
@@ -129,11 +151,8 @@ namespace ice
 
   double FourierTrafo::getResult(double* destinationReal, int n) const
   {
-    if (state != sDone)
-      {
-        throw IceException(FNAME, "data incomplete");
-      }
-    else if (size != n)
+    checkDone();
+    if (size != n)
       {
         throw IceException(FNAME, M_VECTORDIM);
       }
@@ -155,105 +174,75 @@ namespace ice
   void FourierTrafo::getResult(std::vector<double>& destinationReal,
                                std::vector<double>& destinationImag) const
   {
-    if (state != sDone)
+    checkDone();
+
+    destinationReal.resize(size);
+    destinationImag.resize(size);
+
+    int dest = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
       {
-        throw IceException(FNAME, "data incomplete");
-      }
-    else
-      {
-        destinationReal.resize(size);
-        destinationImag.resize(size);
-        int dest = getIndexFromFrequency(0);
-        //    cout << dest << endl;
-        for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
-          {
-            destinationReal[dest] = out[i][0] * norm;
-            destinationImag[dest] = out[i][1] * norm;
-          }
+        destinationReal[dest] = out[i][0] * norm;
+        destinationImag[dest] = out[i][1] * norm;
       }
   }
 
   void FourierTrafo::getResultFromReal(std::vector<double>& destinationReal,
                                        std::vector<double>& destinationImag) const
   {
-    if (state != sDone)
+    checkDone();
+    destinationReal.resize(size);
+    destinationImag.resize(size);
+    int dest = getIndexFromFrequency(0);
+    //    cout << dest << endl;
+    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
       {
-        throw IceException(FNAME, "data incomplete");
-      }
-    else
-      {
-        destinationReal.resize(size);
-        destinationImag.resize(size);
-        int dest = getIndexFromFrequency(0);
-        //    cout << dest << endl;
-        for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
-          {
-            int negidx = (size - i) % size;
-            destinationReal[dest] = 0.5 * (out[i][0] + out[negidx][0]) * norm;
-            destinationImag[dest] = 0.5 * (out[i][1] - out[negidx][1]) * norm;
-          }
+        int negidx = (size - i) % size;
+        destinationReal[dest] = 0.5 * (out[i][0] + out[negidx][0]) * norm;
+        destinationImag[dest] = 0.5 * (out[i][1] - out[negidx][1]) * norm;
       }
   }
 
   void FourierTrafo::getResultFromImag(std::vector<double>& destinationReal,
                                        std::vector<double>& destinationImag) const
   {
-    if (state != sDone)
+    checkDone();
+    destinationReal.resize(size);
+    destinationImag.resize(size);
+    int dest = getIndexFromFrequency(0);
+    //    cout << dest << endl;
+    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
       {
-        throw IceException(FNAME, "data incomplete");
-      }
-    else
-      {
-        destinationReal.resize(size);
-        destinationImag.resize(size);
-        int dest = getIndexFromFrequency(0);
-        //    cout << dest << endl;
-        for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
-          {
-            int negidx = (size - i) % size;
-            destinationReal[dest] = 0.5 * (out[i][1] + out[negidx][1]) * norm;
-            destinationImag[dest] = 0.5 * (-out[i][0] + out[negidx][0]) * norm;
-          }
+        int negidx = (size - i) % size;
+        destinationReal[dest] = 0.5 * (out[i][1] + out[negidx][1]) * norm;
+        destinationImag[dest] = 0.5 * (-out[i][0] + out[negidx][0]) * norm;
       }
   }
 
   double FourierTrafo::getResult(std::vector<double>& destinationReal) const
   {
-    if (state != sDone)
+    checkDone();
+    destinationReal.resize(size);
+    double imagSum = 0.0;
+    int dest = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
       {
-        throw IceException(FNAME, "data incomplete");
+        destinationReal[dest] = out[i][0] * norm;
+        double imagValue = out[i][1] * norm;
+        imagSum += imagValue * imagValue;
       }
-    else
-      {
-        destinationReal.resize(size);
-        double imagSum = 0.0;
-        int dest = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
-          {
-            destinationReal[dest] = out[i][0] * norm;
-            double imagValue = out[i][1] * norm;
-            imagSum += imagValue * imagValue;
-          }
-        return sqrt(imagSum);
-      }
-    return 0.0;
+    return sqrt(imagSum);
   }
 
   void FourierTrafo::getResult(std::vector<Point>& destination) const
   {
-    if (state != sDone)
+    checkDone();
+    destination.resize(size);
+    int destIdx = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, destIdx = (destIdx + 1) % size)
       {
-        throw IceException(FNAME, "data incomplete");
-      }
-    else
-      {
-        destination.resize(size);
-        int destIdx = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, destIdx = (destIdx + 1) % size)
-          {
-            destination[destIdx].x = out[i][0] * norm;
-            destination[destIdx].y = out[i][1] * norm;
-          }
+        destination[destIdx].x = out[i][0] * norm;
+        destination[destIdx].y = out[i][1] * norm;
       }
   }
 
@@ -261,107 +250,100 @@ namespace ice
   // -------- setSource (privat) ---------------------------
   // get source data and transform data
 
-  void FourierTrafo::setSource(const double* source, int n)
+  void FourierTrafo::setInput(const double* source, int n)
   {
-    if (checkParameter(n))
+    checkParameter(n);
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in[i][0] = source[sourceIndex];
-            in[i][1] = 0.0;
-          }
-        transform();
+        in[i][0] = source[sourceIndex];
+        in[i][1] = 0.0;
       }
+    setStateData();
+
   }
 
-  void FourierTrafo::setSource(const double* sourceReal,
-                               const double* sourceImag, int n)
+  void FourierTrafo::setInput(const double* sourceReal,
+                              const double* sourceImag, int n)
   {
-    if (checkParameter(n))
+    checkParameter(n);
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in[i][0] = sourceReal[sourceIndex];
-            in[i][1] = sourceImag[sourceIndex];
-          }
-        transform();
+        in[i][0] = sourceReal[sourceIndex];
+        in[i][1] = sourceImag[sourceIndex];
       }
+    setStateData();
+
   }
 
-  void FourierTrafo::setSource(const std::vector<double>& source)
+  void FourierTrafo::setInput(const std::vector<double>& source)
   {
-    if (checkParameter(source.size()))
+    checkParameter(source.size());
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in[i][0] = source[sourceIndex];
-            in[i][1] = 0.0;
-          }
-        transform();
+        in[i][0] = source[sourceIndex];
+        in[i][1] = 0.0;
       }
+    setStateData();
   }
 
-  void FourierTrafo::setSource(const std::vector<Point>& source)
+  void FourierTrafo::setInput(const std::vector<Point>& source)
   {
-    if (checkParameter(source.size()))
+    checkParameter(source.size());
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in[i][0] = source[sourceIndex].x;
-            in[i][1] = source[sourceIndex].y;
-          }
-        transform();
+        in[i][0] = source[sourceIndex].x;
+        in[i][1] = source[sourceIndex].y;
       }
+    setStateData();
   }
 
-  void FourierTrafo::setSource(const std::vector<double>& sourceReal,
-                               const std::vector<double>& sourceImag)
+  void FourierTrafo::setInput(const std::vector<double>& sourceReal,
+                              const std::vector<double>& sourceImag)
   {
-    if (checkParameter(sourceReal.size()))
+    checkParameter(sourceReal.size());
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in[i][0] = sourceReal[sourceIndex];
-            in[i][1] = sourceImag[sourceIndex];
-          }
-        transform();
+        in[i][0] = sourceReal[sourceIndex];
+        in[i][1] = sourceImag[sourceIndex];
       }
+    setStateData();
   }
 
-  void FourierTrafo::setSource(const std::vector<int>& source, double factor)
+  void FourierTrafo::setInput(const std::vector<int>& source, double factor)
   {
-    if (checkParameter(source.size()))
+    checkParameter(source.size());
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in[i][0] = source[sourceIndex] * factor;
-            in[i][1] = 0.0;
-          }
-        transform();
+        in[i][0] = source[sourceIndex] * factor;
+        in[i][1] = 0.0;
       }
+    setStateData();
   }
 
-  void FourierTrafo::setSource(const std::vector<int>& sourceReal,
-                               const std::vector<int>& sourceImag, double factor)
+  void FourierTrafo::setInput(const std::vector<int>& sourceReal,
+                              const std::vector<int>& sourceImag, double factor)
   {
-    if (checkParameter(sourceReal.size()))
-      {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in[i][0] = sourceReal[sourceIndex] * factor;
-            in[i][1] = sourceImag[sourceIndex] * factor;
-          }
-        transform();
-      }
-  }
+    checkParameter(sourceReal.size());
 
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
+      {
+        in[i][0] = sourceReal[sourceIndex] * factor;
+        in[i][1] = sourceImag[sourceIndex] * factor;
+      }
+    setStateData();
+  }
 #else
   // NOFFTW3
   void FourierTrafo::setParameter(int newsize, bool newforward)
@@ -384,10 +366,10 @@ namespace ice
             makeSinCosTab();
           }
       }
-    state = sPara;
+    setStatePara();
   }
 
-  void FourierTrafo::makeSinCosTab()
+  void FourierTrafo::makeSinCosTab() const
   // creates sinus / cosinus tables if neccessary
   // creates "inverse" table for inverse transform if (invers)
   {
@@ -408,7 +390,7 @@ namespace ice
       }
   }
 
-  void FourierTrafo::doBitReversal()
+  void FourierTrafo::doBitReversal() const
   {
     int ln = 0;
     for (int i = 1; i < size; i = i + i)
@@ -436,7 +418,7 @@ namespace ice
       }
   }
 
-  void FourierTrafo::FFT()
+  void FourierTrafo::FFT() const
   {
     /* ln = log_2(size) */
     int ln = 0;
@@ -480,7 +462,7 @@ namespace ice
       }
   }
 
-  void FourierTrafo::FT()
+  void FourierTrafo::FT() const
   {
     for (int freq = 0; freq < size; ++freq)
       {
@@ -500,7 +482,7 @@ namespace ice
       }
   }
 
-  void FourierTrafo::transform()
+  void FourierTrafo::transform() const
   {
     if ((size & (size - 1)) == 0)   // size is potence of 2 ?
       {
@@ -512,70 +494,109 @@ namespace ice
       {
         FT();
       }
-    state = sDone;
+    setStateDone();
   }
 
-  void FourierTrafo::setSource(const std::vector<double>& source)
+  void FourierTrafo::setInput(const double* source, int n)
   {
-    if (checkParameter(source.size()))
+    checkParameter(n);
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in_real[i] = source[sourceIndex];
-            in_imag[i] = 0.0;
-          }
-        transform();
+        in_real[i] = source[sourceIndex];
+        in_imag[i] = 0.0;
       }
+    setStateData();
   }
 
-  void FourierTrafo::setSource(const std::vector<double>& sourceReal,
-                               const std::vector<double>& sourceImag)
+  void FourierTrafo::setInput(const double* sourceReal,
+                              const double* sourceImag, int n)
   {
-    if (checkParameter(sourceReal.size()))
+    checkParameter(n);
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in_real[i] = sourceReal[sourceIndex];
-            in_imag[i] = sourceImag[sourceIndex];
-          }
-        transform();
+        in_real[i] = sourceReal[sourceIndex];
+        in_imag[i] = sourceImag[sourceIndex];
       }
+    setStateData();
+
   }
 
-  void FourierTrafo::setSource(const std::vector<int>& source, double factor)
+  void FourierTrafo::setInput(const std::vector<Point>& source)
   {
-    if (checkParameter(source.size()))
+    checkParameter(source.size());
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in_real[i] = source[sourceIndex] * factor;
-            in_imag[i] = 0.0;
-          }
-        transform();
+        in_real[i] = source[sourceIndex].x;
+        in_imag[i] = source[sourceIndex].y;
       }
+    setStateData();
+
   }
 
-  void FourierTrafo::setSource(const std::vector<int>& sourceReal,
-                               const std::vector<int>& sourceImag, double factor)
+  void FourierTrafo::setInput(const std::vector<double>& source)
   {
-    if (checkParameter(sourceReal.size()))
+    checkParameter(source.size());
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
-        int sourceIndex = getIndexFromFrequency(0);
-        for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
-          {
-            in_real[i] = sourceReal[sourceIndex] * factor;
-            in_imag[i] = sourceImag[sourceIndex] * factor;
-          }
-        transform();
+        in_real[i] = source[sourceIndex];
+        in_imag[i] = 0.0;
       }
+    setStateData();
+
+  }
+
+  void FourierTrafo::setInput(const std::vector<double>& sourceReal,
+                              const std::vector<double>& sourceImag)
+  {
+    checkParameter(sourceReal.size());
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
+      {
+        in_real[i] = sourceReal[sourceIndex];
+        in_imag[i] = sourceImag[sourceIndex];
+      }
+    setStateData();
+  }
+
+  void FourierTrafo::setInput(const std::vector<int>& source, double factor)
+  {
+    checkParameter(source.size());
+
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
+      {
+        in_real[i] = source[sourceIndex] * factor;
+        in_imag[i] = 0.0;
+      }
+    setStateData();
+  }
+
+  void FourierTrafo::setInput(const std::vector<int>& sourceReal,
+                              const std::vector<int>& sourceImag, double factor)
+  {
+    checkParameter(sourceReal.size());
+    int sourceIndex = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
+      {
+        in_real[i] = sourceReal[sourceIndex] * factor;
+        in_imag[i] = sourceImag[sourceIndex] * factor;
+      }
+    setStateData();
+
   }
 
   void FourierTrafo::getResult(std::vector<double>& destinationReal,
                                std::vector<double>& destinationImag) const
   {
+    checkDone();
     destinationReal.resize(size);
     destinationImag.resize(size);
     int dest = getIndexFromFrequency(0);
@@ -586,8 +607,39 @@ namespace ice
       }
   }
 
+  void FourierTrafo::getResultFromReal(std::vector<double>& destinationReal,
+                                       std::vector<double>& destinationImag) const
+  {
+    checkDone();
+    destinationReal.resize(size);
+    destinationImag.resize(size);
+    int dest = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
+      {
+        int negidx = (size - i) % size;
+        destinationReal[dest] = 0.5 * (out_real[i] + out_real[negidx]) * norm;
+        destinationImag[dest] = 0.5 * (out_imag[i] - out_imag[negidx]) * norm;
+      }
+  }
+
+  void FourierTrafo::getResultFromImag(std::vector<double>& destinationReal,
+                                       std::vector<double>& destinationImag) const
+  {
+    checkDone();
+    destinationReal.resize(size);
+    destinationImag.resize(size);
+    int dest = getIndexFromFrequency(0);
+    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
+      {
+        int negidx = (size - i) % size;
+        destinationReal[dest] = 0.5 * (out_imag[i] + out_imag[negidx]) * norm;
+        destinationImag[dest] = 0.5 * (-out_real[i] + out_real[negidx]) * norm;
+      }
+  }
+
   double FourierTrafo::getResult(std::vector<double>& destinationReal) const
   {
+    checkDone();
     destinationReal.resize(size);
     double imagSum = 0.0;
     int dest = getIndexFromFrequency(0);
@@ -604,6 +656,7 @@ namespace ice
   // put Result into row of 2d matrix
   double FourierTrafo::getResultToRow(ice::matrix<double>& v, int row) const
   {
+    checkDone();
     vector<double> res;
     double absim = getResult(res);
     for (int i = 0; i < size; ++i)
@@ -616,6 +669,7 @@ namespace ice
   void FourierTrafo::getResultToRow(ice::matrix<double>& vr,
                                     ice::matrix<double>& vi, int row) const
   {
+    checkDone();
     vector<double> resr;
     vector<double> resi;
     getResult(resr, resi);
@@ -629,6 +683,7 @@ namespace ice
   // put Result into column of 2d matrix
   double FourierTrafo::getResultToColumn(ice::matrix<double>& v, int col) const
   {
+    checkDone();
     vector<double> res;
     double absim = getResult(res);
     for (int i = 0; i < size; ++i)
@@ -641,6 +696,7 @@ namespace ice
   void FourierTrafo::getResultToColumn(ice::matrix<double>& vr,
                                        ice::matrix<double>& vi, int col) const
   {
+    checkDone();
     vector<double> resr;
     vector<double> resi;
     getResult(resr, resi);
@@ -751,53 +807,9 @@ namespace ice
     setInput(colr, coli, factor);
   }
 
-  void FourierTrafo::setInput(const double* v, int n)
+  void FourierTrafo::checkParameter(int sourceSize)
   {
-    checkParameter(n);
-    setSource(v, n);
-  }
-
-  void FourierTrafo::setInput(const double* vr,
-                              const double* vi, int n)
-  {
-    checkParameter(n);
-    setSource(vr, vi, n);
-  }
-
-  void FourierTrafo::setInput(const std::vector<double>& v)
-  {
-    checkParameter(v.size());
-    setSource(v);
-  }
-
-  void FourierTrafo::setInput(const std::vector<Point>& v)
-  {
-    checkParameter(v.size());
-    setSource(v);
-  }
-
-  void FourierTrafo::setInput(const std::vector<double>& vr,
-                              const std::vector<double>& vi)
-  {
-    checkParameter(vr.size());
-    setSource(vr, vi);
-  }
-
-  void FourierTrafo::setInput(const std::vector<int>& v, double factor)
-  {
-    checkParameter(v.size());
-    setSource(v, factor);
-  }
-
-  void FourierTrafo::setInput(const std::vector<int>& vr,
-                              const std::vector<int>& vi, double factor)
-  {
-    setSource(vr, vi, factor);
-  }
-
-  bool FourierTrafo::checkParameter(int sourceSize)
-  {
-    if (state == sNull)   // no set
+    if (mState & sPara == 0)   // not set
       {
         setParameter(sourceSize);
       }
@@ -806,6 +818,5 @@ namespace ice
         if (size != sourceSize)
           throw IceException(FNAME, M_VECTORDIM);
       }
-    return true;
   }
 }

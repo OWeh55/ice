@@ -5,7 +5,7 @@
 
 void print(vector<string> l)
 {
-  for (int i = 0; i < l.size(); i++)
+  for (unsigned int i = 0; i < l.size(); i++)
     cout << l[i] << endl;
 }
 

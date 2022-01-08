@@ -36,12 +36,12 @@ namespace ice
   public:
     FourierTrafo(int size, bool forward = true, bool centered = false):
       size(0), forward(true),     // the correct values will be set in setParameter
-      centered(centered), state(sNull)
+      centered(centered), mState(sNull)
     {
       setParameter(size, forward);
     }
 
-    FourierTrafo(): size(0), centered(false), state(sNull) {}
+    FourierTrafo(): size(0), centered(false), mState(sNull) {}
 
     ~FourierTrafo()
     {
@@ -128,8 +128,8 @@ namespace ice
                    bool forward = true);
 
   private:
-    void transform();
-
+    void transform() const;
+#if 0
     void setSource(const double* src, int n);
     void setSource(const double* srcre,
                    const double* srcim, int n);
@@ -140,7 +140,7 @@ namespace ice
     void setSource(const std::vector<int>& src, double factor = 1.0);
     void setSource(const std::vector<int>& srcre,
                    const std::vector<int>& srcim, double factor = 1.0);
-
+#endif
     // transformation index in vector < -- > frequency
 
     int getFrequencyFromIndex(int idx) const
@@ -157,33 +157,40 @@ namespace ice
 
     static const int sNull = 0;
     static const int sPara = 1;
-    static const int sDone = 2;
+    static const int sData = 2;
+    static const int sReady = 3;
+    static const int sDone = 4;
 
-    bool checkParameter(int size);
+    void checkParameter(int size);
+
+    void setStateData() const;
+    void setStatePara() const;
+    void setStateDone() const;
+    void checkDone() const;
 
     int size = 0;
     bool forward = true;
     bool centered = false;
     double norm;
 
-    int state = sNull;
+    mutable int mState = sNull;
 
 #ifndef NOFFTW3
     fftw_complex* in;
     fftw_complex* out;
     fftw_plan fftw_p;
 #else
-    void makeSinCosTab();
-    void FFT();
-    void FT();
-    void doBitReversal();
+    void makeSinCosTab() const;
+    void FFT() const;
+    void FT() const;
+    void doBitReversal() const;
 
     std::vector<double> in_real;
     std::vector<double> in_imag;
-    std::vector<double> out_real;
-    std::vector<double> out_imag;
-    std::vector<double> sinTab;
-    std::vector<double> cosTab;
+    mutable std::vector<double> out_real;
+    mutable std::vector<double> out_imag;
+    mutable std::vector<double> sinTab;
+    mutable std::vector<double> cosTab;
 #endif
   };
 }
