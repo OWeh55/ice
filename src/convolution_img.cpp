@@ -27,7 +27,7 @@
 
 #include "base.h"
 #include "based.h"
-#include "fouriertrafo.h"
+#include "FourierTrafo.h"
 #include "fourier.h"
 #include "convolution_fft.h"
 

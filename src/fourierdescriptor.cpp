@@ -1,5 +1,5 @@
 #include "fourierdescriptor.h"
-#include "fouriertrafo.h"
+#include "FourierTrafo.h"
 
 using namespace std;
 using namespace ice;

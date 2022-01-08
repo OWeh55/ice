@@ -20,8 +20,8 @@
 
 #include <stdexcept>
 
-#include "fouriertrafo.h"
-#include "fouriertrafo2d.h"
+#include "FourierTrafo.h"
+#include "FourierTrafo2D.h"
 
 using namespace std;
 

@@ -32,7 +32,7 @@
 #include "darith.h"
 #include "fourier.h"
 
-#include "fouriertrafo.h"
+#include "FourierTrafo.h"
 
 using namespace std;
 

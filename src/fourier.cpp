@@ -28,7 +28,7 @@
 #include "IceException.h"
 #include "macro.h"
 
-#include "fouriertrafo.h"
+#include "FourierTrafo.h"
 
 #include "fourier.h"
 

@@ -25,7 +25,7 @@
 #include <iostream>
 
 using namespace std;
-#include "fouriertrafo.h"
+#include "FourierTrafo.h"
 
 namespace ice
 {
