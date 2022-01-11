@@ -246,9 +246,7 @@ namespace ice
       }
   }
 
-
-  // -------- setSource (privat) ---------------------------
-  // get source data and transform data
+  // get source data
 
   void FourierTrafo::setInput(const double* source, int n)
   {
@@ -260,8 +258,8 @@ namespace ice
         in[i][0] = source[sourceIndex];
         in[i][1] = 0.0;
       }
-    setStateData();
 
+    setStateData();
   }
 
   void FourierTrafo::setInput(const double* sourceReal,
@@ -275,8 +273,8 @@ namespace ice
         in[i][0] = sourceReal[sourceIndex];
         in[i][1] = sourceImag[sourceIndex];
       }
-    setStateData();
 
+    setStateData();
   }
 
   void FourierTrafo::setInput(const std::vector<double>& source)
@@ -289,6 +287,7 @@ namespace ice
         in[i][0] = source[sourceIndex];
         in[i][1] = 0.0;
       }
+
     setStateData();
   }
 
@@ -302,6 +301,7 @@ namespace ice
         in[i][0] = source[sourceIndex].x;
         in[i][1] = source[sourceIndex].y;
       }
+
     setStateData();
   }
 
@@ -309,12 +309,14 @@ namespace ice
                               const std::vector<double>& sourceImag)
   {
     checkParameter(sourceReal.size());
+
     int sourceIndex = getIndexFromFrequency(0);
     for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
         in[i][0] = sourceReal[sourceIndex];
         in[i][1] = sourceImag[sourceIndex];
       }
+
     setStateData();
   }
 
@@ -328,6 +330,7 @@ namespace ice
         in[i][0] = source[sourceIndex] * factor;
         in[i][1] = 0.0;
       }
+
     setStateData();
   }
 
@@ -342,6 +345,7 @@ namespace ice
         in[i][0] = sourceReal[sourceIndex] * factor;
         in[i][1] = sourceImag[sourceIndex] * factor;
       }
+
     setStateData();
   }
 #else
@@ -366,6 +370,7 @@ namespace ice
             makeSinCosTab();
           }
       }
+
     setStatePara();
   }
 
@@ -378,13 +383,9 @@ namespace ice
         double fi = 2 * M_PI * i / size;
 
         if (forward)
-          {
-            sinTab[i] = sin(fi);
-          }
+          sinTab[i] = sin(fi);
         else
-          {
-            sinTab[i] = -sin(fi);
-          }
+          sinTab[i] = -sin(fi);
 
         cosTab[i] = cos(fi);
       }
@@ -392,11 +393,10 @@ namespace ice
 
   void FourierTrafo::doBitReversal() const
   {
+    /* ln = log_2(size) */
     int ln = 0;
     for (int i = 1; i < size; i = i + i)
-      {
-        ln++;
-      }
+      ln++;
 
     /* Do the bit reversal */
     int i2 = size >> 1;
@@ -500,12 +500,14 @@ namespace ice
   void FourierTrafo::setInput(const double* source, int n)
   {
     checkParameter(n);
+
     int sourceIndex = getIndexFromFrequency(0);
     for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
         in_real[i] = source[sourceIndex];
         in_imag[i] = 0.0;
       }
+
     setStateData();
   }
 
@@ -520,8 +522,8 @@ namespace ice
         in_real[i] = sourceReal[sourceIndex];
         in_imag[i] = sourceImag[sourceIndex];
       }
-    setStateData();
 
+    setStateData();
   }
 
   void FourierTrafo::setInput(const std::vector<Point>& source)
@@ -534,8 +536,8 @@ namespace ice
         in_real[i] = source[sourceIndex].x;
         in_imag[i] = source[sourceIndex].y;
       }
-    setStateData();
 
+    setStateData();
   }
 
   void FourierTrafo::setInput(const std::vector<double>& source)
@@ -548,8 +550,8 @@ namespace ice
         in_real[i] = source[sourceIndex];
         in_imag[i] = 0.0;
       }
-    setStateData();
 
+    setStateData();
   }
 
   void FourierTrafo::setInput(const std::vector<double>& sourceReal,
@@ -563,6 +565,7 @@ namespace ice
         in_real[i] = sourceReal[sourceIndex];
         in_imag[i] = sourceImag[sourceIndex];
       }
+
     setStateData();
   }
 
@@ -576,6 +579,7 @@ namespace ice
         in_real[i] = source[sourceIndex] * factor;
         in_imag[i] = 0.0;
       }
+
     setStateData();
   }
 
@@ -583,20 +587,22 @@ namespace ice
                               const std::vector<int>& sourceImag, double factor)
   {
     checkParameter(sourceReal.size());
+
     int sourceIndex = getIndexFromFrequency(0);
     for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
       {
         in_real[i] = sourceReal[sourceIndex] * factor;
         in_imag[i] = sourceImag[sourceIndex] * factor;
       }
-    setStateData();
 
+    setStateData();
   }
 
   void FourierTrafo::getResult(std::vector<double>& destinationReal,
                                std::vector<double>& destinationImag) const
   {
     checkDone();
+
     destinationReal.resize(size);
     destinationImag.resize(size);
     int dest = getIndexFromFrequency(0);
@@ -611,6 +617,7 @@ namespace ice
                                        std::vector<double>& destinationImag) const
   {
     checkDone();
+
     destinationReal.resize(size);
     destinationImag.resize(size);
     int dest = getIndexFromFrequency(0);
@@ -626,6 +633,7 @@ namespace ice
                                        std::vector<double>& destinationImag) const
   {
     checkDone();
+
     destinationReal.resize(size);
     destinationImag.resize(size);
     int dest = getIndexFromFrequency(0);
@@ -640,6 +648,7 @@ namespace ice
   double FourierTrafo::getResult(std::vector<double>& destinationReal) const
   {
     checkDone();
+
     destinationReal.resize(size);
     double imagSum = 0.0;
     int dest = getIndexFromFrequency(0);
@@ -657,6 +666,7 @@ namespace ice
   double FourierTrafo::getResultToRow(ice::matrix<double>& v, int row) const
   {
     checkDone();
+
     vector<double> res;
     double absim = getResult(res);
     for (int i = 0; i < size; ++i)
@@ -670,6 +680,7 @@ namespace ice
                                     ice::matrix<double>& vi, int row) const
   {
     checkDone();
+
     vector<double> resr;
     vector<double> resi;
     getResult(resr, resi);
@@ -684,6 +695,7 @@ namespace ice
   double FourierTrafo::getResultToColumn(ice::matrix<double>& v, int col) const
   {
     checkDone();
+
     vector<double> res;
     double absim = getResult(res);
     for (int i = 0; i < size; ++i)
@@ -697,6 +709,7 @@ namespace ice
                                        ice::matrix<double>& vi, int col) const
   {
     checkDone();
+
     vector<double> resr;
     vector<double> resi;
     getResult(resr, resi);
@@ -710,100 +723,81 @@ namespace ice
   void FourierTrafo::setInputFromRow(const ice::matrix<double>& v, int row)
   {
     vector<double> thisrow(v.cols());
-    for (int i = 0; i < v.cols(); ++i)
-      {
-        thisrow[i] = v[row][i];
-      }
+    v.getRow(row, thisrow);
     setInput(thisrow);
   }
 
-  void FourierTrafo::setInputFromRow(const ice::matrix<double>& vr, const ice::matrix<double>& vi, int row)
+  void FourierTrafo::setInputFromRow(const ice::matrix<double>& vr,
+                                     const ice::matrix<double>& vi, int row)
   {
     vector<double> rowr(vr.cols());
-    for (int i = 0; i < vr.cols(); ++i)
-      {
-        rowr[i] = vr[row][i];
-      }
+    vr.getRow(row, rowr);
+
     vector<double> rowi(vi.cols());
-    for (int i = 0; i < vi.cols(); ++i)
-      {
-        rowi[i] = vi[row][i];
-      }
+    vi.getRow(row, rowi);
+
     setInput(rowr, rowi);
   }
 
-  void FourierTrafo::setInputFromRow(const ice::matrix<int>& v, int row, double factor)
+  void FourierTrafo::setInputFromRow(const ice::matrix<int>& v, int row,
+                                     double factor)
   {
     vector<int> thisrow(v.cols());
-    for (int i = 0; i < v.cols(); ++i)
-      {
-        thisrow[i] = v[row][i];
-      }
+    v.getRow(row, thisrow, factor);
+
     setInput(thisrow, factor);
   }
 
-  void FourierTrafo::setInputFromRow(const ice::matrix<int>& vr, const ice::matrix<int>& vi, int row, double factor)
+  void FourierTrafo::setInputFromRow(const ice::matrix<int>& vr,
+                                     const ice::matrix<int>& vi,
+                                     int row, double factor)
   {
     vector<int> rowr(vr.cols());
-    for (int i = 0; i < vr.cols(); ++i)
-      {
-        rowr[i] = vr[row][i];
-      }
+    vr.getRow(row, rowr, factor);
+
     vector<int> rowi(vi.cols());
-    for (int i = 0; i < vi.cols(); ++i)
-      {
-        rowi[i] = vi[row][i];
-      }
+    vi.getRow(row, rowi, factor);
+
     setInput(rowr, rowi, factor);
   }
 
   void FourierTrafo::setInputFromColumn(const ice::matrix<double>& v, int col)
   {
     vector<double> thiscol(v.rows());
-    for (int i = 0; i < v.rows(); ++i)
-      {
-        thiscol[i] = v[i][col];
-      }
+    v.getColumn(col, thiscol);
     setInput(thiscol);
   }
 
-  void FourierTrafo::setInputFromColumn(const ice::matrix<double>& vr, const ice::matrix<double>& vi, int col)
+  void FourierTrafo::setInputFromColumn(const ice::matrix<double>& vr,
+                                        const ice::matrix<double>& vi, int col)
   {
     vector<double> colr(vr.rows());
-    for (int i = 0; i < vr.rows(); ++i)
-      {
-        colr[i] = vr[i][col];
-      }
+    vr.getColumn(col, colr);
+
     vector<double> coli(vi.rows());
-    for (int i = 0; i < vi.rows(); ++i)
-      {
-        coli[i] = vi[i][col];
-      }
+    vi.getColumn(col, coli);
+
     setInput(colr, coli);
   }
 
-  void FourierTrafo::setInputFromColumn(const ice::matrix<int>& v, int col, double factor)
+  void FourierTrafo::setInputFromColumn(const ice::matrix<int>& v,
+                                        int col, double factor)
   {
     vector<int> thiscol(v.rows());
-    for (int i = 0; i < v.rows(); ++i)
-      {
-        thiscol[i] = v[i][col];
-      }
+    v.getColumn(col, thiscol, factor);
     setInput(thiscol, factor);
   }
 
-  void FourierTrafo::setInputFromColumn(const ice::matrix<int>& vr, const ice::matrix<int>& vi, int col, double factor)
+  void FourierTrafo::setInputFromColumn(const ice::matrix<int>& vr,
+                                        const ice::matrix<int>& vi,
+                                        int col, double factor)
   {
     vector<int> colr(vr.rows());
-    for (int i = 0; i < vr.rows(); ++i)
-      {
-        colr[i] = vr[i][col];
-      }
+    vr.getColumn(col, colr, factor);
+
     vector<int> coli(vi.rows());
-    for (int i = 0; i < vi.rows(); ++i)
-      {
-        coli[i] = vi[i][col];
-      }
+    vi.getColumn(col, coli, factor);
+
     setInput(colr, coli, factor);
   }
 

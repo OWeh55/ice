@@ -6,7 +6,7 @@ void print(const matrix<double>& m)
   for (int i = 0; i < m.rows(); i++)
     {
       for (int k = 0; k < m.cols(); k++)
-	cout << m[i][k] << " ";
+        cout << m[i][k] << " ";
       cout << endl;
     }
 }
@@ -20,28 +20,28 @@ int main(int argc, char** argv)
 
       FourierTrafo2D ft1;
       cout << "ft1 constructed without parameter" << endl;
-      
+
       matrix<double> m1(4, 8);
       for (int i = 0; i < 4; i++)
         for (int k = 0; k < 8; k++)
           m1[i][k] = i + 0.1 * k;
-      
+
       ft1.setInput(m1);
       cout << "ft1 set input with matrix<double>" << endl;
-      
+
       matrix<double> m2(4, 8);
       matrix<double> m3(4, 8);
       ft1.getResult(m2, m3);
       cout << "ft1 got result" << endl;
-      
+
       FourierTrafo2D ft2(m2, m3, false);
       cout << "ft2 constructed with 2 matrix<double>" << endl;
-      
+
       matrix<double> m4(4, 8);
       matrix<double> m5(4, 8);
       ft2.getResult(m4, m5);
       cout << "ft2 got result" << endl;
-      
+
       double fsum = 0.0;
 
       for (int i = 0; i < 4; i++)
@@ -140,7 +140,6 @@ int main(int argc, char** argv)
     {
       cerr << "exception: " << ex.what() << endl;
     }
-
 
   return 1;
 }

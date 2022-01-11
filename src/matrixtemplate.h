@@ -231,7 +231,7 @@ namespace ice
     }
 
     /**
-     * copy assign operator.
+     * move assign operator.
      */
     const matrix<T>& operator =(matrix&& s)
     {
@@ -288,6 +288,59 @@ namespace ice
           }
       return tm;
     }
+
+    /**
+     * Get data from row
+     * @param rowNr selected row number
+     * @param array destination for row data
+     */
+    template<typename TA>
+    void getRow(int rowNr, TA& array) const
+    {
+      for (int c = 0; c < nColumns; c++)
+        array[c] = (*this)[rowNr][c];
+    }
+
+    /**
+     * Get data from row
+     * @param rowNr selected row number
+     * @param array destination for row data
+     * @param factor values are multiplied with factor
+     */
+    template<typename TA>
+    void getRow(int rowNr, TA& array, double factor) const
+    {
+      for (int c = 0; c < nColumns; c++)
+        array[c] = (*this)[rowNr][c] * factor;
+    }
+
+    /**
+     * Get data from column
+     * @param columnNr selected column number
+     * @param array destination for column data
+     */
+
+    template<typename TA>
+    void getColumn(int columnNr, TA& array) const
+    {
+      for (int r = 0; r < nRows; r++)
+        array[r] = (*this)[r][columnNr];
+    }
+
+    /**
+     * Get data from column
+     * @param columnNr selected column number
+     * @param array destination for column data
+     * @param factor values are multiplied with factor
+     */
+
+    template<typename TA>
+    void getColumn(int columnNr, TA& array, double factor) const
+    {
+      for (int r = 0; r < nRows; r++)
+        array[r] = (*this)[r][columnNr] * factor;
+    }
+
     //*************************************************************
 
     /**

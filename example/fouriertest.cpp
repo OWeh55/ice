@@ -18,19 +18,22 @@ void print(const vector<double>& v, bool index = true, bool sc = false)
         cout << setw(width) << i << " ";
       cout << endl;
     }
+  double sum2 = 0;
   for (int i = -fm; i < -fm + n; ++i)
     {
       int idx = i;
       while (idx < 0) idx += dim;
+      sum2 += v[idx] * v[idx];
       if (sc)
         cout << setw(width) << setprecision(2) << scientific << v[idx] << " ";
       else
         cout << setw(width) << setprecision(4) << fixed << v[idx] << " ";
     }
+  cout << "(" << sqrt(sum2) << ")";
   cout << endl;
 }
 
-const int vsize = 13;
+const int vsize = 9;
 
 int main(int argc, char** argv)
 {
@@ -41,10 +44,10 @@ int main(int argc, char** argv)
   for (int i = 0; i < vsize; ++i)
     {
       double fi = M_PI * 2 * i / vsize;
-      f1[i] = sin(fi) + 0.5 * cos(2 * fi) + 0.2;
-      f2[i] = cos(fi) + 0.3 * sin(3 * fi) + 0.3;
+      f1[i] = 0.3 * sin(fi) + 0.5 * cos(2 * fi) + 0.2;
+      f2[i] = 0.5 * cos(fi) + 0.3 * sin(3 * fi) - 0.2;
     }
-  
+
   cout << "two given functions" << endl;
   print(f1);
   print(f2, false);
