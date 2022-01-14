@@ -55,6 +55,7 @@ namespace ice
     }
 
     virtual void setInput(const Image& img1, const Image& img2);
+    virtual void setInput(const ImageD& img1, const ImageD& img2);
     virtual void getPeak(ImageD& result);
     virtual void getPeak(Image& result);
   private:

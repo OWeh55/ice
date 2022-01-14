@@ -120,6 +120,33 @@ namespace ice
         }
   }
 
+  void Sdr::setInput(const ImageD& img1, const ImageD& img2)
+  {
+    if (img1.xsize != xSize || img1.ysize != ySize ||
+        img2.xsize != xSize || img2.ysize != ySize)
+      throw IceException("Sdr::setInput", M_WRONG_IMGSIZE);
+
+    int idx = 0;
+    for (int y = 0; y < ySize; y++)
+      for (int x = 0; x < xSize; x++)
+        {
+          if (windowing == 0) // avoid unnecessary multiplication
+            {
+              data[idx] = img1.getPixelUnchecked(x, y);
+              idx++;
+              data[idx] = img2.getPixelUnchecked(x, y);
+              idx++;
+            }
+          else
+            {
+              data[idx] = img1.getPixelUnchecked(x, y) * xWindow[x] * yWindow[y];
+              idx++;
+              data[idx] = img2.getPixelUnchecked(x, y) * xWindow[x] * yWindow[y];
+              idx++;
+            }
+        }
+  }
+
   void sdrFormulaPacked(
     double rr, double ir, // complex positiv coefficient
     double rq, double iq, // complex negativ coefficient
