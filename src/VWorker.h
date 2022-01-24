@@ -34,6 +34,7 @@ namespace ice
   public:
     VWorker(): size(0), resultValid(false)
     {}
+
     VWorker(int size): size(size), resultValid(false)
     {}
 
@@ -120,8 +121,7 @@ namespace ice
     void getResultToColumn(ice::matrix<double>& m1,
                            ice::matrix<double>& m2, int col) const;
 
-  private:
-
+  protected:
     virtual void transform() const = 0;
 
     void checkIndex(unsigned int i) const;
@@ -130,8 +130,9 @@ namespace ice
     void checkDone() const;
 
     int size = 0;
-    bool resultValid = false;
     std::array<std::vector<double>, 2> input;
+
+    mutable bool resultValid = false;
     mutable std::array<std::vector<double>, 2> result;
   };
 }

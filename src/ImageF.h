@@ -449,7 +449,7 @@ namespace ice
 
     double getPixelInterpol(double x, double y) const
     {
-      double val;
+      double val = 0.0;
       if (getPixelInterpol(x, y, val))
         {
           return val;

@@ -22,6 +22,7 @@
 #include <vector>
 #include <Point.h>
 #include "matrixtemplate.h"
+#include "VWorker.h"
 
 //#define NOFFTW3
 
@@ -31,21 +32,25 @@
 
 namespace ice
 {
-  class FourierTrafo final
+  class FourierTrafo: public VWorker
   {
   public:
     FourierTrafo(int size, bool forward = true, bool centered = false):
-      size(0), forward(true),     // the correct values will be set in setParameter
-      centered(centered), mState(sNull)
+      VWorker(0), forward(true), // real setting in setParameter
+      centered(centered)
     {
       setParameter(size, forward);
     }
 
-    FourierTrafo(): size(0), centered(false), mState(sNull) {}
+    FourierTrafo(): centered(false) {}
 
-    ~FourierTrafo()
+    virtual ~FourierTrafo()
     {
-      setParameter(0); // call with zero only frees data
+#ifndef NOFFTW3
+      fftw_destroy_plan(fftw_p);
+      fftw_free(in);
+      fftw_free(out);
+#endif
     }
 
     FourierTrafo(const FourierTrafo& ft) = delete;
@@ -54,66 +59,11 @@ namespace ice
 
     void setParameter(int newSize, bool newForward = true);
 
-    // assign input data in different forms
-    void setInput(const double* v, int n);
-    void setInput(const double* vr, const double* vi, int n);
-    void setInput(const std::vector<double>& v);
-    void setInput(const std::vector<double>& vr, const std::vector<double>& vi);
-    void setInput(const std::vector<Point>& v);
-    void setInput(const std::vector<int>& v, double factor = 1.0);
-    void setInput(const std::vector<int>& vr, const std::vector<int>& vi, double factor = 1.0);
+    void getResultFromReal(std::vector<double>& destinationReal,
+                           std::vector<double>& destinationImag) const;
 
-    // input from row of 2d matrix
-    //   pure real
-    void setInputFromRow(const ice::matrix<double>& v, int row);
-    //   complex
-    void setInputFromRow(const ice::matrix<double>& vr, const ice::matrix<double>& vi, int row);
-    //   pur real (int)
-    void setInputFromRow(const ice::matrix<int>& v, int row, double factor = 1.0);
-    //   complex (int)
-    void setInputFromRow(const ice::matrix<int>& vr, const ice::matrix<int>& vi, int row, double factor = 1.0);
-
-    // input from column of 2d matrix
-    //   pure real
-    void setInputFromColumn(const ice::matrix<double>& v, int col);
-    //   complex
-    void setInputFromColumn(const ice::matrix<double>& vr, const ice::matrix<double>& vi, int col);
-    //   pur real (int)
-    void setInputFromColumn(const ice::matrix<int>& v, int col,
-                            double factor = 1.0);
-    //   complex (int)
-    void setInputFromColumn(const ice::matrix<int>& vr,
-                            const ice::matrix<int>& vi,
-                            int col, double factor = 1.0);
-
-
-    void getResult(double* dstre,
-                   double* dstim, int n) const;
-
-    double getResult(double* dstre, int n) const;
-
-    void getResult(std::vector<double>& dstre,
-                   std::vector<double>& dstim) const;
-
-    double getResult(std::vector<double>& dstre) const;
-
-    void getResult(std::vector<Point>& dstre) const;
-
-    void getResultFromReal(std::vector<double>& dstre,
-                           std::vector<double>& dstim) const;
-
-    void getResultFromImag(std::vector<double>& dstre,
-                           std::vector<double>& dstim) const;
-
-    // put Result into row of 2d matrix
-    double getResultToRow(ice::matrix<double>& v, int row) const;
-    void getResultToRow(ice::matrix<double>& vr,
-                        ice::matrix<double>& vi, int row) const;
-
-    // put Result into column of 2d matrix
-    double getResultToColumn(ice::matrix<double>& v, int col) const;
-    void getResultToColumn(ice::matrix<double>& vr,
-                           ice::matrix<double>& vi, int col) const;
+    void getResultFromImag(std::vector<double>& destinationReal,
+                           std::vector<double>& destinationImag) const;
 
     // simplified calls for special cases
     void transform(const std::vector<double>& src,
@@ -128,26 +78,9 @@ namespace ice
                    bool forward = true);
 
   private:
-    void transform() const;
-#if 0
-    void setSource(const double* src, int n);
-    void setSource(const double* srcre,
-                   const double* srcim, int n);
-    void setSource(const std::vector<double>& src);
-    void setSource(const std::vector<double>& srcre,
-                   const std::vector<double>& srcim);
-    void setSource(const std::vector<Point>& source);
-    void setSource(const std::vector<int>& src, double factor = 1.0);
-    void setSource(const std::vector<int>& srcre,
-                   const std::vector<int>& srcim, double factor = 1.0);
-#endif
-    // transformation index in vector < -- > frequency
+    virtual void transform() const;
 
-    int getFrequencyFromIndex(int idx) const
-    {
-      return centered ? ((idx - size / 2 + size) % size) : idx;
-    }
-
+    // transformation frequency to index in vector
     int getIndexFromFrequency(int f) const
     {
       return (centered ? (f + size / 2) : (f + size)) % size;
@@ -155,40 +88,22 @@ namespace ice
 
   private:
 
-    static const int sNull = 0;
-    static const int sPara = 1;
-    static const int sData = 2;
-    static const int sReady = 3;
-    static const int sDone = 4;
-
-    void checkParameter(int size);
-
-    void setStateData() const;
-    void setStatePara() const;
-    void setStateDone() const;
-    void checkDone() const;
-
-    int size = 0;
     bool forward = true;
     bool centered = false;
     double norm;
-
-    mutable int mState = sNull;
+    mutable int oldsize = 0;
+    mutable bool oldforward;
 
 #ifndef NOFFTW3
-    fftw_complex* in;
-    fftw_complex* out;
-    fftw_plan fftw_p;
+    mutable fftw_complex* in;
+    mutable fftw_complex* out;
+    mutable fftw_plan fftw_p;
 #else
     void makeSinCosTab() const;
     void FFT() const;
     void FT() const;
     void doBitReversal() const;
 
-    std::vector<double> in_real;
-    std::vector<double> in_imag;
-    mutable std::vector<double> out_real;
-    mutable std::vector<double> out_imag;
     mutable std::vector<double> sinTab;
     mutable std::vector<double> cosTab;
 #endif

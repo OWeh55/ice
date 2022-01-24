@@ -50,12 +50,13 @@ namespace ice
     input[i].resize(size);
     for (int k = 0; k < size; k++)
       input[i][k] = v[k];
+    resultValid = false;
   }
 
   void VWorker::setInput(const double* vr, const double* vi, int n)
   {
     setInput(0, vr, n);
-    setInput(1, vr, n);
+    setInput(1, vi, n);
   }
 
   void VWorker::setInput(const std::vector<double>& v)
@@ -70,13 +71,14 @@ namespace ice
     input[i].resize(size);
     for (int k = 0; k < size; k++)
       input[i][k] = v[k];
+    resultValid = false;
   }
 
   void VWorker::setInput(const std::vector<double>& vr,
                          const std::vector<double>& vi)
   {
     setInput(0, vr);
-    setInput(1, vr);
+    setInput(1, vi);
   }
 
   void VWorker::setInput(const std::vector<Point>& v)
@@ -89,6 +91,7 @@ namespace ice
         input[0][k] = v[k].x;
         input[0][k] = v[k].y;
       }
+    resultValid = false;
   }
 
   void VWorker::setInput(const std::vector<int>& v, double factor)
@@ -103,13 +106,14 @@ namespace ice
     input[i].resize(size);
     for (int k = 0; k < size; k++)
       input[i][k] = v[k];
+    resultValid = false;
   }
 
   void VWorker::setInput(const std::vector<int>& vr,
                          const std::vector<int>& vi, double factor)
   {
     setInput(0, vr, factor);
-    setInput(1, vr, factor);
+    setInput(1, vi, factor);
   }
 
   void VWorker::setInputFromRow(const ice::matrix<double>& m, int row)
@@ -123,6 +127,7 @@ namespace ice
     checkParameter(m.cols());
     input[i].resize(size);
     m.getRow(row, input[i]);
+    resultValid = false;
   }
 
   void VWorker::setInputFromRow(const ice::matrix<double>& m1,
@@ -144,6 +149,7 @@ namespace ice
     checkParameter(m.cols());
     input[i].resize(size);
     m.getRow(row, input[i], factor);
+    resultValid = false;
   }
 
   void VWorker::setInputFromRow(const ice::matrix<int>& m1,
@@ -165,6 +171,7 @@ namespace ice
     checkParameter(m.rows());
     input[i].resize(size);
     m.getColumn(col, input[i]);
+    resultValid = false;
   }
 
   void VWorker::setInputFromColumn(const ice::matrix<double>& m1,
@@ -186,6 +193,7 @@ namespace ice
     checkParameter(m.rows());
     input[i].resize(size);
     m.getColumn(col, input[i], factor);
+    resultValid = false;
   }
 
   void VWorker::setInputFromColumn(const ice::matrix<int>& m1,
@@ -193,6 +201,32 @@ namespace ice
   {
     setInputFromColumn(0, m1, col, factor);
     setInputFromColumn(1, m2, col, factor);
+  }
+
+  void VWorker::checkParameter(int sourceSize)
+  {
+    if (size == 0) // not set
+      {
+        setParameter(sourceSize);
+      }
+    else
+      {
+        if (size != sourceSize)
+          throw IceException(CNAME, M_VECTORDIM);
+      }
+  }
+
+  void VWorker::checkDone() const
+  {
+    if (!resultValid)
+      {
+        if (size == 0)
+          throw IceException(CNAME, "parameter not set");
+        if (input[0].empty())
+          throw IceException(CNAME, "input not set");
+        transform();
+        resultValid = true;
+      }
   }
 
   void VWorker::getResult(double* v1,

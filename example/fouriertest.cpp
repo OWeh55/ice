@@ -63,7 +63,7 @@ int main(int argc, char** argv)
   // transform f2
   ft.setInput(f2);
   ft.getResult(s2r, s2i);
-  cout << "the fourier transformed fuctions" << endl;
+  cout << "the fourier transformed functions" << endl;
   print(s1r, true);
   print(s1i, false);
 
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
   ft.getResultFromReal(s1cr, s1ci);
   ft.getResultFromImag(s2cr, s2ci);
 
-  cout << "fourier transformed fuctions from combined transform" << endl;
+  cout << "fourier transformed functions from combined transform" << endl;
   print(s1cr, true);
   print(s1ci, false);
 
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
   // inverse transform f2
   ft.setInput(s2r, s2i);
   ft.getResult(f2r);
-  cout << "the back transformed fuctions" << endl;
+  cout << "the back transformed functions" << endl;
   print(f1r, true);
   print(f2r, false);
   print(f1r - f1, false, true);
