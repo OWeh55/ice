@@ -305,4 +305,60 @@ namespace ice
       }
   }
 
+  // put Result into row of 2d matrix
+  void VWorker::getResultToRow(ice::matrix<double>& v, int row) const
+  {
+    checkDone();
+
+    vector<double> res;
+    getResult(res);
+    for (int i = 0; i < size; ++i)
+      {
+        v[row][i] = res[i];
+      }
+  }
+
+  void VWorker::getResultToRow(ice::matrix<double>& vr,
+                               ice::matrix<double>& vi, int row) const
+  {
+    checkDone();
+
+    vector<double> resr;
+    vector<double> resi;
+    getResult(resr, resi);
+    for (int i = 0; i < size; ++i)
+      {
+        vr[row][i] = resr[i];
+        vi[row][i] = resi[i];
+      }
+  }
+
+  // put Result into column of 2d matrix
+  void VWorker::getResultToColumn(ice::matrix<double>& v, int col) const
+  {
+    checkDone();
+
+    vector<double> res;
+    getResult(res);
+    for (int i = 0; i < size; ++i)
+      {
+        v[i][col] = res[i];
+      }
+  }
+
+  void VWorker::getResultToColumn(ice::matrix<double>& vr,
+                                  ice::matrix<double>& vi, int col) const
+  {
+    checkDone();
+
+    vector<double> resr;
+    vector<double> resi;
+    getResult(resr, resi);
+    for (int i = 0; i < size; ++i)
+      {
+        vr[i][col] = resr[i];
+        vi[i][col] = resi[i];
+      }
+  }
+
 }

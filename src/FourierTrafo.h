@@ -66,16 +66,16 @@ namespace ice
                            std::vector<double>& destinationImag) const;
 
     // simplified calls for special cases
-    void transform(const std::vector<double>& src,
-                   std::vector<double>& dstre,
-                   std::vector<double>& dstim,
-                   bool forward = true);
-
-    void transform(const std::vector<double>& srcre,
-                   const std::vector<double>& srcim,
-                   std::vector<double>& dstre,
-                   std::vector<double>& dstim,
-                   bool forward = true);
+    static void transform(const std::vector<double>& src,
+			  std::vector<double>& dstre,
+			  std::vector<double>& dstim,
+			  bool forward = true);
+    
+    static void transform(const std::vector<double>& srcre,
+			  const std::vector<double>& srcim,
+			  std::vector<double>& dstre,
+			  std::vector<double>& dstim,
+			  bool forward = true);
 
   private:
     virtual void transform() const;

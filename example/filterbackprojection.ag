@@ -10,8 +10,10 @@
  opt: o, outfiles, string, outfilename, Ausgabe-Dateiname, ""
  opt: p, phiresolution, int, phiResolution, Auflösung phi, 360
  opt: s, steps, void, showSteps, Zeige Zwischenschritte, false
- opt: w, waitsteps, void, waitSteps, Warte bei Zwischenschritten, false
+% opt: w, waitsteps, void, waitSteps, Warte bei Zwischenschritten, false
+ opt: r, radius, double, rad, Radius künstlicher Testbilder, 500
  opt: u, unfiltered, void, showUnfiltered, Zeige auch unfiltered back projection, false
+ opt: t, text, string, text, Text in Testbild, "Hallo"
  opt: h, help, usage, help, Hilfe
 AppGen*/
 
@@ -20,7 +22,6 @@ int main(int argc, char* argv[])
 {
   /*AppGen:MainEnd*/
   Image test;
-  double rad = 500;
   Point center(rad + 1, rad + 1);
   if (!filename.empty())
     {
@@ -42,17 +43,10 @@ int main(int argc, char* argv[])
     {
       test.create(rad * 2 + 2, rad * 2 + 2, 255);
       test.set(0);
-      Text("H", rad - 200, rad - 200, 200, 3, test);
-      Text("a", rad - 200, rad - 100, 200, 3, test);
-      Text("l", rad - 200, rad - 0, 200, 3, test);
-      Text("l", rad - 200, rad + 100, 200, 3, test);
-      Text("o", rad - 200, rad + 200, 200, 3, test);
-#if 0
-      test.setPixel(rad, rad, 255);
-      test.setPixel(rad + 1, rad, 255);
-      test.setPixel(rad, rad + 1, 255);
-      test.setPixel(rad + 1, rad + 1, 255);
-#endif
+
+      for (unsigned int i = 0; i < text.size(); i++)
+        Text(text.substr(i, 1), rad - 200, rad - 200 + i * 100, 200, 3, test);
+
     }
   Show(ON, test);
   if (!outfilename.empty())

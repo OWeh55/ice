@@ -36,9 +36,10 @@ namespace ice
                                std::vector<double>& destinationImag,
                                bool forward)
   {
-    setParameter(source.size(), forward);
-    setInput(source);
-    getResult(destinationReal, destinationImag);
+    FourierTrafo ft;
+    ft.setParameter(source.size(), forward);
+    ft.setInput(source);
+    ft.getResult(destinationReal, destinationImag);
   }
 
   void FourierTrafo::transform(const std::vector<double>& sourceReal,
@@ -47,9 +48,10 @@ namespace ice
                                std::vector<double>& destinationImag,
                                bool forward)
   {
-    setParameter(sourceReal.size(), forward);
-    setInput(sourceReal, sourceImag);
-    getResult(destinationReal, destinationImag);
+    FourierTrafo ft;
+    ft.setParameter(sourceReal.size(), forward);
+    ft.setInput(sourceReal, sourceImag);
+    ft.getResult(destinationReal, destinationImag);
   }
 
   void FourierTrafo::setParameter(int newSize, bool newForward)

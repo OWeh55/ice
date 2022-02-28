@@ -63,7 +63,9 @@ int main(int argc, char** argv)
   // transform f2
   ft.setInput(f2);
   ft.getResult(s2r, s2i);
+
   cout << "the fourier transformed functions" << endl;
+
   print(s1r, true);
   print(s1i, false);
 
@@ -105,8 +107,37 @@ int main(int argc, char** argv)
   cout << "the back transformed functions" << endl;
   print(f1r, true);
   print(f2r, false);
+  cout << "differences" << endl;
   print(f1r - f1, false, true);
   print(f2r - f2, false, true);
+  cout << "---------------------------------------" << endl;
+  cout << "simplified calls for vector<double>" << endl;
+  cout << "real source" << endl;
 
+  vector<double> scr, sci;
+  print(f1, true);
+  FourierTrafo::transform(f1, scr, sci, true);
+  cout << "spectrum" << endl;
+  print(scr, true);
+  print(sci, false);
+  FourierTrafo::transform(scr, sci, f1r, f2r, false);
+  print(f1r, true);
+  print(f2r, false);
+  cout << "differences" << endl;
+  print(f1r - f1, false, true);
+
+  cout << "complex source" << endl;
+  print(f1, true);
+  print(f2, false);
+  FourierTrafo::transform(f1, f2, scr, sci, true);
+  cout << "spectrum" << endl;
+  print(scr, true);
+  print(sci, false);
+  FourierTrafo::transform(scr, sci, f1r, f2r, false);
+  print(f1r, true);
+  print(f2r, false);
+  cout << "differences" << endl;
+  print(f1r - f1, false, true);
+  print(f2r - f2, false, true);
   return 0;
 }
