@@ -38,8 +38,8 @@ const int vsize = 9;
 int main(int argc, char** argv)
 {
   // two functions
-  vector<double> f1(vsize);
-  vector<double> f2(vsize);
+  vector<double> f1(vsize, 0.0);
+  vector<double> f2(vsize, 0.0);
 
   for (int i = 0; i < vsize; ++i)
     {

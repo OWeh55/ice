@@ -36,13 +36,12 @@ void print(const vector<double>& v, bool index = true, bool sc = false)
 /*AppGen:Global*/
 
 /*AppGen
-prog: Faltung eines Bildes mit einem anderen Bild oder einer speziellen Maske
+prog: test of ConvolutionC
 %%Beschreibung Parameter
 %symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
-%para: file,optional,string,fn,Bild-Datei,""
 %
-opt: n, vsize, int, vsize, Vektorgröße, 9
-opt: v, verbose, void, verbose, Anzeige der Abarbeitung, false
+opt: n, vsize, int, vsize, vektor size, 9
+opt: v, verbose, void, verbose, more messages during processing, false
 opt: h, help, usage, help, Hilfe
 AppGen*/
 
@@ -55,18 +54,13 @@ int main(int argc, char* argv[])
       vector<double> f1(vsize, 0.0);
       vector<double> f2(vsize, 0.0);
 
-#if 1
       for (int i = 0; i < vsize; i++)
         {
           if (i < vsize / 2)
-            f1[i] = 2.0 / vsize;
+            f2[i] = 2.0 / vsize;
         }
-      f2 = f1;
-#else
-      f1[0] = 1;
-      f1[1] = 1;
-      f2 = f1;
-#endif
+      f1 = f2;
+
 
       cout << "\"manual\" convolution" << endl;
       print(f1, true);
