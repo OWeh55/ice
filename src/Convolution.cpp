@@ -24,9 +24,9 @@ using std::vector;
 
 namespace ice
 {
-#define CNAME "Convolution"
+#define CNAME "ConvolutionC"
 
-  void Convolution::transform() const
+  void ConvolutionC::transform() const
   {
     FourierTrafo ft1(size);
     ft1.setInput(input[0], input[1]);
@@ -50,9 +50,19 @@ namespace ice
         imag3[i] = sqrtN * (real1[i] * imag2[i] + real1[i] * imag2[i]);
       }
 
-    FourierTrafo ft2(size, true);
+    FourierTrafo ft2(size, false);
     ft2.setInput(real3, imag3);
     result[0].resize(size);
     ft2.getResult(result[0]);
   }
+
+  void ConvolutionC::convolute(const std::vector<double>& src1,
+                               const std::vector<double>& src2,
+                               std::vector<double>& dst)
+  {
+    ConvolutionC convolution;
+    convolution.setInput(src1, src2);
+    convolution.getResult(dst);
+  }
+
 }

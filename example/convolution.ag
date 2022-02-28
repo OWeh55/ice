@@ -1,237 +1,48 @@
+#include <iomanip>
+
 #include <image.h>
-#include <fouriertrafo2d.h>
-#include <fouriertrafo.h>
+#include <Convolution.h>
+
+// test class ComvolutionC
+
+void print(const vector<double>& v, bool index = true, bool sc = false)
+{
+  int width = 9;
+  int dim = v.size();
+  int n = dim;
+  if (n > 20)
+    n = 20;
+  if (index)
+    {
+      for (int i = 0; i < n; ++i)
+        cout << setw(width) << i << " ";
+      cout << endl;
+    }
+  double sum2 = 0;
+  for (int i = 0; i < n; ++i)
+    {
+      int idx = i;
+      while (idx < 0) idx += dim;
+      sum2 += v[idx] * v[idx];
+      if (sc)
+        cout << setw(width) << setprecision(2) << scientific << v[idx] << " ";
+      else
+        cout << setw(width) << setprecision(4) << fixed << v[idx] << " ";
+    }
+  cout << "(" << sqrt(sum2) << ")";
+  cout << endl;
+}
 
 /*AppGen:Global*/
-
-const int iFactor = 10;
-
-class ComplexImage
-{
-public:
-  void create(const ImageD& img)
-  {
-    real.create(img, true);
-    imag.create(img);
-    imag.set(0);
-    xsize = real.xsize;
-    ysize = real.ysize;
-  }
-
-  void create(const ImageD& imgr, const ImageD& imgi)
-  {
-    real.create(imgr, true);
-    imag.create(imgi, true);
-    xsize = real.xsize;
-    ysize = real.ysize;
-  }
-
-  void create(const Image& img)
-  {
-    real.create(img.xsize, img.ysize);
-    xsize = real.xsize;
-    ysize = real.ysize;
-
-    for (int y = 0; y < ysize; ++y)
-      for (int x = 0; x < xsize; ++x)
-        real.setPixel(x, y, img.getPixel(x, y));
-
-    imag.create(real);
-    imag.set(0);
-  }
-
-  void create(int xs, int ys)
-  {
-    xsize = xs;
-    ysize = ys;
-    real.create(xsize, ysize);
-    real.set(0);
-    imag.create(xsize, ysize);
-    imag.set(0);
-  }
-  void getValue(int x, int y, double& r, double& i)
-  {
-    r = real.getPixel(x, y);
-    i = imag.getPixel(x, y);
-  }
-
-  void setValue(int x, int y, double r, double i)
-  {
-    real.setPixel(x, y, r);
-    imag.setPixel(x, y, i);
-  }
-
-  const ComplexImage& operator=(const ComplexImage& rhs)
-  {
-    real.copy(rhs.real);
-    imag.copy(rhs.imag);
-    return *this;
-  }
-
-  ImageD real;
-  ImageD imag;
-  int xsize;
-  int ysize;
-
-};
-
-double downsize(const matrix<double>& big, matrix<double>& m)
-{
-  int size = m.cols();
-  int bigSize = big.cols();
-  int iFactor = bigSize / size;
-  int iFactor2 = iFactor * iFactor;
-  double sum = 0.0;
-
-  for (int x = 0; x < size; ++x)
-    {
-      int xBig = x * iFactor;
-      for (int y = 0; y < size; ++y)
-        {
-          int yBig = y * iFactor;
-
-          double sumV = 0.0;
-          for (int xx = xBig; xx < xBig + iFactor; ++xx)
-            for (int yy = yBig; yy < yBig + iFactor; ++yy)
-              sumV += big[xx][yy];
-
-          double currentValue = sumV / iFactor2;
-          sum += currentValue;
-          m[x][y] = currentValue;
-        }
-    }
-  return sum;
-}
-
-double makeLine(matrix<double>& m, double len, double phi)
-{
-  int size = int(2 * (len + 1.0));
-  int bigSize = size * iFactor;
-  m.resize(size, size);
-
-  matrix<double> big(bigSize, bigSize, 0.0);
-  double bigLen = len * iFactor;
-  int z0 = bigSize / 2;
-
-  LineSeg line(-cos(phi)*bigLen, -sin(phi)*bigLen, cos(phi)*bigLen, sin(phi)*bigLen);
-
-  for (int x = 0; x < bigSize; ++x)
-    {
-      double dx = x - z0;
-      for (int y = 0; y < bigSize; ++y)
-        {
-          double dy = y - z0;
-          //    cout << dx << ","<<dy << " " << line.Distance(dx, dy) << endl;
-          if (line.Distance(dx, dy) < 2.0)
-            big[x][y] = 1.0;
-          else
-            big[x][y] = 0.0;
-        }
-    }
-  return downsize(big, m);
-}
-
-double makeDisc(matrix<double>& m, double radius)
-{
-  int size = int(2 * (radius + 1.0));
-  int bigSize = size * iFactor;
-
-  m.resize(size, size);
-
-  matrix<double> big(bigSize, bigSize, 0.0);
-
-  double ifactor2 = iFactor * iFactor;
-  double radius2 = radius * radius * ifactor2;
-
-  int z0 = bigSize / 2;
-
-  for (int x = 0; x < bigSize; ++x)
-    {
-      double dx = x - z0;
-      dx *= dx;
-      for (int y = 0; y < bigSize; ++y)
-        {
-          double dy = y - z0;
-          dy *= dy;
-          if (dx + dy < radius2)
-            big[x][y] = 1.0;
-        }
-    }
-
-  return downsize(big, m);
-}
-
-double makeMaskFromMatrix(const Image& mask, double par1, double par2, int mode)
-{
-  int xm = mask.xsize / 2;
-  int ym = mask.ysize / 2;
-  int mv = mask.maxval;
-  int mv2 = (mv + 1) / 2;
-
-  matrix<double> dmask;
-  double factor = 0;
-  switch (mode)
-    {
-    case 1:
-      factor = makeDisc(dmask, par1);
-      break;
-    case 2:
-      factor = makeLine(dmask, par1, par2);
-      break;
-    }
-  mask.set(mv2);
-  int ss = dmask.rows() / 2;
-  for (int xi = 0; xi < dmask.cols(); ++xi)
-    {
-      for (int yi = 0; yi < dmask.rows(); ++yi)
-        {
-          int g =  0.5 * dmask[xi][yi] * mv + mv2;
-          //  if (g < 0 || g > mv)
-          //    cout << "!!! "  << dmask[xi][yi] << endl;
-          mask.setPixel(xm - ss + xi, ym - ss + yi, g);
-        }
-    }
-  //  cout << factor << endl;
-  return factor;
-}
-
-double makeMask(const Image& mask, double par1, double par2, int mode)
-{
-  double result = 0;
-  switch (mode)
-    {
-    case 1:
-      result = makeMaskFromMatrix(mask, par1, par2, 1);
-      break;
-    case 2:
-      result = makeMaskFromMatrix(mask, par1, par2, 2);
-      break;
-    case 99:
-      // Maske aus Datei laden
-      // wird nicht hier bearbeitet
-      break;
-    default:
-      throw "Wrong mask mode";
-    }
-  return result;
-}
 
 /*AppGen
 prog: Faltung eines Bildes mit einem anderen Bild oder einer speziellen Maske
 %%Beschreibung Parameter
 %symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
-para: file,optional,string,fn,Bild-Datei,""
+%para: file,optional,string,fn,Bild-Datei,""
 %
-opt: f, factor, double, factor, Faktor für Faltung(0.0=auto), 0.0
-opt: m, maskmode, int, maskMode, Modus für [Ent-]Faltungsmaske, 1
-opt2:   m = 1  Kreisscheibe
-opt2:   m = 2  Linie / Bewegungsunschärfe
-opt: r, radius, double, radius, Ausdehnung der Maske, 10
-opt: p, phi, double, phi, Orientierung der Maske, 0
-opt: M, maskfile, string, maskFilename, Lies Maske aus Datei, ""
-
-opt: o, output, string, outfile, Datei-Name für Bildausgabe, ""
-opt: v, verbose, void,verbose,Anzeige der Abarbeitung, false
+opt: n, vsize, int, vsize, Vektorgröße, 9
+opt: v, verbose, void, verbose, Anzeige der Abarbeitung, false
 opt: h, help, usage, help, Hilfe
 AppGen*/
 
@@ -241,148 +52,56 @@ int main(int argc, char* argv[])
   /*AppGen:MainEnd*/
   try
     {
-      Image src;
+      vector<double> f1(vsize, 0.0);
+      vector<double> f2(vsize, 0.0);
 
-      if (!fn.empty())
+#if 1
+      for (int i = 0; i < vsize; i++)
         {
-          if (verbose)
-            cout << "Lese" << fn << endl;
-          src = ReadImg(fn);
+          if (i < vsize / 2)
+            f1[i] = 2.0 / vsize;
         }
-      else
+      f2 = f1;
+#else
+      f1[0] = 1;
+      f1[1] = 1;
+      f2 = f1;
+#endif
+
+      cout << "\"manual\" convolution" << endl;
+      print(f1, true);
+      print(f2, false);
+
+      vector<double> result1(vsize, 0.0);
+      for (int i = 0; i < vsize; i++)
         {
-          if (verbose)
-            cout << "Erzeuge Testbild" << endl;
-          // simples testbild
-          src.create(1000, 750, 255);
-
-          src.set(20); // hintergrund
-
-          for (int i = 0; i < 200; i++)
-            {
-              int x = Random(800);
-              int y = Random(550);
-              Circle c(x + 100, y + 100, 8);
-              draw(c, src, 127, 255);
-            }
-
-        }
-
-      if (!maskFilename.empty())
-        maskMode = 99;
-
-      Show(ON, src, "Original");
-
-      int xSize = src.xsize;
-      int ySize = src.ysize;
-
-      ComplexImage srcSp;
-      srcSp.create(xSize, ySize);
-
-      if (verbose)
-        cout << "FT(src)" << endl;
-
-      FourierTrafo2D ft2;
-      ft2.setInput(src);
-      ft2.getResult(srcSp.real, srcSp.imag);
-
-      if (verbose)
-        cout << "ErzeugeMaske" << endl;
-
-      Image mask;
-      mask.create(src);
-
-      Show(ON, mask, "Filter-Maske");
-
-      //Maske kreieren
-      double maskNorm;
-      if (maskMode != 99)
-        maskNorm = makeMask(mask, radius, phi, maskMode);
-      else
-        {
-          mask.read(maskFilename);
-          /*
-                Image temp;
-                temp.create(xSize, ySize, 255);
-                temp.read(maskFilename);
-
-                int min = 255;
-                int max = 0;
-                int xmin = 0, ymin = 0;
-                for (int y = 0; y < ySize; ++y)
-                  for (int x = 0; x < xSize; ++x)
-                    {
-                      int val = temp.getPixel(x, y);
-                      if (val < min)
-                        {
-                          min = val;
-                          xmin = x;
-                          ymin = y;
-                        }
-                      if (val > max)
-                        max = val;
-                    }
-                int xShift = xSize / 2 - xmin;
-                int yShift = ySize / 2 - ymin;
-
-                double sum = 0;
-                for (int y = 0; y < ySize; ++y)
-                  for (int x = 0; x < xSize; ++x)
-                    {
-                      int val = temp.getPixel(x, y);
-                      val -= max;
-                      val = val * 255 / (min - max);
-                      mask.setPixel((x + xShift + xSize) % xSize, (y + yShift + ySize) % ySize, val);
-                      sum += val;
-                    }
-          */
-
           double sum = 0;
-          for (int y = 0; y < ySize; ++y)
-            for (int x = 0; x < xSize; ++x)
-              {
-                int val = mask.getPixel(x, y);
-                sum += val;
-              }
-
-          maskNorm = sum;
-
+          for (int k = 0; k < vsize; k++)
+            sum += f1[k] * f2[(vsize + i - k) % vsize];
+          result1[i] = sum;
         }
+      print(result1, true);
 
-      if (verbose)
-        cout << "FT(mask)" << endl;
+      cout << "convolution with ConvolutionC" << endl;
+      print(f1, true);
+      print(f2, false);
+      vector<double> result2;
+      ConvolutionC conv;
+      conv.setInput(f1, f2);
+      conv.getResult(result2);
+      print(result2, true);
+      cout << "difference" << endl;
+      print(result2 - result1, true, true);
 
-      ComplexImage maskSp;
-      maskSp.create(xSize, ySize);
-      ft2.setInput(mask);
-      ft2.getResult(maskSp.real, maskSp.imag);
+      vector<double> result3;
+      cout << "static method of ConvolutionC" << endl;
+      print(f1, true);
+      print(f2, false);
+      ConvolutionC::convolute(f1, f2, result3);
+      print(result3, true);
+      cout << "difference" << endl;
+      print(result3 - result1, false, true);
 
-      ComplexImage destSp;
-      destSp.create(xSize, ySize);
-
-      if (verbose)
-        cout << "Faltung(imSpektrum)" << endl;
-
-      ConvolutionFImgD(srcSp.real, srcSp.imag,
-                       maskSp.real, maskSp.imag,
-                       destSp.real, destSp.imag);
-
-      if (verbose)
-        cout << "IFT(gefaltet)" << endl;
-
-      ft2.setParameter(src.ysize, src.xsize, false);
-      ft2.setInput(destSp.real, destSp.imag);
-      // cout << "Input set" << endl;
-      Image dest = NewImg(src);
-      ft2.getResult(dest, ADAPTIVE);
-      // cout << "output get" < <endl;
-      Show(ON, dest, "Gefaltetes Bild");
-
-      GetChar();
-      if (!outfile.empty())
-        {
-          dest.write(outfile);
-        }
     }
   catch (const char* msg)
     {

@@ -24,26 +24,27 @@
 
 namespace ice
 {
-  class Convolution : public VWorker
+  class ConvolutionC : public VWorker
   {
   public:
-    Convolution(int size): VWorker(size)
+    ConvolutionC(int size): VWorker(size)
     {
     }
 
-    Convolution(): VWorker()
+    ConvolutionC(): VWorker()
     {}
 
-    virtual ~Convolution()
+    virtual ~ConvolutionC()
     {
     }
 
-    Convolution(const Convolution& ft) = delete;
-    const Convolution& operator=(const Convolution& ft) = delete;
+    ConvolutionC(const ConvolutionC& ft) = delete;
+    const ConvolutionC& operator=(const ConvolutionC& ft) = delete;
 
-    void convolute(const std::vector<double>& src1,
-                   const std::vector<double>& src2,
-                   std::vector<double>& dst);
+    // simplified call for vector<double>
+    static void convolute(const std::vector<double>& src1,
+                          const std::vector<double>& src2,
+                          std::vector<double>& dst);
 
   private:
     virtual void transform() const;

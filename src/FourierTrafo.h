@@ -67,15 +67,15 @@ namespace ice
 
     // simplified calls for special cases
     static void transform(const std::vector<double>& src,
-			  std::vector<double>& dstre,
-			  std::vector<double>& dstim,
-			  bool forward = true);
-    
+                          std::vector<double>& dstre,
+                          std::vector<double>& dstim,
+                          bool forward = true);
+
     static void transform(const std::vector<double>& srcre,
-			  const std::vector<double>& srcim,
-			  std::vector<double>& dstre,
-			  std::vector<double>& dstim,
-			  bool forward = true);
+                          const std::vector<double>& srcim,
+                          std::vector<double>& dstre,
+                          std::vector<double>& dstim,
+                          bool forward = true);
 
   private:
     virtual void transform() const;
