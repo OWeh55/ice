@@ -271,6 +271,11 @@ namespace ice
       return nRows;
     }
 
+    bool empty() const
+    {
+      return nColumns == 0 || nRows == 0;
+    }
+
     /**
      * Create matrix from part of *this matrix.
      * @param r1, r2 range of rows
