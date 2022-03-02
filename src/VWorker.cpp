@@ -34,8 +34,11 @@ namespace ice
 
   void VWorker::setParameter(int newSize)
   {
-    size = newSize;
-    resultValid = false;
+    if (newSize != size)
+      {
+        size = newSize;
+        resultValid = false;
+      }
   }
 
   void VWorker::setInput(const double* v, int n)

@@ -19,10 +19,9 @@
 #ifndef FOURIERTRAFO_H
 #define FOURIERTRAFO_H
 
-#include <vector>
-#include <Point.h>
-#include "matrixtemplate.h"
 #include "VWorker.h"
+
+#include <vector>
 
 //#define NOFFTW3
 
@@ -35,14 +34,14 @@ namespace ice
   class FourierTrafo: public VWorker
   {
   public:
-    FourierTrafo(int size, bool forward = true, bool centered = false):
+    FourierTrafo(int size, bool forwardP = true, bool centered = false):
       VWorker(0), forward(true), // real setting in setParameter
       centered(centered)
     {
-      setParameter(size, forward);
+      setParameter(size, forwardP);
     }
 
-    FourierTrafo(): centered(false) {}
+    FourierTrafo(): forward(true), centered(false) {}
 
     virtual ~FourierTrafo()
     {

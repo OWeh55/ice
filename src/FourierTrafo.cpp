@@ -59,7 +59,11 @@ namespace ice
     // cout << "setParameter" << endl;
     VWorker::setParameter(newSize);
     norm = 1.0 / sqrt(size);
-    forward = newForward;
+    if (forward != newForward)
+      {
+        forward = newForward;
+        resultValid = false;
+      }
   }
 
   void FourierTrafo::getResultFromReal(std::vector<double>& destinationReal,
