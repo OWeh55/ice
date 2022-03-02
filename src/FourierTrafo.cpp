@@ -104,10 +104,15 @@ namespace ice
   {
     if ((oldsize != size) || (oldforward != forward))
       {
-        in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size);
+        if (inp != nullptr)
+          fftw_free(inp);
+        if (out != nullptr)
+          fftw_free(out);
+        inp = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size);
         out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size);
 
-        fftw_p = fftw_plan_dft_1d(size, in, out,
+        cout << inp << " x " << out << endl;
+        fftw_p = fftw_plan_dft_1d(size, inp, out,
                                   forward ? FFTW_FORWARD : FFTW_BACKWARD,
                                   FFTW_ESTIMATE);
         oldsize = size;
@@ -119,14 +124,14 @@ namespace ice
     if (input[1].empty())
       for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
         {
-          in[i][0] = input[0][sourceIndex];
-          in[i][1] = 0.0;
+          inp[i][0] = input[0][sourceIndex];
+          inp[i][1] = 0.0;
         }
     else
       for (int i = 0; i < size; ++i, sourceIndex = (sourceIndex + 1) % size)
         {
-          in[i][0] = input[0][sourceIndex];
-          in[i][1] = input[1][sourceIndex];
+          inp[i][0] = input[0][sourceIndex];
+          inp[i][1] = input[1][sourceIndex];
         }
 
     fftw_execute(fftw_p);

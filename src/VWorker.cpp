@@ -363,5 +363,4 @@ namespace ice
         vi[i][col] = resi[i];
       }
   }
-
 }

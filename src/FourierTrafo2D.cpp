@@ -47,10 +47,15 @@ namespace ice
 
   void FourierTrafo2D::transform() const
   {
+    result[0].resize(rows, cols);
+    result[1].resize(rows, cols);
     FourierTrafo trRow(cols, forward, centered);
     for (int y = 0; y < rows; ++y)
       {
-        trRow.setInputFromRow(input[0], input[1], y);
+        if (input[1].empty())
+          trRow.setInputFromRow(input[0], y);
+        else
+          trRow.setInputFromRow(input[0], input[1], y);
         trRow.getResultToRow(result[0], result[1], y);
       }
 

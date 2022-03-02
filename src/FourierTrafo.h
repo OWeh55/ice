@@ -47,7 +47,7 @@ namespace ice
     {
 #ifndef NOFFTW3
       fftw_destroy_plan(fftw_p);
-      fftw_free(in);
+      fftw_free(inp);
       fftw_free(out);
 #endif
     }
@@ -94,8 +94,8 @@ namespace ice
     mutable bool oldforward;
 
 #ifndef NOFFTW3
-    mutable fftw_complex* in;
-    mutable fftw_complex* out;
+    mutable fftw_complex* inp = nullptr;
+    mutable fftw_complex* out = nullptr;
     mutable fftw_plan fftw_p;
 #else
     void makeSinCosTab() const;

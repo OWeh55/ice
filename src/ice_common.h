@@ -193,5 +193,7 @@
 #include "WindowWalker.h"
 #include "Walker.h"
 #include "WaterShed.h"
+#include "VWorker.h"
+#include "VWorker2D.h"
 
 #endif
