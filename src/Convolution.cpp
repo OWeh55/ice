@@ -24,9 +24,9 @@ using std::vector;
 
 namespace ice
 {
-#define CNAME "ConvolutionC"
+#define CNAME "Convolution"
 
-  void ConvolutionC::transform() const
+  void Convolution::transform() const
   {
     FourierTrafo ft1(size);
 
@@ -57,11 +57,11 @@ namespace ice
     ft2.getResult(result[0]);
   }
 
-  void ConvolutionC::convolute(const std::vector<double>& src1,
-                               const std::vector<double>& src2,
-                               std::vector<double>& dst)
+  void Convolution::convolute(const std::vector<double>& src1,
+                              const std::vector<double>& src2,
+                              std::vector<double>& dst)
   {
-    ConvolutionC convolution;
+    Convolution convolution;
     convolution.setInput(src1, src2);
     convolution.getResult(dst);
   }
