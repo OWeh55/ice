@@ -34,8 +34,8 @@
 namespace ice
 {
 #define FNAME "Convolution"
-  void Convolution(const ImageD& is1, const ImageD& is2,
-                   ImageD& id, int mode)
+  void calcConvolution(const ImageD& is1, const ImageD& is2,
+                       ImageD& id, int mode)
   // id = is1 (*) is2
   {
     try
@@ -102,8 +102,8 @@ namespace ice
 
 #define FNAME "Convolution"
 // ID = IS1 (*) IS2
-  void Convolution(const Image& is1, const Image& is2,
-                   Image& id, double factor, int mode)
+  void calcConvolution(const Image& is1, const Image& is2,
+                       Image& id, double factor, int mode)
   {
     try
       {
@@ -120,7 +120,7 @@ namespace ice
         ImageD dd;
         dd.create(xs, ys, 0, 1);
 
-        Convolution(ds1, ds2, dd, mode);
+        calcConvolution(ds1, ds2, dd, mode);
 
         if (factor != 0) // gray value scaling given
           {
@@ -144,8 +144,8 @@ namespace ice
 
 #define FNAME "InvConvolution"
 // is2 = id (*) is1
-  void InvConvolution(const ImageD& is1, const ImageD& is2, ImageD& id,
-                      double noise, int mode)
+  void calcInvConvolution(const ImageD& is1, const ImageD& is2, ImageD& id,
+                          double noise, int mode)
   {
     try
       {
@@ -224,8 +224,8 @@ namespace ice
 #undef FNAME
 
 #define FNAME "InvConvolution"
-  void InvConvolution(const Image& is1, const Image& is2, Image& id,
-                      double factor, double noise, int mode)
+  void calcInvConvolution(const Image& is1, const Image& is2, Image& id,
+                          double factor, double noise, int mode)
   {
     try
       {
@@ -242,7 +242,7 @@ namespace ice
         ImageD dd;
         dd.create(xs, ys);
 
-        InvConvolution(ds1, ds2, dd, noise, mode);
+        calcInvConvolution(ds1, ds2, dd, noise, mode);
 
         if (factor != 0.0)
           {
@@ -263,8 +263,8 @@ namespace ice
     RETHROW;
   }
 
-  void InvConvolution(const Image& is1, const Image& is2,
-                      ImageD& dd, double noise, int mode)
+  void calcInvConvolution(const Image& is1, const Image& is2,
+                          ImageD& dd, double noise, int mode)
   {
     try
       {
@@ -281,7 +281,7 @@ namespace ice
         ds2.create(xs, ys);
         ConvImgImgD(is2, ds2, NORMALIZED, SIGNED);
 
-        InvConvolution(ds1, ds2, dd, noise, mode);
+        calcInvConvolution(ds1, ds2, dd, noise, mode);
       }
     RETHROW;
   }

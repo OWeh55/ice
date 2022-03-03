@@ -112,7 +112,7 @@ namespace ice
         ImageD imgr;
         imgr.create(sx, sy);
 
-        InvConvolution(img1, img2, imgr, beta, MD_IGNORE_BIAS);
+        calcInvConvolution(img1, img2, imgr, beta, MD_IGNORE_BIAS);
 
         Point p;
         double val = peakEvaluation(imgr, p);

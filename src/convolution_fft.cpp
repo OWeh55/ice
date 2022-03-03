@@ -36,7 +36,7 @@
 namespace ice
 {
 #define FNAME "Convolution"
-  void Convolution(const Vector& s1, const Vector& s2, Vector& d)
+  void calcConvolution(const Vector& s1, const Vector& s2, Vector& d)
   {
     try
       {
@@ -50,7 +50,7 @@ namespace ice
         for (int i = 0; i < size; i++)
           h2[i] = s2[i];
         std::vector<double> dh;
-        Convolution(s1, s2, dh);
+        calcConvolution(s1, s2, dh);
         d.Resize(size);
         for (int i = 0; i < size; i++)
           d[i] = dh[i];
@@ -58,8 +58,8 @@ namespace ice
     RETHROW;
   }
 
-  void Convolution(const std::vector<double>& s1,
-                   const std::vector<double>& s2, std::vector<double>& d)
+  void calcConvolution(const std::vector<double>& s1,
+                       const std::vector<double>& s2, std::vector<double>& d)
   {
     try
       {
@@ -95,9 +95,9 @@ namespace ice
 
 #undef FNAME
 #define FNAME "InvConvolution"
-  void InvConvolution(const Vector& s1, const Vector& s2,
-                      Vector& d,
-                      double noise)
+  void calcInvConvolution(const Vector& s1, const Vector& s2,
+                          Vector& d,
+                          double noise)
   {
     try
       {
@@ -111,7 +111,7 @@ namespace ice
         for (int i = 0; i < size; i++)
           h2[i] = s2[i];
         std::vector<double> dh;
-        InvConvolution(s1, s2, dh, noise);
+        calcInvConvolution(s1, s2, dh, noise);
         d.Resize(size);
         for (int i = 0; i < size; i++)
           d[i] = dh[i];
@@ -119,9 +119,9 @@ namespace ice
     RETHROW;
   }
 
-  void InvConvolution(const std::vector<double>& s1,
-                      const std::vector<double>& s2,
-                      std::vector<double>& d, double noise)
+  void calcInvConvolution(const std::vector<double>& s1,
+                          const std::vector<double>& s2,
+                          std::vector<double>& d, double noise)
   {
     try
       {
