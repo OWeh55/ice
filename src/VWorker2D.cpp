@@ -51,6 +51,7 @@ namespace ice
     checkIndex(i);
     checkParameter(v.rows(), v.cols());
     input[i] = v;
+    resultValid = false;
   }
 
   void VWorker2D::setInput(const ice::matrix<double>& vr,
@@ -60,6 +61,7 @@ namespace ice
 
     input[0] = vr;
     input[1] = vi;
+    resultValid = false;
   }
 
   void VWorker2D::setInput(const ice::matrix<int>& v, double factor)
@@ -72,11 +74,14 @@ namespace ice
     checkIndex(i);
     checkParameter(v.rows(), v.cols());
 
+    input[i].resize(rows, cols);
+
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
         {
           input[i][y][x] = v[y][x] * factor;
         }
+    resultValid = false;
   }
 
   void VWorker2D::setInput(const ice::matrix<int>& vr,
@@ -95,13 +100,14 @@ namespace ice
   {
     checkIndex(i);
     checkParameter(v.ysize, v.xsize);
-
+    input[i].resize(rows, cols);
     int v0 = (sign == SIGNED) ? (v.maxval + 1) / 2 : 0;
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
         {
           input[i][y][x] = (v.getPixel(x, y) - v0) * factor;
         }
+    resultValid = false;
   }
 
   void VWorker2D::setInput(const Image& vr, const Image& vi,
@@ -120,12 +126,13 @@ namespace ice
   {
     checkIndex(i);
     checkParameter(v.ysize, v.xsize);
-
+    input[i].resize(rows, cols);
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
         {
           input[i][y][x] = v.getPixel(x, y);
         }
+    resultValid = false;
   }
 
   void VWorker2D::setInput(const ImageD& vr, const ImageD& vi)
@@ -149,6 +156,7 @@ namespace ice
         {
           input[i][y][x] = v[y][x];
         }
+    resultValid = false;
   }
 
   void VWorker2D::setInput(const Matrix& vr, const Matrix& vi)
@@ -159,7 +167,7 @@ namespace ice
 
   void VWorker2D::checkParameter(int nRows, int nCols)
   {
-    if (cols == 0 && rows == 0)
+    if (cols == 0 || rows == 0)
       setParameter(nRows, nCols);
     else
       {
@@ -169,7 +177,6 @@ namespace ice
           }
       }
   }
-
 
   void VWorker2D::getResult(ice::matrix<double>& dstre,
                             ice::matrix<double>& dstim)

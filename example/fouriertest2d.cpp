@@ -54,13 +54,13 @@ int main(int argc, char** argv)
 
       // with ImageD
       cout << "ImageD:" << endl;
-      int xs = 300;
-      int ys = 200;
+      int xs = 900;
+      int ys = 600;
       ImageD source;
       source.create(xs, ys);
       for (int x = 0; x < xs; x++)
         for (int y = 0; y < ys; y++)
-          source.setPixel(x, y, (x + 3 * y) % 100);
+          source.setPixel(x, y, (2 * x - 3 * y) % 250 -125);
       FourierTrafo2D ft3(ys, xs, true);
       ft3.setInput(source);
       ImageD real;
@@ -69,6 +69,10 @@ int main(int argc, char** argv)
       imag.create(xs, ys);
       ft3.getResult(real, imag);
 
+      real.adaptLimits();
+      Show(GRAY,real);
+      GetChar();
+      
       FourierTrafo2D ft4(ys, xs, false);
       ft4.setInput(real, imag);
       ImageD res;

@@ -6,9 +6,10 @@ endif
 
 # main program to build
 MAIN=vis2
+MAIN=dft_demo
 
 # objects needed for main
-OBJECTS=$(MAIN).o filefunctions.o
+OBJECTS=$(MAIN).o filefunctions.o xdisplay.o
 
 ifndef ICEDIR
 ICEDIR=..

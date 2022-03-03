@@ -111,7 +111,6 @@ namespace ice
         inp = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size);
         out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size);
 
-        cout << inp << " x " << out << endl;
         fftw_p = fftw_plan_dft_1d(size, inp, out,
                                   forward ? FFTW_FORWARD : FFTW_BACKWARD,
                                   FFTW_ESTIMATE);
