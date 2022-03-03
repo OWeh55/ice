@@ -41,6 +41,7 @@ namespace ice
       }
   }
 
+  // setInput c array double*
   void VWorker::setInput(const double* v, int n)
   {
     setInput(0, v, n);
@@ -61,6 +62,8 @@ namespace ice
     setInput(0, vr, n);
     setInput(1, vi, n);
   }
+
+  // setInput vector<double>
 
   void VWorker::setInput(const std::vector<double>& v)
   {
@@ -84,6 +87,8 @@ namespace ice
     setInput(1, vi);
   }
 
+  // setInput vector<Point>
+
   void VWorker::setInput(const std::vector<Point>& v)
   {
     checkParameter(v.size());
@@ -97,6 +102,7 @@ namespace ice
     resultValid = false;
   }
 
+  // setInput vector<int>
   void VWorker::setInput(const std::vector<int>& v, double factor)
   {
     setInput(0, v, factor);
@@ -118,6 +124,8 @@ namespace ice
     setInput(0, vr, factor);
     setInput(1, vi, factor);
   }
+
+  // setInput from matrix<double> selecting one row or column
 
   void VWorker::setInputFromRow(const ice::matrix<double>& m, int row)
   {
@@ -156,12 +164,12 @@ namespace ice
   }
 
   void VWorker::setInputFromRow(const ice::matrix<int>& m1,
-                                const ice::matrix<int>& m2, int row, double factor)
+                                const ice::matrix<int>& m2,
+                                int row, double factor)
   {
     setInputFromRow(0, m1, row, factor);
     setInputFromRow(1, m2, row, factor);
   }
-
 
   void VWorker::setInputFromColumn(const ice::matrix<double>& m, int col)
   {
@@ -184,7 +192,6 @@ namespace ice
     setInputFromColumn(1, m2, col);
   }
 
-
   void VWorker::setInputFromColumn(const ice::matrix<int>& m, int col, double factor)
   {
     setInputFromColumn(0, m, col, factor);
@@ -200,7 +207,8 @@ namespace ice
   }
 
   void VWorker::setInputFromColumn(const ice::matrix<int>& m1,
-                                   const ice::matrix<int>& m2, int col, double factor)
+                                   const ice::matrix<int>& m2,
+                                   int col, double factor)
   {
     setInputFromColumn(0, m1, col, factor);
     setInputFromColumn(1, m2, col, factor);
@@ -308,7 +316,7 @@ namespace ice
       }
   }
 
-  // put Result into row of 2d matrix
+  // put result into row of 2d matrix
   void VWorker::getResultToRow(ice::matrix<double>& v, int row) const
   {
     checkDone();
@@ -336,7 +344,7 @@ namespace ice
       }
   }
 
-  // put Result into column of 2d matrix
+  // put result into column of 2d matrix
   void VWorker::getResultToColumn(ice::matrix<double>& v, int col) const
   {
     checkDone();

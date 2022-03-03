@@ -38,18 +38,19 @@ namespace ice
       setParameter(rows, cols, forward, centered);
     }
 
+    // c'tor with already given data
     template<typename Tmatrix>
     FourierTrafo2D(Tmatrix mat, bool forward = true, bool centered = true)
     {
-      setParameter(mat.rows(), mat.cols(), forward, centered);
-      setInput(mat);
+      setParameter(0, 0, forward, centered); // sizes not set here
+      setInput(mat);  // sets sizes implicitly
     }
 
     template<typename Tmatrix>
     FourierTrafo2D(Tmatrix matr, Tmatrix mati, bool forward = true, bool centered = true)
     {
-      setParameter(matr.rows(), matr.cols(), forward, centered);
-      setInput(matr, mati);
+      setParameter(0, 0, forward, centered); // sizes not set here
+      setInput(matr, mati); // sets sizes implicitly
     }
 
     virtual ~FourierTrafo2D()
@@ -63,7 +64,7 @@ namespace ice
     const FourierTrafo2D& operator=(const FourierTrafo2D& ft) = delete;
 
   private:
-    void transform() const;
+    virtual void transform() const;
 
     bool forward;
     bool centered;

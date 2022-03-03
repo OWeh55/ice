@@ -112,6 +112,18 @@ namespace ice
     };
 
     /**
+     * clear.
+     * set matrix to empty
+     */
+    void clear()
+    {
+      if (data != nullptr)
+        delete data;
+      nRows = 0;
+      nColumns = 0;
+    }
+
+    /**
      * initialization of a given matrix.
      * @param mode initialization mode \n
      *  mode = 0   all values zero.\n
@@ -271,13 +283,16 @@ namespace ice
       return nRows;
     }
 
+    /**
+     * is matrix empty? .
+     */
     bool empty() const
     {
       return nColumns == 0 || nRows == 0;
     }
 
     /**
-     * Create matrix from part of *this matrix.
+     * Create new matrix from part of *this matrix.
      * @param r1, r2 range of rows
      * @param c1, c2 range of columns
      */

@@ -48,17 +48,21 @@ namespace ice
     virtual void setParameter(int newSize);
 
     // assign input data in different forms
+    // c array
     void setInput(const double* v, int n);
     void setInput(int i, const double* v, int n);
     void setInput(const double* vr, const double* vi, int n);
 
+    // vector<double>
     void setInput(const std::vector<double>& v);
     void setInput(int i, const std::vector<double>& v);
     void setInput(const std::vector<double>& vr,
                   const std::vector<double>& vi);
 
+    // vector<Point>
     void setInput(const std::vector<Point>& v);
 
+    // vector<int>
     void setInput(const std::vector<int>& v, double factor = 1.0);
     void setInput(int i, const std::vector<int>& v, double factor = 1.0);
     void setInput(const std::vector<int>& vr,
@@ -92,7 +96,7 @@ namespace ice
                             const ice::matrix<int>& vi,
                             int col, double factor = 1.0);
 
-    // get Result
+    // get result
     void getResult(double* v1,
                    double* v2, int n) const;
 
@@ -111,12 +115,12 @@ namespace ice
     void getResultFromImag(std::vector<double>& v1,
                            std::vector<double>& v2) const;
 
-    // put Result into row of 2d matrix
+    // put result into row of 2d matrix
     void getResultToRow(ice::matrix<double>& m, int row) const;
     void getResultToRow(ice::matrix<double>& m1,
                         ice::matrix<double>& m2, int row) const;
 
-    // put Result into column of 2d matrix
+    // put result into column of 2d matrix
     void getResultToColumn(ice::matrix<double>& m, int col) const;
     void getResultToColumn(ice::matrix<double>& m1,
                            ice::matrix<double>& m2, int col) const;
@@ -127,11 +131,17 @@ namespace ice
     void checkIndex(unsigned int i) const;
     void checkParameter(int size);
 
+    // check if transform is done and result valid
+    // used in getResult*
     void checkDone() const;
 
     int size = 0;
+    // operation need 2 inputs
     std::array<std::vector<double>, 2> input;
 
+    // result may have up to 2 output vectors
+    // mutable to allow calculation at the moment of
+    // request for result (getResult* const)
     mutable bool resultValid = false;
     mutable std::array<std::vector<double>, 2> result;
   };

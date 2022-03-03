@@ -31,6 +31,9 @@ namespace ice
   {
     rows = newRows;
     cols = newCols;
+    // make inputs invalid
+    input[0].clear();
+    input[1].clear();
     resultValid = false;
   }
 
