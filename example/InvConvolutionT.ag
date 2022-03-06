@@ -1,0 +1,116 @@
+#include <iomanip>
+
+#include <image.h>
+#include <Convolution.h>
+#include <InvConvolution.h>
+
+// test class IncConvolutionC
+
+void print(const vector<double>& v, bool index = true, bool sc = false)
+{
+  int width = 9;
+  int dim = v.size();
+  int n = dim;
+  if (n > 20)
+    n = 20;
+  if (index)
+    {
+      for (int i = 0; i < n; ++i)
+        cout << setw(width) << i << " ";
+      cout << endl;
+    }
+  double sum2 = 0;
+  for (int i = 0; i < n; ++i)
+    {
+      int idx = i;
+      while (idx < 0) idx += dim;
+      sum2 += v[idx] * v[idx];
+      if (sc)
+        cout << setw(width) << setprecision(2) << scientific << v[idx] << " ";
+      else
+        cout << setw(width) << setprecision(4) << fixed << v[idx] << " ";
+    }
+  cout << "(" << sqrt(sum2) << ")";
+  cout << endl;
+}
+
+/*AppGen:Global*/
+
+/*AppGen
+prog: test class InvConvolution
+%%Beschreibung Parameter
+%symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
+%para: file,optional,string,fn,Bild-Datei,""
+%
+opt: t, type, int, ftype, function type, 1
+opt2: 0 - constant
+opt2: 1 - sine
+opt2: 2 - random
+opt: p, parameter, double, para, parameter of function, 1.0
+opt: n, vsize, int, vsize, vector size, 9
+opt: b, beta, double, beta, Beta, 0.1
+opt: v, verbose, void, verbose, more messages during processing, false
+opt: h, help, usage, help, This help
+AppGen*/
+
+void genFunction(vector<double>& f, int sel, double para = 0.0)
+{
+  int n = f.size();
+  switch (sel)
+    {
+    case 0: // constant
+      for (int i = 0; i < n; i++)
+        f[i] = para;
+      break;
+    case 1: // sine
+      for (int i = 0; i < n; i++)
+        f[i] = sin(i * 2 * M_PI * para / n);
+      break;
+    case 2: // random
+      for (int i = 0; i < n; i++)
+        f[i] = (double)rand() / RAND_MAX ;
+      break;
+    default:
+      throw "wrong function type";
+    }
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      vector<double> f1(vsize, 0.0);
+      vector<double> f2(vsize, 0.0);
+
+      genFunction(f1, ftype, para);
+      f2 = f1;
+
+      cout << "convolution with ConvolutionC" << endl;
+      print(f1, true);
+      print(f2, false);
+      vector<double> convoluted;
+      ConvolutionC conv;
+      conv.setInput(f1, f2);
+      conv.getResult(convoluted);
+      print(convoluted, true);
+
+      vector<double> deconvoluted;
+      cout << "deconvolution with InvConvolutionC" << endl;
+      print(convoluted, true);
+      print(f2, false);
+      InvConvolutionC ic(vsize, beta);
+      ic.setInput(convoluted, f2);
+      ic.getResult(deconvoluted);
+      print(deconvoluted, true);
+      cout << "difference" << endl;
+      print(deconvoluted - f1, false, true);
+
+    }
+  catch (const char* msg)
+    {
+      cout << "Exception: " << msg << endl;
+    }
+  return OK;
+}
