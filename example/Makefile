@@ -117,6 +117,7 @@ conrdg\
 contread\
 contur_test\
 conv\
+convolution\
 dir\
 distortiontest\
 equsys\
@@ -133,6 +134,7 @@ fit_moments\
 fmittel\
 four\
 four1\
+four2\
 fouritime\
 fourtime\
 freader\

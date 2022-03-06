@@ -3,7 +3,7 @@
 #include <image.h>
 #include <Convolution.h>
 
-// test class ComvolutionC
+// test class Comvolution
 
 void print(const vector<double>& v, bool index = true, bool sc = false)
 {
@@ -76,22 +76,33 @@ int main(int argc, char* argv[])
         }
       print(result1, true);
 
-      cout << "convolution with ConvolutionC" << endl;
+      cout << endl << "convolution with Convolution" << endl;
       print(f1, true);
       print(f2, false);
       vector<double> result2;
-      ConvolutionC conv;
+      Convolution conv;
       conv.setInput(f1, f2);
       conv.getResult(result2);
       print(result2, true);
       cout << "difference" << endl;
       print(result2 - result1, true, true);
 
-      vector<double> result3;
-      cout << "static method of ConvolutionC" << endl;
+      cout << endl << "convolution with Convolution(centered)" << endl;
       print(f1, true);
       print(f2, false);
-      ConvolutionC::convolute(f1, f2, result3);
+
+      Convolution convc(vsize, true);
+      convc.setInput(f1, f2);
+      convc.getResult(result2);
+      print(result2, true);
+      cout << "difference" << endl;
+      print(result2 - result1, true, true);
+
+      vector<double> result3;
+      cout << "static method of Convolution" << endl;
+      print(f1, true);
+      print(f2, false);
+      Convolution::convolute(f1, f2, result3);
       print(result3, true);
       cout << "difference" << endl;
       print(result3 - result1, false, true);

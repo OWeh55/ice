@@ -60,7 +60,7 @@ int main(int argc, char** argv)
       source.create(xs, ys);
       for (int x = 0; x < xs; x++)
         for (int y = 0; y < ys; y++)
-          source.setPixel(x, y, (2 * x - 3 * y) % 250 -125);
+          source.setPixel(x, y, (2 * x - 3 * y) % 250 - 125);
       FourierTrafo2D ft3(ys, xs, true);
       ft3.setInput(source);
       ImageD real;
@@ -70,9 +70,9 @@ int main(int argc, char** argv)
       ft3.getResult(real, imag);
 
       real.adaptLimits();
-      Show(GRAY,real);
+      Show(GRAY, real);
       GetChar();
-      
+
       FourierTrafo2D ft4(ys, xs, false);
       ft4.setInput(real, imag);
       ImageD res;

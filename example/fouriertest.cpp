@@ -33,6 +33,12 @@ void print(const vector<double>& v, bool index = true, bool sc = false)
   cout << endl;
 }
 
+void printc(const vector<double>& v1, const vector<double>& v2, bool index = true, bool sc = false)
+{
+  print(v1, index, sc);
+  print(v2, false, sc);
+}
+
 const int vsize = 9;
 
 int main(int argc, char** argv)
@@ -66,11 +72,8 @@ int main(int argc, char** argv)
 
   cout << "the fourier transformed functions" << endl;
 
-  print(s1r, true);
-  print(s1i, false);
-
-  print(s2r, false);
-  print(s2i, false);
+  printc(s1r, s1i, true);
+  printc(s2r, s2i, false);
 
   // combined transform (f1 + i*f2)
   vector<double> s1cr, s1ci;

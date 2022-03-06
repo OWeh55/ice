@@ -27,11 +27,11 @@ namespace ice
   class Convolution : public VWorker
   {
   public:
-    Convolution(int size): VWorker(size)
+    Convolution(int size, bool centered = false): VWorker(size), centered(centered)
     {
     }
 
-    Convolution(): VWorker()
+    Convolution(): VWorker(), centered(false)
     {}
 
     virtual ~Convolution()
@@ -47,6 +47,7 @@ namespace ice
                           std::vector<double>& dst);
 
   private:
+    bool centered;
     virtual void transform() const;
   };
 }

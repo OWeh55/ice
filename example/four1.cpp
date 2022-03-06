@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
   v2[3] = 1.0;
   v1[2] = 1.0;
 
-  Convolution(v1, v2, v3);
+  calcConvolution(v1, v2, v3);
 
   cout << "v1:   " << v1 << endl;
   cout << "v2:   " << v2 << endl;
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
       v2[(i + 7) % SIZE] = i;
     }
 
-  InvConvolution(v1, v2, v3, 0.001);
+  calcInvConvolution(v1, v2, v3, 0.001);
   cout << "v1:   " << v1 << endl;
   cout << "S(v1):" << v2 << endl;
   cout << "S:    " << v3 << endl << "----------------------------" << endl;

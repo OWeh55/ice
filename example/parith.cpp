@@ -13,7 +13,6 @@ int main(int argc, char* argv[])
   Image p1, p2, p3;
   int mode, smode;
 
-  int x, y;
   OpenAlpha("Arithmetiktest");
   Alpha(ON);
   ClearAlpha();

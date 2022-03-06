@@ -70,15 +70,19 @@ namespace ice
                                        std::vector<double>& destinationImag) const
   {
     checkDone();
+
     destinationReal.resize(size);
     destinationImag.resize(size);
-    int dest = getIndexFromFrequency(0);
-    //    cout << dest << endl;
-    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
+
+    int ref = size;
+    if (centered && (size % 2 != 0))
+      ref--;
+
+    for (int i = 0; i < size; ++i)
       {
-        int negidx = (size - i) % size;
-        destinationReal[dest] = 0.5 * (result[0][i] + result[0][negidx]);
-        destinationImag[dest] = 0.5 * (result[1][i] - result[1][negidx]);
+        int negidx = (ref - i) % size;
+        destinationReal[i] = 0.5 * (result[0][i] + result[0][negidx]);
+        destinationImag[i] = 0.5 * (result[1][i] - result[1][negidx]);
       }
   }
 
@@ -86,15 +90,19 @@ namespace ice
                                        std::vector<double>& destinationImag) const
   {
     checkDone();
+
     destinationReal.resize(size);
     destinationImag.resize(size);
-    int dest = getIndexFromFrequency(0);
 
-    for (int i = 0; i < size; ++i, dest = (dest + 1) % size)
+    int ref = size;
+    if (centered && (size % 2 != 0))
+      ref--;
+
+    for (int i = 0; i < size; ++i)
       {
-        int negidx = (size - i) % size;
-        destinationReal[dest] = 0.5 * (result[1][i] + result[1][negidx]);
-        destinationImag[dest] = 0.5 * (-result[0][i] + result[0][negidx]);
+        int negidx = (ref - i) % size;
+        destinationReal[i] = 0.5 * (result[1][i] + result[1][negidx]);
+        destinationImag[i] = 0.5 * (-result[0][i] + result[0][negidx]);
       }
   }
 

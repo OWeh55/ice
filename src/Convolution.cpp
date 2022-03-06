@@ -28,14 +28,15 @@ namespace ice
 
   void Convolution::transform() const
   {
-    FourierTrafo ft1(size);
+    FourierTrafo ft1(size, true, centered);
 
     ft1.setInput(input[0], input[1]);
     // spectrum first input
     vector<double> real1(size);
     vector<double> imag1(size);
     ft1.getResultFromReal(real1, imag1);
-    // spectrum first input
+
+    // spectrum second input
     vector<double> real2(size);
     vector<double> imag2(size);
     ft1.getResultFromImag(real2, imag2);
@@ -51,7 +52,7 @@ namespace ice
         imag3[i] = sqrtN * (real1[i] * imag2[i] + imag1[i] * real2[i]);
       }
 
-    FourierTrafo ft2(size, false);
+    FourierTrafo ft2(size, false, centered);
     ft2.setInput(real3, imag3);
     result[0].resize(size);
     ft2.getResult(result[0]);

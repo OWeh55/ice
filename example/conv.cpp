@@ -71,12 +71,12 @@ int main(int arc, char* argv[])
 
   // SDR mit zwei verschiedenen betas
   Printf("Verschiebungsbestimmung\n");
-  InvConvolution(i1, i2, i3, 0.0, BETA1, MD_IGNORE_BIAS);
-  InvConvolution(i1, i2, i4, 0.0, BETA2, MD_IGNORE_BIAS);
+  calcInvConvolution(i1, i2, i3, 0.0, BETA1, MD_IGNORE_BIAS);
+  calcInvConvolution(i1, i2, i4, 0.0, BETA2, MD_IGNORE_BIAS);
   // phase correlation
   PhaseCorrelationImg(i1, i2, i5);
   // approximation of cross correlation
-  InvConvolution(i1, i2, i6, 0.0, 1e102, MD_IGNORE_BIAS);
+  calcInvConvolution(i1, i2, i6, 0.0, 1e102, MD_IGNORE_BIAS);
   double xf, yf;
   Printf("Verschiebung ist: %i, %i\n", (int)DX, (int)DY);
   double val = peakEvaluation(i3, xf, yf);
