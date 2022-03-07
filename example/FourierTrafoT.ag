@@ -1,0 +1,125 @@
+#include <iomanip>
+#include <image.h>
+#include <FourierTrafo.h>
+
+// test class FourierTrafo
+/*AppGen:Global*/
+
+#include "vectorfunctiontools.cpp"
+
+/*AppGen
+  prog: test of class FourierTrafo
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  % no parameter
+  %
+  opt: 1, function1, int, f1type, Type of first function, 1
+  opt: 2, function2, int, f2type, Type of second function, 2
+  opt2:  0 - delta function
+  opt2:  1 - sin function
+  opt2:  2 - cos function
+  opt: p, parameter1, double, f1para, Parameter for function1, 0.0
+  opt: P, parameter2,double, f2para, Parameter for funtion2, 0.0
+  opt: n, size, int, vsize, Size if test vector / function, 9
+  opt: c, centered, void, centered, centered handling of ft, false
+  opt: v, verbose, Void, verbose, be verbose, false
+  opt: h, help, usage, , This help, false
+  AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+
+  // two functions
+  vector<double> f1(vsize, 0.0);
+  vector<double> f2(vsize, 0.0);
+
+  // set functions
+  setFunction(f1type, f1para, f1);
+  setFunction(f2type, f2para, f2);
+
+  cout << "two given functions" << endl;
+  print(f1);
+  print(f2, false);
+
+  // FT of functions:
+  vector<double> s1r, s1i;
+  vector<double> s2r, s2i;
+  FourierTrafo ft(vsize, true, centered);
+  // transform f1
+  ft.setInput(f1);
+  ft.getResult(s1r, s1i);
+
+  // transform f2
+  ft.setInput(f2);
+  ft.getResult(s2r, s2i);
+
+  cout << "the fourier transformed functions" << endl;
+
+  printc(s1r, s1i, true, centered);
+  printc(s2r, s2i, false);
+
+  // combined transform (f1 + i*f2)
+  vector<double> s1cr, s1ci;
+  vector<double> s2cr, s2ci;
+  ft.setParameter(vsize, true); // is this neccessary?
+
+  ft.setInput(f1, f2);
+  ft.getResultFromReal(s1cr, s1ci);
+  ft.getResultFromImag(s2cr, s2ci);
+
+  cout << "fourier transformed functions from combined transform" << endl;
+  printc(s1cr, s1ci, true, centered);
+  printc(s2cr, s2ci, false);
+
+  printc(s1cr - s1r, s1ci - s1i, true, centered, true);
+  printc(s2cr - s2r, s2ci - s2i, false, centered, true);
+
+  vector<double> f1r(vsize);
+  vector<double> f2r(vsize);
+
+  ft.setParameter(vsize, false); // inverse transform
+  // inverse transform f1
+  ft.setInput(s1r, s1i);
+  ft.getResult(f1r);
+  // inverse transform f2
+  ft.setInput(s2r, s2i);
+  ft.getResult(f2r);
+  cout << "the back transformed functions" << endl;
+  print(f1r, true);
+  print(f2r, false);
+  cout << "differences" << endl;
+  print(f1r - f1, false, true);
+  print(f2r - f2, false, true);
+  cout << "---------------------------------------" << endl;
+  cout << "simplified calls for vector<double>" << endl;
+  cout << "real source" << endl;
+
+  vector<double> scr, sci;
+  print(f1, true);
+  FourierTrafo::transform(f1, scr, sci, true);
+  cout << "spectrum" << endl;
+  print(scr, true);
+  print(sci, false);
+  FourierTrafo::transform(scr, sci, f1r, f2r, false);
+  print(f1r, true);
+  print(f2r, false);
+  cout << "differences" << endl;
+  print(f1r - f1, false, true);
+
+  cout << "complex source" << endl;
+  print(f1, true);
+  print(f2, false);
+  FourierTrafo::transform(f1, f2, scr, sci, true);
+  cout << "spectrum" << endl;
+  print(scr, true);
+  print(sci, false);
+  FourierTrafo::transform(scr, sci, f1r, f2r, false);
+  print(f1r, true);
+  print(f2r, false);
+  cout << "differences" << endl;
+  print(f1r - f1, false, true);
+  print(f2r - f2, false, true);
+  return 0;
+}

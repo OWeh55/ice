@@ -1,0 +1,383 @@
+#include <image.h>
+
+#include "xdisplay.h"
+
+/*AppGen
+  %%  Beschreibung des Programmes:
+  prog: spectra and manipulations
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ, Variablenname, Erklärung, Default-Wert
+  para: file, optional, string, imgFile, image file, test.jpg
+  %% Beschreibung der Optionen
+  % kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
+  opt: m, mode, char, operation, mode of manipulation, 'n'
+  opt2:  n - no operation
+  opt2:  c - conjugate complex
+  opt2:  p - power spectra
+  opt2:  m - magnitude
+  opt2:  s - square
+  opt2:  w - whitening
+  opt: o, output, string, outFile, output file, ""
+  opt: b, batch, void, batch, batch mode, false
+  opt: n, null, void, nobias, ignore bias, false
+  opt: l, log, void, logSpectra, logarithmic visualization, false
+  opt: w, wait, Void, wait, wait in batch mode,  false
+  opt: v, verbose, Void, verbose, be verbose,  false
+  opt: d, display, Void, display,  display of images,  false
+  opt: 6, xdiplay, void, xdisplay, display as matrix, false
+  opt: X, xdxsize, int, xdxsize, width of display, -1
+  opt: Y, xdysize, int, xdysize, height of display, -1
+  opt: t, notitle, void, noTitle, no titles, false
+  opt: h, help,   usage,   , this help
+  AppGen*/
+
+/*AppGen:Global*/
+
+/*AppGen:Main*/
+int main(int argc, char** argv)
+{
+  /*AppGen:MainEnd*/
+
+  if (outFile.empty())
+    {
+      // wenn keine Ausgabe, dann ansehen
+      if (!xdisplay)
+        display = true;
+      wait = true;
+    }
+
+  if (xdisplay)
+    wait = true;
+
+  int xs, ys, mv, ch;
+  InfImgFile(imgFile, xs, ys, mv, ch);
+
+  Image sourceImage;
+  sourceImage.read(imgFile);
+  if (verbose)
+    cout << "read " << imgFile << endl;
+
+  // .. und anzeigen
+  if (display)
+    Show(ON, sourceImage, "original image");
+
+  int xdx = 3 * xs;
+  int xdy = 2 * ys;
+
+  // sizes of display given?
+  if (xdxsize > 0)
+    {
+      xdx = xdxsize;
+      if (xdysize > 0)
+        xdy = xdysize;
+      else
+        xdy = 2 * xdx / 3;
+    }
+  else if (xdysize > 0)
+    {
+      xdy = xdysize;
+      xdx = 3 * xdy / 2;
+    }
+  //  cout << xdx  << "x" << xdy << endl;
+  XDisplay xd(xdx, xdy, 6);
+  if (xdisplay)
+    {
+      xd.show();
+      xd.show(0, sourceImage);
+      if (!noTitle)
+        xd.setTitle(0, "original");
+    }
+
+  // Bild mittelpunkt = Frequenz Null des Spektrums
+  int xCenter = xs / 2;
+  int yCenter = ys / 2;
+  Point center(xCenter, yCenter);
+
+  FourierTrafo2D fft;
+  fft.setInput(sourceImage);
+
+  FourierTrafo2D ffti(ys, xs, false);
+
+  // Zielbild für FT
+  ImageD spectra_real;
+  spectra_real.create(xs, ys);
+  ImageD spectra_imag;
+  spectra_imag.create(xs, ys);
+
+  ImageD spectra_m_real;
+  spectra_m_real.create(xs, ys);
+  ImageD spectra_m_imag;
+  spectra_m_imag.create(xs, ys);
+
+  Image result;
+  result.create(xs, ys, mv);
+
+  ImageD dresult;
+  dresult.create(xs, ys);
+
+  if (display)
+    Show(GRAY, result, "result");
+
+  double fg = -1;
+  bool newfilter = true;
+
+  bool sZoom = false; // zoom of spectra
+  bool ready = false;
+  while (!ready)
+    {
+      if (batch) // nur ein Durchlauf
+        ready = true;
+
+      fft.getResult(spectra_real, spectra_imag);
+
+      if (verbose)
+        cout << "spectrum calculated" << endl;
+
+      // Gleichanteil loeschen ?
+      if (nobias)
+        {
+          spectra_real.setPixel(xCenter, yCenter, 0);
+          spectra_imag.setPixel(xCenter, yCenter, 0);
+        }
+
+      if (xdisplay)
+        {
+          xd.show(1, spectra_real, logSpectra);
+          if (sZoom)
+            xd.setZoom(1, 4);
+          if (!noTitle)
+            xd.setTitle(1, "spectrum (real)");
+          xd.show(2, spectra_imag, logSpectra);
+          if (sZoom)
+            xd.setZoom(2, 4);
+          if (!noTitle)
+            xd.setTitle(2, "spectrum (imag)");
+        }
+
+      WindowWalker all(spectra_real);
+
+
+      string s;
+      // manipulate spectra
+      switch (operation)
+        {
+        case 'c':
+          s = "conjugated";
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              spectra_m_real.setPixel(all, r);
+              spectra_m_imag.setPixel(all, -i);
+            }
+          break;
+        case 'n':
+          s = "noop";
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              spectra_m_real.setPixel(all, r);
+              spectra_m_imag.setPixel(all, i);
+            }
+          break;
+        case 's':
+          s = "square";
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              spectra_m_real.setPixel(all, r * r - i * i);
+              spectra_m_imag.setPixel(all, r * i + i * r);
+            }
+          break;
+
+        case 'p':
+          s = "power";
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              spectra_m_real.setPixel(all, r * r + i * i);
+              spectra_m_imag.setPixel(all, 0);
+            }
+          break;
+
+        case 'h':
+        {
+          s = "highpass";
+          if (newfilter || fg < 0)
+            fg = InputD("cut-off frequency of highpass: ");
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              Point dd = Point(all) - center;
+              if (dd.length() < fg)
+                {
+                  r = 0;
+                  i = 0;
+                }
+              spectra_m_real.setPixel(all, r);
+              spectra_m_imag.setPixel(all, i);
+
+            }
+        }
+        break;
+        case 'l':
+        {
+          s = "lowpass";
+          if (newfilter || fg < 0)
+            fg = InputD("cut-off frequency of lowpass: ");
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              Point dd = Point(all) - center;
+              if (dd.length() > fg)
+                {
+                  r = 0;
+                  i = 0;
+                }
+              spectra_m_real.setPixel(all, r);
+              spectra_m_imag.setPixel(all, i);
+
+            }
+        }
+        break;
+        case 'm':
+          s = "magnitude+phase";
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              spectra_m_real.setPixel(all, sqrt(r * r + i * i));
+              spectra_m_imag.setPixel(all, atan2(i, r));
+            }
+          break;
+
+        case 'w':
+        {
+          s = "whitened";
+          for (all.init(); !all.ready(); all.next())
+            {
+              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
+              double a = sqrt(r * r + i * i + 1);
+              spectra_m_real.setPixel(all, r / a);
+              spectra_m_imag.setPixel(all, i / a);
+            }
+        }
+        break;
+
+        default:
+          cerr << (string("mode ") + operation + " not implemented") << endl;
+        }
+
+      if (verbose)
+        cout << s << endl;
+
+      if (xdisplay)
+        {
+          xd.show(3, spectra_m_real, logSpectra);
+          if (sZoom)
+            xd.setZoom(3, 4);
+          if (!noTitle)
+            xd.setTitle(3, "spectrum (real) - " + s);
+          xd.show(4, spectra_m_imag, logSpectra);
+          if (sZoom)
+            xd.setZoom(4, 4);
+          if (!noTitle)
+            xd.setTitle(4, "spectrum (imag) - " + s);
+        }
+
+      ffti.setInput(spectra_m_real,
+                    spectra_m_imag);
+      ffti.getResult(result, ADAPTIVE);
+      ffti.getResult(dresult);
+
+      if (verbose)
+        cout << "transformed back" << endl;
+
+      if (xdisplay)
+        {
+          xd.show(5, result);
+          if (!noTitle)
+            xd.setTitle(5, "result");
+        }
+
+      if (!batch)
+        {
+          ClearAlpha();
+
+          Print("\n");
+          Print("operation = " + s + "\n");
+          Print(string("mode = ") + (logSpectra ? "logarithmic" : "linear") + "\n");
+          Print(string(nobias ? "without bias" : "with bias") + "\n");
+
+          Print("\n");
+          Print("n - no operation\n");
+          Print("c - conjugate complex\n");
+          Print("p - power spectrum\n");
+          Print("m - magnitude spectrum\n");
+          Print("h - highpass\n");
+          Print("l - lowpass\n");
+          Print("w - whitening image\n");
+
+          // Print("s - square spectrum\n");
+          Print("-\n");
+          Print("L - switch linear <-> logarithmic\n");
+
+          newfilter = false;
+          bool keyValid = false;
+          while (!keyValid)
+            {
+              int c = GetChar();
+              // Printf("%d\n",c);
+              keyValid = true;
+              switch (c)
+                {
+                case 'p':
+                case 's':
+                case 'm':
+                case 'w':
+                case 'n':
+                case 'c':
+                case 'h':
+                case 'l':
+                  newfilter = true;
+                  operation = c;
+                  break;
+                case 'L':
+                  logSpectra = ! logSpectra;
+                  break;
+                case 'b':
+                  nobias = ! nobias;
+                  break;
+                case 'z':
+                  sZoom = ! sZoom;
+                  break;
+                case 27:
+                case 'q':
+                case 'x':
+                  ready = true;
+                  break;
+                default:
+                  keyValid = false;
+                }
+            }
+        }
+    }
+
+  // warten auf Tastendruck
+  if (batch & wait)
+    GetChar();
+
+  if (!outFile.empty())
+    {
+      result.write(outFile);
+      if (verbose)
+        cout << "wrote output file " << outFile << endl;
+    }
+  return 0;
+}
