@@ -507,7 +507,7 @@ int main(int argc, char* argv[])
           if (verbose)
             cout << "InvConvolutionImg" << endl;
 
-          InvConvolution(mask, dest, rest, factor / maskNorm, beta);
+          calcInvConvolution(mask, dest, rest, factor / maskNorm, beta);
           GetChar();
         }
       else

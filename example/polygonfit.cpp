@@ -46,23 +46,23 @@ int main(int argc, char* argv[])
       Printf("Original mit %d Eckpunkten\n", panz);
       Polygon ch;
       m.ConvexHull(ch);
-      Draw(ch, img, 255, 127);
+      draw(ch, img, 255, 127);
       Printf("Konvexe Hülle mit %d Eckpunkten\n", ch.size());
 
       GetChar();
-      ClearImg(img);
+      clearImg(img);
 
       for (int i = panz - 1; i > 3; i--)
         {
           Polygon r = m.Reduced(i);
-          Draw(r, img, 255, 127);
+          draw(r, img, 255, 127);
           Printf("%d Eckpunkte\n", r.size());
           GetChar();
-          Draw(r, img, 50, 0);
+          draw(r, img, 50, 0);
         }
 
-      ClearImg(mark);
-      ClearImg(img);
+      clearImg(mark);
+      clearImg(img);
     }
 
   return OK;

@@ -16,7 +16,6 @@ void ShowLog(ImageD d, Image i)
 
 void ShowDiff(ImageD d1, ImageD d2, Image i)
 {
-  int x, y;
   ImageD diff;
   diff.create(d1.xsize, d1.ysize);
   for (int y = 0; y < diff.ysize; y++)
@@ -33,7 +32,6 @@ void PrintRange(string p, ImageD d)
 
 void PrintDiffRange(string p, ImageD d1, ImageD d2)
 {
-  int x, y;
   ImageD diff = NewImgD(d1.xsize, d1.ysize);
   for (int y = 0; y < diff.ysize; y++)
     for (int x = 0; x < diff.xsize; x++)
@@ -60,8 +58,6 @@ int main(int argc, char* argv[])
   Image links, mitte, rechts;
   //  ImageD d1,d2,d3,d4,d5,d6,d7,d8, null;
   ImageD original, maske, resultat1, resultat2, s1, s2, s3, s4, s5, s6, h, null;
-  int x, y;
-
   ClearAlpha();
 
   links = NewImg(imgsize, imgsize, 255);

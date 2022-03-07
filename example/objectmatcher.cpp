@@ -99,7 +99,7 @@ int main(int argc, char** argv)
   cout << tr.getMatrix() << endl;
 
   vector<Point> pl2a;
-  Transform(tr, pl2, pl2a);
+  transform(tr, pl2, pl2a);
   om.setObject(0, pl2a);
   draw(pl2a, 3, mark);
 #if 0

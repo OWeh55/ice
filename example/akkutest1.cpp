@@ -88,7 +88,7 @@ int main(int argc, char** argv)
       // Punkte in der nähe aufsammeln
       pl2.clear();
 
-      for (int i = 0; i < pl.size(); i++)
+      for (unsigned int i = 0; i < pl.size(); i++)
         if (line.Distance(pl[i]) < 2.0)
           pl2.push_back(pl[i]);
 

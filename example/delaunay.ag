@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 
   for (int lauf = 0; lauf < loops; lauf++)
     {
-      ClearImg(marker);
+      clearImg(marker);
 
       vector<Point> pl;
 
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
                   i++;
                 }
             }
-          ClearImg(marker);
+          clearImg(marker);
         }
         break;
 
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
       if ((display & 16) > 0)
         {
           //      Forest f;
-          ClearImg(marker);
+          clearImg(marker);
           for (int dist = 4; dist < edgeLimit; dist = dist + dist / 2)
             {
               Printf("Maximale Länge %d\n", dist);

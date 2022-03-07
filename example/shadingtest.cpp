@@ -4,7 +4,7 @@ void showShading(const Image& src, const Image& dst, const Image& shading,
                  Function2dWithFitting& fn)
 {
   correctShading(src, dst, fn);
-  SetImg(shading, fn);
+  setImg(shading, fn);
   GetChar();
 }
 

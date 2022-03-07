@@ -74,9 +74,9 @@ int main(int argc, char** argv)
   Show(ON, dist1, "Euklidische Distanz");
   Show(ON, dist2, "City Block Distanz");
   Show(ON, dist3, "Earth Mover Distanz");
-  ClearImg(dist1);
-  ClearImg(dist2);
-  ClearImg(dist3);
+  clearImg(dist1);
+  clearImg(dist2);
+  clearImg(dist3);
 
   while (true)
     {
@@ -84,13 +84,13 @@ int main(int argc, char** argv)
       Histogram h(grw(Window(testpoint.x - ns, testpoint.y - ns,
                              testpoint.x + ns, testpoint.y + ns)));
       vector<double> vtest;
-      h.Rel(vtest);
+      h.getRelative(vtest);
 
       for (int y = ns; y < grw->ysize - ns; y++)
         for (int x = ns; x < grw->xsize - ns; x++)
           {
             Histogram h1(grw(Window(x - ns, y - ns, x + ns, y + ns)));
-            vector<double> vtest1 = h1.Rel();
+            vector<double> vtest1 = h1.getRelative();
             PutVal(dist1, x, y, limited(ed(vtest, vtest1) * 255, dist1));
             PutVal(dist2, x, y, limited(md(vtest, vtest1) * 255, dist2));
             PutVal(dist3, x, y, limited(emd(vtest, vtest1), dist3));

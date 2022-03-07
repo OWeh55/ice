@@ -17,7 +17,7 @@ PolygonalCurve Spirale()
   for (double fi = 0; fi < lastfi; fi += stepfi)
     {
       double r = fi * ysize / 2 / lastfi + 4 * sin(fi * 36);
-      sp.Add(Point(xsize / 2 + r * cos(fi), ysize / 2 + r * sin(fi)));
+      sp.add(Point(xsize / 2 + r * cos(fi), ysize / 2 + r * sin(fi)));
     }
 
   return sp;
@@ -26,22 +26,23 @@ PolygonalCurve Spirale()
 PolygonalCurve Viereck()
 {
   Contur c(IPoint(30, 80));
-  c.Add(IPoint(800, 10));
-  c.Add(IPoint(700, 500));
-  c.Add(IPoint(10, 500));
+  c.add(IPoint(800, 10));
+  c.add(IPoint(700, 500));
+  c.add(IPoint(10, 500));
   return PolygonalCurve(c, false);
 }
 
 int main(int argc, char* argv[])
 {
-  int mv;
-//  InfImgFile("20120912_113049.jpg",xsize,ysize,mv);
-  Image img(xsize, ysize, 255);
-  Image lsimg(xsize, ysize, 255);
-  ClearImg(img);
+  Image img;
+  img.create(xsize, ysize, 255);
+  Image lsimg;
+  lsimg.create(xsize, ysize, 255);
+  clearImg(img);
   //  ReadImg("20120912_113049.jpg",img);
-  Image mark(xsize, ysize, 255);
-  ClearImg(mark);
+  Image mark;
+  mark.create(xsize, ysize, 255);
+  clearImg(mark);
   // LocalSeg(img,lsimg,15,75);
   Show(OVERLAY, img, mark);
   //  Show(OVERLAY, img, lsimg);
@@ -60,7 +61,7 @@ int main(int argc, char* argv[])
       //      PolygonalCurve m=Spirale();
       //      PolygonalCurve m=Viereck();
       panz = m.size();
-      Draw(m, mark, 3);
+      draw(m, mark, 3);
       Printf("Original mit %d Eckpunkten, Länge %4.2f\n", panz, m.Length());
       // cout << "Closed? " << m.isClosed() << endl;
       /*
@@ -71,7 +72,7 @@ int main(int argc, char* argv[])
       */
       GetChar();
       //      ClearImg(img);
-      ClearImg(mark);
+      clearImg(mark);
 #if 0
       if (panz > 50)
         panz = 50;
@@ -101,9 +102,9 @@ int main(int argc, char* argv[])
           }
 
 #else
-      Draw(m, img, 255, 127);
+      draw(m, img, 255, 127);
 #endif
-      ClearImg(mark);
+      clearImg(mark);
 
       for (double prec = 1.0; prec < 200; prec *= 1.414)
         {
@@ -111,8 +112,8 @@ int main(int argc, char* argv[])
           //Polygon r;
           m.ReducedToPrecision(prec, r, mode);
           //    cout << "Closed? " << r.isClosed() << endl;
-          ClearImg(mark);
-          Draw(r, mark, 3, -1);
+          clearImg(mark);
+          draw(r, mark, 3, -1);
           //          Point p;
 
           for (int i = 0; i < r.size(); i++)
@@ -140,8 +141,8 @@ int main(int argc, char* argv[])
 #endif
         }
 
-      ClearImg(mark);
-      ClearImg(img);
+      clearImg(mark);
+      clearImg(img);
     }
 
   return OK;

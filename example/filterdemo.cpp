@@ -38,9 +38,9 @@ int main(int argc, char* argv[])
   if (argc > optind)
     filename = argv[optind];
 
-  
+
   // create masks
-  
+
   Matrix matrix(KSIZE, KSIZE);
   IMatrix imatrix(KSIZE, KSIZE);
 
@@ -103,20 +103,20 @@ int main(int argc, char* argv[])
   // read original image
   Image p1a;
   p1a.read(filename);
-  
+
   // create image with given maximum value
   Image p1;
   p1.create(p1a.xsize, p1a.ysize, maximumValue);
-  
+
   IPoint p;
   for (p.y = 0; p.y < p1->ysize; p.y++)
     for (p.x = 0; p.x < p1->xsize; p.x++)
       p1.setPixel(p, p1a.getPixel(p) * maximumValue / 255);
-  
+
   // destination
   Image p2;
   p2.create(p1);
-  
+
   Show(ON, p1, "original");
   Show(ON, p2, "gefiltert");
 

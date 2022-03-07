@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   Image gi = NewImg(xs, ys, mv);
   Image bi = NewImg(xs, ys, mv);
   Show(_RGB, ri, gi, bi);
-  vi.Read(ri, gi, bi, 10);
+  vi.read(ri, gi, bi, 10);
   Printf("Frame: %d , Error: %d\n", vi.FrameNumber(), vi.getError());
   int c;
 
@@ -23,10 +23,10 @@ int main(int argc, char** argv)
       switch (c)
         {
         case 'n':
-          vi.Read(ri, gi, bi, vi.next);
+          vi.read(ri, gi, bi, vi.next);
           break;
         case 'p':
-          vi.Read(ri, gi, bi, vi.prev);
+          vi.read(ri, gi, bi, vi.prev);
           break;
         }
 

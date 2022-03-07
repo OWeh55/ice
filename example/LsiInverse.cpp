@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 #if 1
         if (r2 <= rad * rad)
           {
-	    m[r][c]=1.0;
+            m[r][c] = 1.0;
             //m[r][c] = drand48() - 0.5;
           }
 #endif
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 #endif
         sum += m[r][c];
       }
-  
+
   for (int r = 0; r < m.rows(); ++r)
     for (int c = 0; c < m.cols(); ++c)
       {
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
   dest.create(source);
   Image rec;
   rec.create(source);
-  
+
   Show(ON, source, "source");
   Show(ON, dest, "filtered");
   Show(ON, rec, "reconstructed");
@@ -49,20 +49,23 @@ int main(int argc, char** argv)
   LsiFilter f(m);
   cout << "filter:" << endl;
   cout << fixed << setprecision(3) << setw(7) << f << endl;
-  cout << "filtering..." ; cout.flush();
+  cout << "filtering..." ;
+  cout.flush();
   f.filter(source, dest, 0);
   cout << "done." << endl;
 
-  cout << "calculating inverse filter..."; cout.flush();
+  cout << "calculating inverse filter...";
+  cout.flush();
   LsiFilter fi = f.getInverse(39);
   cout << "done." << endl;
-  
-  cout << "inverse filter:"<<endl;
+
+  cout << "inverse filter:" << endl;
 
   cout << setprecision(3) << setw(7) << fi << endl;
   GetChar();
-  
-  cout << "filtering..." ; cout.flush();
+
+  cout << "filtering..." ;
+  cout.flush();
   fi.filter(dest, rec, 0);
   cout << "done." << endl;
   GetChar();

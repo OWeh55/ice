@@ -1,6 +1,6 @@
 #include <image.h>
-#include <fouriertrafo2d.h>
-#include <fouriertrafo.h>
+#include <FourierTrafo2D.h>
+#include <FourierTrafo.h>
 
 /*AppGen:Global*/
 

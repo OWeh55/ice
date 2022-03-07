@@ -123,7 +123,7 @@ namespace ice
   double length2(const std::vector<T>& v)
   {
     double l = 0;
-    for (int i = 0; i < v.size(); ++i)
+    for (unsigned int i = 0; i < v.size(); ++i)
       {
         l += v[i] * v[i];
       }

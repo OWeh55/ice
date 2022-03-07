@@ -10,8 +10,8 @@ int main(int argc, char** argv)
   double gamma = 1.3;
 
   Trafo tr(3, 3);
-  tr.Move(dx, dy, dz, alpha, beta, gamma);
-  cout << tr.Tmatrix() << endl;
+  tr.move(dx, dy, dz, alpha, beta, gamma);
+  cout << tr.getMatrix() << endl;
 
 
   double ca = cos(alpha);
@@ -43,5 +43,5 @@ int main(int argc, char** argv)
 
   cout << m << endl;
 
-  cout << (m - tr.getM()) << endl;
+  cout << (m - tr.getMatrix()) << endl;
 }

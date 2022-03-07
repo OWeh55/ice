@@ -65,8 +65,6 @@ void Filter(Image& resimg, int fmax)
 
   HartleyImgD(hartley, result);
   ConvImgDImg(result, resimg);
-  FreeImgD(hartley);
-  FreeImgD(result);
 }
 
 void usage(const string& pn)
@@ -154,14 +152,14 @@ int main(int argc, char** argv)
     }
 
   radonimg = NewImg(rxs, rys, diag * srcimg->maxval);
-  ClearImg(radonimg);
+  clearImg(radonimg);
 
   //  debug=NewImg(srcimg);
   //  ClearImg(debug);
   //  Show(ON,debug,"DEBUG");
 
   resimg = NewImg(srcimg->xsize, srcimg->ysize, 16000);
-  ClearImg(resimg);
+  clearImg(resimg);
 
   Show(ON, srcimg, "Source");
   Show(ON, radonimg, "Radon");
@@ -201,13 +199,13 @@ int main(int argc, char** argv)
       if (rmethode != 0)
         {
           Image outimg = NewImg(resimg->xsize, resimg->ysize, 255);
-          RenormImg(resimg, outimg);
+          renormImg(resimg, outimg);
           WriteImg(outimg, outfilename);
         }
       else
         {
           Image outimg = NewImg(radonimg->xsize, radonimg->ysize, 255);
-          RenormImg(radonimg, outimg);
+          renormImg(radonimg, outimg);
           WriteImg(outimg, outfilename);
         }
     }

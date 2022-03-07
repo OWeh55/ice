@@ -272,7 +272,6 @@ RenormImg\
 resampling\
 rgb2h\
 ridge\
-scan\
 selectcontur\
 selfcalib\
 shadingtest\
@@ -284,7 +283,6 @@ splitandmerge\
 ssdr\
 statistik\
 stringtest\
-subImage\
 subimg\
 term\
 test\
@@ -293,7 +291,6 @@ thinning\
 trafo\
 transformImage\
 transimg\
-treecltest\
 triginter\
 trtest1\
 trtest\
@@ -303,11 +300,9 @@ valref\
 vectordistancetest\
 vectortest\
 vis1\
-vis2\
 visual\
 visualx\
 vreaderchachetest\
-xdisplay\
 yuvConvert\
 capture_v4l2\
 circledetection\

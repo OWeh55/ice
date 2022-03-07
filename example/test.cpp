@@ -8,16 +8,16 @@ int main(int argc, char** argv)
   for (int y = 0; y < img.ysize; y++)
     for (int x = 0; x < img.xsize; x++)
       img.setPixel(x, y, sin(x / 100.)*sin(y / 100.));
-  cout << img.minval << " .. " << img.maxval << endl;
+  cout << img.minValue() << " .. " << img.maxValue() << endl;
   GetChar();
   img.adaptLimits();
-  cout << img.minval << " .. " << img.maxval << endl;
+  cout << img.minValue() << " .. " << img.maxValue() << endl;
   GetChar();
   Show(OFF, img);
   for (int y = 0; y < img.ysize; y++)
     for (int x = 0; x < img.xsize; x++)
       img.setPixel(x, y, sin(x / 100.)*sin(y / 100.));
   Show(GRAY, img);
-  cout << img.minval << " .. " << img.maxval << endl;
+  cout << img.minValue() << " .. " << img.maxValue() << endl;
   GetChar();
 }

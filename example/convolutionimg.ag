@@ -1,6 +1,6 @@
 #include <image.h>
-#include <fouriertrafo2d.h>
-#include <fouriertrafo.h>
+#include <FourierTrafo2D.h>
+#include <FourierTrafo.h>
 
 /*AppGen:Global*/
 
@@ -295,7 +295,7 @@ int main(int argc, char* argv[])
       Show(ON, mask, "Filter-Maske");
 
       //Maske kreieren
-      double maskNorm;
+      double maskNorm = 0.0;
       if (maskMode != 99)
         maskNorm = makeMask(mask, radius, phi, maskMode);
       else

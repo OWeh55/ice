@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
   ImageD psf;
   psf.create(xSize, ySize);
 
-  InvConvolution(i1, i2, psf, beta);
+  calcInvConvolution(i1, i2, psf, beta);
   psf.adaptLimits();
   Show(GRAY, psf, "psf");
 

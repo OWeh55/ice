@@ -108,13 +108,13 @@ int main(int argc, char** argv)
   cout << "ideally transformed list 1 - red " << endl;
   cout << "matched point list 1 - blue" << endl;
   cout << "--------------------------------------------" << endl;
-  for (int i = 0; i < modelist.size(); i++)
+  for (unsigned int i = 0; i < modelist.size(); i++)
     {
       drawPoints(imgd, p1, 1);
       drawPoints(imgd, p2, 2);
       drawPoints(imgd, pid, 1);
 
-      Trafo res1 = MatchPointlists(p1, p2, modelist[i]);
+      Trafo res1 = matchPointLists(p1, p2, modelist[i]);
 
       vector<Point> pres1;
       transform(res1, p1, pres1);

@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
       print(f1, true);
       print(f2, false);
       vector<double> convoluted;
-      ConvolutionC conv;
+      Convolution conv;
       conv.setInput(f1, f2);
       conv.getResult(convoluted);
       print(convoluted, true);
@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
       cout << "deconvolution with InvConvolutionC" << endl;
       print(convoluted, true);
       print(f2, false);
-      InvConvolutionC ic(vsize, beta);
+      InvConvolution ic(vsize, beta);
       ic.setInput(convoluted, f2);
       ic.getResult(deconvoluted);
       print(deconvoluted, true);

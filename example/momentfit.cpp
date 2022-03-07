@@ -167,13 +167,13 @@ int main(int argc, char* argv[])
       if (ient == 6)
         {
           FitEllipseMoments(moment, ell_par);
-          DrawEllipse(ell_par, 255, 255, NOFILL, pic1);
+          drawEllipse(ell_par, 255, 255, NOFILL, pic1);
         }
 
       if (ient == 7)
         {
           sh = FitEllipticalSegmentMoments(moment, ell_par, seg_par1, seg_par2);
-          DrawEllipse(ell_par, 255, 255, NOFILL, pic1);
+          drawEllipse(ell_par, 255, 255, NOFILL, pic1);
           Line((int)seg_par1[0], (int)seg_par1[1], (int)seg_par2[0], (int)seg_par2[1], 255, DEFAULT, pic1);
 
         }
@@ -186,12 +186,12 @@ int main(int argc, char* argv[])
           //Printf("Superquadrik c2 f2 %f %f \n",sup_c2,sup_f2);
           if (zyklus == 0)
             {
-              DrawSuperEllipse(sup_c1, sup_tr1, 255, pic1);
+              drawSuperEllipse(sup_c1, sup_tr1, 255, pic1);
             }
 
           if (zyklus == 1)
             {
-              DrawSuperEllipse(sup_c2, sup_tr2, 255, pic1);
+              drawSuperEllipse(sup_c2, sup_tr2, 255, pic1);
             }
         }
 
@@ -219,12 +219,12 @@ int main(int argc, char* argv[])
 
               if (Seg1->typ == 2)
                 {
-                  CircleSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
+                  drawCircleSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
                 }
 
               if (Seg1->typ == 3)
                 {
-                  EllipseSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
+                  drawEllipseSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
                 }
 
               Seg1 = Seg1->next;
@@ -256,12 +256,12 @@ int main(int argc, char* argv[])
 
               if (Seg1->typ == 2)
                 {
-                  CircleSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
+                  drawCircleSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
                 }
 
               if (Seg1->typ == 3)
                 {
-                  EllipseSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
+                  drawEllipseSegment(Seg1->par, farbe, farbe, NOFILL, mark1);
                 }
 
               Seg1 = Seg1->next;

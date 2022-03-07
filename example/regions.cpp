@@ -12,11 +12,10 @@ int main(int argc, char* argv[])
   Image img = NewImg(100 * fak, 100 * fak, 255);
   Image mark = NewImg(img);
 
-  ClearImg(img);
-  ClearImg(mark);
+  clearImg(img);
+  clearImg(mark);
   Show(OVERLAY, img, mark);
   ClearAlpha();
-  Display(ON);
 
   double ta;
 
@@ -38,7 +37,7 @@ int main(int argc, char* argv[])
   Print("Region 1 from Contur\n");
   Printf("done (%5.2f)\n", TimeD() - ta);
   GetChar();
-  ClearImg(img);
+  clearImg(img);
 
   draw(k2, img, 255, 100);
 
@@ -50,7 +49,7 @@ int main(int argc, char* argv[])
   Print("Region 2 from Contur\n");
   Printf("done (%5.2f)\n", TimeD() - ta);
   GetChar();
-  ClearImg(img);
+  clearImg(img);
 
   ta = TimeD();
   WindowWalker ww(img);
@@ -86,7 +85,7 @@ int main(int argc, char* argv[])
   Printf("done (%5.2f)\n", TimeD() - ta);
   GetChar();
 
-  ClearImg(img);
+  clearImg(img);
 
   int i;
   int sel;
@@ -98,7 +97,7 @@ int main(int argc, char* argv[])
 
   Print("Berechne \"Summe\"\n");
   REGION ss = s[0] + s[1] + s[2];
-  ClearImg(mark);
+  clearImg(mark);
   ss.draw(mark, 3);
 
   ta = TimeD();
@@ -113,7 +112,7 @@ int main(int argc, char* argv[])
 
   Printf("done (%5.2f)\n", TimeD() - ta);
 
-  ClearImg(mark);
+  clearImg(mark);
   ss.draw(mark, 3);
 
   GetChar();
@@ -152,7 +151,7 @@ int main(int argc, char* argv[])
         }
 
       Printf("%5.2f\n", (TimeD() - ta) * 1000);
-      ClearImg(mark);
+      clearImg(mark);
       ss.draw(mark, 3);
       ende = GetChar() == 'q';
     }
