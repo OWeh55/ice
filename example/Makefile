@@ -158,10 +158,7 @@ fdgen\
 fft_bench\
 fft\
 fileseltest\
-filt0\
-filt1\
-filt2\
-filt3\
+filterdemo\
 fitfunk\
 fit_moments\
 flip\
@@ -233,8 +230,8 @@ los\
 lseg\
 LSIImg\
 LSIImgH\
+LsiInverse\
 ludcmptest\
-#matchobject\
 match_test\
 matinv\
 matrixbench\

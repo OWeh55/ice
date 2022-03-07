@@ -10,7 +10,7 @@
 
 #define TM_MODE TM_PROCESS
 
-#define TIMES 3
+#define TIMES 10
 #define KSIZE 11
 #define MAXVALUE (256-1)
 //#define KSIZE 3
@@ -19,7 +19,6 @@ int main(int argc, char* argv[])
 {
   int rc;
   int maximumValue = MAXVALUE;
-  int filter = -1;
   int nTimes = TIMES;
 
   while ((rc = getopt(argc, argv, "m:t:f:")) >= 0)
@@ -29,22 +28,21 @@ int main(int argc, char* argv[])
         case 'm':
           maximumValue = atol(optarg);
           break;
-        case 'f':
-          filter = atol(optarg);
-          break;
         case 't':
           nTimes = atol(optarg);
           break;
         }
     }
 
-  //  double fkernel[KSIZE*KSIZE];
-  //  double *fkernel;
+  string filename = "test_gray.jpg";
+  if (argc > optind)
+    filename = argv[optind];
+
+  
+  // create masks
+  
   Matrix matrix(KSIZE, KSIZE);
   IMatrix imatrix(KSIZE, KSIZE);
-  string filename = "test_gray.jpg";
-  double atime;
-  OpenAlpha("Filtertest");
 
   for (int i = 0; i < KSIZE; ++i)
     for (int j = 0; j < KSIZE; j++)
@@ -65,8 +63,6 @@ int main(int argc, char* argv[])
             vali = 0;
           }
 
-        //  kernel[i*KSIZE+j]=vali;
-        //  fkernel[i*KSIZE+j]=((double)vali)/((KSIZE)*(KSIZE));
         matrix[i][j] = vali;
         imatrix[i][j] = vali;
       }
@@ -84,6 +80,7 @@ int main(int argc, char* argv[])
   maskm[0][KSIZE - 1] = 1;
   maskm[KSIZE - 1][KSIZE - 1] = 1;
 
+  // gradient mask
   IMatrix m(3, 3);
   m[0][0] = -1;
   m[0][1] = 0;
@@ -94,36 +91,32 @@ int main(int argc, char* argv[])
   m[2][0] = -1;
   m[2][1] = 0;
   m[2][2] = 1;
-
+  // create filter class LsiFilter
   LsiFilter gradx(m, 6);
   LsiFilter grady(!m, 6);
 
-  if (argc > optind)
-    filename = argv[optind];
+  double atime;
+  OpenAlpha("Filtertest");
 
   Print(filename + "\n");
 
-  // Originalbild einlesen
-  Image p1a = ReadImg(filename);
-  // Bild mit gewünschtem Maximalwert erzeugen
-  Image p1 = NewImg(p1a->xsize, p1a->ysize, maximumValue);
-
+  // read original image
+  Image p1a;
+  p1a.read(filename);
+  
+  // create image with given maximum value
+  Image p1;
+  p1.create(p1a.xsize, p1a.ysize, maximumValue);
+  
   IPoint p;
   for (p.y = 0; p.y < p1->ysize; p.y++)
     for (p.x = 0; p.x < p1->xsize; p.x++)
-      PutVal(p1, p, GetVal(p1a, p)*maximumValue / 255);
-
-  /*
-  for (p.y = 0; p.y < p1->ysize; p.y++)
-    for (p.x = 0; p.x < p1->xsize; p.x++)
-    p1.setPixelLimited(p, int((p - IPoint(p1a.xsize / 2, p1a.ysize / 2)).length()) % p1.maxval);
-  */
-
-  // Zielbild anlegen
-  Image p2 = NewImg(p1);
-  // Hilfsbild anlegen
-  Image ph = NewImg(p1);
-
+      p1.setPixel(p, p1a.getPixel(p) * maximumValue / 255);
+  
+  // destination
+  Image p2;
+  p2.create(p1);
+  
   Show(ON, p1, "original");
   Show(ON, p2, "gefiltert");
 
@@ -178,10 +171,7 @@ int main(int argc, char* argv[])
 
       int sel = Menu(men, mid, 33, 2, 77, 22);
 
-      vector<double> times(nTimes);
-
       atime = TimeD(TM_MODE);
-      double ctime = atime;
 
       for (int iii = 0; iii < nTimes; iii++)
         {
@@ -270,15 +260,7 @@ int main(int argc, char* argv[])
             case 17:
               abort = true;
             }/* switch*/
-
-          double jetzt = TimeD(TM_MODE);
-          times[iii] = jetzt - ctime;
-          //  cout << iii << " : " << (jetzt-ctime)*1000 << endl;
-          ctime = jetzt;
         }
-
-      for (int i = 0; i < nTimes; i++)
-        cout << times[i] * 1000 << " " ;
 
       cout << endl;
       Printf("Zeit: %6.2f ms\n", (TimeD(TM_MODE) - atime) / nTimes * 1000.0);
