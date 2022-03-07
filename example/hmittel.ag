@@ -1,0 +1,413 @@
+/*
+ * bildet "Mittelwert"-Bilder aus einer Vielzahl von Einzelbildern
+ * ziwschenresultat ist für jedes Pixel ein Histogramm
+ * die Verrechnung erfolgt in unterschiedlichster Art und Weise
+ * pixelweise Operationen:
+ * - Mittelwert
+ * - Median (RGB-Werte einzeln)
+ * - häufigster Wert (RGB-Werte einzeln)
+ * - maximaler Wert
+ * - minimaler Wert
+ */
+
+#include <image.h>
+
+/*AppGen:Global*/
+
+typedef vector<vector<array<Histogram, 3>>> PixelHist;
+
+int xSize, ySize, maximalValue;
+
+// ermittelt aus Dateiliste alle Bilder
+// ermittelt passende Bildgröße als Maximum
+void filterImg(vector<string>& z)
+{
+  // bilder in Textliste z finden
+  vector<string> images;
+
+  for (unsigned int i = 0; i < z.size(); ++i)
+    {
+      if (verbose)
+        if (i % 10 == 0)
+          cout << i << "/" << z.size() << endl;
+      string filename = z[i];
+      // cout << filename<<endl;
+      int xda = 0, yda = 0, mva = 0;
+      bool isImageFile = true;
+      try
+        {
+          InfImgFile(filename, xSize, ySize, maximalValue);
+        }
+      catch (IceException& ex)
+        {
+          // wenn kein Bild, dann könnte es Verzeichnis sein
+          isImageFile = false;
+        }
+      if (isImageFile)
+        {
+          images.push_back(filename);
+          if (xda > xSize)
+            xSize = xda;
+          if (yda > ySize)
+            ySize = yda;
+          if (mva > maximalValue)
+            maximalValue = mva;
+        }
+    }
+  z = images;
+}
+
+void average(const PixelHist& hist, ColorImage& sum)
+{
+  // mittelwert berechnen
+  array<int, 3> cVal;
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
+      {
+        for (int c = 0; c < 3; ++c)
+          {
+            cVal[c] = hist[y][x][c].computeAverage();
+          }
+        sum.setPixel(x, y, ColorValue(cVal[0], cVal[1], cVal[2]));
+      }
+}
+
+void min(const PixelHist& hist, ColorImage& sum)
+{
+  // minimum
+  array<int, 3> minV;
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
+      {
+        for (int c = 0; c < 3; ++c)
+          {
+            minV[c] = hist[y][x][c].computeMinimum();
+          }
+        sum.setPixel(x, y, ColorValue(minV[0], minV[1], minV[2]));
+      }
+}
+
+void max(const PixelHist& hist, ColorImage& sum)
+{
+  // maximum
+  array<int, 3> maxV;
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
+      {
+        for (int c = 0; c < 3; ++c)
+          {
+            maxV[c] = hist[y][x][c].computeMaximum();
+          }
+        sum.setPixel(x, y, ColorValue(maxV[0], maxV[1], maxV[2]));
+      }
+}
+
+void median(const PixelHist& hist, ColorImage& sum)
+{
+  // median
+  array<int, 3> medianV;
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
+      {
+        for (int c = 0; c < 3; ++c)
+          {
+            medianV[c] = hist[y][x][c].computeMedian();
+          }
+        sum.setPixel(x, y, ColorValue(medianV[0], medianV[1], medianV[2]));
+      }
+}
+
+void frequent(const PixelHist& hist, ColorImage& sum)
+{
+  // häufigster wert
+  array<int, 3> frequentV;
+  for (int y = 0; y < ySize; ++y)
+    for (int x = 0; x < xSize; ++x)
+      {
+        for (int c = 0; c < 3; ++c)
+          {
+            frequentV[c] = hist[y][x][c].computeMostFrequent();
+          }
+        sum.setPixel(x, y, ColorValue(frequentV[0], frequentV[1], frequentV[2]));
+      }
+}
+
+/*AppGen
+ prog: Mittelung von Einzelbildern
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+ para: dir, optional, string, dir, Verzeichnis mit Bildern, "."
+ %
+ opt: m, mask, string, filemask, Dateinamens-Maske, "*"
+ opt: M, mode, char, mode, Berechnungsmodus, 'a'
+ opt2: mode = a - Mittelwert
+ opt2: mode = m - Median
+ opt2: mode = f - Häufigster Wert
+ opt2: mode = i - Minimum
+ opt2: mode = A - Maximum
+ opt2: mode = I - Interaktive Auswahl
+ opt: p, preprocess, char, preprocess, Vorverarbeitung, '-'
+ opt2: 'h' - Histogramm-Egalisierung
+ opt: P, postprocess, char, postprocess, Nachbearbeitung, '-'
+ opt2: 'h' - Histogramm-Egalisierung
+ opt: o, outfile, string, outfile, Dateiname für Ausgabe des Bildes, "averaged.jpg"
+ opt: d, display, void, display, Anzeige Mittelung, false
+ opt: D, displayrate, int, displayrate, Aktualisiere Anzeige nach n Bildern, 0
+ opt: v, verbose, Void, verbose, Anzeige der Abarbeitung, false
+ opt: b, batch, void, batch, Kein Warten für Batchbearbeitung,false
+ opt: h, help, usage, help, Hilfe
+AppGen*/
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+
+  bool interactive = false;
+  if (mode == 'I')
+    {
+      interactive = true;
+      mode = 'a';
+    }
+
+  if (displayrate == 0)
+    {
+      if (display)
+        displayrate = 1;
+    }
+  else
+    display = true;
+
+  vector<string> files;
+
+  bool isImageFile = true;
+  try
+    {
+      InfImgFile(dir, xSize, ySize, maximalValue);
+    }
+  catch (IceException& ex)
+    {
+      // wenn kein Bild, dann könnte es Verzeichnis sein
+      isImageFile = false;
+    }
+
+  if (isImageFile)
+    {
+      // Argument ist Datei: Verzeichnis ermitteln
+      // conversion win -> unix
+      for (unsigned int i = 0; i < dir.length(); i++)
+        if (dir[i] == '\\')
+          dir[i] = '/';
+
+      size_t pos = dir.rfind('/');
+
+      if (pos != string::npos)
+        {
+          dir = dir.substr(0, pos);
+        }
+    }
+
+  if (verbose)
+    cout << (dir + "/" + filemask) << endl;
+  Directory(files, dir + "/" + filemask, DIR_FILE | DIR_WITHPATH);
+
+  filterImg(files);
+  if (verbose)
+    cout << files.size() << " files, " << xSize << "x" << ySize << endl;
+
+  if (files.size() == 0)
+    {
+      cout << "Kein Bild vorhanden" << endl;
+      exit(1);
+    }
+
+  if (files.size() < 2)
+    {
+      cout << "Zu wenig Bilder" << endl;
+      exit(1);
+    }
+
+  ColorImage src;
+  src.create(xSize, ySize, maximalValue);
+
+  ColorImage sum;
+  sum.create(xSize, ySize, maximalValue);
+  Visual resultDisplay = nullptr;
+
+  if (display)
+    {
+      Show(ON, src, "Original");
+      resultDisplay = Show(ON, sum, "Mittel");
+    }
+
+  //  vector<vector<matrix<int> > > hist(ySize);
+  PixelHist hist(ySize);
+
+  if (verbose)
+    cout << "creating histogram" << endl;
+
+  for (int y = 0; y < ySize; ++y)
+    {
+      hist[y].resize(xSize);
+      for (int x = 0; x < xSize; ++x)
+        {
+
+          hist[y][x][0].reset(maximalValue + 1);
+          hist[y][x][1].reset(maximalValue + 1);
+          hist[y][x][2].reset(maximalValue + 1);
+        }
+    }
+
+  int displaycounter = 0;
+
+  for (unsigned int i = 0; i < files.size(); ++i)
+    {
+      string filename = files[i];
+      if (verbose)
+        cout << (i + 1) << "/" << files.size() << ": " << filename << endl;
+
+      src.read(filename);
+
+      switch (preprocess)
+        {
+        case 'h':
+          HistogramEqualization(src, src);
+          break;
+        }
+
+      WindowWalker w(src.redImage());
+      for (w.init(); !w.ready(); w.next())
+        {
+          ColorValue cv = src.getPixel(w);
+
+          hist[w.y][w.x][0].addValue(cv[0]);
+          hist[w.y][w.x][1].addValue(cv[1]);
+          hist[w.y][w.x][2].addValue(cv[2]);
+        }
+
+      if (display)
+        {
+          ++displaycounter;
+          if (displaycounter >= displayrate)
+            {
+              displaycounter = 0;
+              switch (mode)
+                {
+                case 'a':
+                  average(hist, sum);
+                  break;
+                case 'm':
+                  median(hist, sum);
+                  break;
+                case 'f':
+                  frequent(hist, sum);
+                  break;
+                case 'i':
+                  min(hist, sum);
+                  break;
+                case 'A':
+                  max(hist, sum);
+                  break;
+                }
+              switch (postprocess)
+                {
+                case 'h':
+                  HistogramEqualization(sum, sum);
+                  break;
+                }
+              displaycounter = 0;
+            }
+        }
+    }
+
+  do
+    {
+      switch (mode)
+        {
+        case 'a':
+          average(hist, sum);
+          break;
+        case 'm':
+          median(hist, sum);
+          break;
+        case 'f':
+          frequent(hist, sum);
+          break;
+        case 'i':
+          min(hist, sum);
+          break;
+        case 'A':
+          max(hist, sum);
+          break;
+        }
+      switch (postprocess)
+        {
+        case 'h':
+          HistogramEqualization(sum, sum);
+          break;
+        }
+
+      if (interactive)
+        {
+          int c = GetChar();
+          switch (c)
+            {
+            case 'a':
+              mode = 'a';
+              break;
+            case 'A':
+              mode = 'A';
+              break;
+            case 'm':
+              mode = 'm';
+              break;
+            case 'f':
+              mode = 'f';
+              break;
+            case 'i':
+              mode = 'i';
+              break;
+            case 'q':
+              mode = 'q';
+              break;
+
+            }
+        }
+      if (mode != 'q')
+        {
+          switch (mode)
+            {
+            case 'a':
+              Print("Mode: a = average\n");
+              break;
+            case 'A':
+              Print("Mode: A = maximum\n");
+              break;
+            case 'm':
+              Print("Mode: m = median\n");
+              break;
+            case 'f':
+              Print("Mode: f = most frequent\n");
+              break;
+            case 'i':
+              Print("Mode: i = minimum\n");
+              break;
+            }
+        }
+    }
+  while (interactive && mode != 'q');
+
+  if (!outfile.empty())
+    {
+      sum.write(outfile);
+    }
+
+  if (!batch && !interactive)
+    {
+      cout << "Press <Enter> to finish" << endl;
+      cin.get();
+    }
+
+  if (resultDisplay)
+    Show(OFF, resultDisplay);
+  return 1;
+}
