@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 
   // objekt 2 durch transformieren erzeugen
   vector<Point> pl2;
-  Transform(tro, pl1, pl2);
+  transform(tro, pl1, pl2);
 
   om.setObject(0, pl2);
   draw(pl2, 2, mark);

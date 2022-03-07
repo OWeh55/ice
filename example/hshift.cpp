@@ -10,8 +10,8 @@ int HNeg(int f, int n)
 
 void HShift(ImageD& imgd, double lx, double ly)
 {
-  int xs = imgd->xsize;
-  int ys = imgd->ysize;
+  int xs = imgd.xsize;
+  int ys = imgd.ysize;
   int xs2 = xs / 2;
   int ys2 = ys / 2;
   double kx = lx * M_PI * 2 / xs;
@@ -39,8 +39,8 @@ void HShift(ImageD& imgd, double lx, double ly)
 
 void HDouble(const ImageD& src, ImageD& dst)
 {
-  int sx = src->xsize;
-  int sy = src->ysize;
+  int sx = src.xsize;
+  int sy = src.ysize;
   dst = NewImgD(sx * 2, sy * 2);
 
 }

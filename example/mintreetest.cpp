@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
   Image pic;
   pic.create(xsize, ysize, 25500);
-  ClearImg(pic);
+  clearImg(pic);
   Show(OVERLAY, pic);
 
   int rand1 = 5;
@@ -135,8 +135,6 @@ int main(int argc, char** argv)
 
   GetChar();
 
-  unsigned int ui = -1;
-
   if (maxlen > 0.0)
     {
       atime = TimeD();
@@ -177,7 +175,7 @@ int main(int argc, char** argv)
       Printf("Zeit: %5.2f\n", TimeD() - atime);
       Printf("Länge der Kanten %5.2f\n", mintreelen);
 
-      ClearImg(pic);
+      clearImg(pic);
       int color = 2;
       map<unsigned int, int> colormap;
 

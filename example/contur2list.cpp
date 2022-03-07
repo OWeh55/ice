@@ -3,14 +3,14 @@
 int main(int ragc, char** argv)
 {
   Contur c(111, 111);
-  c.Add(0);
-  c.Add(0);
-  c.Add(2);
-  c.Add(2);
-  c.Add(4);
-  c.Add(4);
-  c.Add(6);
-  c.Add(6);
+  c.add(0);
+  c.add(0);
+  c.add(2);
+  c.add(2);
+  c.add(4);
+  c.add(4);
+  c.add(6);
+  c.add(6);
 
   cout << c.Number() << " direction codes in contur " << endl;
 

@@ -22,7 +22,7 @@ void Dequantize(const Image& qimg, int step, Image& iimg)
       if (marker)
         {
           mark = NewImg(qimg->xsize, qimg->ysize, 255);
-          ClearImg(mark);
+          clearImg(mark);
           Show(OVERLAY, h, mark);
         }
       else

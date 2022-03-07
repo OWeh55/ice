@@ -33,12 +33,12 @@ void Richtung(const Image& src, Image& dst, Freeman dir, int size)
 void Linie(const Image& src, Image& dst, int size)
 {
   Image h = NewImg(src);
-  SetImg(dst, dst->maxval);
+  setImg(dst, dst->maxval);
 
   for (int dir = 0; dir < 4; dir++)
     {
       Richtung(src, h, dir, size);
-      MinImg(h, dst, dst);
+      minImg(h, dst, dst);
     }
 }
 
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 
   Image mrk;
   mrk.create(xs, ys, 11);
-  ClearImg(mrk);
+  clearImg(mrk);
   Show(OVERLAY, img, mrk, "Ergebnis");
 
   while (true)
@@ -97,12 +97,12 @@ int main(int argc, char** argv)
       Print("Endpunkt waehlen\n");
       IPoint ende = SelPoint(img);
 
-      ClearImg(mrk);
+      clearImg(mrk);
       PutVal(mrk, ende.x, ende.y, 1);
 
       Contur c = Dijkstra(img, start, mrk);
       GetChar();
-      ClearImg(mrk);
+      clearImg(mrk);
       MarkContur(c, 1, mrk);
       GetChar();
     }

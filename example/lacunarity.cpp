@@ -46,7 +46,7 @@ vector<double> lacu(const Image& img, int maxsize)
       Histogram h(validPixels);
       int n;
       double mean, std;
-      h.Statistic(n, mean, std);
+      h.getStatistics(n, mean, std);
 #ifndef GAUSS
       mean /= boxsize;
       std /= boxsize;

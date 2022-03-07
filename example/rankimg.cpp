@@ -3,8 +3,10 @@
 int main(int argc, char** argv)
 {
   Image img1 = ReadImg("test_gray.jpg");
-  Image img2 = Image::createImage(img1, true);
-  Image img3 = Image::createImage(img1, true);
+  Image img2;
+  img2.create(img1);
+  Image img3;
+  img3.create(img1);
   Show(ON, img1, "Original");
   Show(ON, img2, "Rank");
   Show(ON, img3, "RankSub");

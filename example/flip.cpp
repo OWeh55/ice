@@ -36,10 +36,11 @@ int main(int argc, char** argv)
 {
   Image img = ReadImg("test_gray.jpg");
   WriteImg(img, "lo.jpg");
-  flip(img);
+  ::flip(img);
   WriteImg(img, "ro.jpg");
   flop(img);
   WriteImg(img, "ru.jpg");
-  flip(img);
+  ::flip(img);
   WriteImg(img, "lu.jpg");
+  return 0;
 }

@@ -5,7 +5,7 @@ int main(int argc, char** argv)
 #if 1
   Image img;
   img.create(1000, 1000, 255);
-  ClearImg(img);
+  clearImg(img);
   Show(ON, img);
 
   vector<Point> pl;

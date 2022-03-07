@@ -6,7 +6,7 @@ int main(int argc, char** argv)
   Image src = ReadImg("test_gray.jpg");
 #else
   Image src = NewImg(800, 800, 255);
-  ClearImg(src);
+  clearImg(src);
 
   for (int i = 0; i < 200; i++)
     {
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
   Show(ON, dest, "Gefiltert");
   GetChar();
   Image maske = NewImg(src);
-  InvConvolutionImg(src, dest, maske, 0.0, 0.1);
+  calcInvConvolution(src, dest, maske, 0.0, 0.1);
   Show(ON, maske);
   GetChar();
   return OK;

@@ -25,8 +25,8 @@ int main(int argc, char** argv)
 
   ClearAlpha();
 
-  ClearImg(g1);
-  ClearImg(m1);
+  clearImg(g1);
+  clearImg(m1);
 
   drawBox(5, 5, 5, 5, g1);
   drawBox(5, 25, 6, 26, g1);
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
   drawBox(15, 255, 34, 264, g1);
   drawBox(15, 255, 24, 274, g1);
 
-  InvertImg(g1);
+  invertImg(g1);
 
   while (SearchStart(g1, m1, NULL, 1, 1, ps, HORZ) == OK)
     {

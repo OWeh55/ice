@@ -26,10 +26,10 @@ int main(int argc, char** argv)
     fn = argv[1];
 
   Image img = ReadImg(fn);
-  GradImg(img, 4, img);
+  GradImg(img, img, 4);
   Image mrk = NewImg(img);
   Show(OVERLAY, img, mrk);
-  ClearImg(mrk);
+  clearImg(mrk);
 
   //  DoBImg(img,img,3,5);
 
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
       Printf("Punktliste mit %d Punkten\n", pl.size());
       vector<Point> pl2; // Hilfsliste
 
-      LineSeg line = DetectLine(pl, pl.size() * 100);
+      LineSeg line = detectLine(pl, pl.size() * 100);
 
       // Punkte in der nähe aufsammeln
       pl2.clear();
@@ -108,10 +108,10 @@ int main(int argc, char** argv)
 
       Printf("Punktliste noch mit %d Punkten\n", pl.size());
 
-      ClearImg(mrk);
+      clearImg(mrk);
 
       for (int i = 0; i < lines.size(); i++)
-        Draw(lines[i], mrk, 1);
+        draw(lines[i], mrk, 1);
 
       for (int i = 0; i < pl.size(); i++)
         PutVal(mrk, IPoint(pl[i]), 3);

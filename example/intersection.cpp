@@ -42,18 +42,20 @@ LineSeg InputLine(const Image& img, const string& p)
 
 int main(int argc, char** argv)
 {
-  Image img(1024, 1024, 255);
-  Image mrk(1024, 1024, 8);
-  ClearImg(img);
-  ClearImg(mrk);
+  Image img;
+  img.create(1024, 1024, 255);
+  Image mrk;
+  mrk.create(1024, 1024, 8);
+  clearImg(img);
+  clearImg(mrk);
   Show(OVERLAY, img, mrk);
 
   while (true)
     {
       LineSeg l1 = InputLine(mrk, "Erste Linie");
-      l1.Draw(mrk, 1);
+      draw(l1, mrk, 1);
       LineSeg l2 = InputLine(mrk, "Zweite Linie");
-      l2.Draw(mrk, 2);
+      draw(l2, mrk, 2);
       Point p;
       bool inter = l1.Intersection(l2, p);
       //      cout << p.x << "," << p.y << endl;
@@ -66,27 +68,27 @@ int main(int argc, char** argv)
       if (Inside(mrk, IPoint(p)))
         Marker(2, p, color, 7, mrk);
 
-      for (IPoint p = img.begin(); p != img.end(); img.next(p))
+      WindowWalker w(img);
+      for (w.init(); ! w.ready(); w.next())
         {
-          double d1 = l1.Distance(Point(p));
-          double d2 = l2.Distance(Point(p));
+          double d1 = l1.Distance(Point(w));
+          double d2 = l2.Distance(Point(w));
 
           if (d1 < d2)
-            PutValue(img, p, limited(d1, img));
+            img.setPixel(w, limited(d1, img));
           else
-            PutValue(img, p, limited(d2, img));
+            img.setPixel(w, limited(d2, img));
         }
 
       Print("Weiter... <ENTER>\n");
 
       while (GetChar() != 13) /* wait*/;
 
-      ClearImg(mrk);
-
-      for (IPoint p = img.begin(); p != img.end(); img.next(p))
+      clearImg(mrk);
+      for (w.init(); !w.ready(); w.next())
         {
-          if (l1.RightOf(p))
-            PutValue(mrk, p, 1);
+          if (l1.RightOf(w))
+            mrk.setPixel(w, 1);
         }
 
     }

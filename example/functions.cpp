@@ -11,12 +11,12 @@ int main(int argc, char** argv)
   int yc = img.ysize / 2;
 
   Trafo tr;
-  tr.Rotate(xc, yc, Arcus(5.0));
+  tr.rotate(xc, yc, Arcus(5.0));
   Function2dParameterTransform trimg(fnimg, tr);
 
   Function2dValueTransform lintrimg(trimg, -1, 255);
 
-  SetImg(dst, lintrimg);
+  setImg(dst, lintrimg);
   GetChar();
   return 0;
 }

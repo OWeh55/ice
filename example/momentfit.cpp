@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<math.h>
 #include<image.h>
+#include <textlist.h>
 
 int main(int argc, char* argv[])
 {
@@ -153,13 +154,13 @@ int main(int argc, char* argv[])
           kreis[0] = x0;
           kreis[1] = y0;
           kreis[2] = radius;
-          DrawCircle(kreis, 255, 255, NOFILL, pic1);
+          drawCircle(kreis, 255, 255, NOFILL, pic1);
         }
 
       if (ient == 5)
         {
           FitCircularSegmentMoments(moment, circle_par, c_seg_par1, c_seg_par2);
-          DrawCircle(circle_par, 255, 255, NOFILL, pic1);
+          drawCircle(circle_par, 255, 255, NOFILL, pic1);
           Line((int)c_seg_par1[0], (int)c_seg_par1[1], (int)c_seg_par2[0], (int)c_seg_par2[1], 255, DEFAULT, pic1);
         }
 

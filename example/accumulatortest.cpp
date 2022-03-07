@@ -14,4 +14,5 @@ int main(int argc, char** argv)
   double v, f;
   a.getMax(v, f);
   cout << "value: " << v << "  frequency: " << f << endl;
+  return 0;
 }

@@ -5,8 +5,10 @@ const double rad2 = 433;
 
 int main(int argc, char** argv)
 {
-  Image g(1000, 1000, 255);
-  Image m(1000, 1000, 255);
+  Image g;
+  g.create(1000, 1000, 255);
+  Image m;
+  m.create(1000, 1000, 255);
   Show(OVERLAY, g, m);
 
   Point pc(g->xsize / 2, g->ysize / 2), p1, p2;
@@ -24,7 +26,7 @@ int main(int argc, char** argv)
               double fi = i * 6.283 / steps;
               p2.x = pc.x + rad2 * sin(fi);
               p2.y = pc.y + rad2 * cos(fi);
-              Draw(LineSeg(p1, p2, LineSeg::segment), g, gv);
+              draw(LineSeg(p1, p2, LineSeg::segment), g, gv);
             }
         }
     }

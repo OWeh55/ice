@@ -14,9 +14,9 @@ int main(int argc, char** argv)
   mrk.create(999, 999, 255);
 
   Show(OVERLAY, img, mrk);
-  ClearImg(mrk);
+  clearImg(mrk);
 
-  ClearImg(img);
+  clearImg(img);
   LineSeg aline(755, 55, 77, 777);
   draw(aline, img, 90);
 

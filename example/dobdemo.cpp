@@ -16,14 +16,14 @@ int main(int argc, char** argv)
     }
 
   Image smear1 = NewImg(img);
-  SmearImg(img, smear1, 7);
+  smearImg(img, smear1, 7);
   Show(ON, smear1, "Smear1");
   Image smear2 = NewImg(img);
-  SmearImg(img, smear2, 111);
+  smearImg(img, smear2, 111);
   Show(ON, smear2, "Smear2");
   Image dobimg = NewImg(img);
   Show(ON, dobimg, "DoB");
-  SubImg(smear1, smear2, dobimg, SMD_POSITIVE);
+  subImg(smear1, smear2, dobimg, SMD_POSITIVE);
 
   IPoint p1, p2;
   IPoint ph;

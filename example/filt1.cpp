@@ -18,7 +18,7 @@ int main(int argc, char** argv)
   fm.Append(IVector(-1, 0, 1));
   fm.Append(IVector(-1, 0, 1));
   fm.Append(IVector(-1, 0, 1));
-  LSIFilter f(fm, 6);
+  LsiFilter f(fm, 6);
   double ta = TimeD();
 
   for (int i = 0; i < 100; ++i)

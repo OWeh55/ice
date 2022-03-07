@@ -20,7 +20,7 @@ Polygon MakePoly(int n = 4)
       for (int i = 1; i < n; i++)
         {
           p = Point(Random(xsize - 100) + 50, Random(ysize - 100) + 50);
-          m.Add(p);
+          m.add(p);
         }
     }
   while (! m.isValid());
@@ -31,8 +31,10 @@ Polygon MakePoly(int n = 4)
 int main(int argc, char* argv[])
 {
   Polygon m;
-  Image img(xsize, ysize, 255);
-  Image mark(xsize, ysize, 255);
+  Image img;
+  img.create(xsize, ysize, 255);
+  Image mark;
+  mark.create(xsize, ysize, 255);
   Show(OVERLAY, img, mark);
 
   while (true)
@@ -40,7 +42,7 @@ int main(int argc, char* argv[])
       m = MakePoly(15);
       // m=SelPolygon(mark);
       panz = m.size();
-      Draw(m, mark, 3);
+      draw(m, mark, 3);
       Printf("Original mit %d Eckpunkten\n", panz);
       Polygon ch;
       m.ConvexHull(ch);

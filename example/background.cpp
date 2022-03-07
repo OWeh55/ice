@@ -54,16 +54,16 @@ int main(int argc, char** argv)
         {
           if (!neg)
             {
-              ErodeImg(src, size, size, min);
-              DilateImg(min, size, size, open);
+              erodeImg(src, min, size, size);
+              dilateImg(min, open, size, size);
             }
           else
             {
-              DilateImg(src, size, size, min);
-              ErodeImg(min, size, size, open);
+              dilateImg(src, min, size, size);
+              erodeImg(min, open, size, size);
             }
         }
-      SubImg(src, open, diff);
+      subImg(src, open, diff);
       int ch = GetChar();
       switch (ch)
         {

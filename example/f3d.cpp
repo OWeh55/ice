@@ -240,7 +240,7 @@ int Main(int argc, char* argv[])
 
   // Bild für Darstellung
   img = NewImg(xs, ys, maxval, "Fraktal");
-  ClearImg(img);
+  clearImg(img);
   Show(ON, img);
 
   img3.create(xs, ys, zs);

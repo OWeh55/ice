@@ -34,12 +34,13 @@ int DistanceMatrix(const vector<Point>& pl1,
       mpl2[i][1] = pl2[i].y;
     }
 
-  return DistanceMatrix(mpl1, mpl2, distmatrix, D_EUKLID);
+  return DistanceMatrix(mpl1, mpl2, distmatrix, D_EUCLID);
 }
 
 int main(int argc, char** argv)
 {
-  Image img(999 + 40, 999 + 40, 255 + 40);
+  Image img;
+  img.create(999 + 40, 999 + 40, 255 + 40);
   Show(ON, img);
 
   for (int i = 0; i < 200; i++)
@@ -66,7 +67,7 @@ int main(int argc, char** argv)
       Hungarian(dist, refpairs);
       cout << "Hungarian OK" << endl;
 
-      ClearImg(img);
+      clearImg(img);
 
       //  cout << Matrix(refpairs) << endl;
       for (int i = 0; i < refpairs.rows(); i++)
@@ -75,7 +76,7 @@ int main(int argc, char** argv)
           int i2 = refpairs[i][1];
           // cout << i1 << " " << i2 << endl;
           LineSeg l(list1[i1], list2[i2]);
-          Draw(l, img, 255);
+          draw(l, img, 255);
           // Marker(1,list1[i].x,list1[i].y,127,5,img);
           // Marker(2,list2[i].x,list2[i].y,127,5,img);
         }

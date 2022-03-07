@@ -41,11 +41,11 @@ int main(int argc, char** argv)
   Show(ON, dest);
   Show(ON, rek);
 
-  LSIFilter f(m);
+  LsiFilter f(m);
   f.filter(source, dest, 0);
   cout << fixed << setprecision(3) << setw(7) << f << endl;
 
-  LSIFilter fi = f.getInverse(39);
+  LsiFilter fi = f.getInverse(39);
   cout << setprecision(3) << setw(7) << fi << endl;
 
   fi.filter(dest, rek, 0);

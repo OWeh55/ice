@@ -277,8 +277,8 @@ int main(int argc, char* argv[])
 
   int xs, ys;
 
-  xs = Min(xs1, xs2);
-  ys = Min(ys1, ys2);
+  xs = min(xs1, xs2);
+  ys = min(ys1, ys2);
 
 
   // cout << xs << " " << ys << " " << mv << " "  << fac << endl;
@@ -434,12 +434,12 @@ int main(int argc, char* argv[])
 
       if (fnr == first)
         for (int k = 0; k < firstrep; k++)
-          vfd.Write(destimg);
+          vfd.write(destimg);
       else if (fnr == last)
         for (int k = 0; k < lastrep; k++)
-          vfd.Write(destimg);
+          vfd.write(destimg);
       else
-        vfd.Write(destimg);
+        vfd.write(destimg);
 
       if (moreverbose)
         cout << "wrote " << fnr << endl;

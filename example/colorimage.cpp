@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 
   ColorImage diff = newColorImage(ci);
   Show(ON, diff);
-  SubImg(co, cm, diff, SMD_SHIFT);
+  subImg(co, cm, diff, SMD_SHIFT);
   GetChar();
   return 0;
 }

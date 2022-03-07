@@ -35,7 +35,7 @@ void Dequantize(const Image& qimg, int step, Image& iimg)
       if (marker)
         {
           mark = NewImg(qimg->xsize, qimg->ysize, 255);
-          ClearImg(mark);
+          clearImg(mark);
           Show(OVERLAY, mark, "status");
         }
 
@@ -137,9 +137,6 @@ void Dequantize(const Image& qimg, int step, Image& iimg)
   for (int y = 0; y < ys; y++)
     for (int x = 0; x < xs; x++)
       PutVal(iimg, x, y, limited(RoundInt(GetValD(h, x, y)), iimg));
-
-  FreeImgD(h);
-  FreeImgD(h1);
 }
 
 int main(int argc, char** argv)

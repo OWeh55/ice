@@ -53,7 +53,7 @@ void TInterpol(const vector<double>& t, // Stütztstellen
   // cout << "Gleichung lösen" << endl;
   // cout << A << f << endl;
 
-  Vector res = SolveLinEqu(A, fi);
+  Vector res = SolveLinearEquation(A, fi);
 
 #if 0
 

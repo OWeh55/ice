@@ -11,11 +11,11 @@ int main(int argc, char** argv)
   Contur c1 = SelContur(img, true);
 #else
   Contur c1;
-  c1.SetStart(100, 100);
-  c1.Add(800, 200);
-  c1.Add(700, 777);
-  c1.Add(200, 800);
-  c1.Close();
+  c1.setStart(100, 100);
+  c1.add(800, 200);
+  c1.add(700, 777);
+  c1.add(200, 800);
+  c1.close();
 #endif
   Matrix tm(3, 3, 1);
   tm[0][0] = 0.9;
@@ -27,14 +27,14 @@ int main(int argc, char** argv)
   tm[2][1] = 0.0001;
   Trafo tro(tm);
 
-  cout << tro.Tmatrix() << endl;
-  Contur c2 = Transform(tro, c1);
+  cout << tro.getMatrix() << endl;
+  Contur c2 = transform(tro, c1);
   // SelContur(img,true);
   MarkContur(c2, 200, img);
   Trafo tr = MatchObject(c1, c2, TRM_PROJECTIVE_NOR);
   //Trafo tr=MatchObject(c1,c2,TRM_AFFINE);
-  cout << tr.Tmatrix() << endl;
-  Contur c3 = Transform(tr, c1);
+  cout << tr.getMatrix() << endl;
+  Contur c3 = transform(tr, c1);
   MarkContur(c3, 127, img);
   GetChar();
   return 0;

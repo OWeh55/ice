@@ -74,9 +74,9 @@ int main(int argc, char* argv[])
     fn = argv[optind];
 
   Image img = NewImg(1111, 999, 255);
-  SetImg(img, 177);
+  setImg(img, 177);
   Image imgm = NewImg(img->xsize, img->ysize, 3);
-  ClearImg(imgm);
+  clearImg(imgm);
 
   Show(OVERLAY2, img, imgm);
 
@@ -118,9 +118,9 @@ int main(int argc, char* argv[])
   Point pp4(333, 233);
 
   Polygon poly(pp1);
-  poly.Add(pp2);
-  poly.Add(pp3);
-  poly.Add(pp4);
+  poly.add(pp2);
+  poly.add(pp3);
+  poly.add(pp4);
 
   Fill(poly, img, 110);
   nDraw(poly, imgm, 1);

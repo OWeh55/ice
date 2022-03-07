@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
   for (int i = 0; i < SIZE / 2; i++)
     v2[i] = 1.0;
 
-  Convolution(v1, v2, v3);
+  calcConvolution(v1, v2, v3);
 
   cout << "v1:   " << v1 << endl;
   cout << "v2:   " << v2 << endl;
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
       v2[(i + 2) % SIZE] = i;
     }
   */
-  InvConvolution(v1, v3, v2, 0.003);
+  calcInvConvolution(v1, v3, v2, 0.003);
   cout << "v1:                " << v1 << endl;
   cout << "v1*v2:             " << v3 << endl;
   cout << "v2 (reconstructed):" << v2 << endl;

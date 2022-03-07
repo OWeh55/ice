@@ -44,14 +44,14 @@ void Filter(Image& resimg, int fmax)
   ImageD hartley = NewImgD(resimg->xsize, resimg->ysize);
   ImageD result = NewImgD(resimg->xsize, resimg->ysize);
   HartleyImg(resimg, hartley);
-  double x0 = hartley->xsize / 2;
-  double y0 = hartley->ysize / 2;
+  double x0 = hartley.xsize / 2;
+  double y0 = hartley.ysize / 2;
 
-  for (int y = 0; y < hartley->ysize; y++)
+  for (int y = 0; y < hartley.ysize; y++)
     {
       double fy = y - y0;
 
-      for (int x = 0; x < hartley->xsize; x++)
+      for (int x = 0; x < hartley.xsize; x++)
         {
           double fx = x - x0;
           double f = sqrt(fx * fx + fy * fy);
