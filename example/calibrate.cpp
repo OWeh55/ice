@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
       double dist;
       Vector para;
       int rc = Intersection(ray1, ray2, p1, dist, para);
-#if 0
+#if 1
       cout << p[i] << p2[i] << " ";
       cout << p1 << " " << world[i] ;
       cout << " (" << (p1 - world[i]).Length() << ")" << endl;

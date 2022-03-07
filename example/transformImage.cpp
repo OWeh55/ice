@@ -124,7 +124,9 @@ int main(int argc, char* argv[])
       else
         img2.write(ofn);
     }
-  if (display) GetChar();
+
+  if (display)
+    GetChar();
 
   return OK;
 }

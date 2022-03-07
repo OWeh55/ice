@@ -100,7 +100,7 @@ int main(int argc, char** argv)
       // Punkte in der Nähe der Linie aus Liste entfernen
       pl2.clear();
 
-      for (int i = 0; i < pl.size(); i++)
+      for (unsigned int i = 0; i < pl.size(); i++)
         if (line.Distance(pl[i]) > 2.0)
           pl2.push_back(pl[i]);
 
@@ -110,10 +110,10 @@ int main(int argc, char** argv)
 
       clearImg(mrk);
 
-      for (int i = 0; i < lines.size(); i++)
+      for (unsigned int i = 0; i < lines.size(); i++)
         draw(lines[i], mrk, 1);
 
-      for (int i = 0; i < pl.size(); i++)
+      for (unsigned int i = 0; i < pl.size(); i++)
         PutVal(mrk, IPoint(pl[i]), 3);
 
       GetChar();

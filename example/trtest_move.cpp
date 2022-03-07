@@ -44,4 +44,5 @@ int main(int argc, char** argv)
   cout << m << endl;
 
   cout << (m - tr.getMatrix()) << endl;
+  return OK;
 }

@@ -20,4 +20,5 @@ int main(int argc, char** argv)
   Show(GRAY, img);
   cout << img.minValue() << " .. " << img.maxValue() << endl;
   GetChar();
+  return OK;
 }

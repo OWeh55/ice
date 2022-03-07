@@ -39,4 +39,6 @@ int main(int argc, char** argv)
   cout << setw(8) << u << endl;
   cout << "mm - l * u" << endl;
   cout << scientific << setw(12) << (mm - l * u) << endl;
+
+  return OK;
 }

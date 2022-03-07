@@ -43,7 +43,6 @@ void nDraw(const GeoObject& g, const Image& mark, int value)
 int main(int argc, char* argv[])
 {
   Contur c;
-  bool fill = false;
   double rad = 100.5;
 
   string fn = "";
@@ -51,15 +50,12 @@ int main(int argc, char* argv[])
 
   int rc;
 
-  while ((rc = getopt(argc, argv, "r:fx:y:")) >= 0)
+  while ((rc = getopt(argc, argv, "r:x:y:")) >= 0)
     {
       switch (rc)
         {
         case 'r':
           rad = atof(optarg);
-          break;
-        case 'f':
-          fill = true;
           break;
         case 'x':
           center.x = atof(optarg);

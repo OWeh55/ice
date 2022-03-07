@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
       maxval.push_back(maxvalue3);
     }
 
-  for (int i = 0; i < maxval.size(); ++i)
+  for (unsigned int i = 0; i < maxval.size(); ++i)
     {
       Image img;
       img.create(sx, sy, maxval[i]);
@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
    * Lesen / Schreiben mit Visualisierung
    */
 
-  for (int i = 0; i < images.size(); ++i)
+  for (unsigned int i = 0; i < images.size(); ++i)
     {
       Image img = images[i];
       times.push_back(vector<double>());
@@ -190,10 +190,10 @@ int main(int argc, char* argv[])
   cout << setw(19) << "setPixelUnchecked";
   cout << setw(19) << "getPixelUnchecked" << endl;
   cout << fixed;
-  for (int i = 0; i < times.size(); ++i)
+  for (unsigned int i = 0; i < times.size(); ++i)
     {
       cout << "maxvalue = " << setw(10) << maxval[i] << ": ";
-      for (int k = 0; k < times[i].size(); ++k)
+      for (unsigned int k = 0; k < times[i].size(); ++k)
         cout << setw(19) << setprecision(3) << times[i][k];
       cout << endl;
     }

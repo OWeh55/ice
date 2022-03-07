@@ -48,4 +48,5 @@ int main(int argc, char** argv)
   WriteImg(smear2(w), "smear2.jpg");
   WriteImg(dobimg(w), "dob.jpg");
   GetChar();
+  return OK;
 }

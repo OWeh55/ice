@@ -27,7 +27,7 @@ int main(int argc, char** argv)
   int p = tr.findNearest(vector<double> {2, 4, 3});
   cout << "Klasse: " << sl[p].classNr << endl;
   cout << "Merkmale ";
-  for (int i = 0; i < sl[p].features.size(); ++i)
+  for (unsigned int i = 0; i < sl[p].features.size(); ++i)
     cout << sl[p].features[i] << " ";
 
   cout << endl;
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
   tr.findKNearest(vector<double> {2.1, 4, 4}, 5,
                   res, dist);
 
-  for (int k = 0; k < res.size(); ++k)
+  for (unsigned int k = 0; k < res.size(); ++k)
     {
       cout << sl[res[k]].classNr << " : ";
       for (int i = 0; i < sl[res[k]].size(); ++i)
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
   itr.statistics();
   Image img;
   img.create(999, 777, 16);
-  Visual v = Show(OVERLAY, img);
+  Show(OVERLAY, img);
   for (int y = 0; y < 777; ++y)
     for (int x = 0; x < 999; ++x)
       {
@@ -101,12 +101,12 @@ int main(int argc, char** argv)
   while (!(Mouse(img, x, y) & (M_RIGHT_DOWN | M_LEFT_DOWN)))
     {
       vector<double> v {double(x), double(y)};
-      for (int i = 0; i < samples.size(); ++i)
+      for (unsigned int i = 0; i < samples.size(); ++i)
         {
           img.setPixel(isl[samples[i]][0], isl[samples[i]][1], 2);
         }
       itr.findNeighbors(v, 30, samples);
-      for (int i = 0; i < samples.size(); ++i)
+      for (unsigned int i = 0; i < samples.size(); ++i)
         {
           img.setPixel(isl[samples[i]][0], isl[samples[i]][1], 1);
         }
@@ -114,4 +114,5 @@ int main(int argc, char** argv)
     }
   Print("Press <ENTER> to finish");
   GetChar();
+  return OK;
 }

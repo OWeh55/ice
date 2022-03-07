@@ -22,7 +22,7 @@ int main(int ragc, char** argv)
   c.getPoints(vpl, true);
 
   cout << vpl.size() << " points in pointlist " << endl;
-  for (int i = 0; i < vpl.size(); i++)
+  for (unsigned int i = 0; i < vpl.size(); i++)
     cout << vpl[i].x << "," << vpl[i].y << endl;
 
   return OK;
