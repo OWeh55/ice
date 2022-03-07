@@ -1,0 +1,56 @@
+/*
+ * ICE - C++ - Library for image processing
+ *
+ * Copyright (C) 2022 FSU Jena, Digital Image Processing Group
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ */
+#ifndef CONVOLUTION2D_H
+#define CONVOLUTION2D_H
+
+#include <vector>
+#include "VWorker2D.h"
+
+namespace ice
+{
+  class Convolution2D : public VWorker2D
+  {
+  public:
+    Convolution2D(int rows, int cols): VWorker2D(rows, cols)
+    {
+    }
+
+    Convolution2D(): VWorker2D()
+    {}
+
+    virtual ~Convolution2D()
+    {
+    }
+
+    Convolution2D(const Convolution2D& ft) = delete;
+    const Convolution2D& operator=(const Convolution2D& ft) = delete;
+
+    void setParameter(int rows, int cols, bool centered = true);
+
+    // simplified call for vector<double>
+    static void convolute(const ice::matrix<double>& src1,
+                          const ice::matrix<double>& src2,
+                          ice::matrix<double>& dst);
+
+  private:
+    virtual void transform() const;
+    bool centered;
+  };
+}
+#endif
