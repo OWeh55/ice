@@ -5,7 +5,6 @@ CXX=g++
 endif
 
 # main program to build
-MAIN=vis2
 MAIN=dft_demo
 
 # objects needed for main
@@ -318,7 +317,6 @@ convolutionimg\
 ConvolutionT\
 delaunay\
 detectShift\
-dft\
 dft_demo\
 dftdemo\
 EqsBench\
