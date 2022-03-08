@@ -62,6 +62,8 @@ namespace ice
     matrix<double> s3r(rows, cols);
     matrix<double> s3i(rows, cols);
 
+    double factor = sqrt(rows * cols);
+
     for (int y = 0; y < rows; ++y)
       for (int x = 0; x < cols; ++x)
         {
@@ -69,13 +71,22 @@ namespace ice
           double i1 = s1i[y][x];
           double r2 = s2r[y][x];
           double i2 = s2i[y][x];
-          s3r[y][x] = r1 * r2 - i1 * i2;
-          s3i[x][y] = r1 * i2 + i1 * r2;
+          s3r[y][x] = (r1 * r2 - i1 * i2) * factor;
+          s3i[x][y] = (r1 * i2 + i1 * r2) * factor;
         }
 
     FourierTrafo2D trInv(rows, cols, false, centered);
     trInv.setInput(s3r, s3i);
     trInv.getResult(result[0]);
+  }
+
+  void Convolution2D::convolute(const ice::matrix<double>& src1,
+                                const ice::matrix<double>& src2,
+                                ice::matrix<double>& dst)
+  {
+    Convolution2D conv2d;
+    conv2d.setInput(src1, src2);
+    conv2d.getResult(dst);
   }
 
 

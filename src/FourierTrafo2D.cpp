@@ -66,6 +66,4 @@ namespace ice
         trCol.getResultToColumn(result[0], result[1], x);
       }
   }
-
-
 } // namespace ice

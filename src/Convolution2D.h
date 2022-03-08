@@ -27,11 +27,12 @@ namespace ice
   class Convolution2D : public VWorker2D
   {
   public:
-    Convolution2D(int rows, int cols): VWorker2D(rows, cols)
+    Convolution2D(int rows, int cols, bool centered = true):
+      VWorker2D(rows, cols), centered(centered)
     {
     }
 
-    Convolution2D(): VWorker2D()
+    Convolution2D(): VWorker2D(), centered(true)
     {}
 
     virtual ~Convolution2D()

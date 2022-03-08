@@ -255,10 +255,10 @@ namespace ice
                       unsigned int k) const
     {
       if (tree == nullptr)
-	return;
-      
+        return;
+
       double d2 = distance2(vList[tree->dataIdx], v);
-      
+
       bool newMin = false;
       if (minSamples.size() < k)
         {

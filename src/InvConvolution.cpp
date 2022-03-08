@@ -80,9 +80,9 @@ namespace ice
   }
 
   void InvConvolution::deconvolute(const std::vector<double>& src1,
-                                    const std::vector<double>& src2,
-                                    std::vector<double>& dst,
-                                    double beta)
+                                   const std::vector<double>& src2,
+                                   std::vector<double>& dst,
+                                   double beta)
   {
     InvConvolution convolution;
     convolution.setInput(src1, src2);
