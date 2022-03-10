@@ -1,0 +1,202 @@
+#include <image.h>
+// test FourierTrafo2D
+/*AppGen:Global*/
+
+#include "matrixfunctiontools.cpp"
+
+/*AppGen
+  prog: test of class FourierTrafo
+  %% Beschreibung Parameter
+  % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+  % no parameter
+  %
+  opt: f, function, int, ftype, Type of function, 1
+  opt2:  0 - delta function
+  opt2:  1 - noise function
+  opt2:  2 - cos function
+  opt: p, parameter1, double, fpara1, Parameter for function1, 0.0
+  opt: P, parameter2,double, fpara2, Parameter for funtion2, 0.0
+  opt: c, cols, int, cols, #cols of test matrix / function, 8
+  opt: r, rows, int, rows, #rows of test matrix / function, 6
+  opt: v, verbose, Void, verbose, be verbose, false
+  opt: h, help, usage, , This help, false
+  AppGen*/
+
+template<typename T1>
+double vsum(const T1& img1)
+{
+  double fsum = 0.0;
+  for (int x = 0; x < img1.xsize; x++)
+    for (int y = 0; y < img1.ysize; y++)
+      {
+        fsum += fabs(img1.getPixel(x, y));
+      }
+  return fsum;
+}
+
+template<typename T1, typename T2>
+double dsum(const T1& img1, const T2& img2)
+{
+  double fsum = 0.0;
+  for (int x = 0; x < img1.xsize; x++)
+    for (int y = 0; y < img1.ysize; y++)
+      {
+        fsum += fabs(img1.getPixel(x, y) - img2.getPixel(x, y));
+      }
+  return fsum;
+}
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      // with matrix
+      cout << "Test FourierTrafo2D" << endl;
+      cout << "input matrix<double>:" << endl;
+
+      matrix<double> m1(rows, cols);
+      for (int i = 0; i < 4; i++)
+        for (int k = 0; k < 8; k++)
+          m1[i][k] = i + 0.1 * k;
+
+      print(m1, true, false);
+
+      FourierTrafo2D ft1;
+      cout << "ft1 constructed without parameter" << endl;
+
+      ft1.setInput(m1);
+      cout << "ft1 set input with matrix<double>" << endl;
+
+      matrix<double> m2(rows, cols);
+      matrix<double> m3(rows, cols);
+      ft1.getResult(m2, m3);
+      cout << "ft1 got result" << endl;
+      printc(m2, m3);
+
+      FourierTrafo2D ft2(m2, m3, false);
+      cout << "ft2 for inverse trafo constructed with 2 matrix<double>" << endl;
+
+      matrix<double> m4(rows, cols);
+      matrix<double> m5(rows, cols);
+      ft2.getResult(m4, m5);
+      cout << "ft2 got result" << endl;
+      cout << "difference to original matrix (real, imag)" << endl;
+      printc(m4 - m1, m5);
+
+      double fsum = 0.0;
+
+      for (int i = 0; i < 4; i++)
+        for (int k = 0; k < 8; k++)
+          {
+            fsum += fabs(m4[i][k] - m1[i][k]);
+            fsum += fabs(m5[i][k]);
+          }
+      cout << "sum of deviations of " << (m1.rows()*m1.cols()) << " elements: " << fsum << endl;
+
+      // with ImageD
+      int xs = 900;
+      int ys = 600;
+
+      cout << "input ImageD(" << xs << "x" << ys << ")" << endl;
+
+      ImageD source;
+      source.create(xs, ys);
+      for (int x = 0; x < xs; x++)
+        {
+          double dx = (x - xs / 2.0);
+          for (int y = 0; y < ys; y++)
+            {
+              double dy = (y - ys / 2.0);
+              double d2 = dx * dx + dy * dy;
+              source.setPixel(x, y, (RandomD(100) - 50) * (100.0 / (100.0 + sqrt(d2))));
+            }
+        }
+      source.adaptLimits();
+      Show(GRAY, source, "source");
+      FourierTrafo2D ft3(ys, xs, true);
+      ft3.setInput(source);
+      ImageD real;
+      real.create(xs, ys);
+      ImageD imag;
+      imag.create(xs, ys);
+      ft3.getResult(real, imag);
+
+      real.adaptLimits();
+      Show(GRAY, real, "spectrum real");
+      GetChar();
+
+      FourierTrafo2D ft4(ys, xs, false);
+      ft4.setInput(real, imag);
+      ImageD res;
+      res.create(xs, ys);
+      ImageD resi;
+      resi.create(xs, ys);
+      ft4.getResult(res, resi);
+
+      fsum = vsum(resi) + dsum(res, source);
+
+      cout << "sum of deviations of " << (xs * ys) << " elements: " << fsum << endl;
+      GetChar();
+
+      Show(OFF, source);
+      Show(OFF, real);
+
+
+      // with Image
+      int xsI = 300;
+      int ysI = 200;
+      cout << "input Image(" << xsI << "x" << ysI << ")" << endl;
+      cout << "(spectrum as ImageD)" << endl;
+
+      Image sourceImg;
+      sourceImg.create(xsI, ysI, 255);
+      for (int x = 0; x < xsI; x++)
+        for (int y = 0; y < ysI; y++)
+          sourceImg.setPixel(x, y, Random(100));
+
+      FourierTrafo2D ft5(ysI, xsI, true);
+      ft5.setInput(sourceImg);
+
+      //    ImageD real;
+      real.create(xsI, ysI);
+      //    ImageD imag;
+      imag.create(xsI, ysI);
+      ft5.getResult(real, imag);
+
+      FourierTrafo2D ft6(ysI, xsI, false);
+      ft6.setInput(real, imag);
+
+      Image resImg;
+      resImg.create(xsI, ysI, 255);
+      Image resiImg;
+      resiImg.create(xsI, ysI, 255);
+      ft6.getResult(resImg, resiImg);
+
+      // double isum = vsum(resiImg)+dsum(sourceImg,resImg);
+      double isum = dsum(sourceImg, resImg);
+
+      cout << "sum of deviations of " << (xsI * ysI) << " elements: " << isum << endl;
+      return 0;
+    }
+
+  catch (const char* msg)
+    {
+      cerr << "Exception: " << msg << endl;
+    }
+  catch (const string& msg)
+    {
+      cerr << "Exception: " << msg << endl;
+    }
+  catch (const IceException& ex)
+    {
+      cerr << "IceException: " << ex.what() << endl;
+    }
+  catch (const exception& ex)
+    {
+      cerr << "exception: " << ex.what() << endl;
+    }
+
+  return 1;
+}
