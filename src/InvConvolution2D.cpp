@@ -45,10 +45,10 @@ namespace ice
     if (input[1].empty())
       throw IceException(CNAME, "input not set");
 
-    result[0].resize(rows, cols);
+    result[0].resize(nRows, nCols);
     result[1].clear();
 
-    FourierTrafo2D tr(rows, cols, true, centered);
+    FourierTrafo2D tr(nRows, nCols, true, centered);
 
     tr.setInput(input[0]);
     matrix<double> s1r;
@@ -60,13 +60,13 @@ namespace ice
     matrix<double> s2i;
     tr.getResult(s2r, s2i);
 
-    matrix<double> s3r(rows, cols);
-    matrix<double> s3i(rows, cols);
+    matrix<double> s3r(nRows, nCols);
+    matrix<double> s3i(nRows, nCols);
 
-    double factor = sqrt(rows * cols);
+    double factor = sqrt(nRows * nCols);
 
-    for (int y = 0; y < rows; ++y)
-      for (int x = 0; x < cols; ++x)
+    for (int y = 0; y < nRows; ++y)
+      for (int x = 0; x < nCols; ++x)
         {
           double r1 = s1r[y][x];
           double i1 = s1i[y][x];
@@ -95,7 +95,7 @@ namespace ice
             }
         }
 
-    FourierTrafo2D trInv(rows, cols, false, centered);
+    FourierTrafo2D trInv(nRows, nCols, false, centered);
     trInv.setInput(s3r, s3i);
     trInv.getResult(result[0]);
   }

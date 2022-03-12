@@ -35,7 +35,7 @@ namespace ice
   class VWorker2D
   {
   public:
-    VWorker2D(): rows(0), cols(0) {}
+    VWorker2D(): nRows(0), nCols(0) {}
 
     VWorker2D(int rows, int cols)
     {
@@ -107,12 +107,12 @@ namespace ice
     virtual void transform() const = 0;
 
     void checkIndex(unsigned int i) const;
-    void checkParameter(int nRows, int nCols);
+    void checkParameter(int nRowsP, int nColsP);
 
     void checkDone() const;
 
-    int rows = 0;
-    int cols = 0;
+    int nRows = 0;
+    int nCols = 0;
 
     std::array<ice::matrix<double>, 2> input;
 

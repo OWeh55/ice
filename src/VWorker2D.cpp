@@ -19,7 +19,6 @@
  */
 
 #include <stdexcept>
-
 #include "VWorker2D.h"
 
 using namespace std;
@@ -29,8 +28,8 @@ namespace ice
 {
   void VWorker2D::setParameter(int newRows, int newCols)
   {
-    rows = newRows;
-    cols = newCols;
+    nRows = newRows;
+    nCols = newCols;
     // make inputs invalid
     input[0].clear();
     input[1].clear();
@@ -77,10 +76,10 @@ namespace ice
     checkIndex(i);
     checkParameter(v.rows(), v.cols());
 
-    input[i].resize(rows, cols);
+    input[i].resize(nRows, nCols);
 
-    for (int y = 0; y < rows; ++y)
-      for (int x = 0; x < cols; ++x)
+    for (int y = 0; y < nRows; ++y)
+      for (int x = 0; x < nCols; ++x)
         {
           input[i][y][x] = v[y][x] * factor;
         }
@@ -103,10 +102,10 @@ namespace ice
   {
     checkIndex(i);
     checkParameter(v.ysize, v.xsize);
-    input[i].resize(rows, cols);
+    input[i].resize(nRows, nCols);
     int v0 = (sign == SIGNED) ? (v.maxval + 1) / 2 : 0;
-    for (int y = 0; y < rows; ++y)
-      for (int x = 0; x < cols; ++x)
+    for (int y = 0; y < nRows; ++y)
+      for (int x = 0; x < nCols; ++x)
         {
           input[i][y][x] = (v.getPixel(x, y) - v0) * factor;
         }
@@ -129,9 +128,9 @@ namespace ice
   {
     checkIndex(i);
     checkParameter(v.ysize, v.xsize);
-    input[i].resize(rows, cols);
-    for (int y = 0; y < rows; ++y)
-      for (int x = 0; x < cols; ++x)
+    input[i].resize(nRows, nCols);
+    for (int y = 0; y < nRows; ++y)
+      for (int x = 0; x < nCols; ++x)
         {
           input[i][y][x] = v.getPixel(x, y);
         }
@@ -154,8 +153,8 @@ namespace ice
     checkIndex(i);
     checkParameter(v.rows(), v.cols());
 
-    for (int y = 0; y < rows; ++y)
-      for (int x = 0; x < cols; ++x)
+    for (int y = 0; y < nRows; ++y)
+      for (int x = 0; x < nCols; ++x)
         {
           input[i][y][x] = v[y][x];
         }
@@ -168,13 +167,13 @@ namespace ice
     setInput(1, vi);
   }
 
-  void VWorker2D::checkParameter(int nRows, int nCols)
+  void VWorker2D::checkParameter(int nRowsP, int nColsP)
   {
-    if (cols == 0 || rows == 0)
-      setParameter(nRows, nCols);
+    if (nCols == 0 || nRows == 0)
+      setParameter(nRowsP, nColsP);
     else
       {
-        if (cols != nCols || rows != nRows)
+        if (nCols != nColsP || nRows != nRowsP)
           {
             throw logic_error("wrong input dimension");
           }
@@ -200,9 +199,9 @@ namespace ice
                             int mode, int sign)
   {
     ImageD resReal;
-    resReal.create(cols, rows);
+    resReal.create(nCols, nRows);
     ImageD resImag;
-    resImag.create(cols, rows);
+    resImag.create(nCols, nRows);
     getResult(resReal, resImag);
     ConvImgDImg(resReal, dstre, mode, sign);
     ConvImgDImg(resImag, dstim, mode, sign);
@@ -212,7 +211,7 @@ namespace ice
                             int mode, int sign)
   {
     ImageD resReal;
-    resReal.create(cols, rows);
+    resReal.create(nCols, nRows);
     getResult(resReal);
     ConvImgDImg(resReal, dstre, mode, sign);
   }
@@ -222,8 +221,8 @@ namespace ice
   {
     checkDone();
 
-    for (int y = 0; y < rows; ++y)
-      for (int x = 0; x < cols; ++x)
+    for (int y = 0; y < nRows; ++y)
+      for (int x = 0; x < nCols; ++x)
         {
           // std::cout << x << " " << y << std::endl;
           dstre.setPixel(x, y, result[0][y][x]);
@@ -235,8 +234,8 @@ namespace ice
   {
     checkDone();
 
-    for (int i = 0; i < rows; ++i)
-      for (int j = 0; j < cols; ++j)
+    for (int i = 0; i < nRows; ++i)
+      for (int j = 0; j < nCols; ++j)
         dstre.setPixel(j, i, result[0][i][j]);
   }
 
@@ -244,7 +243,7 @@ namespace ice
   {
     if (!resultValid)
       {
-        if (rows == 0 || cols == 0)
+        if (nRows == 0 || nCols == 0)
           throw IceException(CNAME, "parameter not set");
         if (input[0].empty())
           throw IceException(CNAME, "input not set");

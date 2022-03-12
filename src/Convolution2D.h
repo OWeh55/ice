@@ -44,7 +44,7 @@ namespace ice
 
     void setParameter(int rows, int cols, bool centered = true);
 
-    // simplified call for vector<double>
+    // simplified call for matrix<double>
     static void convolute(const ice::matrix<double>& src1,
                           const ice::matrix<double>& src2,
                           ice::matrix<double>& dst);
