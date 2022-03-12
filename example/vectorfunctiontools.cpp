@@ -95,9 +95,22 @@ void setFunction3(double para, vector<double>& v)
     }
 }
 
+// noise
+void setFunction4(double para, vector<double>& v)
+{
+  int size = v.size();
+  if (para == 0.0) // default of para !!
+    para = 1.0;
+  for (int i = 0; i < size; i++)
+    {
+      v[i] = drand48() * para;
+    }
+}
+
+
 void setFunction(unsigned int type, double para, vector<double>& v)
 {
-  vector<testFunction> func{setFunction0, setFunction1, setFunction2, setFunction3};
+  vector<testFunction> func{setFunction0, setFunction1, setFunction2, setFunction3, setFunction4};
   if (type < func.size())
     func[type](para, v);
   else

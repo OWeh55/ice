@@ -38,7 +38,7 @@ namespace ice
     vector<double> real2(size);
     vector<double> imag2(size);
     ft1.getResultFromImag(real2, imag2); // z2
-    // spectrum result                 // z3 = z1 / z2  *  1 / sqrt(n)
+    // spectrum result                   // z3 = z1 / z2  *  1 / sqrt(n)
     vector<double> real3(size);
     vector<double> imag3(size);
 
@@ -49,7 +49,7 @@ namespace ice
         for (int i = 0; i < size; i++)
           {
             double denominator = real2[i] * real2[i] + imag2[i] * imag2[i];
-            if (denominator != 0)
+            if (denominator != 0.0)
               {
                 // z3 = (1/sqrt(N)) * z1 / z2
                 real3[i] = (real1[i] * real2[i] + imag1[i] * imag2[i]) / denominator * sqrtN;
@@ -68,8 +68,8 @@ namespace ice
           {
             // z3 = (1/sqrt(N) * (z1*~z2)/(z2 * ~z2 + beta^2)
             double denominator = real2[i] * real2[i] + imag2[i] * imag2[i] + beta * beta;
-            real3[i] = (real2[i] * real1[i] + imag2[i] * imag1[i]) / denominator * sqrtN;
-            imag3[i] = (-real1[i] * imag2[i] + real2[i] * imag1[i]) / denominator * sqrtN;
+            real3[i] = (real1[i] * real2[i] + imag1[i] * imag2[i]) / denominator * sqrtN;
+            imag3[i] = (-real1[i] * imag2[i] + imag1[i] * real2[i]) / denominator * sqrtN;
           }
       }
 
