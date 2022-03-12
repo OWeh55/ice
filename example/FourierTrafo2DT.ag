@@ -12,7 +12,7 @@
   %
   opt: f, function, int, ftype, Type of function, 1
   opt2:  0 - delta function
-  opt2:  1 - noise function
+  opt2:  1 - gauss like function e^(-dd/para)
   opt2:  2 - cos function
   opt: p, parameter1, double, fpara1, Parameter for function1, 0.0
   opt: P, parameter2,double, fpara2, Parameter for funtion2, 0.0
@@ -57,11 +57,9 @@ int main(int argc, char* argv[])
       cout << "input matrix<double>:" << endl;
 
       matrix<double> m1(rows, cols);
-      for (int i = 0; i < 4; i++)
-        for (int k = 0; k < 8; k++)
-          m1[i][k] = i + 0.1 * k;
+      setFunction(ftype, fpara1, fpara2, m1);
 
-      print(m1, true, false);
+      print(m1, true, true);
 
       FourierTrafo2D ft1;
       cout << "ft1 constructed without parameter" << endl;
