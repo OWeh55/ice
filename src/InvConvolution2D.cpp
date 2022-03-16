@@ -63,7 +63,7 @@ namespace ice
     matrix<double> s3r(nRows, nCols);
     matrix<double> s3i(nRows, nCols);
 
-    double factor = sqrt(nRows * nCols);
+    double factor = 1.0 / sqrt(nRows * nCols);
 
     for (int y = 0; y < nRows; ++y)
       for (int x = 0; x < nCols; ++x)

@@ -10,17 +10,23 @@
   % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
   % no parameter
   %
-  opt: f, function, int, ftype, Type of function, 1
-  opt2:  0 - delta function
-  opt2:  1 - gauss like function e^(-dd/para)
-  opt2:  2 - sin function
-  opt2:  3 - cos function
-  opt2:  4 - white noise
+  opt: 1, function1, int, f1type, Type of function 1, 1
+  opt: 2, function2, int, f2type, Type of function 2, 1
+  opt2:  0 - delta function (shift x,y)
+  opt2:  1 - gauss like function e^(-dd/para) (center x,y)
+  opt2:  2 - sin function (number of cycles x, y)
+  opt2:  3 - cos function (number of cycles x, y)
+  opt2:  4 - white noise (strength, window radius)
+
+  opt: p, parameter1, double, f1para1, Parameter for function 1, 0.0
+  opt: P, parameter2, double, f1para2, Parameter for function 1, 0.0
+  opt: q, parameter1, double, f2para1, Parameter for function 2, 0.0
+  opt: Q, parameter2, double, f2para2, Parameter for function 2, 0.0
+
   opt: m, matrices, void, matrices, Nur Matrizen testen, false
   opt: i, images, void, images, Nur Bilder testen, false
   opt: d, doubleimages, void, doubleImages, Nur Gleitkomma-Bilder testen, false
-  opt: p, parameter1, double, fpara1, Parameter for function1, 0.0
-  opt: P, parameter2,double, fpara2, Parameter for funtion2, 0.0
+
   opt: c, cols, int, cols, #cols of test matrix / function, 8
   opt: r, rows, int, rows, #rows of test matrix / function, 6
   opt: v, verbose, Void, verbose, be verbose, false
@@ -62,40 +68,46 @@ int main(int argc, char* argv[])
           matrices = images = doubleImages = true;
         }
 
-      cout << "Test FourierTrafo2D" << endl;
+      cout << "Test Convolution2D / InvConvolution2D" << endl;
 
       // with matrix
       if (matrices)
         {
 
-          cout << "input matrix<double>:" << endl;
+          cout << "input1 matrix<double> (" << rows << "," << cols << "): " << endl;
 
           matrix<double> m1(rows, cols);
-          setFunction(ftype, fpara1, fpara2, m1);
-
+          setFunction(f1type, f1para1, f1para2, m1);
           print(m1, true, true);
+	  
+	  matrix<double> m2(rows, cols);
+	  setFunction(f2type, f2para1, f2para2, m2);
 
-          FourierTrafo2D ft1;
-          cout << "ft1 constructed without parameter" << endl;
+	  cout << "input2 matrix<double> (" << rows << "," << cols << "): " << endl;
+          print(m2, true, true);
 
-          ft1.setInput(m1);
-          cout << "ft1 set input with matrix<double>" << endl;
+          Convolution2D convolution;
+          cout << "convolution constructed" << endl;
 
-          matrix<double> m2(rows, cols);
+          convolution.setInput(m1, m2);
+
           matrix<double> m3(rows, cols);
-          ft1.getResult(m2, m3);
-          cout << "ft1 got result" << endl;
-          printc(m2, m3);
+          convolution.getResult(m3);
+          cout << "convolution got result" << endl;
+          print(m3);
 
-          FourierTrafo2D ft2(m2, m3, false);
-          cout << "ft2 for inverse trafo constructed with 2 matrix<double>" << endl;
+          InvConvolution2D invConvolution;
+          cout << "invConvolution constructed" << endl;
 
+	  invConvolution.setInput(m3, m2);
+	  
           matrix<double> m4(rows, cols);
-          matrix<double> m5(rows, cols);
-          ft2.getResult(m4, m5);
-          cout << "ft2 got result" << endl;
+
+          invConvolution.getResult(m4);
+          cout << "invConvolution got result" << endl;
+	  
           cout << "difference to original matrix (real, imag)" << endl;
-          printc(m4 - m1, m5);
+          print(m4 - m1);
 
           double fsum = 0.0;
 
@@ -103,12 +115,11 @@ int main(int argc, char* argv[])
             for (int k = 0; k < 8; k++)
               {
                 fsum += fabs(m4[i][k] - m1[i][k]);
-                fsum += fabs(m5[i][k]);
               }
           cout << "sum of deviations of " << (m1.rows()*m1.cols()) << " elements: " << fsum << endl;
           GetChar();
         }
-
+#if false
       // with ImageD
       if (doubleImages)
         {
@@ -198,8 +209,8 @@ int main(int argc, char* argv[])
           GetChar();
 	  Show(OFF,sourceImg);
 	  Show(OFF,real);
-
         }
+      #endif
       return 0;
     }
 

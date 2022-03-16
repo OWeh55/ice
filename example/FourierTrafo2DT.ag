@@ -11,16 +11,16 @@
   % no parameter
   %
   opt: f, function, int, ftype, Type of function, 1
-  opt2:  0 - delta function
-  opt2:  1 - gauss like function e^(-dd/para)
-  opt2:  2 - sin function
-  opt2:  3 - cos function
-  opt2:  4 - white noise
+  opt2:  0 - delta function (shift x,y)
+  opt2:  1 - gauss like function e^(-dd/para) (center x,y)
+  opt2:  2 - sin function (number of cycles x, y)
+  opt2:  3 - cos function (number of cycles x, y)
+  opt2:  4 - white noise (strength, window radius)
+  opt: p, parameter1, double, fpara1, 1st parameter for function, 0.0
+  opt: P, parameter2, double, fpara2, 2nd parameter for function, 0.0
   opt: m, matrices, void, matrices, Nur Matrizen testen, false
   opt: i, images, void, images, Nur Bilder testen, false
   opt: d, doubleimages, void, doubleImages, Nur Gleitkomma-Bilder testen, false
-  opt: p, parameter1, double, fpara1, Parameter for function1, 0.0
-  opt: P, parameter2,double, fpara2, Parameter for funtion2, 0.0
   opt: c, cols, int, cols, #cols of test matrix / function, 8
   opt: r, rows, int, rows, #rows of test matrix / function, 6
   opt: v, verbose, Void, verbose, be verbose, false
