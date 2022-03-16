@@ -72,7 +72,7 @@ namespace ice
           double r2 = s2r[y][x];
           double i2 = s2i[y][x];
           s3r[y][x] = (r1 * r2 - i1 * i2) * factor;
-          s3i[x][y] = (r1 * i2 + i1 * r2) * factor;
+          s3i[y][x] = (r1 * i2 + i1 * r2) * factor;
         }
 
     FourierTrafo2D trInv(nRows, nCols, false, centered);
