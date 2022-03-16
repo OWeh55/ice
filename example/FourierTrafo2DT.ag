@@ -13,7 +13,9 @@
   opt: f, function, int, ftype, Type of function, 1
   opt2:  0 - delta function
   opt2:  1 - gauss like function e^(-dd/para)
-  opt2:  2 - cos function
+  opt2:  2 - sin function
+  opt2:  3 - cos function
+  opt2:  4 - white noise
   opt: p, parameter1, double, fpara1, Parameter for function1, 0.0
   opt: P, parameter2,double, fpara2, Parameter for funtion2, 0.0
   opt: c, cols, int, cols, #cols of test matrix / function, 8
@@ -101,16 +103,8 @@ int main(int argc, char* argv[])
 
       ImageD source;
       source.create(xs, ys);
-      for (int x = 0; x < xs; x++)
-        {
-          double dx = (x - xs / 2.0);
-          for (int y = 0; y < ys; y++)
-            {
-              double dy = (y - ys / 2.0);
-              double d2 = dx * dx + dy * dy;
-              source.setPixel(x, y, (RandomD(100) - 50) * (100.0 / (100.0 + sqrt(d2))));
-            }
-        }
+      setFunction(ftype, fpara1, fpara2, source);
+
       source.adaptLimits();
       Show(GRAY, source, "source");
       FourierTrafo2D ft3(ys, xs, true);

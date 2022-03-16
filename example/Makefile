@@ -309,18 +309,15 @@ circledetection\
 classtest\
 convinter\
 convolutionimg\
-ConvolutionT\
 delaunay\
 detectShift\
 dft_demo\
 dftdemo\
 EqsBench\
 filterbackprojection\
-FourierTrafoT\
 fractal\
 hmittel\
 invconvolution\
-InvConvolutionT\
 kdmosaic\
 match2d\
 mittel\
@@ -331,6 +328,11 @@ sdr_local\
 sdrtest\
 showFilter\
 siemens\
+FourierTrafoT\
+ConvolutionT\
+InvConvolutionT\
+FourierTrafo2DT
+
 
 clean_files:
 	-rm -f *.o depend *~ *.orig

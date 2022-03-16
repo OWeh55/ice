@@ -86,9 +86,78 @@ void setFunction1(double para1, double para2, matrix<double>& v) // \delta
       }
 }
 
+// sin function
+void setFunction2(double para1, double para2, matrix<double>& v) // sin
+{
+  int nCols = v.cols();
+  double c0 = nCols / 2;
+  int nRows = v.rows();
+  double r0 = nRows / 2;
+  if (para1 == 0.0)
+    para1 = 1;
+  if (para2 == 0.0)
+    para2 = 1;
+  for (int r = 0; r < nRows; r++)
+    {
+      double y = (r - r0) * 2 * M_PI / nRows;
+      for (int c = 0; c < nCols; c++)
+        {
+          double x = (c - c0) * 2 * M_PI / nCols;
+          v[r][c] = sin(para1 * x + para2 * y);
+        }
+    }
+}
+
+// cos function
+void setFunction3(double para1, double para2, matrix<double>& v) // sin
+{
+  int nCols = v.cols();
+  double c0 = nCols / 2;
+  int nRows = v.rows();
+  double r0 = nRows / 2;
+  if (para1 == 0.0)
+    para1 = 1;
+  if (para2 == 0.0)
+    para2 = 1;
+  for (int r = 0; r < nRows; r++)
+    {
+      double y = (r - r0) * 2 * M_PI / nRows;
+      for (int c = 0; c < nCols; c++)
+        {
+          double x = (c - c0) * 2 * M_PI / nCols;
+          v[r][c] = cos(para1 * x + para2 * y);
+        }
+    }
+}
+
+// white noise
+void setFunction4(double para1, double para2, matrix<double>& v) // sin
+{
+  int nCols = v.cols();
+  double c0 = nCols / 2;
+  int nRows = v.rows();
+  double r0 = nRows / 2;
+  if (para1 == 0.0)
+    para1 = 1;
+  double rr = std::min(r0, c0) * para2 / 10;
+  for (int r = 0; r < nRows; r++)
+    for (int c = 0; c < nCols; c++)
+      {
+        double noise = drand48() - 0.5;
+        if (para2 != 0.0)
+          {
+            double dr = r - r0;
+            double dc = c - c0;
+            double dd = dr * dr + dc * dc;
+            noise *= exp(-dd / (rr * rr));
+          }
+        v[r][c] = noise;
+      }
+}
+
 void setFunction(unsigned int type, double para1, double para2, matrix<double>& v)
 {
-  vector<testFunction> func{setFunction0, setFunction1};
+  vector<testFunction> func{setFunction0, setFunction1, setFunction2, setFunction3, setFunction4};
 
   if (type < func.size())
     func[type](para1, para2, v);
@@ -97,4 +166,13 @@ void setFunction(unsigned int type, double para1, double para2, matrix<double>& 
       cerr << "undefined function type" << endl;
       exit(1);
     }
+}
+
+void setFunction(unsigned int type, double para1, double para2, ImageD& imgd)
+{
+  matrix<double> m(imgd.ysize, imgd.xsize);
+  setFunction(type, para1, para2, m);
+  for (int r = 0; r < m.rows(); r++)
+    for (int c = 0; c < m.cols(); c++)
+      imgd.setPixel(c, r, m[r][c]);
 }
