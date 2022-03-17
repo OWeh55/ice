@@ -1,48 +1,23 @@
-/************************************************************************
- * ICE - C++ - Library for image processing
+/*
+ * ICE - Library for image processing in C++
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2019..2022 Wolfgang Ortmann
+ * Contact: ice@ortmann-jena.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * This source file provides the implementation of some linear local
- * filters for modifying ColorImages.
- * Applying them in RGB or YUV color space will lead to the same result
- * In HSI the result may look strange, because the H channel is periodic
- * and so value 1 and 255 are closer together than 1 and 200 for example.
- * Anyway no automatic conversion will be done, to provide the filters to be
- * used in any color space.
- *
- * int smearImg(const ColorImage &src, const ColorImage &dest, int n=3)
- * int smearImg(const ColorImage &src, const ColorImage &dest, int nx, int ny)
- * int DoBImg(const ColorImage &src, const ColorImage &dest, int n1, int n2, int mode=MD_NORMALIZE)
- * int GradXImg(const ColorImage &src, const ColorImage &dest, int norm=1)
- * int GradYImg(const ColorImage &src, const ColorImage &dest, int norm=1)
- * int MeanImg(const ColorImage &src, const ColorImage &dest)
- * int LaplaceXImg(const ColorImage &src, const ColorImage &dest, int norm=1)
- * int LaplaceYImg(const ColorImage &src, const ColorImage &dest, int norm=1)
- * int LaplaceImg(const ColorImage &src, const ColorImage &dest, int norm=1)
- * int LSIImg(const ColorImage &src, const ColorImage &dest, int nx, int ny, int *mask, int norm, int offset)
- * int LSIImg(const ColorImage &src, const ColorImage &dest, int nx, int ny, double *mask, int offset)
- * int LSIImg(const ColorImage &src, const ColorImage &dest, Matrix *mask, int offset)
- * int LSIImg(const ColorImage &src, const ColorImage &dest, IMatrix *mask, int norm, int offset)
- * int MexicanImg(const ColorImage &src, const ColorImage &dest, int neighb, double sigma1, double sigma2)
- *
- * "ColorFunctionsLinLoc.cpp" - Niels Oertel 2008
- ***********************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "ColorImageFunctions.h"
 #include "filter.h"

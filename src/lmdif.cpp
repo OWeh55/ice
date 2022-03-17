@@ -58,177 +58,26 @@ namespace ice
             double fjac[], int ldfjac,
             int ipvt[], double qtf[])
   {
-    /*
-     *     **********
-     *
-     *     subroutine lmdif
-     *
-     *     the purpose of lmdif is to minimize the sum of the squares of
-     *     m nonlinear functions in n variables by a modification of
-     *     the levenberg-marquardt algorithm. the user must provide a
-     *     subroutine which calculates the functions. the jacobian is
-     *     then calculated by a forward-difference approximation.
-     *
-     *  fcn is the name of the user-supplied subroutine which
-     *    calculates the functions. fcn must be declared
-     *    in an external statement in the user calling
-     *    program, and should be written as follows.
-     *
-     *    subroutine fcn(m,n,x,fvec,iflag)
-     *    integer m,n,iflag
-     *    double precision x(n),fvec(m)
-     *    ----------
-     *    calculate the functions at x and
-     *    return this vector in fvec.
-     *    ----------
-     *    return
-     *    end
-     *
-     *    the value of iflag should not be changed by fcn unless
-     *    the user wants to terminate execution of lmdif.
-     *    in this case set iflag to a negative integer.
-     *
-     *  m is a positive integer input variable set to the number
-     *    of functions.
-     *
-     *  n is a positive integer input variable set to the number
-     *    of variables. n must not exceed m.
-     *
-     *  x is an array of length n. on input x must contain
-     *    an initial estimate of the solution vector. on output x
-     *    contains the final estimate of the solution vector.
-     *
-     *  fvec is an output array of length m which contains
-     *    the functions evaluated at the output x.
-     *
-     *  ftol is a nonnegative input variable. termination
-     *    occurs when both the actual and predicted relative
-     *    reductions in the sum of squares are at most ftol.
-     *    therefore, ftol measures the relative error desired
-     *    in the sum of squares.
-     *
-     *  xtol is a nonnegative input variable. termination
-     *    occurs when the relative error between two consecutive
-     *    iterates is at most xtol. therefore, xtol measures the
-     *    relative error desired in the approximate solution.
-     *
-     *  gtol is a nonnegative input variable. termination
-     *    occurs when the cosine of the angle between fvec and
-     *    any column of the jacobian is at most gtol in absolute
-     *    value. therefore, gtol measures the orthogonality
-     *    desired between the function vector and the columns
-     *    of the jacobian.
-     *
-     *  maxiter is a positive integer input variable. termination
-     *    occurs when the number of iteration steps is at least
-     *    maxiter.
-     *
-     *  epsfcn is an input variable used in determining a suitable
-     *    step length for the forward-difference approximation. this
-     *    approximation assumes that the relative errors in the
-     *    functions are of the order of epsfcn. if epsfcn is less
-     *    than the machine precision, it is assumed that the relative
-     *    errors in the functions are of the order of the machine
-     *    precision.
-     *
-     *  diag is an array of length n. if mode = 1 (see
-     *    below), diag is internally set. if mode = 2, diag
-     *    must contain positive entries that serve as
-     *    multiplicative scale factors for the variables.
-     *
-     *  mode is an integer input variable. if mode = 1, the
-     *    variables will be scaled internally. if mode = 2,
-     *    the scaling is specified by the input diag. other
-     *    values of mode are equivalent to mode = 1.
-     *
-     *  factor is a positive input variable used in determining the
-     *    initial step bound. this bound is set to the product of
-     *    factor and the euclidean norm of diag*x if nonzero, or else
-     *    to factor itself. in most cases factor should lie in the
-     *    interval (.1,100.). 100. is a generally recommended value.
-     *
-     *  nprint is an integer input variable that enables controlled
-     *    printing of iterates if it is positive. in this case,
-     *    fcn is called with iflag = 0 at the beginning of the first
-     *    iteration and every nprint iterations thereafter and
-     *    immediately prior to return, with x and fvec available
-     *    for printing. if nprint is not positive, no special calls
-     *    of fcn with iflag = 0 are made.
-     *
-     *  info is an integer output variable. if the user has
-     *    terminated execution, info is set to the (negative)
-     *    value of iflag. see description of fcn. otherwise,
-     *    info is set as follows.
-     *
-     *    info = 0  improper input parameters.
-     *
-     *    info = 1  both actual and predicted relative reductions
-     *        in the sum of squares are at most ftol.
-     *
-     *    info = 2  relative error between two consecutive iterates
-     *        is at most xtol.
-     *
-     *    info = 3  conditions for info = 1 and info = 2 both hold.
-     *
-     *    info = 4  the cosine of the angle between fvec and any
-     *        column of the jacobian is at most gtol in
-     *        absolute value.
-     *
-     *    info = 5  number of calls to fcn has reached or
-     *        exceeded maxfev.
-     *
-     *    info = 6  ftol is too small. no further reduction in
-     *        the sum of squares is possible.
-     *
-     *    info = 7  xtol is too small. no further improvement in
-     *        the approximate solution x is possible.
-     *
-     *    info = 8  gtol is too small. fvec is orthogonal to the
-     *        columns of the jacobian to machine precision.
-     *
-     *  iter is an integer output variable set to the number of
-     *    iteration steps.
-     *
-     *  fjac is an output m by n array. the upper n by n submatrix
-     *    of fjac contains an upper triangular matrix r with
-     *    diagonal elements of nonincreasing magnitude such that
-     *
-     *     t     t     t
-     *    p *(jac *jac)*p = r *r,
-     *
-     *    where p is a permutation matrix and jac is the final
-     *    calculated jacobian. column j of p is column ipvt(j)
-     *    (see below) of the identity matrix. the lower trapezoidal
-     *    part of fjac contains information generated during
-     *    the computation of r.
-     *
-     *  ldfjac is a positive integer input variable not less than m
-     *    which specifies the leading dimension of the array fjac.
-     *
-     *  ipvt is an integer output array of length n. ipvt
-     *    defines a permutation matrix p such that jac*p = q*r,
-     *    where jac is the final calculated jacobian, q is
-     *    orthogonal (not stored), and r is upper triangular
-     *    with diagonal elements of nonincreasing magnitude.
-     *    column j of p is column ipvt(j) of the identity matrix.
-     *
-     *  qtf is an output array of length n which contains
-     *    the first n elements of the vector (q transpose)*fvec.
-     *
-     *
-     *     subprograms called
-     *
-     *  user-supplied ...... fcn
-     *
-     *  minpack-supplied ... dpmpar,enorm,fdjac2,lmpar,qrfac
-     *
-     *  fortran-supplied ... dabs,dmax1,dmin1,dsqrt,mod
-     *
-     *     argonne national laboratory. minpack project. march 1980.
-     *     burton s. garbow, kenneth e. hillstrom, jorge j. more
-     *
-     *     **********
-     */
+/*
+ * ICE - Library for image processing in C++
+ *
+ * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2019..2022 Wolfgang Ortmann
+ * Contact: ice@ortmann-jena.de
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ */
 
     int i, iflag, ij, jj, j, l;
     double actred;

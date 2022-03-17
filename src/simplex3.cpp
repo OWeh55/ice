@@ -1,22 +1,22 @@
 /*
- * ICE - C++ - Library for image processing
+ * ICE - Library for image processing in C++
  *
- * Copyright (C) 2002 FSU Jena, Digital Image Processing Group
- * Contact: ice@pandora.inf.uni-jena.de
+ * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2019..2022 Wolfgang Ortmann
+ * Contact: ice@ortmann-jena.de
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 #include <algorithm>
 #include <stdlib.h>
@@ -72,7 +72,6 @@ namespace ice
   extern int*    si3_kE;    /* Eta file - column start positions */
   extern int     si3_e_iter; /* number of iterations since last refactorization */
   extern int     si3_enz;
-
 
   extern  int     si3_rank;
   extern  int*     si3_kL, *si3_iL,
@@ -1098,13 +1097,7 @@ end:
         CALLOC(btsolve_tag, m, int);
       }
 
-
-
-
     Gauss_Eta_T(m, sy, iy, &ny);
-
-
-
 
     for (k = 0; k < ny; k++)
       {
@@ -1439,7 +1432,6 @@ end:
 
     *pndx_B = k;
   }
-
 
   /*****************************************************************
   *  Gaussian elimination for Eta transformations which will solve *

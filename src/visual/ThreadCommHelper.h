@@ -5,35 +5,26 @@
 
 namespace ice
 {
-  /**
-     A mixin class to provide some synchronisation facilities.
-     This class has been designed to compensate for the wxWidgets restriction that
-     only the main thread can have a message queue (although I don't know any operating
-     system that would make this restriction necessary). This restriction is fine for mose
-     projects, since it prevents the programmer from creating non-thread-safe GUI
-     objects in different threads and mess up the application. The original intention
-     from the wxWidgets guys was, that all threads apart from the main thread should be
-     worker threads, only.
-     <BR>This makes our code a bit more complicated. Since sometimes the user thread (the thread that
-     runs the user's Main() function, see iceApp) must wait for completion of an operation
-     inside the main thread (for example the create-image-window function), we have to
-     use some synchronisation primitives apart from events. Unfortunately, the wxCondition
-     class, that wraps pthread conditions or win32 events, behaves slightly different from
-     the win32 event objects: if the condition becomes signalled and no thread is waiting for the
-     condition, the signal will be lost.
-     <BR>Instead of using wxCondition, I tried to create a solution based on mutexes. After some
-     consideration I came to the conclusion that one mutex would not be sufficient, so I
-     had to use two mutexes. Whenever the user thread has to wait for some operation inside
-     the main thread to finish, it can wait for one mutex. This mutex has been locked inside
-     the main thread, and will be released when the critical operation has finished, so that
-     the user thread can continue. For a consecutive wait the user thread will have to wait
-     for the second mutex, because there is no way to ensure that the first mutex has already
-     been locked by the main thread. Thus both mutexes will be used one after another.
-     This may look a bit confusing at the first moment, but it works just fine!
-     <BR>This class is designed as a mixin-class, that provides the two methods
-     ThreadCommHelper::WaitForMainThread () and ThreadCommHelper::WakeUpUserThread ().
-     The first can only be called from inside
-     the user thread, the latter only from inside the main thread.*/
+/*
+ * ICE - Library for image processing in C++
+ *
+ * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2019..2022 Wolfgang Ortmann
+ * Contact: ice@ortmann-jena.de
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ */
 
   class ThreadCommHelper
   {

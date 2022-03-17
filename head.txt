@@ -1,5 +1,5 @@
 /*
- * ICE - C++ - Library for image processing 
+ * ICE - Library for image processing in C++
  *
  * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
  * Copyright (C) 2019..2022 Wolfgang Ortmann

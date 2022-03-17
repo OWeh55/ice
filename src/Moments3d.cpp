@@ -152,9 +152,26 @@ namespace ice
     const double nu2200 = 2 * M_PI / (15.0 * sqrt(5)) * (8 * J1 * J1 / 3.0 - 8 * J2);
     const double etanu = 2 * M_PI * sqrt(2 * M_PI) / (15.0 * sqrt(35)) * (-32 * J1 * J1 * J1 / 9.0 + 16 * J1 * J2 - 48 * J3);
 
-    /*const double nu3300 = 1/sqrt(7)*(2*M_PI/35.0*(-(m300-3*m120)*(m300-3*m120)-(m030-3*m210)*(m030-3*m210)) - 18*M_PI/35.0*((m201-m021)*(m201-m021)+4*m111*m111) + 6*M_PI/175.0*(-(m300+m120-4*m102)*(m300
-    +m120-4*m102)-(m030+m210-4*m012)*(m030+m210-4*m012)) - 4*M_PI/175.0*(2*m003-3*m201-3*m021)*(2*m003-3*m201-3*m021));
-    const double nu1100 = 1/sqrt(3)*(18*M_PI/25.0*(-(m300+m120+m102)*(m300+m120+m102)-(m030+m210+m012)*(m030+m210+m012)) - 12*M_PI/25.0*(m003+m201+m021)*(m003+m201+m021));*/
+/*
+ * ICE - Library for image processing in C++
+ *
+ * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
+ * Copyright (C) 2019..2022 Wolfgang Ortmann
+ * Contact: ice@ortmann-jena.de
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ */
 
     const std::complex<double> nu11(sqrt(6 * M_PI) / 5.0 * (-m300 - m120 - m102), -sqrt(6 * M_PI) / 5.0 * (m030 + m210 + m012));
     const std::complex<double> nu01(sqrt(12 * M_PI) / 5.0 * (m003 + m201 + m021), 0);
