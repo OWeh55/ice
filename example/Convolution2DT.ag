@@ -16,12 +16,17 @@
   opt2:  1 - gauss like function e^(-dd/para) (center x,y)
   opt2:  2 - sin function (number of cycles x, y)
   opt2:  3 - cos function (number of cycles x, y)
-  opt2:  4 - white noise (strength, window radius)
+  opt2:  4 - rectangle (sin) function (number of cycles x, y)
+  opt2:  5 - rectangle (cos) function (number of cycles x, y)
+  opt2:  6 - white noise (strength, window radius)
+  opt2:  7 - disc (radius, value)
 
   opt: p, parameter1, double, f1para1, Parameter for function 1, 0.0
   opt: P, parameter2, double, f1para2, Parameter for function 1, 0.0
   opt: q, parameter1, double, f2para1, Parameter for function 2, 0.0
   opt: Q, parameter2, double, f2para2, Parameter for function 2, 0.0
+
+  opt: b, beta, double, beta, parameter for deconvolution, 0.1
 
   opt: m, matrices, void, matrices, Nur Matrizen testen, false
   opt: i, images, void, images, Nur Bilder testen, false
@@ -79,11 +84,11 @@ int main(int argc, char* argv[])
           matrix<double> m1(rows, cols);
           setFunction(f1type, f1para1, f1para2, m1);
           print(m1, true, true);
-	  
-	  matrix<double> m2(rows, cols);
-	  setFunction(f2type, f2para1, f2para2, m2);
 
-	  cout << "input2 matrix<double> (" << rows << "," << cols << "): " << endl;
+          matrix<double> m2(rows, cols);
+          setFunction(f2type, f2para1, f2para2, m2);
+
+          cout << "input2 matrix<double> (" << rows << "," << cols << "): " << endl;
           print(m2, true, true);
 
           Convolution2D convolution;
@@ -97,16 +102,18 @@ int main(int argc, char* argv[])
           print(m3);
 
           InvConvolution2D invConvolution;
+          invConvolution.setParameter(rows, cols, beta);
           cout << "invConvolution constructed" << endl;
 
-	  invConvolution.setInput(m3, m2);
-	  
+          invConvolution.setInput(m3, m2);
+
           matrix<double> m4(rows, cols);
 
           invConvolution.getResult(m4);
           cout << "invConvolution got result" << endl;
-	  
-          cout << "difference to original matrix (real, imag)" << endl;
+          print(m4);
+
+          cout << "difference to original matrix" << endl;
           print(m4 - m1);
 
           double fsum = 0.0;
@@ -117,53 +124,72 @@ int main(int argc, char* argv[])
                 fsum += fabs(m4[i][k] - m1[i][k]);
               }
           cout << "sum of deviations of " << (m1.rows()*m1.cols()) << " elements: " << fsum << endl;
-          GetChar();
         }
-#if false
+
       // with ImageD
       if (doubleImages)
         {
           int xs = 900;
           int ys = 600;
 
-          cout << "input ImageD(" << xs << "x" << ys << ")" << endl;
+          cout << "input1 ImageD(" << xs << "x" << ys << ")" << endl;
 
-          ImageD source;
-          source.create(xs, ys);
-          setFunction(ftype, fpara1, fpara2, source);
+          ImageD f1;
+          f1.create(xs, ys);
+          setFunction(f1type, f1para1, f1para2, f1);
 
-          source.adaptLimits();
-          Show(GRAY, source, "source");
-          FourierTrafo2D ft3(ys, xs, true);
-          ft3.setInput(source);
-          ImageD real;
-          real.create(xs, ys);
-          ImageD imag;
-          imag.create(xs, ys);
-          ft3.getResult(real, imag);
+          f1.adaptLimits();
+          Show(GRAY, f1, "function 1");
 
-          real.adaptLimits();
-          Show(GRAY, real, "spectrum real");
-          GetChar();
+          cout << "input2 ImageD(" << xs << "x" << ys << ")" << endl;
+          ImageD f2;
+          f2.create(xs, ys);
+          setFunction(f2type, f2para1, f2para2, f2);
 
-          FourierTrafo2D ft4(ys, xs, false);
-          ft4.setInput(real, imag);
-          ImageD res;
-          res.create(xs, ys);
-          ImageD resi;
-          resi.create(xs, ys);
-          ft4.getResult(res, resi);
+          f2.adaptLimits();
+          Show(GRAY, f2, "function 2");
 
-          double fsum = vsum(resi) + dsum(res, source);
+          Convolution2D convolution;
+          convolution.setInput(f1, f2);
+          cout << "getResult" << endl;
 
+          ImageD f3;
+          f3.create(xs, ys);
+          convolution.getResult(f3);
+          f3.adaptLimits();
+          Show(GRAY, f3, "f3 = f1 * f2");
+
+          InvConvolution2D invConvolution;
+          invConvolution.setParameter(0, 0, beta);
+          cout << "invConvolution constructed" << endl;
+          invConvolution.setInput(f3, f2);
+
+          ImageD f1r;
+          f1r.create(xs, ys);
+          invConvolution.getResult(f1r);
+          f1r.adaptLimits();
+          Show(GRAY, f1r, "reconstructed f1");
+
+          ImageD diff;
+          diff.create(xs, ys);
+          for (int x = 0; x < xs; x++)
+            for (int y = 0; y < ys; y++)
+              diff.setPixel(x, y, f1.getPixel(x, y) - f1r.getPixel(x, y));
+          diff.adaptLimits();
+          Show(GRAY, diff, "difference");
+
+          double fsum = dsum(f1, f1r);
           cout << "sum of deviations of " << (xs * ys) << " elements: " << fsum << endl;
           GetChar();
 
-          Show(OFF, source);
-          Show(OFF, real);
+          Show(OFF, f1);
+          Show(OFF, f2);
+          Show(OFF, f3);
+          Show(OFF, f1r);
+          Show(OFF, diff);
           GetChar();
         }
-
+#if 0
       if (images)
         {
           // with Image
@@ -179,7 +205,7 @@ int main(int argc, char* argv[])
           Image sourceImg;
           sourceImg.create(xsI, ysI, 255);
           ConvImgDImg(sourceImgD, sourceImg, ADAPTIVE, SIGNED);
-	  Show(GRAY, sourceImg, "source as Image");
+          Show(GRAY, sourceImg, "source as Image");
           FourierTrafo2D ft5(ysI, xsI, true);
           ft5.setInput(sourceImg);
 
@@ -189,8 +215,8 @@ int main(int argc, char* argv[])
           imag.create(xsI, ysI);
           ft5.getResult(real, imag);
 
-	  real.adaptLimits();
-	  Show(GRAY,real,"spectrum real");
+          real.adaptLimits();
+          Show(GRAY, real, "spectrum real");
 
           FourierTrafo2D ft6(ysI, xsI, false);
           ft6.setInput(real, imag);
@@ -205,12 +231,12 @@ int main(int argc, char* argv[])
           double isum = dsum(sourceImg, resImg);
 
           cout << "sum of deviations of " << (xsI * ysI) << " elements: " << isum << endl;
-	  
+
           GetChar();
-	  Show(OFF,sourceImg);
-	  Show(OFF,real);
+          Show(OFF, sourceImg);
+          Show(OFF, real);
         }
-      #endif
+#endif
       return 0;
     }
 

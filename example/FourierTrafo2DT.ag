@@ -15,7 +15,10 @@
   opt2:  1 - gauss like function e^(-dd/para) (center x,y)
   opt2:  2 - sin function (number of cycles x, y)
   opt2:  3 - cos function (number of cycles x, y)
-  opt2:  4 - white noise (strength, window radius)
+  opt2:  4 - rectangle (sin) function (number of cycles x, y)
+  opt2:  5 - rectangle (cos) function (number of cycles x, y)
+  opt2:  6 - white noise (strength, window radius)
+  opt2:  7 - disc (radius, value)
   opt: p, parameter1, double, fpara1, 1st parameter for function, 0.0
   opt: P, parameter2, double, fpara2, 2nd parameter for function, 0.0
   opt: m, matrices, void, matrices, Nur Matrizen testen, false
@@ -168,7 +171,7 @@ int main(int argc, char* argv[])
           Image sourceImg;
           sourceImg.create(xsI, ysI, 255);
           ConvImgDImg(sourceImgD, sourceImg, ADAPTIVE, SIGNED);
-	  Show(GRAY, sourceImg, "source as Image");
+          Show(GRAY, sourceImg, "source as Image");
           FourierTrafo2D ft5(ysI, xsI, true);
           ft5.setInput(sourceImg);
 
@@ -178,8 +181,8 @@ int main(int argc, char* argv[])
           imag.create(xsI, ysI);
           ft5.getResult(real, imag);
 
-	  real.adaptLimits();
-	  Show(GRAY,real,"spectrum real");
+          real.adaptLimits();
+          Show(GRAY, real, "spectrum real");
 
           FourierTrafo2D ft6(ysI, xsI, false);
           ft6.setInput(real, imag);
@@ -194,10 +197,10 @@ int main(int argc, char* argv[])
           double isum = dsum(sourceImg, resImg);
 
           cout << "sum of deviations of " << (xsI * ysI) << " elements: " << isum << endl;
-	  
+
           GetChar();
-	  Show(OFF,sourceImg);
-	  Show(OFF,real);
+          Show(OFF, sourceImg);
+          Show(OFF, real);
 
         }
       return 0;

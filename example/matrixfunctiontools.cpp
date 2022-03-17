@@ -53,7 +53,7 @@ void printc(const matrix<double>& v1, const matrix<double>& v2,
 typedef void (*testFunction)(double para1, double para2, matrix<double>& v);
 
 // delta
-void setFunction0(double para1, double para2, matrix<double>& v) // \delta
+void setFunctionDelta(double para1, double para2, matrix<double>& v) // \delta
 {
   int nCols = v.cols();
   int nRows = v.rows();
@@ -68,26 +68,28 @@ void setFunction0(double para1, double para2, matrix<double>& v) // \delta
 }
 
 // gauss like
-void setFunction1(double para1, double para2, matrix<double>& v) // \delta
+void setFunctionBell(double para1, double para2, matrix<double>& v) // \delta
 {
   int nCols = v.cols();
   double c0 = nCols / 2;
   int nRows = v.rows();
   double r0 = nRows / 2;
   if (para1 == 0.0)
-    para1 = 1;
+    para1 = 3;
   if (para2 == 0.0)
-    para2 = 1;
+    para2 = 3;
+  double rc = c0 * para1 / 10;
+  double rr = r0 * para2 / 10;
   for (int r = 0; r < nRows; r++)
     for (int c = 0; c < nCols; c++)
       {
-        double dd = (r - r0) * (r - r0) / para1 + (c - c0) * (c - c0) / para2;
+        double dd = (r - r0) * (r - r0) / (rr * rr) + (c - c0) * (c - c0) / (rc * rc);
         v[r][c] = exp(-dd);
       }
 }
 
 // sin function
-void setFunction2(double para1, double para2, matrix<double>& v) // sin
+void setFunctionSin(double para1, double para2, matrix<double>& v) // sin
 {
   int nCols = v.cols();
   double c0 = nCols / 2;
@@ -109,7 +111,7 @@ void setFunction2(double para1, double para2, matrix<double>& v) // sin
 }
 
 // cos function
-void setFunction3(double para1, double para2, matrix<double>& v) // sin
+void setFunctionCos(double para1, double para2, matrix<double>& v) // sin
 {
   int nCols = v.cols();
   double c0 = nCols / 2;
@@ -129,9 +131,52 @@ void setFunction3(double para1, double para2, matrix<double>& v) // sin
         }
     }
 }
+// sin function
+void setFunctionRectSin(double para1, double para2, matrix<double>& v) // sin
+{
+  int nCols = v.cols();
+  double c0 = nCols / 2;
+  int nRows = v.rows();
+  double r0 = nRows / 2;
+  if (para1 == 0.0)
+    para1 = 1;
+  if (para2 == 0.0)
+    para2 = 1;
+  for (int r = 0; r < nRows; r++)
+    {
+      double y = (r - r0) * 2 * M_PI / nRows;
+      for (int c = 0; c < nCols; c++)
+        {
+          double x = (c - c0) * 2 * M_PI / nCols;
+          v[r][c] = sin(para1 * x + para2 * y) > 0 ? 1 : 0;
+        }
+    }
+}
+
+// cos function
+void setFunctionRectCos(double para1, double para2, matrix<double>& v) // sin
+{
+  int nCols = v.cols();
+  double c0 = nCols / 2;
+  int nRows = v.rows();
+  double r0 = nRows / 2;
+  if (para1 == 0.0)
+    para1 = 1;
+  if (para2 == 0.0)
+    para2 = 1;
+  for (int r = 0; r < nRows; r++)
+    {
+      double y = (r - r0) * 2 * M_PI / nRows;
+      for (int c = 0; c < nCols; c++)
+        {
+          double x = (c - c0) * 2 * M_PI / nCols;
+          v[r][c] = (cos(para1 * x + para2 * y) > 0) ? 1 : 0;
+        }
+    }
+}
 
 // white noise
-void setFunction4(double para1, double para2, matrix<double>& v) // sin
+void setFunctionNoise(double para1, double para2, matrix<double>& v) // sin
 {
   int nCols = v.cols();
   double c0 = nCols / 2;
@@ -155,9 +200,38 @@ void setFunction4(double para1, double para2, matrix<double>& v) // sin
       }
 }
 
+void setFunctionDisc(double para1, double para2, matrix<double>& v) // sin
+{
+  int nCols = v.cols();
+  double c0 = nCols / 2;
+  int nRows = v.rows();
+  double r0 = nRows / 2;
+  if (para1 == 0.0)
+    para1 = 1;
+  if (para2 == 0.0)
+    para2 = 1.0;
+  double rr = std::min(r0, c0) * para2 / 10;
+  for (int r = 0; r < nRows; r++)
+    for (int c = 0; c < nCols; c++)
+      {
+        double dr = r - r0;
+        double dc = c - c0;
+        double dd = dr * dr + dc * dc;
+        if (dd < (rr * rr))
+          v[r][c] = para2;
+        else
+          v[r][c] = 0.0;
+      }
+}
+
 void setFunction(unsigned int type, double para1, double para2, matrix<double>& v)
 {
-  vector<testFunction> func{setFunction0, setFunction1, setFunction2, setFunction3, setFunction4};
+  vector<testFunction> func{setFunctionDelta,
+                            setFunctionBell,
+                            setFunctionSin, setFunctionCos,
+                            setFunctionRectSin, setFunctionRectCos,
+                            setFunctionNoise,
+                            setFunctionDisc};
 
   if (type < func.size())
     func[type](para1, para2, v);
