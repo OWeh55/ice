@@ -210,7 +210,8 @@ void setFunctionDisc(double para1, double para2, matrix<double>& v) // sin
     para1 = 1;
   if (para2 == 0.0)
     para2 = 1.0;
-  double rr = std::min(r0, c0) * para2 / 10;
+  double rr = std::min(r0, c0) * para1 / 10;
+
   for (int r = 0; r < nRows; r++)
     for (int c = 0; c < nCols; c++)
       {

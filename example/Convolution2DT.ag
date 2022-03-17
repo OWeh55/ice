@@ -85,10 +85,10 @@ int main(int argc, char* argv[])
           setFunction(f1type, f1para1, f1para2, m1);
           print(m1, true, true);
 
+          cout << "input2 matrix<double> (" << rows << "," << cols << "): " << endl;
+
           matrix<double> m2(rows, cols);
           setFunction(f2type, f2para1, f2para2, m2);
-
-          cout << "input2 matrix<double> (" << rows << "," << cols << "): " << endl;
           print(m2, true, true);
 
           Convolution2D convolution;
