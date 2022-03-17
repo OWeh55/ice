@@ -152,26 +152,26 @@ namespace ice
     const double nu2200 = 2 * M_PI / (15.0 * sqrt(5)) * (8 * J1 * J1 / 3.0 - 8 * J2);
     const double etanu = 2 * M_PI * sqrt(2 * M_PI) / (15.0 * sqrt(35)) * (-32 * J1 * J1 * J1 / 9.0 + 16 * J1 * J2 - 48 * J3);
 
-/*
- * ICE - Library for image processing in C++
- *
- * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
- * Copyright (C) 2019..2022 Wolfgang Ortmann
- * Contact: ice@ortmann-jena.de
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License 
- * along with this library; if not, see <http://www.gnu.org/licenses/>.
- */
+    /*
+     * ICE - Library for image processing in C++
+     *
+     * Copyright (C) 1992..2018 FSU Jena, Digital Image Processing Group
+     * Copyright (C) 2019..2022 Wolfgang Ortmann
+     * Contact: ice@ortmann-jena.de
+     *
+     * This library is free software; you can redistribute it and/or
+     * modify it under the terms of the GNU Lesser General Public
+     * License as published by the Free Software Foundation; either
+     * version 3 of the License, or (at your option) any later version.
+     *
+     * This library is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+     * Lesser General Public License for more details.
+     *
+     * You should have received a copy of the GNU Lesser General Public License
+     * along with this library; if not, see <http://www.gnu.org/licenses/>.
+     */
 
     const std::complex<double> nu11(sqrt(6 * M_PI) / 5.0 * (-m300 - m120 - m102), -sqrt(6 * M_PI) / 5.0 * (m030 + m210 + m012));
     const std::complex<double> nu01(sqrt(12 * M_PI) / 5.0 * (m003 + m201 + m021), 0);

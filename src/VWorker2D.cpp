@@ -15,7 +15,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License 
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -180,44 +180,44 @@ namespace ice
       }
   }
 
-  void VWorker2D::getResult(ice::matrix<double>& dstre,
-                            ice::matrix<double>& dstim)
+  void VWorker2D::getResult(ice::matrix<double>& result1,
+                            ice::matrix<double>& result2)
   {
     checkDone();
-    dstre = result[0];
-    dstim = result[1];
+    result1 = result[0];
+    result2 = result[1];
   }
 
-  void VWorker2D::getResult(ice::matrix<double>& dstre)
+  void VWorker2D::getResult(ice::matrix<double>& result1)
   {
     checkDone();
-    dstre = result[0];
+    result1 = result[0];
   }
 
-  void VWorker2D::getResult(const Image& dstre,
-                            const Image& dstim,
+  void VWorker2D::getResult(const Image& result1,
+                            const Image& result2,
                             int mode, int sign)
   {
-    ImageD resReal;
-    resReal.create(nCols, nRows);
-    ImageD resImag;
-    resImag.create(nCols, nRows);
-    getResult(resReal, resImag);
-    ConvImgDImg(resReal, dstre, mode, sign);
-    ConvImgDImg(resImag, dstim, mode, sign);
+    ImageD res1d;
+    res1d.create(nCols, nRows);
+    ImageD res2d;
+    res2d.create(nCols, nRows);
+    getResult(res1d, res2d);
+    ConvImgDImg(res1d, result1, mode, sign);
+    ConvImgDImg(res2d, result2, mode, sign);
   }
 
-  void VWorker2D::getResult(const Image& dstre,
+  void VWorker2D::getResult(const Image& resultx,
                             int mode, int sign)
   {
     ImageD resReal;
     resReal.create(nCols, nRows);
     getResult(resReal);
-    ConvImgDImg(resReal, dstre, mode, sign);
+    ConvImgDImg(resReal, resultx, mode, sign);
   }
 
-  void VWorker2D::getResult(ImageD& dstre,
-                            ImageD& dstim)
+  void VWorker2D::getResult(ImageD& result1,
+                            ImageD& result2)
   {
     checkDone();
 
@@ -225,18 +225,18 @@ namespace ice
       for (int x = 0; x < nCols; ++x)
         {
           // std::cout << x << " " << y << std::endl;
-          dstre.setPixel(x, y, result[0][y][x]);
-          dstim.setPixel(x, y, result[1][y][x]);
+          result1.setPixel(x, y, result[0][y][x]);
+          result2.setPixel(x, y, result[1][y][x]);
         }
   }
 
-  void VWorker2D::getResult(ImageD& dstre)
+  void VWorker2D::getResult(ImageD& resultx)
   {
     checkDone();
 
     for (int i = 0; i < nRows; ++i)
       for (int j = 0; j < nCols; ++j)
-        dstre.setPixel(j, i, result[0][i][j]);
+        resultx.setPixel(j, i, result[0][i][j]);
   }
 
   void VWorker2D::checkDone() const

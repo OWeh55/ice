@@ -251,3 +251,11 @@ void setFunction(unsigned int type, double para1, double para2, ImageD& imgd)
     for (int c = 0; c < m.cols(); c++)
       imgd.setPixel(c, r, m[r][c]);
 }
+
+void setFunction(unsigned int type, double para1, double para2, Image& img)
+{
+  ImageD imgd;
+  imgd.create(img.xsize, img.ysize);
+  setFunction(type, para1, para2, imgd);
+  ConvImgDImg(imgd, img);
+}
