@@ -1,5 +1,7 @@
-Install ICE for Windows 7
-==================================
+Install ICE for Windows 7 with mingw and msys
+=============================================
+(other compilers untested but probably possible)
+
 0) Legend:
    ":>" ... console input in mingw shell (msys)
 
