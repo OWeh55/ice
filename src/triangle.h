@@ -22,7 +22,7 @@
 #define ICE_TRIANGLE_H
 
 #include "numbase.h"
-#include "geo_ob.h"
+#include "GeoObject.h"
 #include "region.h"
 #include "lineseg.h"
 

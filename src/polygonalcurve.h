@@ -24,7 +24,7 @@
 #include <vector>
 #include "Matrix.h"
 
-#include "geo_ob.h"
+#include "GeoObject.h"
 #include "Contur.h"
 #include "lineseg.h"
 

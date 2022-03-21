@@ -182,7 +182,7 @@ namespace ice
      * getInsidePoint(IPoint& p) const
      * get a point (of type IPoint) inside of object
      * returns false, of no such point exists
-     * should not be reimplemented by child
+     * @param p point to set
      */
 
     virtual bool getInsidePoint(IPoint& p) const

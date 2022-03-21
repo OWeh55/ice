@@ -21,7 +21,7 @@
 #ifndef OBJECTFUNCTOR_H
 #define OBJECTFUNCTOR_H
 
-#include "geo_ob.h"
+#include "GeoObject.h"
 #include "objectfunction.h"
 
 namespace ice

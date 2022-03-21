@@ -29,7 +29,7 @@
 #include "Vector.h"
 #include "base.h"
 #include "numbase.h"
-#include "geo_ob.h"
+#include "GeoObject.h"
 #include "distance.h"
 #include "Point.h"
 

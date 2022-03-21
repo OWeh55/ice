@@ -28,7 +28,7 @@
 
 #include "base.h"
 #include "Vector.h"
-#include "geo_ob.h"
+#include "GeoObject.h"
 #include "ColorImage.h"
 
 namespace ice

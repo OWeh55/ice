@@ -25,7 +25,7 @@
 
 #include "Vector.h"
 
-#include "geo_ob.h"
+#include "GeoObject.h"
 
 #include "numbase.h"
 #include "defs.h"

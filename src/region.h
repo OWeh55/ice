@@ -30,7 +30,7 @@
 #include "defs.h"
 #include "base.h"
 #include "Matrix.h"
-#include "geo_ob.h"
+#include "GeoObject.h"
 #include "Contur.h"
 #include "Window.h"
 #include "moments.h"
