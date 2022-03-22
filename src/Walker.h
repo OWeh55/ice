@@ -31,7 +31,7 @@ namespace ice
    * class for handling of a set of pixel.
    * A Walker is a IPoint, which "walks" through a set of pixels.
    * With Walkers one may organize loops like \n
-   * for (walker.init();!walker.ready();walker.next()) ... \n
+   * for (walker.init(); !walker.ready(); walker.next()) ... \n
    * Base class Walker is abstract since it lacks a real walking
    * mechanism
    */
@@ -40,7 +40,7 @@ namespace ice
   public:
     /**
      * default c'tor.
-     * Initializes current point and referencePoit with origin.
+     * Initializes current point and referencePoint with origin.
      */
     Walker(): IPoint(0, 0), ready_(false), referencePoint(0, 0) {}
     /**

@@ -40,6 +40,7 @@ namespace ice
   // implementations in fourier_fftw.cpp and fourier_nofftw.cpp
   // define NOFFTW3 if you do not want or can not use library fftw3
   //
+
   void FourierD(const double* srcre, const double* srcim,
                 int dim, int option,
                 double* dstre, double* dstim);

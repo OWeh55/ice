@@ -27,7 +27,8 @@
 namespace ice
 {
   /**
-   * class for samples - helperclass for classifiers
+   * class for samples - helperclass for classifiers.
+   * class combines feature vector and class number of a sample
    */
 
   class ClassSample

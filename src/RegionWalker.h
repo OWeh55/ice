@@ -29,7 +29,7 @@
 namespace ice
 {
   /**
-   * Walker class for regions / areas in images
+   * Walker class for regions / areas in images.
    */
   class RegionWalker: public Walker
   {
@@ -56,7 +56,8 @@ namespace ice
     }
 
     /**
-     * c'tor creates a Walker for the inside of a Contur
+     * c'tor creates a Walker for the region inside of a Contur
+     * @param c contur 
      */
     explicit RegionWalker(const Contur& c)
     {
@@ -165,6 +166,8 @@ namespace ice
   public:
     /**
      * c'tor creates DiskWalker from center and radius
+     * @param center center of circle as IPoint
+     * @param radius radius of circle
      */
     DiskWalker(IPoint center, double rad): RegionWalker(center)
     {
@@ -174,6 +177,9 @@ namespace ice
 
     /**
      * c'tor creates DiskWalker from center coordinates and radius
+     * @param x x coordinate of center
+     * @param y y coordinate of center
+     * @param radius radius of circle
      */
     DiskWalker(int x, int y, double rad): RegionWalker(IPoint(x, y))
     {

@@ -38,15 +38,18 @@ namespace ice
   {
   public:
     /**
-     * standard constructor.
+     * @name constructors and destructors
+     */
+    ///@{
+    /**
+     * standard c'tor.
      * size will be determined from input
      */
-
     VWorker(): size(0), resultValid(false)
     {}
 
     /**
-     * constructor with given size of vectors.
+     * c'tor with given size of vectors.
      * @param size size of vectors
      */
 
@@ -54,16 +57,17 @@ namespace ice
     {}
 
     /**
-     * destructor
+     * copy c'tor deleted
+     */
+    VWorker(const VWorker& ft) = delete;
+    
+    /**
+     * d'tor
      */
     virtual ~VWorker()
     {
     }
-
-    /**
-     * copy constructor deleted
-     */
-    VWorker(const VWorker& ft) = delete;
+    ///@}
 
     /**
      * assignment operator deleted
@@ -76,6 +80,11 @@ namespace ice
      */
     virtual void setParameter(int newSize);
 
+    /**
+     * @name seting input
+     * methods setting the input from c array, vector, ice::Vector
+     */
+    ///@{
     /**
      * assign c array to first input (index 0)
      * @param v input vector as c array
@@ -149,7 +158,13 @@ namespace ice
      */
     void setInput(const std::vector<int>& v1,
                   const std::vector<int>& v2, double factor = 1.0);
+    ///@}
 
+    /**
+     * @name setting input from matrix
+     * methods using rows or columns of matrices as input
+     */
+    ///@{
     // input from row of 2d matrix
     /**
      * assign row of matrix<double> to first input (index 0).
@@ -258,7 +273,16 @@ namespace ice
     void setInputFromColumn(const ice::matrix<int>& m1,
                             const ice::matrix<int>& m2,
                             int col, double factor = 1.0);
+    ///@}
 
+    /** 
+     *  @name retrieve result
+     *  methods retrieving the result of the operation.
+     *  if parameters and inputs are valid but result
+     *  not valid yet, the methods initiate the execution of the operation
+     */
+    
+    ///@{
     // get result
     /**
      * puts result to c arrays.
@@ -299,7 +323,17 @@ namespace ice
      * @param v c array
      */
     void getResult(std::vector<Point>& v) const;
+    ///@}
 
+    /** 
+     *  @name retrieve result to matrix.
+     *  methods retrieving the result of the operation and putting it
+     *  to columns or rows of matrix.
+     *  if parameters and inputs are valid but result
+     *  not valid yet, the methods initiate the execution of the operation
+     */
+    
+    ///@{    
     // put result to row of 2d matrix
     /**
      * puts first result to row of matrix<double>.
@@ -334,7 +368,8 @@ namespace ice
      */
     void getResultToColumn(ice::matrix<double>& m1,
                            ice::matrix<double>& m2, int col) const;
-
+    ///@}
+    
   protected:
     /**
      * transformation of data.
@@ -360,19 +395,20 @@ namespace ice
     // check if transform is done and result valid
     // used in getResult*
     /**
-     * checks if result is calculated and call transfom if neccessary
+     * checks if result is calculated and call transform if neccessary
      */
     void checkDone() const;
 
-    int size = 0;
+    int size = 0; ///< dimension of input vectors
+    
     // operation need 2 inputs
-    std::array<std::vector<double>, 2> input;
+    std::array<std::vector<double>, 2> input; ///< input vectors
 
     // result may have up to 2 output vectors
     // mutable to allow calculation at the moment of
     // request for result (getResult* const)
-    mutable bool resultValid = false;
-    mutable std::array<std::vector<double>, 2> result;
+    mutable bool resultValid = false; ///< output valid?
+    mutable std::array<std::vector<double>, 2> result; ///< output of operator
   };
 }
 #endif
