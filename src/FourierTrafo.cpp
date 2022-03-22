@@ -35,10 +35,10 @@ namespace ice
   void FourierTrafo::transform(const std::vector<double>& source,
                                std::vector<double>& destinationReal,
                                std::vector<double>& destinationImag,
-                               bool forward)
+                               bool forward, bool centered)
   {
     FourierTrafo ft;
-    ft.setParameter(source.size(), forward);
+    ft.setParameter(source.size(), forward, centered);
     ft.setInput(source);
     ft.getResult(destinationReal, destinationImag);
   }
@@ -47,15 +47,15 @@ namespace ice
                                const std::vector<double>& sourceImag,
                                std::vector<double>& destinationReal,
                                std::vector<double>& destinationImag,
-                               bool forward)
+                               bool forward, bool centeredP)
   {
     FourierTrafo ft;
-    ft.setParameter(sourceReal.size(), forward);
+    ft.setParameter(sourceReal.size(), forward, centeredP);
     ft.setInput(sourceReal, sourceImag);
     ft.getResult(destinationReal, destinationImag);
   }
 
-  void FourierTrafo::setParameter(int newSize, bool newForward)
+  void FourierTrafo::setParameter(int newSize, bool newForward, bool newCentered)
   {
     // cout << "setParameter" << endl;
     VWorker::setParameter(newSize);
@@ -63,6 +63,11 @@ namespace ice
     if (forward != newForward)
       {
         forward = newForward;
+        resultValid = false;
+      }
+    if (newCentered != centered)
+      {
+        centered = newCentered;
         resultValid = false;
       }
   }

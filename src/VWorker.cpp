@@ -38,6 +38,9 @@ namespace ice
       {
         size = newSize;
         resultValid = false;
+        // input invalid
+        input[0].clear();
+        input[1].clear();
       }
   }
 

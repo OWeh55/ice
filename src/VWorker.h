@@ -255,8 +255,8 @@ namespace ice
      * @param col column number
      * @param factor factor all values are multiplied with
      */
-    void setInputFromColumn(const ice::matrix<int>& m,
-                            const ice::matrix<int>& m,
+    void setInputFromColumn(const ice::matrix<int>& m1,
+                            const ice::matrix<int>& m2,
                             int col, double factor = 1.0);
 
     // get result
@@ -339,7 +339,7 @@ namespace ice
     /**
      * transformation of data.
      * must be redefined in derived classes.\n
-     * transforms vectors input[0] and input[2] to vectors result[0] and
+     * transforms vectors input[0] and input[1] to vectors result[0] and
      * result[1]. if there is only one result, keep vector[1] empty
      */
     virtual void transform() const = 0;
