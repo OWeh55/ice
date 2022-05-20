@@ -49,7 +49,7 @@ namespace ice
     maxval = MaxValue;
 
     ImageBase* imag = nullptr;
-    //    if (UCHAR_MAX >= MaxValue)
+
     if (numeric_limits<PixelType1>::max() >= MaxValue)
       {
         imag = new iceImage1(SizeX, SizeY, MaxValue, title);
@@ -57,14 +57,12 @@ namespace ice
     else
       {
         if (numeric_limits<PixelType2>::max() >= MaxValue)
-          // if (USHRT_MAX >= MaxValue)
           {
             imag = new iceImage2(SizeX, SizeY, MaxValue, title);
           }
         else
           {
             if (numeric_limits<PixelType3>::max() >= MaxValue)
-              // if (INT_MAX >= MaxValue)
               {
                 imag = new iceImage3(SizeX, SizeY, MaxValue, title);
               }
@@ -180,7 +178,7 @@ namespace ice
     Image result;
     result.create(Img, title); // create with given size..
 
-    if (ShallCopyContents)   // copy content if neccesary
+    if (ShallCopyContents)   // copy content if necesary
       {
         result.copyData(Img);
       }

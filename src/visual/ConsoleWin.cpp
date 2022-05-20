@@ -43,7 +43,7 @@ using namespace std;
 
 namespace ice
 {
-  wxPaintEvent p(wxID_ANY);
+  //  wxPaintEvent p(wxID_ANY); !!!
 
   const std::string iceConsoleWin::StdCaption = "ICE Console Window";
 

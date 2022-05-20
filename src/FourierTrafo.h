@@ -41,7 +41,7 @@ namespace ice
   {
   public:
     /**
-     * c'tor with given parameter size.
+     * c'tor with given parameters.
      * @param size size of vectors
      * @param forward forward transform
      * @param centered origin is center of vector (range -n/2 .. n/2)
@@ -92,7 +92,13 @@ namespace ice
      * @param centered origin is center of vector (range -n/2 .. n/2)
      */
     void setParameter(int newSize, bool forward = true, bool centered = false);
-
+    /**
+     * @name transform of two real valued functions
+     * if two real valued functions are set as real and imaginary part
+     * of input only one transform is necessary to generate the transformed
+     * functions.
+     */
+    ///@{
     /**
      * get transformed function of (real valued) real part.
      * if two real valued functions are used as real and imaginary part
@@ -112,8 +118,13 @@ namespace ice
      */
     void getResultFromImag(std::vector<double>& resultReal,
                            std::vector<double>& resultImag) const;
+    ///@}
 
-    // simplified calls for special cases
+    /**
+     * @name simplified calls for special cases
+     * input and output vectors are given directly as parameters.
+     */
+    ///@{
     /**
      * transforms real valued function.
      * @param src real valued function as vector<double>
@@ -141,7 +152,7 @@ namespace ice
                           std::vector<double>& resultReal,
                           std::vector<double>& resultImag,
                           bool forward = true,  bool centered = false);
-
+    ///@}
   private:
     /**
      * fourier transformation of data.

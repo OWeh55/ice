@@ -96,7 +96,7 @@
 #include "function.h"
 #include "gentrans.h"
 #include "geo.h"
-#include "geo_ob.h"
+#include "GeoObject.h"
 #include "glinefit.h"
 #include "haar.h"
 #include "histogramequalization.h"

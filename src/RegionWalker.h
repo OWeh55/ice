@@ -57,7 +57,7 @@ namespace ice
 
     /**
      * c'tor creates a Walker for the region inside of a Contur
-     * @param c contur 
+     * @param c contur
      */
     explicit RegionWalker(const Contur& c)
     {

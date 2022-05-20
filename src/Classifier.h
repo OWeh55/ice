@@ -35,7 +35,7 @@ namespace ice
 
   /**
    * (abstract) base class for classifiers.
-   * implements wrapper functions, that convert different 
+   * implements wrapper functions, that convert different
    * datastructures for input\n
    * all protected base functions deal with ClassSample or vector<double>
    * wrappers also manage training status etc

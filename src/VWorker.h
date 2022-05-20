@@ -60,7 +60,7 @@ namespace ice
      * copy c'tor deleted
      */
     VWorker(const VWorker& ft) = delete;
-    
+
     /**
      * d'tor
      */
@@ -275,13 +275,13 @@ namespace ice
                             int col, double factor = 1.0);
     ///@}
 
-    /** 
+    /**
      *  @name retrieve result
      *  methods retrieving the result of the operation.
      *  if parameters and inputs are valid but result
      *  not valid yet, the methods initiate the execution of the operation
      */
-    
+
     ///@{
     // get result
     /**
@@ -325,15 +325,15 @@ namespace ice
     void getResult(std::vector<Point>& v) const;
     ///@}
 
-    /** 
+    /**
      *  @name retrieve result to matrix.
      *  methods retrieving the result of the operation and putting it
      *  to columns or rows of matrix.
      *  if parameters and inputs are valid but result
      *  not valid yet, the methods initiate the execution of the operation
      */
-    
-    ///@{    
+
+    ///@{
     // put result to row of 2d matrix
     /**
      * puts first result to row of matrix<double>.
@@ -369,7 +369,7 @@ namespace ice
     void getResultToColumn(ice::matrix<double>& m1,
                            ice::matrix<double>& m2, int col) const;
     ///@}
-    
+
   protected:
     /**
      * transformation of data.
@@ -395,12 +395,12 @@ namespace ice
     // check if transform is done and result valid
     // used in getResult*
     /**
-     * checks if result is calculated and call transform if neccessary
+     * checks if result is calculated and call transform if necessary
      */
     void checkDone() const;
 
     int size = 0; ///< dimension of input vectors
-    
+
     // operation need 2 inputs
     std::array<std::vector<double>, 2> input; ///< input vectors
 

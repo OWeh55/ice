@@ -162,7 +162,7 @@ namespace ice
 
 #else
   void FourierTrafo::makeSinCosTab() const
-  // creates sinus / cosinus tables if neccessary
+  // creates sinus / cosinus tables if necessary
   // creates "inverse" table for inverse transform if (invers)
   {
     for (int i = 0; i < size; ++i)
