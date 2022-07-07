@@ -162,16 +162,6 @@ fitfunk\
 fit_moments\
 flip\
 fmittel\
-four1\
-four2\
-four\
-fourier1d\
-fourier2d\
-fouriertest_1\
-fouriertest2d\
-fouriertest\
-fouritime\
-fourtime\
 freader\
 ftest\
 ftestm1\

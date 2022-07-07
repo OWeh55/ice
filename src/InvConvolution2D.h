@@ -29,7 +29,8 @@ namespace ice
   class InvConvolution2D : public VWorker2D
   {
   public:
-    InvConvolution2D(int rows, int cols, double beta = 0.0, bool centered = true):
+    InvConvolution2D(int rows, int cols,
+                     double beta = 0.0, bool centered = true):
       VWorker2D(rows, cols), beta(beta), centered(centered)
     {
     }

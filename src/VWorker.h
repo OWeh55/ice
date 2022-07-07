@@ -124,8 +124,8 @@ namespace ice
      * @param v1 first input vector
      * @param v2 second input vector
      */
-    void setInput(const std::vector<double>& vr,
-                  const std::vector<double>& vi);
+    void setInput(const std::vector<double>& v1,
+                  const std::vector<double>& v2);
 
 
     /**
@@ -240,7 +240,7 @@ namespace ice
     * assign column of matrix<double> to input.
     * @param m1 input matrix
     * @param m2 input matrix
-    * @param column column number
+    * @param col column number
     */
     void setInputFromColumn(const ice::matrix<double>& m1,
                             const ice::matrix<double>& m2, int col);

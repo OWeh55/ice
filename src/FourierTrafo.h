@@ -43,7 +43,7 @@ namespace ice
     /**
      * c'tor with given parameters.
      * @param size size of vectors
-     * @param forward forward transform
+     * @param forwardP forward transform
      * @param centered origin is center of vector (range -n/2 .. n/2)
      */
     FourierTrafo(int size, bool forwardP = true, bool centered = false):
@@ -87,7 +87,7 @@ namespace ice
      * sets parameters.
      * if parameters are changed, result becomes invalid\n
      * if size is changed, input becomes invalid\n
-     * @param size size of vectors
+     * @param newSize size of vectors
      * @param forward forward transform
      * @param centered origin is center of vector (range -n/2 .. n/2)
      */

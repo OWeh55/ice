@@ -30,10 +30,11 @@ void usage(const string& pn)
   cout << "Optionen:" << endl;
   cout << "-f <n>   Erstes zu lesendes Bild (frame)" << endl;
   cout << "-l <n>   Letztes zu lesendes Bild" << endl;
+  cout << "-x <x>   Zeitlich abklingender Mittelwert (default:0)" << endl;
   cout << "-O <fn>  Ausgabe des Ergebnisbildes als Datei fn" << endl;
   cout << "-o <fn>  Ausgabe als Videodatei fn" << endl;
   cout << "-z <n>   Zeitraffer, schreibt jedes n. Bild" << endl;
-  cout << "-x <x>   Zeitlich abklingender Mittelwert (default:0)" << endl;
+  cout << "-p <n>   Einrahmen (Vor- und Abspann) mit n frames Standbild" << endl;
   cout << "-d       Zeige Differenzbild an" << endl;
   cout << "-e       Wende Histogramm-Egalisierung auf Eingabebilder an" << endl;
   cout << "-n       Normalisiere Eingabebilder (Strecken auf 0..255)" << endl;
@@ -52,6 +53,8 @@ int main(int argc, char* argv[])
   int last = 0;
   int zeitraffer = 1;
   int zcount = 0;
+  int framing = 0;
+  bool firstFrame = true;
 
   bool hequal = false;
   bool normalise = false;
@@ -67,7 +70,7 @@ int main(int argc, char* argv[])
   double expire = 0;
 
   int rc;
-  while ((rc = getopt(argc, argv, "mM:o:z:ef:l:x:O:4nas:hdi")) >= 0)
+  while ((rc = getopt(argc, argv, "mM:o:z:ef:l:x:O:4nas:p:hdi")) >= 0)
     {
       switch (rc)
         {
@@ -88,6 +91,9 @@ int main(int argc, char* argv[])
           break;
         case 'z':
           zeitraffer = atol(optarg);
+          break;
+        case 'p':
+          framing = atol(optarg);
           break;
         case 'x':
           expire = atof(optarg);
@@ -130,6 +136,7 @@ int main(int argc, char* argv[])
   vf.getPara(xs1, ys1, mv, fps);
 
   Printf("input format %d x %d    0 .. %d   %d fps\n", xs1, ys1, mv, fps);
+
   VideoFile vfd;
   if (!videoFileName.empty())
     {
@@ -137,7 +144,9 @@ int main(int argc, char* argv[])
       //    cout << vfd.getpara() << endl;
       //    vfd.setpara("-ovc lavc -lavcopts vcodec=mpeg4:vbitrate=2400");
       vfd.setPara(xs1, ys1, mv, fps);
+
     }
+
   int xs, ys;
 
   xs = xs1;
@@ -227,15 +236,16 @@ int main(int argc, char* argv[])
               GrayNormalize(in1.blueImage(), in1t.blueImage(), GV_QUANTILE);
             }
 
+#if 0
           WindowWalker w(in1t);
 
           for (w.init(); !w.ready(); w.next())
             {
-              ColorValue v1 = preprocess ? in1t.getPixel(w) : in1.getPixel(w);
+              ColorValue v1 = preprocess ? in1t.getPixelUnchecked(w) : in1.getPixelUnchecked(w);
 
-              double sr = summe.r.getPixel(w) * expire1 + v1.red;
-              double sg = summe.g.getPixel(w) * expire1 + v1.green;
-              double sb = summe.b.getPixel(w) * expire1 + v1.blue;
+              double sr = summe.r.getPixelUnchecked(w) * expire1 + v1.red;
+              double sg = summe.g.getPixelUnchecked(w) * expire1 + v1.green;
+              double sb = summe.b.getPixelUnchecked(w) * expire1 + v1.blue;
 
               summe.r.setPixelUnchecked(w, sr);
               summe.g.setPixelUnchecked(w, sg);
@@ -260,14 +270,60 @@ int main(int argc, char* argv[])
                   break;
                 } // switch
             }
+#else
+
+#ifdef OPENMP
+          #pragma omp parallel for schedule(dynamic,30)
+#endif
+          for (int y = 0; y < ys; y++)
+            for (int x = 0; x < xs; x++)
+              {
+                IPoint w(x, y);
+                ColorValue v1 = preprocess ? in1t.getPixelUnchecked(w) : in1.getPixelUnchecked(w);
+
+                double sr = summe.r.getPixelUnchecked(w) * expire1 + v1.red;
+                double sg = summe.g.getPixelUnchecked(w) * expire1 + v1.green;
+                double sb = summe.b.getPixelUnchecked(w) * expire1 + v1.blue;
+
+                summe.r.setPixelUnchecked(w, sr);
+                summe.g.setPixelUnchecked(w, sg);
+                summe.b.setPixelUnchecked(w, sb);
+
+                double r = sr / ct;
+                double g = sg / ct;
+                double b = sb / ct;
+                double dr = r - v1.red;
+                double dg = g - v1.green;
+                double db = b - v1.blue;
+
+                switch (output)
+                  {
+                  case dMittel:
+                    // result.setPixelLimited(w, ColorValue(r, g, b));
+                    result.setPixelUnchecked(w, ColorValue(r, g, b));
+                    break;
+                  case dDifference:
+                    result.setPixelLimited(w, ColorValue(dr, dg, db) + ColorValue(mv / 2));
+
+                    break;
+                  } // switch
+              }
+
+#endif
 
           zcount++;
           if (zcount == zeitraffer)
             {
               Print("+");
-              if (!videoFileName.empty()) // if video output file given
+              if (vfd.isOpen())
                 {
                   vfd.write(result);
+                  if (firstFrame)
+                    {
+                      for (int n = 0; n < framing; n++)
+                        vfd.write(result);
+                      firstFrame = false;
+                    }
                 }
               zcount = 0;
             }
@@ -276,6 +332,10 @@ int main(int argc, char* argv[])
       Print("\n");
     }
   while (ok && ((last == 0) || (last > vf.FrameNumber())));
+
+  if (vfd.isOpen())
+    for (int n = 0; n < framing; n++)
+      vfd.write(result);
 
   if (!imageFileName.empty()) // if image output file given
     {

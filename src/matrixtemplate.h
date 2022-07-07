@@ -57,14 +57,20 @@ namespace ice
      * A matrix of the given size is created and possibly initialized.
      * @param r number of rows of the matrix.
      * @param c number of columns of the matrix.
-     * @param init mode of initialization.
-     * @see init()
      */
     matrix(int r, int c):
       nColumns(c), nRows(r), data(new T[r * c])
     {
     }
 
+    /**
+     * constructor with size and optional initialization.
+     * A matrix of the given size is created and possibly initialized.
+     * @param r number of rows of the matrix.
+     * @param c number of columns of the matrix.
+     * @param init mode of initialization.
+     * @see init()
+     */
     matrix(int r, int c, int init):
       nColumns(c), nRows(r), data(new T[r * c])
     {

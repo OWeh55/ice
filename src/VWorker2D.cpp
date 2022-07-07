@@ -181,14 +181,14 @@ namespace ice
   }
 
   void VWorker2D::getResult(ice::matrix<double>& result1,
-                            ice::matrix<double>& result2)
+                            ice::matrix<double>& result2) const
   {
     checkDone();
     result1 = result[0];
     result2 = result[1];
   }
 
-  void VWorker2D::getResult(ice::matrix<double>& result1)
+  void VWorker2D::getResult(ice::matrix<double>& result1) const
   {
     checkDone();
     result1 = result[0];
@@ -196,7 +196,7 @@ namespace ice
 
   void VWorker2D::getResult(const Image& result1,
                             const Image& result2,
-                            int mode, int sign)
+                            int mode, int sign) const
   {
     ImageD res1d;
     res1d.create(nCols, nRows);
@@ -208,7 +208,7 @@ namespace ice
   }
 
   void VWorker2D::getResult(const Image& resultx,
-                            int mode, int sign)
+                            int mode, int sign) const
   {
     ImageD resReal;
     resReal.create(nCols, nRows);
@@ -217,7 +217,7 @@ namespace ice
   }
 
   void VWorker2D::getResult(ImageD& result1,
-                            ImageD& result2)
+                            ImageD& result2) const
   {
     checkDone();
 
@@ -230,7 +230,7 @@ namespace ice
         }
   }
 
-  void VWorker2D::getResult(ImageD& resultx)
+  void VWorker2D::getResult(ImageD& resultx) const
   {
     checkDone();
 

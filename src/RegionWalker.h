@@ -166,8 +166,8 @@ namespace ice
   public:
     /**
      * c'tor creates DiskWalker from center and radius
-     * @param center center of circle as IPoint
-     * @param radius radius of circle
+     * @param center center of disk as IPoint
+     * @param rad radius of disk
      */
     DiskWalker(IPoint center, double rad): RegionWalker(center)
     {
@@ -179,7 +179,7 @@ namespace ice
      * c'tor creates DiskWalker from center coordinates and radius
      * @param x x coordinate of center
      * @param y y coordinate of center
-     * @param radius radius of circle
+     * @param rad radius of circle
      */
     DiskWalker(int x, int y, double rad): RegionWalker(IPoint(x, y))
     {
