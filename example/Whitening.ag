@@ -1,0 +1,55 @@
+#include <image.h>
+
+using namespace ice;
+using namespace std;
+
+/*AppGen:Global*/
+
+/*AppGen
+ prog: Whitening von Funktionen
+ %% Beschreibung Parameter
+ % symbolischerName, Art, Typ,   Variablenname, Erklärung, Default-Wert
+% para: file, optional, string, filename, Zu verarbeitendes Bild, "test_rgb.jpg"
+ %
+ opt: n, number, int, nValues, number of values, 8
+ opt: v, verbose, void, verbose, be verbose, false
+AppGen*/
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  vector<double> fr(nValues);
+  for (int i = 0; i < nValues; i++)
+    fr[i] = RandomD();
+  cout << fr << endl;
+  FourierTrafo ft(nValues);
+  ft.setInput(fr);
+  vector<double> sr;
+  vector<double> si;
+  ft.getResult(sr, si);
+  cout << sr << endl;
+  cout << si << endl;
+  for (int i = 0; i < nValues; i++)
+    {
+      double rv = sr[i];
+      double iv = si[i];
+      double abs = sqrt(rv * rv + iv * iv);
+      if (abs > 0)
+        {
+          sr[i] = rv / abs;
+          si[i] = iv / abs;
+        }
+    }
+  cout << sr << endl;
+  cout << si << endl;
+
+  FourierTrafo fti(nValues, false);
+  fti.setInput(sr, si);
+  vector<double> fw;
+  vector<double> fwi;
+  fti.getResult(fw, fwi);
+  cout << setw(5) << setprecision(3) << fw << endl;
+  cout << fwi << endl;
+  return 0;
+}
