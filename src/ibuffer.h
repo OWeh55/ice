@@ -55,11 +55,11 @@ namespace ice
     ibuffer(): data(nullptr) {}
     ~ibuffer()
     {
-      delete data;
+      delete[] data;
     }
     void alloc(int size)
     {
-      delete data;
+      delete[] data;
       data = new unsigned char [size];
     }
     unsigned char* const getData()

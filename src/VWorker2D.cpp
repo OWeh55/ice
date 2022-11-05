@@ -132,7 +132,8 @@ namespace ice
     for (int y = 0; y < nRows; ++y)
       for (int x = 0; x < nCols; ++x)
         {
-          input[i][y][x] = v.getPixel(x, y);
+          double d = v.getPixel(x, y); // for debugging compile with -O0
+          input[i][y][x] = d;
         }
     resultValid = false;
   }

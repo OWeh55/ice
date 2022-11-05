@@ -50,7 +50,7 @@ namespace ice
      * After default construction matrix is invalid. Use resize or
      * init to create a real matrix
      */
-    matrix() {}
+    matrix(): data(nullptr) {}
 
     /**
      * constructor with size and optional initialization.
@@ -144,8 +144,8 @@ namespace ice
      */
     void clear()
     {
-      if (data != nullptr)
-        delete data;
+      delete [] data;
+      data = nullptr;
       nRows = 0;
       nColumns = 0;
     }
