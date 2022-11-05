@@ -50,7 +50,7 @@ namespace ice
       VWorker(0), forward(true), // real setting in setParameter
       centered(centered)
     {
-      setParameter(size, forwardP);
+      setParameter(size, forwardP, centered);
     }
 
     /**
