@@ -29,6 +29,23 @@ using namespace std;
 #define FNAME "FourierTrafo2D"
 namespace ice
 {
+  void FourierTrafo2D::setParameter(int newRows, int newCols)
+  {
+    VWorker2D::setParameter(newRows, newCols);
+  }
+
+  void FourierTrafo2D::setParameter(int newRows, int newCols,
+                                    bool newForward)
+  {
+    VWorker2D::setParameter(newRows, newCols);
+
+    if (forward != newForward)
+      {
+        forward = newForward;
+        resultValid = false;
+      }
+  }
+
   void FourierTrafo2D::setParameter(int newRows, int newCols,
                                     bool newForward, bool newCentered)
   {

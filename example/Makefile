@@ -5,8 +5,8 @@ CXX=g++
 endif
 
 # main program to build
-#MAIN=dft_demo
-MAIN=FourierTrafoT
+MAIN=dft_demo
+#MAIN=FourierTrafoT
 
 # objects needed for main
 OBJECTS=$(MAIN).o filefunctions.o xdisplay.o

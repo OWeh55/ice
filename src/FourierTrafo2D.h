@@ -59,8 +59,9 @@ namespace ice
     {
     }
 
-    void setParameter(int newRows, int newCols,
-                      bool newForward = true, bool newCentered = true);
+    void setParameter(int newRows, int newCols);
+    void setParameter(int newRows, int newCols, bool newForward);
+    void setParameter(int newRows, int newCols, bool newForward, bool newCentered);
 
     FourierTrafo2D(const FourierTrafo2D& ft) = delete;
     const FourierTrafo2D& operator=(const FourierTrafo2D& ft) = delete;
