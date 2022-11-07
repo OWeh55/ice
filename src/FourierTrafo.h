@@ -47,15 +47,15 @@ namespace ice
      * @param centered origin is center of vector (range -n/2 .. n/2)
      */
     FourierTrafo(int size, bool forwardP = true, bool centered = false):
-      VWorker(0), forward(true), // real setting in setParameter
+      VWorker(0), forward(true), // real setting in setParameter()
       centered(centered)
     {
-      setParameter(size, forwardP, centered);
+      setParameter(size, forwardP);
     }
 
     /**
      * default c'tor.
-     * parameters must be set later\n
+     * parameters are set later\n
      * size is derived from vector size in setInput
      * @see setParameter
      */
@@ -84,14 +84,16 @@ namespace ice
     const FourierTrafo& operator=(const FourierTrafo& ft) = delete;
 
     /**
-     * sets parameters.
+     * set parameters.
      * if parameters are changed, result becomes invalid\n
-     * if size is changed, input becomes invalid\n
+     * parameters not specified remain unchanged\n
      * @param newSize size of vectors
      * @param forward forward transform
      * @param centered origin is center of vector (range -n/2 .. n/2)
      */
-    void setParameter(int newSize, bool forward = true, bool centered = false);
+    void setParameter(int newSize);
+    void setParameter(int newSize, bool forward);
+    void setParameter(int newSize, bool forward, bool centered);
     /**
      * @name transform of two real valued functions
      * if two real valued functions are set as real and imaginary part

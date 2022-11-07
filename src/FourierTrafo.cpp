@@ -55,9 +55,25 @@ namespace ice
     ft.getResult(destinationReal, destinationImag);
   }
 
+  void FourierTrafo::setParameter(int newSize)
+  {
+    VWorker::setParameter(newSize);
+    norm = 1.0 / sqrt(size);
+  }
+
+  void FourierTrafo::setParameter(int newSize, bool newForward)
+  {
+    VWorker::setParameter(newSize);
+    norm = 1.0 / sqrt(size);
+    if (forward != newForward)
+      {
+        forward = newForward;
+        resultValid = false;
+      }
+  }
+  
   void FourierTrafo::setParameter(int newSize, bool newForward, bool newCentered)
   {
-    // cout << "setParameter" << endl;
     VWorker::setParameter(newSize);
     norm = 1.0 / sqrt(size);
     if (forward != newForward)
