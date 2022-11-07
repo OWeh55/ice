@@ -71,7 +71,7 @@ namespace ice
         resultValid = false;
       }
   }
-  
+
   void FourierTrafo::setParameter(int newSize, bool newForward, bool newCentered)
   {
     VWorker::setParameter(newSize);

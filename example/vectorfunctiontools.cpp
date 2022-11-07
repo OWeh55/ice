@@ -49,7 +49,7 @@ void printc(const vector<double>& v1, const vector<double>& v2,
 typedef void (*testFunction)(double para, vector<double>& v);
 
 // delta
-void setFunction0(double para, vector<double>& v) // \delta
+void setFunction0(double para, vector<double>& v)
 {
   int size = v.size();
   for (int i = 0; i < size; i++)
@@ -107,10 +107,19 @@ void setFunction4(double para, vector<double>& v)
     }
 }
 
+// constant
+void setFunction5(double para, vector<double>& v)
+{
+  int size = v.size();
+  for (int i = 0; i < size; i++)
+    {
+      v[i] = para;
+    }
+}
 
 void setFunction(unsigned int type, double para, vector<double>& v)
 {
-  vector<testFunction> func{setFunction0, setFunction1, setFunction2, setFunction3, setFunction4};
+  vector<testFunction> func{setFunction0, setFunction1, setFunction2, setFunction3, setFunction4, setFunction5};
   if (type < func.size())
     func[type](para, v);
   else
