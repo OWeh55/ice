@@ -49,6 +49,7 @@ public:
     imag.create(xsize, ysize);
     imag.set(0);
   }
+
   void getValue(int x, int y, double& r, double& i)
   {
     r = real.getPixel(x, y);
@@ -72,16 +73,24 @@ public:
   ImageD imag;
   int xsize;
   int ysize;
-
 };
 
-double downsize(const matrix<double>& big, matrix<double>& m)
+void checkSquare(const matrix<double>& m)
 {
+  if (m.cols() != m.rows())
+    throw "matrix is not square";
+}
+
+void downsize(const matrix<double>& big, matrix<double>& m)
+{
+  checkSquare(big);
+  checkSquare(m);
+
   int size = m.cols();
   int bigSize = big.cols();
+
   int iFactor = bigSize / size;
   int iFactor2 = iFactor * iFactor;
-  double sum = 0.0;
 
   for (int x = 0; x < size; ++x)
     {
@@ -96,14 +105,24 @@ double downsize(const matrix<double>& big, matrix<double>& m)
               sumV += big[xx][yy];
 
           double currentValue = sumV / iFactor2;
-          sum += currentValue;
           m[x][y] = currentValue;
         }
     }
+}
+
+double maskSum(const Image& img)
+{
+  WindowWalker w(img);
+  double sum = 0.0;
+  for (w.init(); !w.ready(); w.next())
+    sum += img.getPixel(w);
   return sum;
 }
 
-double makeLine(matrix<double>& m, double len, double phi_degree)
+// create masks for [de-]convolution, PSF
+
+void makeLine(matrix<double>& m,
+              double len, double phi_degree, double thickness = 2.0)
 {
   double phi = Arcus(phi_degree);
   int size = int(2 * (len + 1.0));
@@ -122,21 +141,19 @@ double makeLine(matrix<double>& m, double len, double phi_degree)
       for (int y = 0; y < bigSize; ++y)
         {
           double dy = y - z0;
-          //    cout << dx << ","<<dy << " " << line.Distance(dx, dy) << endl;
-          if (line.Distance(dx, dy) < 2.0)
+          if (line.Distance(dx, dy) <= thickness)
             big[x][y] = 1.0;
           else
             big[x][y] = 0.0;
         }
     }
-  return downsize(big, m);
+  downsize(big, m);
 }
 
-double makeDisc(matrix<double>& m, double radius, bool hollow = false)
+void makeDisc(matrix<double>& m, double radius, bool hollow = false)
 {
   int size = int(2 * (radius + 1.0));
   int bigSize = size * iFactor;
-
   m.resize(size, size);
 
   matrix<double> big(bigSize, bigSize, 0.0);
@@ -162,59 +179,46 @@ double makeDisc(matrix<double>& m, double radius, bool hollow = false)
         }
     }
 
-  return downsize(big, m);
+  downsize(big, m);
 }
 
-double makeMaskFromMatrix(const Image& mask, double par1, double par2, int mode)
+void makeMaskFromMatrix(const Image& mask, const matrix<double>& mm)
 {
   int xm = mask.xsize / 2;
   int ym = mask.ysize / 2;
   int mv = mask.maxval;
   int mv2 = (mv + 1) / 2;
 
-  matrix<double> dmask;
-  double factor = 0;
-  switch (mode)
-    {
-    case 1:
-      factor = makeDisc(dmask, par1, false);
-      break;
-    case 2:
-      factor = makeLine(dmask, par1, par2);
-      break;
-    case 3:
-      factor = makeDisc(dmask, par1, true);
-      break;
-    }
   mask.set(mv2);
-  int ss = dmask.rows() / 2;
-  for (int xi = 0; xi < dmask.cols(); ++xi)
+
+  checkSquare(mm);
+  int ms = mm.rows();
+  int ss = ms / 2;
+  for (int xi = 0; xi < ms; ++xi)
     {
-      for (int yi = 0; yi < dmask.rows(); ++yi)
+      for (int yi = 0; yi < ms; ++yi)
         {
-          int g =  0.5 * dmask[xi][yi] * mv + mv2;
+          int g =  0.5 * mm[xi][yi] * mv + mv2;
           //  if (g < 0 || g > mv)
           //    cout << "!!! "  << dmask[xi][yi] << endl;
           mask.setPixel(xm - ss + xi, ym - ss + yi, g);
         }
     }
-  //  cout << factor << endl;
-  return factor;
 }
 
-double makeMask(const Image& mask, double par1, double par2, int mode)
+void makeMask(const Image& mask, double par1, double par2, int mode)
 {
-  double result = 0;
+  matrix<double> mm;
   switch (mode)
     {
     case 1:
-      result = makeMaskFromMatrix(mask, par1, par2, 1);
+      makeDisc(mm, par1, false);
       break;
     case 2:
-      result = makeMaskFromMatrix(mask, par1, par2, 2);
+      makeLine(mm, par1, par2);
       break;
     case 3:
-      result = makeMaskFromMatrix(mask, par1, par2, 3);
+      makeDisc(mm, par1, true);
       break;
     case 99:
       // Maske aus Datei laden
@@ -223,7 +227,7 @@ double makeMask(const Image& mask, double par1, double par2, int mode)
     default:
       throw "Wrong mask mode";
     }
-  return result;
+  makeMaskFromMatrix(mask, mm);
 }
 
 /*AppGen
@@ -234,8 +238,9 @@ para: file,optional,string,fn,Bild-Datei,""
 %
 opt: e, expand, int, expand, Erweitern durch Padding um Faktor expand, 1
 opt: b, beta, double, beta, Regularisierungsparameter, 0.01
+opt: l, laplacefilter, void, laplace, Benutze Laplace-Filter als Bewertung, false
 opt: f, factor, double, factor, Faktor für Faltung (0.0=auto), 0.0
-opt: d, deconvolution, void, deconv, Nur inverse Faltung, false
+opt: d, demomode, void, demo, Quellbild falten und als Testbild verwenden, false
 opt: M, maskfile, string, maskFilename, Lies Maske aus Datei, ""
 opt: m, maskmode, int, maskMode, Modus für [Ent-]Faltungsmaske, 1
 opt2:   m = 1  Kreisscheibe
@@ -371,7 +376,7 @@ int main(int argc, char* argv[])
               Circle c(x + 100, y + 100, 8);
               draw(c, src, 127, 255);
             }
-
+          demo = true;
         }
 
       if (!maskFilename.empty())
@@ -389,9 +394,14 @@ int main(int argc, char* argv[])
       if (verbose)
         cout << "FT(src)" << endl;
 
-      FourierTrafo2D ft2;
-      ft2.setInput(src);
-      ft2.getResult(srcSp.real, srcSp.imag);
+      FourierTrafo2D ft2d;
+      ft2d.setParameter(src.ysize, src.xsize, true);
+
+      FourierTrafo2D ft2di;
+      ft2di.setParameter(src.ysize, src.xsize, false);
+
+      ft2d.setInput(src);
+      ft2d.getResult(srcSp.real, srcSp.imag);
 
       if (verbose)
         cout << "ErzeugeMaske" << endl;
@@ -403,52 +413,11 @@ int main(int argc, char* argv[])
         Show(ON, mask, "Filter-Maske");
 
       //Maske kreieren
-      double maskNorm;
       if (maskMode != 99)
-        maskNorm = makeMask(mask, radius, phi, maskMode);
+        makeMask(mask, radius, phi, maskMode);
       else
         {
           mask.read(maskFilename);
-          WindowWalker w(mask);
-          double sum = 0;
-          for (w.init(); !w.ready(); w.next())
-            sum += mask.getPixel(w);
-          maskNorm = sum;
-          /*
-                Image temp;
-                temp.create(xSize, ySize, 255);
-                temp.read(maskFilename);
-
-                int min = 255;
-                int max = 0;
-                int xmin = 0, ymin = 0;
-                for (int y = 0; y < ySize; ++y)
-                  for (int x = 0; x < xSize; ++x)
-                    {
-                      int val = temp.getPixel(x, y);
-                      if (val < min)
-                        {
-                          min = val;
-                          xmin = x;
-                          ymin = y;
-                        }
-                      if (val > max)
-                        max = val;
-                    }
-                int xShift = xSize / 2 - xmin;
-                int yShift = ySize / 2 - ymin;
-                double sum = 0;
-                for (int y = 0; y < ySize; ++y)
-                  for (int x = 0; x < xSize; ++x)
-                    {
-                      int val = temp.getPixel(x, y);
-                      val -= max;
-                      val = val * 255 / (min - max);
-                      mask.setPixel((x + xShift + xSize) % xSize, (y + yShift + ySize) % ySize, val);
-                      sum += val;
-                    }
-          maskNorm = sum;
-          */
         }
 
       if (verbose)
@@ -456,43 +425,41 @@ int main(int argc, char* argv[])
 
       ComplexImage maskSp;
       maskSp.create(xSize, ySize);
-      ft2.setInput(mask);
-      ft2.getResult(maskSp.real, maskSp.imag);
+      ft2d.setInput(mask);
+      ft2d.getResult(maskSp.real, maskSp.imag);
 
-      ComplexImage destSp;
-      destSp.create(xSize, ySize);
+      ComplexImage convSp;
+      convSp.create(xSize, ySize);
 
-      if (!deconv)
+      if (demo)
         {
           if (verbose)
             cout << "Faltung(imSpektrum)" << endl;
 
           ConvolutionFImgD(srcSp.real, srcSp.imag,
                            maskSp.real, maskSp.imag,
-                           destSp.real, destSp.imag);
+                           convSp.real, convSp.imag);
         }
       else
-        destSp = srcSp;
+        convSp = srcSp;
 
       if (verbose)
         cout << "IFT(gefaltet)" << endl;
 
-      ft2.setParameter(src.ysize, src.xsize, false);
-      ft2.setInput(destSp.real, destSp.imag);
+      ft2di.setInput(convSp.real, convSp.imag);
       // cout << "Input set" << endl;
-      Image dest;
-      dest.create(src);
-      ft2.getResult(dest, ADAPTIVE);
+      Image conv;
+      conv.create(src);
+      ft2di.getResult(conv, ADAPTIVE);
       // cout << "output get" < <endl;
       if (displayMode & 4)
-        Show(ON, dest, "Gefaltetes Bild");
+        Show(ON, conv, "Gefaltetes Bild");
 
       if (simulateQuantization)
         {
           // Spektrum erneut aus 8Bit-Bild berechnen
-          ft2.setParameter(ySize, xSize, true);
-          ft2.setInput(dest);
-          ft2.getResult(destSp.real, destSp.imag);
+          ft2d.setInput(conv);
+          ft2d.getResult(convSp.real, convSp.imag);
         }
 
       Image rest;
@@ -506,8 +473,8 @@ int main(int argc, char* argv[])
         {
           if (verbose)
             cout << "InvConvolutionImg" << endl;
-
-          calcInvConvolution(mask, dest, rest, factor / maskNorm, beta);
+          double maskNorm = maskSum(mask);
+          calcInvConvolution(mask, conv, rest, factor / maskNorm, beta);
           GetChar();
         }
       else
@@ -518,7 +485,8 @@ int main(int argc, char* argv[])
           Visual specialWindow = nullptr;
           if (displayMode == 16)
             {
-              specialWindow = Show(GRAY, display, "Use D/d to change selected image");
+              specialWindow = Show(GRAY, display,
+                                   "Use D/d to change selected image");
               select = 4;     // display restored image
             }
 
@@ -531,7 +499,8 @@ int main(int argc, char* argv[])
           char iMode = 'R';
           while (!done)
             {
-              ClearAlpha();
+              // ClearAlpha();
+              SetAlphaCursor(0, 0);
               Printf("radius: %4.2f (d: %4.2f)  phi: %5.3f "
                      "(d: %4.1f) beta: %6.1e  factor: %6.1e\n",
                      radius, deltaR, phi, deltaPhi, beta, factor);
@@ -539,6 +508,7 @@ int main(int argc, char* argv[])
               Printf("R/r - radius groesser/kleiner\n");
               Printf("P/p - phi groesser/kleiner\n");
               Printf("B/b - beta groesser/kleiner\n");
+              Printf("L/l - Laplace umschalten\n");
               Printf("F/f - factor groesser/kleiner\n");
               Printf("0   - factor gleich Null == adaptive\n");
               Printf("+/- - Schrittweite (radius/phi) groesser/kleiner\n");
@@ -561,8 +531,11 @@ int main(int argc, char* argv[])
                     }
                   Printf("d/D   - naechster Darstellungsmodus\n");
                 }
+
               if (changed)
                 {
+                  int x0 = xSize / 2;
+                  int y0 = ySize / 2;
                   // Spektren von Maske und zu restaurierenden Bild sind gültig
                   for (int y = 0; y < ySize; ++y)
                     for (int x = 0; x < xSize; ++x)
@@ -570,13 +543,16 @@ int main(int argc, char* argv[])
                         double mr, mi;
                         maskSp.getValue(x, y, mr, mi);
                         double br, bi;
-                        destSp.getValue(x, y, br, bi);
+                        convSp.getValue(x, y, br, bi);
                         double b2 = mr * mr + mi * mi;
-                        double fx = (x - xSize / 2.0) / xSize;
-                        double fy = (y - ySize / 2.0) / ySize;
-                        double alpha = -4 + 4 * cos(sqrt(fx * fx + fy * fy) * 2 * M_PI);
-                        alpha = alpha * alpha;
-                        double nom = b2 + beta; // *alpha*alpha;
+                        double fx = (double)(x - x0) / xSize;
+                        double fy = (double)(y - y0) / ySize;
+                        double alpha = -4 + 2 * cos(fx * 2 * M_PI) + 2 * cos(fy * 2 * M_PI);
+                        alpha = alpha * alpha; // |alpha|^2
+                        double reg = beta;
+                        if (laplace)
+                          reg *= alpha;
+                        double nom = b2 + reg;
                         double rr = mr * br + bi * mi;
                         double ri = -br * mi + bi * mr;
                         if (factor != 0)
@@ -587,12 +563,12 @@ int main(int argc, char* argv[])
                         restSp.setValue(x, y, rr / nom, ri / nom);
                       }
 
-                  ft2.setParameter(ySize, xSize, false, true);
-                  ft2.setInput(restSp.real, restSp.imag);
+                  restSp.setValue(x0, y0, 0, 0);
+                  ft2di.setInput(restSp.real, restSp.imag);
                   if (factor == 0)
-                    ft2.getResult(rest, ADAPTIVE, SIGNED);
+                    ft2di.getResult(rest, ADAPTIVE, SIGNED);
                   else
-                    ft2.getResult(rest, RAW, SIGNED);
+                    ft2di.getResult(rest, RAW, SIGNED);
                 }
 
               switch (select)
@@ -604,7 +580,7 @@ int main(int argc, char* argv[])
                   CopyImg(mask, display);
                   break;
                 case 3:
-                  CopyImg(dest, display);
+                  CopyImg(conv, display);
                   break;
                 case 4:
                   CopyImg(rest, display);
@@ -674,6 +650,24 @@ int main(int argc, char* argv[])
                   if (select > 4)
                     select = 1;
                   break;
+                case 'l':
+                case 'L':
+                  laplace = ! laplace;
+                  break;
+                case 'M':
+                case 'm':
+                {
+                  Point p1 = SelPoint(conv);
+                  Printf("\nP1: %6.2f %6.2f \n", p1.x, p1.y);
+                  Point p2 = SelPoint(conv);
+                  Printf("P2 %6.2f %6.2f \n", p2.x, p2.y);
+                  Point dp = p2 - p1;
+                  double rm = dp.length() / 2;
+                  double phim = Degree(dp.phi());
+                  if (phim > 90) phim -= 180;
+                  Printf("r: %6.2f phi: %6.2f \n", rm, phim);
+                }
+                break;
                 case'X':
                 case'x':
                 case'Q':
@@ -686,10 +680,10 @@ int main(int argc, char* argv[])
               if (radius != radiusAlt || phi != phiAlt)
                 {
                   // maske neu aufbauen
-                  maskNorm = makeMask(mask, radius, phi, maskMode);
+                  makeMask(mask, radius, phi, maskMode);
                   // Spektrum berechnen
-                  ft2.setInput(mask);
-                  ft2.getResult(maskSp.real, maskSp.imag);
+                  ft2d.setInput(mask);
+                  ft2d.getResult(maskSp.real, maskSp.imag);
                   radiusAlt = radius;
                   phiAlt = phi;
                 }
@@ -698,7 +692,7 @@ int main(int argc, char* argv[])
 
       if (!outfile.empty())
         {
-          dest.write(outfile);
+          rest.write(outfile);
         }
     }
   catch (const char* msg)
