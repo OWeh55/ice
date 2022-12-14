@@ -217,6 +217,16 @@ namespace ice
         }
     }
 
+    T getNorm() const
+    {
+      T sum = 0.0;
+      for (int i = 0; i < nRows * nColumns; i++)
+        {
+          sum += data[i] * data[i];
+        }
+      return sqrt(sum);
+    }
+
     //*****************************************************
 
     /**

@@ -87,6 +87,18 @@ namespace ice
       maxValue = max;
       minValue = min;
     }
+
+    T getNorm() const
+    {
+      T sum = 0.0;
+      for (int r = 0; r < matrix<T>::nRows; r++)
+        for (int c = 0; c < matrix<T>::nColumns; c++)
+          {
+            T value = (*this)[r][c];
+            sum += value * value;
+          }
+      return sqrt(sum);
+    }
   };
 
   /**
@@ -586,6 +598,11 @@ namespace ice
     void adaptLimits()
     {
       mat->adaptLimits();
+    }
+
+    T getNorm() const
+    {
+      return mat->getNorm();
     }
 
     // set call back function, that is called, if the image is destroyed
