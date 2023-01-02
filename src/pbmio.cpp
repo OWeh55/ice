@@ -93,9 +93,9 @@ namespace ice
         for (int y = 0; y < r.ysize; ++y)
           for (int x = 0; x < r.xsize; ++x)
             {
-              unsigned char rb = maxval - r.getPixel(x, y);
-              unsigned char gb = maxval - g.getPixel(x, y);
-              unsigned char bb = maxval - b.getPixel(x, y);
+              unsigned char rb = maxval - r.getPixelUnchecked(x, y);
+              unsigned char gb = maxval - g.getPixelUnchecked(x, y);
+              unsigned char bb = maxval - b.getPixelUnchecked(x, y);
               fputc(rb, fd.fd);
               fputc(gb, fd.fd);
               fputc(bb, fd.fd);
@@ -106,9 +106,9 @@ namespace ice
         for (int y = 0; y < r.ysize; ++y)
           for (int x = 0; x < r.xsize; ++x)
             {
-              short rw = maxval - r.getPixel(x, y);
-              short gw = maxval - g.getPixel(x, y);
-              short bw = maxval - b.getPixel(x, y);
+              short rw = maxval - r.getPixelUnchecked(x, y);
+              short gw = maxval - g.getPixelUnchecked(x, y);
+              short bw = maxval - b.getPixelUnchecked(x, y);
               fputc(rw >> 8, fd.fd);
               fputc(rw & 0xff, fd.fd);
               fputc(gw >> 8, fd.fd);
