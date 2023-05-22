@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
+#include "binfile.h"
+
 #include "tv.h"
 
 bool isWhite(char c)
@@ -161,6 +164,46 @@ void ReadWorld2(std::vector<Triangle>& world, istream& is, int flags)
     }
 }
 
+Vector3 readV3(std::istream& is, int flags)
+{
+  float x =  read<float>(is);
+  if (flags & 1) x = -x;
+  float y =  read<float>(is);
+  if (flags & 2) y = -y;
+  float z =  read<float>(is);
+  if (flags & 4) z = -z;
+  return Vector3(x, y, z);
+}
+
+Triangle readTriangle(std::istream& is, int flags)
+{
+  Vector3 normal = readV3(is, flags);
+  Vector3 v1 = readV3(is, flags);
+  Vector3 v2 = readV3(is, flags);
+  Vector3 v3 = readV3(is, flags);
+  int att = read<short int>(is);
+  Vector3 color(1, 1, 1);
+  Triangle tri(v1, v2, v3, color);
+  return tri;
+}
+
+void ReadWorld3(std::vector<Triangle>& world, istream& is, int flags)
+{
+  std::string header;
+  for (int i = 0; i < 80; i++)
+    {
+      char c = is.get();
+      header += c;
+    }
+  unsigned int nTriangles = read<unsigned int>(is);
+
+  for (unsigned int i = 0; i < nTriangles; i++)
+    {
+      Triangle t = readTriangle(is, flags);
+      world.push_back(t);
+    }
+}
+
 void ReadWorld(std::vector<Triangle>& world, const string& fname, int flags)
 {
   if (fname == "-")
@@ -174,6 +217,8 @@ void ReadWorld(std::vector<Triangle>& world, const string& fname, int flags)
         throw "Cannot open input file";
       if (fname.substr(fname.size() - 4) == ".obj")
         ReadWorld2(world, is, flags);
+      else if (fname.substr(fname.size() - 4) == ".stl")
+        ReadWorld3(world, is, flags);
       else
         ReadWorld1(world, is, flags);
     }

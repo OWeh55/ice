@@ -13,7 +13,7 @@
 # compiler options (e.g. -fPIC )
 ###########################################
 
-#CXX := g++
+#CXX := g++-12
 #CXX=clang++
 
 CXX?=g++
