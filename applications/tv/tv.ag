@@ -80,7 +80,7 @@ GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
   %% Beschreibung der Optionen
   % kurz-Option, lang-Option, Typ, Variablenname, Erklärung, Default-Wert
 
-  opt: f, worldfile, string, fname_opt, Dateiname Weltbeschreibung, ""
+  opt: f, world, string, fname_opt, Dateiname Weltbeschreibung, ""
   opt2:   Dies ist eine alternative Form, die auch die Angabe von
   opt2:   -f - erlaubt, was die Standard-Eingabe als Quelle festlegt
 
@@ -97,7 +97,7 @@ GLfloat eins[] = { 1.0, 1.0, 1.0, 1.0};
   opt2:   2 - Kamera frei beweglich im Raum
   opt2:   3 - Kamera rotiert um den Ursprung
 
-  opt: D, cameradistance, Double, cameraDistance, Abstand der Kamera, 30
+  opt: D, distance, Double, cameraDistance, Abstand der Kamera, 300
   opt: a, anglestep, double, angledelta, Winkel-Schrittweite, 2
 
   opt: l, lights, int, std_lights, Zahl der Standard-Lichtquellen, 2
