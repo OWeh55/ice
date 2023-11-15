@@ -1,0 +1,149 @@
+#include <fstream>
+#include <image.h>
+
+/*AppGen:Global*/
+
+/*AppGen
+  prog: Generiere 3d-Modell von (binärem) Bild
+  %%Beschreibung Parameter
+  %symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
+  para: file,optional,string,fn,Bild-Datei,"test_gray.jpg"
+  %
+  opt: i, inverse, void, inverse, invertiere Bild, false
+  opt: v, verbose, void,verbose, viele Meldungen, false
+  opt: h, help, usage, help, Hilfe
+  AppGen*/
+
+template<typename T>
+void write(std::ofstream& is, const T& var)
+{
+  char buf[sizeof(T)];
+  *(T*)buf = var;
+  for (unsigned int i = 0; i < sizeof(T); i++)
+    is.put(buf[i]);
+}
+
+typedef vector3d<double> vec3;
+
+class Dreieck
+{
+public:
+  Dreieck(const vec3& v1, const vec3& v2, const vec3& v3)
+  {
+    f[0] = v1;
+    f[1] = v2;
+    f[2] = v3;
+  }
+  vec3& operator[](int i)
+  {
+    return f[i];
+  }
+  array<vec3, 3> f;
+};
+
+/*AppGen:Main*/
+int main(int argc, char* argv[])
+{
+  /*AppGen:MainEnd*/
+  try
+    {
+      Image src;
+      if (verbose) cout << "lese Bild " << fn << endl;
+      src.read(fn);
+
+      if (inverse)
+        {
+          if (verbose) cout << "invertiere Bild " << endl;
+          invertImg(src);
+        }
+
+      // bild mit weissem rand
+      Image srce;
+      srce.create(src.xsize + 2, src.ysize + 2, src.maxval);
+      srce.set(0);
+      WindowWalker w(src);
+      for (w.init(); !w.ready(); w.next())
+        srce.setPixel(w.x + 1, w.y + 1, src.getPixel(w));
+
+      Image bin;
+      bin.create(srce.xsize, srce.ysize, 1);
+
+      Show(OVERLAY, srce, bin, fn);
+
+      if (verbose) cout << "berechne Schwelle " << endl;
+      int thrs = CalcThreshold(src);
+      if (verbose) cout << "binarisiere mit Schwelle  " << thrs << endl;
+      binImg(srce, thrs, bin);
+
+      vector<Dreieck> tri;
+      if (verbose) cout << "finde Voxel, generiere Dreiecke" << endl;
+      for (int y = 1; y < bin.ysize - 1; y++)
+        for (int x = 1; x < bin.xsize - 1; x++)
+          {
+            if (bin.getPixel(x, y) > 0)
+              {
+                // deckfläche
+                tri.push_back(Dreieck(vec3(x, y, 1), vec3(x + 1, y, 1), vec3(x + 1, y + 1, 1)));
+                tri.push_back(Dreieck(vec3(x, y, 1), vec3(x + 1, y + 1, 1), vec3(x, y + 1, 1)));
+                // grundfläche
+                tri.push_back(Dreieck(vec3(x, y, 0), vec3(x + 1, y + 1, 0), vec3(x + 1, y, 0)));
+                tri.push_back(Dreieck(vec3(x, y, 0), vec3(x, y + 1, 0), vec3(x + 1, y + 1, 0)));
+                // seitenflächen (bedingt)
+                if (bin.getPixel(x - 1, y) == 0) // links
+                  {
+                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x, y + 1, 1), vec3(x, y + 1, 0)));
+                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x, y + 1, 0), vec3(x, y, 0)));
+                  }
+                if (bin.getPixel(x + 1, y) == 0) // rechts
+                  {
+                    tri.push_back(Dreieck(vec3(x + 1, y, 1), vec3(x + 1, y, 0), vec3(x + 1, y + 1, 0)));
+                    tri.push_back(Dreieck(vec3(x + 1, y, 1), vec3(x + 1, y + 1, 0), vec3(x + 1, y + 1, 1)));
+                  }
+                if (bin.getPixel(x, y - 1) == 0) // oben
+                  {
+                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x, y, 0), vec3(x + 1, y, 1)));
+                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x + 1, y, 0), vec3(x + 1, y, 1)));
+                  }
+                if (bin.getPixel(x + 1, y) == 0) // unten
+                  {
+                    tri.push_back(Dreieck(vec3(x, y + 1, 1), vec3(x + 1, y + 1, 1), vec3(x + 1, y + 1, 0)));
+                    tri.push_back(Dreieck(vec3(x, y + 1, 1), vec3(x + 1, y + 1, 0), vec3(x, y + 1, 0)));
+                  }
+              }
+          }
+
+      std::ofstream os(fn + ".stl");
+
+      for (int i = 0; i < 80; i++)
+        write<char>(os, i + 32);
+
+      write<int>(os, tri.size());
+
+      for (auto f : tri)
+        {
+          // calculating normal
+          vec3 v1 = f[1] - f[0];
+          vec3 v2 = f[2] - f[0];
+          vec3 vc = v1.Cross(v2);
+          vc.Normalize();
+
+          write<float>(os, vc.x);
+          write<float>(os, vc.y);
+          write<float>(os, vc.z);
+          for (int i = 0; i < 3; i++)
+            {
+              write<float>(os, f[i].x);
+              write<float>(os, f[i].y);
+              write<float>(os, f[i].z);
+            }
+          write<short int>(os, 0);
+        }
+
+      GetChar();
+    }
+  catch (const char* msg)
+    {
+      cout << "Exception: " << msg << endl;
+    }
+  return OK;
+}
