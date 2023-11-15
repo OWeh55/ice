@@ -4,14 +4,17 @@
 /*AppGen:Global*/
 
 /*AppGen
-  prog: Generiere 3d-Modell von (binärem) Bild
+  prog: generate 3d model from binary image
   %%Beschreibung Parameter
   %symbolischerName,Art,Typ,Variablenname,Erklärung,Default-Wert
-  para: file,optional,string,fn,Bild-Datei,"test_gray.jpg"
+  para: file,optional,string,fn, image filename ,""
   %
-  opt: i, inverse, void, inverse, invertiere Bild, false
-  opt: v, verbose, void,verbose, viele Meldungen, false
-  opt: h, help, usage, help, Hilfe
+  opt: i, inverse, void, inverse, invert image, false
+  opt: z, height, double, height, object height, 10.0
+  opt: s, unit, double, vsize, voxel size, 1.0
+  opt: d, debug, int, debug, debug with test pattern, 0
+  opt: v, verbose, void,verbose, be verbose, false
+  opt: h, help, usage, help, help
   AppGen*/
 
 template<typename T>
@@ -41,6 +44,27 @@ public:
   array<vec3, 3> f;
 };
 
+Image doubleI(const Image& src)
+{
+  Image srcd;
+  srcd.create(src.xsize * 2, src.ysize * 2, src.maxval);
+  WindowWalker w1(srcd);
+  for (w1.init(); !w1.ready(); w1.next())
+    srcd.setPixel(w1, src.getPixel(w1.x / 2, w1.y / 2));
+  return srcd;
+}
+
+Image borderI(const Image& src)
+{
+  Image srce;
+  srce.create(src.xsize + 2, src.ysize + 2, src.maxval);
+  srce.set(0);
+  WindowWalker w2(src);
+  for (w2.init(); !w2.ready(); w2.next())
+    srce.setPixel(w2.x + 1, w2.y + 1, src.getPixel(w2));
+  return srce;
+}
+
 /*AppGen:Main*/
 int main(int argc, char* argv[])
 {
@@ -48,8 +72,22 @@ int main(int argc, char* argv[])
   try
     {
       Image src;
-      if (verbose) cout << "lese Bild " << fn << endl;
-      src.read(fn);
+      if (debug == 0)
+        {
+          if (verbose) cout << "lese Bild " << fn << endl;
+          src.read(fn);
+        }
+      else
+        {
+          src.create(222, 222, 255);
+          src.set(0);
+          if (debug == 1)
+            {
+              src.setPixel(111, 111, 255);
+            }
+          else
+            throw "invalid debug mode";
+        }
 
       if (inverse)
         {
@@ -57,13 +95,10 @@ int main(int argc, char* argv[])
           invertImg(src);
         }
 
+      Image srcd = doubleI(src);
+
       // bild mit weissem rand
-      Image srce;
-      srce.create(src.xsize + 2, src.ysize + 2, src.maxval);
-      srce.set(0);
-      WindowWalker w(src);
-      for (w.init(); !w.ready(); w.next())
-        srce.setPixel(w.x + 1, w.y + 1, src.getPixel(w));
+      Image srce = borderI(srcd);
 
       Image bin;
       bin.create(srce.xsize, srce.ysize, 1);
@@ -75,39 +110,74 @@ int main(int argc, char* argv[])
       if (verbose) cout << "binarisiere mit Schwelle  " << thrs << endl;
       binImg(srce, thrs, bin);
 
-      vector<Dreieck> tri;
-      if (verbose) cout << "finde Voxel, generiere Dreiecke" << endl;
+
+      Image binf;
+      binf.create(srce.xsize, srce.ysize, 1);
+
+      // fill
       for (int y = 1; y < bin.ysize - 1; y++)
         for (int x = 1; x < bin.xsize - 1; x++)
           {
+            if (bin.getPixel(x, y) == 0)
+              {
+                int nN = 0;
+                if (bin.getPixel(x - 1, y) > 0) nN++;
+                if (bin.getPixel(x - 1, y - 1) > 0) nN++;
+                if (bin.getPixel(x - 1, y + 1) > 0) nN++;
+                if (bin.getPixel(x, y - 1) > 0) nN++;
+                if (bin.getPixel(x, y + 1) > 0) nN++;
+                if (bin.getPixel(x + 1, y - 1) > 0) nN++;
+                if (bin.getPixel(x + 1, y) > 0) nN++;
+                if (bin.getPixel(x + 1, y + 1) > 0) nN++;
+                if (nN > 3) binf.setPixel(x, y, 1);
+              }
+            else
+              binf.setPixel(x, y, 1);
+          }
+
+      CopyImg(binf, bin);
+
+      int xc = srce.xsize / 2;
+      int yc = srce.ysize / 2;
+
+      vector<Dreieck> tri;
+      if (verbose) cout << "finde Voxel, generiere Dreiecke" << endl;
+
+      double pheight = height / vsize;
+
+      for (int y = 1; y < bin.ysize - 1; y++)
+        for (int x = 1; x < bin.xsize - 1; x++)
+          {
+            int xr = x - xc;
+            int yr = y - yc;
             if (bin.getPixel(x, y) > 0)
               {
                 // deckfläche
-                tri.push_back(Dreieck(vec3(x, y, 1), vec3(x + 1, y, 1), vec3(x + 1, y + 1, 1)));
-                tri.push_back(Dreieck(vec3(x, y, 1), vec3(x + 1, y + 1, 1), vec3(x, y + 1, 1)));
+                tri.push_back(Dreieck(vec3(xr, yr, pheight), vec3(xr + 1, yr, pheight), vec3(xr + 1, yr + 1, pheight)));
+                tri.push_back(Dreieck(vec3(xr, yr, pheight), vec3(xr + 1, yr + 1, pheight), vec3(xr, yr + 1, pheight)));
                 // grundfläche
-                tri.push_back(Dreieck(vec3(x, y, 0), vec3(x + 1, y + 1, 0), vec3(x + 1, y, 0)));
-                tri.push_back(Dreieck(vec3(x, y, 0), vec3(x, y + 1, 0), vec3(x + 1, y + 1, 0)));
+                tri.push_back(Dreieck(vec3(xr, yr, 0), vec3(xr + 1, yr + 1, 0), vec3(xr + 1, yr, 0)));
+                tri.push_back(Dreieck(vec3(xr, yr, 0), vec3(xr, yr + 1, 0), vec3(xr + 1, yr + 1, 0)));
                 // seitenflächen (bedingt)
                 if (bin.getPixel(x - 1, y) == 0) // links
                   {
-                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x, y + 1, 1), vec3(x, y + 1, 0)));
-                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x, y + 1, 0), vec3(x, y, 0)));
+                    tri.push_back(Dreieck(vec3(xr, yr, pheight), vec3(xr, yr + 1, pheight), vec3(xr, yr + 1, 0)));
+                    tri.push_back(Dreieck(vec3(xr, yr, pheight), vec3(xr, yr + 1, 0), vec3(xr, yr, 0)));
                   }
                 if (bin.getPixel(x + 1, y) == 0) // rechts
                   {
-                    tri.push_back(Dreieck(vec3(x + 1, y, 1), vec3(x + 1, y, 0), vec3(x + 1, y + 1, 0)));
-                    tri.push_back(Dreieck(vec3(x + 1, y, 1), vec3(x + 1, y + 1, 0), vec3(x + 1, y + 1, 1)));
+                    tri.push_back(Dreieck(vec3(xr + 1, yr, pheight), vec3(xr + 1, yr, 0), vec3(xr + 1, yr + 1, 0)));
+                    tri.push_back(Dreieck(vec3(xr + 1, yr, pheight), vec3(xr + 1, yr + 1, 0), vec3(xr + 1, yr + 1, pheight)));
                   }
                 if (bin.getPixel(x, y - 1) == 0) // oben
                   {
-                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x, y, 0), vec3(x + 1, y, 1)));
-                    tri.push_back(Dreieck(vec3(x, y, 1), vec3(x + 1, y, 0), vec3(x + 1, y, 1)));
+                    tri.push_back(Dreieck(vec3(xr, yr, pheight), vec3(xr, yr, 0), vec3(xr + 1, yr, 0)));
+                    tri.push_back(Dreieck(vec3(xr, yr, pheight), vec3(xr + 1, yr, 0), vec3(xr + 1, yr, pheight)));
                   }
-                if (bin.getPixel(x + 1, y) == 0) // unten
+                if (bin.getPixel(x, y + 1) == 0) // unten
                   {
-                    tri.push_back(Dreieck(vec3(x, y + 1, 1), vec3(x + 1, y + 1, 1), vec3(x + 1, y + 1, 0)));
-                    tri.push_back(Dreieck(vec3(x, y + 1, 1), vec3(x + 1, y + 1, 0), vec3(x, y + 1, 0)));
+                    tri.push_back(Dreieck(vec3(xr, yr + 1, pheight), vec3(xr + 1, yr + 1, pheight), vec3(xr + 1, yr + 1, 0)));
+                    tri.push_back(Dreieck(vec3(xr, yr + 1, pheight), vec3(xr + 1, yr + 1, 0), vec3(xr, yr + 1, 0)));
                   }
               }
           }
@@ -125,6 +195,7 @@ int main(int argc, char* argv[])
           vec3 v1 = f[1] - f[0];
           vec3 v2 = f[2] - f[0];
           vec3 vc = v1.Cross(v2);
+          //vec3 vc = v2.Cross(v1);
           vc.Normalize();
 
           write<float>(os, vc.x);
@@ -132,9 +203,9 @@ int main(int argc, char* argv[])
           write<float>(os, vc.z);
           for (int i = 0; i < 3; i++)
             {
-              write<float>(os, f[i].x);
-              write<float>(os, f[i].y);
-              write<float>(os, f[i].z);
+              write<float>(os, f[i].x * vsize);
+              write<float>(os, f[i].y * vsize);
+              write<float>(os, f[i].z * vsize);
             }
           write<short int>(os, 0);
         }
