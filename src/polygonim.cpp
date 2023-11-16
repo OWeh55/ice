@@ -714,8 +714,6 @@ namespace ice
 
         if (prec < 0)
           {
-            // reducing to less then 3 point does not make sense
-            // "reducing" to more then original points does not make sense
             throw IceException(FNAME, M_WRONG_PARAMETER);
           }
 
@@ -735,8 +733,9 @@ namespace ice
           {
             reduced_polym rpl(pl, reduced_polym::all);
 
-            while (rpl.size() > 3 && rpl.precision() < prec)   // reduce to given precision
+            while (rpl.size() > 3 && rpl.precision() < prec)
               {
+                // reduce by merging
                 rpl.merge();
               }
 
