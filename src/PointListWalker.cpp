@@ -47,6 +47,19 @@ namespace ice
     init();
   }
 
+  Neighbor8Walker::Neighbor8Walker(int x,int y): PointListWalker(IPoint(x,y))
+  {
+    pl.push_back(IPoint(x + 1, y));
+    pl.push_back(IPoint(x + 1, y + 1));
+    pl.push_back(IPoint(x, y + 1));
+    pl.push_back(IPoint(x - 1, y + 1));
+    pl.push_back(IPoint(x - 1, y));
+    pl.push_back(IPoint(x - 1, y - 1));
+    pl.push_back(IPoint(x, y - 1));
+    pl.push_back(IPoint(x + 1, y - 1));
+    init();
+  }
+  
   Neighbor8Walker::Neighbor8Walker(IPoint pp): PointListWalker(pp)
   {
     pl.push_back(IPoint(pp.x + 1, pp.y));

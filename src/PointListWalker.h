@@ -161,6 +161,7 @@ namespace ice
   {
   public:
     Neighbor8Walker(IPoint pp);
+    Neighbor8Walker(int x, int y);
   };
 
 }
