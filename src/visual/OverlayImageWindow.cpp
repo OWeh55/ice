@@ -58,7 +58,7 @@ namespace ice
     OverlayColorTable.setTable(0);
   }
 
-  int OverlayImageWindow::SetGreyColor(unsigned int Entry,
+  int OverlayImageWindow::SetGrayColor(unsigned int Entry,
                                        unsigned char RedValue, unsigned char GreenValue, unsigned char BlueValue)
   {
     int RetVal = BaseColorTable.setColor(Entry, RedValue, GreenValue, BlueValue);
@@ -69,7 +69,7 @@ namespace ice
     return RetVal;
   }
 
-  int OverlayImageWindow::SetGreyLUT(unsigned int First, unsigned int Last)
+  int OverlayImageWindow::SetGrayLUT(unsigned int First, unsigned int Last)
   {
     int RetVal = BaseColorTable.setLinear(First, Last);
     if (RetVal != ERROR)

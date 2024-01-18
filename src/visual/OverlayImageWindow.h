@@ -36,12 +36,12 @@ namespace ice
                        ice::ImageBase* OverlayImage,
                        const std::string& windowname);
 
-    int GetGreyColor(unsigned int Entry,
+    int GetGrayColor(unsigned int Entry,
                      unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal);
-    int SetGreyColor(unsigned int Entry,
+    int SetGrayColor(unsigned int Entry,
                      unsigned char RedVal, unsigned char GreenVal, unsigned char BlueVal);
 
-    int SetGreyLUT(unsigned int First, unsigned int Last);
+    int SetGrayLUT(unsigned int First, unsigned int Last);
 
     int GetOverlayColor(unsigned int Entry,
                         unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal);
@@ -72,7 +72,7 @@ namespace ice
 //             inline implementations
 //
 
-  inline int OverlayImageWindow::GetGreyColor
+  inline int OverlayImageWindow::GetGrayColor
   (unsigned int Entry, unsigned char& RedVal, unsigned char& GreenVal, unsigned char& BlueVal)
   {
     return BaseColorTable.getColor(Entry, RedVal, GreenVal, BlueVal);
