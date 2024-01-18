@@ -21,6 +21,7 @@
 #ifndef VWORKER_H
 #define VWORKER_H
 
+#include <array>
 #include <vector>
 #include "matrixtemplate.h"
 #include "Point.h"
