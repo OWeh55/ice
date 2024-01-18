@@ -23,6 +23,7 @@
 #define VWORKER2D_H
 
 #include <stdexcept>
+#include <array>
 #include <vector>
 #include "matrixtemplate.h"
 
