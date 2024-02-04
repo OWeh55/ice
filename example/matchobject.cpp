@@ -5,7 +5,7 @@ int main(int argc, char** argv)
   Image img;
   img.create(1000, 800, 255);
   img.set(0);
-
+  
   Show(ON, img);
 #if 0
   Contur c1 = SelContur(img, true);

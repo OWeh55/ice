@@ -40,7 +40,6 @@
 using namespace std;
 namespace ice
 {
-
   inline int MyMod(int a, int b)
   {
     return ((a % b) + b) % b;
@@ -346,7 +345,11 @@ namespace ice
       {
         calcReferences();
       }
-    return eval;
+    // normalize value to number of points (in bigger list)
+    int len = pl1.size();
+    if (len < pl2.size())
+      len = pl2.size();
+    return eval / len;
   }
 #undef FNAME
 #define FNAME "ObjectMatcher::getReferences"

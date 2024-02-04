@@ -37,8 +37,8 @@ namespace ice
 // Several ways to use a Trafo
 //-----------------------------
 
-#define FNAME "Transform"
-  Contur Transform(const Trafo& tr, const Contur& c)
+#define FNAME "transform"
+  Contur transform(const Trafo& tr, const Contur& c)
   {
     try
       {
