@@ -30,13 +30,12 @@ namespace ice
 #define FNAME "AffineFit"
   Trafo AffineFit(const Moments& m1, const Moments& m2)
   {
-    Matrix trm;
     double tr[3][3];
     AffinFitMoments(m1.oldMoments(), m2.oldMoments(), tr);
-    int i, j;
 
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
+    Matrix trm(3, 3);
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
         {
           trm[i][j] = tr[i][j];
         }
