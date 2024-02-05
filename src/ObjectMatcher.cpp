@@ -123,17 +123,12 @@ namespace ice
 
     return minimum;
   }
-
+  //- setObject --
   void ObjectMatcher::setObject(int which, const Contur& c)
   {
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
-    /*
-    for (int i = 0; i < c.Number(); ++i)
-      {
-        p1.push_back(c.getPoint(i));
-      }
-    */
+
     // since "normal" contur point are inner points of the object,
     // we use pairs of inner and outer points and place the
     // limiting polygon between these.
@@ -157,9 +152,7 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < m.rows(); ++i)
-      {
-        p1.push_back(Point(m[i][0], m[i][1]));
-      }
+      p1.push_back(Point(m[i][0], m[i][1]));
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -169,9 +162,8 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < m.rows(); ++i)
-      {
-        p1.push_back(Point(m[i][0], m[i][1]));
-      }
+      p1.push_back(Point(m[i][0], m[i][1]));
+
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -181,9 +173,7 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < (int)pl.size(); ++i)
-      {
-        p1.push_back(Point(pl[i]));
-      }
+      p1.push_back(Point(pl[i]));
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -193,9 +183,7 @@ namespace ice
     vector<Point>& p1 = (which == 0) ? pl1 : pl2 ;
     p1.clear();
     for (int i = 0; i < (int)pl.size(); ++i)
-      {
-        p1.push_back(pl[i]);
-      }
+      p1.push_back(pl[i]);
     state |= (which == 0) ? st_first : st_second ;
     state &= st_first | st_second ;
   }
@@ -212,9 +200,8 @@ namespace ice
           {
             int i1 = i + 1;
             if (i1 >= (int)pl.size())
-              {
-                i1 = 0;
-              }
+              i1 = 0;
+
             pl_new.push_back(pl[i]);
 
             if ((pl[i1] - pl[i]).r() > distance)
