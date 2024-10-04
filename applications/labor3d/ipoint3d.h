@@ -132,7 +132,6 @@ namespace ice
       return *this;
     }
 
-
     point3d operator*(T fac) const
     {
       point3d res = *this;

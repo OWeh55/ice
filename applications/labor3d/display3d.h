@@ -80,7 +80,6 @@ private:
 
   static const int gap = 10;
 
-
   Image3d<Image>* img3d;
   bool owner;
 

@@ -11,23 +11,23 @@ const string tempfile = "/tmp/d2d";
 
 using namespace std;
 
-bool verbose=false;
-bool doit=true;
+bool verbose = false;
+bool doit = true;
 
-void printHex(int h,bool withX=false)
+void printHex(int h, bool withX = false)
 {
   string res;
-  if (h!=0)
+  if (h != 0)
     {
-      while (h!=0)
-	{
-	  int hd=h % 16;
-	  h/=16;
-	  res = "0123456789ABCDEF"[hd] + res;
-	}
+      while (h != 0)
+        {
+          int hd = h % 16;
+          h /= 16;
+          res = "0123456789ABCDEF"[hd] + res;
+        }
     }
   else
-    res="0";
+    res = "0";
   cout << res;
 }
 void System(const string& cmd)
@@ -76,7 +76,7 @@ public:
     cmd = "mv " + Escape(dstname + "/" + basename + ".bmp");
     cmd += " " + Escape(dstname + "/img" + NumberString(number, -3) + ".bmp");
     cout << cmd << endl;
-    if (doit) 
+    if (doit)
       System(cmd);
   }
 };
@@ -296,7 +296,9 @@ public:
         lastvalue = pl.getToDel(']');
         value += "/" + lastvalue;
       }
-    cout << "tag: "; printHex(high); cout << " / ";
+    cout << "tag: ";
+    printHex(high);
+    cout << " / ";
     printHex(low);
     cout << endl;
   }
@@ -399,7 +401,7 @@ void readImage(FILE* f, image& img)
         {
           img.fileid = t.value;
           img.basename = t.lastvalue;
-	  // cout << img.fileid << " == " << img.basename << endl;
+          // cout << img.fileid << " == " << img.basename << endl;
         }
       else if (t.equal(0x08, 0x23))
         img.date = t.value;
@@ -408,10 +410,10 @@ void readImage(FILE* f, image& img)
       else if (t.equal(0x08, 0x18))
         img.instanceUID = t.value;
       else if (t.equal(0x20, 0x13))
-	{
-	  img.number = Integer(t.value);
-	  cout << "instance: " << img.number << endl;
-	}
+        {
+          img.number = Integer(t.value);
+          cout << "instance: " << img.number << endl;
+        }
 #if 0
       else if (t.equal(0x28, 0x11))
         img.cols = Integer(t.value);
@@ -419,15 +421,16 @@ void readImage(FILE* f, image& img)
         img.rows = Integer(t.value);
 #endif
       else if (t.equal(0xFFFE, 0xE000)) // embedded sequence (?)
-	{
-	  cout << "embedded" << endl;
-	  tag th;
-	  do {
-	    readtag(f,th);
-	  }
-	  while (!th.equal(0xFFFE, 0xE00D));
-	  cout << "end embedded"<<endl;
-	}
+        {
+          cout << "embedded" << endl;
+          tag th;
+          do
+            {
+              readtag(f, th);
+            }
+          while (!th.equal(0xFFFE, 0xE00D));
+          cout << "end embedded" << endl;
+        }
     }
   while (!t.equal(0xFFFE, 0xE00D));
   cout << "---- end image " << endl;
@@ -475,7 +478,7 @@ int main(int argc, char** argv)
                 }
               else if (t.value == "IMAGE")
                 {
-		  pat.back().stud.back().ser.back().img.push_back(image());
+                  pat.back().stud.back().ser.back().img.push_back(image());
                   readImage(dd, pat.back().stud.back().ser.back().img.back());
                 }
               else

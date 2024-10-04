@@ -55,7 +55,6 @@ public:
   }
 };
 
-
 double PeakEvaluation(const Matrix3d& m, double xm, double ym, double zm)
 {
   int inumber = 10000;

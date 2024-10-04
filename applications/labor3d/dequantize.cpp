@@ -48,7 +48,6 @@ void Dequantize(const Image& qimg, int step, Image& iimg)
 
               //        cout << sval << " " << aval << " " << val << endl;
 
-
               // val += ((val-aval)/4);
 
               // Begrenzung auf original +- step

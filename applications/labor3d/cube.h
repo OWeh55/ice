@@ -20,5 +20,4 @@ private:
   const int x, y, z; // Position Referenzecke
 };
 
-
 #endif

@@ -37,7 +37,6 @@ void Expand(const Matrix3d& m1, int faktor, Matrix3d& m2)
       az = 0;
     }
 
-
   // cout << "old " << ox << "," << oy << "," << oz << endl;
   // cout << "new " << nx << "," << ny << "," << nz << endl;
 

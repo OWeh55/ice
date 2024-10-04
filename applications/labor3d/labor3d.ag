@@ -22,7 +22,7 @@
 /*AppGen
 %%
 prog: Experimentier-Programm fuer 3D-Bilder
-para: basedir,optional, String, basedir, Ausgangsverzeichnis fuer Dateiauswahl, "."
+para: basedir, optional, String, basedir, Ausgangsverzeichnis fuer Dateiauswahl, "."
 opt: z, zoom, double, zoom, Zoomfaktor, 1.0
 opt: X, xfactor, Double, xfak, X-Faktor, 1.0
 opt: Y, yfactor, Double, yfak, Y-Faktor, 1.0
@@ -120,11 +120,11 @@ void NewDisplay(Display3d* olddisplay, const string& title, bool activate = true
 }
 
 /*AppGen:Main*/
-
 int main(int argc, char** argv)
 {
   /*AppGen:MainEnd*/
 
+  //  cout << "main()" << endl;
   try
     {
       int level = 0;
@@ -206,7 +206,6 @@ int main(int argc, char** argv)
               else
                 displayrgb->Update();
             }
-
 
           int c = 0;
 
@@ -316,7 +315,6 @@ int main(int argc, char** argv)
                   displays[i]->Cursor(lines);
                 }
               break;
-
 
             case menu0+'C':
               if (displayrgb)
@@ -886,10 +884,10 @@ int main(int argc, char** argv)
                         }
                     }
                 }
-	      
-	      if (verbose)
-		cout << min << " .. " << max << endl;
-	      
+
+              if (verbose)
+                cout << min << " .. " << max << endl;
+
               int diff = max - min;
               if (diff == 0) diff++;
 
@@ -907,48 +905,48 @@ int main(int argc, char** argv)
                 }
               break;
             }
-	    
+
             case menu1+'N':
-	      // Grauwert-Normalisierung Einzelbilder
+              // Grauwert-Normalisierung Einzelbilder
               NewDisplay(activedisplay, activedisplay->getTitle() + " normalized");
               for (int z = 0; z < zsize; z++)
                 {
-		  Image himg;
-		  himg.create(xsize,ysize,255);
-		  
-                  for (int y = 0; y < ysize; y++)
-		    for (int x = 0; x < xsize; x++)
-		      himg.setPixel(x,y,lastImage->getPixel(x, y, z));
-		  
-		  GrayNormalize(himg);
+                  Image himg;
+                  himg.create(xsize, ysize, 255);
 
                   for (int y = 0; y < ysize; y++)
-		    for (int x = 0; x < xsize; x++)
-		      activeImage->setPixel(x,y,z,himg.getPixel(x,y));
+                    for (int x = 0; x < xsize; x++)
+                      himg.setPixel(x, y, lastImage->getPixel(x, y, z));
 
-		}
-	      break;
+                  GrayNormalize(himg);
 
-	    case menu1+'H':
+                  for (int y = 0; y < ysize; y++)
+                    for (int x = 0; x < xsize; x++)
+                      activeImage->setPixel(x, y, z, himg.getPixel(x, y));
 
-	      NewDisplay(activedisplay, activedisplay->getTitle() + " hequal");
+                }
+              break;
+
+            case menu1+'H':
+
+              NewDisplay(activedisplay, activedisplay->getTitle() + " hequal");
               for (int z = 0; z < zsize; z++)
                 {
-		  Image himg;
-		  himg.create(xsize,ysize,255);
+                  Image himg;
+                  himg.create(xsize, ysize, 255);
 
                   for (int y = 0; y < ysize; y++)
-		    for (int x = 0; x < xsize; x++)
-		      himg.setPixel(x,y,lastImage->getPixel(x, y, z));
-		  
-		  HistogramEqualization(himg);
-		  
+                    for (int x = 0; x < xsize; x++)
+                      himg.setPixel(x, y, lastImage->getPixel(x, y, z));
+
+                  HistogramEqualization(himg);
+
                   for (int y = 0; y < ysize; y++)
-		    for (int x = 0; x < xsize; x++)
-		      activeImage->setPixel(x,y,z,himg.getPixel(x,y));
-		}
-	      break;
-	      
+                    for (int x = 0; x < xsize; x++)
+                      activeImage->setPixel(x, y, z, himg.getPixel(x, y));
+                }
+              break;
+
             case menu0+'r':
               referenceImage = activeImage;
               break;
@@ -1123,11 +1121,11 @@ int main(int argc, char** argv)
                           for (int x = sdr_wsize / 2; x < xsize - sdr_wsize / 2; x += sdr_xstep)
                             {
                               Matrix3d peak;
-                              if (InvConvolution(*referenceImage, *testimage,
-                                                 x, y, z,
-                                                 sdr_wsize, sdr_wsize, sdr_wsizeZ,
-                                                 sdr_beta, sdr_resfac,
-                                                 peak))
+                              if (::InvConvolution(*referenceImage, *testimage,
+                                                   x, y, z,
+                                                   sdr_wsize, sdr_wsize, sdr_wsizeZ,
+                                                   sdr_beta, sdr_resfac,
+                                                   peak))
                                 {
                                   int xm, ym, zm;
                                   double max = peak.Max(xm, ym, zm);
@@ -1189,11 +1187,11 @@ int main(int argc, char** argv)
                     Printf("Subpixel-Aufloesungs-Faktor: %d\n", sdr_resfac);
                     Printf("beta: %lf\n", sdr_beta);
                     Matrix3d md1e;
-                    if (InvConvolution(*referenceImage, *activeImage,
-                                       currentPosition,
-                                       sdr_wsize, sdr_wsize, sdr_wsizeZ,
-                                       sdr_beta, sdr_resfac,
-                                       md1e))
+                    if (::InvConvolution(*referenceImage, *activeImage,
+                                         currentPosition,
+                                         sdr_wsize, sdr_wsize, sdr_wsizeZ,
+                                         sdr_beta, sdr_resfac,
+                                         md1e))
                       {
                         int xm = 0;
                         int ym = 0;

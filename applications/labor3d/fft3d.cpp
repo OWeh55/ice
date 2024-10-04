@@ -42,7 +42,6 @@ public:
 #endif
   }
 
-
   ~Transformer()
   {
     fftw_free(in);
