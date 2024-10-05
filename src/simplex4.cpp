@@ -116,7 +116,7 @@ namespace ice
   {
     TNODE* node   = si4_root;
     TNODE* parent = nullptr;
-    TNODE* node1, *node2;
+    TNODE* node1, * node2;
 
     while (node != nullptr && node->data != data)
       {

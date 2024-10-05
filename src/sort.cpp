@@ -49,7 +49,7 @@ namespace ice
 
   PointList SortPointList(PointList pl, int col, int mode)
   {
-    int i, j, *ix;
+    int i, j, * ix;
     PointList pls;
 
     /*zu sortierendes Feld auswählen*/
@@ -163,7 +163,7 @@ namespace ice
 
   MatrixStruct SortMatrix(MatrixStruct mat, int col, int mode)
   {
-    int i, j, k, *ix;
+    int i, j, k, * ix;
     MatrixStruct mats;
 
     if (!IsMatrix(mat))

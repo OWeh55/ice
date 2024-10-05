@@ -910,7 +910,7 @@ namespace ice
   {
     unsigned int i, j, nc, nbits, bperlin;
     unsigned int w, h;
-    unsigned char* pic, *dd;
+    unsigned char* pic, * dd;
     unsigned int graymax;
     string hname = fname;
     FILE* fp;

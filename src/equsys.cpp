@@ -68,7 +68,7 @@ namespace ice
   {
     double sum;
     double eps = 0.1e-5;
-    double* hb, *pd;
+    double* hb, * pd;
     int size;
     int i, j, k;
     /*** Anforderung des dynamischen Speichers fuer b*/
@@ -154,7 +154,7 @@ namespace ice
     double maxa, max, maxb, fh, fha;
     double epsinst = 1e-15; /* Grenze der Instabilitaet */
     double epsnull = 1e-200; /* Definition 0 */
-    double* dpa, *dpb;
+    double* dpa, * dpb;
     int size_a, size_b;
 
     maxa = 0;
@@ -359,7 +359,7 @@ namespace ice
     int ii, jj;
     int size, dim, rang = 0;
     int cont1, cont2;
-    double* hA, *hb;
+    double* hA, * hb;
     int* hperm;
     double maxcol;
     int rowmem, colmem;
@@ -782,7 +782,7 @@ namespace ice
 #define FNAME "NonLinEquSys"
   int NonLinEquSys(FuncD* f, int dim, int* step, double* eps, double* sol)
   {
-    double* a, *b, *x, *hstart, *dptr;
+    double* a, * b, * x, * hstart, * dptr;
     int size_mat, size_vec;
     int i, j, cont, nbr, rang;
     double heps, det, deriv, ceps = 1e-15;
@@ -914,7 +914,7 @@ namespace ice
   int NormalEqu(double* m1, double* v1, int row, int col, double* m2, double* v2)
   {
     int i, j, k;
-    double* mp1i, *mp1j, *mp2, *vp2;
+    double* mp1i, * mp1j, * mp2, * vp2;
 
     if ((m1 == NULL) || (v1 == NULL) || (m2 == NULL) || (v2 == NULL))
       throw IceException(FNAME, M_WRONG_PTR);
@@ -963,7 +963,7 @@ namespace ice
 #define FNAME "OverEquSys"
   int OverEquSys(double* m1, double* v1, int row, int col, double* x, double* mse)
   {
-    double* m2, *v2, *mp;
+    double* m2, * v2, * mp;
     double w;
 
     m2 = new double[col * col];

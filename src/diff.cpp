@@ -243,6 +243,7 @@ namespace ice
                 return Diff3(img1, img2, dx, dy);
               }
           }
+        return 0.0;
       }
     RETHROW;
   }
@@ -333,10 +334,10 @@ namespace ice
           case ID_COV:
             return Diff3(img1, img2, dx, dy);
           }
+        return 0.0;
       }
     RETHROW;
   }
 
 #undef FNAME
 }
-

@@ -19,7 +19,6 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /*
  * Author: Alexander Lärz, 2005
  */
@@ -33,7 +32,6 @@
 #include "rotquaternion.h"
 #include "dualquaternion.h"
 #include "trafodualquaternion.h"
-
 
 namespace ice
 {

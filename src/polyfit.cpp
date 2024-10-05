@@ -46,7 +46,7 @@ namespace ice
   {
     PointList pl;
     int adr;
-    struct pfit_Corner_* prev, *next;
+    struct pfit_Corner_* prev, * next;
   } pfit_Corner;
   /************************************************/
 
@@ -188,10 +188,10 @@ namespace ice
   /************************************************/
   pfit_Corner* pfit_MergeSegments(pfit_Corner* crl, double dist, int closed)
   {
-    double d, d1, d2, d3, dmax, cc, ss, *x, *y;
+    double d, d1, d2, d3, dmax, cc, ss, * x, * y;
     double p1[2], p2[2], par[2];
     PointList pl;
-    pfit_Corner* cre, *cr1, *cr2, *cr3;
+    pfit_Corner* cre, * cr1, * cr2, * cr3;
     int a1, a2, a3, a;
     cre = nullptr;
     dmax = 1.5 * dist;
@@ -544,7 +544,7 @@ namespace ice
 #define FNAME "LineSegPointList"
   Segment LineSegPointList(PointList pl, int closed, int mlng, double mdist)
   {
-    pfit_Corner* cr1, *cr2, *cr3;
+    pfit_Corner* cr1, * cr2, * cr3;
     Segment segl = nullptr;
     int i, admax = 0;
     double d, dmax = 0;

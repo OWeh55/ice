@@ -251,7 +251,7 @@ namespace ice
   double* TranspMatrix(double* m1, int row, int col, double* m2)
   {
     int i, j;
-    double* mh, *mptr;
+    double* mh, * mptr;
 
     if (m1 == NULL)
       throw IceException(FNAME, M_WRONG_VECTOR);
@@ -293,7 +293,7 @@ namespace ice
   double* MulMatrix(double* m1, double* m2, int row1, int col1, int col2, double* m3)
   {
     int i, j, k;
-    double* mh, *mptr;
+    double* mh, * mptr;
 
     if (m1 == NULL || m2 == NULL)
       throw IceException(FNAME, M_WRONG_VECTOR);
@@ -526,7 +526,7 @@ namespace ice
   {
     int rang = 0;
     double det;
-    double* hx, *hb1, *hb2;
+    double* hx, * hb1, * hb2;
     double d1, d2;
     int i, k;
     int size1, size2;
@@ -900,7 +900,7 @@ namespace ice
       {
         int i, j;
         double val;
-        double* eval, *evec;
+        double* eval, * evec;
 
         double eps = 1e-5;
         i = 0;
@@ -1232,7 +1232,7 @@ namespace ice
 #define FNAME "IsMatrixOrtho"
   int IsMatrixOrtho(double* m, int dim, double* eps)
   {
-    double* m1, *m2;
+    double* m1, * m2;
     int flag;
 
     if (dim < 1)
@@ -1386,7 +1386,7 @@ namespace ice
 #define FNAME "IsMatrixPosDef"
   int IsMatrixPosDef(double* m, int dim)
   {
-    double* eval, *evec;
+    double* eval, * evec;
     int i;
 
     if (dim < 1)

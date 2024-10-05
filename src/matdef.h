@@ -39,7 +39,7 @@ namespace ice
     int** datai;
     unsigned char** datac;
 
-    struct MatrixStruct_* prev, *next;
+    struct MatrixStruct_* prev, * next;
   }*  MatrixStruct;
 
   /* Verwaltung der Matrizen */

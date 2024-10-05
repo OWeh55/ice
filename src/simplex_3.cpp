@@ -74,13 +74,13 @@ namespace ice
   int si3_enz = 0;
 
   int si3_rank;
-  int*  si3_kL = NULL, *si3_iL = NULL,
-        *si3_kLt = NULL, *si3_iLt = NULL,
-         *si3_kU = NULL, *si3_iU = NULL,
-          *si3_kUt = NULL, *si3_iUt = NULL;
-  int* si3_colperm = NULL, *si3_icolperm = NULL;
-  int* si3_rowperm = NULL, *si3_irowperm = NULL;
-  double* si3_L = NULL, *si3_Lt = NULL, *si3_U = NULL, *si3_Ut = NULL, *si3_diagU = NULL;
+  int*  si3_kL = NULL, * si3_iL = NULL,
+        * si3_kLt = NULL, * si3_iLt = NULL,
+          * si3_kU = NULL, * si3_iU = NULL,
+            * si3_kUt = NULL, * si3_iUt = NULL;
+  int* si3_colperm = NULL, * si3_icolperm = NULL;
+  int* si3_rowperm = NULL, * si3_irowperm = NULL;
+  double* si3_L = NULL, * si3_Lt = NULL, * si3_U = NULL, * si3_Ut = NULL, * si3_diagU = NULL;
 
   double si3_cumtime = 0.0;
   double si3_ocumtime = 0.0;

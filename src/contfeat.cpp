@@ -77,7 +77,7 @@ namespace ice
   PointList RegionPointList(const Contur& c)
   {
     int i, j;
-    double* x, *y, *w;
+    double* x, * y, * w;
 
     PointList pl;
 

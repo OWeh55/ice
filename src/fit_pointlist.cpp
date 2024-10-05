@@ -76,7 +76,7 @@ namespace ice
     double p, phi, ss, cc, h, lmin, lmax, xm, ym;
     double par[2];
     int ad;
-    double* xptr, *yptr;
+    double* xptr, * yptr;
     Segment sl;
 
     if ((ad2 - ad1) < 2)

@@ -32,7 +32,6 @@
 #include "rotquaternion.h"
 #include "dualquaternion.h"
 
-
 using namespace std;
 
 namespace ice

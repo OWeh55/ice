@@ -149,7 +149,6 @@ namespace ice
     return !(a.rot == b.rot);
   }
 
-
   inline bool operator==(const RotQuaternion& a, const Quaternion& b)
   {
     return (a.rot == b);

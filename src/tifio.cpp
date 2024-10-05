@@ -49,7 +49,7 @@ namespace ice
       {
         //Setup the Buffers and init
         //everything
-        int32 Width, Height;
+        int32_t Width, Height;
 
         TIFFGetField(MyTiff, TIFFTAG_IMAGEWIDTH, &Width);
         TIFFGetField(MyTiff, TIFFTAG_IMAGELENGTH, &Height);
@@ -59,7 +59,7 @@ namespace ice
             img.create(Width, Height, 255);
           }
 
-        uint32* Buffer = new uint32[Width * Height];
+        uint32_t* Buffer = new uint32_t[Width * Height];
 
         TIFFReadRGBAImage(MyTiff, Width, Height, Buffer, 0);
 
@@ -79,7 +79,7 @@ namespace ice
           for (int x = 0; x < xs; ++x)
             {
               int idx = y * Width + x;
-              uint32 val = Buffer[idx];
+              uint32_t val = Buffer[idx];
               int gray3 = TIFFGetR(val) + TIFFGetG(val) + TIFFGetB(val);
               img.setPixelUnchecked(x, ys - 1 - y,
                                     img.maxval - MulDiv(gray3, img.maxval, 3 * 256));
@@ -98,7 +98,7 @@ namespace ice
       {
         //Setup the Buffers and init
         //everything
-        int32 Width, Height;
+        int32_t Width, Height;
 
         TIFFGetField(MyTiff, TIFFTAG_IMAGEWIDTH, &Width);
         TIFFGetField(MyTiff, TIFFTAG_IMAGELENGTH, &Height);
@@ -123,7 +123,7 @@ namespace ice
 
         RETURN_ERROR_IF_FAILED(MatchImg(imgr, imgg, imgb, xs, ys));
 
-        uint32* Buffer = new uint32[Width * Height];
+        uint32_t* Buffer = new uint32_t[Width * Height];
 
         TIFFReadRGBAImage(MyTiff, Width, Height, Buffer, 0);
 
@@ -142,7 +142,7 @@ namespace ice
           for (int x = 0; x < xs; ++x)
             {
               int idx = y * Width + x;
-              uint32 val = Buffer[idx];
+              uint32_t val = Buffer[idx];
               imgr.setPixel(x, ys - 1 - y,
                             imgr.maxval - TIFFGetR(val)*imgr.maxval / 256);
               imgg.setPixel(x, ys - 1 - y,
@@ -165,7 +165,7 @@ namespace ice
     TIFF* MyTiff = TIFFOpen(fname.c_str(), "r");
     if (MyTiff)
       {
-        int32 Width, Height;
+        int32_t Width, Height;
 
         TIFFGetField(MyTiff, TIFFTAG_IMAGEWIDTH, &Width);
         TIFFGetField(MyTiff, TIFFTAG_IMAGELENGTH, &Height);
@@ -217,7 +217,7 @@ namespace ice
     TIFFSetField(image, TIFFTAG_YRESOLUTION, 150.0);
     TIFFSetField(image, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH);
 
-    uint8* buffer = new uint8[img.xsize * img.ysize];
+    uint8_t* buffer = new uint8_t[img.xsize * img.ysize];
     int idx = 0;
     for (int y = 0; y < img.ysize; y++)
       for (int x = 0; x < img.xsize; x++)
@@ -265,7 +265,7 @@ namespace ice
     TIFFSetField(image, TIFFTAG_YRESOLUTION, 150.0);
     TIFFSetField(image, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH);
 
-    uint8* buffer = new uint8[xs * ys * 3];
+    uint8_t* buffer = new uint8_t[xs * ys * 3];
     int idx = 0;
     for (int y = 0; y < ys; y++)
       for (int x = 0; x < xs; x++)

@@ -41,8 +41,8 @@ namespace ice
 
   int EigenVal(double* a, int dim, double* eval, double* evec)
   {
-    double* am, *x0, *xt, *xh;
-    double* h1, *h2, *h3;
+    double* am, * x0, * xt, * xh;
+    double* h1, * h2, * h3;
     double* zplus;
     double* zminus;
     double* vec1;

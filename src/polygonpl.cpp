@@ -52,7 +52,7 @@ namespace ice
   {
     double p[2];
     int valid;
-    struct p_clip_* prev, *next;
+    struct p_clip_* prev, * next;
   }* p_clip;
   /******************************************************/
 

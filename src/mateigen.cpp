@@ -38,10 +38,10 @@ namespace ice
   MatrixStruct Mateigen(MatrixStruct A, double* d, MatrixStruct evect)
   {
     MatrixStruct Amat;
-    double** a, **v;
+    double** a,** v;
     int nrot, n;
     int j, iq, ip, i;
-    double tresh, theta, tau, t, sm, s, h, g, c, *b, *z;
+    double tresh, theta, tau, t, sm, s, h, g, c, * b, * z;
 
     /* Testung der Parameter */
     if (IsMatrix(A) == false)
@@ -253,7 +253,7 @@ namespace ice
 
   int SingularValueDcmp(MatrixStruct A, MatrixStruct* U, MatrixStruct* W, MatrixStruct* V)
   {
-    double** a, *w, **v;
+    double** a, * w,** v;
     int m, n;
     int flag, i, its, j, jj, k, l, nm;
     double c, f, h, s1, x, y, z;

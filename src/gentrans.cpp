@@ -248,7 +248,7 @@ namespace ice
 #define FNAME "FitProjectiveTrans"
   int FitProjectiveTrans(PointList pl1, PointList pl2, double tr[3][3])
   {
-    double* ih, *ip, w;
+    double* ih, * ip, w;
     MatrixStruct A;
     int i, rc;
 
@@ -310,7 +310,7 @@ namespace ice
 #define FNAME "FitAffineTrans"
   int FitAffineTrans(PointList pl1, PointList pl2, double tr[3][3])
   {
-    double* ih, *ip, w;
+    double* ih, * ip, w;
     MatrixStruct A;
     int i, rc;
 

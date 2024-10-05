@@ -128,7 +128,6 @@ namespace ice
     void setInput(const std::vector<double>& v1,
                   const std::vector<double>& v2);
 
-
     /**
      * assign vector<ice::Point> to input.
      * @param v input vector\n

@@ -55,7 +55,7 @@ namespace ice
     /*Kreissegment:   xm,ym,r,psi1,psi2*/
     /*Ellipsensegment:xm,ym,a,b,phi,psi1,psi2*/
     double          par[7];
-    struct Segment_* prev, *next;     /*Listenverkettung*/
+    struct Segment_* prev, * next;    /*Listenverkettung*/
   }* Segment;
 
   /******* Funktionen zu Datenstrukturen (pointlist.cpp) **************/

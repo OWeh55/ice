@@ -206,7 +206,7 @@ namespace ice
 #define FNAME "EquationSys"
   int EquationSys(MatrixStruct A, double* b, double* x)
   {
-    int n, *indx, rc;
+    int n, * indx, rc;
     double** a, d;
     MatrixStruct Ah;
 
@@ -267,7 +267,7 @@ namespace ice
 #define FNAME "NormalEquationSys"
   int NormalEquationSys(MatrixStruct A, double* b, double* x)
   {
-    int i, j, k, n, *indx, rc;
+    int i, j, k, n, * indx, rc;
     double** a, d;
     MatrixStruct Ah;
 
@@ -344,9 +344,9 @@ namespace ice
 #define FNAME "InvertMat"
   MatrixStruct InvertMat(MatrixStruct A, MatrixStruct B)
   {
-    int i, j, *indx, n, rc;
+    int i, j, * indx, n, rc;
     MatrixStruct Ah;
-    double* icol, *bcol, d, **a, **b;
+    double* icol, * bcol, d,** a,** b;
 
     /*Parametertestung*/
     if (!IsMatrix(A))
@@ -436,9 +436,9 @@ namespace ice
 #define FNAME "DetMat"
   double DetMat(MatrixStruct A)
   {
-    int i, *indx, n, rc;
+    int i, * indx, n, rc;
     MatrixStruct Ah;
-    double d, **a;
+    double d,** a;
 
     /*Parametertestung*/
     if (!IsMatrix(A))

@@ -75,13 +75,13 @@ namespace ice
   extern int si3_enz;
 
   extern int si3_rank;
-  extern int*  si3_kL, *si3_iL,
-         *si3_kLt, *si3_iLt,
-         *si3_kU, *si3_iU,
-         *si3_kUt, *si3_iUt;
-  extern int* si3_colperm, *si3_icolperm;
-  extern int* si3_rowperm, *si3_irowperm;
-  extern double* si3_L, *si3_Lt, *si3_U, *si3_Ut, *si3_diagU;
+  extern int*  si3_kL, * si3_iL,
+         * si3_kLt, * si3_iLt,
+         * si3_kU, * si3_iU,
+         * si3_kUt, * si3_iUt;
+  extern int* si3_colperm, * si3_icolperm;
+  extern int* si3_rowperm, * si3_irowperm;
+  extern double* si3_L, * si3_Lt, * si3_U, * si3_Ut, * si3_diagU;
 
   extern double si3_cumtime ;
   extern double si3_ocumtime;

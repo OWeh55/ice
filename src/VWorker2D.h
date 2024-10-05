@@ -145,7 +145,6 @@ namespace ice
      *  not valid yet, the methods initiate the execution of the operation
      */
 
-
     void getResult(ice::matrix<double>& dstre,
                    ice::matrix<double>& dstim) const;
 

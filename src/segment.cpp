@@ -1507,7 +1507,7 @@ namespace ice
     /* Ellipsensegment : xm ,ym, a, b, phi, psi1, psi2 */
     double sig;                                             /* Signifikanzwert */
     int flag;                                                   /* Abbruchflag */
-    Segmentt* prev, *next;                         /* Listenverkettung */
+    Segmentt* prev, * next;                        /* Listenverkettung */
   };
 
   /* ***************************************************************************
@@ -1803,7 +1803,7 @@ namespace ice
 
   Segmentt* improve(Segmentt* sl, PointList pl, int mode)
   {
-    Segmentt* sg1, *sg2, *sg3, *act1, *act2, *act3, *tmp;
+    Segmentt* sg1, * sg2, * sg3, * act1, * act2, * act3, * tmp;
     double sig[4], dummy1[4], sigp, sigc, sign;
     int dummy2[4], cont, sl_lng, replace, best[4], i, j;
 
@@ -2101,7 +2101,7 @@ namespace ice
   Segment
   SegmentPointList(PointList pl, int mode)
   {
-    Segmentt* tree, *sl;
+    Segmentt* tree, * sl;
     Segment segl;
     double code;
 

@@ -113,7 +113,7 @@ namespace ice
     PointList pl;
     int i;
     int x, y;
-    double* xp, *yp;
+    double* xp, * yp;
     double* wp;
 
     if (diff < 1)

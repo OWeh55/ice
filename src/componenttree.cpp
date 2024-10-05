@@ -21,6 +21,7 @@
 
 #include <assert.h>
 #include <algorithm>
+#include <functional>
 
 #include "freeman.h"
 #include "componenttree.h"
@@ -128,11 +129,15 @@ namespace ice
                 children[i] = nullptr;
               }
           }
-
+	
+	using namespace std::placeholders;
+	
         // Liste bereinigen, nullptr eliminieren
         nodelist_t::iterator new_end =
-          remove_if(children.begin(), children.end(),
-                    bind2nd(equal_to<ComponentTreeNode*>(), (ComponentTreeNode*) nullptr));
+	  remove_if(children.begin(),
+		    children.end(),
+		    std::bind(equal_to<ComponentTreeNode*>(), _1, nullptr));
+	
         children.erase(new_end, children.end());
 
         for (unsigned int i = 0; i < children.size(); i++)
@@ -160,12 +165,14 @@ namespace ice
           }
       }
 
+    using namespace std::placeholders;
     // Liste bereinigen, nullptr eliminieren
     nodelist_t::iterator new_end =
       remove_if(children.begin(), children.end(),
-                bind2nd(equal_to<ComponentTreeNode*>(), (ComponentTreeNode*) nullptr));
+		std::bind(equal_to<ComponentTreeNode*>(), _1, nullptr));
+    
     children.erase(new_end, children.end());
-
+    
     return false; // "ich bin schon groß"
   }
 

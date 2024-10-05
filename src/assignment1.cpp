@@ -333,7 +333,7 @@ namespace ice
     TNum d1, d2, z;
     TEdge* p;
     TVertexLeft* a;
-    TVertexRight* b, *c;
+    TVertexRight* b, * c;
     struct SStack
     {
       void* v;

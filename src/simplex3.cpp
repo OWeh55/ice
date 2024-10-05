@@ -74,12 +74,12 @@ namespace ice
   extern int     si3_enz;
 
   extern  int     si3_rank;
-  extern  int*     si3_kL, *si3_iL,
-          *si3_kLt, *si3_iLt,
-          *si3_kU, *si3_iU,
-          *si3_kUt, *si3_iUt;
-  extern  int*     si3_colperm, *si3_icolperm, *si3_rowperm, *si3_irowperm;
-  extern  double*  si3_L, *si3_Lt, *si3_U, *si3_Ut, *si3_diagU;
+  extern  int*     si3_kL, * si3_iL,
+          * si3_kLt, * si3_iLt,
+          * si3_kU, * si3_iU,
+          * si3_kUt, * si3_iUt;
+  extern  int*     si3_colperm, * si3_icolperm, * si3_rowperm, * si3_irowperm;
+  extern  double*  si3_L, * si3_Lt, * si3_U, * si3_Ut, * si3_diagU;
 
   extern  double  si3_cumtime ;
   extern  double  si3_ocumtime;
@@ -183,10 +183,10 @@ namespace ice
     int     i, j, k, cnt, lnz, unz, lnzbnd, unzbnd, okey, deg,
             heapnum, cur, method = MD;
 
-    int*     degB = NULL, *degBt = NULL, *hkey = NULL,
-             *heap = NULL, *iheap = NULL, *iwork = NULL, *iwork2 = NULL;
+    int*     degB = NULL, * degBt = NULL, * hkey = NULL,
+             * heap = NULL, * iheap = NULL, * iwork = NULL, * iwork2 = NULL;
 
-    VALIND  tempB, **B = NULL, **Bt = NULL;
+    VALIND  tempB,** B = NULL,** Bt = NULL;
 
     double  narth;
 
@@ -1238,7 +1238,7 @@ end:
   {
     int i;
     int k, row, consistent = true;
-    double beta, *dwork;
+    double beta, * dwork;
     double eps = 0.0;
 
     double starttime, endtime;

@@ -143,7 +143,7 @@ namespace ice
   {
     double tm[3][3];
     double p[3][2], pf1[3][3][2], pf2[3][3][2];
-    double* nx, *ny;
+    double* nx, * ny;
     int i, j, y, sx, sy;
     double h;
     double mx1, my1, my2[3];
@@ -384,7 +384,7 @@ namespace ice
     double tm[3][3];
     double tm02, tm12;
     double tx, ty;
-    double* nxx, *nxy, *nyx, *nyy;
+    double* nxx, * nxy, * nyx, * nyy;
     int x, y, sx, sy;
     double ox, oy;
 

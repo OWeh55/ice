@@ -51,7 +51,7 @@ namespace ice
   double* FTransPoint(double p1[3], Frame* f, double p2[3])
   {
     int i, j;
-    double h[3], *p;
+    double h[3], * p;
 
     if (p2 == p1)
       {
@@ -85,7 +85,7 @@ namespace ice
   /*********************************************************/
   double* FTransVec(double v1[3], Frame* f, double v2[3])
   {
-    double vr[3], *v;
+    double vr[3], * v;
     int i, j;
 
     if (v2 == v1)
@@ -120,7 +120,7 @@ namespace ice
   {
     /*f3=f1*f2 (Verkettung der Frames f1 und f2)*/
     int i, j, k;
-    Frame fr, *f;
+    Frame fr, * f;
 
     if (f3 == f1 || f3 == f2)
       {

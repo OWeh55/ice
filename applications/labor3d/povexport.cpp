@@ -133,6 +133,7 @@ void cvExportDepth(const Image& depth, const Image& depthvalid, const string& fn
   os2 << "obj NULL, -90, X" << endl;
 }
 
+
 void cvVector(ostream& os, const Vector3d& v)
 {
   os << "<" << v.x << "," << v.y << "," << v.z << ">";
@@ -193,7 +194,6 @@ void tvExport(const vector<TRIANGLE>& tri, const string& fn)
 {
   Vector3d center = Center(tri);
   ofstream os(fn.c_str());
-
 }
 
 void povExport(const vector<TRIANGLE>& tri, const string& fn)

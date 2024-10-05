@@ -79,7 +79,7 @@ namespace ice
     int xs, ys;
     int x, y;
     unsigned int val = 0, valr = 0, valg = 0, valb = 0;
-    unsigned char* hptr, *rptr = nullptr, *gptr = nullptr, *bptr = nullptr;
+    unsigned char* hptr, * rptr = nullptr, * gptr = nullptr, * bptr = nullptr;
     int xm, ym;
     bool norm = false;
 

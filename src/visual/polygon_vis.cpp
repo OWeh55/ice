@@ -71,7 +71,7 @@ namespace ice
 #if 0
   PointList SelPolygon(const Image& img)
   {
-    int i, j, *p, *pp1, *pp2, *p1, *p2;
+    int i, j, * p, * pp1, * pp2, * p1, * p2;
     PointList pl;
     int maxp = 100;
     p = (int*)malloc(maxp * 2 * sizeof(int));

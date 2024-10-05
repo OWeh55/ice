@@ -94,7 +94,6 @@ namespace ice
   }
 #undef FNAME
 
-
   QuatVector& QuatVector::operator= (const QuatVector& qv)
   {
     if (this == &qv)

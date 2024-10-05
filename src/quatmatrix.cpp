@@ -19,7 +19,6 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /*
  * Author: Alexander Lärz, 2005
  */
@@ -161,7 +160,6 @@ namespace ice
   {
     return columns;
   }
-
 
   const QuatVector& QuatMatrix::operator[](int i) const
   {

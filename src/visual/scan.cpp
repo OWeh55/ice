@@ -184,11 +184,11 @@ namespace ice
   }
 #endif
 #ifdef _MSC_VER
-  init_func* initfunctions[] = {&init_program, &init_file, &init_clipboard,
-                                &init_twain, &init_dll, &init_xfp, &init_vfw, 0
+  init_func* initfunctions[] = {&init_program, & init_file, & init_clipboard,
+                                & init_twain, & init_dll, & init_xfp, & init_vfw, 0
                                };
 #else
-  init_func* initfunctions[] = {&init_program, &init_file,
+  init_func* initfunctions[] = {&init_program, & init_file,
                                 //#ifndef NOSCANV4L
                                 //           &init_v4l,
                                 //#endif
