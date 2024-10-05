@@ -48,7 +48,6 @@ int main(int argc, char** argv)
       cout << endl;
     }
 
-
   vector<ClassSample> isl;
   KDIndexTree<ClassSample> itr(isl);
 
@@ -57,7 +56,6 @@ int main(int argc, char** argv)
   isl.push_back(ClassSample(3, vector<double> {555, 666}));
   isl.push_back(ClassSample(4, vector<double> {550, 666}));
   isl.push_back(ClassSample(5, vector<double> {500, 666}));
-
 
   itr.create();
   itr.statistics();

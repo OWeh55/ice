@@ -27,7 +27,6 @@ int main(int argc, char** argv)
   else
     cout << "nix Cholesky" << endl;
 
-
   mm = m * !m;
 
   matrix<double> l;

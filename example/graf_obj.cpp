@@ -22,7 +22,6 @@ int main(int argc, char* argv[])
 
   GetChar();
 
-
   Ellipse e(110, 110, 100, 50, 0.2);
   draw(e, imgo, 1, -1);
 

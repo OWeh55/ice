@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <image_nonvis.h>
 
-
 #define LNG 10000
 
 int main(int argc, char* argv[])

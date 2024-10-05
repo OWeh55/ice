@@ -5,7 +5,7 @@ int main(int argc, char** argv)
   Image img;
   img.create(1000, 800, 255);
   img.set(0);
-  
+
   Show(ON, img);
 
 #if 1
@@ -32,8 +32,8 @@ int main(int argc, char** argv)
   Trafo tro(tm);
 #else
   Trafo tro;
-  tro.scale(500,400,0.9);
-  tro.rotate(500,400,2);
+  tro.scale(500, 400, 0.9);
+  tro.rotate(500, 400, 2);
 #endif
   cout << tro.getMatrix() << endl;
 
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
   MarkContur(c2, 200, img);
   //  Trafo tr = MatchObject(c1, c2, TRM_PROJECTIVE_NOR);
   //Trafo tr = MatchObject(c1, c2, TRM_PROJECTIVE);
-   Trafo tr=MatchObject(c1,c2,TRM_AFFINE);
+  Trafo tr = MatchObject(c1, c2, TRM_AFFINE);
   cout << tr.getMatrix() << endl;
   //  cout << tr.inverse().getMatrix() << endl;
   Contur c3 = transform(tr, c1);

@@ -110,7 +110,6 @@ int main(int argc, char* argv[])
           Printf("Groesse: %d x %d\n", imgr->xsize, imgr->ysize);
           Printf("Werte: 0..%d\n", imgr->maxval);
 
-
           if (multiple)
             {
               if (!noWait)

@@ -65,7 +65,6 @@ int testLMDif4()
                1000,
                inumber);
 
-
   printf("Nach %d Iterationen: ", inumber);
   printf("Funktion: y= %g*x + %g\n", n[1], n[0]);
   return OK;

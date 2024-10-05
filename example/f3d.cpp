@@ -81,8 +81,8 @@ iterfunc iterexp;
 iterfunc iter3_2;
 iterfunc itercollatz;
 
-const iterfunc* fractals[] = {&iterapfel, &iterapfel4, &iterapfelcc, &itership,
-                              &iterexp, &iter3_2, &itercollatz, NULL
+const iterfunc* fractals[] = {&iterapfel, & iterapfel4, & iterapfelcc, & itership,
+                              & iterexp, & iter3_2, & itercollatz, NULL
                              };
 
 int display = true;
@@ -389,7 +389,6 @@ int iterapfel4(DOUBLE x0, DOUBLE y0, DOUBLE ap, DOUBLE bp, int maxcount)
     }
   return z;
 }
-
 
 int itercollatz(DOUBLE x0, DOUBLE y0, DOUBLE ap, DOUBLE bp, int maxcount)
 {

@@ -37,7 +37,6 @@ XDisplay::XDisplay(int xSize, int ySize, int nImages):
   mImage.create(xSize, ySize);
   mImage.set(0);
 
-
   iXSize = xSize / nX;
   iYSize = ySize / nY;
 

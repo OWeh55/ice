@@ -31,7 +31,6 @@ int main(int argc, char* argv[])
   s.add(3, 3, 6, 6);
   sout(s);
 
-
   s.del(2, 3, 5, 6);
   sout(s);
   s.del(3, 6, 7, 6);

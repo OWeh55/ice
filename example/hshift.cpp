@@ -45,7 +45,6 @@ void HDouble(const ImageD& src, ImageD& dst)
 
 }
 
-
 int main(int argc, char** argv)
 {
   string fn = "lorna.jpg";

@@ -24,7 +24,7 @@ int filesize(FILE*);
 int main(int argc, char* argv[])
 {
   char wort[80];
-  char q[40], z[40], *buffer, *buffer1;
+  char q[40], z[40], * buffer, * buffer1;
   char ch[5] = "-/|\\";
   TextEntry akt;
   int fsize;

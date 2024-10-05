@@ -390,7 +390,6 @@ int DetectShift1(Image img1, Image img2,
   return OK;
 }
 
-
 void MarkRefs(const Matrix& xy, Image m1, Image m2)
 {
   int i;

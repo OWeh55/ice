@@ -413,7 +413,6 @@ int main(int argc, char** argv)
     cout << endl << endl;
   */
 
-
   if (ofn == "gnuplot")
     {
       FILE* gp = popen("gnuplot >/dev/null", "w");
@@ -424,7 +423,6 @@ int main(int argc, char** argv)
         gpsend(gp, t[i], f[i]);
 
       gpsend(gp, "e");
-
 
       for (unsigned int i = 0; i < inter.size(); i++)
         if (dif)

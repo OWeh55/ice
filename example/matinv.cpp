@@ -62,7 +62,7 @@ void printmat(int z, int s, double* pa)
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 int main(int argc, char* argv[])
 {
-  double* a, *b, *c;
+  double* a, * b, * c;
   int i, j, RANG;
   double maxf, f;
   printf("\n\n### Berechnung der invesen Matrix ###\n \

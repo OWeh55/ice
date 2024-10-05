@@ -98,8 +98,6 @@ int main(int argc, char* argv[])
         for (y = y2 + i * dy; y < y2 + (i + 1)*dy; y++)
           PutVal(img1, x, y, 11 * i + j);
 
-
-
   /* Colorierung mit konstantem Rotanteil */
   Text("Colorierung mit konstantem Rotanteil", 5, 5, 1, 1, img2);
 

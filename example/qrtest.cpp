@@ -28,13 +28,11 @@ int main(int argc, char* argv[])
               Vector(0, 0, 9, 10) &&
               Vector(0, 0, 0, 11) ;
 
-
   Matrix A5(20, 20);
 
   for (i = 0; i < 20; i++)
     for (j = 0; j < 20; j++)
       A5[i][j] = rand() % 100;
-
 
   A = A5;
 

@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
   pgl = GradThreshold(img);
   pgl1 = pgl / 3;
 
-
   while (SearchGradStart(img, imgm, pgl, 5, ps, HORZ) == OK)
     {
       c = CalcGradContur(img, imgm, pgl1, 40, ps, 0);
@@ -59,5 +58,3 @@ int main(int argc, char* argv[])
 
   return 0;
 }
-
-

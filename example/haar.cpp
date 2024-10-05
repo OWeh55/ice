@@ -2,7 +2,6 @@
 Test for haar transform
 ********************************************************************/
 
-
 #include <stdlib.h>
 #include <image.h>
 #include <math.h>

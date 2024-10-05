@@ -70,7 +70,6 @@ int main(int argc, char** argv)
       Circle c2 = InputCircle(mrk, "zweiter Kreis");
       draw(c2, mrk, 2);
 
-
 #if 0
       {
         Point p;

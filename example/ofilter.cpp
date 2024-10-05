@@ -2,7 +2,6 @@
 
 // testprogramm für Parameter für Orientierte Filter
 
-
 int main(int argc, char** argv)
 {
   string filename = "test_rgb.jpg";
@@ -200,5 +199,3 @@ int main(int argc, char** argv)
     }
   return OK;
 }
-
-

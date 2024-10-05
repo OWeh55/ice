@@ -280,7 +280,6 @@ int main(int argc, char* argv[])
   xs = min(xs1, xs2);
   ys = min(ys1, ys2);
 
-
   // cout << xs << " " << ys << " " << mv << " "  << fac << endl;
 
   ColorImage in1;
@@ -315,7 +314,6 @@ int main(int argc, char* argv[])
     {
       destimg.create(xd, yd, mv);
     }
-
 
   vfd.setPara(destimg.xsize,
               destimg.ysize,
@@ -407,7 +405,6 @@ int main(int argc, char* argv[])
                     }
                 }
                 break;
-
 
                 case overunder:
                 {

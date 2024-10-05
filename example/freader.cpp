@@ -94,7 +94,6 @@ int main(int argc, char* argv[])
         of.setPara(xs, ys, mv, fps, brate);
     }
 
-
   ColorImage rgb;
   rgb.create(xs, ys, mv);
 
@@ -114,4 +113,3 @@ int main(int argc, char* argv[])
   GetChar();
   return OK;
 }
-

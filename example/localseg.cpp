@@ -151,7 +151,6 @@ int main(int argc, char* argv[])
       WriteImg(gray, outfilename);
     }
 
-
   GetChar();
   return OK;
 }

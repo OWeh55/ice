@@ -84,7 +84,6 @@ int main(int argc, char** argv)
   MedianImg(ci.greenImage(), medianSize, cm.greenImage());
   MedianImg(ci.blueImage(), medianSize, cm.blueImage());
 
-
   ColorImage diff = newColorImage(ci);
   Show(ON, diff);
   subImg(co, cm, diff, SMD_SHIFT);

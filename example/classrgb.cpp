@@ -260,7 +260,6 @@ int main(int argc, char* argv[])
         }
     }
 
-
   //  cout << basename(filename) << endl;
 
   if (writereadtest)

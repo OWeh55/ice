@@ -105,7 +105,6 @@ int main(int argc, char* argv[])
   Delay(1.0);
   Alpha(OFF);
 
-
   ClearAlpha();
   Alpha(ON);
   SetAttribute(1, 7, -1, 1);

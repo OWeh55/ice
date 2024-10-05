@@ -294,8 +294,8 @@ Fractal ApfelX(iterapfelfalsch, DRange(-0.2, 3.0, 0.0, 3.0), "Falscher Apfel");
 Fractal C2(iterC2, DRange(-0.2, 3.0, 0.0, 3.0), "CC");
 Fractal CS(iterCS, DRange(-0.2, 3.0, 0.0, 3.0), "CosSin");
 
-const Fractal* fractals[] = {&Apfel, &Apfel4, &ApfelCC, &BurningShip,
-                             &ExpZ, &Apfel3_2, &Collatz, &ApfelX, &C2, &CS, nullptr
+const Fractal* fractals[] = {&Apfel, & Apfel4, & ApfelCC, & BurningShip,
+                             & ExpZ, & Apfel3_2, & Collatz, & ApfelX, & C2, & CS, nullptr
                             };
 
 int iters(const Fractal& fractal, const FRange& r,
@@ -1010,7 +1010,6 @@ int iterapfel4(DOUBLE ap, DOUBLE bp, int maxcount)
   return z;
 }
 
-
 int itercollatz(DOUBLE a, DOUBLE b, int maxcount)
 {
   int ct = 0;
@@ -1255,7 +1254,6 @@ void SaveToImage(const string& bfn, const ColorImage& colorImage)
     {
       PrintStatus("Bild " + fn + " wird gespeichert.");
 
-
       colorImage.write(fn);
 
 #if (USE_EXIFTOOL)
@@ -1271,7 +1269,6 @@ void SaveToImage(const string& bfn, const ColorImage& colorImage)
 void SaveToVideo(VideoFile& vout, const ColorImage& colorImage)
 {
   PrintStatus("Bild wird gespeichert.");
-
 
   vout.write(colorImage);
 

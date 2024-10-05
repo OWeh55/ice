@@ -507,7 +507,6 @@ int main(int argc, char* argv[])
       if (bench)
         cout << "Finishing: " << finishTime << endl;
 
-
       clearImg(marker);
       double classifyTime = -TimeD();
       classifyImage(marker, classifier, featureMode, nFeatures);
@@ -545,4 +544,3 @@ int main(int argc, char* argv[])
     }
   return 0;
 }
-

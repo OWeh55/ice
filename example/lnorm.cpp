@@ -185,7 +185,6 @@ int main(int argc, char** argv)
 
   Print("!");
 
-
   h.CalcHist(Window(0, 0, 2 * nn, 2 * nn));
   int lx = xs - nn - 1;
   int ly = ys - nn - 1;

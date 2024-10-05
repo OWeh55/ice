@@ -204,7 +204,6 @@ int main(int argc, char** argv)
           typ = optarg[0];
           break;
 
-
         case 'H':
           hequal = true;
           break;
@@ -329,7 +328,6 @@ int main(int argc, char** argv)
               HistogramEqualization(timg);
             }
 
-
           if (verbose)
             cout << ((TimeD(TM_WORLD) - ta) * 1000) << " ms" << endl;
 
@@ -445,7 +443,6 @@ int main(int argc, char** argv)
 
               if (!ofn.empty())
                 filtered.write(ofn);
-
 
               if (wait)
                 Enter("Press Enter to continue");

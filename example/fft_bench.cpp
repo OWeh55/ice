@@ -152,7 +152,7 @@ void main(int argc, char** argv)
 
   if (fftw)
     {
-      fftw_complex* in, *out;
+      fftw_complex* in, * out;
       fftw_plan p;
 
 #if 1

@@ -109,7 +109,6 @@ int main(int argc, char** argv)
   string fn;
   string ofn = "";
 
-
   while ((rc = getopt(argc, argv, "m:gh:o:H:T:ib")) >= 0)
     {
       switch (rc)

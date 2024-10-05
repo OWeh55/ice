@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
   if (argc > optind)
     filename = argv[optind];
 
-
   // create masks
 
   Matrix matrix(KSIZE, KSIZE);

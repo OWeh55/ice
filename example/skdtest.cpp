@@ -53,7 +53,6 @@ int main(int argc, char** argv)
   isl.push_back(ClassSample(4, vector<double> {550, 666}));
   isl.push_back(ClassSample(5, vector<double> {500, 666}));
 
-
   itr.create(isl);
   itr.statistics();
   Image img;
@@ -84,9 +83,7 @@ int main(int argc, char** argv)
           }
       }
 
-
   itr.create(isl);
-
 
   vector<const ClassSample*> samples;
   int x, y;

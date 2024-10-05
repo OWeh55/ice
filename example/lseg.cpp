@@ -278,7 +278,6 @@ int main(int argc, char* argv[])
       gray.write(outfilename);
     }
 
-
   GetChar();
   return OK;
 }

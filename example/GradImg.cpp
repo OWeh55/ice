@@ -4,7 +4,6 @@
  * Niels Oertel - 2008
  */
 
-
 #include <stdio.h>
 #include <image.h>
 #include <iostream>

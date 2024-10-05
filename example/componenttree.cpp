@@ -10,7 +10,7 @@ int main(int argc, char** argv)
   bool wait = true;
   if (argc > 1)
     wait = false;
-  
+
 #if 0
   img.read(fn);
 #else
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
       img.setPixelLimited(ww, 0.5 * maxval * (1 + sc));
     }
 #endif
-  
+
   Image reg;
   reg.create(img);
   Show(OVERLAY, img, reg);

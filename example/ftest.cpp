@@ -33,7 +33,6 @@ int main(int argc, char** argv)
   //    for (int x=0;x<img->xsize/2;x++)
   //      PutVal(img,x,y,GetVal(img,x,y)/2);
 
-
   DilateImg(img, 3, 3, img);
   SmearImg(img);
 #endif

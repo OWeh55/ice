@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
   Printf("OK\n\n");
   GetChar();
 
-
   Printf("Now switching overlay colors cyclically on keypress. end with typing 'X'");
   int i = 1;
 

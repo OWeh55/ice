@@ -40,8 +40,6 @@ int main(int argc, char* argv[])
 
   tr.create(sl);
 
-
-
   ColorImage res;
   res.create(img);
   Show(ON, res);

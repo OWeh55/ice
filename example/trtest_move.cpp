@@ -13,7 +13,6 @@ int main(int argc, char** argv)
   tr.move(dx, dy, dz, alpha, beta, gamma);
   cout << tr.getMatrix() << endl;
 
-
   double ca = cos(alpha);
   double sa = sin(alpha);
 
@@ -22,7 +21,6 @@ int main(int argc, char** argv)
 
   double cc = cos(gamma);
   double sc = sin(gamma);
-
 
   matrix<double> m(4, 4, 1);
 

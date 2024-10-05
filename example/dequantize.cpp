@@ -184,7 +184,6 @@ int main(int argc, char** argv)
         }
     }
 
-
   if (optind < argc) // verbleibender Parameter ?
     filename = argv[optind]; // muß Filename sein
   else
