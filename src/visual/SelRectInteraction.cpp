@@ -76,7 +76,7 @@ namespace ice
     ClientDC.SetLogicalFunction(wxXOR);
     ClientDC.SetPen(wxPen(wxColor(128, 128, 128),    // const wxColour& colour
                           1, // int width
-                          wxSOLID)); // int style
+                          wxPENSTYLE_SOLID)); // int style
     ClientDC.SetBrush(*wxTRANSPARENT_BRUSH);
 
     // determine the upper left corner of the rectangle that is determined by FirstPoint

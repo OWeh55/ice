@@ -7,7 +7,9 @@ void Dequantize(const Image& qimg, int step, Image& iimg)
 {
   int xs = qimg->xsize;
   int ys = qimg->ysize;
+  
   double step2 = step / 2;
+  
   ImageD h = NewImgD(xs, ys);
   ImageD h1 = NewImgD(xs, ys);
 

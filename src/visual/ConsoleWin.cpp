@@ -39,7 +39,7 @@ using namespace std;
 #include "visual/screen.h"
 
 // font family (wxDEFAULT, wxDECORATIVE, wxROMAN, wxSCRIPT, wxSWISS, wxMODERN)
-#define CONSOLEFONT wxMODERN
+//#define CONSOLEFONT wxMODERN
 
 namespace ice
 {
@@ -108,20 +108,18 @@ namespace ice
     EVT_CUSTOM(FORCE_CURSOR, wxID_ANY, iceConsoleWin::OnForceCursor)
   END_EVENT_TABLE()
 
-  iceConsoleWin::iceConsoleWin(iceApp& App)
-    : wxWindow(),
-      ThreadCommHelper(),
-      isOpen(false),
-      ParentFrame(NULL),
-      App(&App),
-      ContentStack(),   // content stack empty at the beginning
-      CurrContent(),
-      UpdateTimer(this, CURSOR_TIMER),
-      windowneedsrefresh(false),
-      CursorState(0),
-      LastCursorPos(0, 0),
-      TextHeight(12)
-
+  iceConsoleWin::iceConsoleWin(iceApp& App) : wxWindow(),
+    ThreadCommHelper(),
+    isOpen(false),
+    ParentFrame(NULL),
+    App(&App),
+    ContentStack(),   // content stack empty at the beginning
+    CurrContent(),
+    UpdateTimer(this, CURSOR_TIMER),
+    windowneedsrefresh(false),
+    CursorState(0),
+    LastCursorPos(0, 0),
+    TextHeight(12)
   {
     // create the parent frame
     ParentFrame = new iceFrame(wxString(StdCaption.c_str(), wxConvLibc), // window title
@@ -141,16 +139,17 @@ namespace ice
 
     int ExternalLeading, Descent;
 
+    theFont = wxFont(wxFontInfo(TextHeight).Style(wxFONTSTYLE_NORMAL).Family(wxFONTFAMILY_TELETYPE));
+
     wxWindowDC WindowDC(this);
 
     // we have to select the font we will use
-    WindowDC.SetFont(wxFont(TextHeight, // pointsize
-                            CONSOLEFONT, // font family (wxDEFAULT, wxDECORATIVE, wxROMAN, wxSCRIPT, wxSWISS, wxMODERN)
-                            wxNORMAL, // font style (wxNORMAL, wxSLANT or wxITALIC)
-                            wxNORMAL)); // font weight (wxNORMAL, wxLIGHT or wxBOLD)
+    WindowDC.SetFont(theFont);
+    // WindowDC.SetFont(wxFont(wxFontInfo(TextHeight).Family(wxFONTFAMILY_MODERN)));
 
     WindowDC.GetTextExtent(wxString(wxT("M")),
                            &CharWidth, &CharHeight, &Descent, &ExternalLeading);
+
     CharHeight += ExternalLeading;
 
     // set the appropiate height and width of the Screen
@@ -171,8 +170,8 @@ namespace ice
     // 100 ms should be fast enough for interaction on Console
     UpdateTimer.Start(100, true);
 
-    // set redirection of error messages
-    SetFocus();
+    // get keyboard input ??
+    //    SetFocus();
   }
 
   iceConsoleWin::~iceConsoleWin()
@@ -283,12 +282,8 @@ namespace ice
     cout << "CP ";
     cout.flush();
 #endif
-    // set the font to a terminal-like, monospaced font
-    dc.SetFont(wxFont(TextHeight,
-                      CONSOLEFONT, // font family
-                      wxNORMAL, // font style(wxNORMAL, wxSLANT or wxITALIC)
-                      wxNORMAL)); // font weight(wxNORMAL, wxLIGHT or wxBOLD)
-
+    // set the font to the selected monospaced font
+    dc.SetFont(theFont);
     dc.SetBackgroundMode(wxSOLID);
 
     // we go through the character field and paint each one
@@ -774,13 +769,13 @@ namespace ice
 
   int iceConsoleWin::GetChar()
   {
-    //    SetFocus();
     // open Alphanumerical terminal if neccessary
     if (!isOpen)
       {
         Open();
       }
 
+    //    SetFocus();
     // wait while keyboard buffer is empty
     WaitWhileKeybufferEmpty();
 
@@ -807,14 +802,14 @@ namespace ice
 
   int iceConsoleWin::GetCharW()
   {
-    SetFocus();
     // open Alphanumerical terminal if neccessary
     if (!isOpen)
       {
         Open();
       }
 
-    // wait while keyboard buffer is empty
+    //    SetFocus();
+    // wait while key buffer is empty
     WaitWhileKeybufferEmpty();
 
     return KeyBuffer.pop();
@@ -843,7 +838,7 @@ namespace ice
                                  const string& def,
                                  int& lastkey)
   {
-    SetFocus();
+    //    SetFocus();
     // ScrolledLines hold the overall value of the lines that the contents
     // of the console window had to be scrolled
     int ScrolledLines = 0;

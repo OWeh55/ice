@@ -263,11 +263,12 @@ namespace ice
     // in order to go to the next cursor position.
     int GotoNextPos();
 
-    // The height of the space that will be needed to paint a single character in
-    // the console window.
+    // font
+    wxFont theFont;
+
+    // The height and width of the space that will be needed
+    // to paint a single character in the console window.
     int CharHeight;
-    // The width of the space that will be needed to paint a single character in
-    // the console window.
     int CharWidth;
 
     // The text point size. Maybe this value should be configurable.

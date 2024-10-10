@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 {
   int x;
   vector<string> men;
-  OpenAlpha("Menü-Test");
+  OpenAlpha("Menu Test");
   /*
   SetTextAttributes(TextAttribs::FgColorWhite);
   SetTextAttributes(TextAttribs::BgColorBlue);
@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
           + ". Zeile des alphanumerischen Bildschirms\n");
 
   SetAlphaCursor(0, 0);
-  Print("\020Test für einfache Menufunktion\n");
+  Print("\020Test einfache Menufunktion\n");
   men.push_back("Eins");
   men.push_back("Z~wei");
   men.push_back("~gruen");
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
   men.push_back("#Ig~elb");
   men.push_back("#I~rot");
   men.push_back("#I~blau");
-  men.push_back("Sehr langer Menüpunkt");
+  men.push_back("Sehr langer Menuepunkt");
   x = Menu(men, 5, 5, 24, 18, true);
 
   SetAlphaCursor(0, 20);
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
   GetChar();
 
   SetAlphaCursor(0, 0);
-  Print("\020Test für langes Menue (DIR-Funktion) \n");
+  Print("\020Test langes Menue (DIR-Funktion) \n");
   men.clear();
   Directory(men, "*.cpp");
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
   SetAlphaCursor(0, 22);
   string filename;
   string path;
-  SelFile("*.cpp", filename, path, DIR_SELPATH | DIR_FILE, "Bitte Datei wählen", 3, 3, 65, 22);
+  SelFile("*.cpp", filename, path, DIR_SELPATH | DIR_FILE, "Bitte Datei waehlen", 3, 3, 65, 22);
   Print("Filesel:" + path + "/" + filename + "\n");
 
   GetChar();

@@ -20,7 +20,7 @@
  */
 
 #include <wx/wx.h>
-#include <wx/dcclient.h>  // needed for wxGTK >= 2.5.x 
+#include <wx/dcclient.h>
 
 #include "visual/SelLineInteraction.h"
 //#include "macro.h"  // for min/max templates
@@ -73,7 +73,7 @@ namespace ice
     unsigned int LineWidth = max<int> (1, imageWindow->getZoomFactor());
     wxPen Pen(wxColor(128, 128, 128),  // const wxColour& colour
               LineWidth, // int width
-              wxSOLID); // int style
+              wxPENSTYLE_SOLID); // int style
     Pen.SetCap(wxCAP_PROJECTING);
     ClientDC.SetPen(Pen);
     ClientDC.SetBrush(*wxTRANSPARENT_BRUSH);

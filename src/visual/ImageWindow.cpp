@@ -645,7 +645,7 @@ namespace ice
     unsigned int LineWidth = max<int>(1, getZoomFactor());
     ClientDC.SetPen(wxPen(wxColor(128, 128, 128), // const  wxColour& colour
                           LineWidth, // int width
-                          wxSOLID)); // int style
+                          wxPENSTYLE_SOLID)); // int style
 
     wxPoint WinPos = translateImage2WinPos(Position);
     // + wxPoint(LineWidth / 2, LineWidth / 2);

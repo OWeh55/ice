@@ -10,7 +10,7 @@
 
 int zfak = 4;
 
-string basedir = "/home/dbv/mamma/BMP/";
+string basedir = "/home/noo/3d/volume/mamma/";
 const string mask = "img*.bmp";
 
 class SeriesName
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
       Printf("Stellt BMP-Dateien dar, die aus DICOM-Datensatz extrahiert wurden\n");
 
       SeriesName ser1 = SelectSeries();
-      Image3D primary(ser1.Filename() + "/" + mask, 1, 1, zfak);
+      Image3d<Image> primary(ser1.Filename() + "/" + mask, 1, 1, zfak);
 
       if (!nonormalize)
         NormalizeImages(primary);
@@ -109,14 +109,14 @@ int main(int argc, char** argv)
       Display3D display1(primary, ser1.Filename());
 
       SeriesName ser2 = SelectSeries(ser1);
-      Image3D secondary(ser2.Filename() + "/" + mask, 1, 1, zfak);
+      Image3d<Image> secondary(ser2.Filename() + "/" + mask, 1, 1, zfak);
 
       Display3D display2(secondary, ser2.Filename());
 
       if (!nonormalize)
         NormalizeImages(secondary);
 
-      Image3D diff(primary);
+      Image3d<Image> diff(primary);
 
       Display3D difference(diff, "Differenz " + ser2.Filename() + " - " + ser1.Filename());
 
@@ -264,7 +264,7 @@ int main(int argc, char** argv)
               if (primary.GetValD(xa, ya, za) < level)
                 {
 
-                  Image3D binary(xs, ys, zs, 255);
+                  Image3d<Image> binary(xs, ys, zs, 255);
                   Display3D displayb(binary);
 
                   for (int x = 0; x < xs; x++)

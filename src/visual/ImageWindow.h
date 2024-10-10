@@ -205,6 +205,7 @@ namespace ice
       \returns OK, if the request could be fulfilled.
       <BR>ERROR, if the new position was outside the image.*/
     virtual int SetCursor(int x, int y);
+    using wxWindow::SetCursor;
 
     //! Draws a cursor at the position >Position<. Drawing the cursor
     //! a second time at the same position will erase the cursor.
