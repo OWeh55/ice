@@ -38,13 +38,8 @@ using namespace std;
 #include "strtool.h"
 #include "visual/screen.h"
 
-// font family (wxDEFAULT, wxDECORATIVE, wxROMAN, wxSCRIPT, wxSWISS, wxMODERN)
-//#define CONSOLEFONT wxMODERN
-
 namespace ice
 {
-  //  wxPaintEvent p(wxID_ANY); !!!
-
   const std::string iceConsoleWin::StdCaption = "ICE Console Window";
 
   //  DEFINE_EVENT_TYPE (GET_CHAR)
@@ -211,21 +206,17 @@ namespace ice
       {
         wxClientDC DC(this);
 
-        // set the font
-        /*
-          DC.SetFont(wxFont(TextHeight, // pointsize
-          CONSOLEFONT, // font family(wxDEFAULT, wxDECORATIVE, wxROMAN, wxSCRIPT, wxSWISS, wxMODERN)
-          wxNORMAL, // font style(wxNORMAL, wxSLANT or wxITALIC)
-          wxNORMAL)); // font weight(wxNORMAL, wxLIGHT or wxBOLD)
-        */
         // we set the background mode to transparent since the character
         // at the current position should not get overpainted
         DC.SetBackgroundMode(wxTRANSPARENT);
 
-        // if the cursor should be visible at this time slice, it's color is set to the current foreground color of
-        // the current cursor position(else it will be painted in the current background color and thus
-        // be invisible). We also remember the this cursor position, because we need to delete
+        // if the cursor should be visible at this time slice, it's color
+        // is set to the current foreground color at current cursor position
+        // else it will be painted in the current background color and thus
+        // be invisible.
+        // We also remember the this cursor position, because we need to delete
         // the cursor from there.
+
         if (CursorState > 6)
           {
             DC.SetTextForeground(GlobalColorTable[CurrContent[CurrContent.CursorPos].Attribs.FgColor]);
@@ -286,7 +277,7 @@ namespace ice
     dc.SetFont(theFont);
     dc.SetBackgroundMode(wxSOLID);
 
-    // we go through the character field and paint each one
+    // we go through the character fields and paint each one
     // Since every character may have it's own back- and foreground
     // color we would have to change these values quite often. Instead
     // we use OldBgColor and OldFgColor to keep these changes at a minimum.
@@ -332,17 +323,18 @@ namespace ice
 
   int iceConsoleWin::GotoNextPos()
   {
-    // the easiest case would be if we only had to move the cursor one position to the right
-    // if that gets us out of the line then we must move to the next line, if we are already
+    // the easiest case would be if we only had to move the cursor
+    // one position to the right. if that gets us out of the line
+    // then we must move to the next line, if we are already
     // in the last line then we have to scroll the whole contents one up
     CurrContent.CursorPos.x++;
-    if (CurrContent.CursorPos.x == SCREEN_XS)
+    if (CurrContent.CursorPos.x >= SCREEN_XS)
       {
         CurrContent.CursorPos.x = 0;
         CurrContent.CursorPos.y++;
 
         // now scroll if necessary
-        if (CurrContent.CursorPos.y == SCREEN_YS)
+        if (CurrContent.CursorPos.y >= SCREEN_YS)
           {
             for (int y = 0; y < SCREEN_YS - 1; y++)
               for (int x = 0; x < SCREEN_XS; x++)
@@ -350,14 +342,14 @@ namespace ice
                   CurrContent.characters[y][x] = CurrContent.characters[y + 1][x];
                 }
 
-            // clear the last (newly appeared) line
+            // clear the new line
             for (int x = 0; x < SCREEN_XS; x++)
               {
                 CurrContent.characters[SCREEN_YS - 1][x].Char = ' ';
                 CurrContent.characters[SCREEN_YS - 1][x].Attribs = CurrContent.AttribsCompressed;
               }
 
-            // don't forget to move back to the last line!
+            // move also the cursor up!
             CurrContent.CursorPos.y--;
             return 1;
           }
@@ -385,12 +377,7 @@ namespace ice
 #endif
   }
 
-  // formerly there was a function to create the console
-  // window, even if it was already created. In that case the old
-  // one got destroyed and a new one created, but the former code
-  // wasn't thread-safe. Now the console window will be created just once(at
-  // the start of the application), and it will be deleted only after
-  // the user thread will have terminated. If the user "closes" the console window
+  // If the user "closes" the console window
   // it will disappear from the screen, but it won't be destroyed!
   void iceConsoleWin::OnOpenAlpha(wxCommandEvent& Event)
   {
@@ -400,7 +387,7 @@ namespace ice
     Show(true);
   }
 
-  // make the ConsoleWin invisible, but don't destroy it(see iceConsoleWin::Open)
+  // make the ConsoleWin invisible, but don't destroy it
   void iceConsoleWin::OnCloseAlpha(wxEvent& event)
   {
     ParentFrame->Show(false);
@@ -672,11 +659,12 @@ namespace ice
 
       case '\b': // a.k.a. backspace(BS)
         // move the cursor one back if possible
+        // never changes the line#
         CurrContent.CursorPos.x = max(CurrContent.CursorPos.x - 1, 0);
         CurrContent[CurrContent.CursorPos].Char = ' ';
         break;
 
-      default: // the rest should be only printable characters
+      default: // now the rest should be only printable characters
         CurrContent[CurrContent.CursorPos].Char = c;
         CurrContent[CurrContent.CursorPos].Attribs = CurrContent.AttribsCompressed;
         ScrolledLines = GotoNextPos();
