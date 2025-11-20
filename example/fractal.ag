@@ -14,7 +14,7 @@ using namespace ice;
 
 /*AppGen:Global*/
 
-// exiftool code not yet useable
+// exiftool code not yet useable 
 #define USE_EXIFTOOL 0
 
 #define SFAK 1.002
@@ -97,7 +97,8 @@ public:
     dy *= fac;
   }
 
-  virtual bool operator==(const DRange& other) const
+  //virtual
+  bool operator==(const DRange& other) const
   {
     return x0 == other.x0 &&
            dx == other.dx &&

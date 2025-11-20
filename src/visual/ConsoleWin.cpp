@@ -134,8 +134,9 @@ namespace ice
 
     int ExternalLeading, Descent;
 
-    theFont = wxFont(wxFontInfo(TextHeight).Style(wxFONTSTYLE_NORMAL).Family(wxFONTFAMILY_TELETYPE));
-
+    //theFont = wxFont(wxFontInfo(TextHeight).Style(wxFONTSTYLE_NORMAL).Family(wxFONTFAMILY_TELETYPE));
+    theFont = wxFont(wxFontInfo(TextHeight).Family(wxFONTFAMILY_TELETYPE));
+ 
     wxWindowDC WindowDC(this);
 
     // we have to select the font we will use
