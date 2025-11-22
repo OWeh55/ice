@@ -106,6 +106,8 @@ namespace ice
             // special predefined profiles
             if (format == "#h264ts")
               format = "-f mpegts -vcodec libx264 -vf format=yuv420p -profile:v high -level 4.1";
+            else if (format == "#h265ts")
+              format = "-f mpegts -vcodec libx265 -pix_fmt yuv420p -level 4.1";
             else if (format == "#lossless")
               format = "-c:v libx264 -crf 0 -preset fast";
             else

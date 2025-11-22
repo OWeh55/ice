@@ -144,13 +144,11 @@ int main(int argc, char* argv[])
       //    cout << vfd.getpara() << endl;
       //    vfd.setpara("-ovc lavc -lavcopts vcodec=mpeg4:vbitrate=2400");
       vfd.setPara(xs1, ys1, mv, fps);
-
+      vfd.setCPara("#h265ts");
     }
 
-  int xs, ys;
-
-  xs = xs1;
-  ys = ys1;
+  int xs = xs1;
+  int ys = ys1;
 
   ColorImage in1;
   in1.create(xs1, ys1, mv);
@@ -161,10 +159,11 @@ int main(int argc, char* argv[])
 
   bool ok = true;
 
+  // skip frames before "first"
   while (ok && first > vf.FrameNumber())
     if (!vf.read(in1))
       ok = false;
-
+  
   bool preprocess = false;
 
   //  cout << xs << " " << ys << endl;
@@ -191,7 +190,8 @@ int main(int argc, char* argv[])
 
       ct = ct * expire1 + 1.0;
 
-      Printf("Frame: %d ", vf.FrameNumber());
+      if ((vf.FrameNumber() % 100) == 0)
+	Printf("Frame: %d \n", vf.FrameNumber());
 
       if (ok)
         {
@@ -314,7 +314,7 @@ int main(int argc, char* argv[])
           zcount++;
           if (zcount == zeitraffer)
             {
-              Print("+");
+	      // Print("+");
               if (vfd.isOpen())
                 {
                   vfd.write(result);
@@ -329,7 +329,7 @@ int main(int argc, char* argv[])
             }
         }
       frameNr++;
-      Print("\n");
+      //      Print("\n");
     }
   while (ok && ((last == 0) || (last > vf.FrameNumber())));
 

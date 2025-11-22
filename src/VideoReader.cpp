@@ -111,11 +111,11 @@ namespace ice
           throw IceException("VideoReader", ex.message());
       }
     // if use of ffprobe failed we try getInfo() instead
-    if (width < 0 || height < 0)
-      {
-        int nChannels;
-        pbmReader.getInfo(width, height, maxval, nChannels);
-      }
+    // if (width < 0 || height < 0) // bei hochformatvideos lieferr ffprobe falsche Werte x<->y
+    {
+      int nChannels;
+      pbmReader.getInfo(width, height, maxval, nChannels);
+    }
   }
 
   void VideoReader::freeall()
