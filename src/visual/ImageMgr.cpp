@@ -41,7 +41,6 @@ using namespace std;
 #include "visual/OverlayImageWindow.h"
 #include "visual/Overlay2ImageWindow.h"
 #include "visual/RGBImageWindow.h"
-#include "visual/StereoIHImageWindow.h"
 #include "visual/visual.h"
 
 namespace ice
@@ -52,7 +51,6 @@ namespace ice
   DEFINE_EVENT_TYPE(CREATE_OVERLAY_WIN)
   DEFINE_EVENT_TYPE(CREATE_OVERLAY2_WIN)
   DEFINE_EVENT_TYPE(CREATE_RGB_WIN)
-  DEFINE_EVENT_TYPE(CREATE_STEREO_IH_WIN)
   DEFINE_EVENT_TYPE(REFRESH_TIMER)
 
   BEGIN_EVENT_TABLE(ImageManager, wxEvtHandler)
@@ -61,7 +59,6 @@ namespace ice
     EVT_COMMAND(wxID_ANY, CREATE_OVERLAY_WIN, ImageManager::OnCreateOverlayWin)
     EVT_COMMAND(wxID_ANY, CREATE_OVERLAY2_WIN, ImageManager::OnCreateOverlay2Win)
     EVT_COMMAND(wxID_ANY, CREATE_RGB_WIN,     ImageManager::OnCreateRGBWin)
-    EVT_COMMAND(wxID_ANY, CREATE_STEREO_IH_WIN, ImageManager::OnCreateStereoIHWin)
 
     EVT_COMMAND(wxID_ANY, DESTROY_WIN,        ImageManager::OnDestroyWin)
 
@@ -216,21 +213,6 @@ namespace ice
 
     RGBImageWindow* ImageWindow =
       new RGBImageWindow(id.img1, id.img2, id.img3, id.title);
-    WindowList.push_back(ImageWindow);
-    ImageWindow->Show(true);
-    id.v = ImageWindow;
-    WakeUpUserThread();
-  }
-
-  void ImageManager::OnCreateStereoIHWin(wxCommandEvent& Event)
-  {
-    // extract the image data from the event
-    ImageData& id = *(ImageData*)Event.GetClientData();
-
-    iceStereoIHImageWindow* ImageWindow =
-      new iceStereoIHImageWindow(id.img1, id.img2, id.img3,
-                                 id.img4, id.img5, id.img6,
-                                 id.title);
     WindowList.push_back(ImageWindow);
     ImageWindow->Show(true);
     id.v = ImageWindow;
@@ -560,57 +542,6 @@ namespace ice
     throw IceException(FNAME, M_WRONG_MODE);
   }
 
-  Visual ImageManager::Show(int Mode,
-                            ImageBase* Image1,
-                            ImageBase* Image2,
-                            ImageBase* Image3,
-                            ImageBase* Image4,
-                            ImageBase* Image5,
-                            ImageBase* Image6,
-                            const std::string& name)
-  {
-    ImageData id;
-    id.img1 = Image1;
-    id.img2 = Image2;
-    id.img3 = Image3;
-    id.img4 = Image4;
-    id.img5 = Image5;
-    id.img6 = Image6;
-    id.title = name;
-    if (id.title.empty())
-      {
-        id.title = Image1->getTitle() + " - " + Image4->getTitle();
-      }
-    if (id.title.empty())
-      {
-        id.title = ICEGRAFICNAME;
-      }
-
-    switch (Mode)
-      {
-      case STEREO_IH:
-
-        // Check if the images match in size
-        if (Image1->xsize != Image2->xsize || Image1->ysize != Image2->ysize ||
-            Image1->xsize != Image3->xsize || Image1->ysize != Image3->ysize ||
-            Image1->xsize != Image4->xsize || Image1->ysize != Image4->ysize ||
-            Image1->xsize != Image5->xsize || Image1->ysize != Image5->ysize ||
-            Image1->xsize != Image6->xsize || Image1->ysize != Image6->ysize)
-          throw IceException(FNAME, M_SIZES_DIFFER);
-
-        // Windows MUST be created in main thread
-        wxCommandEvent Event(CREATE_STEREO_IH_WIN);
-        Event.SetClientData(&id);
-
-        AddPendingEvent(Event);
-        WaitForMainThread();
-        return id.v;
-
-      } // switch(Mode)
-
-    // no valid Mode was specified
-    throw IceException(FNAME, M_WRONG_MODE);
-  }
 #undef FNAME
 
   void ImageManager::OnRefreshTimer(wxTimerEvent& TimerEvent)

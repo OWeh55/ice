@@ -40,15 +40,15 @@ BEGIN_EVENT_TABLE(iceApp, wxApp)
 END_EVENT_TABLE();
 
 iceApp::iceApp(): wxApp(),
-  ConsoleWin(NULL),
-  imageManager(NULL)
+  ConsoleWin(nullptr),
+  imageManager(nullptr)
 {
   char* parameter;
   defxsize = 99999;
   defysize = 99999; // very large
   refreshtime = 100; // 100 ms or 10 Hz
   parameter = getenv("ICEVISUALISATION");
-  if (parameter != NULL)
+  if (parameter != nullptr)
     {
       sscanf(parameter, "%d,%d,%d", &defxsize, &defysize, &refreshtime);
     }
@@ -76,7 +76,7 @@ bool iceApp::OnInit()
 void iceApp::OnClose(wxEvent& event)
 {
   delete imageManager;
-  imageManager = NULL;
+  imageManager = nullptr;
   ConsoleWin->Destroy();
 }
 

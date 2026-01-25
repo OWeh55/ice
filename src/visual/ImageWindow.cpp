@@ -145,7 +145,7 @@ namespace ice
     // set the appropiate height and width
 
     parentFrame->SetClientSize(getVirtualSizeX(), getVirtualSizeY());
-    Fit();
+    //    Fit();
     /*
     parentFrame->SetClientSize(
              std::min(wxGetApp().DefXSize(), getVirtualSizeX()),

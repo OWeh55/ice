@@ -48,8 +48,8 @@ iceFrame::iceFrame(const wxString& WindowTitle, long WindowStyle)
             wxID_ANY, // window id, we don't need one
             WindowTitle, // window title
             wxPoint(-1, -1),  // window position, we don't care
-            wxSize(100, 100),
-            WindowStyle), // window size, we don't care yet
+            wxSize(100, 100),  // window size, we don't care yet
+            WindowStyle),
     ChildWindow(NULL),
     MenuBar(NULL)
 {

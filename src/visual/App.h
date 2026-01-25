@@ -96,6 +96,7 @@ namespace ice
     {
       return defysize;
     }
+
     int RefreshTime() const
     {
       return refreshtime;

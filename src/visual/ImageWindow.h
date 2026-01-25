@@ -155,8 +155,7 @@ namespace ice
     //     1=GrayImgWin,
     //     2=OverlayImgWin,
     //     3=RGBImageWin,
-    //     4=StereoIHImageWin
-    //     5=Overlay2ImgWin)
+    //     4=Overlay2ImgWin)
     virtual char getVisualizationType() const = 0;
 
     /* Translates image pixel position PixelPos to window pixel

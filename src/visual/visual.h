@@ -128,20 +128,6 @@ namespace ice
               const ice::Image& Image3,
               const std::string& name = "");
 
-  Visual Show(int Mode,
-              const ice::Image& Image1,
-              const ice::Image& Image2,
-              const ice::Image& Image3,
-              const ice::Image& Image4,
-              const ice::Image& Image5,
-              const ice::Image& Image6,
-              const std::string& name = "");
-
-  Visual Show(int Mode,
-              const ice::ColorImage& Image1,
-              const ice::ColorImage& Image2,
-              const std::string& name = "");
-
   Visual getVisual(const Image& img);
   Visual getVisual(const ImageD& img);
   Visual getVisual(const ColorImage& img);

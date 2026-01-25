@@ -1,7 +1,7 @@
 #ifndef __ICETHREADCOMMHELPER_H
 #define __ICETHREADCOMMHELPER_H
 
-#  include <wx/thread.h>
+#include <wx/thread.h>
 
 namespace ice
 {

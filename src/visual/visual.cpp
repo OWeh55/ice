@@ -339,48 +339,6 @@ namespace ice
            Image3.Img(), name);
   }
 
-  Visual Show(int Mode,
-              const ice::Image& Image1,
-              const ice::Image& Image2,
-              const ice::Image& Image3,
-              const ice::Image& Image4,
-              const ice::Image& Image5,
-              const ice::Image& Image6,
-              const std::string& name)
-  {
-    if (
-      (!IsImg(Image1)) ||
-      (!IsImg(Image2)) ||
-      (!IsImg(Image3)) ||
-      (!IsImg(Image4)) ||
-      (!IsImg(Image5)) ||
-      (!IsImg(Image6))
-    )
-      throw IceException(FNAME, M_WRONG_IMAGE);
-    return wxGetApp().GetImageManager()->Show(Mode,
-           Image1.Img(),
-           Image2.Img(),
-           Image3.Img(),
-           Image4.Img(),
-           Image5.Img(),
-           Image6.Img(),
-           name);
-  }
-
-  Visual Show(int Mode,
-              const ColorImage& Image1,
-              const ColorImage& Image2,
-              const std::string& name)
-  {
-    return wxGetApp().GetImageManager()->Show(Mode,
-           Image1.redImage().Img(),
-           Image1.greenImage().Img(),
-           Image1.blueImage().Img(),
-           Image2.redImage().Img(),
-           Image2.greenImage().Img(),
-           Image2.blueImage().Img(),
-           name);
-  }
 #undef FNAME
 #define FNAME "GetVisual"
   Visual getVisual(const Image& img)

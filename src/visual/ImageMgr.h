@@ -92,16 +92,7 @@ namespace ice
                 ice::ImageBase* Image3,
                 const std::string& name = "");
 
-    Visual Show(int Mode,
-                ice::ImageBase* Image1,
-                ice::ImageBase* Image2,
-                ice::ImageBase* Image3,
-                ice::ImageBase* Image4,
-                ice::ImageBase* Image5,
-                ice::ImageBase* Image6,
-                const std::string& name = "");
-
-    // Get the visual that shows the image img, returns NULL if image
+    // Get the visual that shows the image img, returns nullptr if image
     // is not displayed
     Visual getVisual(const ImageBase* img) const;
     Visual getVisual(const ImageD* img) const;
@@ -127,7 +118,6 @@ namespace ice
     void OnCreateOverlayWin(wxCommandEvent& Event);
     void OnCreateOverlay2Win(wxCommandEvent& Event);
     void OnCreateRGBWin(wxCommandEvent& Event);
-    void OnCreateStereoIHWin(wxCommandEvent& Event);
 
     //! The event handlers.
     void OnRefreshTimer(wxTimerEvent& TimerEvent);

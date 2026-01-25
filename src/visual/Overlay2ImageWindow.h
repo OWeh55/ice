@@ -39,7 +39,7 @@ namespace ice
 
     virtual char getVisualizationType() const
     {
-      return 5;
+      return 4;
     }
 
   protected:
