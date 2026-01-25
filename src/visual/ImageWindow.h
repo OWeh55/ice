@@ -60,10 +60,10 @@ namespace ice
     iceFrame* parentFrame;
 
     //! The horizontal size of the image(s), that is displayed in this window.
-    int SizeX;
+    int sizeX;
 
     //! The vertical size of the image(s), that is displayed in this window.
-    int SizeY;
+    int sizeY;
 
     //! The zoom factor
     int ZoomFactor;
@@ -121,7 +121,6 @@ namespace ice
 
     virtual bool Create(unsigned int SizeX, unsigned int SizeY);
 
-  public:
     ImageWindow(ImageBase* img,
                 const std::string& windowname);
 
@@ -253,6 +252,13 @@ namespace ice
 
   protected:
 
+    virtual wxSize DoGetBestClientSize() const
+    {
+      std::cout << "DoGetBestClientSize" << std::endl;
+
+      return wxSize(sizeX + 2 * BORDER, sizeY + 2 * BORDER);
+    }
+
     virtual bool existImages() const
     {
       bool exist = true;
@@ -322,23 +328,23 @@ namespace ice
 
   inline IPoint ImageWindow::getImageSize() const
   {
-    return IPoint(SizeX, SizeY);
+    return IPoint(sizeX, sizeY);
   }
 
   inline Window ImageWindow::getImageRect() const
   {
-    return Window(0, 0, SizeX - 1, SizeY - 1);
+    return Window(0, 0, sizeX - 1, sizeY - 1);
   }
 
   inline int ImageWindow::getVirtualSizeX() const
   {
     if (ZoomFactor > 0)
       {
-        return SizeX * ZoomFactor + 2 * BORDER;
+        return sizeX * ZoomFactor + 2 * BORDER;
       }
     if (ZoomFactor < 0)
       {
-        return SizeX / -ZoomFactor + 2 * BORDER;
+        return sizeX / -ZoomFactor + 2 * BORDER;
       }
     return 0;
   }
@@ -347,11 +353,11 @@ namespace ice
   {
     if (ZoomFactor > 0)
       {
-        return SizeY * ZoomFactor + 2 * BORDER;
+        return sizeY * ZoomFactor + 2 * BORDER;
       }
     if (ZoomFactor < 0)
       {
-        return SizeY / -ZoomFactor + 2 * BORDER;
+        return sizeY / -ZoomFactor + 2 * BORDER;
       }
     return 0;
   }

@@ -77,8 +77,9 @@ namespace ice
     wxScrolledWindow(),
     caption(windowname),
     parentFrame(NULL),
-    SizeX(img->xsize),
-    SizeY(img->ysize),
+    sizeX(img->xsize),
+    sizeY(img->ysize),
+    // zoom settings
     ZoomFactor(1),
     PixelSize(1),
     ZoomStep(1),
@@ -89,7 +90,7 @@ namespace ice
     NeedsCreation(false),
     isFullScreen(false)
   {
-    Create(SizeX, SizeY);
+    Create(sizeX, sizeY);
     addImage(img);
   }
 
@@ -98,8 +99,9 @@ namespace ice
     wxScrolledWindow(),
     caption(windowname),
     parentFrame(NULL),
-    SizeX(img->xsize),
-    SizeY(img->ysize),
+    sizeX(img->xsize),
+    sizeY(img->ysize),
+    // zoom settings
     ZoomFactor(1),
     PixelSize(1),
     ZoomStep(1),
@@ -110,7 +112,7 @@ namespace ice
     NeedsCreation(false),
     isFullScreen(false)
   {
-    Create(SizeX, SizeY);
+    Create(sizeX, sizeY);
     addImage(img);
   }
 
@@ -127,23 +129,28 @@ namespace ice
     bool RetVal = wxScrolledWindow::Create(parentFrame, // parent window
                                            wxID_ANY, // WindowsID
                                            wxDefaultPosition, // window position
-                                           wxSize(getVirtualSizeX(),
-                                               getVirtualSizeY())); // window size
+                                           wxDefaultSize);
+    //                                           wxSize(getVirtualSizeX(),
+    //              getVirtualSizeY())); // window size
 
     parentFrame->SetChildWindow(*this);
-
-    // set the appropiate height and width
-    parentFrame->SetClientSize(
-      std::min(wxGetApp().DefXSize(), getVirtualSizeX()),
-      std::min(wxGetApp().DefYSize(), getVirtualSizeY()));
 
     Show(true);
     SetFocus();
 
     SetVirtualSize(getVirtualSizeX(), getVirtualSizeY());
     // setting up the scrollbar
-    SetScrollRate(SCROLLUNIT, SCROLLUNIT); // int pixelsPerUnit
+    // SetScrollRate(SCROLLUNIT, SCROLLUNIT); // int pixelsPerUnit
+    SetScrollbars(1, 1, sizeX, sizeY);
+    // set the appropiate height and width
 
+    parentFrame->SetClientSize(getVirtualSizeX(), getVirtualSizeY());
+    Fit();
+    /*
+    parentFrame->SetClientSize(
+             std::min(wxGetApp().DefXSize(), getVirtualSizeX()),
+             std::min(wxGetApp().DefYSize(), getVirtualSizeY()));
+    */
     NeedsCreation = false;
     return RetVal;
   }
@@ -158,7 +165,7 @@ namespace ice
 
   bool ImageWindow::addImage(ImageBase* img)
   {
-    if ((img->xsize != SizeX) || (img->ysize != SizeY))
+    if ((img->xsize != sizeX) || (img->ysize != sizeY))
       {
         return false;
       }
@@ -170,7 +177,7 @@ namespace ice
 
   bool ImageWindow::addImage(ImageD* img)
   {
-    if ((img->xsize != SizeX) || (img->ysize != SizeY))
+    if ((img->xsize != sizeX) || (img->ysize != sizeY))
       {
         return false;
       }
@@ -235,11 +242,11 @@ namespace ice
       }
 
     // determine the optimal zoom factor (zoom in)
-    int NewZoomFactor = min<int>(AvailableSize.GetWidth() / SizeX,
-                                 AvailableSize.GetHeight() / SizeY);
+    int NewZoomFactor = min<int>(AvailableSize.GetWidth() / sizeX,
+                                 AvailableSize.GetHeight() / sizeY);
     if (NewZoomFactor == 0) // have to zoom out ?
-      NewZoomFactor = -max<int>((SizeX + AvailableSize.GetWidth() - 1) / AvailableSize.GetWidth(),
-                                (SizeY + AvailableSize.GetHeight() - 1) / AvailableSize.GetHeight());
+      NewZoomFactor = -max<int>((sizeX + AvailableSize.GetWidth() - 1) / AvailableSize.GetWidth(),
+                                (sizeY + AvailableSize.GetHeight() - 1) / AvailableSize.GetHeight());
 
     return NewZoomFactor;
   }
@@ -451,13 +458,13 @@ namespace ice
       {
         iy0 = 0;
       }
-    if (ix1 >= SizeX)
+    if (ix1 >= sizeX)
       {
-        ix1 = SizeX - 1;
+        ix1 = sizeX - 1;
       }
-    if (iy1 >= SizeY)
+    if (iy1 >= sizeY)
       {
-        iy1 = SizeY - 1;
+        iy1 = sizeY - 1;
       }
 
     int bmx0, bmy0, bmx1, bmy1; // position of bitmap to draw

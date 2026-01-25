@@ -14,7 +14,7 @@ using namespace ice;
 
 /*AppGen:Global*/
 
-// exiftool code not yet useable 
+// exiftool code not yet useable
 #define USE_EXIFTOOL 0
 
 #define SFAK 1.002
@@ -465,11 +465,6 @@ int Main(int argc, char* argv[])
       SplitFilename(outpicture, path, basename, ext);
       basefilename = path + basename;
     }
-  /*
-    cout << InfVis(MAXX) << " x " << InfVis(MAXY) << endl;
-    xsize=InfVis(MAXX);
-    ysize=InfVis(MAXY);
-  */
 
   if (display)
     {
@@ -757,7 +752,9 @@ int Main(int argc, char* argv[])
                           else
                             {
                               vout.open(vfn, ios_base::out);
-                              vout.setPara(dimg.xsize, dimg.ysize, 255, 25, 10000000);
+                              vout.setPara(dimg.xsize, dimg.ysize, 255, 25,
+					   10000000);
+			      vout.setCPara("#lossless");
                             }
                         }
 
