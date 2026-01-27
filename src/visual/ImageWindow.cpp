@@ -76,7 +76,7 @@ namespace ice
                            const std::string& windowname):
     wxScrolledWindow(),
     caption(windowname),
-    parentFrame(NULL),
+    parentFrame(nullptr),
     sizeX(img->xsize),
     sizeY(img->ysize),
     // zoom settings
@@ -84,10 +84,9 @@ namespace ice
     PixelSize(1),
     ZoomStep(1),
     PaintIsRunning(false),
-    Interaction(NULL),
+    Interaction(nullptr),
     CursorPosition(0, 0),
     CursorIsEnabled(false),
-    NeedsCreation(false),
     isFullScreen(false)
   {
     Create(sizeX, sizeY);
@@ -98,7 +97,7 @@ namespace ice
                            const std::string& windowname):
     wxScrolledWindow(),
     caption(windowname),
-    parentFrame(NULL),
+    parentFrame(nullptr),
     sizeX(img->xsize),
     sizeY(img->ysize),
     // zoom settings
@@ -106,10 +105,9 @@ namespace ice
     PixelSize(1),
     ZoomStep(1),
     PaintIsRunning(false),
-    Interaction(NULL),
+    Interaction(nullptr),
     CursorPosition(0, 0),
     CursorIsEnabled(false),
-    NeedsCreation(false),
     isFullScreen(false)
   {
     Create(sizeX, sizeY);
@@ -123,36 +121,30 @@ namespace ice
                                wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCAPTION |
                                wxSYSTEM_MENU | wxRESIZE_BORDER); // window style
 
-    parentFrame->Show(true);
-
     // create the GUI window object
-    bool RetVal = wxScrolledWindow::Create(parentFrame, // parent window
+    bool ok = wxScrolledWindow::Create(parentFrame, // parent window
                                            wxID_ANY, // WindowsID
                                            wxDefaultPosition, // window position
                                            wxDefaultSize);
-    //                                           wxSize(getVirtualSizeX(),
-    //              getVirtualSizeY())); // window size
 
-    parentFrame->SetChildWindow(*this);
+    if (ok)
+      {
+	parentFrame->SetChildWindow(*this);
 
-    Show(true);
-    SetFocus();
+	// set the appropiate height and width (with Border)
+	parentFrame->SetClientSize(getVirtualSizeX(), getVirtualSizeY());
 
-    SetVirtualSize(getVirtualSizeX(), getVirtualSizeY());
-    // setting up the scrollbar
-    // SetScrollRate(SCROLLUNIT, SCROLLUNIT); // int pixelsPerUnit
-    SetScrollbars(1, 1, sizeX, sizeY);
-    // set the appropiate height and width
-
-    parentFrame->SetClientSize(getVirtualSizeX(), getVirtualSizeY());
-    //    Fit();
-    /*
-    parentFrame->SetClientSize(
-             std::min(wxGetApp().DefXSize(), getVirtualSizeX()),
-             std::min(wxGetApp().DefYSize(), getVirtualSizeY()));
-    */
-    NeedsCreation = false;
-    return RetVal;
+	parentFrame->Show(true);
+	
+	Show(true);
+	SetFocus();
+	
+	SetVirtualSize(getVirtualSizeX(), getVirtualSizeY());
+	// setting up the scrollbar
+	SetScrollbars(1, 1, sizeX, sizeY);
+	
+      }
+    return ok;
   }
 
   bool ImageWindow::Destroy()
@@ -293,12 +285,6 @@ namespace ice
 
   int ImageWindow::Zoom(int zoomfactor)
   {
-    // return ERROR, if we haven't created the actual GUI window
-    if (NeedsCreation)
-      {
-        return ERROR;
-      }
-
     wxCommandEvent Event(ZOOM);
     Event.SetInt(zoomfactor);
     AddPendingEvent(Event);
@@ -344,15 +330,7 @@ namespace ice
 
     // any other key is passed through to the console
     // window
-#if wxMAJOR_VERSION == 2
-#if wxMINOR_VERSION <= 8
-    wxGetApp().GetConsoleWin()->ProcessEvent(KeyEvent);
-#else
     wxGetApp().GetConsoleWin()->GetEventHandler()->ProcessEvent(KeyEvent);
-#endif
-#else
-    wxGetApp().GetConsoleWin()->GetEventHandler()->ProcessEvent(KeyEvent);
-#endif
   }
 
   bool ImageWindow::SwitchFullScreen()
@@ -610,7 +588,7 @@ namespace ice
     // allowed to delete it!). The interaction works like an event filter,
     // so have have to unhook it from our event handler list.
     PopEventHandler();
-    Interaction = NULL;
+    Interaction = nullptr;
 
     // Since the interaction has finished we can wake the user thread
     // now.

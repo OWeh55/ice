@@ -33,39 +33,31 @@ BEGIN_EVENT_TABLE(iceFrame, wxFrame)
 END_EVENT_TABLE()
 ;
 
-iceFrame::iceFrame(const wxString& WindowTitle)
-  : wxFrame(NULL,  // window parent
-            wxID_ANY, // window id, we don't need one
-            WindowTitle, // window title
-            wxPoint(-1, -1),  // window position, we don't care
-            wxSize(100, 100)),  // window size, we don't care yet
-    ChildWindow(NULL)
-{
-}
-
 iceFrame::iceFrame(const wxString& WindowTitle, long WindowStyle)
-  : wxFrame(NULL,  // window parent
+  : wxFrame(nullptr,  // window parent
             wxID_ANY, // window id, we don't need one
             WindowTitle, // window title
             wxPoint(-1, -1),  // window position, we don't care
             wxSize(100, 100),  // window size, we don't care yet
             WindowStyle),
-    ChildWindow(NULL),
-    MenuBar(NULL)
+    ChildWindow(nullptr),
+    MenuBar(nullptr)
 {
-//  AddMenuItem("File","Open",11);
-//  AddMenuItem("File","Close",12);
-
-  // AddMenuItem("Display","On",21);
-  // AddMenuItem("Display","Off",22);
-  // AddMenuItem("Display","About",24);
-  // AddMenuItem("Display","Fullscreen",25);
+  /*
+    AddMenuItem("File","Open",11);
+    AddMenuItem("File","Close",12);
+    
+    AddMenuItem("Display","On",21);
+    AddMenuItem("Display","Off",22);
+    AddMenuItem("Display","About",24);
+    AddMenuItem("Display","Fullscreen",25);
+  */
 }
 
 bool iceFrame::SetChildWindow(wxWindow& ChildWindowP)
 {
   // if we already host one window, there is something wrong
-  if (this->ChildWindow != NULL)
+  if (this->ChildWindow != nullptr)
     {
       return false;
     }
@@ -84,7 +76,7 @@ bool iceFrame::SetChildWindow(wxWindow& ChildWindowP)
 bool iceFrame::AddMenuItem(const std::string& menu,
                            const std::string& item, long itemuserid)
 {
-  if (MenuBar == NULL)
+  if (MenuBar == nullptr)
     {
       MenuBar = new wxMenuBar;
       SetMenuBar(MenuBar);
@@ -136,11 +128,10 @@ void iceFrame::OnUserItem(wxCommandEvent& event)
 {
   long id = event.GetId();
   wxGetApp().SendEvent(userid[id]);
-//    wxFrame::ShowFullScreen(true, wxFULLSCREEN_ALL);
 }
 
 bool iceFrame::Destroy()
 {
-  ChildWindow = NULL;
+  ChildWindow = nullptr;
   return wxFrame::Destroy();
 }

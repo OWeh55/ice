@@ -139,14 +139,18 @@ namespace ice
     ImageBase* img1;
     ImageBase* img2;
     ImageBase* img3;
+    /*
     ImageBase* img4;
     ImageBase* img5;
     ImageBase* img6;
+    */
     ImageD* imgd;
     int param;
     std::string title;
     Visual v;
-    ImageData(): img1(nullptr), img2(nullptr), img3(nullptr), img4(nullptr), img5(nullptr), img6(nullptr), imgd(nullptr), v(nullptr) {}
+    ImageData(): img1(nullptr), img2(nullptr), img3(nullptr),
+      //img4(nullptr), img5(nullptr), img6(nullptr),
+      imgd(nullptr), v(nullptr) {}
   };
 
   void ImageManager::OnCreateGrayWin(wxCommandEvent& Event)

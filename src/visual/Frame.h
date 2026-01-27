@@ -34,7 +34,7 @@ namespace ice
   public:
     iceFrame(const iceFrame&) = delete; // disable copy constructor
 
-    iceFrame(const wxString& WindowTitle);
+    //    iceFrame(const wxString& WindowTitle);
     iceFrame(const wxString& WindowTitle, long WindowStyle);
 
     bool SetChildWindow(wxWindow& ChildWindow);

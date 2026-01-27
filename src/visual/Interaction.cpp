@@ -60,15 +60,6 @@ namespace ice
   void InteractionHandler::Cleanup()
   {
     wxCommandEvent Event(CLEANUP_INTERACTION);
-#if wxMAJOR_VERSION == 2
-#if wxMINOR_VERSION <= 8
-    imageWindow->ProcessEvent(Event);
-#else
     imageWindow->GetEventHandler()->ProcessEvent(Event);
-#endif
-#else
-    imageWindow->GetEventHandler()->ProcessEvent(Event);
-#endif
-    //    ImageWindow->ProcessEvent (Event);
   }
 }

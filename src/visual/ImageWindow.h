@@ -104,8 +104,6 @@ namespace ice
     std::vector<ImageStruct*> imgs;
 
   private:
-    //! This flag tells us whether the window still has to be initialized.
-    bool NeedsCreation;
     //! This flag tells us whether the window is displayed in full screen mode
     bool isFullScreen;
 

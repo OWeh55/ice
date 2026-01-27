@@ -97,7 +97,6 @@ namespace ice
   void EventHelper::SendEvent(long event)
   {
     Event = event;
-//  cout << "sendevent " << event << endl;
     WakeUpUserThread();
   }
 }

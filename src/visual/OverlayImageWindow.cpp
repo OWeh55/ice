@@ -109,12 +109,5 @@ namespace ice
     *(PixelArrayPtr++) = g;
     *(PixelArrayPtr++) = b;
   }
-  /*
-  bool OverlayImageWindow::ShowsImage(ImageBase *img) const
-  {
-    std::cout << "OverlayWindow::showsImage" << std::endl;
-    return img == BaseImage || img == OverlayImage;
-  }
-  */
 }
 
