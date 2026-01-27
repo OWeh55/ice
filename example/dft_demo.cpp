@@ -89,49 +89,49 @@ void usage()
   cout << "  file - image file (optional, default:\"test.jpg\")" << endl;
   cout << "Options:" << endl;
   cout << "-m <c>" << "  " << "--mode=<c>   " << "   ";
-  cout << "mode of manipulation (default: 'n')" << endl ;
-  cout << "                        " << "n - no operation" << endl;
-  cout << "                        " << "c - conjugate complex" << endl;
-  cout << "                        " << "p - power spectra" << endl;
-  cout << "                        " << "m - magnitude" << endl;
-  cout << "                        " << "s - square" << endl;
-  cout << "                        " << "w - whitening" << endl;
+  cout << "mode of manipulation (default: 'n')" << endl ; 
+  cout << "                        " << "n - no operation" << endl; 
+  cout << "                        " << "c - conjugate complex" << endl; 
+  cout << "                        " << "p - power spectra" << endl; 
+  cout << "                        " << "m - magnitude" << endl; 
+  cout << "                        " << "s - square" << endl; 
+  cout << "                        " << "w - whitening" << endl; 
   cout << "-o <s>" << "  " << "--output=<s> " << "   ";
-  cout << "output file (default: \"\")" << endl ;
+  cout << "output file (default: \"\")" << endl ; 
   cout << "-b    " << "  " << "--batch      " << "   ";
-  cout << "batch mode (default: false)" << endl ;
+  cout << "batch mode (default: false)" << endl ; 
   cout << "-n    " << "  " << "--null       " << "   ";
-  cout << "ignore bias (default: false)" << endl ;
+  cout << "ignore bias (default: false)" << endl ; 
   cout << "-l    " << "  " << "--log        " << "   ";
-  cout << "logarithmic visualization (default: false)" << endl ;
+  cout << "logarithmic visualization (default: false)" << endl ; 
   cout << "-w    " << "  " << "--wait       " << "   ";
-  cout << "wait in batch mode (default: false)" << endl ;
+  cout << "wait in batch mode (default: false)" << endl ; 
   cout << "-v    " << "  " << "--verbose    " << "   ";
-  cout << "be verbose (default: false)" << endl ;
+  cout << "be verbose (default: false)" << endl ; 
   cout << "-d    " << "  " << "--display    " << "   ";
-  cout << "display of images (default: false)" << endl ;
+  cout << "display of images (default: false)" << endl ; 
   cout << "-6    " << "  " << "--xdiplay    " << "   ";
-  cout << "display as matrix (default: false)" << endl ;
+  cout << "display as matrix (default: false)" << endl ; 
   cout << "-X <i>" << "  " << "--xdxsize=<i>" << "   ";
-  cout << "width of display (default: -1)" << endl ;
+  cout << "width of display (default: -1)" << endl ; 
   cout << "-Y <i>" << "  " << "--xdysize=<i>" << "   ";
-  cout << "height of display (default: -1)" << endl ;
+  cout << "height of display (default: -1)" << endl ; 
   cout << "-t    " << "  " << "--notitle    " << "   ";
-  cout << "no titles (default: false)" << endl ;
+  cout << "no titles (default: false)" << endl ; 
   cout << "-h    " << "  " << "--help       " << "   ";
-  cout << "this help" << endl ;
+  cout << "this help" << endl ; 
   exit(1);
 }
 
-void error(const string& msg)
+void error(const string &msg)
 {
   cout << endl << ag_programName << " - error: " << msg << endl << endl;
   usage();
 }
 
-long int ptol(const char* para)
+long int ptol(const char *para)
 {
-  char* end;
+  char *end;
   long int res = strtol(para, &end, 10);
   if (end == para)
     error(string("no int: ") + para);
@@ -140,7 +140,7 @@ long int ptol(const char* para)
   return res;
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
   char operation = 'n';
   string outFile = "";
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
   int xdxsize = -1;
   int xdysize = -1;
   bool noTitle = false;
-
+  
   string imgFile = "test.jpg";
   static struct option ag_long_options[] =
   {
@@ -242,7 +242,7 @@ int main(int argc, char** argv)
   if (optind < argc)
     imgFile = argv[optind++];
 
-  /*AppGen:MainEnd*/
+/*AppGen:MainEnd*/
 # 40 "dft_demo.ag"
 
 # 41 "dft_demo.ag"
@@ -482,452 +482,450 @@ int main(int argc, char** argv)
 # 158 "dft_demo.ag"
 
 # 159 "dft_demo.ag"
-
-# 160 "dft_demo.ag"
       string s;
-# 161 "dft_demo.ag"
+# 160 "dft_demo.ag"
       // manipulate spectra
-# 162 "dft_demo.ag"
+# 161 "dft_demo.ag"
       switch (operation)
+# 162 "dft_demo.ag"
+        {
 # 163 "dft_demo.ag"
-        {
-# 164 "dft_demo.ag"
         case 'c':
-# 165 "dft_demo.ag"
+# 164 "dft_demo.ag"
           s = "conjugated";
+# 165 "dft_demo.ag"
+          for (all.init(); !all.ready(); all.next())
 # 166 "dft_demo.ag"
-          for (all.init(); !all.ready(); all.next())
+            {
 # 167 "dft_demo.ag"
-            {
+              double r = spectra_real.getPixel(all);
 # 168 "dft_demo.ag"
-              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
 # 169 "dft_demo.ag"
-              double i = spectra_imag.getPixel(all);
+              spectra_m_real.setPixel(all, r);
 # 170 "dft_demo.ag"
-              spectra_m_real.setPixel(all, r);
-# 171 "dft_demo.ag"
               spectra_m_imag.setPixel(all, -i);
+# 171 "dft_demo.ag"
+            }
 # 172 "dft_demo.ag"
-            }
+          break;
 # 173 "dft_demo.ag"
-          break;
-# 174 "dft_demo.ag"
         case 'n':
-# 175 "dft_demo.ag"
+# 174 "dft_demo.ag"
           s = "noop";
+# 175 "dft_demo.ag"
+          for (all.init(); !all.ready(); all.next())
 # 176 "dft_demo.ag"
-          for (all.init(); !all.ready(); all.next())
+            {
 # 177 "dft_demo.ag"
-            {
+              double r = spectra_real.getPixel(all);
 # 178 "dft_demo.ag"
-              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
 # 179 "dft_demo.ag"
-              double i = spectra_imag.getPixel(all);
+              spectra_m_real.setPixel(all, r);
 # 180 "dft_demo.ag"
-              spectra_m_real.setPixel(all, r);
+              spectra_m_imag.setPixel(all, i);
 # 181 "dft_demo.ag"
-              spectra_m_imag.setPixel(all, i);
+            }
 # 182 "dft_demo.ag"
-            }
+          break;
 # 183 "dft_demo.ag"
-          break;
-# 184 "dft_demo.ag"
         case 's':
-# 185 "dft_demo.ag"
+# 184 "dft_demo.ag"
           s = "square";
+# 185 "dft_demo.ag"
+          for (all.init(); !all.ready(); all.next())
 # 186 "dft_demo.ag"
-          for (all.init(); !all.ready(); all.next())
+            {
 # 187 "dft_demo.ag"
-            {
+              double r = spectra_real.getPixel(all);
 # 188 "dft_demo.ag"
-              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
 # 189 "dft_demo.ag"
-              double i = spectra_imag.getPixel(all);
-# 190 "dft_demo.ag"
               spectra_m_real.setPixel(all, r * r - i * i);
-# 191 "dft_demo.ag"
+# 190 "dft_demo.ag"
               spectra_m_imag.setPixel(all, r * i + i * r);
+# 191 "dft_demo.ag"
+            }
 # 192 "dft_demo.ag"
-            }
+          break;
 # 193 "dft_demo.ag"
-          break;
+
 # 194 "dft_demo.ag"
-
-# 195 "dft_demo.ag"
         case 'p':
-# 196 "dft_demo.ag"
+# 195 "dft_demo.ag"
           s = "power";
+# 196 "dft_demo.ag"
+          for (all.init(); !all.ready(); all.next())
 # 197 "dft_demo.ag"
-          for (all.init(); !all.ready(); all.next())
+            {
 # 198 "dft_demo.ag"
-            {
+              double r = spectra_real.getPixel(all);
 # 199 "dft_demo.ag"
-              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
 # 200 "dft_demo.ag"
-              double i = spectra_imag.getPixel(all);
-# 201 "dft_demo.ag"
               spectra_m_real.setPixel(all, r * r + i * i);
-# 202 "dft_demo.ag"
+# 201 "dft_demo.ag"
               spectra_m_imag.setPixel(all, 0);
+# 202 "dft_demo.ag"
+            }
 # 203 "dft_demo.ag"
-            }
+          break;
 # 204 "dft_demo.ag"
-          break;
+
 # 205 "dft_demo.ag"
-
-# 206 "dft_demo.ag"
         case 'h':
+# 206 "dft_demo.ag"
+        {
 # 207 "dft_demo.ag"
-        {
-# 208 "dft_demo.ag"
           s = "highpass";
+# 208 "dft_demo.ag"
+          if (newfilter || fg < 0)
 # 209 "dft_demo.ag"
-          if (newfilter || fg < 0)
-# 210 "dft_demo.ag"
             fg = InputD("cut-off frequency of highpass: ");
+# 210 "dft_demo.ag"
+          for (all.init(); !all.ready(); all.next())
 # 211 "dft_demo.ag"
-          for (all.init(); !all.ready(); all.next())
+            {
 # 212 "dft_demo.ag"
-            {
+              double r = spectra_real.getPixel(all);
 # 213 "dft_demo.ag"
-              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
 # 214 "dft_demo.ag"
-              double i = spectra_imag.getPixel(all);
+              Point dd = Point(all) - center;
 # 215 "dft_demo.ag"
-              Point dd = Point(all) - center;
-# 216 "dft_demo.ag"
               if (dd.length() < fg)
+# 216 "dft_demo.ag"
+                {
 # 217 "dft_demo.ag"
-                {
+                  r = 0;
 # 218 "dft_demo.ag"
-                  r = 0;
+                  i = 0;
 # 219 "dft_demo.ag"
-                  i = 0;
+                }
 # 220 "dft_demo.ag"
-                }
+              spectra_m_real.setPixel(all, r);
 # 221 "dft_demo.ag"
-              spectra_m_real.setPixel(all, r);
+              spectra_m_imag.setPixel(all, i);
 # 222 "dft_demo.ag"
-              spectra_m_imag.setPixel(all, i);
+
 # 223 "dft_demo.ag"
-
+            }
 # 224 "dft_demo.ag"
-            }
+        }
 # 225 "dft_demo.ag"
-        }
+        break;
 # 226 "dft_demo.ag"
-        break;
-# 227 "dft_demo.ag"
         case 'l':
+# 227 "dft_demo.ag"
+        {
 # 228 "dft_demo.ag"
-        {
-# 229 "dft_demo.ag"
           s = "lowpass";
-# 230 "dft_demo.ag"
+# 229 "dft_demo.ag"
           if (newfilter || fg < 0)
-# 231 "dft_demo.ag"
+# 230 "dft_demo.ag"
             fg = InputD("cut-off frequency of lowpass: ");
+# 231 "dft_demo.ag"
+          for (all.init(); !all.ready(); all.next())
 # 232 "dft_demo.ag"
-          for (all.init(); !all.ready(); all.next())
+            {
 # 233 "dft_demo.ag"
-            {
+              double r = spectra_real.getPixel(all);
 # 234 "dft_demo.ag"
-              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
 # 235 "dft_demo.ag"
-              double i = spectra_imag.getPixel(all);
-# 236 "dft_demo.ag"
               Point dd = Point(all) - center;
-# 237 "dft_demo.ag"
+# 236 "dft_demo.ag"
               if (dd.length() > fg)
+# 237 "dft_demo.ag"
+                {
 # 238 "dft_demo.ag"
-                {
-# 239 "dft_demo.ag"
                   r = 0;
-# 240 "dft_demo.ag"
+# 239 "dft_demo.ag"
                   i = 0;
+# 240 "dft_demo.ag"
+                }
 # 241 "dft_demo.ag"
-                }
-# 242 "dft_demo.ag"
               spectra_m_real.setPixel(all, r);
-# 243 "dft_demo.ag"
+# 242 "dft_demo.ag"
               spectra_m_imag.setPixel(all, i);
+# 243 "dft_demo.ag"
+
 # 244 "dft_demo.ag"
-
+            }
 # 245 "dft_demo.ag"
-            }
+        }
 # 246 "dft_demo.ag"
-        }
+        break;
 # 247 "dft_demo.ag"
-        break;
-# 248 "dft_demo.ag"
         case 'm':
-# 249 "dft_demo.ag"
+# 248 "dft_demo.ag"
           s = "magnitude+phase";
+# 249 "dft_demo.ag"
+          for (all.init(); !all.ready(); all.next())
 # 250 "dft_demo.ag"
-          for (all.init(); !all.ready(); all.next())
+            {
 # 251 "dft_demo.ag"
-            {
+              double r = spectra_real.getPixel(all);
 # 252 "dft_demo.ag"
-              double r = spectra_real.getPixel(all);
+              double i = spectra_imag.getPixel(all);
 # 253 "dft_demo.ag"
-              double i = spectra_imag.getPixel(all);
-# 254 "dft_demo.ag"
               spectra_m_real.setPixel(all, sqrt(r * r + i * i));
-# 255 "dft_demo.ag"
+# 254 "dft_demo.ag"
               spectra_m_imag.setPixel(all, atan2(i, r));
+# 255 "dft_demo.ag"
+            }
 # 256 "dft_demo.ag"
-            }
-# 257 "dft_demo.ag"
           break;
+# 257 "dft_demo.ag"
+
 # 258 "dft_demo.ag"
-
-# 259 "dft_demo.ag"
         case 'w':
+# 259 "dft_demo.ag"
+        {
 # 260 "dft_demo.ag"
-        {
-# 261 "dft_demo.ag"
           s = "whitened";
-# 262 "dft_demo.ag"
+# 261 "dft_demo.ag"
           for (all.init(); !all.ready(); all.next())
+# 262 "dft_demo.ag"
+            {
 # 263 "dft_demo.ag"
-            {
-# 264 "dft_demo.ag"
               double r = spectra_real.getPixel(all);
-# 265 "dft_demo.ag"
+# 264 "dft_demo.ag"
               double i = spectra_imag.getPixel(all);
-# 266 "dft_demo.ag"
+# 265 "dft_demo.ag"
               double a = sqrt(r * r + i * i + 1);
-# 267 "dft_demo.ag"
+# 266 "dft_demo.ag"
               spectra_m_real.setPixel(all, r / a);
-# 268 "dft_demo.ag"
+# 267 "dft_demo.ag"
               spectra_m_imag.setPixel(all, i / a);
+# 268 "dft_demo.ag"
+            }
 # 269 "dft_demo.ag"
-            }
+        }
 # 270 "dft_demo.ag"
-        }
-# 271 "dft_demo.ag"
         break;
+# 271 "dft_demo.ag"
+
 # 272 "dft_demo.ag"
-
-# 273 "dft_demo.ag"
         default:
-# 274 "dft_demo.ag"
+# 273 "dft_demo.ag"
           cerr << (string("mode ") + operation + " not implemented") << endl;
+# 274 "dft_demo.ag"
+        }
 # 275 "dft_demo.ag"
-        }
+
 # 276 "dft_demo.ag"
-
+      if (verbose)
 # 277 "dft_demo.ag"
-      if (verbose)
-# 278 "dft_demo.ag"
         cout << s << endl;
+# 278 "dft_demo.ag"
+
 # 279 "dft_demo.ag"
-
+      if (xdisplay)
 # 280 "dft_demo.ag"
-      if (xdisplay)
+        {
 # 281 "dft_demo.ag"
-        {
-# 282 "dft_demo.ag"
           xd.show(3, spectra_m_real, logSpectra);
+# 282 "dft_demo.ag"
+          if (sZoom)
 # 283 "dft_demo.ag"
-          if (sZoom)
-# 284 "dft_demo.ag"
             xd.setZoom(3, 4);
+# 284 "dft_demo.ag"
+          if (!noTitle)
 # 285 "dft_demo.ag"
-          if (!noTitle)
-# 286 "dft_demo.ag"
             xd.setTitle(3, "spectrum (real) - " + s);
-# 287 "dft_demo.ag"
+# 286 "dft_demo.ag"
           xd.show(4, spectra_m_imag, logSpectra);
-# 288 "dft_demo.ag"
+# 287 "dft_demo.ag"
           if (sZoom)
-# 289 "dft_demo.ag"
+# 288 "dft_demo.ag"
             xd.setZoom(4, 4);
+# 289 "dft_demo.ag"
+          if (!noTitle)
 # 290 "dft_demo.ag"
-          if (!noTitle)
-# 291 "dft_demo.ag"
             xd.setTitle(4, "spectrum (imag) - " + s);
+# 291 "dft_demo.ag"
+        }
 # 292 "dft_demo.ag"
-        }
+
 # 293 "dft_demo.ag"
-
-# 294 "dft_demo.ag"
       ffti.setInput(spectra_m_real,
-# 295 "dft_demo.ag"
+# 294 "dft_demo.ag"
                     spectra_m_imag);
-# 296 "dft_demo.ag"
+# 295 "dft_demo.ag"
       ffti.getResult(result, ADAPTIVE);
-# 297 "dft_demo.ag"
+# 296 "dft_demo.ag"
       ffti.getResult(dresult);
+# 297 "dft_demo.ag"
+
 # 298 "dft_demo.ag"
-
+      if (verbose)
 # 299 "dft_demo.ag"
-      if (verbose)
-# 300 "dft_demo.ag"
         cout << "transformed back" << endl;
+# 300 "dft_demo.ag"
+
 # 301 "dft_demo.ag"
-
-# 302 "dft_demo.ag"
       if (xdisplay)
+# 302 "dft_demo.ag"
+        {
 # 303 "dft_demo.ag"
-        {
-# 304 "dft_demo.ag"
           xd.show(5, result);
-# 305 "dft_demo.ag"
+# 304 "dft_demo.ag"
           if (!noTitle)
-# 306 "dft_demo.ag"
+# 305 "dft_demo.ag"
             xd.setTitle(5, "result");
+# 306 "dft_demo.ag"
+        }
 # 307 "dft_demo.ag"
-        }
+
 # 308 "dft_demo.ag"
-
-# 309 "dft_demo.ag"
       if (!batch)
-# 310 "dft_demo.ag"
+# 309 "dft_demo.ag"
         {
-# 311 "dft_demo.ag"
+# 310 "dft_demo.ag"
           ClearAlpha();
+# 311 "dft_demo.ag"
+
 # 312 "dft_demo.ag"
-
+          Print("\n");
 # 313 "dft_demo.ag"
-          Print("\n");
-# 314 "dft_demo.ag"
           Print("operation = " + s + "\n");
-# 315 "dft_demo.ag"
+# 314 "dft_demo.ag"
           Print(string("mode = ") + (logSpectra ? "logarithmic" : "linear") + "\n");
-# 316 "dft_demo.ag"
+# 315 "dft_demo.ag"
           Print(string(nobias ? "without bias" : "with bias") + "\n");
+# 316 "dft_demo.ag"
+
 # 317 "dft_demo.ag"
-
-# 318 "dft_demo.ag"
           Print("\n");
-# 319 "dft_demo.ag"
+# 318 "dft_demo.ag"
           Print("n - no operation\n");
-# 320 "dft_demo.ag"
+# 319 "dft_demo.ag"
           Print("c - conjugate complex\n");
-# 321 "dft_demo.ag"
+# 320 "dft_demo.ag"
           Print("p - power spectrum\n");
-# 322 "dft_demo.ag"
+# 321 "dft_demo.ag"
           Print("m - magnitude spectrum\n");
-# 323 "dft_demo.ag"
+# 322 "dft_demo.ag"
           Print("h - highpass\n");
-# 324 "dft_demo.ag"
+# 323 "dft_demo.ag"
           Print("l - lowpass\n");
-# 325 "dft_demo.ag"
+# 324 "dft_demo.ag"
           Print("w - whitening image\n");
+# 325 "dft_demo.ag"
+
 # 326 "dft_demo.ag"
-
-# 327 "dft_demo.ag"
           // Print("s - square spectrum\n");
-# 328 "dft_demo.ag"
+# 327 "dft_demo.ag"
           Print("-\n");
-# 329 "dft_demo.ag"
+# 328 "dft_demo.ag"
           Print("L - switch linear <-> logarithmic\n");
+# 329 "dft_demo.ag"
+
 # 330 "dft_demo.ag"
-
-# 331 "dft_demo.ag"
           newfilter = false;
-# 332 "dft_demo.ag"
+# 331 "dft_demo.ag"
           bool keyValid = false;
-# 333 "dft_demo.ag"
+# 332 "dft_demo.ag"
           while (!keyValid)
-# 334 "dft_demo.ag"
+# 333 "dft_demo.ag"
             {
-# 335 "dft_demo.ag"
+# 334 "dft_demo.ag"
               int c = GetChar();
-# 336 "dft_demo.ag"
+# 335 "dft_demo.ag"
               // Printf("%d\n",c);
-# 337 "dft_demo.ag"
+# 336 "dft_demo.ag"
               keyValid = true;
-# 338 "dft_demo.ag"
+# 337 "dft_demo.ag"
               switch (c)
-# 339 "dft_demo.ag"
+# 338 "dft_demo.ag"
                 {
-# 340 "dft_demo.ag"
+# 339 "dft_demo.ag"
                 case 'p':
-# 341 "dft_demo.ag"
+# 340 "dft_demo.ag"
                 case 's':
-# 342 "dft_demo.ag"
+# 341 "dft_demo.ag"
                 case 'm':
-# 343 "dft_demo.ag"
+# 342 "dft_demo.ag"
                 case 'w':
-# 344 "dft_demo.ag"
+# 343 "dft_demo.ag"
                 case 'n':
-# 345 "dft_demo.ag"
+# 344 "dft_demo.ag"
                 case 'c':
-# 346 "dft_demo.ag"
+# 345 "dft_demo.ag"
                 case 'h':
-# 347 "dft_demo.ag"
+# 346 "dft_demo.ag"
                 case 'l':
-# 348 "dft_demo.ag"
+# 347 "dft_demo.ag"
                   newfilter = true;
-# 349 "dft_demo.ag"
+# 348 "dft_demo.ag"
                   operation = c;
+# 349 "dft_demo.ag"
+                  break;
 # 350 "dft_demo.ag"
-                  break;
-# 351 "dft_demo.ag"
                 case 'L':
-# 352 "dft_demo.ag"
+# 351 "dft_demo.ag"
                   logSpectra = ! logSpectra;
+# 352 "dft_demo.ag"
+                  break;
 # 353 "dft_demo.ag"
-                  break;
-# 354 "dft_demo.ag"
                 case 'b':
-# 355 "dft_demo.ag"
+# 354 "dft_demo.ag"
                   nobias = ! nobias;
+# 355 "dft_demo.ag"
+                  break;
 # 356 "dft_demo.ag"
-                  break;
-# 357 "dft_demo.ag"
                 case 'z':
-# 358 "dft_demo.ag"
+# 357 "dft_demo.ag"
                   sZoom = ! sZoom;
+# 358 "dft_demo.ag"
+                  break;
 # 359 "dft_demo.ag"
-                  break;
-# 360 "dft_demo.ag"
                 case 27:
-# 361 "dft_demo.ag"
+# 360 "dft_demo.ag"
                 case 'q':
-# 362 "dft_demo.ag"
+# 361 "dft_demo.ag"
                 case 'x':
-# 363 "dft_demo.ag"
+# 362 "dft_demo.ag"
                   ready = true;
-# 364 "dft_demo.ag"
+# 363 "dft_demo.ag"
                   break;
-# 365 "dft_demo.ag"
+# 364 "dft_demo.ag"
                 default:
-# 366 "dft_demo.ag"
+# 365 "dft_demo.ag"
                   keyValid = false;
-# 367 "dft_demo.ag"
+# 366 "dft_demo.ag"
                 }
-# 368 "dft_demo.ag"
+# 367 "dft_demo.ag"
             }
-# 369 "dft_demo.ag"
+# 368 "dft_demo.ag"
         }
+# 369 "dft_demo.ag"
+    }
 # 370 "dft_demo.ag"
-    }
+
 # 371 "dft_demo.ag"
-
-# 372 "dft_demo.ag"
   // warten auf Tastendruck
-# 373 "dft_demo.ag"
+# 372 "dft_demo.ag"
   if (batch & wait)
-# 374 "dft_demo.ag"
+# 373 "dft_demo.ag"
     GetChar();
-# 375 "dft_demo.ag"
+# 374 "dft_demo.ag"
 
-# 376 "dft_demo.ag"
+# 375 "dft_demo.ag"
   if (!outFile.empty())
-# 377 "dft_demo.ag"
+# 376 "dft_demo.ag"
     {
-# 378 "dft_demo.ag"
+# 377 "dft_demo.ag"
       result.write(outFile);
-# 379 "dft_demo.ag"
+# 378 "dft_demo.ag"
       if (verbose)
-# 380 "dft_demo.ag"
+# 379 "dft_demo.ag"
         cout << "wrote output file " << outFile << endl;
-# 381 "dft_demo.ag"
+# 380 "dft_demo.ag"
     }
-# 382 "dft_demo.ag"
+# 381 "dft_demo.ag"
   return 0;
-# 383 "dft_demo.ag"
+# 382 "dft_demo.ag"
 }
