@@ -260,6 +260,7 @@ region2\
 region\
 regiongrow\
 regions\
+relax\
 RenormImg\
 resampling\
 rgb2h\
